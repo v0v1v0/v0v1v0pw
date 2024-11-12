@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>combineOverlapInfo</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find and combine points located very close in x/y space</h2>
+
+<h3>Description</h3>
+
+<p>Search points in x,y space that are located very close and thus likely to overlap.
+In case of points close enough, various options for joining names (and shortening longer descriptions) are available.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">combineOverlapInfo(
+  dat,
+  suplInfo = NULL,
+  disThr = 0.01,
+  addNsimil = TRUE,
+  txtSepChar = ",",
+  combSym = "+",
+  maxOverl = 50,
+  callFrom = NULL,
+  debug = FALSE,
+  silent = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(matrix) matrix or data.frame with 2 cols (used ONLY 1st &amp; 2nd column !), used as x &amp; y coordinates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suplInfo</code></td>
+<td>
+<p>(NULL or character) when points are considered overlapping the text from 'suplInfo' will be reduced to fragment before 'txtSepChar' and combined (with others from overlapping text) using 'combSym', if NULL $combInf will appear with row-numbers</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>disThr</code></td>
+<td>
+<p>(numeric) distance-thrshold for considering as similar via searchDataPairs()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addNsimil</code></td>
+<td>
+<p>(logical) include number of fused points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>txtSepChar</code></td>
+<td>
+<p>(character) for use with .retain1stPart(): where to cut (&amp; keep 1st part) text from 'suplInfo' to return in out$CombInf; only 1st element used !</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>combSym</code></td>
+<td>
+<p>(character) concatenation symbol (character, length=1) for points considered overlaying, see also 'suplInfo'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxOverl</code></td>
+<td>
+<p>(integer) if NULL no limit or max limit of group/clu size (avoid condensing too many neighbour points to single cloud)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppres messages</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>matrix with fused (condensed) information for cluster of overapping points
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2013)
+datT2 &lt;- matrix(round(rnorm(200)+3,1),ncol=2,dimnames=list(paste("li",1:100,sep=""),
+  letters[23:24]))
+# (mimick) some short and longer names for each line
+inf2 &lt;- cbind(sh=paste(rep(letters[1:4],each=26),rep(letters,4),1:(26*4),sep=""),
+ lo=paste(rep(LETTERS[1:4],each=26),rep(LETTERS,4),1:(26*4),",",rep(letters[sample.int(26)],4),
+  rep(letters[sample.int(26)],4),sep=""))[1:100,] 
+head(datT2,n=10)
+head(combineOverlapInfo(datT2,disThr=0.03),n=10)
+head(combineOverlapInfo(datT2,suplI=inf2[,2],disThr=0.03),n=10)
+</code></pre>
+
+
+</div>

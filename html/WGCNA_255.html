@@ -1,0 +1,246 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simulateMultiExpr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Simulate multi-set expression data</h2>
+
+<h3>Description</h3>
+
+<p>Simulation of expression data in several sets with relate module structure.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">simulateMultiExpr(eigengenes, 
+                  nGenes, 
+                  modProportions, 
+                  minCor = 0.5, maxCor = 1, 
+                  corPower = 1, 
+                  backgroundNoise = 0.1, 
+                  leaveOut = NULL, 
+                  signed = FALSE, 
+                  propNegativeCor = 0.3, 
+                  geneMeans = NULL,
+                  nSubmoduleLayers = 0, 
+                  nScatteredModuleLayers = 0, 
+                  averageNGenesInSubmodule = 10, 
+                  averageExprInSubmodule = 0.2, 
+                  submoduleSpacing = 2, 
+                  verbose = 1, indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>eigengenes</code></td>
+<td>
+<p>  the seed eigengenes for the simulated modules in a multi-set format. A list with one
+component per set. Each component is again a list that must contain a component <code>data</code>. This is a data
+frame of seed eigengenes for the corresponding data set. Columns correspond to modules, rows to samples.
+Number of samples in the simulated data is determined from the number of samples of the eigengenes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nGenes</code></td>
+<td>
+<p> integer specifyin the number of simulated genes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>modProportions</code></td>
+<td>
+<p>  a numeric vector with length equal the number of eigengenes in <code>eigengenes</code>
+plus one, containing fractions of the total number of genes to be put into each of the modules and into
+the "grey module", which means genes not related to any of the modules. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minCor</code></td>
+<td>
+<p> minimum correlation of module genes with the corresponding eigengene. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxCor</code></td>
+<td>
+<p> maximum correlation of module genes with the corresponding eigengene. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corPower</code></td>
+<td>
+<p> controls the dropoff of gene-eigengene correlation. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>backgroundNoise</code></td>
+<td>
+<p> amount of background noise to be added to the simulated expression data. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>leaveOut</code></td>
+<td>
+<p> optional specification of modules that should be left out of the simulation, that is
+their genes will be simulated as unrelated ("grey"). A logical matrix in which columns correspond to sets
+and rows to modules. Wherever <code>TRUE</code>, the corresponding module in the corresponding data set will not
+be simulated, that is its genes will be simulated independently of the eigengene. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signed</code></td>
+<td>
+<p> logical: should the genes be simulated as belonging to a signed network? If <code>TRUE</code>,
+all genes will be simulated to have positive correlation with the eigengene. If <code>FALSE</code>, a
+proportion given by <code>propNegativeCor</code> will be simulated with negative correlations of the same
+absolute values. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>propNegativeCor</code></td>
+<td>
+<p> proportion of genes to be simulated with negative gene-eigengene correlations.
+Only effective if <code>signed</code> is <code>FALSE</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geneMeans</code></td>
+<td>
+<p> optional vector of length <code>nGenes</code> giving desired mean expression for each gene. If
+not given, the returned expression profiles will have mean zero. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nSubmoduleLayers</code></td>
+<td>
+<p> number of layers of ordered submodules to be added. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nScatteredModuleLayers</code></td>
+<td>
+<p> number of layers of scattered submodules to be added. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>averageNGenesInSubmodule</code></td>
+<td>
+<p> average number of genes in a submodule. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>averageExprInSubmodule</code></td>
+<td>
+<p> average strength of submodule expression vectors. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>submoduleSpacing</code></td>
+<td>
+<p> a number giving submodule spacing: this multiple of the submodule size will
+lie between the submodule and the next one.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For details of simulation of individual data sets and the meaning of individual set simulation arguments, 
+see <code>simulateDatExpr</code>. This function
+simulates several data sets at a time and puts the result in a multi-set format. The number of genes is the
+same for all data sets. Module memberships are also the same, but modules can optionally be “dissolved”,
+that is their genes will be simulated as unassigned. Such “dissolved”, or left out, modules can be
+specified in the matrix <code>leaveOut</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>multiExpr </code></td>
+<td>
+<p>simulated expression data in multi-set format analogous to that of the input
+<code>eigengenes</code>.  A list with one
+component per set. Each component is again a list that must contains a component <code>data</code>. This is a data
+frame of expression data for the corresponding data set. Columns correspond to genes, rows to samples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>setLabels</code></td>
+<td>
+<p>a matrix of dimensions (number of genes) times (number of sets) that contains module
+labels for each genes in each simulated data set. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allLabels</code></td>
+<td>
+<p>a matrix of dimensions (number of genes) times (number of sets) that contains the module
+labels that would be simulated if no module were left out using <code>leaveOut</code>. This means that all columns
+of the matrix are equal; the columns are repeated for convenience so <code>allLabels</code> has the same
+dimensions as <code>setLabels</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labelOrder</code></td>
+<td>
+<p>a matrix of dimensions (number of modules) times (number of sets) that contains the 
+order in which module labels were assigned to genes in each set. The first label is assigned to genes
+1...(module size of module labeled by first label), the second label to the following batch of genes etc.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder</p>
+
+
+<h3>References</h3>
+
+ 
+<p>A short description of the simulation method can also be found in the Supplementary Material
+to the article
+</p>
+<p>Langfelder P, Horvath S (2007) Eigengene networks for studying the relationships between co-expression
+modules. BMC Systems Biology 2007, 1:54.
+</p>
+<p>The material is posted at
+http://horvath.genetics.ucla.edu/html/CoexpressionNetwork/EigengeneNetwork/SupplementSimulations.pdf.
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code>simulateEigengeneNetwork</code> for a simulation of eigengenes with a given causal structure;
+</p>
+<p><code>simulateDatExpr</code> for simulation of individual data sets; 
+</p>
+<p><code>simulateDatExpr5Modules</code> for a simple simulation of a data set consisting of 5 modules;
+</p>
+<p><code>simulateModule</code> for simulations of individual modules;
+</p>
+
+
+</div>

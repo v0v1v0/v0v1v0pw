@@ -1,0 +1,312 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>polar_periodic</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Polar Plot with Periodic Elements</h2>
+
+<h3>Description</h3>
+
+<p>Shows the interrupted time series in Cartesian coordinates and its a periodic/cyclic components.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">polar_periodic(
+  ds_linear,
+  ds_stage_cycle_polar,
+  x_name,
+  y_name,
+  stage_id_name,
+  periodic_lower_name = "position_lower",
+  periodic_upper_name = "position_upper",
+  palette_dark = NULL,
+  palette_light = NULL,
+  change_points = NULL,
+  change_point_labels = NULL,
+  draw_observed_line = TRUE,
+  draw_periodic_band = TRUE,
+  draw_stage_labels = FALSE,
+  draw_radius_labels = FALSE,
+  jagged_point_size = 2,
+  jagged_line_size = 1,
+  band_alpha_dark = 0.4,
+  band_alpha_light = 0.15,
+  color_labels = "gray50",
+  color_gridlines = "gray80",
+  label_color = "orange3",
+  change_line_alpha = 0.5,
+  change_line_size = 3,
+  tick_locations = base::pretty(x = ds_linear[[y_name]]),
+  graph_floor = min(tick_locations),
+  graph_ceiling = max(tick_locations),
+  cardinal_labels = NULL,
+  origin_label = paste0("The origin represents ", graph_floor,
+    ";\nthe perimeter represents ", graph_ceiling, "."),
+  plot_margins = c(3.5, 2, 0.5, 2)
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ds_linear</code></td>
+<td>
+<p>The data.frame to containing the simple linear data.  There should be one record per observation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ds_stage_cycle_polar</code></td>
+<td>
+<p>The data.frame to containing the bands for a single period.
+There should be one record per theta per stage.  If there are three stages,
+this data.frame should have three times as many rows as <code>ds_linear</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x_name</code></td>
+<td>
+<p>The variable name containing the date.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y_name</code></td>
+<td>
+<p>The variable name containing the dependent/criterion variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stage_id_name</code></td>
+<td>
+<p>The variable name indicating which stage the record belongs to.
+For example, before the first interruption, the <code>stage_id</code> is "1", and is "2" afterwards.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>periodic_lower_name</code></td>
+<td>
+<p>The variable name showing the lower bound of a stage's periodic estimate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>periodic_upper_name</code></td>
+<td>
+<p>The variable name showing the upper bound of a stage's periodic estimate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>palette_dark</code></td>
+<td>
+<p>A vector of colors used for the dark/heavy graphical elements.
+The vector should have one color for each <code>stage_id</code> value.
+If no vector is specified, a default will be chosen, based on the number of stages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>palette_light</code></td>
+<td>
+<p>A vector of colors used for the light graphical elements.
+The vector should have one color for each <code>stage_id</code> value.
+If no vector is specified, a default will be chosen, based on the number of stages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>change_points</code></td>
+<td>
+<p>A vector of values indicate the interruptions between stages.
+It typically works best as a Date or a POSIXct class.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>change_point_labels</code></td>
+<td>
+<p>The text plotted above each interruption.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>draw_observed_line</code></td>
+<td>
+<p>A boolean value indicating
+if the longitudinal observed line should be plotted (whose values are take from <code>ds_linear</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>draw_periodic_band</code></td>
+<td>
+<p>A boolean value indicating
+if the bands should be plotted (whose values are take from the <code>periodic_lower_name</code> and <code>periodic_upper_name</code> fields).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>draw_stage_labels</code></td>
+<td>
+<p>A boolean value indicating
+if the stage labels should be plotted (whose values are take from <code>ds_linear</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>draw_radius_labels</code></td>
+<td>
+<p>A boolean value indicating
+if the gridline/radius labels should be plotted (whose values are take from <code>tick_locations</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>jagged_point_size</code></td>
+<td>
+<p>The size of the observed data points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>jagged_line_size</code></td>
+<td>
+<p>The size of the line connecting the observed data points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>band_alpha_dark</code></td>
+<td>
+<p>The amount of transparency of the band appropriate for a stage's <em>x</em> values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>band_alpha_light</code></td>
+<td>
+<p>The amount of transparency of the band comparison stages for a given <em>x</em> value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color_labels</code></td>
+<td>
+<p>The color for <code>cardinal_labels</code> and <code>origin_label</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color_gridlines</code></td>
+<td>
+<p>The color for the gridlines.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>label_color</code></td>
+<td>
+<p>The color of the text labels imposed on the line.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>change_line_alpha</code></td>
+<td>
+<p>The amount of transparency marking each interruption.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>change_line_size</code></td>
+<td>
+<p>The width of a line marking an interruption.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tick_locations</code></td>
+<td>
+<p>The desired locations for ticks showing the value of the criterion/dependent variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>graph_floor</code></td>
+<td>
+<p>The value of the criterion/dependent variable at the center of the polar plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>graph_ceiling</code></td>
+<td>
+<p>The value of the criterion/dependent variable at the outside of the polar plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cardinal_labels</code></td>
+<td>
+<p>The four labels placed  where "North", "East", "South", and "West" typically are.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>origin_label</code></td>
+<td>
+<p>Explains what the criterion variable's value is at the origin.
+Use <code>NULL</code> if no explanation is desired.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_margins</code></td>
+<td>
+<p>A vector of four <code>numeric</code> values, specifying the number of lines in the
+bottom, left, top and right margins.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a grid graphical object (<em>i.e.</em>, a <code>grid::grob()</code>.)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">requireNamespace("grid")
+library(Wats)
+ds_linear &lt;-
+  Wats::county_month_birth_rate_2005_version |&gt;
+  dplyr::filter(county_name == "oklahoma") |&gt;
+  augment_year_data_with_month_resolution(date_name = "date")
+
+h_spread &lt;- function(scores) { quantile(x = scores, probs = c(.25, .75)) }
+portfolio &lt;- annotate_data(
+  ds_linear       = ds_linear,
+  dv_name         = "birth_rate",
+  center_function = median,
+  spread_function = h_spread
+)
+rm(ds_linear)
+
+polarized &lt;- polarize_cartesian(
+  portfolio$ds_linear,
+  portfolio$ds_stage_cycle,
+  y_name        = "birth_rate",
+  stage_id_name = "stage_id"
+)
+
+grid::grid.newpage()
+polar_periodic(
+  ds_linear             = polarized$ds_observed_polar,
+  ds_stage_cycle_polar  = polarized$ds_stage_cycle_polar,
+  y_name                = "radius",
+  stage_id_name         = "stage_id",
+  cardinal_labels       = c("Jan1", "Apr1", "July1", "Oct1")
+)
+
+grid::grid.newpage()
+polar_periodic(
+  ds_linear              = polarized$ds_observed_polar,
+  ds_stage_cycle_polar   = polarized$ds_stage_cycle_polar,
+  y_name                 = "radius",
+  stage_id_name          = "stage_id",
+  draw_periodic_band     = FALSE
+)
+
+grid::grid.newpage()
+polar_periodic(
+  ds_linear            = polarized$ds_observed_polar,
+  ds_stage_cycle_polar = polarized$ds_stage_cycle_polar,
+  y_name               = "radius",
+  stage_id_name        = "stage_id",
+  draw_observed_line   = FALSE,
+  cardinal_labels      = c("Jan1", "Apr1", "July1", "Oct1")
+)
+</code></pre>
+
+
+</div>

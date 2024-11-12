@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>print.ww_area_of_applicability</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Print number of predictors and area-of-applicability threshold</h2>
+
+<h3>Description</h3>
+
+<p>Print number of predictors and area-of-applicability threshold
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ww_area_of_applicability'
+print(x, digits = getOption("digits"), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>ww_area_of_applicability</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>The number of digits to print, used when rounding the AOA threshold.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>These dots are for future extensions and must be empty.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(vip)
+trn &lt;- gen_friedman(500, seed = 101) # ?vip::gen_friedman
+pp &lt;- ppr(y ~ ., data = trn, nterms = 11)
+metric_name &lt;- ifelse(
+  packageVersion("vip") &gt; package_version("0.3.2"),
+  "rsq",
+  "rsquared"
+)
+
+importance &lt;- vip::vi_permute(
+  pp,
+  target = "y",
+  metric = metric_name,
+  pred_wrapper = predict,
+  train = trn
+)
+
+
+ww_area_of_applicability(trn[2:11], importance = importance)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,167 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wlmtest</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Statistical comparison of wavelet linear models</h2>
+
+<h3>Description</h3>
+
+<p>Compares a wavelet linear model with a nested model. Also the generator function for 
+the <code>wlmtest</code> class.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wlmtest(wlmobj, drop, sigmethod, nrand = 1000)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wlmobj</code></td>
+<td>
+<p>A <code>wlm</code> object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drop</code></td>
+<td>
+<p>Either names or indices of variables in <code>wlmobj$dat</code> that are being 
+dropped to form the simpler, nested model. The first variable in <code>wlmobj$dat</code>, 
+which is the response, is not allowed here.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigmethod</code></td>
+<td>
+<p>Method for significance testing. One of "<code>fft</code>", "<code>aaft</code>", "<code>fast</code>". See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nrand</code></td>
+<td>
+<p>The number of randomizations to do for significance</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The slot <code>signif</code> provides the core information on significance. 
+If <code>sigmethod</code> is not "<code>fast</code>", then <code>signif$coher</code> is the same as 
+<code>wlmobj$coher</code>, and <code>signif$scoher</code> is a matrix of dimensions <code>nrand</code> by 
+<code>length(signif$coher)</code> with rows equal to coherences between refitted models and the 
+response-variable transforms, for datasets where the variables specified in <code>drop</code> have
+been replaced by surrogates. Normalization as specified in <code>norm</code> is used. The type 
+of surrogate used (Fourier surrogates or amplitude adjusted Fourier surrogates, see 
+<code>surrog</code>) is determined by <code>sigmethod</code> ("<code>fft</code>" or "<code>aaft</code>"). 
+Synchrony-preserving surrogates are used. A variety of statements of significance (or lack 
+thereof) can be made by comparing <code>signif$coher</code> with <code>signif$scoher</code> (see the 
+<code>plotmag</code>, <code>plotrank</code>, and <code>bandtest</code> methods
+for the <code>wlmtest</code> class). If <code>sigmethod</code> is 
+"<code>fast</code>", a fast algorithm of Lawrence Sheppard is used which is a generalization 
+to wavelet linear models of the fast algorithm for coherence described in Sheppard et al (2017). 
+In that case
+<code>signif$coher</code> can be compared to <code>signif$scoher</code> to make significance 
+statements about the coherence in exactly the same way, but <code>signif$coher</code> will no
+longer precisely equal <code>wlmobj$coher</code>, and <code>wlmobj$coher</code> should not be compared 
+directly to <code>signif$scoher</code>. Statements about significance of the coherence 
+should be made using <code>signif$coher</code> and <code>signif$scoher</code>, whereas <code>wlmobj$coher</code>
+should be used whenever the actual value of the coherence is needed. 
+</p>
+<p>The slots <code>ranks</code> and <code>bandp</code> are empty on an initial call to <code>wlmtest</code>. 
+They are made to compute and hold 
+aggregate significance results over any timescale band of choice. These are filled in
+when needed by other methods, see <code>plotrank</code> and <code>bandtest</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>wlmtest</code> returns an object of class <code>wlmtest</code>. Slots are:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>wlmobj</code></td>
+<td>
+<p>The input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drop</code></td>
+<td>
+<p>The input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signif</code></td>
+<td>
+<p>A list with information from the significance testing. Elements are 
+<code>sigmethod</code> (the input), <code>coher</code> and <code>scoher</code>. See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ranks</code></td>
+<td>
+<p>A list with ranking information for <code>signif</code>. <code>NA</code> until 
+<code>plotrank</code> or <code>bandtest</code> is called.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bandp</code></td>
+<td>
+<p>A data frame containing results of computing significances across 
+timescale bands. Empty on an initial call to <code>wlmtest</code>, filled in by the function 
+<code>bandtest</code>. See details.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Thomas Anderson, <a href="mailto:anderstl@gmail.com">anderstl@gmail.com</a>, Jon Walter, <a href="mailto:jaw3es@virginia.edu">jaw3es@virginia.edu</a>; Lawrence 
+Sheppard, <a href="mailto:lwsheppard@ku.edu">lwsheppard@ku.edu</a>; Daniel Reuman, <a href="mailto:reuman@ku.edu">reuman@ku.edu</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 
+pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+</p>
+<p>Sheppard, L.W., et al. (2017) Rapid surrogate testing of wavelet coherences. European Physical 
+Journal, Nonlinear and Biomedical Physics, 5, 1. DOI: 10.1051/epjnbp/2017000
+</p>
+<p>Sheppard, LW et al. (2019) Synchrony is more than its top-down and climatic parts: interacting 
+Moran effects on phytoplankton in British seas. Plos Computational Biology 15, e1006744. doi: 10.1371/journal.pcbi.1006744
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wlm</code>, <code>plotrank</code>, <code>bandtest</code>, <code>coh</code>, 
+<code>wlmtest_methods</code>, <code>browseVignettes("wsyn")</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">times&lt;-1:30
+dat&lt;-list(v1=matrix(rnorm(300),10,30),v2=matrix(rnorm(300),10,30),v3=matrix(rnorm(300),10,30),
+          v4=matrix(rnorm(300),10,30),v5=matrix(rnorm(300),10,30))
+dat&lt;-lapply(FUN=function(x){cleandat(x,times,1)$cdat},X=dat)
+resp&lt;-1
+pred&lt;-2:3
+norm&lt;-"powall"
+wlmobj&lt;-wlm(dat,times,resp,pred,norm)
+drop&lt;-3
+sigmethod&lt;-"fft"
+res&lt;-wlmtest(wlmobj,drop,sigmethod,nrand=10)
+
+</code></pre>
+
+
+</div>

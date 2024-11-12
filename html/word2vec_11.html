@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>write.word2vec</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Save a word2vec model to disk</h2>
+
+<h3>Description</h3>
+
+<p>Save a word2vec model as a binary file to disk or as a text file
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">write.word2vec(x, file, type = c("bin", "txt"), encoding = "UTF-8")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an object of class <code>w2v</code> or <code>w2v_trained</code> as returned by <code>word2vec</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>the path to the file where to store the model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>either 'bin' or 'txt' to write respectively the file as binary or as a text file. Defaults to 'bin'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>encoding</code></td>
+<td>
+<p>encoding to use when writing a file with type 'txt' to disk. Defaults to 'UTF-8'</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a logical indicating if the save process succeeded
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>word2vec</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">path  &lt;- system.file(package = "word2vec", "models", "example.bin")
+model &lt;- read.word2vec(path)
+
+
+## Save the model to hard disk as a binary file
+path &lt;- "mymodel.bin"
+
+write.word2vec(model, file = path)
+
+
+
+## Save the model to hard disk as a text file (uses package udpipe)
+library(udpipe)
+path &lt;- "mymodel.txt"
+
+write.word2vec(model, file = path, type = "txt")
+
+
+</code></pre>
+
+
+</div>

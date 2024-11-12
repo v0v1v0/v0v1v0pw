@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hSkew</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Hougaard Measure of Skewness</h2>
+
+<h3>Description</h3>
+
+<p>Hougaard measure of skewness with nonlinear regression
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  hSkew(rx)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>rx</code></td>
+<td>
+<p>a result of nls function</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Hougaard measure of skewness can be used to check if the parameters of nonlinear regression behavior in linear fashion, i.e. symmetric confidence interval. Be cautious on the variable name conflict. All the variables in the nonlinear function should be able to be accessed by the function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Hougaard estimate of skewness for each parameter
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>(0, 0.1]</code></td>
+<td>
+<p>The estimate is very close-to-linear in behavior.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>(0.1, 0.25]</code></td>
+<td>
+<p>The estimate is reasonably close-to-linear in behavior.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>(0.25, 1]</code></td>
+<td>
+<p>The skweness is apparent.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>&gt;1</code></td>
+<td>
+<p>The estimate is considerably nonlinear in behavior.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Kyun-Seop Bae k@acr.kr</p>
+
+
+<h3>References</h3>
+
+<p>EL-Shehawy SA. On Calculating the Hougaard Measure of Skewness in a Nonlinear Regression Model with Two Parameters. J Math &amp; Stat. 2009;5(4):360-364.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  r1 = nls(density ~ b1*conc/(b2 + conc), DNase[DNase$Run == 1, ], start=list(b1=3, b2=5))
+  hSkew(r1)
+</code></pre>
+
+
+</div>

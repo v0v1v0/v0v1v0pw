@@ -1,0 +1,217 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>confint_fisher</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fisher's Confidence Bounds for Quantiles and Probabilities</h2>
+
+<h3>Description</h3>
+
+<p>This function computes normal-approximation confidence intervals for quantiles
+and failure probabilities.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">confint_fisher(x, ...)
+
+## S3 method for class 'wt_model'
+confint_fisher(
+  x,
+  b_lives = c(0.01, 0.1, 0.5),
+  bounds = c("two_sided", "lower", "upper"),
+  conf_level = 0.95,
+  direction = c("y", "x"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A list with classes <code>wt_model</code> and <code>wt_ml_estimation</code> returned by
+ml_estimation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b_lives</code></td>
+<td>
+<p>A numeric vector indicating the probabilities <code class="reqn">p</code> of the
+<code class="reqn">B_p</code>-lives (quantiles) to be considered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bounds</code></td>
+<td>
+<p>A character string specifying the bound(s) to be computed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conf_level</code></td>
+<td>
+<p>Confidence level of the interval.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>direction</code></td>
+<td>
+<p>A character string specifying the direction of the confidence
+interval. <code>"y"</code> for failure probabilities or <code>"x"</code> for quantiles.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The basis for the calculation of these confidence bounds are the standard errors
+obtained by the delta method.
+</p>
+<p>The bounds on the probability are determined by the <em>z-procedure</em>. See
+'References' for more information on this approach.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A tibble with class <code>wt_confint</code> containing the following columns:
+</p>
+
+<ul>
+<li> <p><code>x</code> : An ordered sequence of the lifetime characteristic regarding the
+failed units, starting at <code>min(x)</code> and ending up at <code>max(x)</code>. With
+<code>b_lives = c(0.01, 0.1, 0.5)</code> the 1%, 10% and 50% quantiles are additionally
+included in <code>x</code>, but only if the specified probabilities are in the range of
+the estimated probabilities.
+</p>
+</li>
+<li> <p><code>prob</code> : An ordered sequence of probabilities with specified <code>b_lives</code>
+included.
+</p>
+</li>
+<li> <p><code>std_err</code> : Estimated standard errors with respect to <code>direction</code>.
+</p>
+</li>
+<li> <p><code>lower_bound</code> : Provided, if <code>bounds</code> is one of <code>"two_sided"</code> or <code>"lower"</code>.
+Lower confidence limits with respect to <code>direction</code>, i.e. limits for
+quantiles or probabilities.
+</p>
+</li>
+<li> <p><code>upper_bound</code> : Provided, if <code>bounds</code> is one of <code>"two_sided"</code> or <code>"upper"</code>.
+Upper confidence limits with respect to <code>direction</code>, i.e. limits for
+quantiles or probabilities.
+</p>
+</li>
+<li> <p><code>cdf_estimation_method</code> : A character that is always <code>NA_character</code>. Only
+needed for internal use.
+</p>
+</li>
+</ul>
+<p>Further information is stored in the attributes of this tibble:
+</p>
+
+<ul>
+<li> <p><code>distribution</code> : Distribution which was specified in ml_estimation.
+</p>
+</li>
+<li> <p><code>bounds</code> : Specified bound(s).
+</p>
+</li>
+<li> <p><code>direction</code> : Specified direction.
+</p>
+</li>
+<li> <p><code>model_estimation</code> : Input list with classes <code>wt_model</code> and <code>wt_ml_estimation</code>.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Meeker, William Q; Escobar, Luis A., Statistical methods for
+reliability data, New York: Wiley series in probability and statistics, 1998
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Reliability data preparation:
+## Data for two-parametric model:
+data_2p &lt;- reliability_data(
+  shock,
+  x = distance,
+  status = status
+)
+
+## Data for three-parametric model:
+data_3p &lt;- reliability_data(
+  alloy,
+  x = cycles,
+  status = status
+)
+
+# Model estimation with ml_estimation():
+ml_2p &lt;- ml_estimation(
+  data_2p,
+  distribution = "weibull"
+)
+
+ml_3p &lt;- ml_estimation(
+  data_3p,
+  distribution = "lognormal3",
+  conf_level = 0.90
+)
+
+
+# Example 1 - Two-sided 95% confidence interval for probabilities ('y'):
+conf_fisher_1 &lt;- confint_fisher(
+  x = ml_2p,
+  bounds = "two_sided",
+  conf_level = 0.95,
+  direction = "y"
+)
+
+# Example 2 - One-sided lower/upper 90% confidence interval for quantiles ('x'):
+conf_fisher_2_1 &lt;- confint_fisher(
+  x = ml_2p,
+  bounds = "lower",
+  conf_level = 0.90,
+  direction = "x"
+)
+
+conf_fisher_2_2 &lt;- confint_fisher(
+  x = ml_2p,
+  bounds = "upper",
+  conf_level = 0.90,
+  direction = "x"
+)
+
+# Example 3 - Two-sided 90% confidence intervals for both directions using
+# a three-parametric model:
+
+conf_fisher_3_1 &lt;- confint_fisher(
+  x = ml_3p,
+  bounds = "two_sided",
+  conf_level = 0.90,
+  direction = "y"
+)
+
+conf_fisher_3_2 &lt;- confint_fisher(
+  x = ml_3p,
+  bounds = "two_sided",
+  conf_level = 0.90,
+  direction = "x"
+)
+
+</code></pre>
+
+
+</div>

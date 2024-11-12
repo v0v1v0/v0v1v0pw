@@ -1,0 +1,148 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>searching</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>searching with text the Walmart catalogue</h2>
+
+<h3>Description</h3>
+
+<p><code>searching</code> allows text search on the Walmart.com catalogue and
+returns matching items available for sale online.
+An API key will be required to run this function and can be acquired by
+creating an account on the following website
+<a href="https://developer.walmartlabs.com/member">https://developer.walmartlabs.com/member</a>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">searching(query, key = auth_cache$KEY, lsPublisherId = NULL,
+  categoryId = NULL, start = NULL, sort = NULL, order = NULL,
+  numItems = NULL, facet = FALSE, facet.filter = NULL,
+  list_output = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>Search text - whitespace separated sequence of keywords to
+search for.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>Your API access key.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lsPublisherId</code></td>
+<td>
+<p>Your LinkShare Publisher Id.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>categoryId</code></td>
+<td>
+<p>Category id of the category for search within a category.
+This should match the id field from Taxonomy API.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p>Starting point of the results within the matching set of
+items - up to 10 items will be returned starting from this item.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort</code></td>
+<td>
+<p>Sorting criteria, allowed sort types are (relevance, price,
+title, bestseller, customerRating, new). Default sort is by relevance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>order</code></td>
+<td>
+<p>Sort ordering criteria, allowed values are (asc, desc).
+This parameter is needed only for the sort types (price, title,
+customerRating).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numItems</code></td>
+<td>
+<p>Number of matching items to be returned, max value 25.
+Default is 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>facet</code></td>
+<td>
+<p>Logical. Enables facets. Default value is FALSE.
+Set this to on to enable facets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>facet.filter</code></td>
+<td>
+<p>Filter on the facet attribute values. This parameter
+can be set to &lt;facet-name&gt;:&lt;facet-value&gt; (without the angles). Here
+facet-name and facet-value can be any valid facet picked from the search
+API response when facets are on.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>list_output</code></td>
+<td>
+<p>Indicator for list output.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For more information refer to the original documentation
+<a href="https://developer.walmartlabs.com/docs/read/Search_API">https://developer.walmartlabs.com/docs/read/Search_API</a>.
+</p>
+<p>Response formats are described at the url
+<a href="https://developer.walmartlabs.com/docs/read/Item_Field_Description">https://developer.walmartlabs.com/docs/read/Item_Field_Description</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A tibble with 15 columns in base response format.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+key &lt;- "************************"
+
+searching(query = "ipod", key = key)
+
+searching(query = "ipod", key = key, categoryId = 3944)
+
+searching(query = "ipod", key = key, start = 44)
+
+searching(query = "ipod", key = key, numItems = 44)
+
+searching(query = "ipod", key = key, sort = "price", order = "asc")
+
+searching(query = "ipod", key = key, sort = "bestseller")
+
+searching(query = "ipod", key = key, list_output = TRUE)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

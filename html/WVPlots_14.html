@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>LiftCurvePlotList</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot the cumulative lift curves of a sort-order.</h2>
+
+<h3>Description</h3>
+
+<p>Plot the cumulative lift curves of a sort-order.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">LiftCurvePlotList(
+  frame,
+  xvars,
+  truthVar,
+  title,
+  ...,
+  truth_target = NULL,
+  palette = "Dark2"
+)
+
+LiftCurveListPlot(
+  frame,
+  xvars,
+  truthVar,
+  title,
+  ...,
+  truth_target = NULL,
+  palette = "Dark2"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frame</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvars</code></td>
+<td>
+<p>name of the independent (input or model score) columns in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truthVar</code></td>
+<td>
+<p>name of the dependent (output or result to be modeled) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truth_target</code></td>
+<td>
+<p>if not NULL compare to this scalar value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>palette</code></td>
+<td>
+<p>color palette for the model curves</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The use case for this visualization is to compare a predictive model
+score to an actual outcome (either binary (0/1) or continuous). In this case the
+lift curve plot measures how well the model score sorts the data compared
+to the true outcome value.
+</p>
+<p>The x-axis represents the fraction of items seen when sorted by score, and the
+y-axis represents the lift seen so far (cumulative value of model over cummulative value of random selection)..
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+set.seed(34903490)
+y = abs(rnorm(20)) + 0.1
+x = abs(y + 0.5*rnorm(20))
+frm = data.frame(model=x, value=y)
+WVPlots::LiftCurvePlotList(frm, c("model", "value"), "value",
+   title="Example Continuous Lift Curves")
+
+</code></pre>
+
+
+</div>

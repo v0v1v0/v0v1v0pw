@@ -1,0 +1,75 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wikimedia_rest_apis</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Build a REST request to one of the Wikimedia Foundation's central APIs</h2>
+
+<h3>Description</h3>
+
+<p><code>wikimedia_org_rest_request()</code> builds a request for the
+<a href="https://wikimedia.org/api/rest_v1/">wikimedia.org REST API</a>, which
+provides statistical data about Wikimedia Foundation projects
+</p>
+<p><code>xtools_rest_request()</code> builds a request to the <a href="https://www.mediawiki.org/wiki/XTools/API">XTools API</a>, which provides additional
+statistical data about Wikimedia foundation projects
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wikimedia_org_rest_request(endpoint, ..., language = "en")
+
+xtools_rest_request(endpoint, ..., language = "en")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>endpoint</code></td>
+<td>
+<p>The endpoint for the specific kind of request; for wikimedia
+apis, this comprises the path components in between the general API
+endpoint and the component specifying the project to query</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>&lt;<code>dynamic-dots</code>&gt; Components to add to the URL.
+Unnamed arguments are added to the path of the request, while named
+arguments are added as query parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>Two-letter language code for the desired Wikipedia edition.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>wikimedia_org/rest</code> or <code>xtools/rest</code> object, an S3 vector that
+subclasses httr2::request.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Build request for articleinfo about Kate Bush's page on English Wikipedia
+request &lt;- xtools_rest_request("page/articleinfo", "Kate_Bush")
+
+# Build request for most-viewed pages on German Wikipedia in July 2020
+request &lt;- wikimedia_org_rest_request(
+    "metrics/pageviews/top",
+    "all-access", "2020", "07", "all-days",
+    language = "de"
+    )
+</code></pre>
+
+
+</div>

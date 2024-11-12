@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>years</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Miscellaneous utility functions</h2>
+
+<h3>Description</h3>
+
+<p>A variety of small utilities used in other functions.
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>d</code></td>
+<td>
+<p>A numeric matrix or data frame with depth in the first column and
+observations for some variable in each of the remaining columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>Should missing data be removed?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seas</code></td>
+<td>
+<p>An integer vector of seasons to be retained.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sub</code></td>
+<td>
+<p>An integer vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+<p>A vector of class <code>"Date"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x1</code></td>
+<td>
+<p>A matrix or vector time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A vector of class <code>"Date"</code> or <code>"POSIX"</code> date-time.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>date2decyear</code>: Converts object of class <code>"Date"</code> to decimal year
+assuming time of day is noon.
+</p>
+<p><code>decyear2date</code>: Converts decimal year to object of class <code>"Date"</code>.
+</p>
+<p><code>layerMean</code>: Acts on a matrix or data frame with depth in the first
+column and observations for different variables (or different sites, or
+different times) in each of the remaining columns. The trapezoidal mean over
+the given depths is calculated for each of the variables. Replicate depths
+are averaged, and missing values or data with only one unique depth are
+handled. Data are not extrapolated to cover missing values at the top or
+bottom of the layer. The result can differ markedly from the simple mean
+even for equal spacing of depths, because the top and bottom values are
+weighted by 0.5 in a trapezoidal mean.
+</p>
+<p><code>leapYear</code>: <code>TRUE</code> if <code>x</code> is a leap year, <code>FALSE</code>
+otherwise.
+</p>
+<p><code>meanSub</code>: Mean of a subset of a vector.
+</p>
+<p><code>monthNum</code>: Converts dates to the corresponding numeric month.
+</p>
+<p><code>tsSub</code>: Drops seasons from a matrix or vector time series.
+</p>
+<p><code>years</code>: Converts dates to the corresponding numeric years.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+dates &lt;- as.Date(c("1996-01-01", "1999-12-31", "2004-02-29", "2005-03-01"))
+date2decyear(dates)
+
+decyear2date(c(1996.0014, 1999.9986, 2004.1626, 2005.1630))
+
+z &lt;- c(1, 2, 3, 5, 10)  # 5 depths
+x &lt;- matrix(rnorm(30), nrow = 5)  # 6 variables at 5 depths
+layerMean(cbind(z, x))
+
+leapYear(seq(1500, 2000, 100))
+leapYear(c(1996.9, 1997))
+
+## Aggregate monthly time series over Feb-Apr only.
+aggregate(sfbayChla, 1, meanSub, sub = 2:4)
+
+monthNum(as.Date(c("2007-03-17", "2003-06-01")))
+
+## Ignore certain seasons in a Seasonal Kendall test.
+c27 &lt;- sfbayChla[, "s27"]
+seaKen(tsSub(c27))  # Aug and Dec missing the most key data
+seaKen(tsSub(c27, seas = c(1:7, 9:11)))
+
+y &lt;- Sys.time()
+years(y)
+
+</code></pre>
+
+
+</div>

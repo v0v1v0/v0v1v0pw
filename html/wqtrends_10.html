@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>anlz_prdmatrix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get prediction matrix for a fitted GAM</h2>
+
+<h3>Description</h3>
+
+<p>Get prediction matrix for a fitted GAM
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">anlz_prdmatrix(mod, doystr = 1, doyend = 364, avemat = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mod</code></td>
+<td>
+<p>input model object as returned by <code>anlz_gam</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doystr</code></td>
+<td>
+<p>numeric indicating start Julian day for extracting averages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doyend</code></td>
+<td>
+<p>numeric indicating ending Julian day for extracting averages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>avemat</code></td>
+<td>
+<p>logical indicating if the prediction matrix is to be passed to <code>anlz_metseason</code> (default) or <code>anlz_avgseason</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Used internally by <code>anlz_metseason</code>, not to be used by itself
+</p>
+
+
+<h3>Value</h3>
+
+<p>a <code>data.frame</code> with predictors to use with the fitted GAM
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(dplyr)
+
+# data to model
+tomod &lt;- rawdat %&gt;%
+  filter(station %in% 34) %&gt;%
+  filter(param %in% 'chl') %&gt;% 
+  filter(yr &gt; 2015)
+  
+mod &lt;- anlz_gam(tomod, trans = 'log10')
+anlz_prdmatrix(mod, doystr = 90, doyend = 180)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,191 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sim.PCM</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Simulate Item Responses for Partial Credit and Rasch Models with Varying Levels</h2>
+
+<h3>Description</h3>
+
+<p>Simulate polytomous item responses based on item difficulty thresholds (<code>delta</code>) and person abilities (<code>theta</code>) for the Partial Credit Model (PCM) and the Rasch Model as a special case. The function allows items to have varying numbers of levels, making it useful for generating data in contexts such as item response theory (IRT) models for polytomous items (e.g., Likert scales).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sim.PCM(pN, iN, lN, itemLevels = NULL, delta = NULL, delta.l = NULL, theta = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>pN</code></td>
+<td>
+<p><code>integer</code>. The number of people (respondents) to simulate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iN</code></td>
+<td>
+<p><code>integer</code>. The number of items in the test or survey.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lN</code></td>
+<td>
+<p><code>integer</code>. The default number of levels (categories) for each polytomous item. Must be greater than or equal to 2. This is used if <code>itemLevels</code> is not provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>itemLevels</code></td>
+<td>
+<p><code>integer vector</code>. An optional vector specifying the number of levels for each item. If provided, the length must equal <code>iN</code>. If not provided, all items are assumed to have <code>lN</code> levels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta</code></td>
+<td>
+<p><code>matrix</code>. An optional matrix of item thresholds with dimensions <code>iN</code> by the maximum number of levels in <code>itemLevels</code>. If not provided, the function will generate thresholds internally. The first column must contain zeros or the function will automatically prepend a column of zeros. If provided as a vector, it will be converted into a single-column matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta.l</code></td>
+<td>
+<p><code>numeric vector</code>. An optional vector of common level thresholds (with length <code>lN - 1</code>). This vector represents the difficulty of each level. If not provided, the function will generate it.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p><code>numeric vector</code>. An optional vector of person abilities. If not provided, abilities will be drawn from a standard normal distribution (mean = 0, sd = 1).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function generates polytomous item responses using a logistic IRT model. It first creates or uses given person abilities (<code>theta</code>) and item thresholds (<code>delta</code>). Responses are simulated by computing the probability of a person responding in each category of an item based on their ability and the item's threshold. The function allows for items to have different numbers of response categories through the <code>itemLevels</code> argument.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>pN</code></td>
+<td>
+<p>The number of people (respondents).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iN</code></td>
+<td>
+<p>The number of items.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lN</code></td>
+<td>
+<p>The default number of levels (categories) for the polytomous items.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>itemLevels</code></td>
+<td>
+<p>A vector specifying the number of levels for each item.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>A list of <code>iN</code> matrices containing logits (differences between person ability and item threshold) for each person and item.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CM</code></td>
+<td>
+<p>A list of <code>iN</code> matrices containing cumulative probabilities for each person and item.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>U</code></td>
+<td>
+<p>A <code>pN</code> by <code>iN</code> matrix of uniform random values used to generate the responses.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>A numeric vector of person abilities.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta.l</code></td>
+<td>
+<p>(Optional) A vector of common level thresholds if it was generated internally.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta.il</code></td>
+<td>
+<p>(Optional) A matrix of item-specific deviations for thresholds if <code>delta.l</code> was generated internally.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta</code></td>
+<td>
+<p>A matrix of item thresholds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resp</code></td>
+<td>
+<p>A <code>pN</code> by <code>iN</code> matrix of simulated responses. Each entry corresponds to the level chosen by the person for the respective item.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>David Torres Irribarra
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>runif</code>, <code>rnorm</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Simulate 100 respondents, 5 items, and 3 levels (e.g., Likert scale with 3 options)
+simulated_data &lt;- sim.PCM(pN = 100, iN = 5, lN = 3)
+
+# Simulate with custom item thresholds
+custom_delta &lt;- matrix(c(-0.5, -1, -2, 1, 0.5, 1), nrow = 3)
+simulated_data_custom &lt;- sim.PCM(pN = 50, iN = 3, lN = 3, delta = custom_delta)
+
+# Simulate with custom person abilities
+custom_theta &lt;- rnorm(100, mean = 0, sd = 1.5)
+simulated_data_theta &lt;- sim.PCM(pN = 100, iN = 5, lN = 3, theta = custom_theta)
+
+# Rasch model simulation (dichotomous items)
+# 50 persons with abilities ranging from -3 to 3
+rasch_theta &lt;- seq(-3, 3, length.out = 50)
+rasch_delta &lt;- matrix(c(0,1.5,0,-1,0,0.5,0,-0.5,0,1,0,-1.5,0,2,0,-2,0,0.8,0,-0.8)
+                      , ncol = 2, byrow = TRUE)
+simulated_rasch &lt;- sim.PCM(pN = 50, iN = 10, lN = 2, delta = rasch_delta, theta = rasch_theta)
+
+# Simulation with items having different numbers of levels
+# 4 items with 5 levels, 3 items with dichotomous responses, and 3 items with 3 levels
+# Simulate with a total of 10 items and varying levels
+simulated_mixed_levels &lt;- sim.PCM(pN = 50, iN = 10, lN = 5, 
+                                  itemLevels = c(5, 5, 5, 5, 2, 2, 2, 3, 3, 3))
+</code></pre>
+
+
+</div>

@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>partialFtest</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>partial F test for Wasserstein regression</h2>
+
+<h3>Description</h3>
+
+<p>partial F test for Wasserstein regression
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">partialFtest(reduced_res, full_res, alpha = 0.05)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>reduced_res</code></td>
+<td>
+<p>a reduced model list returned by the <code>wass_regress</code> function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>full_res</code></td>
+<td>
+<p>a full model list returned by the <code>wass_regress</code> function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>type one error rate</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>two methods used to compute p value using asymptotic distribution of F statistic
+</p>
+
+<ul>
+<li>
+<p>truncated: asymptotic inference, p-value is obtained by truncating the infinite summation of eigenvalues into the first K terms, where the first K terms explain more than 99.99% of the variance.
+</p>
+</li>
+<li>
+<p>satterthwaite: asymptotic inference, p-value is computed using Satterthwaite approximation method of mixtures of chi-square.</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>a dataframe containing the following columns:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>methods used to compute p value, see details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>statistic</code></td>
+<td>
+<p>the test statistics</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>critical_value</code></td>
+<td>
+<p>critical value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p_value</code></td>
+<td>
+<p>p value of global F test</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(strokeCTdensity)
+predictor = strokeCTdensity$predictors
+dSup = strokeCTdensity$densitySupport
+densityCurves = strokeCTdensity$densityCurve
+
+full_res &lt;- wass_regress(rightside_formula = ~., Xfit_df = predictor,
+ Ymat = densityCurves, Ytype = 'density', Sup = dSup)
+reduced_res &lt;- wass_regress(~ log_b_vol + b_shapInd + midline_shift + B_TimeCT, Xfit_df = predictor,
+ Ymat = densityCurves, Ytype = 'density', Sup = dSup)
+partialFtable = partialFtest(reduced_res, full_res, alpha = 0.05)
+</code></pre>
+
+
+</div>

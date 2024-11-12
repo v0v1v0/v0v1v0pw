@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wiki_action_request</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Query Wikipedia using the <a href="https://www.mediawiki.org/wiki/API:Main_page">MediaWiki Action API</a>
+</h2>
+
+<h3>Description</h3>
+
+<p>Wikipedia exposes a To build up a query, you first call
+<code>wiki_action_request()</code> to create the basic request object, then use the
+helper functions <code>query_page_properties()</code>, <code>query_list_pages()</code> and
+<code>query_generate_pages()</code> to modify the request, before calling <code>next_batch()</code>
+or <code>retrieve_all()</code> to perform the query and download results from the
+server.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wiki_action_request(..., action = "query", language = "en")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>&lt;<code>dynamic-dots</code>&gt; Parameters for the request</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>action</code></td>
+<td>
+<p>The action to perform, typically 'query'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>The language edition of Wikipedia to request, e.g. 'en' or
+'fr'</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>wikkitidy provides an ergonomic API for the Action API's <a href="https://www.mediawiki.org/wiki/API:Query">Query modules</a>. These modules are most
+useful for researchers, because they allow you to explore the structure of
+Wikipedia and its back pages. You can obtain a list of available modules in
+your R console using <code>list_all_property_modules()</code>, <code>list_all_list_modules()</code>
+and <code>list_all_generators()</code>,
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>action_api</code> object, an S3 list that subclasses httr2::request.
+The dependencies between different aspects of the Action API are complex.
+At the time of writing, there are five major subclasses of
+<code>action_api/httr2_request</code>:
+</p>
+
+<ul>
+<li> <p><code>generator/action_api/httr2_request</code>, returned (sometimes) by query_generate_pages
+</p>
+</li>
+<li> <p><code>list/action_api/httr2_request</code>, returned by query_list_pages
+</p>
+</li>
+<li> <p><code>titles</code>, <code>pageids</code> and <code>revids/action_api/httr2_request</code>, returned by the various query_by_ functions
+</p>
+<p>You can use query_page_properties to modify any kind of query <em>except</em>
+for <code>list</code> queries: indeed, the central limitation of the <code>list</code> queries is
+that you cannot choose what properties to return for the pages the meet the
+given criterion. The concept of a <code>generator</code> is complex. If the
+<code>generator</code> is based on a
+<a href="https://www.mediawiki.org/wiki/API:Properties">property</a> module, then it
+must be combined with a query_by_ function to produce a valid query. If
+the generator is based on a <a href="https://www.mediawiki.org/wiki/API:Lists">list module</a>, then it <em>cannot</em> be
+combined with a query_by_ query.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>gracefully()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># List the first 10 pages in the category 'Australian historians'
+historians &lt;- wiki_action_request() %&gt;%
+  query_list_pages(
+    "categorymembers",
+    cmtitle = "Category:Australian_historians",
+    cmlimit = 10
+  ) %&gt;%
+  gracefully(next_batch)
+historians
+</code></pre>
+
+
+</div>

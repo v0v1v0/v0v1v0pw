@@ -1,0 +1,68 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>aiccrq</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Akaike's Information Criterion for weighted quantile regression</h2>
+
+<h3>Description</h3>
+
+<p>Get AIC values for a single weighted quantile regression as used in WRTDS models
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">aiccrq(mod_in, tau = 0.5)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mod_in</code></td>
+<td>
+<p>input crq model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>numeric indicating quantile to evaluate</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The AIC value is based on the log-likelihood estimate of the model that accounts for the specific quantile, the minimum of the objective function (rho), and the number of model parameters.  The residuals are specific to the WRTDS model such that this function cannot be applied to arbitrary crq models.
+</p>
+
+
+<h3>Value</h3>
+
+<p>AIC estimate
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># get wts for a model centered on the first observation
+ref_in &lt;- tidobj[1, ]
+ref_wts &lt;- getwts(tidobj, ref_in)
+
+# get the model
+mod &lt;- quantreg::crq(
+   survival::Surv(res, not_cens, type = "left") ~ 
+     dec_time + flo + sin(2*pi*dec_time) + cos(2*pi*dec_time), 
+   weights = ref_wts,
+   data = tidobj, 
+   method = "Portnoy"
+   )
+
+aiccrq(mod)
+</code></pre>
+
+
+</div>

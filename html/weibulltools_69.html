@@ -1,0 +1,190 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict_quantile</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Prediction of Quantiles for Parametric Lifetime Distributions</h2>
+
+<h3>Description</h3>
+
+<p>This function predicts the quantiles of a parametric lifetime distribution
+using the (log-)location-scale parameterization.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">predict_quantile(
+  p,
+  dist_params,
+  distribution = c("weibull", "lognormal", "loglogistic", "sev", "normal", "logistic",
+    "weibull3", "lognormal3", "loglogistic3", "exponential", "exponential2")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>A numeric vector of probabilities.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist_params</code></td>
+<td>
+<p>A vector of parameters. An overview of the
+distribution-specific parameters can be found in section 'Distributions'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the random variable.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For a given set of parameters and specified probabilities the quantiles
+of the chosen model are determined.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector with predicted quantiles.
+</p>
+
+
+<h3>Distributions</h3>
+
+<p>The following table summarizes the available distributions and their parameters
+</p>
+
+<ul>
+<li> <p><em>location parameter</em> <code class="reqn">\mu</code>,
+</p>
+</li>
+<li> <p><em>scale parameter</em> <code class="reqn">\sigma</code> or <code class="reqn">\theta</code> and
+</p>
+</li>
+<li> <p><em>threshold parameter</em> <code class="reqn">\gamma</code>.
+</p>
+</li>
+</ul>
+<p>The order within <code>dist_params</code> is given in the table header.</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   <strong><code>distribution</code></strong> </td>
+<td style="text-align: center;"> <strong><code>dist_params[1]</code></strong> </td>
+<td style="text-align: center;"> <strong><code>dist_params[2]</code></strong> </td>
+<td style="text-align: center;"> <strong><code>dist_params[3]</code></strong> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"sev"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"weibull"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"weibull3"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> <code class="reqn">\gamma</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"normal"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"lognormal"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"lognormal3"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> <code class="reqn">\gamma</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"logistic"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"loglogistic"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"loglogistic3"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> <code class="reqn">\gamma</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"exponential"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\theta</code> </td>
+<td style="text-align: center;"> - </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"exponential2"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\theta</code> </td>
+<td style="text-align: center;"> <code class="reqn">\gamma</code> </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Example 1 - Predicted quantiles for a two-parameter weibull distribution:
+quants_weib2 &lt;- predict_quantile(
+  p = c(0.01, 0.1, 0.5),
+  dist_params = c(5, 0.5),
+  distribution = "weibull"
+)
+
+# Example 2 - Predicted quantiles for a three-parameter weibull distribution:
+quants_weib3 &lt;- predict_quantile(
+  p = c(0.01, 0.1, 0.5),
+  dist_params = c(5, 0.5, 10),
+  distribution = "weibull3"
+)
+
+</code></pre>
+
+
+</div>

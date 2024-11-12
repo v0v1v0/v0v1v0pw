@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>readSdrf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read proteomics meta-data as sdrf file</h2>
+
+<h3>Description</h3>
+
+<p>This function allows reading proteomics meta-data from sdrf file, as they are provided on https://github.com/bigbio/proteomics-sample-metadata.
+A data.frame containing all annotation data will be returned. To stay conform with the (non-obligatory) recommendations, columnnames are shown as lower caps.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">readSdrf(
+  fi,
+  chCol = "auto",
+  urlPrefix = "github",
+  silent = FALSE,
+  callFrom = NULL,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fi</code></td>
+<td>
+<p>(character) main input; may be full path or url to the file with meta-annotation. If a short project-name is given,
+it will be searched based at the location of <code>urlPrefix</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chCol</code></td>
+<td>
+<p>(character, length=1) optional checking of column-names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>urlPrefix</code></td>
+<td>
+<p>(character, length=1) prefix to add to search when no complete path or url is given on <code>fi</code>, defaults to proteomics-metadata-standard on github</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The packages utils and wrMisc must be installed.
+Please note that reading sdrf files (if not provided as local copy) will take a few seconds, depending on the responsiveness of github.
+This function only handles the main reading of sdrf data and some diagnostic checks.
+For mining sdrf data please look at <code>replicateStructure</code> and <code>readSampleMetaData</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns the content of sdrf-file as data.frame (or <code>NULL</code> if the corresponding file was not found)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>readSampleMetaData</code>,  <code>replicateStructure</code>,
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## This may take a few sconds...
+sdrf001819 &lt;- readSdrf("PXD001819")
+str(sdrf001819)
+
+
+</code></pre>
+
+
+</div>

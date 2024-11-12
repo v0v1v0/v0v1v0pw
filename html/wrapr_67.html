@@ -1,0 +1,81 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>parLapplyLBm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Memoizing wrapper for parLapplyLB</h2>
+
+<h3>Description</h3>
+
+<p>Memoizing wrapper for parLapplyLB
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">parLapplyLBm(cl = NULL, X, fun, ..., chunk.size = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>cl</code></td>
+<td>
+<p>cluster object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>list or vector of inputs</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>function to apply</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to lapply</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chunk.size</code></td>
+<td>
+<p>passed to <code>parallel::parLapplyLB</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>list of results.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>parLapplyLB</code>, <code>lapplym</code>, <code>VectorizeM</code>, <code>vapplym</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if(requireNamespace("parallel", quietly = TRUE)) {
+  cl &lt;- parallel::makeCluster(2)
+  fs &lt;- function(x) { x &lt;- x[[1]]; Sys.sleep(1); sin(x) }
+  # without memoization should take 1000 seconds
+  lst &lt;- parLapplyLBm(cl, c(rep(0, 1000), rep(1, 1000)), fs)
+  parallel::stopCluster(cl)
+}
+
+</code></pre>
+
+
+</div>

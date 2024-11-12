@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>git_app</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Web app that acts as a git http server</h2>
+
+<h3>Description</h3>
+
+<p>It is useful for tests that need an HTTP git server.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">git_app(
+  git_root,
+  git_cmd = "git",
+  git_timeout = as.difftime(1, units = "mins"),
+  filter = TRUE,
+  cleanup = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>git_root</code></td>
+<td>
+<p>Path to the root of the directory tree to be served.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>git_cmd</code></td>
+<td>
+<p>Command to call, by default it is <code>"git"</code>. It may also
+be a full path to git.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>git_timeout</code></td>
+<td>
+<p>A <code>difftime</code> object, time limit for the git
+command.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>Whether to support the <code>filter</code> capability in the server.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cleanup</code></td>
+<td>
+<p>Whether to clean up <code>git_root</code> when the app is
+garbage collected.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+dir.create(tmp &lt;- tempfile())
+setwd(tmp)
+system("git clone --bare https://github.com/cran/crayon")
+system("git clone --bare https://github.com/cran/glue")
+app &lt;- git_app(tmp)
+git &lt;- new_app_process(app)
+system(paste("git ls-remote", git$url("/crayon")))
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,191 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>GainCurvePlotWithNotation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot the cumulative gain curve of a sort-order with extra notation</h2>
+
+<h3>Description</h3>
+
+<p>Plot the cumulative gain curve of a sort-order with extra notation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">GainCurvePlotWithNotation(
+  frame,
+  xvar,
+  truthVar,
+  title,
+  gainx,
+  labelfun,
+  ...,
+  sort_by_model = TRUE,
+  estimate_sig = FALSE,
+  large_count = 1000,
+  model_color = "darkblue",
+  wizard_color = "darkgreen",
+  shadow_color = "darkgray",
+  crosshair_color = "red",
+  text_color = "black"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frame</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar</code></td>
+<td>
+<p>name of the independent (input or model score) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truthVar</code></td>
+<td>
+<p>name of the dependent (output or result to be modeled) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gainx</code></td>
+<td>
+<p>the point on the x axis corresponding to the desired label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labelfun</code></td>
+<td>
+<p>a function to return a label for the marked point</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort_by_model</code></td>
+<td>
+<p>logical, if TRUE use the model to calculate gainy, else use wizard.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimate_sig</code></td>
+<td>
+<p>logical, if TRUE compute significance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>large_count</code></td>
+<td>
+<p>numeric, upper bound target for number of plotting points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model_color</code></td>
+<td>
+<p>color for the model curve</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wizard_color</code></td>
+<td>
+<p>color for the "wizard" (best possible) curve</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shadow_color</code></td>
+<td>
+<p>color for the shaded area under the curve</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crosshair_color</code></td>
+<td>
+<p>color for the annotation location lines</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>text_color</code></td>
+<td>
+<p>color for the annotation text</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is the standard gain curve plot (see <code>GainCurvePlot</code>) with
+a label attached to a particular value of x. The label is created by
+a function <code>labelfun</code>, which takes as inputs the x and y coordinates
+of a label and returns a string (the label).
+</p>
+<p>By default, uses the model to calculate the y value of the calculated point;
+to use the wizard curve, set <code>sort_by_model = FALSE</code>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>GainCurvePlot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+set.seed(34903490)
+y = abs(rnorm(20)) + 0.1
+x = abs(y + 0.5*rnorm(20))
+frm = data.frame(model=x, value=y)
+gainx = 0.25  # get the predicted top 25% most valuable points as sorted by the model
+# make a function to calculate the label for the annotated point
+labelfun = function(gx, gy) {
+  pctx = gx*100
+  pcty = gy*100
+
+  paste("The predicted top ", pctx, "% most valuable points by the model\n",
+        "are ", pcty, "% of total actual value", sep='')
+}
+WVPlots::GainCurvePlotWithNotation(frm, "model", "value",
+   title="Example Gain Curve with annotation",
+   gainx=gainx,labelfun=labelfun)
+
+# now get the top 25% actual most valuable points
+
+labelfun = function(gx, gy) {
+  pctx = gx*100
+  pcty = gy*100
+
+  paste("The actual top ", pctx, "% most valuable points\n",
+        "are ", pcty, "% of total actual value", sep='')
+}
+
+WVPlots::GainCurvePlotWithNotation(frm, "model", "value",
+   title="Example Gain Curve with annotation",
+   gainx=gainx,labelfun=labelfun, sort_by_model=FALSE)
+
+</code></pre>
+
+
+</div>

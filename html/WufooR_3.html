@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fields_info</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Return details about form's fields</h2>
+
+<h3>Description</h3>
+
+<p>The Fields API describes a hierarchy of your data. At the heart of this API is the
+listing of FieldId values. Each FieldId corresponds to a value in the Entries API.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fields_info(
+  wufoo_name = auth_name(NULL),
+  formIdentifier = NULL,
+  showRequestURL = FALSE,
+  debugConnection = 0L,
+  domain = "wufoo.com"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wufoo_name</code></td>
+<td>
+<p>- User's Name. Default: <code>auth_name</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formIdentifier</code></td>
+<td>
+<p>- this will give you information about just one form. A request without
+the <code>formIdentifier</code> will return all forms.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>showRequestURL</code></td>
+<td>
+<p>- use only for DEBUG purposes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debugConnection</code></td>
+<td>
+<p>- samilar as above. Either "0L" (false; default) or "1L"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>domain</code></td>
+<td>
+<p>- for whatever reason domain's ccTLD may change. With this parameter you can change
+default <code>wufoo.com</code> to another one such as <code>wufoo.eu</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Title - The title is the friendly name you gave the field when creating your form. For
+example, if you were building a table with the API, the Title would be a column header.
+</p>
+<p>Type - The Type represents a Wufoo field type. A listing of the these types can be found
+in the Field Type section of this documentation.
+</p>
+<p>ID - This is the unique reference ID for your field. There will be one corresponding ID
+for each Entry in return value of the the Entries API.
+</p>
+<p>IsRequired - This value can be one or zero, representing whether or not the field has
+been marked required in the Form Builder.
+</p>
+<p>OtherField - This value is true or false and is only set if the field has choices. Only
+Multiple-Choice fields have the option of an Other field. When a Multiple-Choice field is marked
+as HasOtherField, the last choice is the Other field.
+</p>
+
+
+<h3>Note</h3>
+
+<p>For developers: This function returns 2 data frames. One containing only default fields, another one containing
+subfields as described <a href="http://help.wufoo.com/articles/en_US/SurveyMonkeyArticleType/The-Fields-API#Fancypants">http://help.wufoo.com/articles/en_US/SurveyMonkeyArticleType/The-Fields-API#Fancypants</a>.
+"These include name, shortname, checkbox, address, and likert."
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+fields_info(formIdentifier = "z5kqx7h1gtvg4g", showRequestURL = TRUE)
+fields_info(formIdentifier = "z5kqx7h1gtvg4g", debugConnection = 1L)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

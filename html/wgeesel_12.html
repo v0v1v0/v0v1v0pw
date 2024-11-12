@@ -1,0 +1,154 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>drgee</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Fit Doubly Robust Weighted Generalized Estimating Equations
+</h2>
+
+<h3>Description</h3>
+
+<p>Analyzes longitudinal data with doubly robust augmented GEE approach.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">drgee(model,outcomemodel, data, id, family, corstr, scale = NULL, 
+       mismodel = NULL, nameTRT, maxit=200, tol=0.001)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+
+<p>an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outcomemodel</code></td>
+<td>
+
+<p>an object of class "formula" (or one that can be coerced to that class): a symbolic description of the ouctome model
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a data frame containing the variables in the model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+
+<p>a vector which identifies the clusters. The length of "id" should be the same as
+the number of observations. Data are assumed to be sorted so that observations
+on a cluster are contiguous rows for all entities in the formula. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+
+<p>a description of the error distribution and link function to be used in the model. This is a character string naming a family function. The following are permitted: "gaussian", "binomial", "poisson".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corstr</code></td>
+<td>
+
+<p>a character string specifies the working correlation structure. The following are permitted:
+"independence", "exchangeable", "ar1","unstructured".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nameTRT</code></td>
+<td>
+
+<p>name of the variable containing information for the treatment
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+
+<p>a numeric variable giving the value to which the scale parameter should be fixed; if NA, the scale parameter is not fixed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mismodel</code></td>
+<td>
+
+<p>an object of class "formula" (or one that can be coerced to that class): a symbolic description of the missingness model to be fitted. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxit</code></td>
+<td>
+<p>maximum iteration number for Newton-Raphson algorithm.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+
+<p>the tolorance for the Newton-Raphson algorithm to converge.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Analyzes longitudinal data with doubly robust augmented GEE approach. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of type 'CRTgeeDR'
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Zheng Li, Cong Xu and Ming Wang
+</p>
+
+
+<h3>References</h3>
+
+<p>Augmented GEE for improving efficiency and validity of estimation in cluster randomized trials by leveraging cluster-and individual-level covariates -2012-Stephens A., Tchetgen Tchetgen E. and De Gruttola V. : <em>Stat Med</em> 31(10)-915-930.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>https://cran.r-project.org/web/packages/CRTgeeDR/index.html
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(imps)
+fit &lt;- drgee(IMPS79 ~ Drug+Sex+Time, IMPS79 ~ Drug+Sex+Time,
+      data=imps, id=imps$ID, family="gaussian",nameTRT="Drug",
+       corstr="exchangeable", scale=NULL, mismodel= R ~ Drug+Time)
+</code></pre>
+
+
+</div>

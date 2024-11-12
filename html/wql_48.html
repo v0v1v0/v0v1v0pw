@@ -1,0 +1,143 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wqData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Construct an object of class "WqData"</h2>
+
+<h3>Description</h3>
+
+<p><code>wqData</code> is a constructor for the <code>"WqData"</code> class that is often
+more convenient to use than <code>new</code>. It converts a data.frame containing
+water quality data in “long” or “wide” format to a
+<code>"WqData"</code> object. In “long” format, observations are all in one
+column and a second column is used to designate the variable being observed.
+In “wide” format, observations for each variable are in a separate
+column.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wqData(
+  data,
+  locus,
+  wqdata,
+  site.order,
+  time.format = "%Y-%m-%d",
+  type = c("long", "wide")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Data frame containing water quality data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locus</code></td>
+<td>
+<p>Character or numeric vector designating column names or
+numbers, respectively, in <code>data</code> that correspond to <code>time</code>,
+<code>site</code> and <code>depth</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wqdata</code></td>
+<td>
+<p>In the case of “long” data, character or numeric vector
+designating column names or numbers, respectively, in <code>data</code> that
+correspond to <code>variable</code> and <code>value</code>. In the case of “wide”
+data, character or numeric vector designating column names or numbers,
+respectively, in <code>data</code> that denote water quality variable data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>site.order</code></td>
+<td>
+<p>If <code>TRUE</code>, <code>site</code> factor levels will be ordered
+in alphanumeric order.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time.format</code></td>
+<td>
+<p>Conversion specification for <code>time</code> defined by
+<abbr><span class="acronym">ISO C/POSIX</span></abbr> standard (see <code>strptime</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Either “long” or “wide” <code>data</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If the data are already in long format, the function has little to do but
+rename the data fields. If in wide format, the <span class="pkg">reshape2</span> package is
+called to <code>melt</code> the data. The function also removes <code>NA</code>
+observations, converts <code>site</code> to (possibly ordered) factors with valid
+variable names, and converts <code>time</code> to class <code>"Date"</code> or
+<code>"POSIXct"</code> and ISO 8601 format, depending on <code>time.format</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>"WqData"</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alan Jassby, James Cloern
+</p>
+
+
+<h3>References</h3>
+
+<p>International Organization for Standardization (2004) ISO 8601.
+Data elements and interchange formats - Information interchange -
+Representation of dates and times.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>as.Date</code>, <code>strptime</code>,
+<code>WqData-class</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run:  
+
+# Create new WqData object from sfbay data. First combine date and time
+# into a single string after making sure that all times have 4 digits.
+sfb &lt;- within(sfbay, time &lt;- substring(10000 + time, 2, 5))
+sfb &lt;- within(sfb, time &lt;- paste(date, time, sep = ' '))
+sfb &lt;- wqData(sfb, 2:4, 5:12, site.order = TRUE, type = "wide",
+    time.format = "%m/%d/%Y %H%M")
+
+head(sfb)
+tail(sfb)
+
+# If time of day were not required, then the following would suffice:
+sfb &lt;- wqData(sfbay, c(1,3,4), 5:12, site.order = TRUE, type = "wide", 
+  time.format = "%m/%d/%Y")
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

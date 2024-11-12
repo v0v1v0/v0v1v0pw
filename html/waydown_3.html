@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>deltaV</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Approximate potential difference between two points</h2>
+
+<h3>Description</h3>
+
+<p>Approximate potential difference between two points
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">deltaV(f, x, x0, normType = "f")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>f</code></td>
+<td>
+<p>Flow equations (right hand side of differential equation)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Position where we want to know the approximate potential</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x0</code></td>
+<td>
+<p>Reference position (center of the Taylor expansion)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normType</code></td>
+<td>
+<p>(default: 'f') Matrix norm used to compute the error</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing the approximate potential difference between x and x0 and the estimated error
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Pablo Rodríguez-Sánchez (<a href="https://pabrod.github.io">https://pabrod.github.io</a>)
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://arxiv.org/abs/1903.05615">https://arxiv.org/abs/1903.05615</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>approxPot1D, approxPot2D, norm</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># One dimensional flow
+f &lt;- function(x) { cos(x) }
+
+# Evaluation points
+x0 &lt;- 1
+x1 &lt;- 1.02
+
+dV &lt;- deltaV(f, x1, x0)
+
+ # Two dimensional flow
+f &lt;- function(x) { c(
+ -2*x[1]*x[2],
+ -x[1]^2 - 1
+)}
+
+# Evaluation points
+x0 &lt;- matrix(c(1,2), ncol = 1)
+x1 &lt;- matrix(c(0.98,2.01), ncol = 1)
+
+dV &lt;- deltaV(f, x1, x0)
+</code></pre>
+
+
+</div>

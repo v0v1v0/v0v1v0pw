@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wildcard</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Function <code>wildcard</code>
+</h2>
+
+<h3>Description</h3>
+
+<p>Main function of the package. Evaluate a wildcard
+to fill in or expand a data frame.
+Copied and modified from <code>remakeGenerator::evaluate()</code> under GPL-3:
+<a href="https://github.com/wlandau/remakeGenerator">https://github.com/wlandau/remakeGenerator</a>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wildcard(df, rules = NULL, wildcard = NULL, values = NULL,
+  expand = TRUE, include = NULL, exclude = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rules</code></td>
+<td>
+<p>list with names a wildcards and elements as vectors of values
+to substitute in place of the wildcards.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wildcard</code></td>
+<td>
+<p>character scalar, a wildcard found in a data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>vector of values to substitute in place of a wildcard</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expand</code></td>
+<td>
+<p>logical, whether to expand the rows of the data frame to
+substitute each value for each wildcard in turn.
+If <code>FALSE</code>, no new rows will be added to <code>df</code>
+when the values are substituted in place of wildcards.
+Can be a vector of length <code>length(rules)</code>
+if using the <code>rules</code> argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include</code></td>
+<td>
+<p>character vector of columns of <code>df</code>
+to be included in the wildcard evaluation.
+The values will replace the wildcards in these columns
+but not in any of the other colums.
+All columns are included by default.
+You may use <code>include</code> or <code>exclude</code> (or neither),
+but not both.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclude</code></td>
+<td>
+<p>character vector of columns of <code>df</code>
+to be EXCLUDED from the wildcard evaluation.
+The values will NOT replace the wildcards in any of these
+columns, but wildcard evaluation will occur in all
+the other columns.
+By default, no columns are excluded (all columns
+are used for wildcard evaluation).
+You may use <code>include</code> or <code>exclude</code> (or neither),
+but not both.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">myths &lt;- data.frame(
+  myth = c('Bigfoot', 'UFO', 'Loch Ness Monster'),
+  claim = c('various', 'day', 'day'),
+ note = c('various', 'pictures', 'reported day'))
+wildcard(myths, wildcard = 'day', values = c('today', 'yesterday'))
+wildcard(myths, wildcard = 'day', values = c('today', 'yesterday'),
+  expand = FALSE)
+locations &lt;- data.frame(
+  myth = c('Bigfoot', 'UFO', 'Loch Ness Monster'),
+  origin = 'where')
+rules &lt;- list(
+  where = c('North America', 'various', 'Scotland'),
+  UFO = c('spaceship', 'saucer'))
+wildcard(locations, rules = rules, expand = c(FALSE, TRUE))
+numbers &lt;- data.frame(x = 4, y = 3, z = 4444, w = 4.434)
+wildcard(numbers, wildcard = 4, values = 7)
+# Inclusion and exclusion
+wildcard(myths, wildcard = "day", values = c("today", "yesterday"),
+  include = "claim")
+wildcard(myths, wildcard = "day", values = c("today", "yesterday"),
+  exclude = c("claim", "note"))
+# Wildcards should not also be replacement values.
+# Otherwise, the output will be strange
+# and will depend on the order of the wildcards.
+## Not run: 
+df &lt;- data.frame(x = "a", y = "b")
+rules &lt;- list(a = letters[1:3], b = LETTERS[1:3])
+wildcard(df, rules = rules)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

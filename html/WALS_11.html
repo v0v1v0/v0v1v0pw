@@ -1,0 +1,66 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>controlGLM</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Control function for initial GLM fit</h2>
+
+<h3>Description</h3>
+
+<p>Defines controllable parameters of initial GLM fit in <code>walsGLM</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">controlGLM(restricted = FALSE, controlGLMfit = list())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>restricted</code></td>
+<td>
+<p>If <code>TRUE</code>, then initial fit in <code>glm.fit</code>
+only considers the focus regressors. By default <code>FALSE</code>, then the unrestricted
+model is estimated in <code>glm.fit</code> (i.e. all regressors).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>controlGLMfit</code></td>
+<td>
+<p>List. Arguments to be passed to <code>control</code> argument
+of <code>glm.fit</code>. See also <code>glm.control</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a list containing the parameters specified in the arguments
+to be used in <code>walsGLM</code> (and <code>walsGLMfitIterate</code>).
+</p>
+
+
+<h3>See Also</h3>
+
+<p>walsGLM, walsGLMfitIterate, glm.fit, glm.control.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("HMDA", package = "AER")
+fitBinomial &lt;- walsGLM(deny ~ pirat + hirat + lvrat + chist + mhist + phist |
+                       selfemp + afam, data = HMDA,
+                       family = binomialWALS(),
+                       prior = weibull(),
+                       controlInitGLM = controlGLM(restricted = TRUE,
+                                                   controlGLMfit = list(trace = TRUE)))
+
+</code></pre>
+
+
+</div>

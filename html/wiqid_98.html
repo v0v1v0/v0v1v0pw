@@ -1,0 +1,152 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Species richness estimators</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Species richness estimators
+</h2>
+
+<h3>Description</h3>
+
+<p>Functions to estimate species richness, based on samples from one or more surveys (quadrats, sites, occasions, ...) as included in EstimateS. See Details for individual estimators.
+</p>
+<p>EstimateS no longer runs under Windows 10 or later and is effectively defunct. See <a href="https://www.robertkcolwell.org/pages/estimates">https://www.robertkcolwell.org/pages/estimates</a>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">richACE(cntVec, threshold = 10)
+richICE(incMat, threshold = 10)
+richChao1(cntVec, correct = FALSE, ci = 0.95)
+richChao2(incMat, correct = FALSE, ci = 0.95)
+richJack1(incMat)
+richJack2(incMat)
+richJackA1(cntVec)
+richJackA2(cntVec)
+richBoot(incMat)
+richMM(incMat)
+richRenLau(cntVec)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>cntVec</code></td>
+<td>
+
+<p>a vector of species counts (abundances) with one element for each species. A matrix of counts, species x sites, may also be provided and will be converted to a vector with <code>rowSums</code>. Zeros are allowed, but not missing values; non-integers are rounded.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>incMat</code></td>
+<td>
+
+<p>a 1/0 matrix of species incidence (presence), species x sites. A matrix of counts may also be provided and will be converted to 1/0 after rounding.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+
+<p>the definition of rare or infrequent species: species with <code>threshold</code> or smaller counts (ACE) or incidences (ICE) are rare or infrequent.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>correct</code></td>
+<td>
+
+<p>if TRUE, bias-corrected estimates are calculated.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci</code></td>
+<td>
+
+<p>the required confidence interval.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>richACE</code> and <code>richICE</code> calculate Anne Chao's Abundance-based and Incidence-based Coverage Estimators of species richness respectively (Chao et al, 2000).
+</p>
+<p><code>richChao1</code> and <code>richChao2</code> calculate Anne Chao's Chao 1 (abundance-based) and Chao 2 (incidence-based) estimators (Chao 1984, 1987).
+</p>
+<p><code>richJack1</code> and <code>richJack2</code> calculate first and second order incidence-based jackknife estimators of species richness (Smith &amp; van Belle, 1984).
+</p>
+<p><code>richBoot</code> calculates a bootstrap estimator of species richness (Smith &amp; van Belle, 1984).
+</p>
+<p><code>richMM</code> calculates the asymptotic species richness from a Michaelis-Menten curve fitted to the species rarefaction curve (Colwell et al. 2004).
+</p>
+<p>The following were not included in EstimateS v.8.2:
+</p>
+<p><code>richJackA1</code> and <code>richJackA2</code> calculate first and second order abundance-based jackknife estimators of species richness (Gotelli &amp; Colwell 2011).
+</p>
+<p><code>richRenLau</code> calculates Rennolls &amp; Laumonier's (2006) 'shadow species' abundance-based estimator of richness.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>richChao1</code> and <code>richChao2</code> return a vector with a point estimate, upper and lower confidence limits, and standard deviation.
+</p>
+<p>The other functions return a scalar.
+</p>
+
+
+<h3>Benchmarks</h3>
+
+<p>Output for estimators included in EstimateS 8.2 has been checked against EstimateS for the <code>seedbank</code> and <code>killarneyBirds</code> data sets. EstimateS results are often 0.01 lower, as EstimateS appears to truncate rather than rounding.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith
+</p>
+
+
+<h3>References</h3>
+
+<p>Chao, A. 1984. Non-parametric estimation of the number of classes in a population. <em>Scandinavian Journal of Statistics</em> 11, 265-270.
+</p>
+<p>Chao, A. 1987. Estimating the population size for capture-recapture data with unequal capture probabilities. <em>Biometrics</em> 43:783-791.
+</p>
+<p>Chao, A., W.-H. Hwang, Y.-C. Chen, and C.-Y. Kuo. 2000. Estimating the number of shared species in two communities. <em>Statistica Sinica</em> 10:227-246.
+</p>
+<p>Colwell, R. K., C. X. Mao, &amp; J. Chang. 2004. Interpolating, extrapolating, and comparing incidence-based species accumulation curves. <em>Ecology</em> 85, 2717-2727.
+</p>
+<p>Gotelli, N J; R K Colwell. 2011. Estimating species richness. 39-54 in Magurran, A E, and B J McGill, editors. <em>Biological diversity: frontiers in measurement and assessment</em>. Oxford University Press, Oxford, New York NY.
+</p>
+<p>Rennolls, K; Y Laumonier. 2006. A new local estimator of regional species diversity, in terms of 'shadow species', with a case study from Sumatra. <em>J Tropical Ecology</em> 22:321-329.
+</p>
+<p>Smith, E.P. &amp; van Belle, G. 1984. Nonparametric estimation of species richness. <em>Biometrics</em> 40, 119-129.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>richRarefy</code> for rarefaction curves, and <code>richCurve</code> for a function to give richness estimates for sub-sets of samples.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(seedbank)
+
+richACE(seedbank)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,216 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>linkMap.default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot a genetic linkage map with QTL for multiple traits</h2>
+
+<h3>Description</h3>
+
+<p>Neatly plots the genetic linkage map with marker locations,
+marker names and highlights QTL with their associated flanking markers
+for multiple traits obtained from a list of <code>wgaim</code> models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+linkMap(object, intervalObj, chr, chr.dist, marker.names
+    = "markers", flanking = TRUE, list.col = list(q.col = rainbow(length(object)),
+    m.col = "red", t.col = rainbow(length(object))), list.cex =
+    list(m.cex = 0.6, t.cex = 0.6), trait.labels = NULL, tick = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>a list object with elements inheriting the class <code>"wgaim"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intervalObj</code></td>
+<td>
+<p>object of class <code>"cross"</code> or <code>"interval"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chr</code></td>
+<td>
+<p>character string naming the subset of chromosomes to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chr.dist</code></td>
+<td>
+<p>a list containing named elements <code>"start"</code> and
+<code>"end"</code> containing the start and end distances in cM the
+genetic map should be subsetted by. Each of these may also be
+a vector of distances equal to the length of the number of linkage
+groups to be plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>marker.names</code></td>
+<td>
+<p>a character string naming the type of marker
+information to plot. If <code>"dist"</code> then distances are
+plotted alongside each chromosome on the left. If <code>"markers"</code>
+then marker names are plotted instead. Defaults to
+<code>"markers"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flanking</code></td>
+<td>
+<p>logical value. If <code>TRUE</code> then only plot marker
+names or distances for flanking markers of the QTL. Defaults to
+<code>TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>list.col</code></td>
+<td>
+<p>named list of colors used to highlight the QTL regions and
+their flanking markers. <code>q.col</code> is the colors of the QTL
+regions (defaults to <code>rainbow(n)</code> where <code>n</code> is the length
+of <code>object</code>). <code>m.col</code> is the color the flanking markers. <code>t.col</code>
+is the color of the trait names used in each model (defaults to the
+same color as the QTL regions). See <code>par</code> for color options</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>list.cex</code></td>
+<td>
+<p>a named list object containing the character expansion
+factors for the marker names <code>m.cex</code> and the trait labels <code>t.cex</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trait.labels</code></td>
+<td>
+<p>character string naming the trait used in the
+model object, defaults to the response names extracted from the
+fixed compoenent of the base model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tick</code></td>
+<td>
+<p>logical value. If <code>TRUE</code> then an axis with tick marks are
+generated for the chromosome names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to the <code>plot()</code> function to set up the plot
+region. Arguments may also be passed to the <code>text()</code> function for the
+manipulation of the marker names</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This plotting procedure is a wrapper for <code>linkMap.wgaim</code> and displays
+QTL for multiple traits obtained from a list of models given by <code>object</code>.
+Alternative labels for the traits can be given, in model order, using
+<code>trait.labels</code>.
+</p>
+<p>Color specific highligting of the QTL is also available using
+<code>clist</code>. This differs slightly from <code>linkMap.wgaim</code>. Here
+the <code>q.col</code> and <code>t.col</code> should be given a set of colors equal to
+the length of <code>object</code>. Let <code>n</code> be the length of <code>object</code>.
+Then if <code>q.col</code> is <code>NULL</code> or length of <code>q.col</code> is not equal
+to <code>n</code> then it defaults to <code>rainbow(n)</code>. If <cite>t.col</cite> is
+<code>NULL</code> or length of <code>t.col</code> is not equal to <code>n</code> or 1 then
+it defaults to the colors of <code>q.col</code>. Examples of different color
+combinations are given below in the examples.
+</p>
+<p>The <code>list.cex</code> argument can be used to manipulate the character expansion of
+the marker names using <code>m.cex</code> or the character expansion of the
+<code>trait.labels</code> using <code>t.cex</code>. If a set of <code>"marker"</code> analyses has been
+performed then <code>pch</code> is used to plot a symbol at the
+location of the QTL. This character can be changed using the usual
+arguments such as <code>pch</code> or <code>cex</code> that are passed through the
+... argument.
+</p>
+
+
+<h3>Value</h3>
+
+<p>For a set of <code>"interval"</code> analyses, the genetic linkage map is
+plotted with shaded QTL regions and highlighted flanking markers. For
+a set of <code>"marker"</code> analyses, symbols are
+placed at the QTL locations and the markers are highlighted.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Julian Taylor</p>
+
+
+<h3>References</h3>
+
+<p>Verbyla, A. P &amp; Taylor, J. D, Verbyla, K. L (2012). RWGAIM: An efficient high
+dimensional random whole genome average (QTL) interval mapping approach.
+<em>Genetics Research</em>. <b>94</b>, 291-306.
+</p>
+<p>Julian Taylor, Arunas Vebyla (2011). R Package wgaim: QTL Analysis in
+Bi-Parental Populations Using Linear Mixed Models. <em>Journal of
+Statistical Software</em>, <b>40</b>(7), 1-18. URL <a href="https://www.jstatsoft.org/v40/i07/">https://www.jstatsoft.org/v40/i07/</a>.
+</p>
+<p>Verbyla, A. P., Cullis, B. R., Thompson, R (2007) The analysis of QTL
+by simultaneous use of the full linkage map. <em>Theoretical and
+Applied Genetics</em>, <b>116</b>, 95-111.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>linkMap.cross</code>, <code>linkMap.wgaim</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+## fit wgaim models
+
+rktgw.qtl &lt;- wgaim(rktgw.asf, intervalObj = genoRxK, merge.by = "Genotype",
+                 trace = "trace.txt", na.action = na.method(x = "include"))
+
+rkyld.qtl &lt;- wgaim(rkyld.asf, intervalObj = genoRxK, merge.by = "Genotype",
+                 trace = "trace.txt", na.action = na.method(x = "include"))
+
+## plot QTL intervals
+
+# matching rainbow QTL color and trait names, red flanking markers
+# (default) and gray background markers.
+
+linkMap(list(rktgw.qtl,rkyld.qtl), genoRxK, col = "gray")
+
+# rainbow QTL color and black trait names, red flanking markers
+# (default) and gray background markers.
+
+linkMap(list(rktgw.qtl,rkyld.qtl), genoRxK, list.col = list(t.col =
+"black", m.col = "red"), col = "gray")
+
+# monochromatic plot: gray QTLs, black trait names, black flanking
+# markers and gray background markers
+
+linkMap(list(rktgw.qtl,rkyld.qtl), genoRxK, list.col = list(q.col =
+rep(gray(0.8), 2), t.col = "black", mcol = "black"), col = "gray")
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

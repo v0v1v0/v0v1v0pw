@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>setCorrelationPreservation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Summary correlation preservation measure </h2>
+
+<h3>Description</h3>
+
+<p>Given consensus eigengenes, the function calculates the average correlation preservation pair-wise for
+all pairs of sets.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">setCorrelationPreservation(
+   multiME, 
+   setLabels, 
+   excludeGrey = TRUE, greyLabel = "grey", 
+   method = "absolute")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>multiME</code></td>
+<td>
+<p> consensus module eigengenes in a multi-set format. A vector of lists with one list
+corresponding to each set. Each list must contain a component <code>data</code> that is a data frame whose
+columns are consensus module eigengenes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>setLabels</code></td>
+<td>
+<p>names to be used for the sets represented in <code>multiME</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>excludeGrey</code></td>
+<td>
+<p>logical: exclude the 'grey' eigengene from preservation measure?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>greyLabel</code></td>
+<td>
+<p>module label corresponding to the 'grey' module. Usually this will be the
+character string <code>"grey"</code> if the labels are colors, and the number 0 if the labels are numeric.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p> character string giving the correlation preservation measure to use. Recognized values
+are (unique abbreviations of) <code>"absolute"</code>, <code>"hyperbolic"</code>. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For each pair of sets, the function calculates the average preservation of correlation among the
+eigengenes. Two preservation measures are available, the abosolute preservation (high if the two
+correlations are similar and low if they are different), and the hyperbolically scaled preservation,
+which de-emphasizes preservation of low correlation values.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with each row and column corresponding to a set given in <code>multiME</code>, containing the
+pairwise average correlation preservation values. Names and rownames are set to entries of <code>setLabels</code>. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder </p>
+
+
+<h3>References</h3>
+
+<p> Langfelder P, Horvath S (2007) Eigengene networks for studying the relationships between
+co-expression modules. BMC Systems Biology 2007, 1:54 </p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code>multiSetMEs</code> for module eigengene calculation;
+</p>
+<p><code>plotEigengeneNetworks</code> for eigengene network visualization.
+</p>
+
+
+</div>

@@ -1,0 +1,133 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>IV_report</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate a Information Value HTML Report</h2>
+
+<h3>Description</h3>
+
+<p>The function generates an interactive HTML report using Standard Person Query
+data as an input. The report contains a full Information Value analysis,  a
+data exploration technique that helps determine which columns in a data set
+have predictive power or influence on the value of a specified dependent
+variable.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">IV_report(
+  data,
+  predictors = NULL,
+  outcome,
+  bins = 5,
+  max_var = 9,
+  path = "IV report",
+  timestamp = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A Standard Person Query dataset in the form of a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>predictors</code></td>
+<td>
+<p>A character vector specifying the columns to be used as
+predictors. Defaults to NULL, where all numeric vectors in the data will be
+used as predictors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outcome</code></td>
+<td>
+<p>A string specifying a binary variable, i.e. can only contain
+the values 1 or 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bins</code></td>
+<td>
+<p>Number of bins to use in <code>Information::create_infotables()</code>,
+defaults to 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_var</code></td>
+<td>
+<p>Numeric value to represent the maximum number of variables to
+show on plots.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Pass the file path and the desired file name, <em>excluding the file
+extension</em>. For example, <code>"IV report"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timestamp</code></td>
+<td>
+<p>Logical vector specifying whether to include a timestamp in
+the file name. Defaults to TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An HTML report with the same file name as specified in the arguments is
+generated in the working directory. No outputs are directly returned by the
+function.
+</p>
+
+
+<h3>Creating a report</h3>
+
+<p>Below is an example on how to run the report.
+</p>
+<div class="sourceCode"><pre>library(dplyr)
+
+sq_data %&gt;%
+  mutate(CH_binary = ifelse(Collaboration_hours &gt; 12, 1, 0)) %&gt;% # Simulate binary variable
+  IV_report(outcome =  "CH_binary",
+            predictors = c("Email_hours", "Workweek_span"))
+</pre></div>
+
+
+<h3>See Also</h3>
+
+<p>Other Reports: 
+<code>capacity_report()</code>,
+<code>coaching_report()</code>,
+<code>collaboration_report()</code>,
+<code>connectivity_report()</code>,
+<code>generate_report()</code>,
+<code>meeting_tm_report()</code>,
+<code>read_preamble()</code>,
+<code>subject_validate_report()</code>,
+<code>validation_report()</code>,
+<code>workpatterns_report()</code>
+</p>
+<p>Other Variable Association: 
+<code>IV_by_period()</code>,
+<code>create_IV()</code>,
+<code>plot_WOE()</code>
+</p>
+<p>Other Information Value: 
+<code>IV_by_period()</code>,
+<code>create_IV()</code>,
+<code>plot_WOE()</code>
+</p>
+
+
+</div>

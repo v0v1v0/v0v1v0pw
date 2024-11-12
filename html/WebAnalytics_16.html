@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>logFileNamesGetLast</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get lexically last file names from a list of log directories.  
+</h2>
+
+<h3>Description</h3>
+
+<p>The function searches in a list of log file directories for log file names and returns a list of names found (the last name in each directory). 
+This function does not check that the found file names are all the same from each directory.
+This is intended to be used to locate the most recent day's log file for reporting.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">logFileNamesGetLast(dataDirectory = getwd(), 
+  directoryNames=c("."), 
+  fileNamePattern=".*[.]log")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dataDirectory</code></td>
+<td>
+
+<p>a string containing the root directory under which the log file directories are found
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>directoryNames</code></td>
+<td>
+
+<p>a list of directory names that is concatenated with the data directory name.  
+This is intended to support the structure where logs are collected into a series of per-server log directories.  
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fileNamePattern</code></td>
+<td>
+
+<p>a string containing a regular expression for the log file names that are to be processed
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a list of character string file names.  
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Greg Hunt &lt;greg@firmansyah.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">datd = dirname(system.file("extdata", "compressed.log", package = "WebAnalytics"))
+logFileNamesGetLast(dataDirectory=datd, 
+  directoryNames=c(".", "."), 
+  fileNamePattern="*[.]log")
+</code></pre>
+
+
+</div>

@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>readXlsxBatch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read Batch of Excel xlsx-Files</h2>
+
+<h3>Description</h3>
+
+<p><code>readXlsxBatch</code> reads data out of multiple xlsx files, the sheet indicated by 'sheetInd' will be considered. 
+All files must have the same organization of data, as this is typically the case when high-throughput measurements are automatically saved while experiments progress.
+In particular, the first file read is used to structure the output.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">readXlsxBatch(
+  fileNames = NULL,
+  path = ".",
+  fileExtension = "xlsx",
+  excludeFiles = NULL,
+  sheetInd = 1,
+  checkFormat = TRUE,
+  returnArray = TRUE,
+  columns = c("Plate", "Well", "StainA"),
+  simpleNames = 3,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fileNames</code></td>
+<td>
+<p>(character) provide either explicit list of file-names to be read or leave <code>NULL</code> for reading all files ending with 'xlsx' in path specified with argument <code>path</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>(character) there may be a different path for each file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fileExtension</code></td>
+<td>
+<p>(character) extension of files (default='<code>xlsx</code>')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>excludeFiles</code></td>
+<td>
+<p>(character) names of files to exclude (only used when reading all files of given directory)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sheetInd</code></td>
+<td>
+<p>(character or integer) specify which sheet to extract (as exact name of sheed or sheet-number, eg <code>sheetInd=2</code> will extract always the 2nd sheet (no matter the name); if given as sheet-name but nor present in file an empty list-elements wil be returned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checkFormat</code></td>
+<td>
+<p>(logical) if <code>TRUE</code>: check header, remove empty columns, if rownames are increasing integeres it will searh for fisrt column with different entries to use as rownames</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnArray</code></td>
+<td>
+<p>(logical) allows switching from array to list-output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>columns</code></td>
+<td>
+<p>(NULL or character) column-headers to be extracted (if specified, otherwise all columns will be extracted)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simpleNames</code></td>
+<td>
+<p>(integer), if <code>NULL</code> all characters of fileNames will be maintained, otherwise allows truncating names (from beginning) to get to variable part (using .trimLeft()), but keeping at least the number of charcters indicated by this argument</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>By default all columns with text-content may be eliminated to keep the numeric part only, which may then get organized to a 3-dim numeric array 
+(where the additional files will be used as 2nd dimension and multiple columns per file shown as 3rd dimension). 
+</p>
+<p>NOTE : (starting from version wrMisc-1.5.5) requires packages <a href="https://CRAN.R-project.org/package=readxl">readxl</a> and 
+<a href="https://CRAN.R-project.org/package=Rcpp">Rcpp</a> being installed ! 
+(This allows much faster and memory efficient processing than previous use of package '<code>xlsx</code>')
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a list of data.frames
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read_excel</code>; for simple reading of (older) xls-files under 32-bit R one may also see the package <a href="https://CRAN.R-project.org/package=RODBC">RODBC</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">path1 &lt;- system.file("extdata", package="wrMisc")
+fiNa &lt;- c("pl01_1.xlsx","pl01_2.xlsx","pl02_1.xlsx","pl02_2.xlsx")
+datAll &lt;- readXlsxBatch(fiNa, path1)
+str(datAll)
+## Now let's read all xlsx files of directory
+datAll2 &lt;- readXlsxBatch(path=path1, silent=TRUE)
+identical(datAll, datAll2)
+</code></pre>
+
+
+</div>

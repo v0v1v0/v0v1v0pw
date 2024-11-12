@@ -1,0 +1,179 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>HashCounter</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>HashCounter</h2>
+
+<h3>Description</h3>
+
+<p>hash with counter, to store requests, and count each time
+it is used
+</p>
+
+
+<h3>Public fields</h3>
+
+<div class="r6-fields">
+
+<dl>
+<dt><code>hash</code></dt>
+<dd>
+<p>(list) a list for internal use only, with elements
+<code>key</code>, <code>sig</code>, and <code>count</code></p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-HashCounter-put"><code>HashCounter$put()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-HashCounter-get"><code>HashCounter$get()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-HashCounter-clone"><code>HashCounter$clone()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-HashCounter-put"></a>
+
+
+
+<h4>Method <code>put()</code>
+</h4>
+
+<p>Register a request by it's key
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>HashCounter$put(req_sig)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>req_sig</code></dt>
+<dd>
+<p>an object of class <code>RequestSignature</code></p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>nothing returned; registers request and iterates
+internal counter
+</p>
+
+
+<hr>
+<a id="method-HashCounter-get"></a>
+
+
+
+<h4>Method <code>get()</code>
+</h4>
+
+<p>Get a request by key
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>HashCounter$get(req_sig)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>req_sig</code></dt>
+<dd>
+<p>an object of class <code>RequestSignature</code></p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>(integer) the count of how many times the request has been made
+</p>
+
+
+<hr>
+<a id="method-HashCounter-clone"></a>
+
+
+
+<h4>Method <code>clone()</code>
+</h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>HashCounter$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt>
+<dd>
+<p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+<h3>See Also</h3>
+
+<p>Other request-registry: 
+<code>RequestRegistry</code>,
+<code>request_registry()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- HashCounter$new()
+x$hash
+z &lt;- RequestSignature$new(method = "get", uri = "https:/httpbin.org/get")
+x$put(z)
+x$hash
+x$get(z)
+x$put(z)
+x$get(z)
+</code></pre>
+
+
+</div>

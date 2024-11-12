@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>r_squared_profiling</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>R-Squared-Profile Function for Parametric Lifetime Distributions with Threshold</h2>
+
+<h3>Description</h3>
+
+<p>This function evaluates the coefficient of determination with respect to a
+given threshold parameter of a parametric lifetime distribution. In terms of
+<em>Rank Regression</em> this function can be optimized (optim) to
+estimate the threshold parameter.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">r_squared_profiling(x, ...)
+
+## S3 method for class 'wt_cdf_estimation'
+r_squared_profiling(
+  x,
+  thres,
+  distribution = c("weibull3", "lognormal3", "loglogistic3", "exponential2"),
+  direction = c("x_on_y", "y_on_x"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>tibble</code> with class <code>wt_cdf_estimation</code> returned by estimate_cdf.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thres</code></td>
+<td>
+<p>A numeric value for the threshold parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed parametric distribution of the random variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>direction</code></td>
+<td>
+<p>Direction of the dependence in the regression model.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns the coefficient of determination with respect to the threshold
+parameter <code>thres</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Data:
+data &lt;- reliability_data(
+  alloy,
+  x = cycles,
+  status = status
+)
+
+# Probability estimation:
+prob_tbl &lt;- estimate_cdf(
+  data,
+  methods = "johnson"
+)
+
+# Determining the optimal coefficient of determination:
+## Range of threshold parameter must be smaller than the first failure:
+threshold &lt;- seq(
+  0,
+  min(
+    dplyr::pull(
+      dplyr::filter(
+        prob_tbl,
+        status == 1,
+        x == min(x)
+      ),
+      x
+    ) - 0.1
+  ),
+  length.out = 100
+)
+
+## Coefficient of determination with respect to threshold values:
+profile_r2 &lt;- r_squared_profiling(
+  x = dplyr::filter(
+    prob_tbl,
+    status == 1
+  ),
+  thres = threshold,
+  distribution = "weibull3"
+)
+
+## Threshold value (among the candidates) that maximizes the coefficient of determination:
+threshold[which.max(profile_r2)]
+
+## plot:
+plot(
+  threshold,
+  profile_r2,
+  type = "l"
+)
+abline(
+  v = threshold[which.max(profile_r2)],
+  h = max(profile_r2),
+  col = "red"
+)
+
+</code></pre>
+
+
+</div>

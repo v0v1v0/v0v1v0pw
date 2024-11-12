@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>worm_distance</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generates distance matrices
+Distance matrices are generated between the cells of multiple animals
+(Caenorhabditis elegans)  from time-series matrices.</h2>
+
+<h3>Description</h3>
+
+<p>Generates distance matrices
+Distance matrices are generated between the cells of multiple animals
+(Caenorhabditis elegans)  from time-series matrices.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">worm_distance(data, distance = c("mSBD", "SBD", "Euclid"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Time-series matrices</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distance</code></td>
+<td>
+<p>"mSBD" or "SBD" or "Euclid" can be specified. mSBD means
+modified Shape-based distance.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing distance matrices
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Toy data
+n_cell_x &lt;- 13
+n_cell_y &lt;- 24
+n_cell_z &lt;- 29
+n_cells &lt;- 30
+n_time_frames &lt;- 100
+
+# 13 cells, 100 time frames
+animal_x &lt;- matrix(runif(n_cell_x * n_time_frames),
+    nrow = n_cell_x, ncol = n_time_frames
+)
+rownames(animal_x) &lt;- sample(seq(n_cells), n_cell_x)
+colnames(animal_x) &lt;- seq(n_time_frames)
+
+# 24 cells, 100 time frames
+animal_y &lt;- matrix(runif(n_cell_y * n_time_frames),
+    nrow = n_cell_y, ncol = n_time_frames
+)
+rownames(animal_y) &lt;- sample(seq(n_cells), n_cell_y)
+colnames(animal_y) &lt;- seq(n_time_frames)
+
+# 29 cells, 100 time frames
+animal_z &lt;- matrix(runif(n_cell_z * n_time_frames),
+    nrow = n_cell_z, ncol = n_time_frames
+)
+rownames(animal_z) &lt;- sample(seq(n_cells), n_cell_z)
+colnames(animal_z) &lt;- seq(n_time_frames)
+
+# Positive Control of Difference between SBD and mSBD
+animal_z[2, ] &lt;- -animal_x[1, ]
+X &lt;- list(
+    animal_x = animal_x,
+    animal_y = animal_y,
+    animal_z = animal_z
+)
+Ds_mSBD &lt;- worm_distance(X, "mSBD")
+</code></pre>
+
+
+</div>

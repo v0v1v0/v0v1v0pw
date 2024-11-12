@@ -1,0 +1,66 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>+.rpacontrol</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add components to the control list</h2>
+
+<h3>Description</h3>
+
+<p>'+' is used to combine components to control the PA network generation
+process. Available components are <code>rpa_control_scenario()</code>,
+<code>rpa_control_edgeweight()</code>, <code>rpa_control_newedge()</code>,
+<code>rpa_control_preference()</code> and <code>rpa_control_reciprocal()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'rpacontrol'
+e1 + e2
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>e1</code></td>
+<td>
+<p>A list of class <code>rpacontrol</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>e2</code></td>
+<td>
+<p>A list of class <code>rpacontrol</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of class <code>rpacontrol</code> with components from <code>e1</code> and
+<code>e2</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+control &lt;- rpa_control_scenario(alpha = 0.5, beta = 0.5) +
+  rpa_control_preference(
+    ftype = "customized",
+    spref = "pow(outs, 2) + 1",
+    tpref = "pow(ins, 2) + 1"
+  )
+
+
+control &lt;- rpa_control_scenario(alpha = 1) +
+  rpa_control_edgeweight(
+    sampler = function(n) rgamma(n, shape = 5, scale = 0.2)
+  )
+</code></pre>
+
+
+</div>

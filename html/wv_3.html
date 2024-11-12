@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ACF</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Auto-Covariance and Correlation Functions</h2>
+
+<h3>Description</h3>
+
+<p>The ACF function computes the estimated
+autocovariance or autocorrelation for both univariate and multivariate cases.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ACF(x, lagmax = 0, cor = TRUE, demean = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>matrix</code> with dimensions <code class="reqn">N \times S</code> or N observations and S processes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lagmax</code></td>
+<td>
+<p>A <code>integer</code> indicating the max lag.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cor</code></td>
+<td>
+<p>A <code>bool</code> indicating whether the correlation 
+(<code>TRUE</code>) or covariance (<code>FALSE</code>) should be computed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>demean</code></td>
+<td>
+<p>A <code>bool</code> indicating whether the data should be detrended
+(<code>TRUE</code>) or not (<code>FALSE</code>)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>lagmax</code> default is <code class="reqn">10*log10(N/m)</code> where <code class="reqn">N</code> is the number of
+observations and <code class="reqn">m</code> is the number of series being compared. If 
+<code>lagmax</code> supplied is greater than the number of observations, then one
+less than the total will be taken.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>array</code> of dimensions <code class="reqn">N \times S \times S</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Yunxiang Zhang
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Get Autocorrelation
+m = ACF(datasets::AirPassengers)
+
+# Get Autocovariance and do not remove trend from signal
+m = ACF(datasets::AirPassengers, cor = FALSE, demean = FALSE)
+</code></pre>
+
+
+</div>

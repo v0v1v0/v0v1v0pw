@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rttestPS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Robust Paired Samples T-Test</h2>
+
+<h3>Description</h3>
+
+<p>Robust Paired Samples T-Test
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rttestPS(data, pairs, tr = 0.2, md = FALSE, es = FALSE, ci = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>the data as a data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pairs</code></td>
+<td>
+<p>a list of lists specifying the pairs of measurement in
+<code>data</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tr</code></td>
+<td>
+<p>a number between 0 and 0.5, (default: 0.2), the proportion of
+measurements to trim from each end, when using the trim and bootstrap
+methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>md</code></td>
+<td>
+<p><code>TRUE</code> or <code>FALSE</code> (default), provide means and standard
+errors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>es</code></td>
+<td>
+<p><code>TRUE</code> or <code>FALSE</code> (default), provide effect sizes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci</code></td>
+<td>
+<p><code>TRUE</code> or <code>FALSE</code> (default), provide confidence
+intervals</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A results object containing:
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <code>results$ttest</code> </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> the table of t-test results </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>Tables can be converted to data frames with <code>asDF</code> or <code>as.data.frame</code>. For example:
+</p>
+<p><code>results$ttest$asDF</code>
+</p>
+<p><code>as.data.frame(results$ttest)</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(anorexia, package='MASS')
+anorexiaFT &lt;- subset(anorexia, subset = Treat == "FT")
+
+rttestPS(anorexiaFT,
+         pairs = list(
+             list(i1 = 'Prewt', i2 = 'Postwt')))
+
+#
+#  ROBUST PAIRED SAMPLES T-TEST
+#
+#  Robust Paired Samples T-Test
+#  ---------------------------------------------
+#                       t        df      p
+#  ---------------------------------------------
+#    Prewt    Postwt    -3.83    10.0    0.003
+#  ---------------------------------------------
+#
+
+</code></pre>
+
+
+</div>

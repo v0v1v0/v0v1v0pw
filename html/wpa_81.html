@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>flag_ch_ratio</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Flag unusual high collaboration hours to after-hours collaboration
+hours ratio</h2>
+
+<h3>Description</h3>
+
+<p>This function flags persons who have an unusual ratio
+of collaboration hours to after-hours collaboration hours.
+Returns a character string by default.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">flag_ch_ratio(data, threshold = c(1, 30), return = "message")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data frame containing a Person Query.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>Numeric value specifying the threshold for flagging.
+Defaults to 30.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String to specify what to return. Options include:
+</p>
+
+<ul>
+<li> <p><code>"message"</code>
+</p>
+</li>
+<li> <p><code>"text"</code>
+</p>
+</li>
+<li> <p><code>"data"</code>
+</p>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A different output is returned depending on the value passed to the <code>return</code>
+argument:
+</p>
+
+<ul>
+<li> <p><code>"message"</code>: message in the console containing diagnostic summary
+</p>
+</li>
+<li> <p><code>"text"</code>: string containing diagnotic summary
+</p>
+</li>
+<li> <p><code>"data"</code>: data frame. Person-level data with flags on unusually high or
+low ratios
+</p>
+</li>
+</ul>
+<h3>Metrics used</h3>
+
+<p>The metric <code>Collaboration_hours</code> is used in the calculations. Please ensure
+that your query contains a metric with the exact same name.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Data Validation: 
+<code>check_query()</code>,
+<code>extract_hr()</code>,
+<code>flag_em_ratio()</code>,
+<code>flag_extreme()</code>,
+<code>flag_outlooktime()</code>,
+<code>hr_trend()</code>,
+<code>hrvar_count()</code>,
+<code>hrvar_count_all()</code>,
+<code>hrvar_trend()</code>,
+<code>identify_churn()</code>,
+<code>identify_holidayweeks()</code>,
+<code>identify_inactiveweeks()</code>,
+<code>identify_nkw()</code>,
+<code>identify_outlier()</code>,
+<code>identify_privacythreshold()</code>,
+<code>identify_query()</code>,
+<code>identify_shifts()</code>,
+<code>identify_shifts_wp()</code>,
+<code>identify_tenure()</code>,
+<code>remove_outliers()</code>,
+<code>standardise_pq()</code>,
+<code>subject_validate()</code>,
+<code>subject_validate_report()</code>,
+<code>track_HR_change()</code>,
+<code>validation_report()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">flag_ch_ratio(sq_data)
+
+
+data.frame(PersonId = c("Alice", "Bob"),
+           Collaboration_hours = c(30, 0.5),
+           After_hours_collaboration_hours = c(0.5, 30)) %&gt;%
+  flag_ch_ratio()
+
+</code></pre>
+
+
+</div>

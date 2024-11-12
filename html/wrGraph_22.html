@@ -1,0 +1,233 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotPCAw</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>PCA plot with bag-plot to highlight groups</h2>
+
+<h3>Description</h3>
+
+<p>This function allows to plot <a href="https://en.wikipedia.org/wiki/Principal_component_analysis">principal components analysis (PCA)</a>,
+with options to show center and potential outliers for each of the groups (columns of data).
+The main points of this implementation consist in offering bagplots to highlight groups of columns/samples and support to (object-oriented)
+output from <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a> and <a href="https://CRAN.R-project.org/package=wrProteo">wrProteo</a>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotPCAw(
+  dat,
+  sampleGrp,
+  tit = NULL,
+  useSymb = c(21:25, 9:12, 3:4),
+  center = TRUE,
+  scale. = TRUE,
+  colBase = NULL,
+  useSymb2 = NULL,
+  cexTxt = 1,
+  cexSub = 0.6,
+  displBagPl = TRUE,
+  outCoef = 2,
+  getOutL = FALSE,
+  showLegend = TRUE,
+  nGrpForMedian = 6,
+  pointLabelPar = NULL,
+  rowTyName = "genes",
+  rotatePC = NULL,
+  suplFig = TRUE,
+  callFrom = NULL,
+  silent = FALSE,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(matrix, data.frame, MArrayLM-object or list) data to plot. Note: <code>NA</code>-values cannot be processed - all lines with non-finite data (eg <code>NA</code>) will be omitted !
+In case of  MArrayLM-object or list <code>dat</code> must conatain list-element named 'datImp','dat' or 'data'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sampleGrp</code></td>
+<td>
+<p>(character or factor) should be factor describing groups of replicates, NAs are not supported</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tit</code></td>
+<td>
+<p>(character) custom title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useSymb</code></td>
+<td>
+<p>(integer) symbols to use (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>(logical or numeric) decide if variables should be shifted to be zero centered, argument passed to <code>prcomp</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.</code></td>
+<td>
+<p>(logical or numeric) decide if scaling to obtain unit variance, argument passed to <code>prcomp</code>
+Alternatively, a vector of length equal the number of columns of x can be supplied. The value is passed to scale.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colBase</code></td>
+<td>
+<p>(character or integer) use custom colors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useSymb2</code></td>
+<td>
+<p>(integer) symbol to mark group-center (no mark of group-center if default NULL) (equivalent to <code>pch</code>, see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexTxt</code></td>
+<td>
+<p>(integer) expansion factor for text (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexSub</code></td>
+<td>
+<p>(integer) expansion factor for subtitle line text (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>displBagPl</code></td>
+<td>
+<p>(logical) if <code>TRUE</code>, show bagPlot (group-center) if &gt;3 points per group otherwise the average-confidence-interval</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outCoef</code></td>
+<td>
+<p>(numeric) parameter for defining outliers, see  <code>addBagPlot</code> (equivalent to <code>range</code> in <code>boxplot</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getOutL</code></td>
+<td>
+<p>(logical) return outlyer samples/values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>showLegend</code></td>
+<td>
+<p>(logical or character) toggle to display legend, if character it designes the location within the plot to display the legend ('bottomleft','topright', etc..)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nGrpForMedian</code></td>
+<td>
+<p>(integer) decide if group center should be displayed via its average or median value: If group has less than 'nGrpForMedian' values, the average will be used, otherwise the median; if <code>NULL</code> no group centers will be displayed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pointLabelPar</code></td>
+<td>
+<p>(character) define formatting for optional labels next to points in main figure (ie PC1 vs PC2); may be <code>TRUE</code> or list containing elments 'textLabel', 'textCol', 'textCex',
+'textOffSet', 'textAdj' for fine-tuning</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rowTyName</code></td>
+<td>
+<p>(character) for subtitle : specify nature of rows (genes, proteins, probesets,...)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rotatePC</code></td>
+<td>
+<p>(integer) optional rotation (by -1) for fig&amp;ure of the principal components specified by index</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suplFig</code></td>
+<td>
+<p>(logical) to include plots vs 3rd principal component (PC) and Screeplot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>One motivation for this implementation of plotting PCA was to provide a convenient way for doing so with of MArrayLM-objects or lists
+as created by <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a> and <a href="https://CRAN.R-project.org/package=wrProteo">wrProteo</a>.
+</p>
+<p>Another motivation for this implementation come from integrating the idea of bag-plots to better visualize different groups of points
+(if they can be organized so beforehand as distinct groups) :
+The main body of data is shown as 'bag-plots' (a bivariate boxplot, see <a href="https://en.wikipedia.org/wiki/Bagplot">Bagplot</a>)
+with different transparent colors to highlight the core part of different groups (if they contain more than 2 values per group).
+Furthermore, group centers are shown as average or median (see 'nGrpForMedian') with stars &amp; index-number (if &lt;25 groups).
+</p>
+<p>Layout is automatically set to 2 or 4 subplots (if plotting more than 2 principal components makes sense).
+</p>
+<p>Note : This function uses <code>prcomp</code> for calculating Eigenvectors and principal components, with default <code>center=TRUE</code> and <code>scale.=FALSE</code> (different to <code>princomp()</code>. which standardizes by default).
+This way the user has to option to intervene on arguments <code>center</code> and <code>scale.</code>. However, this should be done with care.
+</p>
+<p>Note: <code>NA</code>-values cannot (by definition) be processed by (any) PCA - all lines with any non-finite values/content (eg <code>NA</code>) will be omitted !
+</p>
+<p>Note : Package RColorBrewer may be used if available.
+</p>
+<p>For more options with PCA (and related methods) you may also see also the package  <a href="https://CRAN.R-project.org/package=FactoMineR">FactoMineR</a>
+which provides a very wide spectrum of possibiities, in particular for combined numeric and categorical data.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function make a plot and may retiurn an optional matrix of outlyer-data (depending on argument <code>getOutL</code>)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>prcomp</code> (used here for the PCA underneith) , <code>princomp</code>, see the package <a href="https://CRAN.R-project.org/package=FactoMineR">FactoMineR</a> for multiple plotting options or ways of combining categorical and numeric data
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2019); dat1 &lt;- matrix(round(c(rnorm(1000), runif(1000,-0.9,0.9)),2),
+  ncol=20, byrow=TRUE) + matrix(rep(rep(1:5,6:2), each=100), ncol=20)
+biplot(prcomp(dat1))        # traditional plot
+(grp = factor(rep(LETTERS[5:1],6:2)))
+plotPCAw(dat1, grp)
+</code></pre>
+
+
+</div>

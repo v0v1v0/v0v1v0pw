@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>QIC.gee</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+QIC and QICu for GEE
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculate quasi-likelihood under the independence model criterion (QIC) and QIC<code class="reqn">_{u}</code> based on GEE.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">QIC.gee(object)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>a fitted model object of class <code>"wgee"</code>.
+</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Return a vector of QIC, QIC<code class="reqn">_{u}</code> and Quasi-likelihood.
+</p>
+
+
+<h3>Note</h3>
+
+<p>QIC can be used to select the best correlation structure and the best fitting model in GEE analyses. The GEE is fitted by <code>geeglm</code> (<span class="pkg">geepack</span>). QIC<code class="reqn">_{u}</code> is a simplified version of QIC, which can not be applied to select the optimal working correlation structure. <code>geeglm</code> (<span class="pkg">geepack</span>) only works for complete data. Thus if there are NA’s in data, the missing values are automatically removed by <code>na.omit</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Cong Xu, Zheng Li and Ming Wang
+</p>
+
+
+<h3>References</h3>
+
+<p>Liang, K.Y. and Zeger, S.L., 1986. Longitudinal data analysis using generalized linear models. <em>Biometrika</em>, pp.13-22.
+</p>
+<p>Pan, W., 2001. Akaike's information criterion in generalized estimating equations. <em>Biometrics</em>, 57(1), pp.120-125.
+</p>
+<p>Prentice, R.L. and Zhao, L.P., 1991. Estimating equations for parameters in means and covariances of multivariate discrete and continuous responses. <em>Biometrics</em>, pp.825-839.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>geeglm</code> (<span class="pkg">geepack</span>). <span class="pkg">MuMIn</span> also provides QIC value.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(imps)
+fit &lt;- wgee(Y ~ Drug+Sex+Time, data=imps, id=imps$ID, family="binomial",
+            corstr="exchangeable")
+
+QIC.gee(fit)
+
+data(seizure)
+###reshapre the seizure data to "long" format
+seiz.long &lt;- reshape(seizure, varying=list(c("base","y1", "y2", "y3", "y4")),
+                      v.names="y", times=0:4, direction="long")
+seiz.long &lt;- seiz.long[order(seiz.long$id, seiz.long$time),]
+
+fit &lt;- wgee(y ~ age + trt + time, data=seiz.long, id=seiz.long$id, 
+            family="poisson", corstr="independence")
+
+QIC.gee(fit)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,164 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>profileAsClu</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot profiles according to CLustering</h2>
+
+<h3>Description</h3>
+
+<p>This function was made for visualuzing the result of clustering of a numeric vector or clustering along multiple columns of a matrix.
+The data will be plotted like a reglar scatter-plot, but some extra space is added to separate clusters and dashed lines highlight cluster-borders.
+If no mean/representative value is spacified, a geometric mean will be calculated along all columns of  <code>dat</code>.
+In case <code>dat</code> has multiple columns, a legend and a representative (default geometric mean) dashed grey line will be displayed.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">profileAsClu(
+  dat,
+  clu,
+  meanD = NULL,
+  tit = NULL,
+  col = NULL,
+  pch = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  meCol = "grey",
+  meLty = 1,
+  meLwd = 1,
+  cex = NULL,
+  cexTit = NULL,
+  legLoc = "bottomleft",
+  silent = TRUE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(matrix or data.frame) main input with data to plot as points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clu</code></td>
+<td>
+<p>(numeric or character) clustering results; if length=1 and character this term will be understood as colum-name with cluster-numbers from <code>dat</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meanD</code></td>
+<td>
+<p>(numeric) mean/representative of multiple series for display as lines; if length=1 and character this term will be understood as columname with cluster-numbers from <code>dat</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tit</code></td>
+<td>
+<p>(character) optional custom title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>(character) custom colors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pch</code></td>
+<td>
+<p>(integer) custom plotting symbols (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>(character) custom x-axis label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>(character) custom y-axis label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meCol</code></td>
+<td>
+<p>(character) color for (dashed) line of mean/representative values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meLty</code></td>
+<td>
+<p>(integer) line-type line of mean/representative values (see also <code>lty</code> in <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meLwd</code></td>
+<td>
+<p>(numeric) line-width line of mean/representative values (see also <code>lwd</code> in <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex</code></td>
+<td>
+<p>(numeric) cex-like expansion factor  (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexTit</code></td>
+<td>
+<p>(numeric) cex-like expansion factor for title  (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legLoc</code></td>
+<td>
+<p>(character) legend location</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additonal messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This functin returns a plot only
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2020); dat1 &lt;- runif(12)/2 + rep(6:8, each=4)
+dat1Cl &lt;- stats::kmeans(dat1, 3)$cluster
+dat1Cl &lt;- 5- dat1Cl              # bring cluster-numbers in ascending form
+dat1Cl[which(dat1Cl &gt;3)] &lt;- 1    # bring cluster-numbers in ascending form
+profileAsClu(dat1, clu=dat1Cl)
+</code></pre>
+
+
+</div>

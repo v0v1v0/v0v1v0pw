@@ -1,0 +1,224 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wvar</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Wavelet Variance</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the (MO)DWT wavelet variance
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wvar(x, ...)
+
+## S3 method for class 'lts'
+wvar(
+  x,
+  decomp = "modwt",
+  filter = "haar",
+  nlevels = NULL,
+  alpha = 0.05,
+  robust = FALSE,
+  eff = 0.6,
+  to.unit = NULL,
+  ...
+)
+
+## S3 method for class 'gts'
+wvar(
+  x,
+  decomp = "modwt",
+  filter = "haar",
+  nlevels = NULL,
+  alpha = 0.05,
+  robust = FALSE,
+  eff = 0.6,
+  to.unit = NULL,
+  ...
+)
+
+## S3 method for class 'ts'
+wvar(
+  x,
+  decomp = "modwt",
+  filter = "haar",
+  nlevels = NULL,
+  alpha = 0.05,
+  robust = FALSE,
+  eff = 0.6,
+  to.unit = NULL,
+  ...
+)
+
+## S3 method for class 'imu'
+wvar(
+  x,
+  decomp = "modwt",
+  filter = "haar",
+  nlevels = NULL,
+  alpha = 0.05,
+  robust = FALSE,
+  eff = 0.6,
+  to.unit = NULL,
+  ...
+)
+
+## Default S3 method:
+wvar(
+  x,
+  decomp = "modwt",
+  filter = "haar",
+  nlevels = NULL,
+  alpha = 0.05,
+  robust = FALSE,
+  eff = 0.6,
+  freq = 1,
+  from.unit = NULL,
+  to.unit = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>vector</code> with dimensions N x 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>decomp</code></td>
+<td>
+<p>A <code>string</code> that indicates whether to use a "dwt" or "modwt" decomposition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>A <code>string</code> that specifies which wavelet filter to use.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlevels</code></td>
+<td>
+<p>An <code>integer</code> that indicates the level of decomposition. It must be less than or equal to floor(log2(length(x))).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>A <code>double</code> that specifies the significance level which in turn specifies the <code class="reqn">1-\alpha</code> confidence level.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>robust</code></td>
+<td>
+<p>A <code>boolean</code> that triggers the use of the robust estimate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eff</code></td>
+<td>
+<p>A <code>double</code> that indicates the efficiency as it relates to an MLE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to.unit</code></td>
+<td>
+<p>A <code>string</code> indicating the unit to which the data is converted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>freq</code></td>
+<td>
+<p>A <code>numeric</code> that provides the rate of samples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from.unit</code></td>
+<td>
+<p>A <code>string</code> indicating the unit from which the data is converted.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The default value of <code>nlevels</code> will be set to <code class="reqn">\left\lfloor {{{\log }_2}\left( {length\left( x \right)} \right)} \right\rfloor</code>, unless otherwise specified.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>list</code> with the structure:
+</p>
+
+<ul>
+<li>
+<p> "variance": Wavelet Variance
+</p>
+</li>
+<li>
+<p> "ci_low": Lower CI
+</p>
+</li>
+<li>
+<p> "ci_high": Upper CI
+</p>
+</li>
+<li>
+<p> "robust": Robust active 
+</p>
+</li>
+<li>
+<p> "eff": Efficiency level for Robust calculation
+</p>
+</li>
+<li>
+<p> "alpha": p value used for CI
+</p>
+</li>
+<li>
+<p> "unit": String representation of the unit
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>James Balamuta, Justin Lee and Stephane Guerrier
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(999)
+x = rnorm(100)
+
+# Default
+wvar(x)
+
+# Robust
+wvar(x, robust = TRUE, eff=0.3)
+
+# Classical
+wvar(x, robust = FALSE, eff=0.3)
+
+# 90% Confidence Interval 
+wvar(x, alpha = 0.10)
+</code></pre>
+
+
+</div>

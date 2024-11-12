@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>filtSizeUniq</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Filter for unique elements</h2>
+
+<h3>Description</h3>
+
+<p>This function aims to identify and remove duplicated elements in a list and maintain the list-structure in the output. 
+<code>filtSizeUniq</code>  filters 'lst' (list of character-vectors or character-vector) for elements being unique (to 'ref' or if NULL to all 'lst') and of character length. 
+In addition, the min- and max- character length may be filtered, too. Eg, in proteomics this helps removing peptide sequences which would not be measured/detected any way.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">filtSizeUniq(
+  lst,
+  ref = NULL,
+  minSize = 6,
+  maxSize = 36,
+  filtUnique = TRUE,
+  byProt = TRUE,
+  inclEmpty = TRUE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lst</code></td>
+<td>
+<p>list of character-vectors or character-vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ref</code></td>
+<td>
+<p>(character) optional alternative 'reference', if not <code>NULL</code> used in addition to 'lst' for considering elements of 'lst' as unique</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minSize</code></td>
+<td>
+<p>(integer) minimum number of characters, if <code>NULL</code> set to 0</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxSize</code></td>
+<td>
+<p>(integer) maximum number of characters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filtUnique</code></td>
+<td>
+<p>(logical) if <code>TRUE</code> return unique-only character-strings</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>byProt</code></td>
+<td>
+<p>(logical) if <code>TRUE</code> organize output as list (by names of input, eg protein-names) - if 'lst' was named list</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inclEmpty</code></td>
+<td>
+<p>(logical) optional including empty list-elements when all elements have been filtered away - if 'lst' was named list</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>list of filtered input
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>correctToUnique</code>, <code>unique</code>, <code>duplicated</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">filtSizeUniq(list(A="a",B=c("b","bb","c"),D=c("dd","d","ddd","c")),filtUn=TRUE,minSi=NULL)
+# input: c and dd are repeated
+filtSizeUniq(list(A="a",B=c("b","bb","c"),D=c("dd","d","ddd","c")),ref=c(letters[c(1:26,1:3)],
+  "dd","dd","bb","ddd"),filtUn=TRUE,minSi=NULL)  # a,b,c,dd repeated 
+</code></pre>
+
+
+</div>

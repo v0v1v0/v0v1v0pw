@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gpml-cycles</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Finding Cycles in Biological Pathways
+</h2>
+
+<h3>Description</h3>
+
+<p>Tools to find and interpret cycles in graphs derived from pathways in
+WikiPathways.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">findCycles(graph)
+interpretCycle(v, graph)
+cycleSubgraph(graph, cycles)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>graph</code></td>
+<td>
+<p>An <code>igraph</code> object produced by
+<code>GPMLtoIgraph</code> from a pathway file in GPML format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>v</code></td>
+<td>
+<p>One of the cycles produced by the <code>findCycles</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cycles</code></td>
+<td>
+<p>The list of cycles produced by the <code>findCycles</code>
+function.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The implementation of the <code>findCycles</code> function, while provably
+correct, makes no concessions to efficiency. It is likely to be
+adequate for the vast majority of biological pathways present in
+WikiPathways, but may prove incapable of handling large complex graphs
+in general. The algorithm is a sraightforward double loop. It first
+iterates over all nodes, and uses the <code>neighbors</code> function from
+<code>igraph</code> to find all nodes that are directly connected to the
+start node. It then iterates over those neighbors and uses the
+<code>all_simple_paths</code> function from <code>igraph</code> to find all
+paths that lead back to the starting node. One aspect of its lack of
+efficiency is that each cycle with N nodes is found N times, once for
+each place you could start traversing the cycle. Before returning the
+value to the user, it chooses a unique representative for each such
+cycle by finding the "earliest" node, based on its index, to start
+from.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The <code>findCycles</code> function returns a list. Each element of the
+list is a cycle, repreented by a named character vector specifying the
+nodes in the order that they can be traversed.
+</p>
+<p>The <code>interpretCycle</code> function returns a matrix with two columns,
+<code>genes</code> and <code>arrows</code>. Each row contains the gene name (or
+label) of a node and the form of the interaction arrow relating it
+to the next node in the cycle. Likely to be most often used inside an
+<code>lapply</code> function in order to interpret all cycles at once.
+</p>
+<p>The <code>cycleSubgraph</code> function returns an <code>igraph</code>
+object. This value repesents the subgraph of the full graph defined by
+all nodes that are part of at least one cycle.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Kevin R. Coombes <a href="mailto:krc@silicovore.com">krc@silicovore.com</a>,
+Polina Bombina <a href="mailto:pbombina@augusta.edu">pbombina@augusta.edu</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">xmlfile &lt;- system.file("pathways/WP3850.gpml", package = "WayFindR")
+graf &lt;- GPMLtoIgraph(xmlfile)
+cyc &lt;- findCycles(graf)
+cyc
+CS &lt;- cycleSubgraph(graf, cyc)
+plot(CS)
+</code></pre>
+
+
+</div>

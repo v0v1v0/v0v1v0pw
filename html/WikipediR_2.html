@@ -1,0 +1,120 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>categories_in_page</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieves categories associated with a page.</h2>
+
+<h3>Description</h3>
+
+<p>Retrieves categories associated with a page (or list of pages) on a MediaWiki instance
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">categories_in_page(
+  language = NULL,
+  project = NULL,
+  domain = NULL,
+  pages,
+  properties = c("sortkey", "timestamp", "hidden"),
+  limit = 50,
+  show_hidden = FALSE,
+  clean_response = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>The language code of the project you wish to query,
+if appropriate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>The project you wish to query ("wikiquote"), if appropriate.
+Should be provided in conjunction with <code>language</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>domain</code></td>
+<td>
+<p>as an alternative to a <code>language</code> and <code>project</code> combination,
+you can also provide a domain ("rationalwiki.org") to the URL constructor, allowing
+for the querying of non-Wikimedia MediaWiki instances.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pages</code></td>
+<td>
+<p>A vector of page titles, with or without spaces, that you want to retrieve
+categories for.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>properties</code></td>
+<td>
+<p>The properties you want to retrieve about the categories.
+Options are "sortkey" (the key that sorts the way the page is stored in each category),
+"timestamp" (when the category was added to that page) and "hidden" (tags those categories
+in the returned list that are 'hidden' from readers).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit</code></td>
+<td>
+<p>The maximum number of categories you want to retrieve for each page. Set
+to 50 by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show_hidden</code></td>
+<td>
+<p>Whether or not to include 'hidden' categories in the categories
+that are retrieved - these are usually associated with the maintenance of Wikipedia
+and its internal processes. Set to FALSE by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clean_response</code></td>
+<td>
+<p>whether to do some basic sanitising of the resulting data structure.
+Set to FALSE by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments to pass to httr's GET.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>pages_in_category</code> for pages in a specified category.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+#Retrieve the categories for the "New Age" article on en.wiki
+cats &lt;- categories_in_page("en", "wikipedia", pages = "New Age")
+
+#Retrieve the categories for the "New Age" article on rationalwiki.
+rw_cats &lt;- categories_in_page(domain = "rationalwiki.org", pages = "New Age")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

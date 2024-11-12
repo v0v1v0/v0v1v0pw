@@ -1,0 +1,171 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>occ2sps</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Single-season two-species occupancy estimation
+</h2>
+
+<h3>Description</h3>
+
+<p>Estimates occupancy and probability of detection for two species, where one (dominant) species affects the occupancy or detection of the other (subordinate) species (see Richmond et al, 2010). The model has the following parameters:
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+  psiA </td>
+<td style="text-align: left;"> probability of occupancy of species A </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  psiBa </td>
+<td style="text-align: left;"> probability of occupancy of B if A is absent </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  psiBA </td>
+<td style="text-align: left;"> probability of occupancy of B if A is present </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  pA </td>
+<td style="text-align: left;"> probability of detection of species A if B is absent </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  rA </td>
+<td style="text-align: left;"> probability of detection of species A if both are present </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  pB </td>
+<td style="text-align: left;"> probability of detection of species B if A is absent </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  rBa </td>
+<td style="text-align: left;"> probability of detection of species B if both are present but A was not detected </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  rBA </td>
+<td style="text-align: left;"> probability of detection of species B if both are present and A was detected</td>
+</tr>
+</table>
+<h3>Usage</h3>
+
+<pre><code class="language-R">occ2sps(DHA, DHB, model=NULL, data=NULL, ci = 0.95, verify=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>DHA</code></td>
+<td>
+
+<p>a 1/0/NA matrix (or data frame) of detection histories, sites x occasions, for the dominant species.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DHB</code></td>
+<td>
+
+<p>detection histories for the subordinate species in the same format as DHA.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+
+<p>a list of formulae symbolically defining a linear predictor for any of the parameters in the model. The default, NULL, is equivalent to <code>list(psiA~1, psiBa~1, pA~1, pB~1)</code>; parameters not included in the list are given the following values: <code>psiBA &lt;- psiBa, rA &lt;- pA, rBa &lt;- pB, rBA &lt;- rBa</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>a data frame containing the variables in the model. If <code>data = NULL</code>, a faster algorithm is used, and any covariates in the model will be ignored.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci</code></td>
+<td>
+
+<p>the confidence interval to use.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verify</code></td>
+<td>
+
+<p>if TRUE, the data provided will be checked.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns an object of class <code>wiqid</code>, see wiqid-class for details.
+</p>
+
+
+<h3>Benchmarks</h3>
+
+<p>Output has been checked against output from PRESENCE (Hines 2006) v.5.5 for the <code>railSims</code> data set. Real values are  the same to 4 decimal places, and AICs are the same.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith
+</p>
+
+
+<h3>References</h3>
+
+<p>Richmond, Hines, Beissinger (2010) Two-species occupancy models: a new parameterization applied to co-occurrence of secretive rails. <em>Ecological Applications</em> 20(7):2036-2046
+</p>
+<p>MacKenzie, D I; J D Nichols; A J Royle; K H Pollock; L L Bailey; J E Hines 2006. <em>Occupancy Estimation and Modeling : Inferring Patterns and Dynamics of Species Occurrence</em>. Elsevier Publishing.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See the example data set <code>railSims</code>. See <code>occSS</code> for single-season single-species occupancy estimation.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(railSims)
+# Extract the two detection histories
+DHA &lt;- railSims[, 1:3]
+DHB &lt;- railSims[, 4:6]
+
+# Default model (no interaction)
+occ2sps(DHA, DHB)
+
+  
+# Add a submodel for psiBA, so that psiBA and psiBa are separated:
+occ2sps(DHA, DHB, model = psiBA ~ 1)
+
+# Add covariates for psiA and psiBA; only display beta coefficients:
+occ2sps(DHA, DHB, model = list(psiA ~ logArea, psiBA ~ reeds), data=railSims)$beta
+
+# Model corresponding to the data generation model
+occ2sps(DHA, DHB, list(psiA ~ logArea, psiBA ~ reeds, rBA ~ 1), data=railSims)$beta
+
+</code></pre>
+
+
+</div>

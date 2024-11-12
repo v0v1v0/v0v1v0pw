@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wcAggregateCases</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Aggregate identical cases.
+</h2>
+
+<h3>Description</h3>
+
+<p>Function to aggregate identical cases.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wcAggregateCases(x, weights = NULL, ...)
+## S3 method for class 'data.frame'
+wcAggregateCases(x, weights=NULL, ...) 
+## S3 method for class 'matrix'
+wcAggregateCases(x, weights=NULL, ...) 
+## S3 method for class 'stslist'
+wcAggregateCases(x, weights=NULL, weighted=TRUE, ...)
+## S3 method for class 'wcAggregateCases'
+print(x,  ...) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The object to aggregate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>Numeric. An optional case weights vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weighted</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>, the <code>weights</code> are taken from the sequence object (see <code>seqdef</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Optional additionnal arguments.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>wcAggregateCases</code> object with the following components:
+</p>
+
+<dl>
+<dt>aggIndex</dt>
+<dd>
+<p>Index of the unique cases in the original object data.</p>
+</dd>
+<dt>aggWeights</dt>
+<dd>
+<p>Aggregated case weights</p>
+</dd>
+<dt>disaggIndex</dt>
+<dd>
+<p>Index of the original object data in the unique cases.</p>
+</dd>
+<dt>disaggWeights</dt>
+<dd>
+<p>Original weights used.</p>
+</dd>
+</dl>
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(mvad)
+## Taking only the father unemployment and 
+## success at the end of compulsory schooling.
+myData &lt;- mvad[ , c("funemp", "gcse5eq")]
+## Computing aggregated cases informations
+ac &lt;- wcAggregateCases(myData, weights=mvad$weight)
+print(ac)
+## Retrieving unique cases in the original data set
+uniqueData &lt;- myData[ac$aggIndex, ]
+## Table from original data
+table.orig &lt;- xtabs(mvad$weight~funemp+gcse5eq, data=myData)
+
+## Table from aggregated data
+table.agg &lt;- xtabs(ac$aggWeights~funemp+gcse5eq, data=uniqueData)
+
+## Both table are equal, no information is lost 
+## (only the call command is different)
+all(table.orig == table.agg)
+
+</code></pre>
+
+
+</div>

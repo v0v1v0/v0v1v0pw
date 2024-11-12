@@ -1,0 +1,342 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>windowed_scale_index</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Windowed scale index</h2>
+
+<h3>Description</h3>
+
+<p>This function computes the windowed scale indices of a signal in the scale
+interval <code class="reqn">[s_0,s_1]</code>, for a given set of scale parameters <code class="reqn">s_1</code> and taking
+<code class="reqn">s_0</code> as the minimum scale (see Benítez et al. 2010).
+</p>
+<p>The windowed scale index of a signal in the scale interval <code class="reqn">[s_0,s_1]</code> centered at
+time <code class="reqn">tc</code> and with time windows radius <code>windowrad</code> is given by the quotient
+</p>
+<p style="text-align: center;"><code class="reqn">\frac{WS_{windowrad}(tc,s_{min})}{WS_{windowrad}(tc,s_{max})},</code>
+</p>
+
+<p>where <code class="reqn">WS_{windowrad}</code> is the corresponding windowed scalogram with time windows
+radius <code>windowrad</code>, <code class="reqn">s_{max} \in [s_0,s_1]</code> is the smallest scale such that
+<code class="reqn">WS_{windowrad}(tc,s)\le WS_{windowrad}(tc,s_{max})</code> for all <code class="reqn">s \in [s_0,s_1]</code>,
+and <code class="reqn">s_{min} \in [s_{max},2s_1]</code> is the smallest scale such that
+<code class="reqn">WS_{windowrad}(tc,s_{min})\le WS_{windowrad}(tc,s)</code> for all
+<code class="reqn">s \in [s_{max},2s_1]</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">windowed_scale_index(signal = NULL,
+                            wsc = NULL,
+                            wsc_coi = NULL,
+                            dt = 1,
+                            scales = NULL,
+                            powerscales = TRUE,
+                            s1 = NULL,
+                            windowrad = NULL,
+                            delta_t = NULL,
+                            wname = c("MORLET", "DOG", "PAUL", "HAAR", "HAAR2"),
+                            wparam = NULL,
+                            waverad = NULL,
+                            border_effects = c("BE", "INNER", "PER", "SYM"),
+                            makefigure = TRUE,
+                            time_values = NULL,
+                            figureperiod = TRUE,
+                            plot_wsc = FALSE,
+                            xlab = "Time",
+                            ylab = NULL,
+                            main = "Windowed Scale Index",
+                            zlim = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>signal</code></td>
+<td>
+<p>A vector containing the signal whose windowed scale indices are wanted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wsc</code></td>
+<td>
+<p>A matrix containing the windowed scalograms from which the windowed scale
+indices are going to be computed (number of times x number of scales, as it is returned
+by the <code>windowed_scalogram</code> function). If <code>wsc</code> is not <code>NULL</code>, then
+<code>signal</code>, <code>windowrad</code>, <code>delta_t</code>, <code>waverad</code> and
+<code>border_effects</code> are not necessary and they are ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wsc_coi</code></td>
+<td>
+<p>A vector of length <code>nrow(wsc)</code> (i.e. number of times) containing
+the values of the maximum scale at each time from which there are border effects in the
+windowed scalogram <code>wsc</code>. If <code>wsc</code> is <code>NULL</code>, then <code>wsc_coi</code> is not
+necessary and it is ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dt</code></td>
+<td>
+<p>Numeric. The time step of the signal.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scales</code></td>
+<td>
+<p>A vector containing the wavelet scales at wich the windowed scalograms
+are computed. This can be either a vector with all the scales or, following Torrence
+and Compo 1998, a vector of 3 elements with the minimum scale, the maximum scale and
+the number of suboctaves per octave. In the first case, <code>powerscales</code> must be
+<code>FALSE</code> if the given scales are not power 2 scales. In the second case,
+<code>powerscales</code> must be <code>TRUE</code> in order to construct power 2 scales using a
+base 2 logarithmic scale). If <code>scales</code> is NULL, they are automatically constructed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>powerscales</code></td>
+<td>
+<p>Logical. It must be TRUE (default) only in these cases:
+</p>
+
+<ul>
+<li>
+<p> If <code>scales</code> are power 2 scales, i.e. they use a base 2 logarithmic scale.
+</p>
+</li>
+<li>
+<p> If we want to construct power 2 scales automatically. In this case, <code>scales</code>
+must be <code>NULL</code>.
+</p>
+</li>
+<li>
+<p> If we want to construct power 2 scales from <code>scales</code>. In this case,
+<code>length(scales)</code> must be 3.
+</p>
+</li>
+</ul>
+<p>Otherwise, it must be <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s1</code></td>
+<td>
+<p>A vector containing the scales <code class="reqn">s_1</code>. The windowed scale indices are
+computed in the intervals <code class="reqn">[s_0,s_1]</code>, where <code class="reqn">s_0</code> is the minimum scale in
+<code>scales</code>. If <code>s1</code> are not power 2 scales, then <code>scales</code> should not be
+power 2 scales either and hence, <code>powerscales</code> must be <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>windowrad</code></td>
+<td>
+<p>Integer. Time radius for the windows, measured in dt. By default,
+it is set to <code class="reqn">ceiling(length(signal) / 20)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta_t</code></td>
+<td>
+<p>Integer. Increment of time for the construction of windows central
+times, measured in <code>dt</code>. By default, it is set to
+<code class="reqn">ceiling(length(signal) / 256)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wname</code></td>
+<td>
+<p>A string, equal to "MORLET", "DOG", "PAUL", "HAAR" or "HAAR2". The
+difference between "HAAR" and "HAAR2" is that "HAAR2" is more accurate but slower.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wparam</code></td>
+<td>
+<p>The corresponding nondimensional parameter for the wavelet function
+(Morlet, DoG or Paul).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>waverad</code></td>
+<td>
+<p>Numeric. The radius of the wavelet used in the computations for the cone
+of influence. If it is not specified, it is asumed to be <code class="reqn">\sqrt{2}</code> for Morlet and DoG,
+<code class="reqn">1/\sqrt{2}</code> for Paul and 0.5 for Haar.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>border_effects</code></td>
+<td>
+<p>A string, equal to "BE", "INNER", "PER" or "SYM", which indicates
+how to manage the border effects which arise usually when a convolution is performed on
+finite-lenght signals.
+</p>
+
+<ul>
+<li>
+<p> "BE": With border effects, padding time series with zeroes.
+</p>
+</li>
+<li>
+<p> "INNER": Normalized inner scalogram with security margin adapted for each
+different scale.
+</p>
+</li>
+<li>
+<p> "PER": With border effects, using boundary wavelets (periodization of the
+original time series).
+</p>
+</li>
+<li>
+<p> "SYM": With border effects, using a symmetric catenation of the original time
+series.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>makefigure</code></td>
+<td>
+<p>Logical. If TRUE (default), a figure with the windowed scale indices
+is plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time_values</code></td>
+<td>
+<p>A numerical vector of length <code>length(signal)</code> containing custom
+time values for the figure. If NULL (default), it will be computed starting at 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>figureperiod</code></td>
+<td>
+<p>Logical. If TRUE (default), periods are used in the figure instead
+of scales.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_wsc</code></td>
+<td>
+<p>Logical. If TRUE, it plots the windowed scalograms from which the
+windowed scale indices are computed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>A string giving a custom X axis label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>A string giving a custom Y axis label. If NULL (default) the Y label is
+either "s1" or "Period of s1" depending on the value of <code>figureperiod</code> if
+<code>length(s1) &gt; 1</code>, or "Windowed Scale Index" if <code>length(s1) == 1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>A string giving a custom main title for the figure.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zlim</code></td>
+<td>
+<p>A vector of length 2 with the limits for the z-axis (the color bar).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with the following fields:
+</p>
+
+<ul>
+<li> <p><code>wsi</code>: A matrix of size <code>length(tcentral)</code> x <code>length(s1)</code>
+containing the values of the corresponding windowed scale indices.
+</p>
+</li>
+<li> <p><code>s0</code>: The scale <code class="reqn">s_0</code>.
+</p>
+</li>
+<li> <p><code>s1</code>: The vector of scales <code class="reqn">s_1</code>.
+</p>
+</li>
+<li> <p><code>smax</code>: A matrix of size <code>length(tcentral)</code> x <code>length(s1)</code>
+containing the scales <code class="reqn">s_{max}</code>.
+</p>
+</li>
+<li> <p><code>smin</code>: A matrix of size <code>length(tcentral)</code> x <code>length(s1)</code>
+containing the scales <code class="reqn">s_{min}</code>.
+</p>
+</li>
+<li> <p><code>wsc</code>: A matrix of size <code>length(tcentral)</code> x <code>length(scales)</code>
+containing the windowed scalograms from which the windowed scale indices are computed.
+</p>
+</li>
+<li> <p><code>scalog_smax</code>: A matrix of size <code>length(tcentral)</code> x <code>length(s1)</code>
+containing the values of the corresponding scalograms at scales <code class="reqn">s_{max}</code>.
+</p>
+</li>
+<li> <p><code>scalog_smin</code>: A matrix of size <code>length(tcentral)</code> x <code>length(s1)</code>
+containing the values of the corresponding scalograms at scales <code class="reqn">s_{min}</code>.
+</p>
+</li>
+<li> <p><code>tcentral</code>: The vector of central times used in the computation of
+<code>wsi</code>.
+</p>
+</li>
+<li> <p><code>windowrad</code>: Radius for the time windows, measured in <code>dt</code>.
+</p>
+</li>
+<li> <p><code>fourierfactor</code>: A factor for converting scales into periods.
+</p>
+</li>
+<li> <p><code>coi_maxscale</code>: A vector of length <code>length(tcentral)</code> containing the
+values of the maximum scale at each time from which there are border effects.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>R. Benítez, V. J. Bolós, M. E. Ramírez. A wavelet-based tool for studying
+non-periodicity. Comput. Math. Appl. 60 (2010), no. 3, 634-641.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+dt &lt;- 0.1
+time &lt;- seq(0, 50, dt)
+signal &lt;- c(sin(pi * time), sin(pi * time / 2))
+# First, we try with default s1 scales (a vector with a wide range of values for s1).
+wsi_full &lt;- windowed_scale_index(signal = signal, dt = dt, figureperiod = FALSE)
+# Next, we choose a meaningful s1 value, greater than all relevant scales.
+wsi &lt;- windowed_scale_index(signal = signal, dt = dt, s1 = 4, figureperiod = FALSE)
+
+# Another way, giving the windowed scalograms instead of the signal:
+
+wsc &lt;- windowed_scalogram(signal = signal, dt = dt, figureperiod = FALSE,
+                          energy_density = FALSE, makefigure = FALSE)
+wsi_full &lt;- windowed_scale_index(wsc = wsc$wsc, wsc_coi = wsc$coi_maxscale,
+                                 scales = wsc$scales, time_values = wsc$tcentral,
+                                 figureperiod = FALSE)
+wsi &lt;- windowed_scale_index(wsc = wsc$wsc, wsc_coi = wsc$coi_maxscale,
+                            scales = wsc$scales, s1 = 4, time_values = wsc$tcentral,
+                            figureperiod = FALSE)
+
+</code></pre>
+
+
+</div>

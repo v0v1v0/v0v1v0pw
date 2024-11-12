@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>body_add_flextables</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read Word document with bookmarks and create other Word document with rendered tables in place.</h2>
+
+<h3>Description</h3>
+
+<p>This function is basically a loop wrapper around <code>body_add_flextable</code> function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">body_add_flextables(docxIn, docxOut, flextables, debug = F, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>docxIn</code></td>
+<td>
+<p>String of length one; path to Word file with bookmarks OR officer::rdocx object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>docxOut</code></td>
+<td>
+<p>String of length one; path for output Word file or NA</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flextables</code></td>
+<td>
+<p>Named list of flextables; Tables to be inserted into the Word file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>Boolean of length one; If <code>True</code> then <code>browser()</code> is called at the beginning of the function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Parameters to be sent to other methods (mainly <code>body_add_flextable</code>)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Path to the rendered Word file if the operation was successfull OR officer::rdocx object if docxOut is NA
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(flextable)
+ft_mtcars &lt;- flextable(mtcars)
+ft_iris &lt;- flextable(iris)
+FT &lt;- list(ft_mtcars=ft_mtcars,ft_iris=ft_iris)
+body_add_flextables(
+   paste(examplePath(),'templates/templateFT.docx',sep = ''),
+   paste(tempdir(),'/resultFT.docx',sep = ''),
+   FT)
+</code></pre>
+
+
+</div>

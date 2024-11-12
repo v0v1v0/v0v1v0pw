@@ -1,0 +1,185 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>perm.hom.test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+
+Permutation Homogeneity Test
+</h2>
+
+<h3>Description</h3>
+
+
+<p>Performs a permutation (randomization) test for homogeneity of one variable
+on two or more populations, using chi-square as the test statistic.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">perm.hom.test(x, type = c("cont", "flat", "raw"),
+              variable = NULL, R = 9999)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+
+<p>a data frame (see details below).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+
+
+<p>a character string indicating the type of data frame; must be one
+of "cont" (default), "flat", or "raw".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variable</code></td>
+<td>
+
+
+<p>an optional character string that gives the name of the variable whose
+distributions are to be compared.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+
+
+<p>number of replications (default = 9999).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+<p>The null hypothesis is that the populations are homogeneous with respect
+to the variable under consideration. The alternative hypothesis is that
+the populations are nonhomogeneous with respect to the variable under
+consideration.
+</p>
+<p>Types of data frames permitted:
+</p>
+<p>cont: In this type of data frame, the first variable gives either the
+possible values of the variable under consideration or the populations.
+The remaining variables give the observed frequencies.
+</p>
+<p>flat: This type of data frame consists of three variables. The first
+two variables give the pairs of possible values of the variable under
+consideration and the populations; the third variable gives the
+frequencies of the pairs.
+</p>
+<p>raw: This type of data frame consists of two variables, which give the
+raw data of the variable-values and populations.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with class "perm.cs.hom" containing the following components:
+
+
+
+
+
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Perm.values </code></td>
+<td>
+<p>the values of chi-square obtained from the permutations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Header </code></td>
+<td>
+<p>the main title for the output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Variable </code></td>
+<td>
+<p>the name of the variable whose distributions are to be compared or NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Statistic </code></td>
+<td>
+<p>the statistic used for the permutation test; here, always chi.square.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Observed </code></td>
+<td>
+<p>the value of the chi-square statistic for the observed data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n </code></td>
+<td>
+<p>the (total) sample size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Null </code></td>
+<td>
+<p>the null hypothesis; here, always homogeneous.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Alternative </code></td>
+<td>
+<p>the alternative hypothesis; here, always nonhomogeneous.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>P.value </code></td>
+<td>
+<p>the P-value or a statement like P &lt; 0.001.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value </code></td>
+<td>
+<p>the P-value.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+
+<p>Neil A. Weiss
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Self-concept for independent random samples of sighted and blind
+# Indian adolescents.
+data("self")
+str(self)
+self
+# Note that self is in the form of a contingency table ("cont").
+
+# Permutation homogeneity test to decide whether a difference exists in
+# self-concept distributions between sighted and blind Indian adolescents,
+# using 999 replications.
+perm.hom.test(self, "cont", "Self-concept", 999)
+# Or, equivalently, since "cont" is the default "type":
+perm.hom.test(self, variable = "Self-concept", R = 999)
+</code></pre>
+
+
+</div>

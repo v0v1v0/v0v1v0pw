@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Apouey</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Apouey index</h2>
+
+<h3>Description</h3>
+
+<p>Computes Apouey inequality measure of a given variable taking into account weights.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Apouey(
+  X,
+  W = rep(1, length(X)),
+  a = 2/(1 - length(W[!is.na(W) &amp; !is.na(X)])),
+  b = length(W[!is.na(W) &amp; !is.na(X)])/(length(W[!is.na(W) &amp; !is.na(X)]) - 1)
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>is a data vector (numeric or ordered factor)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p>is a vector of weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+<p>is a positive parameter. See more in details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+<p>is a real parameter. See more in details</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Let <code class="reqn">m</code> be the median category, <code class="reqn">n</code> will be the number of categories and <code class="reqn">P_i</code> be the cumulative distribution of <code class="reqn">i</code>-th category. The following index was proposed by Apouey (2007):
+</p>
+<p style="text-align: center;"><code class="reqn">I = \alpha(\sum_{i\geq m}^{n}P_{i}-\sum_{i&lt;m}^{n}P_{i}+m-\frac{n}{2}-1)+\beta</code>
+</p>
+
+<p>where <code class="reqn">\alpha</code> and <code class="reqn">\beta</code> are given parameters with default values <code class="reqn">\alpha=\frac{2}{1-n}</code> and <code class="reqn">\beta=\frac{n}{n-1}</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The value of Apouey coefficient.
+</p>
+
+
+<h3>References</h3>
+
+<p>Apouey B.: (2007) Measuring health polarization with self-assessed health data, Health Economics 16; 875-894.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Compare weighted and unweighted result
+X=1:10
+W=1:10
+Apouey(X,a=2,b=2)
+Apouey(X,W,a=2,b=2)
+
+data(Well_being)
+# Apouey index for health assessment with sample weights
+X=Well_being$V1
+W=Well_being$Weight
+Apouey(X,W,a=2,b=2)
+
+
+</code></pre>
+
+
+</div>

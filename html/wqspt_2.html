@@ -1,0 +1,214 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wqs_full_perm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Full wrapper WQS permutation test</h2>
+
+<h3>Description</h3>
+
+<p><code>wqs_full_perm</code> is a full wrapper function that is a full implementation
+of the Weighted Quantile Sum (WQS) regression method followed by the
+permutation test to determine the significance of the WQS coefficient.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wqs_full_perm(
+  formula,
+  data,
+  mix_name,
+  q = 10,
+  b_main = 1000,
+  b_perm = 200,
+  b1_pos = TRUE,
+  b1_constr = FALSE,
+  rs = FALSE,
+  niter = 200,
+  seed = NULL,
+  family = "gaussian",
+  plan_strategy = "multicore",
+  stop_if_nonsig = FALSE,
+  stop_thresh = 0.05,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>An object of class formula. The wqs term must be included in
+the formula (e.g., y ~ wqs + ...).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The <code>data.frame</code> to be used in the WQS regression run.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mix_name</code></td>
+<td>
+<p>A vector with the mixture column names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>An integer to indicate the number of quantiles to split the mixture
+variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b_main</code></td>
+<td>
+<p>The number of bootstraps for the main WQS regression run.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b_perm</code></td>
+<td>
+<p>The number of bootstraps for the iterated permutation test
+WQS regression runs and the reference WQS regression run (only for linear
+WQS regression and only when b_mean != b_perm).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b1_pos</code></td>
+<td>
+<p>A logical value that indicates whether beta values should be
+positive or negative.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b1_constr</code></td>
+<td>
+<p>Logical value that determines whether to apply positive or
+negative constraints in the optimization function for the weight optimization.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rs</code></td>
+<td>
+<p>A logical value indicating whether random subset implementation
+should be performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>niter</code></td>
+<td>
+<p>Number of permutation test iterations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>An integer to fix the seed. This will only impact the the initial
+WQS regression run and not the permutation test iterations. The default
+setting is NULL, which means no seed is used for the initial WQS regression.
+The seed will be saved in the "gwqs_main" object as "gwqs_main$seed".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>A description of the error distribution and link function to be
+used in the model. This can be a character string naming a family function
+(e.g., "binomial") or a family object (e.g., binomial(link="logit")).
+Currently validated families include gaussian(link="identity") for linear
+regression, binomial() with any accepted link function (e.g., "logit" or
+"probit"), poisson(link = "log"), quasipoisson(link = "log"), or "negbin" for
+negative binomial. The "multinomial" family is not yet supported.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plan_strategy</code></td>
+<td>
+<p>Evaluation strategy for the plan function. You can choose
+among "sequential", "transparent", "multisession", "multicore", "multiprocess",
+"cluster" and "remote." See future::plan documentation for full details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stop_if_nonsig</code></td>
+<td>
+<p>if TRUE, the function will not proceed with the
+permutation test if the main WQS regression run produces nonsignificant
+p-value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stop_thresh</code></td>
+<td>
+<p>numeric p-value threshold required in order to proceed
+with the permutation test, if <code>stop_if_nonsig = TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other parameters to put into the gwqs function call.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>wqs_full_perm</code> returns an object of class <code>wqs_perm</code>, which
+contains three sublists:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>perm_test</code></td>
+<td>
+<p>List containing: (1) <code>pval</code>: permutation test p-value, (2) (linear
+regression only) <code>testbeta1</code>: reference WQS regression coefficient beta1 value, (3)
+(linear regression only) <code>betas</code>: Vector of beta values from each
+permutation test run, (4) (logistic regression only) <code>testpval</code>: test reference
+p-value, (5) (logistic regression only) <code>permpvals</code>: p-values from the null
+models.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gwqs_main</code></td>
+<td>
+<p>Main gWQS object (same as model input). This will now include an
+additional object "seed" that returns the seed used for this main WQS regression.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gwqs_perm</code></td>
+<td>
+<p>Permutation test reference gWQS object (NULL if model
+<code>family != "gaussian"</code> or if same number of bootstraps are used in permutation
+test WQS regression runs as in the main run).</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(gWQS)
+
+# mixture names
+PCBs &lt;- names(wqs_data)[1:17] #half of the original 34 for quick computation
+
+perm_test_res &lt;- wqs_full_perm(formula = yLBX ~ wqs, data = wqs_data, 
+                                mix_name = PCBs, q = 10, b_main = 5, 
+                                b_perm = 5, b1_pos = TRUE, b1_constr = FALSE, 
+                                niter = 3, seed = 16, plan_strategy = "multicore", 
+                                stop_if_nonsig = FALSE)
+
+# Note: The default values of b_main = 1000, b_perm = 200, and niter = 200 
+# are the recommended parameter values. This example has a lower b_main, 
+# b_perm, and niter in order to serve as a shorter test run. 
+ 
+</code></pre>
+
+
+</div>

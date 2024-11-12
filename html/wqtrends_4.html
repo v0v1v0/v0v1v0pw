@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>anlz_gam</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fit a generalized additive model to a water quality time series</h2>
+
+<h3>Description</h3>
+
+<p>Fit a generalized additive model to a water quality time series
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">anlz_gam(moddat, kts = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>moddat</code></td>
+<td>
+<p>input raw data, one station and paramater</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kts</code></td>
+<td>
+<p>optional numeric vector for the upper limit for the number of knots in the term <code>s(cont_year)</code>, see details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to other methods, i.e., <code>trans = 'log10'</code> (default) or <code>trans = 'ident'</code> passed to <code>anlz_trans</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The model structure is as follows:
+</p>
+
+<dl>
+<dt>model S:</dt>
+<dd>
+<p>chl ~ s(cont_year, k = large)</p>
+</dd>
+</dl>
+<p>The <code>cont_year</code> vector is measured as a continuous numeric variable for the annual effect (e.g., January 1st, 2000 is 2000.0, July 1st, 2000 is 2000.5, etc.) and <code>doy</code> is the day of year as a numeric value from 1 to 366.  The function <code>s</code> models <code>cont_year</code> as a smoothed, non-linear variable. The optimal amount of smoothing on <code>cont_year</code> is determined by cross-validation as implemented in the mgcv package and an upper theoretical upper limit on the number of knots for <code>k</code> should be large enough to allow sufficient flexibility in the smoothing term.  The upper limit of <code>k</code> was chosen as 12 times the number of years for the input data. If insufficient data are available to fit a model with the specified <code>k</code>, the number of knots is decreased until the data can be modelled, e.g., 11 times the number of years, 10 times the number of years, etc.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a <code>gam</code> model object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(dplyr)
+tomod &lt;- rawdat %&gt;% 
+  filter(station %in% 34) %&gt;% 
+  filter(param %in% 'chl')
+anlz_gam(tomod, trans = 'log10')
+</code></pre>
+
+
+</div>

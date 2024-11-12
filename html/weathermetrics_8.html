@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>convert_temperature</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert from one temperature metric to another</h2>
+
+<h3>Description</h3>
+
+<p>This function allows you to convert a vector of temperature values between
+Fahrenheit, Celsius, and degrees Kelvin.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">convert_temperature(temperature, old_metric, new_metric, round = 2)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>temperature</code></td>
+<td>
+<p>A numeric vector of temperatures to be converted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>old_metric</code></td>
+<td>
+<p>The metric from which you want to convert. Possible options are:
+</p>
+
+<ul>
+<li> <p><code>fahrenheit</code>, <code>f</code>
+</p>
+</li>
+<li> <p><code>kelvin</code>, <code>k</code>
+</p>
+</li>
+<li> <p><code>celsius</code>, <code>c</code>
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>new_metric</code></td>
+<td>
+<p>The metric to which you want to convert. The same options
+are possible as for <code>old_metric</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>round</code></td>
+<td>
+<p>An integer indicating the number of decimal places to
+round the converted value.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A numeric vector with temperature converted to the metric specified
+by the argument <code>new_metric</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>#' Joshua Ferreri <a href="mailto:joshua.m.ferreri@gmail.com">joshua.m.ferreri@gmail.com</a>,
+Brooke Anderson <a href="mailto:brooke.anderson@colostate.edu">brooke.anderson@colostate.edu</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(lyon)
+lyon$TemperatureF &lt;- convert_temperature(lyon$TemperatureC,
+   old_metric = "c", new_metric = "f")
+lyon
+
+data(norfolk)
+norfolk$TempC &lt;- convert_temperature(norfolk$TemperatureF,
+   old_metric = "f", new_metric = "c")
+norfolk
+
+data(angeles)
+angeles$TemperatureC &lt;- convert_temperature(angeles$TemperatureK,
+   old_metric = "kelvin", new_metric = "celsius")
+angeles
+
+</code></pre>
+
+
+</div>

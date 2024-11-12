@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>writeSim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Write simulations to file</h2>
+
+<h3>Description</h3>
+
+<p>Write simulation results to .csv files (one .csv file is generated for each trace).
+Inputs include the weather simulations stored in the list object output from the 'wx()' function as well as the 'nsim' and 'nrealz'
+variables that were inputs to the 'wx()' function.<br><br>
+A debug flag allows for more detailed reports (debug = TRUE), but setting 'debug = FALSE' is generally
+recommended for more concise output. Keeping 'debug = FALSE' will also include a simulation
+time stamp (year, month, day) beginning in year 1.<br><br>
+This function will write the .csv files to your working directory.<br><br>
+Leap years may be included in the simulated weather if they are included in your training data,
+so non-leap years include a row of 'NA' values at the end of the calendar year as a book-keeping
+measure so that the total number of rows in each trace is the same.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">writeSim(wxOutput, nsim, nrealz, path = NULL, debug = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wxOutput</code></td>
+<td>
+<p>Weather simulations output from 'wx()' function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsim</code></td>
+<td>
+<p>Number of simulation years.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nrealz</code></td>
+<td>
+<p>Number of realizations (ensemble size).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Specified path to where simulation output shall be written. Defaults to current working directory (path = NULL).
+Specified path should be a character string of the folder location ending with '/'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>Option to include additional variables in the .csv file
+outputs for debugging and advanced analysis. Includes sampling date, etc. Default = FALSE (off).
+If debug is off, the weather simulations will have a simulation year time stamp
+(beginning in year 1) as well as month and day time stamps.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>No return value, called to write simulation results to file.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+z = wx(trainingData = LowerSantaCruzRiverBasinAZ,
+ eyr = 1990, nsim = 5, nrealz = 5, aseed = 23,
+  wwidth = 3, unitSystem = "U.S. Customary",
+   ekflag = TRUE, awinFlag = TRUE, tempPerturb = TRUE,
+    pcpOccFlag = FALSE, numbCores = NULL)
+
+
+writeSim(wxOutput = z, nsim = 5, nrealz = 5, path = paste0(tempdir(), "/"), debug = FALSE)
+
+
+</code></pre>
+
+
+</div>

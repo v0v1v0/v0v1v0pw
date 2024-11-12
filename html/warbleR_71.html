@@ -1,0 +1,365 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>spectrograms</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Spectrograms of selected signals</h2>
+
+<h3>Description</h3>
+
+<p><code>spectrograms</code> creates spectrograms of signals from selection tables.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">spectrograms(
+  X,
+  wl = 512,
+  flim = "frange",
+  wn = "hanning",
+  pal = reverse.gray.colors.2,
+  ovlp = 70,
+  inner.mar = c(5, 4, 4, 2),
+  outer.mar = c(0, 0, 0, 0),
+  picsize = 1,
+  res = 100,
+  cexlab = 1,
+  propwidth = FALSE,
+  xl = 1,
+  osci = FALSE,
+  gr = FALSE,
+  sc = FALSE,
+  line = TRUE,
+  col = "#07889B",
+  fill = adjustcolor("#07889B", alpha.f = 0.15),
+  lty = 3,
+  mar = 0.05,
+  it = "jpeg",
+  parallel = 1,
+  path = NULL,
+  pb = TRUE,
+  fast.spec = FALSE,
+  by.song = NULL,
+  sel.labels = "selec",
+  title.labels = NULL,
+  dest.path = NULL,
+  box = TRUE,
+  axis = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>'selection_table', 'extended_selection_table' or data frame containing columns for sound file name (sound.files),
+selection number (selec), and start and end time of signals (start and end).
+'top.freq' and 'bottom.freq' columns are optional. If using an
+'extended_selection_table' the sound files are not required (see <code>selection_table</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wl</code></td>
+<td>
+<p>A numeric vector of length 1 specifying the window length of the spectrogram, default
+is 512.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flim</code></td>
+<td>
+<p>A numeric vector of length 2 for the frequency limit (in kHz) of
+the spectrogram, as in <code>spectro</code>. The function also
+accepts 'frange' (default) which produces spectrograms with a frequency
+limit around the range of each signal (adding a 1 kHz margin).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wn</code></td>
+<td>
+<p>Character vector of length 1 specifying window name. Default is
+"hanning". See function <code>ftwindow</code> for more options.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pal</code></td>
+<td>
+<p>A color palette function to be used to assign colors in the
+plot, as in <code>spectro</code>. Default is reverse.gray.colors.2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ovlp</code></td>
+<td>
+<p>Numeric vector of length 1 specifying the percent overlap between two
+consecutive windows, as in <code>spectro</code>. Default is 70.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inner.mar</code></td>
+<td>
+<p>Numeric vector with 4 elements, default is c(5,4,4,2).
+Specifies number of lines in inner plot margins where axis labels fall,
+with form c(bottom, left, top, right). See <code>par</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outer.mar</code></td>
+<td>
+<p>Numeric vector with 4 elements, default is c(0,0,0,0).
+Specifies number of lines in outer plot margins beyond axis labels, with
+form c(bottom, left, top, right). See <code>par</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>picsize</code></td>
+<td>
+<p>Numeric argument of length 1. Controls relative size of
+spectrogram. Default is 1. Ignored when propwidth is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res</code></td>
+<td>
+<p>Numeric argument of length 1. Controls image resolution.
+Default is 100 (faster) although 300 - 400 is recommended for publication/
+presentation quality.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexlab</code></td>
+<td>
+<p>Numeric vector of length 1 specifying the relative size of axis
+labels. See <code>spectro</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>propwidth</code></td>
+<td>
+<p>Logical argument to scale the width of spectrogram
+proportionally to duration of the selection. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xl</code></td>
+<td>
+<p>Numeric vector of length 1. A constant by which to scale
+spectrogram width if propwidth = <code>TRUE</code>. Default is 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>osci</code></td>
+<td>
+<p>Logical argument to add an oscillogram underneath spectrogram, as
+in <code>spectro</code>. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gr</code></td>
+<td>
+<p>Logical argument to add grid to spectrogram. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sc</code></td>
+<td>
+<p>Logical argument to add amplitude scale to spectrogram, default is
+<code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>line</code></td>
+<td>
+<p>Logical argument to add lines at start and end times of selection
+(or box if bottom.freq and top.freq columns are provided). Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>Color of 'line'. Default is "#07889B".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fill</code></td>
+<td>
+<p>Fill color of box around selections. Default is  <code>adjustcolor("#07889B", alpha.f = 0.15)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lty</code></td>
+<td>
+<p>Type of 'line' as in <code>par</code>. Default is 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mar</code></td>
+<td>
+<p>Numeric vector of length 1. Specifies the margins adjacent to the start and end points of selections,
+dealineating spectrogram limits. Default is 0.05.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>it</code></td>
+<td>
+<p>A character vector of length 1 giving the image type to be used. Currently only
+"tiff" and "jpeg" are admitted. Default is "jpeg".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Numeric. Controls whether parallel computing is applied.
+It specifies the number of cores to be used. Default is 1 (i.e. no parallel computing).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Character string containing the directory path where the sound files are located.
+If <code>NULL</code> (default) then the current working directory is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Logical argument to control progress bar. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fast.spec</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> then image function is used internally to create spectrograms,
+which substantially increases performance (much faster), although some options become unavailable,
+as collevels, and sc (amplitude scale). This option is indicated for signals with high background noise
+levels. Palette colors <code>gray.1</code>, <code>gray.2</code>,
+<code>gray.3</code>, <code>topo.1</code> and <code>rainbow.1</code>
+(which should be imported from the package monitoR) seem to work better with 'fast' spectrograms.
+Palette colors <code>gray.1</code>, <code>gray.2</code>, <code>gray.3</code>
+offer decreasing darkness levels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>by.song</code></td>
+<td>
+<p>Character string with the column name containing song labels. If
+provide a single spectrogram containing all elements for each song will be produce. Note that
+the function assumes that each song has a unique label within a sound file. If <code>NULL</code> (default), spectrograms are produced for single selections.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sel.labels</code></td>
+<td>
+<p>Character string with the name of the column(s) for selection
+labeling. Default is 'selec'. Set to <code>NULL</code> to remove labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title.labels</code></td>
+<td>
+<p>Character string with the name(s) of the column(s) to use as title. Default is <code>NULL</code> (no title). Only sound file and song included if 'by.song' is provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dest.path</code></td>
+<td>
+<p>Character string containing the directory path where the image files will be saved.
+If <code>NULL</code> (default) then the folder containing the sound files will be used instead.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>box</code></td>
+<td>
+<p>Logical to control if the box around the spectrogram is plotted (see <code>box</code>). Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axis</code></td>
+<td>
+<p>Logical to control if the Y and X axis are of the spectrogram are plotted (see <code>box</code>). Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to be passed to the internal spectrogram
+creating function for customizing graphical output. The function is a modified
+version of <code>spectro</code>, so it takes the same arguments.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function provides access to batch process of (a modified version of) the <code>spectro</code> function from the 'seewave' package. The function creates spectrograms for visualization of vocalizations.
+Setting inner.mar to c(4,4.5,2,1) and outer.mar to c(4,2,2,1) works well when picsize = 2 or 3.
+Title font size, inner.mar and outer.mar (from mar and oma) don't work well when osci or sc = TRUE,
+this may take some optimization by the user. Setting 'fast' argument to TRUE significantly increases speed, although
+some options become unavailable, as collevels, and sc (amplitude scale). This option is indicated for signals with
+high background noise levels.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Image files containing spectrograms of the signals listed in the input data frame.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>) and Grace Smith Vidaurre
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>track_freq_contour</code> for creating spectrograms to visualize
+frequency measurements by <code>spectro_analysis</code>, <code>snr_spectrograms</code> for
+creating spectrograms to optimize noise margins used in <code>sig2noise</code>
+</p>
+<p>Other spectrogram creators: 
+<code>color_spectro()</code>,
+<code>freq_DTW()</code>,
+<code>multi_DTW()</code>,
+<code>phylo_spectro()</code>,
+<code>snr_spectrograms()</code>,
+<code>track_freq_contour()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">{
+  # load and save data
+  data(list = c("Phae.long1", "Phae.long2", "lbh_selec_table"))
+  writeWave(Phae.long1, file.path(tempdir(), "Phae.long1.wav")) # save sound files
+  writeWave(Phae.long2, file.path(tempdir(), "Phae.long2.wav"))
+
+  # make spectrograms
+  spectrograms(
+    X = lbh_selec_table, flim = c(0, 11), res = 300, mar = 0.05,
+    wl = 300, path = tempdir()
+  )
+
+  # check this folder
+  tempdir()
+}
+
+</code></pre>
+
+
+</div>

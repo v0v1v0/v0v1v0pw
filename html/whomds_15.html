@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rasch_DIF</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Perform analysis of Differential Item Functioning (DIF) for Rasch Model</h2>
+
+<h3>Description</h3>
+
+<p>Perform analysis of Differential Item Functioning (DIF) for Rasch Model
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rasch_DIF(
+  df,
+  vars_metric,
+  vars_DIF,
+  residuals_PCM,
+  split_strategy = NULL,
+  print_results = FALSE,
+  path_output = NULL,
+  breaks = 6
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>a data frame of individual survey data, where each row is an individual</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vars_metric</code></td>
+<td>
+<p>a character vector of items to use in the Rasch Analysis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vars_DIF</code></td>
+<td>
+<p>a string with the column names to use for analyzing differential item functioning (DIF). Default is NULL, to skip analysis of DIF.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>residuals_PCM</code></td>
+<td>
+<p>a matrix giving the residuals of the person parameters from the Rasch Model. Row names are the numbers of the people and the columns are for each variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>split_strategy</code></td>
+<td>
+<p>a named list giving the strategy to take for splitting variables by categories, passed to <code>rasch_split()</code>. One element of the list per variable to split by. Each element of the list must be a character vector of column names to split. The names of the list are the variables to split each group of variables by. Default is NULL, to not split items.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print_results</code></td>
+<td>
+<p>a logical value indicating whether or not to print various files displaying results from the Rasch Model. Default is FALSE, to not print the files.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path_output</code></td>
+<td>
+<p>a string with the path to the output folder. Default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>breaks</code></td>
+<td>
+<p>a numeric value giving the number if class intervals. Default is 6.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Differential Item Functioning (DIF) refers to the circumstance when different groups in a sample respond to items in different ways. For instance, DIF would be observed if men and women had different patterns of responses to a set of survey questions. DIF can cause poor fit for the Rasch Model, and therefore should be analyzed. This function uses ANOVA to find DIF by the variables supplied and by a generated class interval.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a list with results from the DIF analysis: 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>df_DIF_class</code></td>
+<td>
+<p>the person residuals from the Rasch Model, the assigned class intervals, and the variables used for DIF analysis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tab_aov_DIF</code></td>
+<td>
+<p>the results of the ANOVA used to analyze DIF</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DIF_results</code></td>
+<td>
+<p>string of various that exhibit some form of DIF</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>Currently the calculation of the class intervals is quite slow. Reducing the number of breaks can improve speed.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other rasch functions: 
+<code>rasch_df_nest()</code>,
+<code>rasch_drop()</code>,
+<code>rasch_factor()</code>,
+<code>rasch_mds_children()</code>,
+<code>rasch_mds()</code>,
+<code>rasch_model_children()</code>,
+<code>rasch_model()</code>,
+<code>rasch_quality_children_print()</code>,
+<code>rasch_quality_children()</code>,
+<code>rasch_rawscore()</code>,
+<code>rasch_recode()</code>,
+<code>rasch_rescale_children()</code>,
+<code>rasch_rescale()</code>,
+<code>rasch_split_age()</code>,
+<code>rasch_split()</code>,
+<code>rasch_testlet()</code>
+</p>
+
+
+</div>

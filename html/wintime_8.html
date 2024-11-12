@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>perm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Resample using permutations</h2>
+
+<h3>Description</h3>
+
+<p>This function reruns the desired wintime package method on a given number of permutations. This resampling method is recommended
+for the Expected win time (EWT) and Restricted mean survival in favor of treatment (RMT) methods.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">perm(
+  type,
+  rmst_restriction,
+  model,
+  n,
+  m,
+  Time,
+  Delta,
+  trt,
+  cov,
+  z_ewtr,
+  z_comp,
+  resample_num,
+  seed
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>A string value indicating the wintime package method that will run with resampling.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rmst_restriction</code></td>
+<td>
+<p>The RMT cutoff value (days).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>A string value indicating the model used on observed data ('markov' or 'km').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The total number of trial participants.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>The number of events in the hierarchy.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Time</code></td>
+<td>
+<p>A m x n matrix of event times (days). Rows should represent events and columns should represent participants. Event rows should be
+in increasing order of clinical severity.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Delta</code></td>
+<td>
+<p>A m x n matrix of event indicators. Rows should represent events and columns should represent participants. Event rows should
+be in increasing order of clinical severity.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trt</code></td>
+<td>
+<p>A numeric vector of treatment arm indicators (1 for treatment, 0 for control).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cov</code></td>
+<td>
+<p>A n x p matrix of covariate values, where p is the number of covariates. Rows should represent participants and columns should
+represent covariate values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z_ewtr</code></td>
+<td>
+<p>The Z-statistic of EWTR.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z_comp</code></td>
+<td>
+<p>The Z-statistic of the composite event approach.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resample_num</code></td>
+<td>
+<p>The number of desired permutations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>The seed used for random number generation.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A vector of length resample_num containing the treatment effect estimates (for type='max' these are z-statistics) for each permutation.
+</p>
+
+
+</div>

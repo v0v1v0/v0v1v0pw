@@ -1,0 +1,1018 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>analyze.coherency</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Computation of the cross-wavelet power and wavelet coherence spectrum
+of two time series
+</h2>
+
+<h3>Description</h3>
+
+<p>The two time series are selected from an input data frame by specifying either their names 
+or their column numbers. Optionally, the time series are detrended, using <code>loess</code> with parameter
+<code>loess.span</code>. Internally, the series will be standardized before they undergo wavelet transformation.
+</p>
+<p>The cross-wavelet power spectrum is computed applying the Morlet wavelet. 
+P-values to test the null hypothesis that a period (within <code>lowerPeriod</code> and <code>upperPeriod</code>) 
+is irrelevant at a certain time are calculated if desired; this is accomplished with the help of a
+simulation algorithm. There is a selection of models from which to choose the alternative hypothesis.
+The selected model will be fitted to the data and simulated according to estimated parameters
+in order to provide surrogate time series.
+</p>
+<p>For the computation of wavelet coherence, a variety of filtering methods is provided, 
+with flexible window parameters.
+</p>
+<p>Wavelet transformation, as well as p-value computations, are carried out by calling subroutine <code>wc</code>.
+</p>
+<p>The name and parts of the layout of subroutine <code>wc</code> were inspired by a similar function 
+developed by Huidong Tian and Bernard Cazelles (archived R package <code>WaveletCo</code>). 
+The basic concept of the simulation algorithm and of ridge determination build on ideas 
+developed by these authors. The major part of the code for the computation of the cone of influence
+and the code for Fourier-randomized surrogate time series has been adopted from Huidong Tian. 
+The implementation of a choice of filtering windows for the computation of the wavelet coherence 
+was inspired by Luis Aguiar-Conraria and Maria Joana Soares (<code>GWPackage</code>).
+</p>
+<p>Cross-wavelet and coherence computation, the simulation algorithm and ridge determination build heavily 
+on the use of matrices in order to minimize computation time in R. 
+</p>
+<p>This function provides a broad variety of final as well as intermediate results 
+which can be further analyzed in detail. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">analyze.coherency(my.data, my.pair = c(1, 2), loess.span = 0.75, 
+                  dt = 1, dj = 1/20, 
+                  lowerPeriod = 2*dt, 
+                  upperPeriod = floor(nrow(my.data)/3)*dt, 
+                  window.type.t = 1, window.type.s = 1, 
+                  window.size.t = 5, window.size.s = 1/4, 
+                  make.pval = TRUE, method = "white.noise", params = NULL, 
+                  n.sim = 100, 
+                  date.format = NULL, date.tz = NULL, 
+                  verbose = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>my.data</code></td>
+<td>
+<p>data frame of time series (including header, and dates as row names or as separate column 
+named <code>"date"</code> if available)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>my.pair</code></td>
+<td>
+<p>pair of names or column indices indicating the series to be analyzed, 
+e.g. <code>c(1,2)</code>, <code>c(2,1)</code>, <code>c("dji","ftse")</code>. 
+</p>
+<p>Default: <code>c(1,2)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loess.span</code></td>
+<td>
+<p>parameter <code>alpha</code> in <code>loess</code> controlling the degree of time series smoothing, 
+if the time series are to be detrended; no detrending if <code>loess.span = 0</code>. 
+</p>
+<p>Default: <code>0.75</code>.
+</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>dt</code></td>
+<td>
+<p>time resolution, i.e. sampling resolution in the time domain, <code>1/dt</code> = number of observations per time unit. 
+For example: a natural choice of <code>dt</code> in case of hourly data is <code>dt = 1/24</code>, 
+resulting in one time unit equaling one day. This is also the time unit in which periods are measured.
+If <code>dt = 1</code>, the time interval between two consecutive observations will equal one time unit.
+</p>
+<p>Default: <code>1</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dj</code></td>
+<td>
+<p>frequency resolution, i.e. sampling resolution in the frequency domain, <code>1/dj</code> = number of 
+suboctaves (voices per octave).
+</p>
+<p>Default: <code>1/20</code>.
+</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>lowerPeriod</code></td>
+<td>
+<p>lower Fourier period (measured in time units determined by <code>dt</code>, 
+see the explanations concerning <code>dt</code>) for wavelet decomposition.<br> 
+If <code>dt = 1</code>, the minimum admissible value is 2. 
+</p>
+<p>Default: <code>2*dt</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upperPeriod</code></td>
+<td>
+<p>upper Fourier period (measured in time units determined by <code>dt</code>, 
+see the explanations concerning <code>dt</code>) for wavelet decomposition. 
+</p>
+<p>Default: <code>(floor of one third of time series length)*dt</code>.
+</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>window.type.t</code></td>
+<td>
+<p>type of window for smoothing in time direction; select from:  
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">  <code>0</code> </td>
+<td style="text-align: left;"> (<code>"none"</code>) </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> no smoothing in time direction </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">  <code>1</code> </td>
+<td style="text-align: left;"> (<code>"bar"</code>)  </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> Bartlett </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">  <code>2</code> </td>
+<td style="text-align: left;"> (<code>"tri"</code>)  </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> Triangular (Non-Bartlett) </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">  <code>3</code> </td>
+<td style="text-align: left;"> (<code>"box"</code>)  </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> Boxcar (Rectangular, Dirichlet)</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">  <code>4</code> </td>
+<td style="text-align: left;"> (<code>"han"</code>)  </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> Hanning </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">  <code>5</code> </td>
+<td style="text-align: left;"> (<code>"ham"</code>)  </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> Hamming </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">  <code>6</code> </td>
+<td style="text-align: left;"> (<code>"bla"</code>)  </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> Blackman 
+                     </td>
+</tr>
+</table>
+<p>Default: <code>1</code> = <code>"bar"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>window.type.s</code></td>
+<td>
+<p>type of window for smoothing in scale (period) direction; select from:
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">  <code>0</code> </td>
+<td style="text-align: left;"> (<code>"none"</code>) </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> no smoothing in scale (period) </td>
+</tr>
+<tr>
+<td style="text-align: right;"> 
+                     </td>
+<td style="text-align: left;">           </td>
+<td style="text-align: left;">                 </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;"> direction </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">  <code>1</code> </td>
+<td style="text-align: left;"> (<code>"bar"</code>)  </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> Bartlett </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">  <code>2</code> </td>
+<td style="text-align: left;"> (<code>"tri"</code>)  </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> Triangular (Non-Bartlett) </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">  <code>3</code> </td>
+<td style="text-align: left;"> (<code>"box"</code>)  </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> Boxcar (Rectangular, Dirichlet)</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">  <code>4</code> </td>
+<td style="text-align: left;"> (<code>"han"</code>)  </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> Hanning </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">  <code>5</code> </td>
+<td style="text-align: left;"> (<code>"ham"</code>)  </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> Hamming </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">  <code>6</code> </td>
+<td style="text-align: left;"> (<code>"bla"</code>)  </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> Blackman 
+                     </td>
+</tr>
+</table>
+<p>Default: <code>1</code> = <code>"bar"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>window.size.t</code></td>
+<td>
+<p>size of the window used for smoothing in time direction, measured in time units 
+determined by <code>dt</code>, see the explanations concerning <code>dt</code>. 
+</p>
+<p>Default: <code>5</code>, which together with <code>dt = 1</code> defines a window of length <code>5*(1/dt)</code> = 5, 
+equaling 5 observations (observation epochs). Windows of even-numbered sizes are extended by 1.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>window.size.s</code></td>
+<td>
+<p>size of the window used for smoothing in scale (period) direction in units of <code>1/dj</code>. 
+</p>
+<p>Default: <code>1/4</code>, which together with <code>dj = 1/20</code> defines a window of length <code>(1/4)*(1/dj)</code> = 5. 
+Windows of even-numbered sizes are extended by 1.
+</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>make.pval</code></td>
+<td>
+<p>Compute p-values? Logical.
+</p>
+<p>Default: <code>TRUE</code>.</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>the method of generating surrogate time series; select from:
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+                    </td>
+<td style="text-align: left;"> <code>"white.noise"</code>  </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> white noise </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                    </td>
+<td style="text-align: left;"> <code>"shuffle"</code>      </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> shuffling the given time series </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                    </td>
+<td style="text-align: left;"> <code>"Fourier.rand"</code> </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> time series with a similar spectrum </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                    </td>
+<td style="text-align: left;"> <code>"AR"</code>           </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> AR(p) </td>
+</tr>
+<tr>
+<td style="text-align: right;">  
+                    </td>
+<td style="text-align: left;"> <code>"ARIMA"</code>        </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> ARIMA(p,0,q) 
+                    </td>
+</tr>
+</table>
+<p>Default: <code>"white.noise"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>params</code></td>
+<td>
+<p>a list of assignments between methods (AR, and ARIMA) and lists of parameter values 
+applying to surrogates. Default: <code>NULL</code>. 
+</p>
+<p>Default includes two lists named <code>AR</code> and <code>ARIMA</code>:
+</p>
+  
+<ul>
+<li> <p><code>AR = list(...)</code>, a list containing one single element:
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>p</code> </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> AR order.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;">          </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;"> Default: <code>1</code>.
+                </td>
+</tr>
+</table>
+</li>
+<li> <p><code>ARIMA = list(...)</code>, a list of six elements:            
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>p</code>            </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  AR order. </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>1</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>q</code>            </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  MA order. </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>1</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>include.mean</code> </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  Include a mean/intercept term? </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>TRUE</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>sd.fac</code>       </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  magnification factor to boost the </td>
+</tr>
+<tr>
+<td style="text-align: right;"> 
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  residual standard deviation. </td>
+</tr>
+<tr>
+<td style="text-align: right;">  
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>1</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>trim</code>         </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  Simulate trimmed data? </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>FALSE</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>trim.prop</code>    </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  high/low trimming proportion. </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>0.01</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                </td>
+</tr>
+</table>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>n.sim</code></td>
+<td>
+<p>number of simulations. 
+</p>
+<p>Default: <code>100</code>.</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>date.format</code></td>
+<td>
+<p>optional, and for later reference: the format of calendar date 
+(if available in the input data frame) given as a character string, e.g. <code>"%Y-%m-%d"</code>, 
+or equivalently <code>"%F"</code>; see <code>strptime</code> for a list of implemented date conversion specifications.
+Explicit information given here will be overwritten by any later specification given in 
+e.g. <code>wc.image</code>. 
+If unspecified, date formatting will be attempted according to <code>as.Date</code>. 
+</p>
+<p>Default: <code>NULL</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date.tz</code></td>
+<td>
+<p>optional, and for later reference: a character string specifying the time zone of calendar date 
+(if available in the input data frame); see <code>strptime</code>. 
+Explicit information given here will be overwritten by any specification given in 
+e.g. <code>wc.image</code>. 
+If unspecified, <code>""</code> (the local time zone) will be used. 
+</p>
+<p>Default: <code>NULL</code>.
+</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Print verbose output on the screen? Logical. 
+</p>
+<p>Default: <code>TRUE</code>.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A list of class <code>"analyze.coherency"</code> with elements of different dimensions.
+
+The elements of matrix type, namely:
+</p>
+
+<ul>
+<li> <p><code>Wave.xy</code>, <code>Angle</code>, <code>sWave.xy</code>, <code>sAngle</code>, 
+</p>
+</li>
+<li> <p><code>Power.xy</code>, <code>Power.xy.pval</code>, 
+</p>
+</li>
+<li> <p><code>Coherency</code>, <code>Coherence</code>, <code>Coherence.pval</code>, 
+</p>
+</li>
+<li> <p><code>Wave.x</code>, <code>Wave.y</code>, <code>Phase.x</code>, <code>Phase.y</code>, <code>Ampl.x</code>, <code>Ampl.y</code>, 
+</p>
+</li>
+<li> <p><code>Power.x</code>, <code>Power.y</code>, <code>Power.x.pval</code>, <code>Power.y.pval</code>, <code>sPower.x</code>, <code>sPower.y</code>, 
+</p>
+</li>
+<li> <p><code>Ridge.xy</code>, <code>Ridge.co</code>, <code>Ridge.x</code>, <code>Ridge.y</code>,</p>
+</li>
+</ul>
+<p>have the following structure:<br> 
+columns correspond to observations (observation epochs; "epoch" meaning point in time), 
+rows correspond to scales (Fourier periods) whose values are given in <code>Scale</code> (<code>Period</code>).
+
+Here is a detailed list of all elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>series</code></td>
+<td>
+<p>a data frame with the following columns:
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;"> date                 </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> the calendar date </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">                      </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;"> (if available as column in <code>my.data</code>) </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;"> &lt;x&gt;, &lt;y&gt;             </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> the two series which have been analyzed </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">                      </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;"> (detrended, if <code>loess.span != 0</code>; </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">                      </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;"> original names retained) </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;"> &lt;x&gt;.trend, &lt;y&gt;.trend </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> the two trend series </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">                      </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;"> (included if <code>loess.span != 0</code>) 
+                     </td>
+</tr>
+</table>
+<p>Row names are taken over from <code>my.data</code>, and so are dates if given as row names.        
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loess.span</code></td>
+<td>
+<p>parameter <code>alpha</code> in <code>loess</code> controlling the degree of time series smoothing 
+if the time series were detrended; no detrending if <code>loess.span = 0</code></p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>dt</code></td>
+<td>
+<p>time resolution, i.e. sampling resolution in the time domain, <code>1/dt</code> = number of observations per time unit</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dj</code></td>
+<td>
+<p>frequency resolution, i.e. sampling resolution in the frequency domain, <code>1/dj</code> = number of suboctaves (voices per octave)</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Wave.xy</code></td>
+<td>
+<p>(complex-valued) cross-wavelet transform (analogous to Fourier cross-frequency spectrum, and to the covariance in statistics)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Angle</code></td>
+<td>
+<p>phase difference, i.e. phase lead of &lt;x&gt; over &lt;y&gt; (= <code>phase.x</code> minus <code>phase.y</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sWave.xy</code></td>
+<td>
+<p>smoothed (complex-valued) cross-wavelet transform</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sAngle</code></td>
+<td>
+<p>phase difference, i.e. phase lead of &lt;x&gt; over &lt;y&gt;, affected by smoothing</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Power.xy</code></td>
+<td>
+<p>cross-wavelet power (analogous to Fourier cross-frequency power spectrum)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Power.xy.avg</code></td>
+<td>
+<p>average cross-wavelet power in the frequency domain (averages over time)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Power.xy.pval</code></td>
+<td>
+<p>p-values of cross-wavelet power</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Power.xy.avg.pval</code></td>
+<td>
+<p>p-values of average cross-wavelet power</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Coherency</code></td>
+<td>
+<p>the (complex-valued) wavelet coherency of series &lt;x&gt; over series &lt;y&gt; in the time/frequency domain, affected by smoothing (analogous to Fourier coherency, and to the coefficient of correlation in statistics)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Coherence</code></td>
+<td>
+<p>wavelet coherence (analogous to Fourier coherence, and to the coefficient of determination in statistics (affected by smoothing)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Coherence.avg</code></td>
+<td>
+<p>average wavelet coherence in the frequency domain (averages across time)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Coherence.pval</code></td>
+<td>
+<p>p-values of wavelet coherence</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Coherence.avg.pval</code></td>
+<td>
+<p>p-values of average wavelet coherence</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Wave.x, Wave.y</code></td>
+<td>
+<p>(complex-valued) wavelet transforms of series &lt;x&gt; and &lt;y&gt;</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Phase.x, Phase.y</code></td>
+<td>
+<p>phases of series &lt;x&gt; and &lt;y&gt;</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ampl.x, Ampl.y</code></td>
+<td>
+<p>amplitudes of series &lt;x&gt; and &lt;y&gt;</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Power.x, Power.y</code></td>
+<td>
+<p>wavelet power of series &lt;x&gt; and &lt;y&gt;</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Power.x.avg, Power.y.avg</code></td>
+<td>
+<p>average wavelet power of series &lt;x&gt; and &lt;y&gt;, averages across time</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Power.x.pval, Power.y.pval</code></td>
+<td>
+<p>p-values of wavelet power of series &lt;x&gt; and &lt;y&gt;</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Power.x.avg.pval, Power.y.avg.pval</code></td>
+<td>
+<p>p-values of average wavelet power of series &lt;x&gt; and &lt;y&gt;</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sPower.x, sPower.y</code></td>
+<td>
+<p>smoothed wavelet power of series &lt;x&gt; and &lt;y&gt;</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Ridge.xy</code></td>
+<td>
+<p>ridge of cross-wavelet power, in the form of a matrix of <code>0</code>s and <code>1</code>s</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ridge.co</code></td>
+<td>
+<p>ridge of wavelet coherence</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ridge.x, Ridge.y</code></td>
+<td>
+<p>power ridges of series &lt;x&gt; and &lt;y&gt;</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Period</code></td>
+<td>
+<p>the Fourier periods 
+(measured in time units determined by <code>dt</code>, see the explanations concerning <code>dt</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Scale</code></td>
+<td>
+<p>the scales (the Fourier periods divided by the Fourier factor)</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>nc</code></td>
+<td>
+<p>number of columns = number of observations = number of observation epochs; "epoch" meaning point in time</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nr</code></td>
+<td>
+<p>number of rows = number of scales (Fourier periods)</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>coi.1, coi.2</code></td>
+<td>
+<p>borders of the region where the wavelet transforms are not influenced by edge effects (cone of influence). 
+The coordinates of the borders are expressed in terms of internal axes <code>axis.1</code> and <code>axis.2</code>.</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>axis.1</code></td>
+<td>
+<p>tick levels corresponding to the time steps used for (cross-)wavelet transformation: <code>1, 1+dt, 1+2dt, ...</code>.
+The default time axis in plot functions provided by <code>WaveletComp</code> is determined by observation epochs, however; "epoch" meaning point in time. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axis.2</code></td>
+<td>
+<p>tick levels corresponding to the log of Fourier periods: <code>log2(Period)</code>. This determines the period axis in plot functions provided by <code>WaveletComp</code>.</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>date.format</code></td>
+<td>
+<p>the format of calendar date (if available)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date.tz</code></td>
+<td>
+<p>the time zone of calendar date (if available)</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Angi Roesch and Harald Schmidbauer; 
+credits are also due to Huidong Tian, Bernard Cazelles, Luis Aguiar-Conraria, and Maria Joana Soares.</p>
+
+
+<h3>References</h3>
+
+ 
+<p>Aguiar-Conraria L., and Soares M.J., 2011. 
+Business cycle synchronization and the Euro: A wavelet analysis. 
+Journal of Macroeconomics 33 (3), 477–489.
+</p>
+<p>Aguiar-Conraria L., and Soares M.J., 2011. 
+The Continuous Wavelet Transform: A Primer. 
+NIPE Working Paper Series 16/2011.
+</p>
+<p>Aguiar-Conraria L., and Soares M.J., 2012. <code>GWPackage</code>. 
+Available at <a href="https://sites.google.com/site/aguiarconraria/joanasoares-wavelets">https://sites.google.com/site/aguiarconraria/joanasoares-wavelets</a>; accessed September 4, 2013.
+</p>
+<p>Cazelles B., Chavez M., Berteaux, D., Menard F., Vik J.O., Jenouvrier S., and Stenseth N.C., 2008.
+Wavelet analysis of ecological time series.
+Oecologia 156, 287–304.
+</p>
+<p>Liu P.C., 1994. 
+Wavelet spectrum analysis and ocean wind waves. 
+In: Foufoula-Georgiou E., and Kumar P., (eds.), Wavelets in Geophysics, Academic Press, San Diego, 151–166.
+</p>
+<p>Tian, H., and Cazelles, B., 2012. <code>WaveletCo</code>. 
+Available at <a href="https://cran.r-project.org/src/contrib/Archive/WaveletCo/">https://cran.r-project.org/src/contrib/Archive/WaveletCo/</a>, archived April 2013; accessed July 26, 2013.
+</p>
+<p>Torrence C., and Compo G.P., 1998. 
+A practical guide to wavelet analysis.
+Bulletin of the American Meteorological Society 79 (1), 61–78.
+</p>
+<p>Veleda D., Montagne R., and Araujo M., 2012. 
+Cross-Wavelet Bias Corrected by Normalizing Scales. 
+Journal of Atmospheric and Oceanic Technology 29, 1401–1408.
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code>wc.image</code>, <code>wc.avg</code>, <code>wc.sel.phases</code>, <code>wc.phasediff.image</code>, 
+<code>wt.image</code>, <code>wt.avg</code>, <code>wt.sel.phases</code>, <code>wt.phase.image</code>, <code>reconstruct</code> 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## The following example is modified from Veleda et al, 2012:
+
+series.length &lt;- 3*128*24
+x1 &lt;- periodic.series(start.period = 1*24, length = series.length)
+x2 &lt;- periodic.series(start.period = 2*24, length = series.length)
+x3 &lt;- periodic.series(start.period = 4*24, length = series.length)
+x4 &lt;- periodic.series(start.period = 8*24, length = series.length)
+x5 &lt;- periodic.series(start.period = 16*24, length = series.length)
+x6 &lt;- periodic.series(start.period = 32*24, length = series.length)
+x7 &lt;- periodic.series(start.period = 64*24, length = series.length)
+x8 &lt;- periodic.series(start.period = 128*24, length = series.length)
+
+x &lt;- x1 + x2 + x3 + x4 + 3*x5 + x6 + x7 + x8 + rnorm(series.length)
+y &lt;- x1 + x2 + x3 + x4 - 3*x5 + x6 + 3*x7 + x8 + rnorm(series.length)
+
+matplot(data.frame(x, y), type = "l", lty = 1, xaxs = "i", col = 1:2, 
+ xlab = "index", ylab = "",
+ main = "hourly series with periods of 1, 2, 4, 8, 16, 32, 64, 128 days", 
+ sub = "(out of phase at period 16, different amplitudes at period 64)")
+legend("topright", legend = c("x","y"), col = 1:2, lty = 1)
+
+## The following dates refer to the local time zone 
+## (possibly allowing for daylight saving time):      
+my.date &lt;- seq(as.POSIXct("2014-10-14 00:00:00", format = "%F %T"), 
+               by = "hour", 
+               length.out = series.length)     
+my.data &lt;- data.frame(date = my.date, x = x, y = y)
+
+## Computation of cross-wavelet power and wavelet coherence, x over y:
+## a natural choice of 'dt' in the case of hourly data is 'dt = 1/24',
+## resulting in one time unit equaling one day. 
+## This is also the time unit in which periods are measured.
+## There is an option to store the date format and time zone as additional
+## parameters within object 'my.wc' for later reference. 
+
+my.wc &lt;- analyze.coherency(my.data, c("x","y"), 
+                           loess.span = 0, 
+                           dt = 1/24, dj = 1/20, 
+                           window.size.t = 1, window.size.s = 1/2, 
+                           lowerPeriod = 1/4,
+                           make.pval = TRUE, n.sim = 10,
+                           date.format = "%F %T", date.tz = "")
+## Note:                           
+## By default, Bartlett windows are used for smoothing in order to obtain
+## the wavelet coherence spectrum; window lengths in this example:
+## 1*24 + 1 = 25 observations in time direction,
+## (1/2)*20 + 1 = 11 units in scale (period) direction.                             
+                         
+## Plot of cross-wavelet power 
+## (with color breakpoints according to quantiles):
+wc.image(my.wc, main = "cross-wavelet power spectrum, x over y",
+   legend.params = list(lab = "cross-wavelet power levels"),
+   periodlab = "period (days)")
+   
+## The same plot, now with calendar axis
+## (according to date format stored in 'my.wc'):
+wc.image(my.wc, main = "cross-wavelet power spectrum, x over y",
+   legend.params = list(lab = "cross-wavelet power levels"),
+   periodlab = "period (days)", show.date = TRUE)   
+         
+## Plot of average cross-wavelet power:
+wc.avg(my.wc, siglvl = 0.05, sigcol = 'red', 
+   periodlab = "period (days)")
+
+## Plot of wavelet coherence 
+## (with color breakpoints according to quantiles):
+wc.image(my.wc, which.image = "wc",  main = "wavelet coherence, x over y", 
+   legend.params = list(lab = "wavelet coherence levels", 
+                        lab.line = 3.5, label.digits = 3),
+   periodlab = "period (days)")
+         
+## plot of average coherence:
+wc.avg(my.wc, which.avg = "wc", 
+   siglvl = 0.05, sigcol = 'red', 
+   legend.coords = "topleft", 
+   periodlab = "period (days)")
+
+## Please see our guide booklet for further examples:
+## URL http://www.hs-stat.com/projects/WaveletComp/WaveletComp_guided_tour.pdf.
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

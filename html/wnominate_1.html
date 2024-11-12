@@ -1,0 +1,175 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>generateTestData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Test Data Generator for W-NOMINATE </h2>
+
+<h3>Description</h3>
+
+ 
+<p><code>generateTestData</code> is the function that generates a <code>rollcall</code> object used to
+test <code>wnominate</code>.  The description of the result below is copied from the
+documentation of package <code>pscl</code>, written by Simon Jackman.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">generateTestData(legislators=20, rcVotes=100,
+            yea=matrix(runif(rcVotes,min=-0.2,max=0.7),nrow=rcVotes),
+            nay=matrix(runif(rcVotes,min=-0.7,max=0.2),nrow=rcVotes),
+            ideal=matrix(rnorm(legislators),nrow=legislators),
+            Beta=15, dimweight=0.5,normal=1, seed = NULL, utility='nominate')
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>legislators</code></td>
+<td>
+<p> integer, number of Legislators ('n'). </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rcVotes</code></td>
+<td>
+<p> integer, number of roll calls ('m').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yea</code></td>
+<td>
+<p> an m x d matrix of yea locations, where 'd' are the number of dimensions. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nay</code></td>
+<td>
+<p> an m x d matrix of no locations, where 'd' are the number of dimensions. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ideal</code></td>
+<td>
+<p> an n x d matrix of legislator ideal points. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Beta</code></td>
+<td>
+<p> scalar giving beta parameter from W-NOMINATE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dimweight</code></td>
+<td>
+<p> d x 1 vector of dimension weights. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normal</code></td>
+<td>
+<p> integer, '1' generates data using normal probabilities,
+any other value generates data using logistic probabilities. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p> a single value, interpreted as an integer, used to set the seed.
+If seed is NULL, current seed is used. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>utility</code></td>
+<td>
+<p> String set to either “nominate” or “qn”. ‘nominate’ allows NOMINATE
+logit or probit utilities, while “qn” allows for quadratic normal utilities
+to be used when generating the roll call matrix.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class <code>rollcall</code>
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>votes</code></td>
+<td>
+<p> n x m vote matrix in 0/1/NA format. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p> integer, number of legislators. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p> integer, number of roll call votes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lopsided</code></td>
+<td>
+<p> logical vector of length <code>m</code> indicating dropped vote. This is
+recomputed in <code>wnominate</code> and is never used. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legis.data</code></td>
+<td>
+<p> matrix, user-supplied data on legislators, containing data from
+an ORD file.  Legislator names are rownames to this matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vote.data</code></td>
+<td>
+<p> user-supplied data on rollcall votes, set to NULL. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>desc</code></td>
+<td>
+<p> user-supplied description, set to NULL.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+ 
+<p>Keith Poole <a href="mailto:ktpoole@uga.edu">ktpoole@uga.edu</a>
+</p>
+<p>Jeffrey Lewis <a href="mailto:jblewis@ucla.edu">jblewis@ucla.edu</a>
+</p>
+<p>James Lo <a href="mailto:lojames@usc.edu">lojames@usc.edu</a>
+</p>
+<p>Royce Carroll <a href="mailto:rcarroll@rice.edu">rcarroll@rice.edu</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>'wnominate', 'nomprob'.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">    dat&lt;-generateTestData()
+    result&lt;-wnominate(dat,polarity=c(1,2))
+    summary(result)
+    plot(result)
+</code></pre>
+
+
+</div>

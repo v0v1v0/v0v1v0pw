@@ -1,0 +1,144 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>globalFtest</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>global F test for Wasserstein regression</h2>
+
+<h3>Description</h3>
+
+<p>global F test for Wasserstein regression
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">globalFtest(
+  wass_regress_res,
+  alpha = 0.05,
+  permutation = FALSE,
+  numPermu = 200,
+  bootstrap = FALSE,
+  numBoot = 200
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wass_regress_res</code></td>
+<td>
+<p>an object returned by the <code>wass_regress</code> function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>type one error rate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>permutation</code></td>
+<td>
+<p>logical; perform permutation global F test (default: FALSE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numPermu</code></td>
+<td>
+<p>number of permutation samples if permutation = TRUE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bootstrap</code></td>
+<td>
+<p>logical; bootstrap global F test (default: FALSE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numBoot</code></td>
+<td>
+<p>number of bootstrap samples if bootstrap = TRUE</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>four methods used to compute p value of global F test
+</p>
+
+<ul>
+<li>
+<p>truncated: asymptotic inference,  p-value is obtained by truncating the infinite summation of eigenvalues into the first K terms, where the first K terms explain more than 99.99% of the variance.
+</p>
+</li>
+<li>
+<p>satterthwaite: asymptotic inference, p-value is computed using Satterthwaite's approximation method of mixtures of chi-square.
+</p>
+</li>
+<li>
+<p>permutation: resampling technique; Wasserstein SSR is used as the F statistic.
+</p>
+</li>
+<li>
+<p>bootstrap: resampling technique; Wasserstein SSR is used as the F statistic.</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>a list containing the following fields:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>wasserstein.F_stat</code></td>
+<td>
+<p>the Wasserstein F statistic value in Satterthwaite method .</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chisq_df</code></td>
+<td>
+<p>the degree of freedom of the null chi-square distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>summary_df</code></td>
+<td>
+<p>a dataframe containing the following columns:</p>
+</td>
+</tr>
+</table>
+<ul>
+<li>
+<p>method: methods used to compute p value, see details
+</p>
+</li>
+<li>
+<p>statistic: the test statistics
+</p>
+</li>
+<li>
+<p>critical_value: critical value
+</p>
+</li>
+<li>
+<p>p_value: p value of global F test</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(strokeCTdensity)
+predictor = strokeCTdensity$predictors
+dSup = strokeCTdensity$densitySupport
+densityCurves = strokeCTdensity$densityCurve
+
+res = wass_regress(rightside_formula = ~., Xfit_df = predictor,
+ Ytype = 'density', Ymat = densityCurves, Sup = dSup)
+globalF_res = globalFtest(res, alpha = 0.05, permutation = TRUE, numPermu = 200)
+</code></pre>
+
+
+</div>

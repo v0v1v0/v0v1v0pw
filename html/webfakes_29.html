@@ -1,0 +1,166 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>new_app_process</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Run a webfakes app in another process</h2>
+
+<h3>Description</h3>
+
+<p>Runs an app in a subprocess, using callr::r_session.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">new_app_process(
+  app,
+  port = NULL,
+  opts = server_opts(remote = TRUE),
+  start = FALSE,
+  auto_start = TRUE,
+  process_timeout = NULL,
+  callr_opts = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>app</code></td>
+<td>
+<p><code>webfakes_app</code> object, the web app to run.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>port</code></td>
+<td>
+<p>Port to use. By default the OS assigns a port.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opts</code></td>
+<td>
+<p>Server options. See <code>server_opts()</code> for the defaults.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p>Whether to start the web server immediately. If this is
+<code>FALSE</code>, and <code>auto_start</code> is <code>TRUE</code>, then it is started as neeed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>auto_start</code></td>
+<td>
+<p>Whether to start the web server process automatically.
+If <code>TRUE</code> and the process is not running, then <code style="white-space: pre;">⁠$start()⁠</code>,
+<code style="white-space: pre;">⁠$get_port()⁠</code> and <code style="white-space: pre;">⁠$url()⁠</code> start the process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>process_timeout</code></td>
+<td>
+<p>How long to wait for the subprocess to start, in
+milliseconds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callr_opts</code></td>
+<td>
+<p>Options to pass to <code>callr::r_session_options()</code>
+when setting up the subprocess.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>webfakes_app_process</code> object.
+</p>
+
+
+<h4>Methods</h4>
+
+<p>The <code>webfakes_app_process</code> class has the following methods:
+</p>
+<div class="sourceCode r"><pre>get_app()
+get_port()
+stop()
+get_state()
+local_env(envvars)
+url(path = "/", query = NULL)
+</pre></div>
+
+<ul>
+<li> <p><code>envvars</code>: Named list of environment variables. The <code>{url}</code> substring
+is replaced by the URL of the app.
+</p>
+</li>
+<li> <p><code>path</code>: Path to return the URL for.
+</p>
+</li>
+<li> <p><code>query</code>: Additional query parameters, a named list, to add to the URL.
+</p>
+</li>
+</ul>
+<p><code>get_app()</code> returns the app object.
+</p>
+<p><code>get_port()</code> returns the port the web server is running on.
+</p>
+<p><code>stop()</code> stops the web server, and also the subprocess. If the error
+log file is not empty, then it dumps its contents to the screen.
+</p>
+<p><code>get_state()</code> returns a string, the state of the web server:
+</p>
+
+<ul>
+<li> <p><code>"not running"</code> the server is not running (because it was stopped
+already).
+</p>
+</li>
+<li> <p><code>"live"</code> means that the server is running.
+</p>
+</li>
+<li> <p><code>"dead"</code> means that the subprocess has quit or crashed.
+</p>
+</li>
+</ul>
+<p><code>local_env()</code> sets the given environment variables for the duration of
+the app process. It resets them in <code style="white-space: pre;">⁠$stop()⁠</code>. Webfakes replaces <code>{url}</code>
+in the value of the environment variables with the app URL, so you can
+set environment variables that point to the app.
+</p>
+<p><code>url()</code> returns the URL of the web app. You can use the <code>path</code>
+parameter to return a specific path.
+</p>
+
+
+
+<h3>See Also</h3>
+
+<p><code>local_app_process()</code> for automatically cleaning up the
+subprocess.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">app &lt;- new_app()
+app$get("/foo", function(req, res) {
+  res$send("Hello world!")
+})
+
+proc &lt;- new_app_process(app)
+url &lt;- proc$url("/foo")
+resp &lt;- curl::curl_fetch_memory(url)
+cat(rawToChar(resp$content))
+
+proc$stop()
+</code></pre>
+
+
+</div>

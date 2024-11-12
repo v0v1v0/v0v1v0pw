@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>model_bioclim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>model_bioclim Generate Bioclim model</h2>
+
+<h3>Description</h3>
+
+<p>The function generates a BIOCLIM model using
+ENMeval 2.0
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">model_bioclim(occs, bg, user.grp, bgMsk, logger = NULL, spN = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>occs</code></td>
+<td>
+<p>data frame of cleaned or processed occurrences obtained from
+components occs: Obtain occurrence data or, poccs: Process occurrence data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bg</code></td>
+<td>
+<p>coordinates of background points to be used for modeling.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>user.grp</code></td>
+<td>
+<p>a list of two vectors containing group assignments for
+occurrences (occs.grp) and background points (bg.grp).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bgMsk</code></td>
+<td>
+<p>a RasterStack or a RasterBrick of environmental layers cropped
+and masked to match the provided background extent.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+<p>Stores all notification messages to be displayed in the Log
+Window of Wallace GUI. Insert the logger reactive list here for running
+in shiny, otherwise leave the default NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spN</code></td>
+<td>
+<p>character. Species name to be used for all logger messages.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function generates a model in ENMeval using a user provided partition of
+occurrences from previous components in the GUI.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Function returns an ENMevaluate object with all the evaluated models
+and a selection of appropriate fields.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jamie M. Kass &lt;jamie.m.kass@gmail.com&gt;
+</p>
+<p>Gonzalo E. Pinilla-Buitrago &lt;gepinillab@gmail.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ENMevaluate</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+envs &lt;- envs_userEnvs(rasPath = list.files(system.file("extdata/wc",
+                                           package = "wallace"),
+                      pattern = ".tif$", full.names = TRUE),
+                      rasName = list.files(system.file("extdata/wc",
+                                           package = "wallace"),
+                      pattern = ".tif$", full.names = FALSE))
+occs &lt;- read.csv(system.file("extdata/Bassaricyon_alleni.csv",
+                 package = "wallace"))
+bg &lt;- read.csv(system.file("extdata/Bassaricyon_alleni_bgPoints.csv",
+               package = "wallace"))
+partblock &lt;- part_partitionOccs(occs, bg, method = 'block')
+m &lt;- model_bioclim(occs, bg, partblock, envs)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

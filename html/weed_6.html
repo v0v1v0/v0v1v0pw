@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>percent_located_disasters</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Percent of Disasters Successfully Geocoded</h2>
+
+<h3>Description</h3>
+
+<p>Tells us how successful the geocoding is.
+</p>
+<p>How many of the disasters in this data frame have non NA coordinates?
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">percent_located_disasters(
+  .,
+  how = "any",
+  lat_column = "lat",
+  lng_column = "lng",
+  plot_result = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.</code></td>
+<td>
+<p>Data Frame that has been locationized. see <code>weed::split_locations</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>how</code></td>
+<td>
+<p>takes in a function, "any", or "all" to determine how to count the disaster as being geocoded
+if any, at least one location must be coded, if all, all locations must have lat/lng
+if a function, it must take in a logical vector and return a single logical</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lat_column</code></td>
+<td>
+<p>Name of column containing Latitude data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lng_column</code></td>
+<td>
+<p>Name of column containing Longitude data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_result</code></td>
+<td>
+<p>Determines output type (Plot or Summarized Data Frame)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The percent and number of Locations that have been geocoded (see <code>plot_result</code> for type of output)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">d &lt;- tibble::tribble(
+~`Dis No`, ~value,  ~location_word,                    ~Country,     ~lat,       ~lng,
+1, "city of new york",      "new york",                       "USA", 40.71427,  -74.00597,
+2, "kerala, chennai municipality, and san francisco",  "kerala", "India", 10.41667,       76.5,
+2, "kerala, chennai municipality, and san francisco",  "chennai",  "India", 13.08784,   80.27847)
+percent_located_disasters(d,
+how = "any",
+lat_column = "lat",
+lng_column = "lng",
+plot_result = FALSE)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,326 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WRSS-package</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Water Resources System Simulator
+</h2>
+
+<h3>Description</h3>
+
+<p>The WRSS is an object-oriented R package, which provides tools for simulation and analysis of large-scale supply and hydropower water resources systems. The package includes functions and methods for building, simulation, and visualization of water resources components.
+</p>
+
+
+<h3>Details</h3>
+
+
+<table>
+<tr>
+<td style="text-align: left;">
+    Package: </td>
+<td style="text-align: left;"> WRSS</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+    Type: </td>
+<td style="text-align: left;"> Package</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+    Version: </td>
+<td style="text-align: left;"> 3.0</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+    Date: </td>
+<td style="text-align: left;"> 2022-05-17</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+    License: </td>
+<td style="text-align: left;"> GPL-3</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  </td>
+</tr>
+</table>
+<p>the package includes three major types of functions as follows:
+</p>
+<p>1- functions for construction and manipulatation of water resources features:
+</p>
+
+<dl>
+<dt>a) <code>createArea</code>
+</dt>
+<dd>
+<p>constructor for basin/study area objects</p>
+</dd>
+<dt>b) <code>createJunction</code>
+</dt>
+<dd>
+<p>constructor for junction objects</p>
+</dd>
+<dt>c) <code>createRiver</code>
+</dt>
+<dd>
+<p>constructor for reach, river, and channel objects</p>
+</dd>
+<dt>d) <code>createReservoir</code>
+</dt>
+<dd>
+<p>constructor for reservoir objects</p>
+</dd>
+<dt>e) <code>createDiversion</code>
+</dt>
+<dd>
+<p>constructor for diversion objects</p>
+</dd>
+<dt>f) <code>createAquifer</code>
+</dt>
+<dd>
+<p>constructor for aquifer objects</p>
+</dd>
+<dt>g) <code>createDemandSite</code>
+</dt>
+<dd>
+<p>constructor for demand site objects</p>
+</dd>
+<dt>h) <code>set.as</code>
+</dt>
+<dd>
+<p>WRSS objects connector</p>
+</dd>
+<dt>i) <code>addObjectToArea</code>
+</dt>
+<dd>
+<p>adds objects form mentioned above constructors to a basin inherited from class of <code>createBasin</code></p>
+</dd>
+</dl>
+<p>2- functions for analysis and operation of water resources objects using Standard Operating Policy (SOP):
+</p>
+
+<dl>
+<dt>a) <code>riverRouting</code>
+</dt>
+<dd>
+<p>river operation using</p>
+</dd>
+<dt>b) <code>reservoirRouting</code>
+</dt>
+<dd>
+<p>reservoir operation</p>
+</dd>
+<dt>c) <code>aquiferRouting</code>
+</dt>
+<dd>
+<p>aquifer operation</p>
+</dd>
+<dt>d) <code>diversionRouting</code>
+</dt>
+<dd>
+<p>diversion operation</p>
+</dd>
+<dt>e) <code>sim</code>
+</dt>
+<dd>
+<p>simulates an objects inherited from class of <code>createArea</code></p>
+</dd>
+<dt>f) <code>rippl</code>
+</dt>
+<dd>
+<p>computes no-failure storage volume using the sequent peak algorithm(SPA)</p>
+</dd>
+<dt>g) <code>cap_design</code>
+</dt>
+<dd>
+<p>computes RRV measures for a range of design parameters</p>
+</dd>
+</dl>
+<p>3- functions for performance analysis and visualization.
+</p>
+
+<dl>
+<dt>a) <code>plot.sim</code>
+</dt>
+<dd>
+<p>plots the results of simulations for an object inherited from class of <code>sim</code></p>
+</dd>
+<dt>b) <code>plot.createArea</code>
+</dt>
+<dd>
+<p>plots an object from class of <code>createArea</code></p>
+</dd>
+<dt>c) <code>risk</code>
+</dt>
+<dd>
+<p>computes risk-based criateria for an object inherited from class of <code>sim</code></p>
+</dd>
+<dt>d) <code>GOF</code>
+</dt>
+<dd>
+<p>Goodness of fit function</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Rezgar Arabzadeh; Parisa Aberi; Kaveh Panaghi; Shahab Araghinejad; Majid Montaseri
+</p>
+<p>Maintainer: Rezgar Arabzadeh &lt;rezgararabzadeh@ut.ac.ir&gt;
+</p>
+
+
+<h3>References</h3>
+
+<p>Loucks, Daniel P., et al. Water resources systems planning and management: an introduction to methods, models and applications. Paris: Unesco, 2005.
+Arabzadeh, R.; Aberi, P.; Hesarkazzazi, S.; Hajibabaei, M.; Rauch, W.; Nikmehr, S.; Sitzenfrei, R. WRSS: An Object-Oriented R Package for Large-Scale Water Resources Operation. Water 2021, 13, 3037. https://doi.org/10.3390/w13213037
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>addObjectToArea</code>, <code>plot.sim</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">###---------- loading data
+data(zarrineh)
+
+###---------- Constructing main features of Zerrineh river basin
+Area&lt;-createArea(name='Zerrineh',location='Kurdistan',
+                 simulation=list(start='1900-01-01',
+                                 end='1909-12-01',
+                                 interval='month'))
+
+   ###---------- Bukan dam
+Q&lt;-zarrineh$bukan$timeSeries[,1]
+E&lt;-zarrineh$bukan$timeSeries[,2]
+R&lt;-zarrineh$bukan$timeSeries[,3]
+D&lt;-zarrineh$bukan$timeSeries[,4]
+A&lt;-zarrineh$bukan$timeSeries[,5]
+RC&lt;-zarrineh$bukan$ratingCurve
+min&lt;-zarrineh$bukan$capacity[1]$min
+max&lt;-zarrineh$bukan$capacity[2]$max
+bukan&lt;-createReservoir(name='bukan',netEvaporation=E,
+                       initialStorage=max, 
+                       geometry=list(deadStorage=min,
+                                     capacity=max,
+                                     storageAreaTable=RC))
+Zerrineh&lt;-createRiver(name='Zerrineh-River',downstream=bukan,discharge=Q)
+R&lt;-createDemandSite(name='E1',demandTS=R,suppliers=list(bukan),priority=1)
+D&lt;-createDemandSite(name='U1',demandTS=D,suppliers=list(bukan),priority=2)
+A&lt;-createDemandSite(name='A1',demandTS=A,suppliers=list(bukan),priority=3)
+Area&lt;-addObjectToArea(Area,Zerrineh)
+Area&lt;-addObjectToArea(Area,bukan)
+Area&lt;-addObjectToArea(Area,R)
+Area&lt;-addObjectToArea(Area,D)
+Area&lt;-addObjectToArea(Area,A)
+
+   ###---------- a junction located in Bukan dam upstream
+J&lt;-createJunction(name='J1', downstream=Zerrineh)
+Area&lt;-addObjectToArea(Area,J)
+
+   ###---------- Markhuz dam
+Q&lt;-zarrineh$Markhuz$timeSeries[,1]
+E&lt;-zarrineh$Markhuz$timeSeries[,2]
+A&lt;-zarrineh$Markhuz$timeSeries[,3]
+RC&lt;-zarrineh$Markhuz$ratingCurve
+min&lt;-zarrineh$Markhuz$capacity[1]$min
+max&lt;-zarrineh$Markhuz$capacity[2]$max
+Markhuz&lt;-createReservoir(name='Markhuz',netEvaporation=E,
+                         downstream=J,initialStorage=max,
+                         geometry=list(deadStorage=min,
+                         capacity=max,
+                         storageAreaTable=RC))
+River&lt;-createRiver(name='Markhuz-River',downstream=Markhuz,discharge=Q)
+A&lt;-createDemandSite(name='A3',demandTS=A,returnFlowFraction=0.3,
+                    suppliers=list(Markhuz),downstream=J,priority=1)
+Area&lt;-addObjectToArea(Area, River)
+Area&lt;-addObjectToArea(Area, Markhuz)
+Area&lt;-addObjectToArea(Area, A)
+
+   ###---------- Cheragh Veys dam
+Q&lt;-zarrineh$cheraghVeys$timeSeries[,1]
+E&lt;-zarrineh$cheraghVeys$timeSeries[,2]
+R&lt;-zarrineh$cheraghVeys$timeSeries[,3]
+D&lt;-zarrineh$cheraghVeys$timeSeries[,4]
+A&lt;-zarrineh$cheraghVeys$timeSeries[,5]
+RC&lt;-zarrineh$cheraghVeys$ratingCurve
+min&lt;-zarrineh$cheraghVeys$capacity[1]$min
+max&lt;-zarrineh$cheraghVeys$capacity[2]$max
+cheraghVeys&lt;-createReservoir(name='cheraghVeys',netEvaporation=E,
+                             downstream=J,initialStorage=max,
+                             geometry=list(deadStorage=min,
+                                           capacity=max,
+                                           storageAreaTable=RC))
+River&lt;-createRiver(name='Cheragh Veys-River',downstream=cheraghVeys,discharge=Q)
+R&lt;-createDemandSite(name='E2',demandTS=R,returnFlowFraction=1.0,
+                    suppliers=list(cheraghVeys),downstream=J,priority=1)
+D&lt;-createDemandSite(name='U2',demandTS=D,returnFlowFraction=0.7,
+                    suppliers=list(cheraghVeys),downstream=J,priority=2)
+                    A&lt;-createDemandSite(name='A2',demandTS=A,returnFlowFraction=0.3,
+suppliers=list(cheraghVeys),downstream=J,priority=3)
+Area&lt;-addObjectToArea(Area, River)
+Area&lt;-addObjectToArea(Area, cheraghVeys)
+Area&lt;-addObjectToArea(Area, R)
+Area&lt;-addObjectToArea(Area, D)
+Area&lt;-addObjectToArea(Area, A)
+
+   ###---------- Sonata dam
+Q&lt;-zarrineh$Sonata$timeSeries[,1]
+E&lt;-zarrineh$Sonata$timeSeries[,2]
+R&lt;-zarrineh$Sonata$timeSeries[,3]
+A&lt;-zarrineh$Sonata$timeSeries[,4]
+RC&lt;-zarrineh$Sonata$ratingCurve
+min&lt;-zarrineh$Sonata$capacity[1]$min
+max&lt;-zarrineh$Sonata$capacity[2]$max
+Sonata&lt;-createReservoir(name='Sonata',netEvaporation=E,downstream=J,
+                        initialStorage=max,
+                        geometry=list(deadStorage=min,
+                                      capacity=max,
+                                      storageAreaTable=RC))
+River&lt;-createRiver(name='Sonata-River',downstream=Sonata,discharge=Q)
+R&lt;-createDemandSite(name='E3',demandTS=R,returnFlowFraction=1.0,
+                    suppliers=list(Sonata),downstream=J,priority=1)
+A&lt;-createDemandSite(name='A4',demandTS=A,returnFlowFraction=0.3,
+                    suppliers=list(Sonata),downstream=J,priority=2)
+Area&lt;-addObjectToArea(Area, River)
+Area&lt;-addObjectToArea(Area, Sonata)
+Area&lt;-addObjectToArea(Area, R)
+Area&lt;-addObjectToArea(Area, A)
+
+   ###---------- Sarogh dam
+Q&lt;-zarrineh$Sarogh$timeSeries[,1]
+E&lt;-zarrineh$Sarogh$timeSeries[,2]
+D&lt;-zarrineh$Sarogh$timeSeries[,3]
+A&lt;-zarrineh$Sarogh$timeSeries[,4]
+RC&lt;-zarrineh$Sarogh$ratingCurve
+min&lt;-zarrineh$Sarogh$capacity[1]$min
+max&lt;-zarrineh$Sarogh$capacity[2]$max
+Sarogh&lt;-createReservoir(name='Sarogh',netEvaporation=E,downstream=J,
+                        initialStorage=max,
+                        geometry=list(deadStorage=min,
+                                      capacity=max,
+                                      storageAreaTable=RC))
+River&lt;-createRiver(name='Sarogh-River',downstream=Sarogh,discharge=Q)
+D&lt;-createDemandSite(name='U3',demandTS=D,returnFlowFraction=0.7,
+                    suppliers=list(Sarogh),downstream=J,priority=1)
+                    A&lt;-createDemandSite(name='A5',demandTS=A,returnFlowFraction=0.3,
+suppliers=list(Sarogh),downstream=J,priority=2)
+Area&lt;-addObjectToArea(Area, River)
+Area&lt;-addObjectToArea(Area, Sarogh)
+Area&lt;-addObjectToArea(Area, D)
+Area&lt;-addObjectToArea(Area, A)
+## Not run: 
+plot(Area)
+
+## End(Not run)
+plot(sim(Area))
+</code></pre>
+
+
+</div>

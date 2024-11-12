@@ -1,0 +1,211 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>withdots</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Give a function <code>...</code> if it does not have it</h2>
+
+<h3>Description</h3>
+
+<p>Adds <code>...</code> to a closure's <code>args</code> if it does not have it already.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">withdots(f)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>f</code></td>
+<td>
+<p>A function. See <strong>Handling of primitives</strong> in case <code>f</code> is
+primitive.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>If <code>f</code> already has <code>...</code> in its <code>args</code>, then it is returned with no
+changes. Otherwise, <code>...</code> is added to <code>f</code>'s formals and then <code>f</code> is
+returned. See <strong>Handling of primitives</strong> below.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>f</code> has <code>...</code> in its <code>args</code>, then <code>f</code>.
+</p>
+<p>Otherwise, a closure: a tweaked version of <code>f</code>, whose only differences
+are:
+</p>
+
+<ol>
+<li> <p><code>...</code> has been appended to the end of its <code>formals</code>, and
+</p>
+</li>
+<li>
+<p> any <code>srcref</code> <code>attribute</code> has been removed (see <strong>Why the
+<code>srcref</code> <code>attribute</code> is removed</strong> below).
+</p>
+</li>
+</ol>
+<h3>How <code>...</code> is added to closures</h3>
+
+<p>These are the steps that
+<code>withdots()</code> takes <strong>only</strong> if <code>f</code> is a closure without <code>...</code> in
+its <code>formals</code>:
+</p>
+
+<ol>
+<li> <p><code>attributes</code><code>(f)</code> are temporarily saved and set aside.
+</p>
+</li>
+<li>
+<p> If there is a <code>srcref</code> <code>attribute</code> among the set-aside
+<code>attributes</code><code>(f)</code>, it is removed (see <strong>Why the <code>srcref</code>
+<code>attribute</code> is removed</strong> below).
+</p>
+</li>
+<li> <p><code>...</code> is added to the <code>formals</code> of <code>f</code> using <code>formals&lt;-</code>.
+</p>
+</li>
+<li>
+<p> The remaining set-aside <code>attributes</code> are added back to <code>f</code> with
+<code>attributes&lt;-</code>.
+</p>
+</li>
+<li> <p><code>f</code> is returned.
+</p>
+</li>
+</ol>
+<h3>Handling of primitives</h3>
+
+<p>If <code>f</code> is primitive and already has
+<code>...</code> in its <code>args</code> (e.g., <code>c()</code>, <code>rep()</code>, <code>max()</code>), then it is
+returned as is.
+</p>
+<p>If <code>f</code> is primitive and does <strong>not</strong> have <code>...</code> in its <code>args</code>,
+then an error will be thrown. The user can bypass this error by processing
+<code>f</code> with <code>rlang::as_closure()</code> before passing it to <code>withdots()</code>.
+<strong>However, keep in mind that the argument matching behavior of the
+resulting closure may be different from what is expected, since
+primitives may use nonstandard argument matching.</strong>
+</p>
+
+
+<h3>Why the <code>srcref</code> <code>attribute</code> is removed</h3>
+
+<p>Many
+functions—including those created with <code>function()</code>—have a <code>srcref</code>
+<code>attribute</code>. When a function is printed, <code>print.function()</code>
+relies on this <code>attribute</code> by default to depict the function's
+formals and body.
+</p>
+<p><code>withdots()</code> adds <code>...</code> via <code>formals&lt;-</code>, which expressly drops
+<code>attributes</code> (see its documentation page). To prevent this
+loss, <code>withdots()</code> sets <code>attributes</code><code>(f)</code> aside at the beginning and
+re-attaches them to <code>f</code> at the end. Normally, this would re-attach the
+original <code>f</code>'s <code>srcref</code> <code>attribute</code> to the new <code>f</code>, making it so
+that the newly added <code>...</code> would not be depicted when the new <code>f</code>
+is printed. For this reason, the old <code>srcref</code> <code>attribute</code> is
+dropped, and only the remaining <code>attributes</code> are re-attached to the new
+<code>f</code>.
+</p>
+<p>Observe what would happen during printing if <strong>all</strong> original
+<code>attributes</code><code>(f)</code> were naively added to the modified <code>f</code>:
+</p>
+<div class="sourceCode r"><pre># Create a function with no dots:
+foo &lt;- function(a = 1) {
+  # Helpful comment
+  a
+}
+
+# Give it important attributes that we can't afford to lose:
+attr(foo, "important_attribute") &lt;- "crucial information"
+class(foo) &lt;- "very_special_function"
+
+# Print foo, which also prints its important attributes:
+foo
+#&gt; function(a = 1) {
+#&gt;   # Helpful comment
+#&gt;   a
+#&gt; }
+#&gt; &lt;environment: 0x571c620&gt;
+#&gt; attr(,"important_attribute")
+#&gt; [1] "crucial information"
+#&gt; attr(,"class")
+#&gt; [1] "very_special_function"
+
+# Save its attributes:
+old_attributes &lt;- attributes(foo)
+
+# Add dots:
+formals(foo)[["..."]] &lt;- quote(expr = )
+
+# See that the important attributes have been dropped:
+foo
+#&gt; function (a = 1, ...) 
+#&gt; {
+#&gt;     a
+#&gt; }
+#&gt; &lt;environment: 0x571c620&gt;
+
+# Add the attributes back:
+attributes(foo) &lt;- old_attributes
+
+# Print it again, and we see that the attributes have returned.
+# However, the ... disappears from the argument list.
+foo
+#&gt; function(a = 1) {
+#&gt;   # Helpful comment
+#&gt;   a
+#&gt; }
+#&gt; &lt;environment: 0x571c620&gt;
+#&gt; attr(,"important_attribute")
+#&gt; [1] "crucial information"
+#&gt; attr(,"class")
+#&gt; [1] "very_special_function"
+
+# We know the actual function definitely has dots, since it can handle
+# extraneous arguments:
+foo(1, 2, junk, "arguments", NULL)
+#&gt; [1] 1
+
+# Remove the "srcref" attribute, and the function is printed accurately.
+# Furthermore, its important attributes are intact:
+attr(foo, "srcref") &lt;- NULL
+foo
+#&gt; function (a = 1, ...) 
+#&gt; {
+#&gt;     a
+#&gt; }
+#&gt; &lt;environment: 0x571c620&gt;
+#&gt; attr(,"important_attribute")
+#&gt; [1] "crucial information"
+#&gt; attr(,"class")
+#&gt; [1] "very_special_function"
+
+# Success (although the comments in the body() of the function are lost)
+</pre></div>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># The base::match() function has no ... and can't handle extraneous arguments
+if (FALSE) {
+  match("z", letters, cannot_handle_ = "junk arguments")
+}
+
+# But if we give it dots...
+match_with_dots &lt;- withdots(match)
+
+# ...it can now handle extraneous arguments:
+match_with_dots("z", letters, can_now_handle = "junk arguments")
+</code></pre>
+
+
+</div>

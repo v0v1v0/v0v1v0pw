@@ -1,0 +1,159 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wNNSel.impute</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Weighted Nearest Neighbor Imputation of Missing Values using Selected Variables</h2>
+
+<h3>Description</h3>
+
+<p>This function imputes the missing values using user-spefied values of the tuning parameters. 
+It also works when the samples are smaller than the covariates.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wNNSel.impute(x, k, useAll = TRUE, x.initial = NULL, x.dist = "euclidean",
+  kernel = "gaussian", lambda = 0.3, impute.fn, convex = TRUE,
+  method = "2", m = 2, c = 0.3, withinFolds = FALSE, folds,
+  verbose = TRUE, verbose2 = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a <code>matrix</code> containing missing values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>an optional, the number of nearest neighbors to use for imputation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useAll</code></td>
+<td>
+<p><code>logical</code>. The default is <code>useALL=TRUE</code>, that is, all <em>available</em> neighbors are used for the imputation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x.initial</code></td>
+<td>
+<p>an optional. A complete data matrix e.g. using mean imputation of <code>x</code>. If provided, it will be used for the computation of correlations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x.dist</code></td>
+<td>
+<p>distance to compute. The default is <code>x.dist="euclidean"</code>, that uses the Euclidean distance. Set <code>x.dist</code> to <code>NULL</code> for Manhattan distance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kernel</code></td>
+<td>
+<p>kernel function to be used in nearest neighbors imputation. Default kernel function is "gaussian".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p><code>scaler</code>, a tuning parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>impute.fn</code></td>
+<td>
+<p>the imputation function to run on the length k vector of values for a missing feature. 
+Defaults to a weighted mean of the neighboring values, weighted by the specified <code>kernel</code>. If not specified then wNN imputation will be used by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>convex</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, selected variables are used for the computation of distance.  The default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>convex function,  performs selection of variables. If <code>method="1"</code>, linear function is used and the power function is used when <code>method="2"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p><code>scaler</code>, a tuning parameter required by the power function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c</code></td>
+<td>
+<p><code>scaler</code>, a tuning parameter required by the linear function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>withinFolds</code></td>
+<td>
+<p><code>logical</code>. Use only if the neighbors/rows belong to particular folds/groups. Default is set to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>folds</code></td>
+<td>
+<p>a <code>list</code> of vectors specifying folds/groups for neighbors. lenght of list is equal to the number of folds/groups. 
+Each element/vector of the list indicates row indices belonging to that particular group/fold.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, prints status updates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose2</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, prints status updates with more detail</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For each sample, identify missinng features.  For each missing feature
+find the nearest neighbors which have that feature.  Impute the missing
+value using the imputation function on the <em>selected</em> vector of values
+found from the neighbors.
+</p>
+
+
+<h3>Value</h3>
+
+<p>imputed data matrix
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>cv.wNNSel</code>,  <code>wNNSel</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  set.seed(3)
+  x = matrix(rnorm(100),10,10)
+  x.miss = x &gt; 1
+  x[x.miss] = NA
+  wNNSel.impute(x)
+  wNNSel.impute(x, lambda=0.5, m=2)
+</code></pre>
+
+
+</div>

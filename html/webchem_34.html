@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_csid</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>ChemSpider ID from compound name, formula, SMILES, InChI or InChIKey</h2>
+
+<h3>Description</h3>
+
+<p>Query one or more compunds by name, formula, SMILES, InChI or InChIKey and
+return a vector of ChemSpider IDs.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_csid(
+  query,
+  from = c("name", "formula", "inchi", "inchikey", "smiles"),
+  match = c("all", "first", "ask", "na"),
+  verbose = getOption("verbose"),
+  apikey = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>character; search term.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>character; the type of the identifier to convert from. Valid
+values are <code>"name"</code>, <code>"formula"</code>, <code>"smiles"</code>,
+<code>"inchi"</code>, <code>"inchikey"</code>. The default value is <code>"name"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>match</code></td>
+<td>
+<p>character; How should multiple hits be handled?, "all" all
+matches are returned, "best" the best matching is returned, "ask" enters an
+interactive mode and the user is asked for input, "na" returns NA if
+multiple hits are found.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical; should a verbose output be printed on the console?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>apikey</code></td>
+<td>
+<p>character; your API key. If NULL (default),
+<code>cs_check_key()</code> will look for it in .Renviron or .Rprofile.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>furthrer arguments passed to <code>cs_control</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Queries by SMILES, InChI or InChiKey do not use <code>cs_control</code>
+options. Queries by name use <code>order_by</code> and <code>order_direction</code>.
+Queries by formula also use <code>datasources</code>. See <code>cs_control()</code> for
+a full list of valid values for these control options.
+</p>
+<p><code>formula</code> can be expressed with and without LaTeX syntax.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a tibble.
+</p>
+
+
+<h3>Note</h3>
+
+<p>An API key is needed. Register at <a href="https://developer.rsc.org/">https://developer.rsc.org/</a> for
+an API key. Please respect the Terms &amp; conditions:
+<a href="https://developer.rsc.org/terms">https://developer.rsc.org/terms</a>.
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://developer.rsc.org/docs/compounds-v1-trial/1/overview">https://developer.rsc.org/docs/compounds-v1-trial/1/overview</a>
+</p>
+<p>Eduard Szöcs, Tamás Stirling, Eric R. Scott, Andreas Scharmüller,
+Ralf B. Schäfer (2020). webchem: An R Package to Retrieve Chemical
+Information from the Web. Journal of Statistical Software, 93(13).
+<a href="https://doi.org/10.18637/jss.v093.i13">doi:10.18637/jss.v093.i13</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+get_csid("triclosan")
+get_csid(c("carbamazepine", "naproxene","oxygen"))
+get_csid("C2H6O", from = "formula")
+get_csid("C_{2}H_{6}O", from = "formula")
+get_csid("CC(O)=O", from = "smiles")
+get_csid("InChI=1S/C2H4O2/c1-2(3)4/h1H3,(H,3,4)", from = "inchi")
+get_csid("QTBSBXVTEAMEQO-UHFFFAOYAR", from = "inchikey")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

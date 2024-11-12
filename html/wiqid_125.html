@@ -1,0 +1,51 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Priors</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Standardisation and priors </h2>
+
+<h3>Description</h3>
+
+<p>This page documents the priors used in the Bayesian analysis. For logistic models, sensible priors depend on the range of values and thus on the standardisation scheme used, which is also detailed here.
+</p>
+<p>At present, this represents good intentions! It has not been implemented in all the functions in <span class="pkg">wiqid</span>.
+</p>
+
+
+<h3>Standardisation</h3>
+
+<p>Continuous variables are standardised to facilitate writing models, and optimisation. Standardisation also means that the size of regression coefficients directly reflect the importance of the corresponding variables.
+</p>
+<p>Binary variables coded as TRUE/FALSE and dummy variables are not changed. To make continuous variables comparable with these, they are centred by subtracting the mean, and then divided by their standard deviation.
+</p>
+<p>Update: In versions prior to 0.2.x, continuous variables were centred by subtracting the mean, and then divided by <em>two times</em> their standard deviation (Gelman, 2008). With the new default, beta coefficients will be exactly half the size. There may be some rounding errors in the fourth decimal place for other estimates.
+</p>
+<p>Note that all numerical inputs (ie, <code>is.numeric == TRUE</code>) that appear in the <code>data</code> argument will be standardised, including binary variables coded as 0/1. Variables coded as TRUE/FALSE or as factors are not affected.
+</p>
+<p>The same standardisation strategy is used for both Bayesian and maximum likelihood functions.
+</p>
+
+
+<h3>Priors for logistic regression coefficients</h3>
+
+<p>Following Gelman et al (2008), we use independent Cauchy priors with centre 0 and scale 10 for the intercept and scale 2.5 for all other coefficients.
+</p>
+
+
+<h3>Priors for probabilities</h3>
+
+<p>We use independent Uniform(0, 1) priors for probabilities.
+</p>
+
+
+<h3>References</h3>
+
+<p>Gelman, A. (2008) Scaling regression inputs by dividing by two standard deviations. <em>Statistics in Medicine</em>, 27, 2865-2873
+</p>
+<p>Gelman, Jakulin, Pittau and Su (2008) A weakly informative default prior distribution for logistic and other regression models. <em>Annals of Applied Statistics</em> 2, 1360-1383.
+</p>
+
+
+</div>

@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>is.inchikey</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check if input is a valid inchikey</h2>
+
+<h3>Description</h3>
+
+<p>This function checks if a string is a valid inchikey.
+Inchikey must fulfill the following criteria:
+1) consist of 27 characters;
+2) be all uppercase, all letters (no numbers);
+3) contain two hyphens at positions 15 and 26;
+4) 24th character (flag character) be 'S' (Standard InChI) or 'N' (non-standard)
+5) 25th character (version character) must be 'A' (currently).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">is.inchikey(
+  x,
+  type = c("format", "chemspider"),
+  verbose = getOption("verbose")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>character; input InChIKey</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>character; How should be checked? Either, by format (see above)
+('format') or by ChemSpider ('chemspider').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical; print messages during processing to console?</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a logical
+</p>
+
+
+<h3>Note</h3>
+
+<p>This function can handle only one inchikey string.
+</p>
+
+
+<h3>References</h3>
+
+<p>Heller, Stephen R., et al. "InChI, the IUPAC International
+Chemical Identifier." Journal of Cheminformatics 7.1 (2015): 23.
+</p>
+<p>Eduard Szöcs, Tamás Stirling, Eric R. Scott, Andreas Scharmüller,
+Ralf B. Schäfer (2020). webchem: An R Package to Retrieve Chemical
+Information from the Web. Journal of Statistical Software, 93(13).
+<a href="https://doi.org/10.18637/jss.v093.i13">doi:10.18637/jss.v093.i13</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">is.inchikey('BQJCRHHNABKAKU-KBQPJGBKSA-N')
+is.inchikey('BQJCRHHNABKAKU-KBQPJGBKSA')
+is.inchikey('BQJCRHHNABKAKU-KBQPJGBKSA-5')
+is.inchikey('BQJCRHHNABKAKU-KBQPJGBKSA-n')
+is.inchikey('BQJCRHHNABKAKU/KBQPJGBKSA/N')
+is.inchikey('BQJCRHHNABKAKU-KBQPJGBKXA-N')
+is.inchikey('BQJCRHHNABKAKU-KBQPJGBKSB-N')
+</code></pre>
+
+
+</div>

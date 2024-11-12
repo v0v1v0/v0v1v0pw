@@ -1,0 +1,64 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_cd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>A function to obtain information on the station and on the catchment upstream of the station using the NRFA API</h2>
+
+<h3>Description</h3>
+
+<p>The function queries the NRFA API for for information of a given station. Unlike <code>get_amax</code> and <code>get_pot</code>, the output of this function is not exactly the same from the output of the <code>read_cd3</code> function due to differences in the information made available by the NRFA API
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_cd(station, fields = "feh")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>station</code></td>
+<td>
+<p>the NRFA station(s) number for which the the information is required</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fields</code></td>
+<td>
+<p>the type of information which is required. Can be "feh" (default), which outputs a subset of information typically used when applying the flood estimation handbook methods, or "all", which output all information made available in the NRFA API.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a data.frame of one row with different columns depending on whether fields = "all" or fields = "feh" was selected.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read_cd3</code>. Information on catchment descriptors river flow gauging in the UK can be found at the National River Flow Archive website <a href="https://nrfa.ceh.ac.uk">https://nrfa.ceh.ac.uk</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"> cdMult &lt;- get_cd(c(40003,42003), fields = "all")
+ ### lots of information on the catchment/station
+ ### including information on rejected annual maxima
+ cdMult$`40003`$`peak-flow-rejected-amax-years` ## no rejections
+ cdMult$`42003`$`peak-flow-rejected-amax-years` ## several rejections
+ cd40003 &lt;- get_cd(40003, fields = "feh")
+ # less information, mostly the FEH descriptors
+ dim(cd40003)
+ sapply(cdMult, ncol)
+
+</code></pre>
+
+
+</div>

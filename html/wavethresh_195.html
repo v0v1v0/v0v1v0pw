@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rfft</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Real Fast Fourier transform</h2>
+
+<h3>Description</h3>
+
+<p>Compute a real Fast Fourier transform of <code>x</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rfft(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The vector whose Fourier transform you wish to take</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Given a vector x this function computes the real continuous Fourier
+transform of <code>x</code>, i.e. it regards <code>x</code> as points on a periodic
+function on [0,1] starting at 0, and finding the coefficients of the functions
+1,
+<code class="reqn">\sqrt{2}\cos(2\pi t)</code>,
+<code class="reqn">\sqrt{2}\sin(2\pi t)</code>, etc. that gives the expansion
+of the interpolant of <code>x</code>. The number of terms in the expansion 
+is the length of <code>x</code>. If <code>x</code> is of even length, the last
+coefficient will be that of a cosine term with no matching sine.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns the Fourier coefficients
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Bernard Silverman</p>
+
+
+<h3>See Also</h3>
+
+<p><code>LocalSpec.wd</code>,
+<code>rfftinv</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- seq(from=0, to=2*pi, length=150)
+s1 &lt;- sin(10*x)
+s2 &lt;- sin(7*x)
+s &lt;- s1 + s2
+w &lt;- rfft(s)
+## Not run: ts.plot(w)
+#
+# Should see two peaks, corresponding to the two sines at different frequencies
+#
+</code></pre>
+
+
+</div>

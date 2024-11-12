@@ -1,0 +1,250 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>voronoiTreemap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>voronoiTreemap</h2>
+
+<h3>Description</h3>
+
+<p>Create nested additively weighted Voronoi treemaps.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">voronoiTreemap(
+  data,
+  levels,
+  fun = sum,
+  sort = TRUE,
+  filter = 0,
+  cell_size = NULL,
+  custom_color = NULL,
+  shape = "rectangle",
+  maxIteration = 100,
+  error_tol = 0.01,
+  seed = NULL,
+  positioning = "regular",
+  verbose = FALSE,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>(data.frame) A data.frame with one column for each hierarchical level</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>levels</code></td>
+<td>
+<p>(character) Character vector indicating the column names to
+be used. The order of names must correspond to the hierarchical levels,
+going from broad to fine</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>(function) Function to be used to aggregate cell sizes of parental cells</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort</code></td>
+<td>
+<p>(logical) Should the columns of the data.frame be sorted before treemap generation?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>(numeric) Filter the supplied data frame to remove very small
+cells that may not be visible. The default is to remove cells with a
+relative target area below a threshold of zero (no negative values allowed).
+Computation time can increase when many small cells are present. For example,
+a threshold of 0.01 filters out all observations/cells below 1 % of the total area.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cell_size</code></td>
+<td>
+<p>(character) The name of the column used to control cell size.
+Can be one of <code>levels</code> or any other column with numerical data. NA or
+values equal or less than zero are not allowed as the cell area needs to be positive.
+The values in this column are aggregated by the function specified by <code>fun</code>.
+If <code>cell_size = NULL</code>, cell area is simply computed by the number of members
+for the respective cell (corresponding to rows in the data.frame).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>custom_color</code></td>
+<td>
+<p>(character) An optional column that can be specified to
+control cell color. Cell colors are determined when drawing the treemap
+using <code>drawTreemap</code>, but the default is to use one of
+<code>levels</code> or <code>cell size</code>. Any other data source that shall be used
+instead has to be included in the treemap generation and explicitly
+specified here. The default value is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shape</code></td>
+<td>
+<p>(list or character) Set the initial shape of the treemap. Currently
+supported are the keywords "rectangle", "rounded_rect", "circle" or "hexagon".
+Alternatively the user can supply a named list with coordinates for a custom polygon.
+The slots of the list must be labeled 'x' and 'y'. The coordinates are not tested
+for validity, use on your own risk.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxIteration</code></td>
+<td>
+<p>(numeric) Force algorithm to stop at this number of iterations
+for each parent cell. The algorithm usually converges to an acceptable
+solution fairly quickly, so it seems reasonable to restrict this number
+in order to save computation time. However, more iterations give higher
+accuracy.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>error_tol</code></td>
+<td>
+<p>(numeric) The allowed maximum error tolerance of a cell.
+The algorithm will stop when all cells have lower error than this value.
+It is calculated as the absolute difference of a cell's area to its target
+area. The default is 0.01 (or 1 %) of the total parental area. Note: this
+is is different from a relative per-cell error, where 1 % would be more
+strict.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>(integer) The default seed is NULL, which will lead to a new
+random sampling of cell coordinates for each tesselation. If you want
+a reproducible arrangement of cells, set seed to an arbitrary number.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>positioning</code></td>
+<td>
+<p>(character) Algorithm for positioning of starting
+coordinates of child cells in the parental cell using <code>spsample()</code>;
+"random" for completely random positions, "regular" for cells aligned
+to a grid sorted from bottom to top by name, "clustered" with regular
+positions of cells but sorted by name from inside out. Two variants
+"regular_by_area" and "clustered_by_area" will work as their counterparts
+but will sort by cell target area instead of cell name. <code>positioning</code>
+can be a single character or a vector of <code>length(levels)</code> to allow
+different positioning algorithms for each level.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>(logical) If verbose is TRUE (default is FALSE), messages
+with statistics for each iteration of a treemap as well as a success message
+are printed to the console.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) If debug is TRUE (default is FALSE), the solution
+for each iteration is drawn to the viewport to allow some visual
+inspection. The weights, target area, and difference are printed to the
+console. It is not recommended to set this option to TRUE unless you know
+what you are doing, as it makes treemap generation much slower.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is a recursive wrapper function, making use of the original implementation
+of the voronoi tesselation from Paul Murrell, University of Auckland.
+The original functions were obtained and slightly modified from
+<a href="https://www.stat.auckland.ac.nz/~paul/Reports/VoronoiTreemap/voronoiTreeMap.html">https://www.stat.auckland.ac.nz/~paul/Reports/VoronoiTreemap/voronoiTreeMap.html</a>
+This function returns a treemap object instead of a plot. In order
+to actually draw the treemap, use <code>drawTreemap</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>'voronoiTreemap' returns an object of the formal class 'voronoiResult'.
+It is essentially a list of objects related to the graphical
+representation of the treemap (polygons, labels, cell data) as well as data from the call
+of the function. It contains the following slots:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>cells</code></td>
+<td>
+<p>'list' of polygons for drawing a treemap</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>'data.frame', the original data that was supplied to calling 'voronoiTreemap'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>'list' of arguments used to call 'voronoiTreemap'</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>drawTreemap</code> for drawing the treemap.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load package
+library(WeightedTreemaps)
+
+# generate dummy data
+df &lt;- data.frame(
+  A = rep(c("abcd", "efgh"), each = 4),
+  B = letters[1:8],
+  size = c(37, 52, 58, 27, 49, 44, 34, 45)
+)
+
+# compute treemap
+tm &lt;- voronoiTreemap(
+  data = df,
+  levels = c("B"),
+  cell_size = "size",
+  shape = "circle",
+  positioning = "regular",
+  seed = 123
+)
+
+# plot treemap with each cell colored by name (default)
+drawTreemap(tm, label_size = 1, color_type = "categorical")
+
+# plot treemap with each cell colored by name, but larger cells
+# lighter and smaller cells darker
+drawTreemap(tm, label_size = 1, color_type = "both")
+
+# plot treemap with different color palette and style
+drawTreemap(tm, label_size = 1, label_color = grey(0.3),
+            border_color = grey(0.3), color_palette = heat.colors(6)
+)
+
+</code></pre>
+
+
+</div>

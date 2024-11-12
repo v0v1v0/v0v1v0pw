@@ -1,0 +1,68 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mw_etag</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Middleware that add an <code>ETag</code> header to the response</h2>
+
+<h3>Description</h3>
+
+<p>If the response already has an <code>ETag</code> header, then it is kept.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mw_etag(algorithm = "crc32")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>algorithm</code></td>
+<td>
+<p>Checksum algorithm to use. Only <code>"crc32"</code> is
+implemented currently.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>This middleware handles the <code>If-None-Match</code> headers, and it sets the
+status code of the response to 304 if <code>If-None-Match</code> matches the
+<code>ETag</code>. It also removes the response body in this case.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Handler function.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other middleware: 
+<code>mw_cgi()</code>,
+<code>mw_cookie_parser()</code>,
+<code>mw_json()</code>,
+<code>mw_log()</code>,
+<code>mw_multipart()</code>,
+<code>mw_range_parser()</code>,
+<code>mw_raw()</code>,
+<code>mw_static()</code>,
+<code>mw_text()</code>,
+<code>mw_urlencoded()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">app &lt;- new_app()
+app$use(mw_etag())
+app
+</code></pre>
+
+
+</div>

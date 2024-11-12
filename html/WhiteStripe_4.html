@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get.largest.mode</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Grab largest peak</h2>
+
+<h3>Description</h3>
+
+<p>This function grabs the largest peak of the histogram
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get.largest.mode(x, y, verbose = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>values of midpoints from <code>hist</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>values of counts from <code>hist</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>print diagnostic output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments to be passed to <code>smooth_hist</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Value of x that is the largest peak
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(t2.voi.hist)
+system.time({
+y = t2.voi.hist$counts
+x = t2.voi.hist$mids
+x = x[!is.na(y)];
+y = y[!is.na(y)]
+# 30 used for speed of example
+nawm_peak = get.largest.mode(x, y, k=30)
+plot(t2.voi.hist, border="red")
+abline(v=nawm_peak)
+})
+</code></pre>
+
+
+</div>

@@ -1,0 +1,143 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict-workflow</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Predict from a workflow</h2>
+
+<h3>Description</h3>
+
+<p>This is the <code>predict()</code> method for a fit workflow object. The nice thing
+about predicting from a workflow is that it will:
+</p>
+
+<ul>
+<li>
+<p> Preprocess <code>new_data</code> using the preprocessing method specified when the
+workflow was created and fit. This is accomplished using
+<code>hardhat::forge()</code>, which will apply any formula preprocessing or call
+<code>recipes::bake()</code> if a recipe was supplied.
+</p>
+</li>
+<li>
+<p> Call <code>parsnip::predict.model_fit()</code> for you using the underlying fit
+parsnip model.
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'workflow'
+predict(object, new_data, type = NULL, opts = list(), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A workflow that has been fit by <code>fit.workflow()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>new_data</code></td>
+<td>
+<p>A data frame containing the new predictors to preprocess
+and predict on. If using a recipe preprocessor, you should not call
+<code>recipes::bake()</code> on <code>new_data</code> before passing to this function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>A single character value or <code>NULL</code>. Possible values
+are <code>"numeric"</code>, <code>"class"</code>, <code>"prob"</code>, <code>"conf_int"</code>, <code>"pred_int"</code>,
+<code>"quantile"</code>, <code>"time"</code>, <code>"hazard"</code>, <code>"survival"</code>, or <code>"raw"</code>. When <code>NULL</code>,
+<code>predict()</code> will choose an appropriate value based on the model's mode.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opts</code></td>
+<td>
+<p>A list of optional arguments to the underlying
+predict function that will be used when <code>type = "raw"</code>. The
+list should not include options for the model object or the
+new data being predicted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional <code>parsnip</code>-related options, depending on the
+value of <code>type</code>. Arguments to the underlying model's prediction
+function cannot be passed here (use the <code>opts</code> argument instead).
+Possible arguments are:
+</p>
+
+<ul>
+<li> <p><code>interval</code>: for <code>type</code> equal to <code>"survival"</code> or <code>"quantile"</code>, should
+interval estimates be added, if available? Options are <code>"none"</code>
+and <code>"confidence"</code>.
+</p>
+</li>
+<li> <p><code>level</code>: for <code>type</code> equal to <code>"conf_int"</code>, <code>"pred_int"</code>, or <code>"survival"</code>,
+this is the parameter for the tail area of the intervals
+(e.g. confidence level for confidence intervals).
+Default value is <code>0.95</code>.
+</p>
+</li>
+<li> <p><code>std_error</code>: for <code>type</code> equal to <code>"conf_int"</code> or <code>"pred_int"</code>, add
+the standard error of fit or prediction (on the scale of the
+linear predictors). Default value is <code>FALSE</code>.
+</p>
+</li>
+<li> <p><code>quantile</code>: for <code>type</code> equal to <code>quantile</code>, the quantiles of the
+distribution. Default is <code>(1:9)/10</code>.
+</p>
+</li>
+<li> <p><code>eval_time</code>: for <code>type</code> equal to <code>"survival"</code> or <code>"hazard"</code>, the
+time points at which the survival probability or hazard is estimated.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data frame of model predictions, with as many rows as <code>new_data</code> has.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(parsnip)
+library(recipes)
+library(magrittr)
+
+training &lt;- mtcars[1:20, ]
+testing &lt;- mtcars[21:32, ]
+
+model &lt;- linear_reg() %&gt;%
+  set_engine("lm")
+
+workflow &lt;- workflow() %&gt;%
+  add_model(model)
+
+recipe &lt;- recipe(mpg ~ cyl + disp, training) %&gt;%
+  step_log(disp)
+
+workflow &lt;- add_recipe(workflow, recipe)
+
+fit_workflow &lt;- fit(workflow, training)
+
+# This will automatically `bake()` the recipe on `testing`,
+# applying the log step to `disp`, and then fit the regression.
+predict(fit_workflow, testing)
+</code></pre>
+
+
+</div>

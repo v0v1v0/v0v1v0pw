@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dprewire.range</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Range of assortativity coefficients.</h2>
+
+<h3>Description</h3>
+
+<p>The assortativity coefficient of a given network may not reach all the values
+between -1 and 1 via degree preserving rewiring. This function calculates the
+range of assortativity coefficients achievable through degree preserving
+rewiring. The algorithm is designed for unweighted networks.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dprewire.range(
+  netwk,
+  edgelist,
+  adj,
+  directed,
+  which.range = c("outout", "outin", "inout", "inin"),
+  control = cvxr_control(),
+  target.assortcoef = list(outout = NULL, outin = NULL, inout = NULL, inin = NULL)
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>netwk</code></td>
+<td>
+<p>A <code>wdnet</code> object representing an unweighted network. If
+<code>NULL</code>, the function will construct a network using either
+<code>edgelist</code> or <code>adj</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edgelist</code></td>
+<td>
+<p>A two-column matrix, where each row represents an edge of the
+network.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adj</code></td>
+<td>
+<p>An adjacency matrix of an unweighted network.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>directed</code></td>
+<td>
+<p>Logical, whether the network is directed or not. It will be
+ignored if <code>netwk</code> is provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>which.range</code></td>
+<td>
+<p>The type of interested assortativity coefficient. For
+directed networks, it takes one of the values: "outout", "outin", "inout"
+and "inin". It will be ignored if the network is undirected.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>A list of parameters passed to <code>CVXR::solve()</code> for
+solving an appropriate <code>eta</code>, given the constraints
+<code>target.assortcoef</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target.assortcoef</code></td>
+<td>
+<p>A list of constraints, it contains the predetermined
+value or range imposed on assortativity coefficients other than
+<code>which.range</code>. It will be ignored if the network is undirected.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The ranges are computed using convex optimization. The optimization problems
+are defined and solved via the <code>R</code> package <code>CVXR</code>. For undirected
+networks, the function returns the range of the assortativity coefficient.
+For directed networks, the function computes the range of <code>which.range</code>
+while other assortativity coefficients are restricted through
+<code>target.assortcoef</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns the range of the selected assortativity coefficient and the
+results from the solver.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+set.seed(123)
+netwk &lt;- rpanet(5e3,
+  control =
+    rpa_control_scenario(alpha = 0.5, beta = 0.5)
+)
+ret1 &lt;- dprewire.range(
+  netwk = netwk, which.range = "outin",
+  target.assortcoef = list("outout" = c(-0.3, 0.3), "inout" = 0.1)
+)
+ret1$range
+
+
+</code></pre>
+
+
+</div>

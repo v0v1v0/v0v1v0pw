@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>AICtable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Make a table for AIC or other criterion
+</h2>
+
+<h3>Description</h3>
+
+<p>Takes the output from a call to AIC or AICc returns a data frame with model likelihoods and model weights.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">AICtable(x, digits=3, sort)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>A data frame with the second column being AIC-type values, as returned by <code>AIC</code> or <code>AICc</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+
+<p>integer indicating the number of decimal places to retain.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort</code></td>
+<td>
+
+<p>logical indicating whether the table should be sorted by AIC; if missing, the rows are sorted if the table has row names.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns the original data frame with the following extra columns
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Delta </code></td>
+<td>
+<p>The difference between each value in x and min(x)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ModelLik </code></td>
+<td>
+<p>The model likelihood</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ModelWt </code></td>
+<td>
+<p>The model weight</p>
+</td>
+</tr>
+</table>
+<p>If sort = TRUE, the rows will be sorted by increasing values of AIC/AICc.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith
+</p>
+
+
+<h3>References</h3>
+
+<p>Burnham and Anderson (2002) <em>Model selection and multimodel inference: a practical information-theoretic approach</em>, 2 edn. Springer-Verlag.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(KanhaTigers)
+mods &lt;- NULL
+mods$M0 &lt;- closedCapM0(KanhaTigers)
+mods$Mh2 &lt;- closedCapMh2(KanhaTigers)
+mods$MhJK &lt;- closedCapMhJK(KanhaTigers)
+mods$Mt &lt;- closedCapMt(KanhaTigers)
+AICc &lt;- sapply(mods, AICc)
+AICtable(AICc)
+# MhJK does not use likelihood maximisation
+</code></pre>
+
+
+</div>

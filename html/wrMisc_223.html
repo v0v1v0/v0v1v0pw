@@ -1,0 +1,63 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>replPlateCV</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>CV of replicate plates (list of matrixes)</h2>
+
+<h3>Description</h3>
+
+<p><code>replPlateCV</code> gets CVs of replicates from list of 2 or 3-dim arrays (where 2nd dim is replicates, 3rd dim may be channel). 
+Note : all list-elements of must MUST have SAME dimensions !
+When treating data from microtiter plates (eg 8x12) data are typically spread over multiple plates, ie initial matrixes that are the organized into arrays.
+Returns matrix or array (1st dim is intraplate-position, 2nd .. plate-group/type, 3rd .. channels)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">replPlateCV(lst, callFrom = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lst</code></td>
+<td>
+<p>list of matrixes : suppose lines are independent elements, colums are replicates of the 1st column. All matrixes must have same dimensions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>matrix or array (1st dim is intraplate-position, 2nd .. plate-group/type, 3rd .. channels)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>rowCVs</code>, @seealso <code>arrayCV</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2016); ra1 &lt;- matrix(rnorm(3*96),nrow=8)
+pla1 &lt;- list(ra1[,1:12],ra1[,13:24],ra1[,25:36])
+replPlateCV(pla1)
+arrL1 &lt;- list(a=array(as.numeric(ra1)[1:192],dim=c(8,12,2)),
+  b=array(as.numeric(ra1)[97:288],dim=c(8,12,2)))
+replPlateCV(arrL1)
+</code></pre>
+
+
+</div>

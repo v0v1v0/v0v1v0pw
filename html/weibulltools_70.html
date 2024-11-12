@@ -1,0 +1,269 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rank_regression</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Rank Regression for Parametric Lifetime Distributions</h2>
+
+<h3>Description</h3>
+
+<p>This function fits a regression model to a linearized parametric lifetime
+distribution for complete and (multiple) right-censored data. The parameters
+are determined in the frequently used (log-)location-scale parameterization.
+</p>
+<p>For the Weibull, estimates are additionally transformed such that they are in
+line with the parameterization provided by the <em>stats</em> package
+(see Weibull).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rank_regression(x, ...)
+
+## S3 method for class 'wt_cdf_estimation'
+rank_regression(
+  x,
+  distribution = c("weibull", "lognormal", "loglogistic", "sev", "normal", "logistic",
+    "weibull3", "lognormal3", "loglogistic3", "exponential", "exponential2"),
+  conf_level = 0.95,
+  direction = c("x_on_y", "y_on_x"),
+  control = list(),
+  options = list(),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>tibble</code> with class <code>wt_cdf_estimation</code> returned by estimate_cdf.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the random variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conf_level</code></td>
+<td>
+<p>Confidence level of the interval.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>direction</code></td>
+<td>
+<p>Direction of the dependence in the regression model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>A list of control parameters (see optim).
+</p>
+<p><code>control</code> is in use only if a three-parametric distribution was specified.
+If this is the case, <code>optim</code> (always with <code>method = "L-BFGS-B"</code> and
+<code>control$fnscale = -1</code>) is called to determine the threshold parameter
+(see r_squared_profiling).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>options</code></td>
+<td>
+<p>A list of named options. See 'Options'.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The confidence intervals of the parameters are computed on the basis of a
+heteroscedasticity-consistent (<strong>HC</strong>) covariance matrix. Here it should be
+said that there is no statistical foundation to determine the standard errors
+of the parameters using <em>Least Squares</em> in context of <em>Rank Regression</em>.
+For an accepted statistical method use maximum likelihood.
+</p>
+<p>If <code>options = list(conf_method = "Mock")</code>, the argument <code>distribution</code> must be
+one of <code>"weibull"</code> and <code>"weibull3"</code>. The approximated confidence intervals
+for the Weibull parameters can then only be estimated on the following
+confidence levels (see 'References' <em>(Mock, 1995)</em>):
+</p>
+
+<ul>
+<li> <p><code>conf_level = 0.90</code>
+</p>
+</li>
+<li> <p><code>conf_level = 0.95</code>
+</p>
+</li>
+<li> <p><code>conf_level = 0.99</code>
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A list with classes <code>wt_model</code>, <code>wt_rank_regression</code> and <code>wt_model_estimation</code>
+which contains:
+</p>
+
+<ul>
+<li> <p><code>coefficients</code> : A named vector of estimated coefficients (parameters of the
+assumed distribution). <strong>Note</strong>: The parameters are given in the
+(log-)location-scale-parameterization.
+</p>
+</li>
+<li> <p><code>confint</code> : Confidence intervals for the (log-)location-scale parameters.
+For threshold distributions no confidence interval for the threshold parameter
+can be computed. If <code>direction = "y_on_x"</code>, back-transformed confidence
+intervals are provided.
+</p>
+</li>
+<li> <p><code>shape_scale_coefficients</code> : Only included if <code>distribution</code> is <code>"weibull"</code>
+or <code>"weibull3"</code> (parameterization used in Weibull).
+</p>
+</li>
+<li> <p><code>shape_scale_confint</code> : Only included if <code>distribution</code> is <code>"weibull"</code>
+or <code>"weibull3"</code>. Approximated confidence intervals for scale <code class="reqn">\eta</code> and
+shape <code class="reqn">\beta</code> (and threshold <code class="reqn">\gamma</code> if <code>distribution = "weibull3"</code>).
+</p>
+</li>
+<li> <p><code>varcov</code> : Only provided if <code>options = list(conf_method = "HC")</code> (default).
+Estimated heteroscedasticity-consistent (<strong>HC</strong>) variance-covariance matrix
+for the (log-)location-scale parameters.
+</p>
+</li>
+<li> <p><code>r_squared</code> : Coefficient of determination.
+</p>
+</li>
+<li> <p><code>data</code> : A <code>tibble</code> with class <code>wt_cdf_estimation</code> returned by estimate_cdf.
+</p>
+</li>
+<li> <p><code>distribution</code> : Specified distribution.
+</p>
+</li>
+<li> <p><code>direction</code> : Specified direction.
+</p>
+</li>
+</ul>
+<p>If more than one method was specified in estimate_cdf, the resulting output
+is a list with class <code>wt_model_estimation_list</code>. In this case, each list element
+has classes <code>wt_rank_regression</code> and <code>wt_model_estimation</code>, and the items listed
+above, are included.
+</p>
+
+
+<h3>Options</h3>
+
+<p>Argument <code>options</code> is a named list of options:</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   Name </td>
+<td style="text-align: left;"> Value </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>conf_method</code> </td>
+<td style="text-align: left;"> <code>"HC"</code> (default) or <code>"Mock"</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+
+<ul>
+<li>
+<p> Mock, R., Methoden zur Datenhandhabung in Zuverlässigkeitsanalysen,
+vdf Hochschulverlag AG an der ETH Zürich, 1995
+</p>
+</li>
+<li>
+<p> Meeker, William Q; Escobar, Luis A., Statistical methods for reliability data,
+New York: Wiley series in probability and statistics, 1998
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Reliability data preparation:
+## Data for two-parametric model:
+data_2p &lt;- reliability_data(
+  shock,
+  x = distance,
+  status = status
+)
+
+## Data for three-parametric model:
+data_3p &lt;- reliability_data(
+  alloy,
+  x = cycles,
+  status = status
+)
+
+# Probability estimation:
+prob_tbl_2p &lt;- estimate_cdf(
+  data_2p,
+  methods = "johnson"
+)
+
+prob_tbl_3p &lt;- estimate_cdf(
+  data_3p,
+  methods = "johnson"
+)
+
+prob_tbl_mult &lt;- estimate_cdf(
+  data_3p,
+  methods = c("johnson", "kaplan")
+)
+
+# Example 1 - Fitting a two-parametric weibull distribution:
+rr_2p &lt;- rank_regression(
+  x = prob_tbl_2p,
+  distribution = "weibull"
+)
+
+# Example 2 - Fitting a three-parametric lognormal distribution:
+rr_3p &lt;- rank_regression(
+  x = prob_tbl_3p,
+  distribution = "lognormal3",
+  conf_level = 0.99
+)
+
+# Example 3 - Fitting a three-parametric lognormal distribution using
+# direction and control arguments:
+rr_3p_control &lt;- rank_regression(
+  x = prob_tbl_3p,
+  distribution = "lognormal3",
+  conf_level = 0.99,
+  direction = "y_on_x",
+  control = list(trace = TRUE, REPORT = 1)
+)
+
+# Example 4 - Fitting a three-parametric loglogistic distribution if multiple
+# methods in estimate_cdf were specified:
+rr_lists &lt;- rank_regression(
+  x = prob_tbl_mult,
+  distribution = "loglogistic3",
+  conf_level = 0.90
+)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,181 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ranova</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Robust ANOVA</h2>
+
+<h3>Description</h3>
+
+<p>Robust Analysis of Variance
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ranova(
+  data,
+  dep,
+  factors = NULL,
+  method = "trim",
+  ph = FALSE,
+  tr = 0.2,
+  est = "mom",
+  nboot = 599,
+  dist = "proj"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>the data as a data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dep</code></td>
+<td>
+<p>a string naming the dependent variable from <code>data</code>; the
+variable must be numeric</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>factors</code></td>
+<td>
+<p>a vector of strings naming the fixed factors from
+<code>data</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p><code>'median'</code>, <code>'trim'</code> (default) or <code>'boot'</code>;
+the method to use, median, trimmed means, or bootstrapped</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ph</code></td>
+<td>
+<p><code>TRUE</code> or <code>FALSE</code> (default), provide post hoc tests</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tr</code></td>
+<td>
+<p>a number between 0 and 0.5, (default: 0.2), the proportion of
+measurements to trim from each end, when using the trim and bootstrap
+methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>est</code></td>
+<td>
+<p><code>'onestep'</code>, <code>'mom'</code> (default) or <code>'median'</code>, the
+M-estimator to use; One-step, Modified one-step or Median respectively</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nboot</code></td>
+<td>
+<p>a number (default: 599) specifying the number of bootstrap
+samples to use when using the bootstrap method</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist</code></td>
+<td>
+<p><code>'maha'</code> or <code>'proj'</code> (default), whether to use
+Mahalanobis or Projection distances respectively</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A results object containing:
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <code>results$main</code> </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> the table of ANOVA results </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>results$phs</code> </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> the table of posthoc tests </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>Tables can be converted to data frames with <code>asDF</code> or <code>as.data.frame</code>. For example:
+</p>
+<p><code>results$main$asDF</code>
+</p>
+<p><code>as.data.frame(results$main)</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data('goggles', package='WRS2')
+
+ranova(goggles,
+       dep = 'attractiveness',
+       factors = c('gender', 'alcohol'),
+       ph = TRUE)
+
+#
+#  ROBUST ANOVA
+#
+#  Robust ANOVA
+#  ------------------------------------
+#                      Q        p
+#  ------------------------------------
+#    gender             1.67    0.209
+#    alcohol           48.28    0.001
+#    gender:alcohol    26.26    0.001
+#  ------------------------------------
+#   Note. Method of trimmed means,
+#   trim level 0.2
+#
+#
+#  POST HOC TESTS
+#
+#  Post Hoc Tests - gender
+#  --------------------------------------------------------
+#                       psi-hat   p        Lower    Upper
+#  --------------------------------------------------------
+#    Female    Male     10.0      0.209    -6.00    26.0
+#  --------------------------------------------------------
+#
+#
+#  Post Hoc Tests - alcohol
+#  -------------------------------------------------------------
+#                           psi-hat   p         Lower    Upper
+#  -------------------------------------------------------------
+#    None       2 Pints     -3.33      0.611    -20.5     13.8
+#    None       4 Pints     35.83     &lt; .001     19.3     52.3
+#    2 Pints    4 Pints     39.17     &lt; .001     22.5     55.9
+#  -------------------------------------------------------------
+#
+
+</code></pre>
+
+
+</div>

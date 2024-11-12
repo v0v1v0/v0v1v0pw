@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rmget</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Search for existing ipndacw matrices. </h2>
+
+<h3>Description</h3>
+
+<p>Returns the integer corresponding to the smallest order <code>ipndacw</code> matrix of greater than or equal to order than the order, J requested. 
+</p>
+<p>Not really intended for user use. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rmget(requestJ, filter.number, family)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>requestJ</code></td>
+<td>
+<p>A positive integer representing the order of the <code>ipndacw</code> matrix that is <em>required</em>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.number</code></td>
+<td>
+<p>The index number of the wavelet used to build the <code>ipndacw</code> matrix that is required.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>The wavelet family used to build the <code>ipndacw</code> matrix that is required.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Some of the matrices computed by <code>ipndacw</code> take a long time to compute. Hence it is a good idea to store them and reuse them. 
+</p>
+<p>This function is asked to find an <code>ipndacw</code> matrix of a particular order, <em>filter.number</em> and <em>family</em>. The function steps through all of the directories in the <code>search()</code> list collecting names of all <code>ipndacw</code> matrices having the same <em>filter.number</em> and <em>family</em> characteristics. It then keeps any names where the <em>order</em> is larger than, or equal to, the requested order. This means that a suitable <code>ipndacw</code> matrix of the same or larger order is visible in one of the <code>search()</code> directories. The matrix name with the smallest <code>order</code> is selected and the <em>order</em> of the matrix is returned. The routine that called this function can then <code>get()</code> the matrix and either use it "as is" or extract the top-left hand corner of it if <code>requestJ</code> is less than the order returned by this function. 
+</p>
+<p>If no such matrix, as described by the previous paragraph, exists then this function returns <code>NULL</code>. 
+</p>
+<p>This function calls the subsidiary routine <code>firstdot</code>. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>If a matrix of order larger than or equal to the requested order exists somewhere on the search path <em>and</em> the <code>filter.number</code> and <code>family</code> is as specified then its order is returned. If more than one such matrix exists then the order of the smallest one larger than or equal to the requested one is returned.
+</p>
+<p>If no such matrix exists the function returns NULL. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.9 Copyright Guy Nason 1998 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>References</h3>
+
+<p>Nason, G.P., von Sachs, R. and Kroisandt, G. (1998). Wavelet processes and adaptive estimation of the evolutionary wavelet spectrum. <em>Technical Report</em>, Department of Mathematics University of Bristol/ Fachbereich Mathematik, Kaiserslautern.</p>
+
+
+<h3>See Also</h3>
+
+<p><code>firstdot</code>, <code>ipndacw</code>, <code>rmname</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Suppose there are no matrices in the search path.
+#
+# Let's look for the matrix rm.4.1.DaubExPhase (Haar wavelet matrix of
+# order 4)
+#
+rmget(requestJ=4, filter.number=1, family="DaubExPhase")
+#NULL
+#
+# I.e. a NULL return code. So there were no suitable matrices.
+#
+#If we create two Haar ipndacw matrix of order 7 and 8
+#
+ipndacw(-7, filter.number=1, family="DaubExPhase")
+ipndacw(-8, filter.number=1, family="DaubExPhase")
+#
+# Now let's repeat the earlier search
+#
+rmget(requestJ=4, filter.number=1, family="DaubExPhase")
+#[1] 7
+#
+# So, as we the smallest Haar ipndacw matrix available larger than
+# the requested order of 4 is "7".
+#
+</code></pre>
+
+
+</div>

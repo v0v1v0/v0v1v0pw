@@ -1,0 +1,214 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>bootclustrange</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cluster Quality Indices estimation by subsampling</h2>
+
+<h3>Description</h3>
+
+<p><code>bootclustrange</code> estimates the quality of the clustering based on subsamples of the data to avoid computational overload.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">bootclustrange(object, seqdata, seqdist.args = list(method = "LCS"),
+               R = 100, sample.size = 1000, parallel = FALSE,
+               progressbar = FALSE, sampling = "clustering",
+               strata = NULL)
+## S3 method for class 'bootclustrange'
+plot(x, stat = "noCH", legendpos = "bottomright",
+                              norm = "none", withlegend = TRUE, lwd = 1,
+                              col = NULL, ylab = "Indicators", 
+                              xlab = "N clusters", conf.int = 0.95, 
+                              ci.method = "perc", ci.alpha = 0.3, 
+                              line = "median", ...)
+## S3 method for class 'bootclustrange'
+print(x, digits = 2, bootstat = c("mean"), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A <code>seqclararange</code> <code>object</code> or a <code>data.frame</code> with the clustering to be evaluated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seqdata</code></td>
+<td>
+<p>State sequence object of class <code>stslist</code>. The sequence data to use. Use <code>seqdef</code> to create such an object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seqdist.args</code></td>
+<td>
+<p>List of arguments passed to <code>seqdist</code> for computing the distances.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+<p>Numeric. The number of subsamples to use.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sample.size</code></td>
+<td>
+<p>Numeric. The size of the subsamples, values between 1000 and 10 000 are recommended.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Logical. Whether to initialize the parallel processing of the <code>future</code> package using the default <code>multisession</code> strategy. If <code>FALSE</code> (default), then the current <code>plan</code> is used. If <code>TRUE</code>, <code>multisession</code> <code>plan</code> is initialized using default values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>progressbar</code></td>
+<td>
+<p>Logical. Whether to initialize a progressbar using the <code>future</code> package. If <code>FALSE</code> (default), then the current progress bar <code>handlers</code> is used . If <code>TRUE</code>, a new global progress bar <code>handlers</code> is initialized.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sampling</code></td>
+<td>
+<p>Character. The sampling procedure to be used: <code>"clustering"</code> (default) the sampling is stratified by the maximum number of clusters, use <code>"medoids"</code> to add the medoids in each subsamples, <code>"strata"</code> to stratify by the <code>strata</code> arguments, or <code>"random"</code> for random sampling.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strata</code></td>
+<td>
+<p>An optional stratification variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>bootclustrange</code> object to be plotted or printed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stat</code></td>
+<td>
+<p>Character. The list of statistics to plot or "noCH" to plot all statistics except "CH" and "CHsq" or "all" for all statistics. See <code>as.clustrange</code> for a list of possible values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legendpos</code></td>
+<td>
+<p>Character. legend position, see <code>legend</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>norm</code></td>
+<td>
+<p>Character. Normalization method of the statistics can be one of "none" (no normalization), "range" (given as (value -min)/(max-min), "zscore" (adjusted by mean and standard deviation) or "zscoremed" (adjusted by median and median of the difference to the median).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>withlegend</code></td>
+<td>
+<p>Logical. If <code>FALSE</code>, the legend is not plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd</code></td>
+<td>
+<p>Numeric. Line width, see <code>par</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>A vector of line colors, see <code>par</code>. If <code>NULL</code>, a default set of color is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>x axis label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>y axis label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conf.int</code></td>
+<td>
+<p>Confidence to build the confidence interval (default: 0.95).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci.method</code></td>
+<td>
+<p>Method used to build the confidence interval (only if bootstrap has been used, see R above). One of "none" (do not plot confidence interval), "norm" (based on normal approximation), "perc" (default, based on percentile).)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci.alpha</code></td>
+<td>
+<p>alpha color value used to plot the interval.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>line</code></td>
+<td>
+<p>Which value should be plotted by the line? One of "mean" (average over all bootstraps), "median"(default, median over all bootstraps).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>Number of digits to be printed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bootstat</code></td>
+<td>
+<p>The summary statistic to use <code>"mean"</code> or <code>"median"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additionnal parameters passed to/from methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>bootclustrange</code> estimates the quality of the clustering based on subsamples of the data to avoid computational overload. It randomly samples <code>R</code> times <code>sample.size</code> sequences from <code>seqdata</code> using the sampling procedure defined by the <code>sampling</code> arguments. In each subsample, a distance matrix is computed using the selected sequences and the <code>seqdist.args</code> arguments and the cluster quality indices are then estimated using <code>as.clustrange</code>.
+</p>
+<p>The clustering can be specified either as a <code>seqclararange</code> object or a <code>data.frame</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>clustrange</code> object, see <code>as.clustrange</code> with the bootrapped values.
+</p>
+
+
+<h3>References</h3>
+
+<p>Studer, M., R. Sadeghi and L. Tochon (2024). Sequence Analysis for Large Databases. <em>LIVES Working Papers 104</em> <a href="https://doi.org/10.12682/lives.2296-1658.2024.104">doi:10.12682/lives.2296-1658.2024.104</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See Also <code>as.clustrange</code> for the list of cluster quality indices that are computed, and <code>seqclararange</code> for example of use
+</p>
+
+
+</div>

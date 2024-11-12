@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>penvs_drawBgExtent</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>penvs_drawBgExtent: Draw background extent</h2>
+
+<h3>Description</h3>
+
+<p>This function generates a background area according to a user
+drawn polygon and provided buffer.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">penvs_drawBgExtent(
+  polyExtXY,
+  polyExtID,
+  drawBgBuf,
+  occs,
+  logger = NULL,
+  spN = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>polyExtXY</code></td>
+<td>
+<p>coordinates of polygon endpoints obtained from user drawn
+polygon in GUI.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>polyExtID</code></td>
+<td>
+<p>numeric. ID to be used in the generation of the polygon.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drawBgBuf</code></td>
+<td>
+<p>the buffer to be used in generating the
+SpatialPolygonsDataFrame, maybe be 0 or &gt;0. A number must be specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>occs</code></td>
+<td>
+<p>data frame of cleaned or processed occurrences obtained from
+components occs: Obtain occurrence data or, poccs: Process occurrence data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+<p>Stores all notification messages to be displayed in the
+Log Window of Wallace GUI. Insert the logger reactive list here for
+running in shiny, otherwise leave the default NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spN</code></td>
+<td>
+<p>data frame of cleaned occurrences obtained from component
+occs: Obtain occurrence data. Used to obtain species name for logger
+messages.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is used in the select study region component. Here, in the GUI,
+the user draws a polygon to be used as the background extent and may
+include a buffer to the given polygon. The buffered poylgon must include
+all occurrences (occs) or function will return an error. The function
+returns a SpatialPolygonsDataFrame object of the desired extent (+ buffer).
+</p>
+
+
+<h3>Value</h3>
+
+<p>This functions returns a SpatialPolygons object based on the user
+specified coordinates (drawn on map). This SpatialPolygons object may be
+larger than specified if drawBgBuf &gt; 0. The SpatialPolygons object will
+include all occurrences.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jamie Kass &lt;jamie.m.kass@gmail.com&gt;
+</p>
+<p>Gonzalo E. Pinilla-Buitrago &lt;gepinillab@gmail.com&gt;
+</p>
+<p>Bethany A. Johnson &lt;bjohnso005@citymail.cuny.edu&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>penvs_userBgExtent</code>, <code>penvs_bgExtent</code>,
+<code>penvs_bgMask</code> , <code>penvs_bgSample</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">occs &lt;- read.csv(system.file("extdata/Bassaricyon_alleni.csv",
+                 package = "wallace"))[, 2:3]
+occs$occID &lt;- 1:nrow(occs)
+longitude &lt;- c(-27.78641, -74.09170, -84.01930, -129.74867,
+               -142.19085, -45.55045, -28.56050)
+latitude &lt;- c(-40.40539, -37.02010, 2.28455, 40.75350,
+              56.35954, 54.55045, -7.11861)
+expertDrawPoly &lt;- matrix(c(longitude, latitude), byrow = FALSE,
+                         ncol = 2)
+drawBgBf &lt;- penvs_drawBgExtent(polyExtXY = expertDrawPoly, polyExtID = 1,
+                               drawBgBuf = 0.5, occs)
+</code></pre>
+
+
+</div>

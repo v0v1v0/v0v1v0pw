@@ -1,0 +1,132 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>newCorrelationOptions</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Creates a list of correlation options.
+</h2>
+
+<h3>Description</h3>
+
+<p>Convenience function to create a re-usable list of correlation options. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">newCorrelationOptions(
+      corType = c("pearson", "bicor"),
+      maxPOutliers = 0.05,
+      quickCor = 0,
+      pearsonFallback = "individual",
+      cosineCorrelation = FALSE,
+      nThreads = 0,
+      corFnc = if (corType=="bicor") "bicor" else "cor",
+      corOptions = c(
+        list(use = 'p', 
+             cosine = cosineCorrelation, 
+             quick = quickCor,
+             nThreads = nThreads),
+        if (corType=="bicor") 
+           list(maxPOutliers = maxPOutliers, 
+                pearsonFallback = pearsonFallback) else NULL))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>corType</code></td>
+<td>
+
+<p>Character specifying the type of correlation function. Currently supported options are <code>"pearson",
+"bicor"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxPOutliers</code></td>
+<td>
+
+<p>Maximum proportion of outliers for biweight mid-correlation. See <code>bicor</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quickCor</code></td>
+<td>
+
+<p>Real number between 0 and 1 that controls the handling of missing data in the
+calculation of correlations. See <code>bicor</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pearsonFallback</code></td>
+<td>
+
+<p>Specifies whether the bicor calculation should revert to Pearson when median
+absolute deviation (mad) is zero. Recongnized values are (abbreviations of)
+<code>"none", "individual", "all"</code>. If set to
+<code>"none"</code>, zero mad will result in <code>NA</code> for the corresponding correlation.
+If set to <code>"individual"</code>, Pearson calculation will be used only for columns that have zero mad.
+If set to <code>"all"</code>, the presence of a single zero mad will cause the whole variable to be treated in
+Pearson correlation manner (as if the corresponding <code>robust</code> option was set to <code>FALSE</code>). 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cosineCorrelation</code></td>
+<td>
+
+<p>Logical: calculate cosine biweight midcorrelation?
+Cosine bicorrelation is similar to standard bicorrelation but the median subtraction is not performed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nThreads</code></td>
+<td>
+
+<p>A non-negative integer specifying the number of parallel threads to be used by certain
+parts of correlation calculations. This option only has an effect on systems on which a POSIX thread
+library is available (which currently includes Linux and Mac OSX, but excludes Windows).
+If zero, the number of online processors will be used if it can be determined dynamically, otherwise
+correlation calculations will use 2 threads.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corFnc</code></td>
+<td>
+
+<p>Correlation function to be called in R code. Should correspoind to the value of <code>corType</code> above.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corOptions</code></td>
+<td>
+
+<p>A list of options to be supplied to the correlation function (in addition to appropriate arguments <code>x</code>
+and <code>y</code>).
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing a copy of the input arguments. The output has class <code>CorrelationOptions</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+</div>

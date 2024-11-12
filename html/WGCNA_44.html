@@ -1,0 +1,192 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>branchEigengeneDissim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Branch dissimilarity based on eigennodes (eigengenes).
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculation of branch dissimilarity based on eigennodes (eigengenes) in single set and multi-data
+situations. This function is used as a plugin for the
+dynamicTreeCut package and the user should not call this function directly. This function is experimental
+and subject to change.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">branchEigengeneDissim(
+  expr, 
+  branch1, branch2, 
+  corFnc = cor, corOptions = list(use = "p"), 
+  signed = TRUE, ...)
+
+branchEigengeneSimilarity(
+  expr, 
+  branch1, 
+  branch2, 
+  networkOptions, 
+  returnDissim = TRUE, ...)
+
+mtd.branchEigengeneDissim(
+  multiExpr, 
+  branch1, branch2,
+  corFnc = cor, corOptions = list(use = 'p'),
+  consensusQuantile = 0, 
+  signed = TRUE, reproduceQuantileError = FALSE, ...)
+
+hierarchicalBranchEigengeneDissim(
+    multiExpr,
+    branch1, branch2,
+    networkOptions,
+    consensusTree, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>expr</code></td>
+<td>
+
+<p>Expression data.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multiExpr</code></td>
+<td>
+
+<p>Expression data in multi-set format.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>branch1</code></td>
+<td>
+
+<p>Branch 1.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>branch2</code></td>
+<td>
+
+<p>Branch 2.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corFnc</code></td>
+<td>
+
+<p>Correlation function.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corOptions</code></td>
+<td>
+
+<p>Other arguments to the correlation function.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>consensusQuantile</code></td>
+<td>
+
+<p>Consensus quantile.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signed</code></td>
+<td>
+
+<p>Should the network be considered signed?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reproduceQuantileError</code></td>
+<td>
+<p>Logical: should an error in the calculation from previous versions, which
+caused the true consensus quantile to be <code>1-consensusQuantile</code> rather than <code>consensusQuantile</code>,
+be reproduced? Use this only to reproduce old calculations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkOptions</code></td>
+<td>
+<p>An object of class <code>NetworkOptions</code> giving the network construction
+options to be used in the calculation of the similarity.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnDissim</code></td>
+<td>
+<p>Logical: if <code>TRUE</code>, dissimarity, rather than similarity, will be returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>consensusTree</code></td>
+<td>
+<p>A list of class <code>ConsensusTree</code> specifying the consensus calculation.
+Note that calibration options within the
+consensus specifications are ignored: since the consensus is calulated from entries representing a single
+value, calibration would not make sense.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Other arguments for compatibility; currently unused.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>These functions calculate the similarity or dissimilarity of two groups of genes (variables) in <code>expr</code> or
+<code>multiExpr</code> using correlations of the first singular vectors ("eigengenes"). For a single data set
+(<code>branchEigengeneDissim</code> and <code>branchEigengeneSimilarity</code>), the similarity is the correlation, and
+dissimilarity 1-correlation of the first signular vectors. 
+</p>
+<p>Functions <code>mtd.branchEigengeneDissim</code> and 
+<code>hierarchicalBranchEigengeneDissim</code> calculate consensus eigengene dissimilarity.
+Function <code>mtd.branchEigengeneDissim</code> calculates a simple ("flat") consensus of branch eigengene
+similarities across the given data set, at the given consensus quantile. 
+Function <code>hierarchicalBranchEigengeneDissim</code> can calculate a hierarchical consensus in which consensus
+calculations are hierarchically nested. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A single number, the dissimilarity for <code>branchEigengeneDissim</code>, <code>mtd.branchEigengeneDissim</code>, and
+<code>hierarchicalBranchEigengeneDissim</code>. 
+</p>
+<p><code>branchEigengeneSimilarity</code> returns similarity or dissimilarity, depending on imput.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>hierarchicalConsensusCalculation</code></p>
+
+
+</div>

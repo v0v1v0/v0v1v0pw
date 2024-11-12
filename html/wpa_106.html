@@ -1,0 +1,220 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>identify_shifts_wp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Identify shifts based on binary activity</h2>
+
+<h3>Description</h3>
+
+<p>This function uses the Hourly Collaboration query and computes binary
+activity to identify the 'behavioural' work shift. This is a distinct method
+to <code>identify_shifts()</code>, which instead uses outlook calendar settings for
+start and end time of work day to identify work shifts. The two methods can
+be compared to gauge the accuracy of existing Outlook settings.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">identify_shifts_wp(
+  data,
+  signals = c("email", "IM"),
+  active_threshold = 1,
+  start_hour = 9,
+  end_hour = 17,
+  percent = FALSE,
+  n = 10,
+  return = "plot"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data frame containing data from the Hourly Collaboration query.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signals</code></td>
+<td>
+<p>Character vector to specify which collaboration metrics to
+use:
+</p>
+
+<ul>
+<li>
+<p> a combination of signals, such as <code>c("email", "IM")</code> (default)
+</p>
+</li>
+<li> <p><code>"email"</code> for emails only
+</p>
+</li>
+<li> <p><code>"IM"</code> for Teams messages only
+</p>
+</li>
+<li> <p><code>"unscheduled_calls"</code> for Unscheduled Calls only
+</p>
+</li>
+<li> <p><code>"meetings"</code> for Meetings only
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>active_threshold</code></td>
+<td>
+<p>A numeric value specifying the minimum number of
+signals to be greater than in order to qualify as <em>active</em>. Defaults to 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_hour</code></td>
+<td>
+<p>A character vector specifying starting hours, e.g.
+<code>"0900"</code>. Note that this currently only supports <strong>hourly</strong> increments. If
+the official hours specifying checking in and 9 AM and checking out at 5
+PM, then <code>"0900"</code> should be supplied here.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end_hour</code></td>
+<td>
+<p>A character vector specifying starting hours, e.g. <code>"1700"</code>.
+Note that this currently only supports <strong>hourly</strong> increments. If the
+official hours specifying checking in and 9 AM and checking out at 5 PM,
+then <code>"1700"</code> should be supplied here.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percent</code></td>
+<td>
+<p>Logical value to determine whether to show labels as
+percentage signs. Defaults to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Numeric value specifying number of shifts to show. Defaults to 10.
+This parameter is only used when <code>return</code> is set to <code>"plot"</code>,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String specifying what to return. This must be one of the
+following strings:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>
+</p>
+</li>
+<li> <p><code>"table"</code>
+</p>
+</li>
+<li> <p><code>"data"</code>
+</p>
+</li>
+</ul>
+<p>See <code>Value</code> for more information.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A different output is returned depending on the value passed to the <code>return</code>
+argument:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>: ggplot object. A bar plot for the weekly count of shifts.
+</p>
+</li>
+<li> <p><code>"table"</code>: data frame. A summary table for the count of shifts.
+</p>
+</li>
+<li> <p><code style="white-space: pre;">⁠"data⁠</code>: data frame. Input data appended with the following columns:
+</p>
+
+<ul>
+<li> <p><code>Start</code>
+</p>
+</li>
+<li> <p><code>End</code>
+</p>
+</li>
+<li> <p><code>DaySpan</code>
+</p>
+</li>
+<li> <p><code>Shifts</code>
+</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>Other Data Validation: 
+<code>check_query()</code>,
+<code>extract_hr()</code>,
+<code>flag_ch_ratio()</code>,
+<code>flag_em_ratio()</code>,
+<code>flag_extreme()</code>,
+<code>flag_outlooktime()</code>,
+<code>hr_trend()</code>,
+<code>hrvar_count()</code>,
+<code>hrvar_count_all()</code>,
+<code>hrvar_trend()</code>,
+<code>identify_churn()</code>,
+<code>identify_holidayweeks()</code>,
+<code>identify_inactiveweeks()</code>,
+<code>identify_nkw()</code>,
+<code>identify_outlier()</code>,
+<code>identify_privacythreshold()</code>,
+<code>identify_query()</code>,
+<code>identify_shifts()</code>,
+<code>identify_tenure()</code>,
+<code>remove_outliers()</code>,
+<code>standardise_pq()</code>,
+<code>subject_validate()</code>,
+<code>subject_validate_report()</code>,
+<code>track_HR_change()</code>,
+<code>validation_report()</code>
+</p>
+<p>Other Working Patterns: 
+<code>flex_index()</code>,
+<code>identify_shifts()</code>,
+<code>plot_flex_index()</code>,
+<code>workpatterns_area()</code>,
+<code>workpatterns_classify()</code>,
+<code>workpatterns_classify_bw()</code>,
+<code>workpatterns_classify_pav()</code>,
+<code>workpatterns_hclust()</code>,
+<code>workpatterns_rank()</code>,
+<code>workpatterns_report()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Return plot
+em_data %&gt;% identify_shifts_wp()
+
+# Return plot - showing percentages
+em_data %&gt;% identify_shifts_wp(percent = TRUE)
+
+# Return table
+em_data %&gt;% identify_shifts_wp(return = "table")
+
+</code></pre>
+
+
+</div>

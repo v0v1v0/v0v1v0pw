@@ -1,0 +1,161 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>run_cwb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate bootstrap outcomes or test statistics using cluster wild
+bootstrapping</h2>
+
+<h3>Description</h3>
+
+<p>Calculate bootstrap outcomes or test statistics using cluster
+wild bootstrapping for meta-analytic models fit using
+<code>robumeta::robu()</code>, <code>metafor::rma.mv()</code>, and <code>metafor::rma.uni()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">run_cwb(
+  model,
+  cluster,
+  R,
+  f = NULL,
+  ...,
+  auxiliary_dist = "Rademacher",
+  adjust = "CR0",
+  simplify = FALSE,
+  seed = NULL,
+  future_args = NULL,
+  future_f_args = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>Fitted <code>robumeta::robu()</code>,
+<code>metafor::rma.mv()</code>, or <code>metafor::rma.uni()</code>
+model. For cluster wild bootstrapping, a null model is recommended, with
+null model indicating a model containing all variables except the ones
+being tested.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cluster</code></td>
+<td>
+<p>Vector indicating which observations belong to the same
+cluster.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+<p>Number of bootstrap replications.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f</code></td>
+<td>
+<p>Optional function to be used to calculate bootstrap test statistics
+based on the bootstrapped outcomes. If f is <code>NULL</code> (the default), this
+function returns a list containing bootstrapped outcomes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Optional arguments to be passed to the function specified in
+<code>f</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>auxiliary_dist</code></td>
+<td>
+<p>Character string indicating the auxiliary distribution
+to be used for cluster wild bootstrapping, with available options:
+"Rademacher", "Mammen", "Webb six", "uniform", "standard normal". The
+default is set to "Rademacher." We recommend the Rademacher distribution
+for models that have at least 10 clusters. For models with less than 10
+clusters, we recommend the use of "Webb six" distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adjust</code></td>
+<td>
+<p>Character string specifying which small-sample adjustment
+should be used to multiply the residuals by. The available options are
+<code>"CRO"</code>, <code>"CR1"</code>, <code>"CR2"</code>, <code>"CR3"</code>, or <code>"CR4"</code>,
+with a default of <code>"CRO"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simplify</code></td>
+<td>
+<p>Logical, with <code>TRUE</code> indicating the bootstrapped
+outcomes or F statistics will be simplified to a vector or matrix and
+<code>FALSE</code> (the default) indicating the results will be returned as a
+list.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>Optional seed value to ensure reproducibility.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>future_args</code></td>
+<td>
+<p>Optional list of additional arguments passed to the
+<code>future_*()</code> functions used in calculating results across bootstrap
+replications. Ignored if the future.apply package is not available.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>future_f_args</code></td>
+<td>
+<p>Optional list of additional arguments passed to the
+<code>future_*()</code> function used in calculating <code>f</code> results (but not
+bootstrap outcome vectors) across bootstrap replications. Ignored if the
+future.apply package is not available.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list or matrix containing either the bootstrapped outcomes or
+bootstrapped test statistics.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(clubSandwich)
+library(robumeta)
+
+model &lt;- robu(d ~ 0 + study_type + hrs + test,
+             studynum = study,
+              var.eff.size = V,
+              small = FALSE,
+              data = SATcoaching)
+
+
+bootstraps &lt;- run_cwb(
+  model = model,
+  cluster =  model$data.full$study,
+  R = 12,
+  adjust = "CR2",
+  simplify = FALSE
+)
+
+bootstraps
+</code></pre>
+
+
+</div>

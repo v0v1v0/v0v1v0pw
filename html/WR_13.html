@@ -1,0 +1,130 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WRSS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute the sample size for standard win ratio test</h2>
+
+<h3>Description</h3>
+
+<p>Compute the sample size for standard win ratio test.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WRSS(xi, bparam, q = 0.5, alpha = 0.05, side = 2, power = 0.8)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>xi</code></td>
+<td>
+<p>A bivariate vector of hypothesized component-wise (treatment-to-control) log-hazard
+ratios under the Gumbel–Hougaard copula model described in <code>base</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bparam</code></td>
+<td>
+<p>A list containing baseline parameters <code>zeta2</code> for <code class="reqn">\zeta_0^2</code>
+and <code>delta</code> for <code class="reqn">\boldsymbol\delta_0</code>; Can directly use the output of base.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>Proportion of patients assigned to treatment.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Type I error rate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>side</code></td>
+<td>
+<p>2-sided or 1-sided test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>Target power.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing <code>n</code>, the computed sample size.
+</p>
+
+
+<h3>References</h3>
+
+<p>Mao, L., Kim, K. and Miao, X. (2021). Sample size formula for general win ratio analysis.
+Biometrics, https://doi.org/10.1111/biom.13501.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>gumbel.est</code>, <code>base</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># The following is not run in package checking to save time.
+## Not run: 
+## load the package and pilot dataset
+library(WR)
+head(hfaction_cpx9)
+dat&lt;-hfaction_cpx9
+## subset to control group
+pilot&lt;-dat[dat$trt_ab==0,]
+
+## get the data ready for gumbel.est()
+id&lt;-pilot$patid
+## convert time from month to year
+time&lt;-pilot$time/12
+status&lt;-pilot$status
+## compute the baseline parameters for the Gumbel--Hougaard
+## copula for death and hospitalization
+gum&lt;-gumbel.est(id, time, status)
+
+## get the baseline parameters
+lambda_D&lt;-gum$lambda_D
+lambda_H&lt;-gum$lambda_H
+kappa&lt;-gum$kappa
+## set up design parameters and use base()
+## to calculate bparam for WRSS()
+# max follow-up 4 years
+tau&lt;-4
+# 3 years of initial accrual
+tau_b&lt;-3
+# loss to follow-up rate
+lambda_L=0.05
+# compute the baseline parameters
+bparam&lt;-base(lambda_D,lambda_H,kappa,tau_b,tau,lambda_L)
+bparam
+
+## sample size with power=0.8 under hazard ratios
+## 0.9 and 0.8 for death and hospitalization, respectively.
+WRSS(xi=log(c(0.9,0.8)),bparam=bparam,q=0.5,alpha=0.05,
+    power=0.8)$n
+## sample size under the same set-up but with power 0.9
+WRSS(xi=log(c(0.9,0.8)),bparam=bparam,q=0.5,alpha=0.05,
+    power=0.9)$n
+
+## End(Not run)
+</code></pre>
+
+
+</div>

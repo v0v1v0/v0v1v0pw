@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>r2.single.window</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plots R2 of calibration and cross-validation of a single nindow.</h2>
+
+<h3>Description</h3>
+
+<p>Plots R2 of calibration and cross-validation of a single nindow.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">r2.single.window(
+  wpls = NULL,
+  condition = "Complete",
+  shape.cal = 19,
+  shape.cv = 19,
+  width = 1,
+  size = 2,
+  col.cal = "blue",
+  col.cv = "red",
+  xaxis.title = "Component",
+  yaxis.title = expression(R^2),
+  title = paste("Plot of R2 for the", condition, "model"),
+  legend.name = NULL,
+  x.legend = 0.9,
+  y.legend = 0.2
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wpls, </code></td>
+<td>
+<p>object obtained from <strong>cv.wpls</strong>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>condition, </code></td>
+<td>
+<p>name of the Window the user wants to plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shape.cal, </code></td>
+<td>
+<p>shape of the point of the calibration line.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shape.cv, </code></td>
+<td>
+<p>shape of the point of the cross-validation line.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width, </code></td>
+<td>
+<p>width of the line.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size, </code></td>
+<td>
+<p>size of the points of calibration and cross-validation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.cal, </code></td>
+<td>
+<p>color for the calibration line.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.cv, </code></td>
+<td>
+<p>color for the cross-validation line.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xaxis.title, </code></td>
+<td>
+<p>title of the x axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yaxis.title, </code></td>
+<td>
+<p>title of the y axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title, </code></td>
+<td>
+<p>title of the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend.name, </code></td>
+<td>
+<p>displays legend and its name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x.legend, </code></td>
+<td>
+<p>position of the legend on the x axis, ranges from 0 to 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y.legend, </code></td>
+<td>
+<p>position of the legend on the y axis, ranges from 0 to 1.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Plot of R2 of the region requested by the user.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(beer)
+conc=beer[,1]
+sp=beer[,2:ncol(beer)]
+names(sp)=convert.names.wl(1100,2250,2)
+conc=unlist(conc)
+mywpls=cv.wpls(sp, conc,mode='wpls', windows = 5)
+r2.single.window(mywpls,'Window2')
+</code></pre>
+
+
+</div>

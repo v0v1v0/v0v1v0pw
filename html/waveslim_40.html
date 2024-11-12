@@ -1,0 +1,130 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dwpt.sim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Simulate Seasonal Persistent Processes Using the DWPT</h2>
+
+<h3>Description</h3>
+
+<p>A seasonal persistent process may be characterized by a spectral density
+function with an asymptote occuring at a particular frequency in
+<code class="reqn">[0,\frac{1}{2})</code>.  It's time domain representation was first
+noted in passing by Hosking (1981).  Although an exact time-domain approach
+to simulation is possible, this function utilizes the discrete wavelet
+packet transform (DWPT).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dwpt.sim(N, wf, delta, fG, M = 2, adaptive = TRUE, epsilon = 0.05)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>Length of time series to be generated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wf</code></td>
+<td>
+<p>Character string for the wavelet filter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta</code></td>
+<td>
+<p>Long-memory parameter for the seasonal persistent process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fG</code></td>
+<td>
+<p>Gegenbauer frequency.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>Actual length of simulated time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adaptive</code></td>
+<td>
+<p>Logical; if <code>TRUE</code> the orthonormal basis used in the
+DWPT is adapted to the ideal spectrum, otherwise the orthonormal basis is
+performed to a maximum depth.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsilon</code></td>
+<td>
+<p>Threshold for adaptive basis selection.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Two subroutines are used, the first selects an adaptive orthonormal basis
+for the true spectral density function (SDF) while the second computes the
+bandpass variances associated with the chosen orthonormal basis and SDF.
+Finally, when <code class="reqn">M&gt;N</code> a uniform random variable is
+generated in order to select a random piece of the simulated time series.
+For more details see Whitcher (2001).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Time series of length <code>N</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>B. Whitcher
+</p>
+
+
+<h3>References</h3>
+
+<p>Hosking, J. R. M. (1981) Fractional Differencing,
+<em>Biometrika</em>, <b>68</b>, No. 1, 165-176.
+</p>
+<p>Whitcher, B. (2001) Simulating Gaussian Stationary Time Series with
+Unbounded Spectra, <em>Journal of Computational and Graphical Statistics</em>,
+<b>10</b>, No. 1, 112-134.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>hosking.sim</code> for an exact time-domain method and
+<code>wave.filter</code> for a list of available wavelet filters.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Generate monthly time series with annual oscillation
+## library(ts) is required in order to access acf()
+x &lt;- dwpt.sim(256, "mb16", .4, 1/12, M=4, epsilon=.001)
+par(mfrow=c(2,1))
+plot(x, type="l", xlab="Time")
+acf(x, lag.max=128, ylim=c(-.6,1))
+data(acvs.andel8)
+lines(acvs.andel8$lag[1:128], acvs.andel8$acf[1:128], col=2)
+
+</code></pre>
+
+
+</div>

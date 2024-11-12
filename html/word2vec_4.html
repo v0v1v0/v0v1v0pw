@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read.word2vec</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read a binary word2vec model from disk</h2>
+
+<h3>Description</h3>
+
+<p>Read a binary word2vec model from disk
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read.word2vec(file, normalize = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>the path to the model file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalize</code></td>
+<td>
+<p>logical indicating to normalize the embeddings by dividing by the factor (sqrt(sum(x . x) / length(x))). Defaults to FALSE.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>an object of class w2v which is a list with elements
+</p>
+
+<ul>
+<li>
+<p>model: a Rcpp pointer to the model
+</p>
+</li>
+<li>
+<p>model_path: the path to the model on disk
+</p>
+</li>
+<li>
+<p>dim: the dimension of the embedding matrix
+</p>
+</li>
+<li>
+<p>n: the number of words in the vocabulary
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">path  &lt;- system.file(package = "word2vec", "models", "example.bin")
+model &lt;- read.word2vec(path)
+vocab &lt;- summary(model, type = "vocabulary")
+emb &lt;- predict(model, c("bus", "naar", "unknownword"), type = "embedding")
+emb
+nn  &lt;- predict(model, c("bus", "toilet"), type = "nearest")
+nn
+
+# Do some calculations with the vectors and find similar terms to these
+emb &lt;- as.matrix(model)
+vector &lt;- emb["gastvrouw", ] - emb["gastvrij", ]
+predict(model, vector, type = "nearest", top_n = 5)
+vectors &lt;- emb[c("gastheer", "gastvrouw"), ]
+vectors &lt;- rbind(vectors, avg = colMeans(vectors))
+predict(model, vectors, type = "nearest", top_n = 10)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>w_LabelDesc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Return label and/or descriptions of Wikidata entities</h2>
+
+<h3>Description</h3>
+
+<p>Return label and/or descriptions of the entities in entity_list in language
+indicated in <code>langsorder</code>. Note that entities can be Wikidata entities (Qxxx)
+or Wikidata properties (Pxxx).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">w_LabelDesc(
+  entity_list,
+  what = "LD",
+  langsorder = "en",
+  nlimit = 25000,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>entity_list</code></td>
+<td>
+<p>A vector with de Wikidata entities.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>what</code></td>
+<td>
+<p>Retrieve only Labels (L), only Descriptions (D) or both (LD).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>langsorder</code></td>
+<td>
+<p>Order of languages in which the information will be
+returned, separated with '|'. If no information is given in the first
+language, next is used. This parameter is mandatory, at least one language is
+required, default 'en'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlimit</code></td>
+<td>
+<p>If the number of entities exceeds this number, chunked queries
+are done. This is the number of entities requested in each chunk. Please,
+reduce the default value if error is raised.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>For debugging purposes (default FALSE). If debug='info'
+information about chunked queries is shown. If debug='query' also the query
+launched is shown.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data-frame with one column for the entities, and others for the
+language and the labels and/or descriptions. The index of the dataframe is
+also set to the entity list.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Angel Zazo, Department of Computer Science and Automatics, University of Salamanca
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+w_LabelDesc(c("Q57860", "Q712609", "Q381800", "P569"), what='LD', langsorder = 'se|es|en')
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>counter_state</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>whereami counter</h2>
+
+<h3>Description</h3>
+
+<p>Interact with internal whereami counter
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">counter_state(item = NULL, tag = NULL)
+
+counter_reset(item = NULL, tag = NULL)
+
+counter_names()
+
+counter_tags()
+
+counter_get()
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>item</code></td>
+<td>
+<p>character, name of the counter to access, Default: NULL</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tag</code></td>
+<td>
+<p>character, tag of the counter to acces, if it was set at initial whereami call.
+This can be used instead of the item name, Default: NULL</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>counter_names()</code> returns names of the active stored counters.
+</p>
+<p><code>counter_state()</code> returns current hit count for item, if NULL then all counters
+are returned.
+</p>
+<p><code>counter_reset()</code> will remove counter of item, if item is NULL then all counters
+are reset.
+</p>
+<p><code>counter_get()</code> returns a table with all the counters. These can then
+be plotted with the with the plot method.
+</p>
+<p>A json log of the counter is written to file.path(tempdir(),'whereami.json') by default
+The path can be set using set_whereami_log
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jonathan Sidi
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other counter: 
+<code>set_whereami_log()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if(interactive()){
+
+txt &lt;- "
+whereami::cat_where(whereami::whereami(tag = 'tag1'))
+"
+
+tf &lt;- tempfile(fileext = '.R')
+
+cat(txt,file = tf)
+
+source(tf)
+
+counter_state()
+
+counter_state(tag = 'tag1')
+
+counter_names()
+
+counter_tags()
+
+counters &lt;- counter_get()
+
+counters
+
+plot(counter_get())
+
+# read the json log
+jsonlite::read_json(
+file.path(tempdir(),'whereami.json'),
+simplifyVector = TRUE)
+
+# clear all counters
+counter_reset()
+
+#verify that there are no active counters
+counter_state()
+
+# cleanup
+unlink(tf)
+
+}
+
+</code></pre>
+
+
+</div>

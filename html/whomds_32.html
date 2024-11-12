@@ -1,0 +1,81 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>table_basicstats</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute basic statistics of the number of members per group per household</h2>
+
+<h3>Description</h3>
+
+<p>Compute basic statistics of the number of members per group per household
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">table_basicstats(df, hh_id, group_by_var)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>a data frame of household data where the rows represent members of the households in the sample</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hh_id</code></td>
+<td>
+<p>string (length 1) indicating the name of the variable in <code>df</code> uniquely identifying households</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group_by_var</code></td>
+<td>
+<p>string (length 1) to pass to <code>group_by_at()</code> with name of variable in <code>df</code> to group results by</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tibble with rows for each level of <code>group_by_var</code> and "Total" and columns for the Mean (SD), Median and Range of the number of people in each group per household.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Includes a call to <code>tidyr::complete()</code>, which causes the function to be a bit slow.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other table functions: 
+<code>table_unweightedpctn()</code>,
+<code>table_weightedpct()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#create dummy table of household data, where each row represents one member
+df_hh &lt;- data.frame(HHID = sample(
+  x = 1:300,
+  size = 1000,
+  replace = TRUE
+),
+age_cat = ordered(sample(
+  x = c("18-24", "25-39", "40-64", "64-100"),
+  size = 1000,
+  replace = TRUE
+)))
+                
+table_basicstats(df_hh, "HHID", "age_cat")
+</code></pre>
+
+
+</div>

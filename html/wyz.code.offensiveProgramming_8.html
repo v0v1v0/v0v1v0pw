@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>FunctionParameterTypeFactory</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Function parameter type factory
+</h2>
+
+<h3>Description</h3>
+
+<p>This factory is a parameter type check factory. It provides type checking for each allowed type.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">FunctionParameterTypeFactory()
+</code></pre>
+
+
+<h3>Details</h3>
+
+<p>Many common types are already recorded and available through the factory. Use the function
+<em><code>getRecordedTypes</code></em> to get more insight.
+</p>
+<p>If you desire to verify a type instrumentation, just use <em><code>checkSuffix</code></em> function.
+If you want to add an instrumentation for a new type, use <em><code>addSuffix</code></em> function.
+</p>
+<p>See examples below for more hands-on approach.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <em><code>object</code></em> that is an <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> <code>environment</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+<p>Maintainer: Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Refer to <code>defineEvaluationModes</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##---- typical case ----
+ff &lt;- FunctionParameterTypeFactory()
+ff$checkSuffix('b') # TRUE
+
+# see verify_function recorded for 'boolean' entries
+ff$getRecordedTypes()[suffix == 'b']$verify_function[[1]]
+
+# record a new entry for suffix 'wo'
+ff$addSuffix('wo', "wo class", function(o_) is(o, "wo")) # TRUE
+ff$getRecordedTypes()[suffix == 'wo']
+</code></pre>
+
+
+</div>

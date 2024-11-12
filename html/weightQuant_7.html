@@ -1,0 +1,188 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>weightsIMD</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Estimation of observation-specific weights with intermittent missing
+data
+</h2>
+
+<h3>Description</h3>
+
+<p>This function provides stabilized weights for incomplete longitudinal
+data selected by death. The procedure allows intermittent missing data
+and assumes a missing at random (MAR) mechanism.
+Weights are defined as the inverse of the probability of being
+observed. These are obtained by pooled logistic regressions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">weightsIMD(data, Y, X1, X2, subject, death, time, impute = 0, name = "weight")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>data frame containing the observations and all variables named in
+<code>Y</code>, <code>X1</code>, <code>X2</code>, <code>subject</code>, <code>death</code> and
+<code>time</code> arguments.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+
+<p>character indicating the name of the response outcome
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X1</code></td>
+<td>
+
+<p>character vector indicating the name of the covariates with 
+interaction with the outcome Y in the logistic regressions
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X2</code></td>
+<td>
+
+<p>character vector indicating the name of the covariates without 
+interaction with the outcome Y in the logistic regressions
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subject</code></td>
+<td>
+
+<p>character indicating the name of the subject identifier
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>death</code></td>
+<td>
+
+<p>character indicating the time of death variable 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+
+<p>character indicating the measurement time variable. Time should be 1 for
+the first (theoretical) visit, 2 for the second (theoretical) visit, etc.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>impute</code></td>
+<td>
+
+<p>numeric indicating the value to impute if the outcome Y is missing
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+
+<p>character indicating the name of the weight variable that will be added
+to the data
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Denoting T_i the death time, R_ij the observation indicator for
+subject i and occasion j, t the time, Y the outcome and X1 and X2 the covariates, we propose
+weights for intermittent missing data defined as :
+</p>
+<p>w_ij = P(R_ij = 1 | T_i &gt; t_ij, X1_ij, X2_ij)  / P(R_ij = 1 | T_i &gt;
+t_ij, X1_ij, X2_ij, Y_ij-1) 
+</p>
+<p>The numerator corresponds to the conditional probability of being
+observed in the population currently alive under the MCAR assumption.
+</p>
+<p>The denominator is computed by recurrence :
+</p>
+<p>P(R_ij = 1 | T_i &gt; t_ij, X1_ij, X2_ij, Y_ij-1) =
+</p>
+<p>P(R_ij = 1 | T_i &gt; t_ij-1, X1_ij, X2_ij, Y_ij-1, R_ij-1 = 0) *
+P(R_ij-1 = 0 | T_i &gt; t_ij, X1_ij, X2_ij, Y_ij-1) + P(R_ij =
+1 | T_i &gt; t_ij-1, X1_ij, X2_ij, Y_ij-1, R_ij-1 = 1) *
+P(R_ij-1 = 1 | T_i &gt; t_ij, X1_ij, X2_ij, Y_ij-1)
+</p>
+<p>Under the MAR assumption, the conditional probabilities lambda_ij = P(R_ij =
+1 | T_i &gt; t_ij, X1_ij, X2_ij, Y_ij-1, R_ij-1) are obtained
+from the logistic regression :
+</p>
+<p>logit(lambda_ij) = b_0j + b_1 X1_ij +  b_2 X2_ij +  b_3 Y_i(j-1) + b_4
+X1_ij Y_i(j-1) + b_5 (1-R_ij-1)
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing :
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>the data frame with initial data and estimated weights as
+last column</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coef</code></td>
+<td>
+<p>a list containing the estimates of the logistic
+regressions. The first element of coef contains the estimates under the MCAR
+assumption, the second contains the estimates under the MAR
+assumption.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>se</code></td>
+<td>
+<p>a list containing the standard erros of the estimates
+contained in coef, in the same order.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Viviane Philipps, Marion Medeville, Anais Rouanet, Helene Jacqmin-Gadda
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>weightsMMD</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">w_simdata &lt;- weightsIMD(data=simdata,Y="Y",X1="X",X2=NULL,subject="id",
+death="death",time="time",impute=20,name="w_imd")$data
+</code></pre>
+
+
+</div>

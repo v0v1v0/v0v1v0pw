@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>p_test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate the p-value of the null hypothesis that two outcomes are from the
+same dataset</h2>
+
+<h3>Description</h3>
+
+<p>Specify an outcome variable and return p-test outputs.
+All numeric variables in the dataset are used as predictor variables.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">p_test(data, outcome, behavior, paired = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A Person Query dataset in the form of a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outcome</code></td>
+<td>
+<p>A string specifying the name of a binary variable, i.e. can
+only contain the values 1 or 0. Used to group the two distributions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>behavior</code></td>
+<td>
+<p>A character vector specifying the column to be used as the
+behavior to test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>paired</code></td>
+<td>
+<p>Specify whether the dataset is paired or not. Defaults to
+<code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is a wrapper around <code>wilcox.test()</code> from 'stats'.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a numeric value representing the p-value outcome of the test.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mark Powers <a href="mailto:mark.powers@microsoft.com">mark.powers@microsoft.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Support: 
+<code>camel_clean()</code>,
+<code>check_inputs()</code>,
+<code>combine_signals()</code>,
+<code>cut_hour()</code>,
+<code>extract_date_range()</code>,
+<code>extract_hr()</code>,
+<code>heat_colours()</code>,
+<code>is_date_format()</code>,
+<code>maxmin()</code>,
+<code>pairwise_count()</code>,
+<code>plot_WOE()</code>,
+<code>read_preamble()</code>,
+<code>rgb2hex()</code>,
+<code>totals_bind()</code>,
+<code>totals_col()</code>,
+<code>totals_reorder()</code>,
+<code>tstamp()</code>,
+<code>us_to_space()</code>,
+<code>wrap()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Simulate a binary variable X
+# Returns a single p-value
+library(dplyr)
+sq_data %&gt;%
+  mutate(X = ifelse(Email_hours &gt; 6, 1, 0)) %&gt;%
+  p_test(outcome = "X", behavior = "External_network_size")
+
+</code></pre>
+
+
+</div>

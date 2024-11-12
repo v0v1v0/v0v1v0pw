@@ -1,0 +1,159 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wblr.fit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Add Fit Distributions to <code>wblr</code> Objects
+</h2>
+
+<h3>Description</h3>
+
+<p>This function fits probability distributions to <code>wblr</code> objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wblr.fit(x, modify.by.t0=FALSE, ...)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>Object of class <code>"wblr"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>modify.by.t0</code></td>
+<td>
+
+<p>A logical value to signifying whether to revise object data by subtraction of the "t0" (translation) parameter of a 3-parameter fit.
+A value of TRUE generates a linearized view of the fit on its base distribution canvas. It is recommended that
+the resulting object have an altered name perhaps adding a ".3p" suffix to the original wblr object to preserve original data.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Options for fitting the (life-)time observations, and for plotting the results.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function calculates fits for the (life-)time observations in the
+<code>wblr</code> object and adds them to the object alongside any
+pre-existing fits.
+</p>
+<p>Fitting options are passed with the <code>dist</code> and <code>method.fit</code>
+arguments:
+</p>
+
+<dl>
+<dt><code>dist</code></dt>
+<dd>
+<p>A character string with the target distribution for fitting.
+Possible values are <code>"weibull"</code>, <code>"weibull2p"</code>,
+<code>"weibull3p"</code> (three parameter Weibull), <code>"lognormal"</code>
+, <code>"lognormal2p"</code>or <code>"lognormal3p"</code>.
+</p>
+<p>Defaults to <code>"weibull"</code>.
+</p>
+</dd>
+<dt><code>in.legend</code></dt>
+<dd>
+<p>Logical value controlling the inclusion of various elements in 
+the legend. 
+</p>
+<p>If <code>in.legend=FALSE</code> is passed,
+the resulting fit calculations will be omitted from the legend, 
+leaving only observation summary data.
+</p>
+<p>Defaults to <code>TRUE</code>.
+</p>
+</dd>
+<dt><code>method.fit</code></dt>
+<dd>
+<p>A vector of class <code>"character"</code> with fitting options.
+</p>
+<p>Defaults to <code>"rr-xony"</code>.
+</p>
+
+<ul>
+<li> <p><code>"rr"</code>: Rank Regression (RR). Depending on the method for
+calculating probability plot positions chosen during the creation of the
+<code>wblr</code> object (see option <code>pp</code> and
+function <code>wblr</code>), this can
+either be "exact median rank regression" or
+"Benard's approximate median rank regression".
+If this method is used then it is mandatory to additionally specify
+either X-on-Y or Y-on-X regression.
+</p>
+</li>
+<li> <p><code>"xony"</code>,<code>"yonx"</code>: Differentiate between X-on-Y and Y-on-X
+regression, respectively. For rank regression in lifetime analysis,
+it is best practice to use the X values ((life-)time observations)
+as the response variables whose horizontal distance to the fit line
+must be minimized, and the Y values (unreliabilities) as the
+explanatory variable.
+</p>
+</li>
+<li> <p><code>"mle"</code>: Maximum Likelihood Estimation (MLE), using
+many functions of the <span class="pkg">debias</span> package.
+</p>
+</li>
+<li> <p><code>"mle-rba"</code>: Maximum Likelihood Estimation with Reduced Bias Adjustment
+as popularized by Abernethy based on the median bias of MLE fitted distributions.
+</p>
+</li>
+<li> <p><code>"mle-unbias"</code>: Maximum Likelihood Estimation with bias adjustment
+as popularized by Reliasoft software based on the mean bias of MLE fitted distributions.
+</p>
+</li>
+</ul>
+</dd>
+</dl>
+<p>Additionally, one can pass any options available from <code>options.wblr</code>,
+such as <code>col</code> or <code>is.plot.legend</code>. The graphical options
+will be used when plotting the (life-)time observations using <code>plot.wblr</code>.
+Subsequent calls to <code>wblr.conf</code> will inherit these options.
+</p>
+<p>Currently, there is no graceful error recovery after attempting to fit
+lifetime data including negative time observations, for example 
+<code>wblr.fit(wblr(-5:10)).</code>
+</p>
+
+
+
+<h3>Value</h3>
+
+<p>The function returns its argument object <code>x</code>, extended with the
+calculated fit and the optional graphical and calculation arguments as
+provided to the function.
+</p>
+
+
+<h3>References</h3>
+
+<p>William Q. Meeker and Luis A. Escobar, (1998) "Statistical Methods for Reliability Data", Wiley-Interscience, New York
+</p>
+<p>Robert B. Abernethy, (2008) "The New Weibull Handbook, Fifth Edition" 
+</p>
+<p>John I. McCool, (2012) "Using the Weibull Distribution: Reliability, Modeling and Inference"
+</p>
+<p>Marie Laure Delignette-Muller, Christophe Dutang (2015). "fitdistrplus: An R Package for Fitting Distributions".
+Journal of Statistical Software, 64(4), 1-34. URL http://www.jstatsoft.org/v64/i04/.
+</p>
+
+
+</div>

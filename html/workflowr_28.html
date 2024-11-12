@@ -1,0 +1,151 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wflow_view</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>View research website locally</h2>
+
+<h3>Description</h3>
+
+<p><code>wflow_view</code> displays the website locally in your browser or the RStudio
+Viewer pane.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wflow_view(files = NULL, latest = FALSE, dry_run = FALSE, project = ".")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>character (default: NULL). Name(s) of the specific file(s) to
+view. These can be either the name(s) of the R Markdown file(s) in the
+analysis directory or the HTML file(s) in the docs directory. Supports file
+<a href="https://en.wikipedia.org/wiki/Glob_(programming)">globbing</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>latest</code></td>
+<td>
+<p>logical (default: FALSE). Display the HTML file with the most
+recent modification time (in addition to those specified in <code>files</code>).
+If <code>files = NULL</code> and <code>latest = FALSE</code>, then <code>index.html</code> is
+viewed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dry_run</code></td>
+<td>
+<p>logical (default: FALSE). Do not actually view file(s). Mainly
+useful for testing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>character (default: ".") By default the function assumes the
+current working directory is within the project. If this is not true,
+you'll need to provide the path to the project directory.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>wflow_view</code> by default displays the file <code>index.html</code>. To view the
+most recently modified HTML file, set <code>latest = TRUE</code>. To specify which
+file(s) to view, specify either the name(s) of the R Markdown or HTML
+file(s).
+</p>
+<p><code>wflow_view</code> uses <code>browseURL</code> to view the HTML files in the
+browser. If you wish to do something non-traditional like view an HTML file
+that is not in the docs directory or not part of a workflowr project, you can
+use that function directly.
+</p>
+<p>If <code>wflow_view</code> is run in the RStudio IDE and only one file has been
+requested to be viewed, the file is displayed in the
+<a href="https://rstudio.github.io/rstudio-extensions/rstudio_viewer.html">RStudio
+Viewer</a>.
+</p>
+<p>If R has no default browser set (determined by <code>getOption("browser")</code>),
+then <code>wflow_view</code> cannot open any HTML files. See
+<code>browseURL</code> for setup instructions.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>wflow_view</code>, which is a list with the
+following elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>The input argument <code>files</code> (converted to relative paths).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>latest</code></td>
+<td>
+<p>The input argument <code>latest</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dry_run</code></td>
+<td>
+<p>The input argument <code>dry_run</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>browser</code></td>
+<td>
+<p>Logical indicating if a default browser has been set. If
+FALSE, no HTML files can be opened. This is determined by the value
+returned by <code>getOption("browser")</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opened</code></td>
+<td>
+<p>The HTML files opened by <code>wflow_view</code>.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>browseURL</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+# View index.html
+wflow_view()
+
+# View the most recently modified HTML file
+wflow_view(latest = TRUE)
+
+# View a file by specifying the R Markdown file
+wflow_view("analysis/fname.Rmd")
+
+# View a file by specifying the HTML file
+wflow_view("docs/fname.html")
+
+# View multiple files
+wflow_view(c("fname1.Rmd", "fname2.Rmd"))
+wflow_view("docs/*html")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

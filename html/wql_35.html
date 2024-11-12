@@ -1,0 +1,139 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>seaRoll</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Rolling Seasonal Kendall trend test</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the Seasonal Kendall test of significance, including an estimate
+of the Sen slope, for rolling windows over a time series.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">seaRoll(
+  x,
+  w = 10,
+  plot = FALSE,
+  pval = 0.05,
+  mval = 0.5,
+  pchs = c(19, 21),
+  xlab = NULL,
+  ylab = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A seasonal time series vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+<p>The window width for “rolling” estimates of slope.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>Indicates if a plot should be drawn</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pval</code></td>
+<td>
+<p>p-value for significance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mval</code></td>
+<td>
+<p>Minimum fraction of seasons needed with non-missing slope
+estimates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pchs</code></td>
+<td>
+<p>Plot symbols for significant and not significant trend
+estimates, respectively</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>Optional label for x-axis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>Optional label for y-axis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments to pass to plotting function</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function <code>seaRoll</code> applies <code>seaKen</code> to rolling time windows of
+width <code>w</code>. A minimum <code>w</code> of five years is required. For any
+window, a season is considered missing if half or more of the possible
+comparisons between the first and last 20% of the years is missing. If
+<code>mval</code> or more of the seasons are missing, then that windowed trend is
+considered to be missing.
+</p>
+<p>If <code>plot = TRUE</code>, a point plot will be drawn with the Sen slope plotted
+at the leading year of the trend window. The plot symbols indicate,
+respectively, that the trend is significant or not significant. The plot can
+be customized by passing any arguments used by <code>plot.default</code>,
+as well as graphical parameters described in <code>par</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>seaRoll</code> returns a matrix with one row per time window
+containing the Sen slope, the relative Sen slope, and the <em>p-</em>value.
+Rows are labelled with the leading year of the window.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alan Jassby, James Cloern
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>seaKen</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+chl27 &lt;- sfbayChla[, 's27']
+seaRoll(chl27)
+seaRoll(chl27, plot = TRUE)
+
+</code></pre>
+
+
+</div>

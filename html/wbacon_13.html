@@ -1,0 +1,156 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.wbaconlm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Predicted Values Based on the Weighted BACON Linear Regression</h2>
+
+<h3>Description</h3>
+
+<p>This function does exactly what <code>predict</code> does for
+the linear model <code>lm</code>; see <code>predict.lm</code> for
+more details.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wbaconlm'
+predict(object, newdata, se.fit = FALSE, scale = NULL,
+    df = Inf, interval = c("none", "confidence", "prediction"), level = 0.95,
+    type = c("response", "terms"), terms = NULL, na.action = na.pass, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>Object of class inheriting from <code>"lm"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>An optional data frame in which to look for variables with
+which to predict.  If omitted, the fitted values are used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>se.fit</code></td>
+<td>
+<p>A switch <code>[logical]</code> indicating if standard errors
+are required.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>Scale parameter for std.err. calculation, <code>[numeric]</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>Degrees of freedom for scale, <code>[integer]</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interval</code></td>
+<td>
+<p>Type of interval calculation, <code>[character]</code>. Can be
+abbreviated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>Tolerance/confidence level, <code>[numeric]</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Type of prediction (response or model term),
+<code>[character]</code>. Can be abbreviated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>terms</code></td>
+<td>
+<p>If <code>type = "terms"</code>, which terms (default is all
+terms), a <code>[character]</code> vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.action</code></td>
+<td>
+<p>function determining what should be done with missing
+values in <code>newdata</code>. The default is to predict <code>NA</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to
+<code>predict.lm</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>predict.wbaconlm</code> produces a vector of predictions or a matrix of
+predictions and bounds with column names <code>fit</code>, <code>lwr</code>, and
+<code>upr</code> if <code>interval</code> is set.  For <code>type = "terms"</code> this
+is a matrix with a column per term and may have an attribute
+<code>"constant"</code>.
+</p>
+<p>If <code>se.fit</code> is
+<code>TRUE</code>, a list with the following components is returned:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>fit</code></td>
+<td>
+<p>vector or matrix as above</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>se.fit</code></td>
+<td>
+<p>standard error of predicted means</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>residual.scale</code></td>
+<td>
+<p>residual standard deviations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>degrees of freedom for residual</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>wBACON_reg</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(iris)
+m &lt;- wBACON_reg(Sepal.Length ~ Sepal.Width + Petal.Length + Petal.Width,
+    data = iris)
+predict(m, newdata = data.frame(Sepal.Width = 1, Petal.Length = 1,
+    Petal.Width = 1))
+</code></pre>
+
+
+</div>

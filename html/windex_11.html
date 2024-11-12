@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pir</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Calculates phylogenetic imbalance ratio (PIR)
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the PIR to assess suitability of categorical traits for modelling approaches, following Gardner and Organ (2021).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pir(tree,trait1,trait2=NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tree</code></td>
+<td>
+
+<p>Phylogenetic tree of class 'phylo'.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trait1</code></td>
+<td>
+
+<p>Named vector containing states of a categorical trait. Must be a character or a factor and names must match tip labels of the tree.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trait2</code></td>
+<td>
+
+<p>An optional second trait when the intention is to test suitability of modelling a correlation between two categorical traits. Argument requirements are the same as trait1.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>CI</code></td>
+<td>
+<p>Consistency index</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NIR</code></td>
+<td>
+<p>Normalised imbalance ratio (a measure of class imbalance across states or, if there are two traits, state combinations)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PIR</code></td>
+<td>
+<p>Phylogenetic imbalance ratio</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>This function implements the phylogenetic imbalance ratio recommended in concert with its component parts (consistency index and normalised imbalance ratio) by Gardner and Organ (2021) to assess the suitability of categorical trait data for modelling in phylogenetic comparative methods. Each of these three indices ranges from 0 to 1. Low values of CI indicate high levels of homoplasy, which is linked to higher evolutionary sample sizes, whereas low values of NIR indicate a balanced distribution of traits (similar proportion of species in each state) and this often enables better and more data-driven parameter estimation from models. PIR is the product of CI and NIR, with lower values again preferred for phylogenetic comparative models. Gardner and Organ (2021) recommended a rule of thumb of PIR&lt;0.1 as indicative that the categorical trait data are suitable for model-based analysis, but see that paper for more detailed discussion.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Kevin Arbuckle
+</p>
+
+
+<h3>References</h3>
+
+<p>Gardner, J.D. and Organ, C.L. 2021. Evolutionary sample size and consilience in phylogenetic comparative analysis. Systematic Biology 70:1061 - 1075.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(sample.tree)
+
+# Single trait (perhaps intended for estimating transition rates)
+t1&lt;-sample(c("brown","blue","green"),length(sample.tree$tip.label),replace=TRUE)
+names(t1)&lt;-sample.tree$tip.label
+pir(sample.tree,trait1=t1)
+
+# Two traits (perhaps intended for testing correlations)
+t2&lt;-sample(c("0","1"),length(sample.tree$tip.label),replace=TRUE)
+names(t2)&lt;-sample.tree$tip.label
+pir(sample.tree,trait1=t1,trait2=t2)
+</code></pre>
+
+
+</div>

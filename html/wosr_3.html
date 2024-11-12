@@ -1,0 +1,60 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>create_ut_queries</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a vector of UT-based queries</h2>
+
+<h3>Description</h3>
+
+<p>Use this function when you have a bunch of UTs whose data you want to pull
+and you need to write a series of UT-based queries to do so (i.e., queries
+in the form "UT = (WOS:000186387100005 OR WOS:000179260700001)").
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">create_ut_queries(uts, uts_per_query = 200)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>uts</code></td>
+<td>
+<p>UTs that will be placed inside the UT-based queries.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uts_per_query</code></td>
+<td>
+<p>Number of UTs to include in each query. Note, there is
+a limit on how long your query can be, so you probably want to keep this set
+to around 200.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A vector of queries. You can feed these queries to
+<code>pull_wos_apply</code> to download data for each query.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+data &lt;- pull_wos('TS = ("animal welfare") AND PY = (2002-2003)')
+queries &lt;- create_ut_queries(data$publication$ut)
+pull_wos_apply(queries)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

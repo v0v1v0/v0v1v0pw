@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>denplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate plotting information for a density estimate.</h2>
+
+<h3>Description</h3>
+
+<p>Calculates plotting information for a wavelet density estimate from high level
+scaling function coefficients.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">denplot(wr, coef, nT=20, lims, n=50)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wr</code></td>
+<td>
+<p>Scaling function coefficients, usually at some high level and
+usually smoothed (thresholded).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coef</code></td>
+<td>
+<p>The output from <code>denproj</code> for this analysis,
+i.e. the object containing the empirical scaling function coefficients.
+This is required because of the information it contains about the wavelet
+filter used, the resolution of the projection,
+and the bounds on the translation index of the scaling function coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lims</code></td>
+<td>
+<p>Vector containing the minimum and maximum x values required on the
+plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nT</code></td>
+<td>
+<p>The number of iterations to be performed in the
+Daubechies-Lagarias algorithm,
+which is used to evaluate the scaling functions of the specified
+wavelet basis at the plotting points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The number of points at which the density estimate is to be evaluated.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The density estimate is evaluated at <code>n</code> points between the values
+in <code>lims</code>. This function can be used to plot the empirical
+scaling function density estimate by entering
+<code>wr=coef$coef</code>, but since the empirical coefficients are usually found
+at some very high resolution,
+such a plot will be very noisy and not very informative.
+This function will be of much more use as and when
+thresholding function are included in this density estimation package.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The points at which the density estimate is evaluated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>The values of the density estimate at the points in <code>x</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>David Herrick</p>
+
+
+<h3>See Also</h3>
+
+<p><code>denproj</code>,<code>rclaw</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Simulate data from the claw density and find the 
+# empirical scaling function coefficients at a lowish resolution and plot
+# the resulting density estimate
+data &lt;- rclaw(100)
+datahr &lt;- denproj(data, J=3, filter.number=2,family="DaubExPhase")
+datapl &lt;- denplot(datahr$coef, datahr, lims=c(-3,3), n=1000)
+## Not run: plot(datapl, type="l")
+</code></pre>
+
+
+</div>

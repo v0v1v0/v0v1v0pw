@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>omega</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Computation of Fisher information  matrice</h2>
+
+<h3>Description</h3>
+
+<p>Computes matrices of Fisher information like <code class="reqn">I</code>, <code class="reqn">J</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">omega(ar = NULL, ma = NULL, y)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ar</code></td>
+<td>
+<p>Vector of AR coefficients. If <code>NULL</code>,  the simulation is a MA process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ma</code></td>
+<td>
+<p>Vector of MA coefficients. If <code>NULL</code>,  the simulation is a AR process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Univariate time series.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of matrix containing:
+</p>
+
+<dl>
+<dt><code>I</code></dt>
+<dd>
+<p>Matrix <code>I</code> computed in function <code>matXi</code>.</p>
+</dd>
+<dt><code>J</code></dt>
+<dd>
+<p>Matrix <code>J</code> computed as <code class="reqn">\frac{2}{n} H(e) H(e)^t </code> where <code class="reqn">e</code> is the residuals vector.</p>
+</dd>
+<dt><code>J.inv</code></dt>
+<dd>
+<p>Inverse of the matrix <code>J</code>.</p>
+</dd>
+<dt><code>matOmega</code></dt>
+<dd>
+<p>Matrix variance-covariance in the weak case computed as <code class="reqn">J^{-1}IJ^{-1}</code>.</p>
+</dd>
+<dt><code>matvar.strong</code></dt>
+<dd>
+<p>Matrix variance-covariance in the strong case computed as 
+<code class="reqn">2\sigma^2J^{-1}</code>.</p>
+</dd>
+<dt><code>standard.dev.Omega</code></dt>
+<dd>
+<p>Standard deviation of the matrix <code>matOmega</code>.</p>
+</dd>
+<dt><code>standard.dev.strong</code></dt>
+<dd>
+<p>Standard deviation of the matrix <code>matvar.strong</code>.</p>
+</dd>
+<dt><code>sig2</code></dt>
+<dd>
+<p>Innovation variance estimate.</p>
+</dd>
+</dl>
+<h3>Examples</h3>
+
+<pre><code class="language-R">y &lt;- sim.ARMA(n = 1000, ar = c(0.95,-0.8), ma = -0.6)
+est&lt;-estimation(p = 2, q = 1, y = y)
+omega(ar = est$ar, ma = est$ma, y = y)
+
+estCAC&lt;-estimation(p = 1, q = 1, y = CAC40return.sq, meanparam = TRUE)
+omega(ar = estCAC$ar, ma = estCAC$ma, y = CAC40return.sq)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Z.clean.up</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Clean Data
+</h2>
+
+<h3>Description</h3>
+
+<p>A crude, brute-force way to destroy bad values in data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Z.clean.up(Z)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+
+<p>Data.  A <code class="reqn">\tau</code> x <code class="reqn">n</code> matrix.
+</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>This function replaces intractable values, e.g., <code>NA</code>, or <code>-Inf</code>, in data, with the global mean. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code class="reqn">\tau</code> x <code class="reqn">n</code> numeric matrix.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+tau &lt;- 10
+n &lt;- 7
+
+Z &lt;- matrix(1, tau, n)
+Z[2,4] &lt;- -Inf
+Z[3,4] &lt;- Inf
+Z[4,4] &lt;- NA
+Z[5,4] &lt;- log(-1)
+Z
+
+Z.clean.up(Z)
+
+
+
+
+
+## The function is currently defined as
+function (Z) 
+{
+    Z[Z == Inf | Z == -Inf] &lt;- NA
+    Z[is.na(Z) | is.nan(Z)] &lt;- mean(Z, na.rm = TRUE)
+    return(Z)
+  }
+</code></pre>
+
+
+</div>

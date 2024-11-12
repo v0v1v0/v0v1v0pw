@@ -1,0 +1,225 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cartesian_periodic</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Linear Plot with Periodic Elements</h2>
+
+<h3>Description</h3>
+
+<p>Shows the interrupted time series in Cartesian coordinates and
+its a periodic/cyclic components.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cartesian_periodic(
+  ds_linear,
+  ds_periodic,
+  x_name,
+  y_name,
+  stage_id_name,
+  periodic_lower_name = "position_lower",
+  periodic_upper_name = "position_upper",
+  palette_dark = NULL,
+  palette_light = NULL,
+  change_points = NULL,
+  change_point_labels = NULL,
+  draw_periodic_band = TRUE,
+  jagged_point_size = 2,
+  jagged_line_size = 0.5,
+  band_alpha_dark = 0.4,
+  band_alpha_light = 0.15,
+  change_line_alpha = 0.5,
+  change_line_size = 3,
+  title = NULL,
+  x_title = NULL,
+  y_title = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ds_linear</code></td>
+<td>
+<p>The data.frame to containing the simple linear data.
+There should be one record per observation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ds_periodic</code></td>
+<td>
+<p>The data.frame to containing the reoccurring/periodic bands.
+There should be one record per observation per stage.
+If there are three stages, this data.frame should have three times as many rows as
+<code>ds_linear</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x_name</code></td>
+<td>
+<p>The variable name containing the date.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y_name</code></td>
+<td>
+<p>The variable name containing the dependent/criterion variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stage_id_name</code></td>
+<td>
+<p>The variable name indicating which stage the record belongs to.
+For example, before the first interruption, the <code>stage_id</code> is "1", and is "2" afterwards.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>periodic_lower_name</code></td>
+<td>
+<p>The variable name showing the lower bound
+of a stage's periodic estimate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>periodic_upper_name</code></td>
+<td>
+<p>The variable name showing the upper bound
+of a stage's periodic estimate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>palette_dark</code></td>
+<td>
+<p>A vector of colors used for the dark/heavy graphical elements.
+The vector should have one color for each <code>stage_id</code> value.  If no vector is specified,
+a default will be chosen, based on the number of stages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>palette_light</code></td>
+<td>
+<p>A vector of colors used for the light graphical elements.
+The vector should have one color for each <code>stage_id</code> value.  If no vector is specified,
+a default will be chosen, based on the number of stages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>change_points</code></td>
+<td>
+<p>A vector of values indicate the interruptions between stages.
+It typically works best as a Date or a POSIXct class.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>change_point_labels</code></td>
+<td>
+<p>The text plotted above each interruption.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>draw_periodic_band</code></td>
+<td>
+<p>A boolean value indicating if the bands should be plotted
+(whose values are take from the <code>periodic_lower_name</code> and <code>periodic_upper_name</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>jagged_point_size</code></td>
+<td>
+<p>The size of the observed data points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>jagged_line_size</code></td>
+<td>
+<p>The size of the line connecting the observed data points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>band_alpha_dark</code></td>
+<td>
+<p>The amount of transparency of the band appropriate
+for a stage's <em>x</em> values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>band_alpha_light</code></td>
+<td>
+<p>The amount of transparency of the band comparison stages
+for a given <em>x</em> value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>change_line_alpha</code></td>
+<td>
+<p>The amount of transparency marking each interruption.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>change_line_size</code></td>
+<td>
+<p>The width of a line marking an interruption.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>The string describing the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x_title</code></td>
+<td>
+<p>The string describing the <em>x</em>-axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y_title</code></td>
+<td>
+<p>The string describing the <em>y</em>-axis.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a ggplot2 graphing object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(Wats) # Load the package
+change_month &lt;- base::as.Date("1996-02-15")
+ds_linear &lt;-
+  Wats::county_month_birth_rate_2005_version |&gt;
+  dplyr::filter(county_name == "oklahoma") |&gt;
+  augment_year_data_with_month_resolution(date_name = "date")
+
+h_spread  &lt;- function(scores) { quantile(x = scores, probs = c(.25, .75)) }
+
+portfolio &lt;- annotate_data(
+  ds_linear,
+  dv_name = "birth_rate",
+  center_function = median,
+  spread_function = h_spread
+)
+
+cartesian_periodic(
+  portfolio$ds_linear,
+  portfolio$ds_periodic,
+  x_name               = "date",
+  y_name               = "birth_rate",
+  stage_id_name        = "stage_id",
+  change_points        = change_month,
+  change_point_labels  = "Bombing Effect"
+)
+</code></pre>
+
+
+</div>

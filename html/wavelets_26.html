@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>scalingshift.dwt</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Find Circular Shift of DWT Scaling Coefficients
+</h2>
+
+<h3>Description</h3>
+
+<p>Finds circular shift of DWT scaling coefficients at a specified level,
+for a specified filter length.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">scalingshift.dwt(L, j, N = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>Length of wavelet transform filter used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>j</code></td>
+<td>
+<p>Level of DWT scaling coefficients to be shifted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>Length of original time series sample.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function computes the circular shift associated with a wavelet
+transform filter of length <code>L</code> and level <code>j</code>. <code>L</code> must
+be of even length.
+</p>
+<p>Each coefficient's index will be circularly shifted forward by the
+value outputted. For example, if we have a vector of DWT scaling
+coefficients (with NAs inserted) with indices 1,2,3,4,5,6,7,8 and the
+value outputted from the function <code>scalingshift.dwt</code> is 2, the
+new order of the vector of aligned DWT wavelet coefficients would be
+7,8,1,2,3,4,5,6.
+</p>
+<p>If <code>N</code> is specified, the function will output the "shift" Modulo
+N. Because the shift is circular, the value outputted when N is
+specified is equivalent to the case when N is not specified.
+</p>
+<p>This function calculates the absolute value of vjH in formulas (114c)
+in <em>Wavelet Methods for Time Series Analysis</em> by Percival and
+Walden (2000). (And optionally vjH Modulo N)
+</p>
+
+
+<h3>Value</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>shift</code></td>
+<td>
+<p>Circular shift for specified level of DWT scaling
+coefficients for a specified filter length.</p>
+</td>
+</tr></table>
+<h3>Author(s)</h3>
+
+<p>Kelvin Ma, kkym@u.washington.edu
+</p>
+
+
+<h3>References</h3>
+
+<p>Percival, D. B. and A. T. Walden (2000) <em>Wavelet Methods for Time
+Series Analysis</em>, Cambridge University Press.  
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>waveletshift.dwt</code> and <code>plot.dwt</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Finding the circular shift for a wavelet transform filter of length 8,
+# pertaining to DWT Scaling Coefficients of level 5.
+scalingshift.dwt(8, 5)
+
+# If the sample size of the original time series is of length 1024.
+scalingshift.dwt(8, 5, N = 1024)
+</code></pre>
+
+
+</div>

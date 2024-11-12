@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotParam</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot Streamflow and Continous Water-Quality Data</h2>
+
+<h3>Description</h3>
+
+<p>Function to plot hydrologic times series.  
+Will plot more than one site at a time.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotParam(data, logscale = FALSE, metric = FALSE, ylabel = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>is the data frame in the format of that returned by 
+importDVs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logscale</code></td>
+<td>
+<p>is a logical indicating whether or not the y-scale should be 
+log 10.  Streamflow generally is plotted with a log scale and this only has 
+an effect on the plotting of streamflow data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metric</code></td>
+<td>
+<p>USGS streamflow data are usually in cubic feet per second;
+however it may be converted to cubic meters per second for publication.  
+Likewise, gage height is usually in feet, but could be converted to 
+meters.  The metric argument only has an effect on streamflow and gage 
+height.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylabel</code></td>
+<td>
+<p>optionally allows user to pass a y-axis label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments to be passed to plotting method (see par). 
+(see xyplot).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a lattice plot
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(exampleWaterData)
+plotParam(misQ05054000, code="00060", stat="00003", logscale=TRUE)
+plotParam(misQ05054000, code=attributes(misQ05054000)$code, 
+stat=attributes(misQ05054000)$stat, logscale=TRUE)
+</code></pre>
+
+
+</div>

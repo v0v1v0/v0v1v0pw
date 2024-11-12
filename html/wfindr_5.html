@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>model_to_regex</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Build a regular expression to fit chosen parameters</h2>
+
+<h3>Description</h3>
+
+<p>Build a regular expression to fit chosen parameters
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">model_to_regex(model = "*", allow = letters, ban = character(0),
+  type = "usual")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>pattern that a word should match. Consists of letters and
+unknown characters specifications. Dot <code>.</code> stands for unknown
+character. It may be followed by <code>{...}</code> repetition quantifier (i.e.
+<code>.{n}</code>, <code>.{n,}</code>, <code>.{n,m}</code>). Asterisk <code>*</code> stands
+for unknown number of unknown characters. See examples.<br> By default
+<code>model</code> is set to <code>"*"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allow</code></td>
+<td>
+<p>characters allowed to fill gaps in a word. Can be listed in a
+single string or in a vector. By default is set to <code>letters</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ban</code></td>
+<td>
+<p>characters not allowed to fill gaps in a word.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>can be <code>"usual"</code>, <code>"scrabble"</code>, or <code>"anagram"</code>.
+Abbreviated input is allowed: e.g. <code>"u"</code>, <code>"s"</code>, or
+<code>"a"</code>.<br><code>type</code> defines how often allowed characters can be used
+to fill the gaps. Say, character appears <code>n</code> times in <code>allow</code> and
+<code>m</code> times in <code>ban</code>. If <code>d = n - m</code> is less or equal to zero,
+whatever the <code>type</code> is, this character won't be used to fill the gaps.
+For the case when <code>d &gt; 0</code>:<br></p>
+ <ul>
+<li>
+<p> If <code>type</code> is
+<code>"usual"</code> then the character is allowed to fill the gaps
+<strong>unlimited</strong> number of times. <br></p>
+</li>
+<li>
+<p> If <code>type</code> is
+<code>"scrabble"</code> then the character is allowed to fill the gaps <strong>no
+more</strong> than d times. </p>
+</li>
+<li>
+<p> If <code>type</code> is <code>"anagram"</code> then the
+character should be used <strong>exactly</strong> d times. </p>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<h3>Warning</h3>
+
+<p>If <code>type = "scrabble"</code> or <code>"anagram"</code>, output
+regex will contain perl-like syntax. So, to use it in <code>grep</code> or
+<code>gsub</code> for example, set <code>perl</code> parameter to <code>TRUE</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>find_word</code>, <code>scrabble</code>,
+<code>anagram</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Regular expression to match all the 5-letter words starting with "c".
+model_to_regex("c.{4}")
+## Disallow "a" and "b".
+model_to_regex("c.{4}", ban = "ab")
+## Allow only "a" and "b" to fill the gap.
+model_to_regex("c.{4}", allow = "ab")
+## Allow "a", "b", and "c", but then ban "c" (result is the same as the previous example)
+model_to_regex("c.{4}", allow = "abc", ban = "c")
+
+## Regex to match all words that start with "p" and end with "zed".
+model_to_regex("p*zed")
+
+## Regex to match all the words that can be constructed of the word "thing".
+model_to_regex(allow = "thing", type = "scrabble")
+## Get at lest 4-letter words.
+model_to_regex(".{4,}", allow = "thing", type = "scrabble")
+
+## Regex to match anagrams of the word "thing"
+model_to_regex(allow = "thing", type = "anagram")
+
+</code></pre>
+
+
+</div>

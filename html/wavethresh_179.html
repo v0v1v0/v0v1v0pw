@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>putC.wd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Puts a whole resolution level of father wavelet coeffients into wd wavelet object.</h2>
+
+<h3>Description</h3>
+
+<p>Makes a copy of the <code>wd</code> object, replaces some father wavelet coefficients data in the copy, and then returns the copy. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wd'
+putC(wd, level, v, boundary=FALSE, index=FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wd</code></td>
+<td>
+<p>Wavelet decomposition object into which you wish to insert the father wavelet coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>the resolution level at which you wish to replace the father wavelet coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>v</code></td>
+<td>
+<p>the replacement data, this should be of the correct length.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>If <code>boundary</code> is <code>FALSE</code> then only "real" data is replaced. If boundary is <code>TRUE</code> then the boundary (bookeeping) elements are replaced as well. Information about the lengths of the vectors can be found in the <code>first.last</code> database function and Nason and Silverman, 1994.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>index</code></td>
+<td>
+<p>If index is <code>TRUE</code> then the index numbers into the 1D array where the coefficient insertion would take place are returned. If index is <code>FALSE</code> (default) then the modified <code>wavelet decomposition</code> object is returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function <code>accessC</code> obtains the father wavelet coefficients for a particular level. The function <code>putC.wd</code> replaces father wavelet coefficients at a particular resolution level and returns a modified wd object reflecting the change.
+</p>
+<p>The need for this function is a consequence of the pyramidal structure of Mallat's algorithm and the memory efficiency gain achieved by storing the pyramid as a linear vector. <code>PutC.wd</code> obtains information about where the smoothed data appears from the <code>fl.dbase</code> component of an <code>wd.object</code>, in particular the array
+</p>
+<p><code>fl.dbase$first.last.c</code>
+</p>
+<p>which gives a complete specification of index numbers and offsets for 
+</p>
+<p><code>wd.object$C</code>.
+</p>
+<p>Note that this function is method for the generic function <code>putC</code>. When the <code>wd.object</code> is definitely a wd class object then you only need use the generic version of this function. 
+</p>
+<p>Note also that this function only puts information into <code>wd</code> class objects. To extract coefficients from a <code>wd</code> object you have to use the <code>accessC</code> function (or more precisely, the <code>accessC.wd</code> method).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>wd</code> class object containing the modified father wavelet coefficients. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.5.3 Copyright Guy Nason 1994 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>putC</code>, <code>wd.object</code>, <code>wd</code>, <code>accessC</code>,<code>putD</code>, <code>first.last</code>, 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Generate an EMPTY wd object:
+#
+zero &lt;- rep(0, 16)
+zerowd &lt;- wd(zero)
+#
+# Put some random father wavelet coefficients into the object at
+# resolution level 2. For the decimated wavelet transform there
+# are always 2^i coefficients at resolution level i. So we have to
+# insert 4 coefficients
+#
+mod.zerowd &lt;- putC( zerowd, level=2, v=rnorm(4))
+#
+# If you use accessC on mod.zerowd you would see that there were only
+# coefficients at resolution level 2 where you just put the coefficients.
+#
+# Now, for a time-ordered non-decimated wavelet transform object the
+# procedure is exactly the same EXCEPT that there are going to be
+# 16 coefficients at each resolution level. I.e.
+#
+# Create empty TIME-ORDERED NON-DECIMATED wavelet transform object
+#
+zerowdS &lt;- wd(zero, type="station")
+#
+# Now insert 16 random coefficients at resolution level 2
+##
+mod.zerowdS &lt;- putC(zerowdS, level=2, v=rnorm(16))
+#
+# Once more if you use accessC on mod.zerowdS you will see that there are
+# only coefficients at resolution level 2.
+</code></pre>
+
+
+</div>

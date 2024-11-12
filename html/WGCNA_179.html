@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>newNetworkOptions</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Create a list of network construction arguments (options).
+</h2>
+
+<h3>Description</h3>
+
+<p>This function creates a reusable list of network calculation arguments/options.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">newNetworkOptions(
+    correlationOptions = newCorrelationOptions(),
+
+    # Adjacency options
+    replaceMissingAdjacencies = TRUE,
+    power = 6,
+    networkType = c("signed hybrid", "signed", "unsigned"),
+    checkPower = TRUE,
+
+    # Topological overlap options
+    TOMType = c("signed", "signed Nowick", "unsigned", "none",
+                "signed 2", "signed Nowick 2", "unsigned 2"),
+    TOMDenom = c("mean", "min"),
+    suppressTOMForZeroAdjacencies = FALSE,
+    suppressNegativeTOM = FALSE,
+
+    # Internal behavior options
+    useInternalMatrixAlgebra = FALSE)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>correlationOptions</code></td>
+<td>
+
+<p>A list of correlation options. See <code>newCorrelationOptions</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>replaceMissingAdjacencies</code></td>
+<td>
+<p>Logical: should missing adjacencies be replaced by zero? 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p> Soft-thresholding power for network construction. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkType</code></td>
+<td>
+<p> network type. Allowed values are (unique abbreviations of) <code>"unsigned"</code>,
+<code>"signed"</code>, <code>"signed hybrid"</code>. See <code>adjacency</code>. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checkPower</code></td>
+<td>
+<p>Logicel: should the power be checked for sanity? 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>TOMType</code></td>
+<td>
+<p>One of <code>"none"</code>, <code>"unsigned"</code>, <code>"signed"</code>, <code>"signed Nowick"</code>,
+<code>"unsigned 2"</code>, <code>"signed 2"</code> and <code>"signed Nowick 2"</code>. If <code>"none"</code>, adjacency
+will be used for clustering. See <code>TOMsimilarityFromExpr</code> for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>TOMDenom</code></td>
+<td>
+<p>Character string specifying the TOM variant to be used. Recognized values are
+<code>"min"</code> giving the standard TOM described in Zhang and Horvath (2005), and <code>"mean"</code> in which
+the <code>min</code> function in the denominator is replaced by <code>mean</code>. The <code>"mean"</code> may produce
+better results but at this time should be considered experimental.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suppressTOMForZeroAdjacencies</code></td>
+<td>
+<p>logical: for those components that have zero adjacency, should TOM be
+set to zero as well?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suppressNegativeTOM</code></td>
+<td>
+<p>Logical: should the result be set to zero when negative? Negative TOM values can occur when
+<code>TOMType</code> is <code>"signed Nowick"</code>.</p>
+</td>
+</tr>
+</table>
+<p>newNetworkOptions
+</p>
+<table><tr style="vertical-align: top;">
+<td><code>useInternalMatrixAlgebra</code></td>
+<td>
+<p>logical: should internal implementation of matrix multiplication be used
+instead of R-provided BLAS? The internal implementation is slow and this option should only be used if one
+suspects a bug in R-provided BLAS.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A list of class <code>NetworkOptions</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>newCorrelationOptions</code>
+</p>
+
+
+</div>

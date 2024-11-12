@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>humidity.to.dewpoint</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate dew point temperature.</h2>
+
+<h3>Description</h3>
+
+<p><code>humidity.to.dewpoint</code> creates a numeric vector of dew point
+temperature from numeric vectors of air temperature and relative
+humidity.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">humidity.to.dewpoint(rh = NA, t = NA, temperature.metric = "fahrenheit")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>rh</code></td>
+<td>
+<p>Numeric vector of relative humidity (in %).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t</code></td>
+<td>
+<p>Numeric vector of air temperatures.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>temperature.metric</code></td>
+<td>
+<p>Character string indicating the temperature
+metric of air temperature. Possible values are <code>fahrenheit</code> or
+<code>celsius</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Dew point temperature will be calculated in the same metric as
+the temperature vector (as specified by the <code>temperature.metric</code>
+option). If you'd like dew point temperature in a different metric,
+use the function <code>celsius.to.fahrenheit</code> or
+<code>fahrenheit.to.celsius</code> on the output from this function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector of dew point temperature, in the same metric
+as the temperature vector (as specified by the <code>temperature.metric</code>
+option).
+</p>
+
+
+<h3>Note</h3>
+
+<p>Equations are from the source code for the US National Weather
+Service's
+<a href="http://www.wpc.ncep.noaa.gov/html/heatindex.shtml">online heat index calculator</a>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Brooke Anderson <a href="mailto:brooke.anderson@colostate.edu">brooke.anderson@colostate.edu</a>,
+Roger Peng <a href="mailto:rdpeng@gmail.com">rdpeng@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>National Weather Service Hydrometeorological Prediction
+Center Web Team. Heat Index Calculator. 30 Jan 2015.
+<a href="http://www.wpc.ncep.noaa.gov/html/heatindex.shtml">http://www.wpc.ncep.noaa.gov/html/heatindex.shtml</a>.
+Accessed 18 Dec 2015.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dewpoint.to.humidity,
+   fahrenheit.to.celsius,
+   celsius.to.fahrenheit</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Calculate dew point temperature from relative humidity and
+# air temperature.
+
+data(newhaven)
+newhaven$DP &lt;- humidity.to.dewpoint(t = newhaven$TemperatureF,
+                                    rh = newhaven$Relative.Humidity,
+                                    temperature.metric = 'fahrenheit')
+newhaven
+
+</code></pre>
+
+
+</div>

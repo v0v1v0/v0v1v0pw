@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wTO.fast</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>wTO.fast</h2>
+
+<h3>Description</h3>
+
+<p>Compute the wTO and also the bootstraps. Proposed at arXiv:1711.04702. This is a quicker version of the wTO.Complete. It doesn't contain diagnose plots nor a parallel version.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wTO.fast(
+  Data,
+  Overlap = row.names(Data),
+  method = "p",
+  sign = "sign",
+  delta = 0.2,
+  n = 10,
+  method_resampling = "Bootstrap",
+  lag = NULL,
+  ID = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Data</code></td>
+<td>
+<p>data.frame containing the count / expression data for the correlation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Overlap</code></td>
+<td>
+<p>Set of nodes of interest, where the Overlapping weights will be computed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Type of the correlation that should be used. "s" / "spearman" will compute the rank spearman correlation, "p" / "pearson" will compute the linear correlation. If no value is given, the default is to use "p".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sign</code></td>
+<td>
+<p>Should the wTO be signed?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta</code></td>
+<td>
+<p>expected difference between the real wTO and the bootstraped.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Number of resamplings, used to compute the empirical distribuitions of the links. Default is set to 100.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method_resampling</code></td>
+<td>
+<p>method of the resampling. Bootstrap or BlockBootstrap.If the second is used, please give the lag (time dependency among the data).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lag</code></td>
+<td>
+<p>Time dependency for the blocked bootstrap (for time series).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ID</code></td>
+<td>
+<p>ID of the samples for the blocked bootstrap (for repeated measures).</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Deisy Morselli Gysi &lt;deisy at bioinf.uni-leipzig.de&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"> wTO.fast(Data = Microarray_Expression1,
+ Overlap = ExampleGRF$x, 
+ method = "p")
+
+#  For a time series with lag = 4
+# wTO.fast(Data = Microarray_Expression1,
+# Overlap = ExampleGRF$x, 
+# method = "p", 
+# method_resampling = 'BlockBootstrap', 
+# lag = 4)
+
+# For a study where the individuals were measured multiple times.
+# wTO.fast(Data = Microarray_Expression1,
+# Overlap = ExampleGRF$x, 
+# method = "p", 
+# method_resampling = 'BlockBootstrap', 
+# ID = rep(1:9, each= 2))
+</code></pre>
+
+
+</div>

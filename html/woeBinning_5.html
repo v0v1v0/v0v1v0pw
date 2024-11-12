@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>woe.binning.table</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Tabulation of Binning</h2>
+
+<h3>Description</h3>
+
+<p><code>woe.binning.table</code> tabulates the binning solution generated and saved via the <code>woe.binning</code>
+or <code>woe.tree.binning</code> function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">woe.binning.table(binning)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>binning</code></td>
+<td>
+<p>Binning information generated from the <code>woe.binning</code> or <code>woe.tree.binning</code> function.
+Contains names of the input predictor variables and the
+corresponding binning, counts, WOE and IV information, which is used to
+generate the tables.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>For each predictor variable <code>woe.binning.table</code> generates a table (data frame).
+This table contains the final bin labels, total counts, total distribution (column percentages),
+counts for the first and the second target class, distribution of the first and the second target
+class (column percentages), rate (row percentages) of the target event specified via the
+<em>event.class</em> parameter in the <code>woe.binning</code> or <code>woe.tree.binning</code> function, as well as weight of evidence
+(WOE) and information values (IV).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Load German credit data and create a subset
+data(germancredit)
+df &lt;- germancredit[, c('creditability', 'credit.amount', 'duration.in.month',
+                  'savings.account.and.bonds', 'purpose')]
+
+# Bin all variables of the data frame (apart from the target variable)
+# with default parameter settings
+binning &lt;- woe.binning(df, 'creditability', df)
+
+# Tabulate the binned variables
+tabulate.binning &lt;- woe.binning.table(binning)
+tabulate.binning
+
+## Not run: 
+
+# Plot a layouted table (using the gridExtra library) for a specific
+# variable (in this example for the first binned variable
+# with the highest IV value)
+library(gridExtra)
+grid.table(tabulate.binning[[1]],
+          theme = ttheme_default(core=list(bg_params=
+                  list(fill=c(rep(c('grey95','grey90'),
+                  length.out=nrow(tabulate.binning[[1]])-1),
+                  '#BCC7BD')),fg_params=list(cex=0.8)),
+                  colhead=list(fg_params=list(cex=0.8))),
+                  rows=NULL)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>calibrate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calibrate Propensity Score Weights</h2>
+
+<h3>Description</h3>
+
+<p><code>calibrate()</code> performs Platt scaling to calibrate propensity scores as recommended by Gutman et al. (2024). This involves fitting a new propensity score model using logistic regression with the previously estimated propensity score as the sole predictor. Weights are computed using this new propensity score.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">calibrate(x, ...)
+
+## Default S3 method:
+calibrate(x, treat, s.weights = NULL, data = NULL, ...)
+
+## S3 method for class 'weightit'
+calibrate(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>weightit</code> object or a vector of propensity scores. Only binary treatments are supported.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>treat</code></td>
+<td>
+<p>A vector of treatment status for each unit. Only binary treatments are supported.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s.weights</code></td>
+<td>
+<p>A vector of sampling weights or the name of a variable in
+<code>data</code> that contains sampling weights.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>An optional data frame containing the variable named in <code>s.weights</code> when supplied as a string.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>If the input is a <code>weightit</code> object, the output will be a
+<code>weightit</code> object with the propensity scores replaced with the calibrated propensity scores and the weights replaced by weights computed from the calibrated propensity scores.
+</p>
+<p>If the input is a numeric vector of weights, the output will be a numeric
+vector of the calibrated propensity scores.
+</p>
+
+
+<h3>References</h3>
+
+<p>Gutman, R., Karavani, E., &amp; Shimoni, Y. (2024). Improving Inverse Probability Weighting by Post-calibrating Its Propensity Scores. <em>Epidemiology</em>, 35(4). <a href="https://doi.org/10.1097/EDE.0000000000001733">doi:10.1097/EDE.0000000000001733</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>weightit()</code>, <code>weightitMSM()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library("cobalt")
+data("lalonde", package = "cobalt")
+
+#Using GBM to estimate weights
+(W &lt;- weightit(treat ~ age + educ + married +
+                 nodegree + re74, data = lalonde,
+               method = "gbm", estimand = "ATT",
+               criterion = "smd.max"))
+summary(W)
+
+#Calibrating the GBM propensity scores
+Wc &lt;- calibrate(W)
+
+#Calibrating propensity scores directly
+PSc &lt;- calibrate(W$ps, treat = lalonde$treat)
+
+</code></pre>
+
+
+</div>

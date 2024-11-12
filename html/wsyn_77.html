@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wlmtest_methods</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Basic methods for the <code>wlmtest</code> class</h2>
+
+<h3>Description</h3>
+
+<p>Set, get, summary, and print methods for the <code>wlmtest</code> class.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wlmtest'
+summary(object, ...)
+
+## S3 method for class 'wlmtest'
+print(x, ...)
+
+## S3 method for class 'wlmtest'
+set_wlmobj(obj, newval)
+
+## S3 method for class 'wlmtest'
+set_drop(obj, newval)
+
+## S3 method for class 'wlmtest'
+set_signif(obj, newval)
+
+## S3 method for class 'wlmtest'
+set_ranks(obj, newval)
+
+## S3 method for class 'wlmtest'
+set_bandp(obj, newval)
+
+## S3 method for class 'wlmtest'
+get_wlmobj(obj)
+
+## S3 method for class 'wlmtest'
+get_drop(obj)
+
+## S3 method for class 'wlmtest'
+get_signif(obj)
+
+## S3 method for class 'wlmtest'
+get_ranks(obj)
+
+## S3 method for class 'wlmtest'
+get_bandp(obj)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object, x, obj</code></td>
+<td>
+<p>An object of class <code>wlmtest</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not currently used. Included for argument consistency
+with existing generics.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newval</code></td>
+<td>
+<p>A new value, for the <code>set_*</code> methods</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>summary.wlmtest</code> produces a summary of a <code>wlmtest</code> object.
+A <code>print.wlmtest</code> method is also available. For <code>wlmtest</code> objects, 
+<code>set_*</code> and <code>get_*</code> methods are available for all slots (see
+the documentation for <code>wlmtest</code> for a list). The <code>set_*</code> methods 
+just throw an error, to prevent breaking the consistency between the 
+slots of a <code>wlmtest</code> object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Daniel Reuman, <a href="mailto:reuman@ku.edu">reuman@ku.edu</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wlmtest</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">times&lt;-1:30
+dat&lt;-list(v1=matrix(rnorm(300),10,30),v2=matrix(rnorm(300),10,30),v3=matrix(rnorm(300),10,30),
+          v4=matrix(rnorm(300),10,30),v5=matrix(rnorm(300),10,30))
+dat&lt;-lapply(FUN=function(x){cleandat(x,times,1)$cdat},X=dat)
+resp&lt;-1
+pred&lt;-2:3
+norm&lt;-"powall"
+wlmobj&lt;-wlm(dat,times,resp,pred,norm)
+drop&lt;-3
+sigmethod&lt;-"fft"
+h&lt;-wlmtest(wlmobj,drop,sigmethod,nrand=10)
+get_times(get_wlmobj(h))
+summary(h)
+print(h)
+
+</code></pre>
+
+
+</div>

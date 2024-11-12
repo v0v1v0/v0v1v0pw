@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>denoise.dwt.2d</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Denoise an Image via the 2D Discrete Wavelet Transform</h2>
+
+<h3>Description</h3>
+
+<p>Perform simple de-noising of an image using the two-dimensional discrete
+wavelet transform.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">denoise.dwt.2d(
+  x,
+  wf = "la8",
+  J = 4,
+  method = "universal",
+  H = 0.5,
+  noise.dir = 3,
+  rule = "hard"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>input matrix (image)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wf</code></td>
+<td>
+<p>name of the wavelet filter to use in the decomposition</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>depth of the decomposition, must be a number less than or equal to
+log(minM,N,2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>character string describing the threshold applied, only
+<code>"universal"</code> and <code>"long-memory"</code> are currently implemented</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>H</code></td>
+<td>
+<p>self-similarity or Hurst parameter to indicate spectral scaling,
+white noise is 0.5</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>noise.dir</code></td>
+<td>
+<p>number of directions to estimate background noise standard
+deviation, the default is 3 which produces a unique estimate of the
+background noise for each spatial direction</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rule</code></td>
+<td>
+<p>either a <code>"hard"</code> or <code>"soft"</code> thresholding rule may be
+used</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See <code>Thresholding</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Image of the same dimension as the original but with high-freqency
+fluctuations removed.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>B. Whitcher
+</p>
+
+
+<h3>References</h3>
+
+<p>See <code>Thresholding</code> for references concerning
+de-noising in one dimension.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Thresholding</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Xbox image
+data(xbox)
+n &lt;- nrow(xbox)
+xbox.noise &lt;- xbox + matrix(rnorm(n*n, sd=.15), n, n)
+par(mfrow=c(2,2), cex=.8, pty="s")
+image(xbox.noise, col=rainbow(128), main="Original Image")
+image(denoise.dwt.2d(xbox.noise, wf="haar"), col=rainbow(128),
+      zlim=range(xbox.noise), main="Denoised image")
+image(xbox.noise - denoise.dwt.2d(xbox.noise, wf="haar"), col=rainbow(128),
+      zlim=range(xbox.noise), main="Residual image")
+
+## Daubechies image
+data(dau)
+n &lt;- nrow(dau)
+dau.noise &lt;- dau + matrix(rnorm(n*n, sd=10), n, n)
+par(mfrow=c(2,2), cex=.8, pty="s")
+image(dau.noise, col=rainbow(128), main="Original Image")
+dau.denoise &lt;- denoise.modwt.2d(dau.noise, wf="d4", rule="soft")
+image(dau.denoise, col=rainbow(128), zlim=range(dau.noise),
+      main="Denoised image")
+image(dau.noise - dau.denoise, col=rainbow(128), main="Residual image")
+
+</code></pre>
+
+
+</div>

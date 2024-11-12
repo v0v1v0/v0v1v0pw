@@ -1,0 +1,58 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>buildNameCallback</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Build a custom writeback function that writes state into a user named variable.</h2>
+
+<h3>Description</h3>
+
+<p>Build a custom writeback function that writes state into a user named variable.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">buildNameCallback(varName)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>varName</code></td>
+<td>
+<p>character where to write captured state</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>writeback function for use with functions such as <code>DebugFnW</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# user function
+f &lt;- function(i) { (1:10)[[i]] }
+# capture last error in variable called "lastError"
+writeBack &lt;- buildNameCallback('lastError')
+# wrap function with writeBack
+df &lt;- DebugFnW(writeBack,f)
+# capture error (Note: tryCatch not needed for user code!)
+tryCatch(
+  df(12),
+   error = function(e) { print(e) })
+# examine error
+str(lastError)
+# redo call, perhaps debugging
+tryCatch(
+ do.call(lastError$fn_name, lastError$args),
+   error = function(e) { print(e) })
+
+</code></pre>
+
+
+</div>

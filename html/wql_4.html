@@ -1,0 +1,145 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>decompTs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Decompose a time series</h2>
+
+<h3>Description</h3>
+
+<p>The function decomposes a time series into a long-term mean, annual,
+seasonal and "events" component. The decomposition can be multiplicative or
+additive, and based on median or mean centering.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">decompTs(
+  x,
+  event = TRUE,
+  type = c("mult", "add"),
+  center = c("median", "mean")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a monthly time series vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>event</code></td>
+<td>
+<p>whether or not an "events" component should be determined</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>the type of decomposition, either multiplicative ("mult") or
+additive ("add")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>the method of centering, either median or mean</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The rationale for this simple approach to decomposing a time series, with
+examples of its application, is given by Cloern and Jassby (2010). It is
+motivated by the observation that many important events for estuaries (e.g.,
+persistent dry periods, species invasions) start or stop suddenly. Smoothing
+to extract the annualized term, which can disguise the timing of these
+events and make analysis of them unnecessarily difficult, is not used.
+</p>
+<p>A multiplicative decomposition will typically be useful for a biological
+community- or population-related variable (e.g., chlorophyll-a) that
+experiences exponential changes in time and is approximately lognormal,
+whereas an additive decomposition is more suitable for a normal variable.
+The default centering method is the median, especially appropriate for
+series that have large, infrequent events.
+</p>
+<p>If <code>event = TRUE</code>, the seasonal component represents a recurring
+monthly pattern and the events component a residual series. Otherwise, the
+seasonal component becomes the residual series. The latter is appropriate
+when seasonal patterns change systematically over time. You can use
+<code>plotSeason</code> and <code>seasonTrend</code> to investigate the
+way seasonality changes.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A monthly time series matrix with the following individual time
+series: </p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>original </code></td>
+<td>
+<p>original time series</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annual </code></td>
+<td>
+<p>annual mean
+series</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seasonal </code></td>
+<td>
+<p>repeating seasonal component</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>events
+</code></td>
+<td>
+<p>optionally, the residual or "events" series</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Alan Jassby, James Cloern
+</p>
+
+
+<h3>References</h3>
+
+<p>Cloern, J.E. and Jassby, A.D. (2010) Patterns and scales of
+phytoplankton variability in estuarine-coastal ecosystems. <em>Estuaries
+and Coasts</em> <b>33,</b> 230–241.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>plotSeason</code>, <code>seasonTrend</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Apply the function to a single series (Station 27) and plot it:
+y &lt;- decompTs(sfbayChla[, 's27'])
+y
+plot(y, nc=1, main="")
+
+</code></pre>
+
+
+</div>

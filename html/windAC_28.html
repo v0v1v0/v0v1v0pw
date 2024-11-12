@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>secondDerivative</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>secondDerivative</h2>
+
+<h3>Description</h3>
+
+<p>Computes numeric second derivatives (hessian) of an
+arbitrary multidimensional function at a particular location.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">secondDerivative(loc, FUN, ..., eps = 1e-07)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>loc</code></td>
+<td>
+<p>The location (a vector) where the second derivatives
+of <code>FUN</code> are desired.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>FUN</code></td>
+<td>
+<p>An R function to compute second derivatives for.
+This must be a function of the form FUN &lt;- function(x, ...)...
+where x is the parameters of the function (e.g., location <code>loc</code>).
+<code>FUN</code> must return a single value (scalar), the height of the
+surface above <code>x</code>, i.e., <code>FUN</code> evaluated at <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional agruments to <code>FUN</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eps</code></td>
+<td>
+<p>Radius argument, see details. Default is <code>10e-7</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function uses the "5-point" numeric second derivative
+method advocated in numerous numerical recipe texts.  During computation
+of the second derivative, FUN will be evaluated at locations within a hyper-elipsoid
+with cardinal radius <code>2*loc*(eps)^0.25</code>.
+</p>
+<p>A handy way to use this function is to call an optimization routine
+like <code>nlminb</code> with FUN, then call this function with the
+optimized values (solution) and FUN.  This will yeild the hessian
+at the solution rather than the hessian at the previous step of the
+optimization.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Matrix
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+func &lt;- function(x){-x*x} # second derivative should be -2
+secondDerivative(0,func)
+secondDerivative(3,func)
+
+func &lt;- function(x){3 + 5*x^2 + 2*x^3} # second derivative should be 10+12x
+secondDerivative(0,func)
+secondDerivative(2,func)
+
+func &lt;- function(x){x[1]^2 + 5*x[2]^2} # should be rbind(c(2,0),c(0,10))
+secondDerivative(c(1,1),func)
+secondDerivative(c(4,9),func)
+</code></pre>
+
+
+</div>

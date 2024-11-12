@@ -1,0 +1,165 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>consolidate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Consolidate (sound) files into a single directory</h2>
+
+<h3>Description</h3>
+
+<p><code>consolidate</code> copies (sound) files scattered in several directories into a single one.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">consolidate(
+  files = NULL,
+  path = NULL,
+  dest.path = NULL,
+  pb = TRUE,
+  file.ext = ".wav$",
+  parallel = 1,
+  save.csv = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>character vector indicating the subset of files that will be consolidated. File names should include the full file path. Optional.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Character string containing the directory path where the sound files are located.
+'wav.path' set by <code>warbleR_options</code> is ignored.
+If <code>NULL</code> (default) then the current working directory is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dest.path</code></td>
+<td>
+<p>Character string containing the directory path where the sound files will be saved.
+If <code>NULL</code> (default) then the current working directory is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Logical argument to control progress bar. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file.ext</code></td>
+<td>
+<p>Character string defining the file extension (i.e. format) for the files to be consolidated. Default is <code>'.wav$'</code> ignoring case. Several formats can be used: <code>"\.wav$|\.wac$|\.mp3$|\.flac$"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Numeric. Controls whether parallel computing is applied.
+It specifies the number of cores to be used. Default is 1 (i.e. no parallel computing).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>save.csv</code></td>
+<td>
+<p>Logical. Controls whether a data frame containing sound file information is saved in the new directory. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to be passed to the internal <code>file.copy</code> function for customizing file copying.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function allows users to put files scattered in several directories into a
+single one. By default it works on sound files in '.wav' format but can work with
+other type of files (for instance '.txt' selection files).
+</p>
+
+
+<h3>Value</h3>
+
+<p>All (sound) files are consolidated (copied) to a single directory ("consolidated_files"). The function returns a data frame with each of the files that were copied in a row and the following information:
+</p>
+
+<ul>
+<li> <p><code>original_dir</code> the path to the original file
+</p>
+</li>
+<li> <p><code>old_name</code> the name of the original file
+</p>
+</li>
+<li> <p><code>new_name</code> the name of the new file. This will be the same as 'old_name' if the name was not duplicated (i.e. no files in other directories with the same name).
+</p>
+</li>
+<li> <p><code>file_size_bytes</code> size of the file in bytes.
+</p>
+</li>
+<li> <p><code>duplicate</code> indicates whether a file is likely to be duplicated (i.e. if files with the same name were found in other directories). If so it will be labeled as 'possible.dupl', otherwise it will contain NAs.
+</p>
+</li>
+</ul>
+<p>If <code>csv = TRUE</code> (default)
+a 'file_names_info.csv' file with the same information as the output data frame is also saved in the consolidated directory.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>References</h3>
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fix_wavs</code> for making sound files readable in R
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">{
+# save wav file examples
+data(list = c("Phae.long1", "Phae.long2", "Phae.long3", "Phae.long4", "lbh_selec_table"))
+
+# create first folder with 2 sound files
+dir.create(file.path(tempdir(), "folder1"))
+writeWave(Phae.long1, file.path(tempdir(), "folder1", "Phae.long1.wav"))
+writeWave(Phae.long2, file.path(tempdir(), "folder1", "Phae.long2.wav"))
+
+# create second folder with 2 sound files
+dir.create(file.path(tempdir(), "folder2"))
+writeWave(Phae.long3, file.path(tempdir(), "folder2", "Phae.long3.wav"))
+writeWave(Phae.long4, file.path(tempdir(), "folder2", "Phae.long4.wav"))
+
+# consolidate in a single folder
+# consolidate(path = tempdir(), dest.path = tempdir())
+
+# check this folder
+tempdir()
+}
+
+</code></pre>
+
+
+</div>

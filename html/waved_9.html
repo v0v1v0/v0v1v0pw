@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>FWaveD</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>FWaveD</h2>
+
+<h3>Description</h3>
+
+<p>Computes the Forward WaveD Transform.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">FWaveD(y,g=1,L=3,deg=3,F=(log2(length(y))-1),thr=rep(0,log2(length(y))),SOFT=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Sample of <code class="reqn">f*g</code> + (Gaussian noise), a vector of dyadic length 
+(i.e. <code class="reqn">2^{J-1}</code> where J is the largest resolution level). 
+Here f is the target function, g is the convolution kernel.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>g</code></td>
+<td>
+<p>Sample of <code class="reqn">g</code> or <code class="reqn">g</code> +  (Gaussian noise), same length as yobs.
+The default is the Dirac mass at 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>Lowest resolution level; the default is 3.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>deg</code></td>
+<td>
+<p>The degree of the Meyer wavelet, either 1, 2, or 3 (the default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>F</code></td>
+<td>
+<p>Finest resolution level; the default is the data-driven choice j1
+(see Value below).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thr</code></td>
+<td>
+<p>A vector of length <code class="reqn">F-L+1</code>, giving thresholds at each resolution levels <code class="reqn">L,L+1,\ldots,F</code>; default is maxiset threshold.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SOFT</code></td>
+<td>
+<p>if SOFT=TRUE, uses the soft thresholding policy as opposed to the
+hard (SOFT=FALSE, the default).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a vector of wavelet coefficients of length n (the same length as y),
+the last <code class="reqn">n/2</code> entries are wavelet coefficients at resolution level <code class="reqn">J-1</code>, where
+<code class="reqn">J = \log_2(n)</code>; the <code class="reqn">n/4</code> entries before that are the wavelet coefficients at
+resolution level <code class="reqn">J-2</code>, and so on until level L. In addition the <code class="reqn">2^L</code> entries
+are scaling coefficients at coarse level <code class="reqn">C=L</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Johnstone, I., Kerkyacharian, G., Picard, D. and Raimondo, M.  (2004), 
+'Wavelet deconvolution in a periodic
+setting', <em> Journal of the Royal Statistical Society, Series B</em> <b>
+66</b>(3),547–573.  with discussion pp.627–652.
+</p>
+<p>Raimondo, M. and Stewart, M. (2006),
+‘The WaveD Transform in R’, preprint, School and Mathematics and Statistics,
+University of Sydney.</p>
+
+
+<h3>See Also</h3>
+
+<p><code>WaveD</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(waved)
+data=waved.example(TRUE,FALSE)
+lidar.w=FWaveD(data$lidar.blur,data$g)
+</code></pre>
+
+
+</div>

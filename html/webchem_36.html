@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_wdid</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get Wikidata Item ID</h2>
+
+<h3>Description</h3>
+
+<p>Search www.wikidata.org for wikidata item identifiers.  Note that this search
+is currently not limited to chemical substances, so be sure to check your
+results.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_wdid(
+  query,
+  match = c("best", "first", "all", "ask", "na"),
+  verbose = getOption("verbose"),
+  language = "en"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>character; The searchterm</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>match</code></td>
+<td>
+<p>character; How should multiple hits be handeled? 'all' returns
+all matched IDs, 'first' only the first match, 'best' the best matching (by
+name) ID, 'ask' is a interactive mode and the user is asked for input, na'
+returns NA if multiple hits are found.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical; print message during processing to console?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>character; the language to search in</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>if match = 'all' a list with ids, otherwise a dataframe with 4 columns:
+id, matched text, string distance to match and the queried string
+</p>
+
+
+<h3>Note</h3>
+
+<p>Only matches in labels are returned.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+get_wdid('Triclosan', language = 'de')
+get_wdid('DDT')
+get_wdid('DDT', match = 'all')
+
+# multiple inputs
+comps &lt;- c('Triclosan', 'Glyphosate')
+get_wdid(comps)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

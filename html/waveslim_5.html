@@ -1,0 +1,209 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>afb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Filter Banks for Dual-Tree Wavelet Transforms</h2>
+
+<h3>Description</h3>
+
+<p>Analysis and synthesis filter banks used in dual-tree wavelet algorithms.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">afb(x, af)
+
+afb2D(x, af1, af2 = NULL)
+
+afb2D.A(x, af, d)
+
+sfb(lo, hi, sf)
+
+sfb2D(lo, hi, sf1, sf2 = NULL)
+
+sfb2D.A(lo, hi, sf, d)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>vector or matrix of observations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>af</code></td>
+<td>
+<p>analysis filters.  First element of the list is the low-pass
+filter, second element is the high-pass filter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>af1, af2</code></td>
+<td>
+<p>analysis filters for the first and second dimension of a 2D
+array.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sf</code></td>
+<td>
+<p>synthesis filters.  First element of the list is the low-pass
+filter, second element is the high-pass filter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sf1, sf2</code></td>
+<td>
+<p>synthesis filters for the first and second dimension of a 2D
+array.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d</code></td>
+<td>
+<p>dimension of filtering (d = 1 or 2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lo</code></td>
+<td>
+<p>low-frequecy coefficients</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hi</code></td>
+<td>
+<p>high-frequency coefficients</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The functions <code>afb2D.A</code> and <code>sfb2D.A</code> implement the convolutions,
+either for analysis or synthesis, in one dimension only.  Thus, they are the
+workhorses of <code>afb2D</code> and <code>sfb2D</code>.  The output for the analysis
+filter bank along one dimension (<code>afb2D.A</code>) is a list with two elements
+</p>
+ <dl>
+<dt>lo</dt>
+<dd>
+<p>low-pass subband</p>
+</dd> <dt>hi</dt>
+<dd>
+<p>high-pass subband</p>
+</dd> </dl>
+<p> where
+the dimension of analysis will be half its original length.  The output for
+the synthesis filter bank along one dimension (<code>sfb2D.A</code>) will be the
+output array, where the dimension of synthesis will be twice its original
+length.
+</p>
+
+
+<h3>Value</h3>
+
+<p>In one dimension the output for the analysis filter bank
+(<code>afb</code>) is a list with two elements </p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>lo</code></td>
+<td>
+<p>Low frequecy output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hi</code></td>
+<td>
+<p>High frequency output</p>
+</td>
+</tr>
+</table>
+<p> and the output for the synthesis filter
+bank (<code>sfb</code>) is the output signal.
+</p>
+<p>In two dimensions the output for the analysis filter bank (<code>afb2D</code>) is
+a list with four elements </p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>lo</code></td>
+<td>
+<p>low-pass subband</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hi[[1]]</code></td>
+<td>
+<p>'lohi'
+subband</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hi[[2]]</code></td>
+<td>
+<p>'hilo' subband</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hi[[3]]</code></td>
+<td>
+<p>'hihi' subband</p>
+</td>
+</tr>
+</table>
+<p> and
+the output for the synthesis filter bank (<code>sfb2D</code>) is the output array.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Matlab: S. Cai, K. Li and I. Selesnick; R port: B. Whitcher
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## EXAMPLE: afb, sfb
+af = farras()$af
+sf = farras()$sf
+x = rnorm(64)
+x.afb = afb(x, af)
+lo = x.afb$lo
+hi = x.afb$hi
+y = sfb(lo, hi, sf)
+err = x - y
+max(abs(err))
+
+## EXAMPLE: afb2D, sfb2D
+x = matrix(rnorm(32*64), 32, 64)
+af = farras()$af
+sf = farras()$sf
+x.afb2D = afb2D(x, af, af)
+lo = x.afb2D$lo
+hi = x.afb2D$hi
+y = sfb2D(lo, hi, sf, sf)
+err = x - y
+max(abs(err))
+
+## Example: afb2D.A, sfb2D.A
+x = matrix(rnorm(32*64), 32, 64)
+af = farras()$af
+sf = farras()$sf
+x.afb2D.A = afb2D.A(x, af, 1)
+lo = x.afb2D.A$lo
+hi = x.afb2D.A$hi
+y = sfb2D.A(lo, hi, sf, 1)
+err = x - y
+max(abs(err))
+</code></pre>
+
+
+</div>

@@ -1,0 +1,347 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>walsGLM</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Weighted Average Least Squares for Generalized Linear Models</h2>
+
+<h3>Description</h3>
+
+<p>Performs model averaging of generalized linear models (GLMs) using the
+Weighted-Average Least Squares method described in De Luca et al. (2018).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">walsGLM(x, ...)
+
+## S3 method for class 'formula'
+walsGLM(
+  formula,
+  family,
+  data,
+  subset = NULL,
+  na.action = NULL,
+  weights = NULL,
+  offset = NULL,
+  prior = weibull(),
+  controlInitGLM = controlGLM(),
+  model = TRUE,
+  keepY = TRUE,
+  keepX = FALSE,
+  iterate = FALSE,
+  tol = 1e-06,
+  maxIt = 50,
+  nIt = NULL,
+  verbose = FALSE,
+  ...
+)
+
+## S3 method for class 'matrix'
+walsGLM(
+  x,
+  x2,
+  y,
+  family,
+  subset = NULL,
+  na.action = NULL,
+  weights = NULL,
+  offset = NULL,
+  prior = weibull(),
+  controlInitGLM = controlGLM(),
+  keepY = TRUE,
+  keepX = FALSE,
+  iterate = FALSE,
+  tol = 1e-06,
+  maxIt = 50,
+  nIt = NULL,
+  verbose = FALSE,
+  ...
+)
+
+## Default S3 method:
+walsGLM(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Design matrix of focus regressors. Usually includes a constant
+(column full of 1s) and can be generated using <code>model.matrix</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments for workhorse <code>walsGLMfit</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>an object of class <code>"Formula"</code>
+(or one that can be coerced to that class, e.g. <code>"formula"</code>):
+a symbolic description of the model to be fitted.
+The details of model specification are given under ‘Details’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>Object of class <code>"familyWALS"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>an optional data frame, list or environment
+(or object coercible by <code>as.data.frame</code> to a data frame)
+containing the variables in the model. If not found in <code>data</code>, the variables
+are taken from <code>environment(formula)</code>, typically the environment which
+the function is called from.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subset</code></td>
+<td>
+<p>an optional vector specifying a subset of observations to be
+used in the fitting process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.action</code></td>
+<td>
+<p><strong>not implemented yet.</strong></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p><strong>not implemented yet.</strong></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+<p><strong>not implemented yet.</strong></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior</code></td>
+<td>
+<p>Object of class <code>"familyPrior"</code>. For example
+<code>weibull</code> or <code>laplace</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>controlInitGLM</code></td>
+<td>
+<p>Controls estimation of starting values for one-step ML,
+see <code>controlGLM</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>if <code>TRUE</code> (default), then the model.frame is stored in
+the return.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepY</code></td>
+<td>
+<p>if <code>TRUE</code> (default), then the response is stored in
+the return.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepX</code></td>
+<td>
+<p>if <code>TRUE</code>, then the model matrices are stored in the return.
+the return.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iterate</code></td>
+<td>
+<p>if <code>TRUE</code> then the WALS algorithm is iterated using the previous
+estimates as starting values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>Only used if <code>iterate = TRUE</code> and <code>nIt = NULL</code>.
+If the Euclidean distance between the previous and current coefficient vector
+divided by the square root of the length of the vector falls below <code>tol</code>,
+then the algorithm stops. See <code>walsGLMfitIterate</code> for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxIt</code></td>
+<td>
+<p>Only used if <code>iterate = TRUE</code> and <code>nIt = NULL</code>. Aborts
+iterative fitting when number of iterations exceed <code>maxIt</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nIt</code></td>
+<td>
+<p>Only used if <code>iterate = TRUE</code>. If this is specified, then
+<code>tol</code> is ignored and the algorithm iterates <code>nIt</code> times. This option
+should not be used unless the user has a specific reason to run the algorithm
+<code>nIt</code> times, e.g. for replication purposes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>If <code>verbose = TRUE</code>, then it prints the iteration process
+(only relevant if <code>iterate = TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x2</code></td>
+<td>
+<p>Design matrix of auxiliary regressors. Usually does not include
+a constant column and can also be generated using <code>model.matrix</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Response as vector.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Computes WALS estimates when focus regressors (X1) are present in all
+submodels and model averaging takes place over the auxiliary regressors (X2).
+</p>
+<p>Formulas typically contain two parts, i.e. they are of the form
+"<code>y ~ X11 + X12 | X21 + X22</code>", where the variables before "<code>|</code>" are
+the focus regressors (includes a constant by default) and the ones after
+"<code>|</code>" are the auxiliary regressors. If only a one-part formula is
+specified, then all regressors are considered as auxiliary regressors and only
+a constant is employed as focus regressor, i.e.
+"<code>y ~ X1 + X2</code>" is equivalent to "<code>y ~ 1 | X1 + X2</code>".
+</p>
+<p><strong>WARNING:</strong> Interactions in formula do work work properly yet.
+It is recommended to manually create the interactions beforehand and then
+to insert them as 'linear terms' in the formula.
+</p>
+<p><code>walsGLM.default()</code> raises an error if <code>x</code> is not an object of class
+<code>"matrix"</code> or a class that extends <code>"matrix"</code>. Otherwise it calls
+<code>walsGLM.matrix()</code>. It is a modified version of <code>glmboost.default</code>
+from the <code>mboost</code> package version 2.9-8 (2023-09-06) (Hofner et al. 2014).
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>walsGLM.formula()</code> returns an object of class <code>"walsGLM"</code>
+which inherits from <code>"wals"</code>. This is a list that contains
+all elements returned from <code>walsGLMfitIterate</code> and additionally
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>cl</code></td>
+<td>
+<p>Call of the function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p><code>formula</code> used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>terms</code></td>
+<td>
+<p>List containing the model terms of the focus and auxiliary
+regressors separately, as well as for the full model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>levels</code></td>
+<td>
+<p>List containing the levels of the focus and auxiliary
+regressors separately, as well as for the full model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>contrasts</code></td>
+<td>
+<p>List containing the contrasts of the design matrices of
+focus and auxiliary regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>If <code>model = TRUE</code>, contains the model frame.</p>
+</td>
+</tr>
+</table>
+<p>See returns of <code>walsGLMfit</code> and <code>walsGLMfitIterate</code>
+for more details.
+</p>
+<p><code>walsGLM.matrix()</code> returns an object of class
+<code>"walsGLMmatrix"</code>, which inherits from <code>"walsGLM"</code>, <code>"walsMatrix"</code>
+and <code>"wals"</code>. This is a list that contains all elements returned from
+<code>walsGLMfitIterate</code> and additionally the call in <code>cl</code>.
+</p>
+<p><code>walsGLM.default()</code> raises an error if <code>x</code> is not an object
+of class <code>"matrix"</code> or a class that extends <code>"matrix"</code>. Otherwise
+returns an object of class <code>"walsGLMmatrix"</code>. See above for more details.
+</p>
+
+
+<h3>References</h3>
+
+<p>De Luca G, Magnus JR, Peracchi F (2018).
+“Weighted-average least squares estimation of generalized linear models.”
+<em>Journal of Econometrics</em>, <b>204</b>(1), 1–17.
+<a href="https://doi.org/10.1016/j.jeconom.2017.12.007">doi:10.1016/j.jeconom.2017.12.007</a>.<br><br> Hofner B, Mayr A, Robinzonov N, Schmid M (2014).
+“Model-based Boosting in R: A Hands-on Tutorial Using the R Package mboost.”
+<em>Computational Statistics</em>, <b>29</b>, 3–35.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("HMDA", package = "AER")
+fitBinomial &lt;- walsGLM(deny ~ pirat + hirat + lvrat + chist + mhist + phist |
+                       selfemp + afam, data = HMDA, family = binomialWALS(),
+                       prior = weibull())
+summary(fitBinomial)
+
+data("NMES1988", package = "AER")
+fitPoisson &lt;- walsGLM(emergency ~ health + chronic + age + gender |
+                      I((age^2)/10) + married + region, data = NMES1988,
+                      family = poissonWALS(), prior = laplace())
+summary(fitPoisson)
+
+## Example for walsGLM.matrix()
+data("HMDA", package = "AER")
+X &lt;- model.matrix(deny ~ pirat + hirat + lvrat + chist + mhist + phist + selfemp + afam,
+                  data = HMDA)
+X1 &lt;- X[,c("(Intercept)", "pirat", "hirat", "lvrat", "chist2", "chist3",
+        "chist4", "chist5", "chist6", "mhist2", "mhist3", "mhist4", "phistyes")]
+X2 &lt;- X[,c("selfempyes", "afamyes")]
+y &lt;- HMDA$deny
+fit &lt;- walsGLM(X1, X2, y, family = binomialWALS(), prior = weibull())
+summary(fit)
+
+</code></pre>
+
+
+</div>

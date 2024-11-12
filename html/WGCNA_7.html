@@ -1,0 +1,173 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>adjacency</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Calculate network adjacency </h2>
+
+<h3>Description</h3>
+
+<p>Calculates (correlation or distance) network adjacency from given expression data or from a similarity.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">adjacency(datExpr, 
+          selectCols = NULL, 
+          type = "unsigned", 
+          power = if (type=="distance") 1 else 6,
+          corFnc = "cor", corOptions = list(use = "p"),
+          weights = NULL,
+          distFnc = "dist", distOptions = "method = 'euclidean'",
+          weightArgNames = c("weights.x", "weights.y"))
+
+adjacency.fromSimilarity(similarity, 
+                         type = "unsigned", 
+                         power = if (type=="distance") 1 else 6)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datExpr</code></td>
+<td>
+<p> data frame containing expression data. Columns correspond to genes and rows to
+samples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>similarity</code></td>
+<td>
+<p>a (signed) similarity matrix: square, symmetric matrix with entries between -1 and 1. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>selectCols</code></td>
+<td>
+<p> for correlation networks only (see below); 
+can be used to select genes whose adjacencies will be calculated. Should be either a
+numeric vector giving the indices of the genes to be used, or a boolean vector indicating which genes are
+to be used. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>network type. Allowed values are (unique abbreviations of) <code>"unsigned"</code>,
+<code>"signed"</code>, <code>"signed hybrid"</code>, <code>"distance"</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>soft thresholding power. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corFnc</code></td>
+<td>
+<p> character string specifying the function to be used to calculate co-expression
+similarity for correlation networks. 
+Defaults to Pearson correlation. Any function returning values between -1 and 1 can be used. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corOptions</code></td>
+<td>
+<p> character string or a list specifying additional arguments to be passed to the function given
+by <code>corFnc</code>. Use <code>"use = 'p', method = 'spearman'"</code> or, equivalently, 
+<code>list(use = 'p', method = 'spearman')</code> to obtain Spearman correlation.   </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>optional observation weights for <code>datExpr</code> to be used in correlation calculation.
+A matrix of the same dimensions as <code>datExpr</code>, containing non-negative weights. Only used with Pearson
+correlation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distFnc</code></td>
+<td>
+<p> character string specifying the function to be used to calculate co-expression
+similarity for distance networks. Defaults to the function <code>dist</code>. 
+Any function returning non-negative values can be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distOptions</code></td>
+<td>
+<p> character string or a list specifying additional arguments to be passed to the function given
+by <code>distFnc</code>. For example, when the function  <code>dist</code> is used, the argument <code>method</code>
+can be used to specify various ways of computing the distance. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weightArgNames</code></td>
+<td>
+<p>character vector of length 2 giving the names of the arguments to <code>corFnc</code> that
+represent weights for variable x and y. Only used if <code>weights</code> are non-NULL.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The argument <code>type</code> determines whether a correlation (<code>type</code> one of <code>"unsigned"</code>,
+<code>"signed"</code>, <code>"signed hybrid"</code>), or a distance network (<code>type</code> equal <code>"distance"</code>) will
+be calculated. In correlation networks the adajcency is constructed from correlations (values between -1 and
+1, with high numbers meaning high similarity). In distance networks, the adjacency is constructed from
+distances (non-negative values, high values mean low similarity). 
+</p>
+<p>The function calculates the similarity of columns (genes) in <code>datExpr</code> by calling the function
+given in <code>corFnc</code> (for correlation networks) or <code>distFnc</code> (for distance networks), 
+transforms the similarity according to <code>type</code> and raises it to <code>power</code>,
+resulting in a weighted network adjacency matrix. If <code>selectCols</code> is given, the <code>corFnc</code> function
+will be given arguments <code>(datExpr, datExpr[selectCols], ...)</code>; hence the returned adjacency will have
+rows corresponding to all genes and columns corresponding to genes selected by <code>selectCols</code>.
+</p>
+<p>Correlation and distance are transformed as follows: for <code>type = "unsigned"</code>, adjacency = |cor|^power;
+for <code>type = "signed"</code>, adjacency = (0.5 * (1+cor) )^power; for <code>type = "signed hybrid"</code>, adjacency
+= cor^power if cor&gt;0 and 0 otherwise; and for <code>type = "distance"</code>, adjacency =
+(1-(dist/max(dist))^2)^power.
+</p>
+<p>The function <code>adjacency.fromSimilarity</code> inputs a similarity matrix, that is it skips the correlation
+calculation step but is otherwise identical.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Adjacency matrix of dimensions <code>ncol(datExpr)</code> times <code>ncol(datExpr)</code> (or the same dimensions 
+as <code>similarity</code>). If <code>selectCols</code> was
+given, the number of columns will be the length (if numeric) or sum (if boolean) of <code>selectCols</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>When calculated from the <code>datExpr</code>, the network is always calculated among the columns of 
+<code>datExpr</code> irrespective of whether a correlation or a distance network is requested. </p>
+
+
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder and Steve Horvath </p>
+
+
+<h3>References</h3>
+
+<p>Bin Zhang and Steve Horvath (2005) A General Framework for Weighted Gene Co-Expression
+Network Analysis, Statistical Applications in Genetics and Molecular Biology, Vol. 4 No. 1, Article 17 
+</p>
+<p>Langfelder P, Horvath S (2007) Eigengene networks for studying the relationships between co-expression
+modules. BMC Systems Biology 2007, 1:54
+</p>
+
+
+</div>

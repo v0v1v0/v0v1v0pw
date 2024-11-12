@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>filterLiColDeList</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Filter lines(rows) and/or columns from all suitable elements of list</h2>
+
+<h3>Description</h3>
+
+<p>Filter all elements of list (or S3-object) according to criteria designed to one selected reference-element of the list.
+All simple vectors, matrix, data.frames and 3-dimensional arrays will be checked if matching number of rows and/or columns to decide if they should be filtered the same way.
+If the reference element has same number of rows and columns simple (1-dimensional) vectors won't be filtered since it not clear if this should be done to lines or columns.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">filterLiColDeList(
+  lst,
+  useLines,
+  useCols = NULL,
+  ref = 1,
+  silent = FALSE,
+  callFrom = NULL,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lst</code></td>
+<td>
+<p>(list or S3 object) main input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useLines</code></td>
+<td>
+<p>(integer, logcial or character) vector to assign lines to keep when filtering along lines;
+set to <code>NULL</code> for no filtering; if '<code>allNA</code>' all lines composed uniquely of <code>NA</code> values will be removed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useCols</code></td>
+<td>
+<p>(integer, logcial or character) vector for filtering columns; set to <code>NULL</code> for no filtering; if '<code>allNA</code>' all columns uniquely <code>NA</code> values will be removed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ref</code></td>
+<td>
+<p>(integer) index for designing the elment of 'lst' to take as reference for checking which other list-elements have suitable number of rows or columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is used eg in package wrProteo to simultaneaously filter raw and transformed data.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns the correct(ed) input (object of same class, of same length)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>moderTest2grp</code> for single comparisons, <code>lmFit</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">lst1 &lt;- list(m1=matrix(11:18,ncol=2), m2=matrix(21:30,ncol=2), indR=31:34,
+  m3=matrix(c(21:23,NA,25:27,NA),ncol=2))
+## here $m2 has more lines than $m1, and thus will be ignored when ref=1
+filterLiColDeList(lst1, useLines=2:3)
+filterLiColDeList(lst1, useLines="allNA", ref=4)
+
+</code></pre>
+
+
+</div>

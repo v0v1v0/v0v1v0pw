@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>.imputeNA</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Basic NA-imputaton (main)</h2>
+
+<h3>Description</h3>
+
+<p>This (lower-level) function allows to perfom the basic NA-imputaton.
+Note, at this point the information from argument <code>gr</code> is not used.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">.imputeNA(
+  dat,
+  gr = NULL,
+  impParam,
+  exclNeg = TRUE,
+  inclLowValMod = TRUE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(matrix or data.frame) main data (may contain <code>NA</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gr</code></td>
+<td>
+<p>(character or factor) grouping of columns of <code>dat</code>, replicate association</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>impParam</code></td>
+<td>
+<p>(numeric) 1st for mean; 2nd for sd; 3rd for seed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclNeg</code></td>
+<td>
+<p>(logical) exclude negative</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inclLowValMod</code></td>
+<td>
+<p>(logical) label on x-axis on plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) supplemental messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a list with <code>$data</code> and <code>$datImp</code>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>for more complex treatment <code>matrixNAneighbourImpute</code>;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">dat1 &lt;- matrix(11:22, ncol=4)
+dat1[3:4] &lt;- NA
+.imputeNA(dat1, impParam=c(mean(dat1, na.rm=TRUE), 0.1))
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Theil_T</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Theil T</h2>
+
+<h3>Description</h3>
+
+<p>Computes <code>Theil_T</code> inequality measure of a given variable taking into account weights.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Theil_T(X, W = rep(1, length(X)), zeroes = "include")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>is a data vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p>is a vector of weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zeroes</code></td>
+<td>
+<p>defines what to do with zeroes in the data vector. Possible options are "remove" and "include". See Details for more.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Theil T index is defined as:
+</p>
+<p style="text-align: center;"><code class="reqn">T_{T} =  T_{\alpha=1} =  \frac{1}{N}  \sum_{i=1}^N  \frac{ x_{i} }{\mu} ln \big( \frac{ x_{i} }{\mu} \big)</code>
+</p>
+
+<p>where </p>
+<p style="text-align: center;"><code class="reqn">\mu = \frac{1}{N} \sum_{i=1}^N x_{i}</code>
+</p>
+
+<p>Formally, Theil index is defined for positive values due to logarithms.
+Nevertheless, in data analysis zero values may occur.
+There are two way we can deal with them.
+Option "remove" discard these X's and corresponding weights.
+Option "include" puts <code class="reqn">0\log{0=}0</code> due to limiting property of <code class="reqn">p\log{p}</code> in zero preserving zero value in dataset.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The value of <code>Theil_T</code> coefficient.
+</p>
+
+
+<h3>References</h3>
+
+<p>Serebrenik A., van den Brand M.: Theil index for aggregation of software metrics values. 26th IEEE International Conference on Software Maintenance. IEEE Computer Society.
+</p>
+<p>Conceição P., Ferreira P.: (2000) The Young Person’s Guide to the Theil Index: Suggesting Intuitive Interpretations and Exploring Analytical Applications
+</p>
+<p>OECD: (2020) Regions and Cities at a Glance 2020, Chapter: Indexes and estimation techniques
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Compare weighted and unweighted result
+X=1:10
+W=1:10
+Theil_T(X)
+Theil_T(X,W)
+
+data(Tourism)
+# Theil T coefficient for Total expenditure with sample weights
+X=Tourism$Total_expenditure
+W=Tourism$Sample_weight
+Theil_T(X,W)
+
+
+
+</code></pre>
+
+
+</div>

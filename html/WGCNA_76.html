@@ -1,0 +1,259 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cor</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Fast calculations of Pearson correlation. </h2>
+
+<h3>Description</h3>
+
+<p>These functions implements a faster calculation of (weighted) Pearson correlation. 
+</p>
+<p>The speedup against the R's standard <code>cor</code> function will be substantial particularly
+if the input matrix only contains a small number of missing data. If there are no missing data, or the
+missing data are numerous, the speedup will be smaller.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cor(x, y = NULL, 
+    use = "all.obs", 
+    method = c("pearson", "kendall", "spearman"),
+    weights.x = NULL,
+    weights.y = NULL,
+    quick = 0, 
+    cosine = FALSE, 
+    cosineX = cosine,
+    cosineY = cosine, 
+    drop = FALSE,
+    nThreads = 0, 
+    verbose = 0, indent = 0)
+
+corFast(x, y = NULL, 
+    use = "all.obs", 
+    quick = 0, nThreads = 0, 
+    verbose = 0, indent = 0)
+
+cor1(x, use = "all.obs", verbose = 0, indent = 0)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> a numeric vector or a matrix. If <code>y</code> is null, <code>x</code> must be a matrix. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p> a numeric vector or a matrix. If not given, correlations of columns of <code>x</code> will be
+calculated. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use</code></td>
+<td>
+<p> a character string specifying the handling of missing data. The fast calculations currently
+support <code>"all.obs"</code> and <code>"pairwise.complete.obs"</code>; for other options, see R's standard
+correlation function <code>cor</code>.  Abbreviations are allowed. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p> a character string specifying the method to be used. Fast calculations are currently
+available only for <code>"pearson"</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights.x</code></td>
+<td>
+<p>optional observation weights for <code>x</code>. A matrix of the same dimensions as <code>x</code>, 
+containing non-negative weights. Only used in fast calculations: <code>methods</code> must be <code>"pearson"</code> and
+<code>use</code> must be one of <code>"all.obs", "pairwise.complete.obs"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights.y</code></td>
+<td>
+<p>optional observation weights for <code>y</code>. A matrix of the same dimensions as <code>y</code>, 
+containing non-negative weights. Only used in fast calculations: <code>methods</code> must be <code>"pearson"</code> and 
+<code>use</code> must be one of <code>"all.obs", "pairwise.complete.obs"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quick</code></td>
+<td>
+<p> real number between 0 and 1 that controls the precision of handling of missing data in the
+calculation of correlations. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cosine</code></td>
+<td>
+<p> logical: calculate cosine correlation? Only valid for <code>method="pearson"</code>.
+Cosine correlation is similar to Pearson correlation but the mean subtraction is not performed. The result
+is the cosine of the angle(s) between (the columns of) <code>x</code> and <code>y</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cosineX</code></td>
+<td>
+<p> logical: use the cosine calculation for <code>x</code>? This setting does not affect <code>y</code>
+and can be used to give a hybrid cosine-standard correlation. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cosineY</code></td>
+<td>
+<p> logical: use the cosine calculation for <code>y</code>? This setting does not affect <code>x</code>
+and can be used to give a hybrid cosine-standard correlation. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drop</code></td>
+<td>
+<p>logical: should the result be turned into a vector if it is effectively one-dimensional? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nThreads</code></td>
+<td>
+<p> non-negative integer specifying the number of parallel threads to be used by certain
+parts of correlation calculations. 
+This option only has an effect on systems on which a POSIX thread
+library is available (which currently includes Linux and Mac OSX, but excludes Windows).
+If zero, the number of online processors will be used if it can be determined dynamically, otherwise
+correlation calculations will use 2 threads. 
+Note that this option does not affect what is usually the most expensive part of the
+calculation, namely the matrix multiplication. The matrix multiplication is carried out by BLAS routines provided by R;
+these can be sped up by installing a fast BLAS and making R use it. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> Controls the level of verbosity. Values above zero will cause a small amount of
+diagnostic messages to be printed. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> Indentation of printed diagnostic messages. Each unit above zero adds two spaces.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The fast calculations are currently implemented only for <code>method="pearson"</code> and <code>use</code> either
+<code>"all.obs"</code> or <code>"pairwise.complete.obs"</code>. 
+The <code>corFast</code> function is a wrapper that calls the function <code>cor</code>. If the combination of
+<code>method</code> and <code>use</code> is implemented by the fast calculations, the fast code is executed; 
+otherwise, R's own correlation <code>cor</code> is executed.
+</p>
+<p>The argument <code>quick</code> specifies the precision of handling of missing data. Zero will cause all
+calculations to be executed precisely, which may be significantly slower than calculations without
+missing data. Progressively higher values will speed up the
+calculations but introduce progressively larger errors. Without missing data, all column means and
+variances can be pre-calculated before the covariances are calculated. When missing data are present,
+exact calculations require the column means and variances to be calculated for each covariance. The
+approximate calculation uses the pre-calculated mean and variance and simply ignores missing data in the
+covariance calculation. If the number of missing data is high, the pre-calculated means and variances may
+be very different from the actual ones, thus potentially introducing large errors. 
+The <code>quick</code> value times the
+number of rows specifies the maximum difference in the 
+number of missing entries for mean and variance calculations on the one hand and covariance on the other   
+hand that will be tolerated before a recalculation is triggered. The hope is that if only a few missing
+data are treated approximately, the error introduced will be small but the potential speedup can be
+significant. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>The matrix of the Pearson correlations of the columns of <code>x</code> with columns of <code>y</code> if <code>y</code>
+is given, and the correlations of the columns of <code>x</code> if <code>y</code> is not given. 
+</p>
+
+
+<h3>Note</h3>
+
+ 
+<p>The implementation uses the BLAS library matrix multiplication function for the most expensive step of
+the calculation. Using a tuned, architecture-specific BLAS may significantly improve the performance of
+this function.
+</p>
+<p>The values returned by the corFast function may differ from the values returned by R's function
+<code>cor</code> by rounding errors on the order of 1e-15. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder </p>
+
+
+<h3>References</h3>
+
+<p>Peter Langfelder, Steve Horvath (2012)
+Fast R Functions for Robust Correlations and Hierarchical Clustering.
+Journal of Statistical Software, 46(11), 1-17.
+<a href="https://www.jstatsoft.org/v46/i11/">https://www.jstatsoft.org/v46/i11/</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p> R's standard Pearson correlation function <code>cor</code>. </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Test the speedup compared to standard function cor
+
+# Generate a random matrix with 200 rows and 1000 columns
+
+set.seed(10)
+nrow = 100;
+ncol = 500;
+data = matrix(rnorm(nrow*ncol), nrow, ncol);
+
+## First test: no missing data
+
+system.time( {corStd = stats::cor(data)} );
+
+system.time( {corFast = cor(data)} );
+
+all.equal(corStd, corFast)
+
+# Here R's standard correlation performs very well.
+
+# We now add a few missing entries.
+
+data[sample(nrow, 10), 1] = NA;
+
+# And test the correlations again...
+
+system.time( {corStd = stats::cor(data, use ='p')} );
+
+system.time( {corFast = cor(data, use = 'p')} );
+
+all.equal(corStd, corFast)
+
+# Here the R's standard correlation slows down considerably
+# while corFast still retains it speed. Choosing
+# higher ncol above will make the difference more pronounced.
+
+</code></pre>
+
+
+</div>

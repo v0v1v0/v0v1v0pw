@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>addPlots</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read Word document with bookmarks and create other Word document with rendered plots in place.</h2>
+
+<h3>Description</h3>
+
+<p>This function takes a list of functions creating plots and insert into Word document on places with corresponding bookmarks.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">addPlots(
+  docxIn,
+  docxOut,
+  Plots = list(),
+  width = 6,
+  height = 6,
+  res = 300,
+  style = NULL,
+  debug = F,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>docxIn</code></td>
+<td>
+<p>String of length one; path to Word file with bookmarks OR officer::rdocx object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>docxOut</code></td>
+<td>
+<p>String of length one; path for output Word file or NA</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Plots</code></td>
+<td>
+<p>Named list of functions (or plots - for plots which are stored as objects e.g., ggplot) creating plots to be inserted into the Word file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+<p>width of the plots in output in inches, either of length 1 (and will be recycled), or same length as Plots</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>height</code></td>
+<td>
+<p>height of the plots in output in inches, either of length 1 (and will be recycled), or same length as Plots</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res</code></td>
+<td>
+<p>see res parameter in <code>png</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>style</code></td>
+<td>
+<p>see style parameter in <code>body_add_img</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>Boolean of length one; If <code>True</code> then <code>browser()</code> is called at the beginning of the function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Parameters to be sent to other methods (<code>png</code>)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Path to the rendered Word file if the operation was successfull OR officer::rdocx object if docxOut is NA
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(ggplot2)
+Plots&lt;-list(plot1=function()plot(hp~wt,data=mtcars,col=cyl),
+ plot2=function()print(ggplot(mtcars,aes(x=wt,y=hp,col=as.factor(cyl)))+geom_point()))
+addPlots(
+ paste(examplePath(),'templates/templatePlots.docx',sep = ''),
+ paste(tempdir(),'/resultPlots.docx',sep = ''),
+ Plots,height=4)
+
+</code></pre>
+
+
+</div>

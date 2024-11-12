@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dwt.vt.val</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Variance Transformation Operation for Validation</h2>
+
+<h3>Description</h3>
+
+<p>Variance Transformation Operation for Validation
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dwt.vt.val(data, J, dwt, detrend = FALSE, backward = FALSE, verbose = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A list of response x and dependent variables dp.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>Specifies the depth of the decomposition. This must be a number less than or equal to log(length(x),2).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dwt</code></td>
+<td>
+<p>A class of "dwt" data. Output from dwt.vt().</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detrend</code></td>
+<td>
+<p>Detrend the input time series or just center, default (F).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>backward</code></td>
+<td>
+<p>Detrend the input time series or just center, default (F).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>A logical indicating if some “progress report” should be given.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of 8 elements: wf, method, boundary, pad, x (data), dp (data), dp.n (variance trasnformed dp), and S (covariance matrix).
+</p>
+
+
+<h3>References</h3>
+
+<p>Jiang, Z., Sharma, A., &amp; Johnson, F. (2020). Refining Predictor Spectral Representation Using Wavelet Theory for Improved Natural System Modeling. Water Resources Research, 56(3), e2019WR026962. doi:10.1029/2019wr026962
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(rain.mon)
+data(obs.mon)
+
+## response SPI - calibration
+SPI.cal &lt;- SPI.calc(window(rain.mon, start=c(1949,1), end=c(1979,12)),sc=12)
+#SPI.cal &lt;- SPEI::spi(window(rain.mon, start = c(1949, 1), end = c(1979, 12)), scale = 12)$fitted
+
+## create paired response and predictors dataset for each station
+data.list &lt;- list()
+for (id in seq_len(ncol(SPI.cal))) {
+  x &lt;- window(SPI.cal[, id], start = c(1950, 1), end = c(1979, 12))
+  dp &lt;- window(obs.mon, start = c(1950, 1), end = c(1979, 12))
+  data.list[[id]] &lt;- list(x = as.numeric(x), dp = matrix(dp, nrow = nrow(dp)))
+}
+
+## variance transformation - calibration
+dwt.list &lt;- lapply(data.list, function(x) {
+  dwt.vt(x, wf = "d4", J = 7, method = "dwt", pad = "zero", boundary = "periodic", cov.opt = "auto")
+})
+
+## response SPI - validation
+SPI.val &lt;- SPI.calc(window(rain.mon, start=c(1979,1), end=c(2009,12)),sc=12)
+#SPI.val &lt;- SPEI::spi(window(rain.mon, start = c(1979, 1), end = c(2009, 12)), scale = 12)$fitted
+
+## create paired response and predictors dataset for each station
+data.list &lt;- list()
+for (id in seq_len(ncol(SPI.val))) {
+  x &lt;- window(SPI.val[, id], start = c(1980, 1), end = c(2009, 12))
+  dp &lt;- window(obs.mon, start = c(1980, 1), end = c(2009, 12))
+  data.list[[id]] &lt;- list(x = as.numeric(x), dp = matrix(dp, nrow = nrow(dp)))
+}
+
+# variance transformation - validation
+dwt.list.val &lt;- lapply(
+  seq_len(length(data.list)),
+  function(i) dwt.vt.val(data.list[[i]], J = 7, dwt.list[[i]])
+)
+
+## plot original and reconstrcuted predictors for each station
+for (i in seq_len(length(dwt.list.val))) {
+  # extract data
+  dwt &lt;- dwt.list.val[[i]]
+  x &lt;- dwt$x # response
+  dp &lt;- dwt$dp # original predictors
+  dp.n &lt;- dwt$dp.n # variance transformed predictors
+
+  plot.ts(cbind(x, dp))
+  plot.ts(cbind(x, dp.n))
+}
+</code></pre>
+
+
+</div>

@@ -1,0 +1,197 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wlm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Wavelet linear models</h2>
+
+<h3>Description</h3>
+
+<p>Fits wavelet linear models. Also the generator function of the <code>wlm</code> class, which
+inherits from the <code>list</code> class.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wlm(
+  dat,
+  times,
+  resp,
+  pred,
+  norm,
+  scale.min = 2,
+  scale.max.input = NULL,
+  sigma = 1.05,
+  f0 = 1
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>A list of matrices representing the data (or in the case of one location, a list of
+vectors). All the same dimensions (respectively, lengths)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>times</code></td>
+<td>
+<p>The times at which measurements were made, spacing 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resp</code></td>
+<td>
+<p>Index in dat for the response variable of the model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pred</code></td>
+<td>
+<p>Vector of indices in dat for the predictor variables of the model; must differ from <code>resp</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>norm</code></td>
+<td>
+<p>The normalization of wavelet transforms to use. One of "none", "powall", "powind". See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.min</code></td>
+<td>
+<p>The smallest scale of fluctuation that will be examined. At least 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.max.input</code></td>
+<td>
+<p>The largest scale of fluctuation that will be examined. Note that if this is set too high relative to the length of the timeseries it will be truncated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>The ratio of each time scale examined relative to the next timescale. Greater than 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f0</code></td>
+<td>
+<p>The ratio of the period of fluctuation to the width of the envelope</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Normalization is as specified in the documentation for <code>coh</code>, HOWEVER, only
+the "<code>powall</code>" option is currently implemented, other choices throw an error. Details 
+are specified in appendices S7 and S9 of Sheppard et al, 2018. The output <code>modval</code>
+is v in appendix S7, and <code>coefs</code> are the betas in equation 12 in that appendix.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>wlm</code> returns an object of class <code>wlm</code>. Slots are:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>The input data list, but reordered and subsetted so the response is first and only used predictors are included</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>times</code></td>
+<td>
+<p>The times associated with the data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>norm</code></td>
+<td>
+<p>The input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wtopt</code></td>
+<td>
+<p>The inputted wavelet transform options scale.min, scale.max.input, sigma, f0 in a list</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wts</code></td>
+<td>
+<p>List of transforms, normalized as specified in <code>norm</code>. Same length as the output <code>dat</code>, each entry a locations x time x timescales array of transforms.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timescales</code></td>
+<td>
+<p>The timescales associated with the wavelet transforms of the data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coefs</code></td>
+<td>
+<p>A list (data frame, actually) of complex vectors, each of length the same 
+as <code>timescales</code>. These are the model coefficients (which depend on timescale), and 
+correspond to the <code>wts</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>modval</code></td>
+<td>
+<p>The model values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coher</code></td>
+<td>
+<p>Appropriately normalized version of coherence of the model and response transforms. See details.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Thomas Anderson, <a href="mailto:anderstl@gmail.com">anderstl@gmail.com</a>, Jon Walter, <a href="mailto:jaw3es@virginia.edu">jaw3es@virginia.edu</a>; Lawrence 
+Sheppard, <a href="mailto:lwsheppard@ku.edu">lwsheppard@ku.edu</a>; Daniel Reuman, <a href="mailto:reuman@ku.edu">reuman@ku.edu</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Sheppard, LW et al. (2019) Synchrony is more than its top-down and climatic parts: interacting 
+Moran effects on phytoplankton in British seas. Plos Computational Biology 15, e1006744. doi: 10.1371/journal.pcbi.1006744
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wlm_methods</code>, <code>wlmtest</code>, <code>syncexpl</code>, <code>predsync</code>, 
+<code>browseVignettes("wsyn")</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">times&lt;-1:30
+dat&lt;-list(v1=matrix(rnorm(300),10,30),v2=matrix(rnorm(300),10,30),v3=matrix(rnorm(300),10,30),
+          v4=matrix(rnorm(300),10,30),v5=matrix(rnorm(300),10,30))
+dat&lt;-lapply(FUN=function(x){cleandat(x,times,1)$cdat},X=dat)
+resp&lt;-2
+pred&lt;-c(1,3,4)
+norm&lt;-"powall"
+res&lt;-wlm(dat,times,resp,pred,norm)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>IAB</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Benhamou's IAB Index</h2>
+
+<h3>Description</h3>
+
+<p>The function <code>IAB</code> computes the IAB index following the methods described in the paper by 
+Benhamou et al. (2014). It facilitates global analysis, with the significance testing procedure
+described in the paper, but also a local level output, to explore the IAB statistic through time.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">IAB(traj, traj2, tc = 0, dc = 0, local = FALSE, rand = 99)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>traj</code></td>
+<td>
+<p>an object of the class <code>move2</code> which contains the time-stamped movement fixes of at least two individuals. For more information on objects of this type see <code>help(mt_as_move2)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>traj2</code></td>
+<td>
+<p>(optional) same as traj, but for the second group of individuals. See <code>checkTO</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tc</code></td>
+<td>
+<p>time threshold for determining simultaneous fixes – see function: <code>GetSimultaneous</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dc</code></td>
+<td>
+<p>critical distance where the IAB function will show maximum slope – see Benhamou et al. (2014) for more advice on selecting this parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>local</code></td>
+<td>
+<p>logical value indicating whether a dataframe (<code>local = TRUE</code>) containing the IAB index for each simultaneous fix should be returned (with a local permutation test), or (if <code>local = FALSE</code> - the default) the global index along with associated global permutation test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rand</code></td>
+<td>
+<p>number of permutations to use in the local permutation test.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function <code>IAB</code> can be used to test for direct interaction in wildlife telemetry data and affords a novel significance testing procedure that takes into account the serially correlated structure of telemetry data. Specifically, it computes an index analogous to the Bhattacharyya coefficient between the potential influence domains of two animals. Like the other indices, IAB is dependent on the selection of an appropriate value for <code>dc</code> (which is termed <code class="reqn">\Delta</code> in the article). The <code>dc</code> parameter here is not a threshold distance, but rather the distance at which the function shows maximum slope (see Benhamou et al. 2014). 
+</p>
+<p>The significance testing procedure uses a wrapped shifting method in order to maintain the serially correlated structure of the data. At each shift, a sample value of IAB (termed MAB) is computed in order to generate a distribution of values to test against (for more information see Benhamou et al. 2014). Here a local version of this statistical testing procedure is implemented by taking <code>rand</code> samples of the <code class="reqn">(n^2 - n</code> permutations of unpaired fixes. The p-values are computed following Benhamou et al. (2014), z-scores are calculated based on the mean and standard deviation of this hypothetical distribution.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>local=FALSE</code> (the default) IAB returns a dataframe with the values of the IAB index and the associated p-values for one-sided tests for attraction or avoidance. If <code>local=TRUE</code> IAB returns a dataframe (containing the date/times of <em>all</em> simultaneous fixes (NOTE: times are associated with traj1), along with the distance between fixes at each time , and the IAB index value for each simultaneous fix. A localized p-value (.pa signifies the test for attraction and pb the test for avoidance) and z-score is computed based on <code>rand</code> permutations of the fixes. The row.name columns can be used to match the simultaneous fixes to the original trajectory.
+</p>
+
+
+<h3>References</h3>
+
+<p>Benhamou, S., Valeix, M., Chamaille-Jammes, S., Macdonald, D., Loveridge, A.J. (2014) Movement-based analysis of interactions in African lions. <em>Animal Behaviour</em>, <b>90</b>: 171-180.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>GetSimultaneous, DI, Prox
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(deer)
+#tc = 7.5 minutes, dc = 50 meters
+IAB(deer, tc=7.5*60, dc=50)
+df &lt;- IAB(deer, tc=7.5*60, dc=50, local=TRUE)
+
+</code></pre>
+
+
+</div>

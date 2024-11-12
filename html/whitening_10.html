@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pitprops14</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Pitprops Correlation Data for 14 Variables</h2>
+
+<h3>Description</h3>
+
+<p>Pit prop timber is used in construction to build mining tunnels. 
+The <code>pitprops14</code> data is described in Jeffers (1967) and is
+a correlation matrix that was calculated from measuring 14 physical properties
+of 180 pit props made from wood from Corsican pines grown in East Anglia, UK.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(pitprops14)
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A correlation matrix of dimension 14 times 14.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The 14 variables are described in Jeffers (1967) as follows:
+</p>
+<p><code>topdiam</code>: the top diameter of the prop in inches;
+<code>length</code>: the length of the prop in inches;
+<code>moist</code>: the moisture content of the prop, expressed as a percentage of the dry weight;
+<code>testsg</code>: the specific gravity of the timber at the time of the test;
+<code>ovensg</code>: the oven-dry specific gravity of the timber;
+<code>rinotop</code>: the number of annual rings at the top of the prop;
+<code>ringbut</code>: the number of annual rings at the base of the prop;
+<code>bowmax</code>: the maximum bow in inches;
+<code>bowdist</code>: the distance of the point of maximum bow from the top of the prop in inches;
+<code>whorls</code>: the number of knot whorls;
+<code>clear</code>: the length of clear prop from the top of the prop in inches;
+<code>knots</code>: the average number of knots per whorl;
+<code>diaknot</code>: the average diameter of the knots in inches;
+<code>maxcs</code>: the maximum compressive strength in lb per square inch.
+</p>
+
+
+<h3>Source</h3>
+
+<p>The data set is printed in Jeffers (1967) in Table 2 and Table 5.
+</p>
+
+
+<h3>References</h3>
+
+<p>Jeffers, J. N. R. 1967. Two case studies in the application of principal component analysis.    
+JRSS C (Applied Statistics) 16: 225-236. &lt;DOI:10.2307/2985919&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load whitening library
+library("whitening")
+
+# load pitprops14 data set
+data(pitprops14)
+colnames(pitprops14)
+
+# correlation matrix for the first 13 variables
+pitprops13 = pitprops14[1:13, 1:13]
+
+# correlation loadings for PCA whitening
+Psi = whiteningLoadings(pitprops13, "PCA")$Psi
+
+# corresponding explained variation
+Psi.explained = explainedVariation(Psi)
+
+# the first six whitened variables account for 87% of the variation
+cumsum(Psi.explained)/13*100
+
+</code></pre>
+
+
+</div>

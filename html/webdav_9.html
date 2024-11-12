@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>webdav_upload_file</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Upload a file to the WebDAV server</h2>
+
+<h3>Description</h3>
+
+<p>This function uploads a file to a specific folder on the WebDAV server. It validates the provided parameters and handles errors during the process.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">webdav_upload_file(
+  base_url,
+  local_path,
+  server_path = "",
+  username = Sys.getenv("WEBDAV_USERNAME"),
+  password = Sys.getenv("WEBDAV_PASSWORD"),
+  timeout = 300,
+  verbose = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>base_url</code></td>
+<td>
+<p>The base URL of the WebDAV server.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>local_path</code></td>
+<td>
+<p>The local path of the file to be uploaded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>server_path</code></td>
+<td>
+<p>The folder path on the WebDAV server where the file will be uploaded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>username</code></td>
+<td>
+<p>The username for WebDAV authentication. Defaults to the "WEBDAV_USERNAME" environment variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>password</code></td>
+<td>
+<p>The password for WebDAV authentication. Defaults to the "WEBDAV_PASSWORD" environment variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timeout</code></td>
+<td>
+<p>The timeout for the upload request in seconds (default is 300 seconds).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical value indicating whether to print detailed debug messages. When TRUE, the function outputs additional information about its progress and actions.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Logical value indicating whether the file was uploaded successfully.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Example usage with a public WebDAV server.
+# Visit test_server$url link to view the results of the operation.
+library(magrittr)
+library(httr2)
+test_server &lt;- "https://www.webdavserver.com/" %&gt;%
+  request() %&gt;%
+  req_retry(max_tries = 3, max_seconds = 4, backoff =  ~ 1) %&gt;%
+  req_perform() %&gt;%
+  try(silent = TRUE)
+
+# Upload a file
+file_test &lt;- tempfile(pattern = "teste_", fileext = ".txt")
+cat("Text file content", file = file_test)
+if (class(test_server) != "try-error")
+  webdav_upload_file(base_url = test_server$url, local_path = file_test, verbose = TRUE)
+</code></pre>
+
+
+</div>

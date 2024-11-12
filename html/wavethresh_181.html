@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>putC.wst</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Puts a whole resolution level of father wavelet coeffients into wst wavelet object.</h2>
+
+<h3>Description</h3>
+
+<p>Makes a copy of the <code>wst</code> object, replaces a whole resolution level of father wavelet coefficients data in the copy, and then returns the copy. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wst'
+putC(wst, level, value, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wst</code></td>
+<td>
+<p>Packet-ordered non-decimated wavelet object into which you wish to insert the father wavelet coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>the resolution level at which you wish to replace the father wavelet coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>the replacement data, this should be of the correct length.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function <code>accessC.wst</code> obtains the father wavelet coefficients for a particular level. The function <code>putC.wst</code> replaces father wavelet coefficients at a particular resolution level and returns a modified wst object reflecting the change. 
+</p>
+<p>For the non-decimated wavelet transforms the number of coefficients at each resolution level is the same and equal to <code>2^nlevelsWT</code> where <code>nlevels</code> is the number of levels in the <code>wst.object</code>. The number of coefficients at each resolution level is also, of course, the number of data points used to initially form the <code>wst</code> object in the first place. 
+</p>
+<p>Use the <code>accessC.wst</code> to extract whole resolution levels of father wavelet coefficients. Use <code>accessD.wst</code> and <code>putD.wst</code> to extract/insert whole resolution levels of mother wavelet coefficients. Use the <code>getpacket.wst</code> and <code>putpacket.wst</code> functions to extract/insert packets of coefficients into a packet-ordered non-decimated wavelet object. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>wst</code> class object containing the modified father wavelet coefficients
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.5.3 Copyright Guy Nason 1994 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wst.object</code>, <code>wst</code>, <code>putC</code>, <code>accessD.wst</code>, <code>putD.wst</code>, <code>getpacket.wst</code>, <code>putpacket.wst</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Generate an EMPTY wst object:
+#
+zero &lt;- rep(0, 16)
+zerowst &lt;- wst(zero)
+#
+# Put some random father wavelet coefficients into the object at
+# resolution level 2. For the non-decimated wavelet transform there
+# are always 16 coefficients at every resolution level. 
+#
+mod.zerowst &lt;- putC( zerowst, level=2, v=rnorm(16))
+#
+# If you use accessC  on mod.zerowd you would see that there were only
+# coefficients at resolution level 2 where you just put the coefficients.
+</code></pre>
+
+
+</div>

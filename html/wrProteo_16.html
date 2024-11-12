@@ -1,0 +1,148 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>extractTestingResults</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract Results From Moderated t-tests</h2>
+
+<h3>Description</h3>
+
+<p>This function allows convenient access to results produced using the functions <code>moderTest2grp</code> or <code>moderTestXgrp</code>.
+The user can define the threshold which type of multiple testing correction should be used
+(as long as the  multiple testing correction method was actually performed as part of testing).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">extractTestingResults(
+  stat,
+  compNo = 1,
+  statTy = "BH",
+  thrsh = 0.05,
+  FCthrs = 1.5,
+  annotCol = c("Accession", "EntryName", "GeneName"),
+  nSign = 6,
+  addTy = c("allMeans"),
+  filename = NULL,
+  fileTy = "csvUS",
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>stat</code></td>
+<td>
+<p>('MArrayLM'-object or list) Designed for the output from <code>moderTest2grp</code> or <code>moderTestXgrp</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>compNo</code></td>
+<td>
+<p>(integer) the comparison number/index to be used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>statTy</code></td>
+<td>
+<p>(character) the multiple-testing correction type to be considered when looking for significant changes  with threshold <code>thrsh</code> (depends on which have been run initially with <code>moderTest2grp</code> or <code>moderTestXgrp</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thrsh</code></td>
+<td>
+<p>(numeric) the threshold to be applied on <code>statTy</code> for the result of the statistcal testing (after multiple testing correction)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>FCthrs</code></td>
+<td>
+<p>(numeric) Fold-Change threshold given as Fold-change and NOT log2(FC), default at 1.5 (for filtering at M-value =0.585)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annotCol</code></td>
+<td>
+<p>(character) column-names from the annotation to be included</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nSign</code></td>
+<td>
+<p>(integer) number of significant digits whe returning results</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addTy</code></td>
+<td>
+<p>(character) additional groups to add (so far only "allMeans" available) in addition to the means used in the pairwise comparison</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+<p>(character) optional (path and) file-name for exporting results to csv-file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fileTy</code></td>
+<td>
+<p>(character) file-type to be used with argument <code>filename</code>, may be 'csvEur' or 'csvUS'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a limma-type MA-object (which can be handeled just like a list)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>testRobustToNAimputation</code>, <code>moderTestXgrp</code> or <code>moderTest2grp</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">grp &lt;- factor(rep(LETTERS[c(3,1,4)],c(2,3,3)))
+set.seed(2017); t8 &lt;- matrix(round(rnorm(208*8,10,0.4),2), ncol=8,
+  dimnames=list(paste(letters[],rep(1:8,each=26),sep=""), paste(grp,c(1:2,1:3,1:3),sep="")))
+t8[3:6,1:2] &lt;- t8[3:6,1:2] +3                    # augment lines 3:6 (c-f) 
+t8[5:8,c(1:2,6:8)] &lt;- t8[5:8,c(1:2,6:8)] -1.5    # lower lines 
+t8[6:7,3:5] &lt;- t8[6:7,3:5] +2.2                  # augment lines 
+## expect to find C/A in c,d,g, (h)
+## expect to find C/D in c,d,e,f
+## expect to find A/D in f,g,(h) 
+library(wrMisc)     # for testing we'll use this package
+test8 &lt;- moderTestXgrp(t8, grp) 
+extractTestingResults(test8)
+</code></pre>
+
+
+</div>

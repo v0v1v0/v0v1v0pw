@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>runTransientFunction</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Run Transient Function </h2>
+
+<h3>Description</h3>
+
+<p> Run a function in a transient (non persistent) context. </p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">runTransientFunction(function_f_1,
+                     arguments_l,
+                     evaluationMode_o_1,
+                     function_return_type_s_1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>function_f_1</code></td>
+<td>
+<p> a single <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> <em><code>function</code></em> </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arguments_l</code></td>
+<td>
+<p> a <em><code>list</code></em> of arguments to pass to the function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>evaluationMode_o_1</code></td>
+<td>
+<p> an evaluation mode <em><code>object</code></em>. See
+<b><em><code>EvaluationMode</code></em></b></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>function_return_type_s_1</code></td>
+<td>
+<p> a <em><code>string</code></em> that is a semantic parameter name,
+to express expected function return type</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>list</code> with names
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p> a single <em><code>boolean</code></em>. Always <em><code>TRUE</code></em> when evaluation mode is
+<b><code>standard_R_evaluation</code></b>.
+Otherwise, will reflect result validity in the chose evaluation mode. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>the result of the computation, might be a scalar or not, a warning, an error, ... </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>the evaluation mode used to check the results</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>function_return_type_check</code></td>
+<td>
+<p>available if mode is different of
+<b><code>standard_R_evaluation</code></b> </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameter_type_checks</code></td>
+<td>
+<p>available if mode is <b><code>type_checking_inforcement</code></b> </p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+<p>Maintainer: Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Refer to <b><em><code>runFunction</code></em></b>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##---- typical case ----
+em &lt;- EvaluationMode(defineEvaluationModes()[3])
+h &lt;- function(x_s) x_s
+runTransientFunction(h, list('neonira'), em, 'x_s')
+runTransientFunction(h, list(pi), em, 'x_s')
+runTransientFunction(h, list(pi), em, 'x_d')
+</code></pre>
+
+
+</div>

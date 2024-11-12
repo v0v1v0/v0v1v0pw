@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>penvs_bgSample</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>penvs_bgSample Sample background points</h2>
+
+<h3>Description</h3>
+
+<p>This function samples background points from an area determined
+by a rasterBrick or RasterStack of environmental layers previously cropped
+and masked to user determined extent.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">penvs_bgSample(occs, bgMask, bgPtsNum, logger = NULL, spN = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>occs</code></td>
+<td>
+<p>data frame of cleaned or processed occurrences obtained from
+components occs: Obtain occurrence data or, poccs: Process occurrence data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bgMask</code></td>
+<td>
+<p>a RasterStack or a RasterBrick of environmental layers cropped
+and masked.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bgPtsNum</code></td>
+<td>
+<p>numeric. Number of points to be sampled from the area, they
+will be sampled as long as &lt;= non NA cells in any reference layer.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+<p>Stores all notification messages to be displayed in the Log
+Window of Wallace GUI. Insert the logger reactive list here for running in
+shiny, otherwise leave the default NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spN</code></td>
+<td>
+<p>data frame of cleaned occurrences obtained from component occs:
+Obtain occurrence data. Used to obtain species name for logger messages.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is used in the select study region component. Here, a user
+provided amount of points is randomly sampled from the RasterBrick or
+RasterStack of environmental variables cropped and masked to a given
+background extent. The maximum number of points to be sampled is the number
+of non NA cells in each layer of the reference RasterBrick or RasterStack
+If the requested number of points is larger than the number of cells in
+the reference RasterBrick or RasterStack then only a proportion of the
+requested will be returned.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a dataframe containing point coordinates (longitude and latitude).
+All points are within the area provided in the RasterBrick or RasterStack (bgMask).
+Maximum number of points is equal to non NA cells in each layer of the
+reference brick or stack.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jamie Kass &lt;jamie.m.kass@gmail.com&gt;
+</p>
+<p>Gonzalo E. Pinilla-Buitrago &lt;gepinillab@gmail.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>penvs_bgMask</code>, <code>penvs_bgExtent</code>
+<code>penvs_userBgExtent</code>, <code>penvs_drawBgExtent</code>,
+<code>randomPoints</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+occs &lt;-  occs_queryDb(spName = "Panthera onca", occDb = "gbif",
+                      occNum = 100)
+occs &lt;- as.data.frame(occs[[1]]$cleaned)
+envs &lt;- envs_worldclim(bcRes = 10,
+                       bcSel = c("bio03", "bio04", "bio13", "bio14"),
+                       doBrick = TRUE)
+bgExt &lt;- penvs_bgExtent(occs, bgSel = 'bounding box', bgBuf = 0.5)
+bgMask &lt;- penvs_bgMask(occs, envs, bgExt)
+bgsample &lt;- penvs_bgSample(occs, bgMask, bgPtsNum = 1000)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

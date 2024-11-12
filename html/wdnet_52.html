@@ -1,0 +1,158 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rpanet_general</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Internal functions for generating PA networks</h2>
+
+<h3>Description</h3>
+
+<p>These functions generate a PA network with linear (<code>rpanet_simple</code>) or
+non-linear (<code>rpanet_general</code>) preference functions
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rpanet_general(
+  nstep,
+  initial.network,
+  control,
+  m,
+  sum_m,
+  w,
+  nnode,
+  nedge,
+  method,
+  sample.recip
+)
+
+rpanet_simple(
+  nstep,
+  initial.network,
+  control,
+  m,
+  sum_m,
+  w,
+  ex_node,
+  ex_edge,
+  method
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>nstep</code></td>
+<td>
+<p>Number of steps when generating a network.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initial.network</code></td>
+<td>
+<p>A <code>wdnet</code> object or a list that represents the
+initial network. By default, <code>initial.network</code> has one directed edge from node 1
+to node 2 with weight 1. It may have the following components: a two-column
+matrix <code>edgelist</code> representing the edges; a vector <code>edgeweight</code>
+representing the weight of edges; a logical argument <code>directed</code> indicating
+whether the initial network is directed;
+an integer vector <code>nodegroup</code>
+representing the group of nodes. <code>nodegroup</code> is defined for directed
+networks, if <code>NULL</code>, all nodes from the seed network are considered
+from group 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>A list of parameters that controls the PA generation process.
+The default value is <code>wdnet:::rpa_control_default()</code>. By default, in
+each step, a new edge of weight 1 is added from a new node <code>A</code> to an
+existing node <code>B</code> (<code>alpha</code> scenario), where $<code>B</code> is chosen
+with probability proportional to its in-strength + 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>Integer vector, number of new edges in each step.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sum_m</code></td>
+<td>
+<p>Integer, summation of <code>m</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+<p>Vector, weight of new edges.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nnode</code></td>
+<td>
+<p>Integer, number of nodes in <code>initial.network</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nedge</code></td>
+<td>
+<p>Integer, number of edges in <code>initial.network</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Which method to use when generating PA networks: "binary" or
+"linear".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sample.recip</code></td>
+<td>
+<p>Whether reciprocal edges will be added.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a <code>wdnet</code> object that includes the following components:
+</p>
+
+<ul>
+<li> <p><code>directed</code>: Logical, whether the network is directed.
+</p>
+</li>
+<li> <p><code>weighted</code>: Logical, whether the network is weighted.
+</p>
+</li>
+<li> <p><code>edgelist</code>: A two-column matrix representing the edges.
+</p>
+</li>
+<li> <p><code>edge.attr</code>: A data frame including edge weights and edge
+scenarios (0: from initial network; 1: <code>alpha</code>; 2: <code>beta</code>;
+3: <code>gamma</code>; 4: <code>xi</code>; 5; <code>rho</code>; 6: reciprocal edge).
+</p>
+</li>
+<li> <p><code>node.attr</code>: A data frame including node out- and
+in-strength, node source and target preference scores (for directed
+networks), node strength and preference scores (for undirected
+networks), and node group (if applicable).
+</p>
+</li>
+<li> <p><code>newedge</code>: The number of new edges at each step, including
+reciprocal edges.
+</p>
+</li>
+<li> <p><code>control</code>: An <code>rpacontrol</code> object that is used to
+generate the network.
+</p>
+</li>
+</ul>
+</div>

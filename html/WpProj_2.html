@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>binary_program_method_options</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Options For Use With the Binary Program Method</h2>
+
+<h3>Description</h3>
+
+<p>Options For Use With the Binary Program Method
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">binary_program_method_options(
+  maxit = 500L,
+  infimum.maxit = 100L,
+  transport.method = transport_options(),
+  epsilon = 0.05,
+  OTmaxit = 100L,
+  model.size = NULL,
+  nvars = NULL,
+  tol = 1e-07,
+  display.progress = FALSE,
+  parallel = NULL,
+  solver.options = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>maxit</code></td>
+<td>
+<p>The maximum iterations for the optimizer. Default is 500.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>infimum.maxit</code></td>
+<td>
+<p>Maximum iterations to alternate binary program and Wasserstein distance calculations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transport.method</code></td>
+<td>
+<p>Method for Wasserstein distance calculation. Should be one the outputs of <code>transport_options()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsilon</code></td>
+<td>
+<p>A value &gt; 0 for the penalty parameter of if using the Sinkhorn method</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>OTmaxit</code></td>
+<td>
+<p>The number of iterations to run the Wasserstein distance solvers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model.size</code></td>
+<td>
+<p>What is the maximum number of coefficients to have in the final model. Default is NULL. If NULL, will find models from the minimum size, 0, to the number of columns in <code>X</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nvars</code></td>
+<td>
+<p>The number of variables to explore. Should be an integer vector of model sizes. Default is NULL which will explore all models from 1 to <code>model.size</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>The tolerance for convergence</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>display.progress</code></td>
+<td>
+<p>Logical. Should intermediate progress be displayed? TRUE or FALSE. Default is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>A cluster backend to be used by <code>foreach::foreach()</code>. See <code>foreach::foreach()</code> for details about how to set them up. The <code>WpProj</code> functions will register the cluster with the <code>doParallel::registerDoParallel()</code> function internally.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>solver.options</code></td>
+<td>
+<p>Options to be passed on to the solver. See details</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function will setup the default arguments used by the binary program method. Of note, for the argument <code>solver.options</code>, If using the "lasso" solver, you should provide arguments such as "penalty", "nlambda", "lambda.min.ratio", "gamma", and "lambda" in a list. A simple way to do this is to feed the output of the <code>L1_method_options()</code> function to the argument <code>solver.options.</code> This will tell the approximate solver, which uses a lasso method that then will project the parameters back to the <code class="reqn">\{0,1\}</code> space. For the other solvers, you can see the options in the ECOS solver package, <code>ECOSolveR::ecos.control()</code>, and the options for the mosek solver, <code>Rmosek::mosek()</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with names corresponding to each argument above.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>WpProj()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">binary_program_method_options()
+# is using the lasso solver for the binary program method to give an approximate solution
+binary_program_method_options(solver.options = L1_method_options(nlambda = 50L))
+</code></pre>
+
+
+</div>

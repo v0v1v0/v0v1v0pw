@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WeightedAUC</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>WeightedAUC</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the exact area under the ROC curve.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WeightedAUC(tpr.fpr)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>tpr.fpr</code></td>
+<td>
+<p>Output of <code>WeightedROC</code>: data.frame with the true positive rate
+(TPR) and false positive rate (FPR).</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Numeric scalar.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Toby Dylan Hocking</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(WeightedROC)
+## Compute the AUC for this weighted data set.
+y &lt;- c(0, 0, 1, 1, 1)
+w &lt;- c(1, 1, 1, 4, 5)
+y.hat &lt;- c(1, 2, 3, 1, 1)
+tp.fp &lt;- WeightedROC(y.hat, y, w)
+(wauc &lt;- WeightedAUC(tp.fp))
+
+## For the un-weighted ROCR example data set, verify that our AUC is
+## the same as that of ROCR/pROC.
+if(require(microbenchmark) &amp;&amp; require(ROCR) &amp;&amp; require(pROC)){
+  data(ROCR.simple, envir=environment())
+  microbenchmark(WeightedROC={
+    tp.fp &lt;- with(ROCR.simple, WeightedROC(predictions, labels))
+    wroc &lt;- WeightedAUC(tp.fp)
+  }, ROCR={
+    pred &lt;- with(ROCR.simple, prediction(predictions, labels))
+    rocr &lt;- performance(pred, "auc")@y.values[[1]]
+  }, pROC={
+    proc &lt;- pROC::auc(labels ~ predictions, ROCR.simple, algorithm=2)
+  }, times=10)
+  rbind(WeightedROC=wroc, ROCR=rocr, pROC=proc) #same
+}
+
+## For the un-weighted pROC example data set, verify that our AUC is
+## the same as that of ROCR/pROC.
+data(aSAH, envir=environment())
+table(aSAH$s100b)
+if(require(microbenchmark)){
+  microbenchmark(WeightedROC={
+    tp.fp &lt;- with(aSAH, WeightedROC(s100b, outcome))
+    wroc &lt;- WeightedAUC(tp.fp)
+  }, ROCR={
+    pred &lt;- with(aSAH, prediction(s100b, outcome))
+    rocr &lt;- performance(pred, "auc")@y.values[[1]]
+  }, pROC={
+    proc &lt;- pROC::auc(outcome ~ s100b, aSAH, algorithm=2)
+  }, times=10)
+  rbind(WeightedROC=wroc, ROCR=rocr, pROC=proc)
+}
+
+</code></pre>
+
+
+</div>

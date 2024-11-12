@@ -1,0 +1,75 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read_combined</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>read Combined Log Format files</h2>
+
+<h3>Description</h3>
+
+<p>read requests logs following the Combined Log Format.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read_combined(file, has_header = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>the full path to the CLF-formatted file you want to read.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>has_header</code></td>
+<td>
+<p>whether or not the file has a header row. Set to FALSE by
+default.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>the Combined Log Format (CLF) is the same as the Common Log Format (CLF, because
+software engineers and naming go together like chalk and cheese), which
+is documented at <code>read_clf</code>. In addition to the fields described there,
+the Combined Log Format also includes:
+</p>
+
+<ul>
+<li>
+<p>referer: the referer associated with the request.
+</p>
+</li>
+<li>
+<p>user_agent: the user agent of the user that made the request.
+</p>
+</li>
+</ul>
+<p><code>read_combined</code> handles these fields, as well as the CLF-standard ones. This is (amongst
+other things) the default logging format for <a href="http://nginx.org/">nginx</a> servers
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read_clf</code> for the /Common/ Log Format, and
+<code>split_clf</code> for splitting out the "requests" field.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#Read in an example Combined-formatted file provided with the webreadr package.
+data &lt;- read_combined(system.file("extdata/combined_log.clf", package = "webreadr"))
+</code></pre>
+
+
+</div>

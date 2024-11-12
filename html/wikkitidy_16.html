@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_history_count</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Count how many times Wikipedia articles have been edited</h2>
+
+<h3>Description</h3>
+
+<p>Count how many times Wikipedia articles have been edited
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_history_count(
+  title,
+  type = c("edits", "anonymous", "bot", "editors", "minor", "reverted"),
+  from = NULL,
+  to = NULL,
+  language = "en"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>A vector of article titles</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>The <a href="https://www.mediawiki.org/wiki/API:REST_API/Reference#Parameters_12">type of edit to count</a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>Optional: a vector of revision ids</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to</code></td>
+<td>
+<p>Optional: a vector of revision ids</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>Vector of two-letter language codes for Wikipedia editions</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tibble::tbl_df with two columns:
+</p>
+
+<ul>
+<li>
+<p> 'count': integer, the number of edits of the given type
+</p>
+</li>
+<li>
+<p> 'limit': logical, whether the 'count' exceeds the API's limit. Each type of
+edit has a different limit. If the 'count' exceeds the limit, then the
+limit is returned as the count and 'limit' is set to TRUE
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Get the number of edits made by auto-confirmed editors to a page between
+# revisions 384955912 and 406217369
+get_history_count("Jupiter", "editors", 384955912, 406217369)
+
+# Compare which authors have the most edit activity
+authors &lt;- tibble::tribble(
+  ~author,
+  "Jane Austen",
+  "William Shakespeare",
+  "Emily Dickinson"
+) %&gt;%
+  dplyr::mutate(get_history_count(author))
+authors
+</code></pre>
+
+
+</div>

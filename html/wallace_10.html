@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>espace_nicheOv</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>espace_nicheOv Niche Overlap</h2>
+
+<h3>Description</h3>
+
+<p>Function evaluates niche overlap between the two species for
+which the occurrence density grid was computed
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">espace_nicheOv(
+  z1,
+  z2,
+  iter = 100,
+  equivalency = FALSE,
+  similarity = TRUE,
+  logger = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>z1</code></td>
+<td>
+<p>ecospat niche object for species 1 from espace_occDens.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z2</code></td>
+<td>
+<p>ecospat niche object for species 2 from espace_occDens.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iter</code></td>
+<td>
+<p>numeric. Number of iterations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>equivalency</code></td>
+<td>
+<p>logical. Whether to run equivalency test. Default is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>similarity</code></td>
+<td>
+<p>logical. Whether to run similarity test. Default is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+<p>Stores all notification messages to be displayed in the Log
+Window of Wallace GUI. Insert the logger reactive list here for running in
+shiny, otherwise leave the default NULL.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The niche overlap quantification is based on the occurrence densities and
+the densities of environmental conditions available in the background extent
+that are estimated in the module Occurrence Density Grid. The function
+computes 4 different things; Schoener's D, unfilling, stability,
+expansion indices (Guisan et al. 2014 TREE), and tests for niche
+equivalency and niche similarity.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of 4 elements if all is set to TRUE. Elements are overlap
+(Schoener's D), USE (ecospat.niche.dyn.index), equiv and simil.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jamie Kass &lt;jamie.m.kass@gmail.com&gt;
+</p>
+<p>Olivier Broennimann &lt;olivier.broennimann@unil.ch&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>espace_pca</code> <code>espace_occDens</code>
+<code>ecospat.niche.overlap</code>
+<code>ecospat.niche.dyn.index</code>
+<code>ecospat.niche.equivalency.test</code>
+<code>ecospat.niche.similarity.test</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+sp.name1 &lt;- "Bassaricyon_alleni"
+sp.name2 &lt;- "Bassaricyon_neblina"
+envs &lt;- envs_userEnvs(rasPath = list.files(system.file("extdata/wc",
+                                           package = "wallace"),
+                      pattern = ".tif$", full.names = TRUE),
+                      rasName = list.files(system.file("extdata/wc",
+                                           package = "wallace"),
+                      pattern = ".tif$", full.names = FALSE))
+
+occs.z1 &lt;- read.csv(system.file("extdata/Bassaricyon_alleni.csv",
+                    package = "wallace"))
+occs.z2 &lt;- read.csv(system.file("extdata/Bassaricyon_neblina.csv",
+                    package = "wallace"))
+
+bgPts.z1 &lt;- read.csv(system.file("extdata/Bassaricyon_alleni_bgPoints.csv",
+                     package = "wallace"))
+bgPts.z2 &lt;- read.csv(system.file("extdata/Bassaricyon_neblina_bgPoints.csv",
+                     package = "wallace"))
+
+occsExt.z1 &lt;- raster::extract(envs, occs.z1[, c("longitude", "latitude")])
+occsExt.z2 &lt;- raster::extract(envs, occs.z2[, c("longitude", "latitude")])
+bgExt.z1 &lt;- raster::extract(envs, bgPts.z1[, c("longitude", "latitude")])
+bgExt.z2 &lt;- raster::extract(envs, bgPts.z2[, c("longitude", "latitude")])
+pcaZ &lt;- espace_pca(sp.name1, sp.name2,
+                   occsExt.z1, occsExt.z2,
+                   bgExt.z1, bgExt.z2)
+occDens &lt;- espace_occDens(sp.name1, sp.name2, pcaZ)
+nicheOv &lt;- espace_nicheOv(z1 = occDens[[sp.name1]],
+                          z2 = occDens[[sp.name2]],
+                          iter = 100, equivalency = TRUE,
+                          similarity = TRUE)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

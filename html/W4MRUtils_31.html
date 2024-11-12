@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>parse_args</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Parse Command arguments</h2>
+
+<h3>Description</h3>
+
+<p>parse_args
+Replacement for the parseCommandArgs utility from batch.
+Note that inputs like <code style="white-space: pre;">⁠script.R some-list c(1, 2, 3)⁠</code> will result in
+args$<code>some-list</code> to be the string "c(1, 2, 3)", and not a vector anymore
+as this ability was permitted by dangerous behaviours from the
+batch package (the usage of <code>eval</code> which MUST NEVER be used on user's
+inputs).
+</p>
+<p>To get a list of numeric from users, instead of using the <code>c(1, 2)</code> trick,
+please, use regular lists parsing:
+</p>
+<div class="sourceCode"><pre>&gt; args$`some-list`
+[1] "1,2"
+args$`some-list` &lt;- as.numeric(strsplit(args$`some-list`, ",")[[1]])
+&gt; args$`some-list`
+[1] 1 2
+</pre></div>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">parse_args(
+  args = NULL,
+  convert_booleans = TRUE,
+  convert_numerics = TRUE,
+  strip_trailing_dash = TRUE,
+  replace_dashes = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>args</code></td>
+<td>
+<p>optional, provide arguments to parse.
+This function will use 'commandArgs()' if args is not provided</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>convert_booleans</code></td>
+<td>
+<p>logical - tells the function to convert
+values into logical if their value is "TRUE" or "FALSE".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>convert_numerics</code></td>
+<td>
+<p>logical - tells the function to convert
+values into numeric if possible.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strip_trailing_dash</code></td>
+<td>
+
+<ul><li>
+<p> tells whether to remove trailing hyphens from
+the start of the parameter name
+</p>
+</li></ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>replace_dashes</code></td>
+<td>
+
+<ul><li>
+<p> tells whether to turn trailing hyphens into
+underscores
+</p>
+</li></ul>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a named <code>list</code> object containing the input parameters in values
+and the parameters names in names
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>L.Pavot
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## faking command line parameters:
+
+commandArgs &lt;- function() {
+  list(
+    "--args",
+    "param1", "a value",
+    "param2", "42"
+  )
+}
+
+## extracting command line parameters:
+parameters &lt;- W4MRUtils::parse_args(args = commandArgs())
+str(parameters)
+
+</code></pre>
+
+
+</div>

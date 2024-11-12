@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>standardize</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Scaling and centring of vectors, matrices and arrays
+</h2>
+
+<h3>Description</h3>
+
+<p>Maps a numeric variable to a new object with the same dimensions. <code>standardize</code> is typically used to standardise a covariate to mean 0 and SD 1. <code>standardize2match</code> is used to standardise one object using the mean and SD of another; it is a wrapper for <code>standardize(x, center=mean(y), scale=sd(y))</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">standardize(x, center = TRUE, scale = TRUE)
+standardize2match(x, y)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x, y</code></td>
+<td>
+
+<p>a numeric vector, matrix or multidimensional array; <code>NA</code> and <code>NaN</code> are allowed; <code>Inf</code> and <code>-Inf</code> will produce all-<code>NaN</code> output if either <code>center</code> or <code>scale</code> is <code>TRUE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+
+<p>either a logical or a numeric value of length 1.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+
+<p>either a logical or a numeric value of length 1.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>standardize</code> differs from <code>scale</code> by (1) accepting multidimensional arrays but not data frames; (2) <em>not</em> standardizing column-wise but using a single value to centre or to scale; (3) if <code>x</code> is a vector, the output will be a vector (not a 1-column matrix). If each column in the matrix represents a different variable, use <code>scale</code> not <code>standardize</code>.
+</p>
+<p>Centring is performed before scaling.
+</p>
+<p>If <code>center</code> is numeric, that value will be subtracted from the whole object. If logical and TRUE, the mean of the object (after removing NAs) will be subtracted.
+</p>
+<p>If <code>scale</code> is numeric, the whole object will be divided by that value. If logical and TRUE, the standard deviation of the object (after removing NAs) will be used; this may not make sense if <code>center = FALSE</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric object of the same dimensions as <code>x</code> with the standardized values. NAs in the input will be preserved in the output.
+</p>
+<p>For the default arguments, the object returned will have mean approximately zero and SD 1. (The mean is not exactly zero as scaling is performed after centring.)
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith, after looking at the code of <code>base::scale</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Generate some fake elevation data:
+elev &lt;- runif(100, min=100, max=500)
+mean(elev) ; sd(elev)
+str( e &lt;- standardize(elev) )
+mean(e) ; sd(e)
+
+# Standardize so that e=0 corresponds to exactly 300m and +/- 1 to
+#   a change of 100m:
+e &lt;- standardize(elev, center=300, scale=100)
+mean(e)
+mean(elev) - 300
+range(e)
+range(elev) - 300
+
+# Generate data matrix for survey duration for 3 surveys at 10 sites
+dur &lt;- matrix(round(runif(30, 20, 60)), nrow=10, ncol=3)
+d &lt;- standardize(dur)
+mean(d) ; sd(d)
+
+# Standardize new data to match the mean and SD of 'dur'
+(new &lt;- seq(20, 60, length.out=11))
+standardize2match(new, dur)
+
+# compare with base::scale
+dx &lt;- base::scale(dur)
+colMeans(dx) ; apply(dx, 2, sd)
+colMeans(d) ; apply(d, 2, sd)
+# Don't use 'standardize' if the columns in the matrix are different variables!
+</code></pre>
+
+
+</div>

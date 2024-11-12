@@ -1,0 +1,263 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>walsGLMfitIterate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Iteratively fitting walsGLM, internal function for walsGLM.formula and
+walsGLM.matrix.</h2>
+
+<h3>Description</h3>
+
+<p>Wrapper around <code>walsGLMfit</code> that allows iteratively
+(re-)fitting <code>walsGLM</code> models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">walsGLMfitIterate(
+  y,
+  X1,
+  X2,
+  family,
+  na.action = NULL,
+  weights = NULL,
+  offset = NULL,
+  prior = weibull(),
+  controlInitGLM = controlGLM(),
+  keepY = TRUE,
+  keepX = FALSE,
+  iterate = FALSE,
+  tol = 1e-06,
+  maxIt = 50,
+  nIt = NULL,
+  verbose = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Response as vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X1</code></td>
+<td>
+<p>Design matrix for focus regressors. Usually includes a constant
+(column full of 1s) and can be generated using <code>model.matrix</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X2</code></td>
+<td>
+<p>Design matrix for auxiliary regressors. Usually does not include
+a constant column and can also be generated using <code>model.matrix</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>Object of class <code>"familyWALS"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.action</code></td>
+<td>
+<p>Not implemented yet.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>Not implemented yet.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+<p>Not implemented yet.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior</code></td>
+<td>
+<p>Object of class <code>"familyPrior"</code>. For example
+<code>weibull</code> or <code>laplace</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>controlInitGLM</code></td>
+<td>
+<p>Controls estimation of starting values for one-step ML,
+see <code>controlGLM</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepY</code></td>
+<td>
+<p>If <code>TRUE</code>, then output keeps response.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepX</code></td>
+<td>
+<p>If <code>TRUE</code>, then output keeps the design matrices.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iterate</code></td>
+<td>
+<p>if <code>TRUE</code> then the WALS algorithm is iterated using the previous
+estimates as starting values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>Only used if <code>iterate = TRUE</code> and <code>nIt = NULL</code>.
+If the Euclidean distance between the previous and current coefficient vector
+divided by the square root of the length of the vector falls below <code>tol</code>,
+then the algorithm stops. See below for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxIt</code></td>
+<td>
+<p>Only used if <code>iterate = TRUE</code> and <code>nIt = NULL</code>. Aborts
+iterative fitting when number of iterations exceed <code>maxIt</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nIt</code></td>
+<td>
+<p>Only used if <code>iterate = TRUE</code>. If this is specified, then
+<code>tol</code> is ignored and the algorithm iterates <code>nIt</code> times.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>If <code>verbose = TRUE</code>, then it prints the iteration process
+(only relevant if <code>iterate = TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments to be passed to the workhorse function <code>walsGLMfit</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The parameter <code>tol</code> is used to control the convergence of the iterative
+fitting algorithm. Let <code class="reqn">i</code> be the current iteration step for the
+coefficient vector <code class="reqn">\beta_{i} = (\beta_{i,1}, \ldots, \beta_{i,k})', k &gt; 0</code>.
+If
+</p>
+<p style="text-align: center;"><code class="reqn">\frac{||\beta_{i} - \beta_{i-1}||_{2}}{\sqrt{k}}
+= \sqrt{\frac{\sum_{j = 1}^{k} (\beta_{i,j} - \beta_{i-1,j})^{2}}{k}} &lt; \texttt{tol},</code>
+</p>
+
+<p>then the fitting process is assumed to have converged and stops.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing all elements returned from <code>walsGLMfit</code>
+and additionally the following elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>If <code>keepY = TRUE</code>, contains the response vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>list. If <code>keepX = TRUE</code>, then it is a list with elements
+<code>x1</code> and <code>x2</code> containing the design matrices of the focus and
+auxiliary regressors, respectively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initialFit</code></td>
+<td>
+<p>List containing information (e.g. convergence) on the
+estimation of the starting values for <code>walsGLMfit</code>.
+See <code>glm.fit</code> for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>returns the argument <code>weights</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+<p>returns the argument <code>offset</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>converged</code></td>
+<td>
+<p>Logical. Only relevant if <code>iterate = TRUE</code>. Equals
+<code>TRUE</code> if iterative fitting converged, else <code>FALSE</code>. Is <code>NULL</code>
+if <code>iterate = FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>it</code></td>
+<td>
+<p>Number of iterations run in the iterative fitting algorithm.
+<code>NULL</code> if <code>iterate = FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>deviance</code></td>
+<td>
+<p>Deviance of the fitted regression model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>residuals</code></td>
+<td>
+<p>Raw residuals, i.e. response - fitted mean.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>walsGLM, walsGLMfit.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("HMDA", package = "AER")
+X &lt;- model.matrix(deny ~ pirat + hirat + lvrat + chist + mhist + phist + selfemp + afam,
+                  data = HMDA)
+X1 &lt;- X[,c("(Intercept)", "pirat", "hirat", "lvrat", "chist2", "chist3",
+        "chist4", "chist5", "chist6", "mhist2", "mhist3", "mhist4", "phistyes")]
+X2 &lt;- X[,c("selfempyes", "afamyes")]
+y &lt;- HMDA$deny
+
+str(walsGLMfitIterate(y, X1, X2, family = binomialWALS(), prior = weibull(),
+                      iterate = TRUE))
+
+</code></pre>
+
+
+</div>

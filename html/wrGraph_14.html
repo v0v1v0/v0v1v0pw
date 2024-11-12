@@ -1,0 +1,204 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>histW</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Histogram (version by WR)</h2>
+
+<h3>Description</h3>
+
+<p>This function proposes a few special tweaks to the general <code>hist</code> function :
+In a number of settings data are treated and plotted as log-data. This function allows feeding directly log2-data and displaying the x-axis   
+(re-translated) in linear scale (see argument <code>isLog</code>). 
+The default settings allow making (very) small histograms ('low resolution'), which may be used as a rough overview of bandwidth and distribution of values in <code>dat</code>. 
+Similar to <code>hist</code>, by changing the parameters <code>nBars</code> and/or <code>breaks</code> very 'high resolution' histograms can be produced.
+By default it displays n per set of data (on the top of the figure). 
+Note that the argument for (costom) title <code>main</code> is now called <code>tit</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">histW(
+  dat,
+  fileName = "histW",
+  output = "screen",
+  nBars = 8,
+  breaks = NULL,
+  tit = NULL,
+  subTi = NULL,
+  xLab = NULL,
+  yLab = NULL,
+  las = NULL,
+  xcex = 0.7,
+  imgxSize = 900,
+  useCol = NULL,
+  useBord = NULL,
+  isLog = TRUE,
+  cexSubTi = NULL,
+  cropHist = TRUE,
+  parDefault = TRUE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(matrix, list or data.frame) data to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fileName</code></td>
+<td>
+<p>(character) name of file for saving graphics</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>(character, length=1) options for output on 'screen' or saving image in various formats (set to 'jpg','png' or 'tif')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nBars</code></td>
+<td>
+<p>(integer) number of bars in histogram (default for 'low resolution' plot to give rough overview)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>breaks</code></td>
+<td>
+<p>(integer) for (partial) compatibility with hist() : use only for number of breaks (or 'FD'), gets priority over 'nBars'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tit</code></td>
+<td>
+<p>(character) custom title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subTi</code></td>
+<td>
+<p>(character) may be <code>FALSE</code> for NOT displaying, or any text, otherwise range</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xLab</code></td>
+<td>
+<p>(character) custom x-axes label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yLab</code></td>
+<td>
+<p>(character) custom y-axes label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>las</code></td>
+<td>
+<p>(integer) optional fixed text orientation of x-axis numbers : use 1 for horizontal and 2 for perpendicular, see also <code>par</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xcex</code></td>
+<td>
+<p>(numeric) cex-type expansion factor for x-axis numbers, see also <code>par</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>imgxSize</code></td>
+<td>
+<p>(integer) width of image when saving to file, see also <code>par</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useCol</code></td>
+<td>
+<p>(character or integer) custom colors, see also <code>par</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useBord</code></td>
+<td>
+<p>(character) custom histogram elements border color, see also <code>par</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>isLog</code></td>
+<td>
+<p>(logical) for lin scale signal intensity values where repesentation needs log, assume log2 if <code>TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexSubTi</code></td>
+<td>
+<p>(numerical) subtitle size (expansion factor cex), see also <code>par</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cropHist</code></td>
+<td>
+<p>(logical) -not implemented yet- designed for cutting off bars with very low ('insignificant') values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parDefault</code></td>
+<td>
+<p>(logical) to automatic adjusting par(marg=,cex.axis=0.8), see also <code>par</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additonal messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function produces a histogram type graphic (to the ccurrent graphical device)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>hist</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2016); dat1 &lt;- round(c(rnorm(200,6,0.5),rlnorm(300,2,0.5),rnorm(100,17)),2)
+dat1 &lt;- dat1[which(dat1 &lt;50 &amp; dat1 &gt; 0.2)]
+histW(dat1, br="FD", isLog=FALSE)
+histW(log2(dat1), br="FD", isLog=TRUE)
+
+## quick overview of distributions  
+layout(partitionPlot(4))
+for(i in 1:4) histW(iris[,i], isLog=FALSE, tit=colnames(iris)[i])
+</code></pre>
+
+
+</div>

@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>server_opts</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Webfakes web server options</h2>
+
+<h3>Description</h3>
+
+<p>Webfakes web server options
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">server_opts(
+  remote = FALSE,
+  port = NULL,
+  num_threads = 1,
+  interfaces = "127.0.0.1",
+  enable_keep_alive = FALSE,
+  access_log_file = remote,
+  error_log_file = TRUE,
+  tcp_nodelay = FALSE,
+  throttle = Inf
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>remote</code></td>
+<td>
+<p>Meta-option. If set to <code>TRUE</code>, webfakes uses slightly
+different defaults, that are more appropriate for a background
+server process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>port</code></td>
+<td>
+<p>Port to start the web server on. Defaults to a randomly
+chosen port.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num_threads</code></td>
+<td>
+<p>Number of request handler threads to use. Typically
+you don't need more than one thread, unless you run test cases in
+parallel or you make concurrent HTTP requests.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interfaces</code></td>
+<td>
+<p>The network interfaces to listen on. Being a test
+web server, it defaults to the localhost. Only bind to a public
+interface if you know what you are doing. webfakes was not designed
+to serve public web pages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>enable_keep_alive</code></td>
+<td>
+<p>Whether the server keeps connections alive.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>access_log_file</code></td>
+<td>
+<p><code>TRUE</code>, <code>FALSE</code>, or a path. See 'Logging'
+below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>error_log_file</code></td>
+<td>
+<p><code>TRUE</code>, <code>FALSE</code>, or a path. See 'Logging'
+below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tcp_nodelay</code></td>
+<td>
+<p>if <code>TRUE</code> then packages will be sent as soon as
+possible, instead of waiting for a full buffer or timeout to occur.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>throttle</code></td>
+<td>
+<p>Limit download speed for clients. If not <code>Inf</code>,
+then it is the maximum number of bytes per second, that is sent to
+as connection.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>List of options that can be passed to <code>webfakes_app$listen()</code>
+(see <code>new_app()</code>), and <code>new_app_process()</code>.
+</p>
+
+
+<h3>Logging</h3>
+
+
+<ul>
+<li>
+<p> For <code>access_log_file</code>, <code>TRUE</code> means <code style="white-space: pre;">⁠&lt;log-dir&gt;/access.log⁠</code>.
+</p>
+</li>
+<li>
+<p> For <code>error_log_file</code>, <code>TRUE</code> means <code style="white-space: pre;">⁠&lt;log-dir&gt;/error.log⁠</code>.
+</p>
+</li>
+</ul>
+<p><code style="white-space: pre;">⁠&lt;log-dir&gt;⁠</code> is set to the contents of the <code>WEBFAKES_LOG_DIR</code>
+environment variable, if it is set. Otherwise it is set to
+<code style="white-space: pre;">⁠&lt;tmpdir&gt;/webfakes⁠</code> for local apps and <code style="white-space: pre;">⁠&lt;tmpdir&gt;/&lt;pid&gt;/webfakes⁠</code> for
+remote apps (started with <code>new_app_procss()</code>).
+</p>
+<p><code style="white-space: pre;">⁠&lt;tmpdir&gt;⁠</code> is the session temporary directory of the <em>main process</em>.
+</p>
+<p><code style="white-space: pre;">⁠&lt;pid&gt;⁠</code> is the process id of the subprocess.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># See the defaults
+server_opts()
+</code></pre>
+
+
+</div>

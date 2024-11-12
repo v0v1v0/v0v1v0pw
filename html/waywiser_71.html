@@ -1,0 +1,195 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ww_willmott_d</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Willmott's d and related values</h2>
+
+<h3>Description</h3>
+
+<p>These functions calculate Willmott's d value, a proposed replacement for R2
+which better differentiates between types and magnitudes of possible
+covariations. Additional functions calculate systematic and unsystematic
+components of MSE and RMSE; the sum of the systematic and unsystematic
+components of MSE equal total MSE (though the same is not true for RMSE).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ww_willmott_d(data, ...)
+
+## S3 method for class 'data.frame'
+ww_willmott_d(data, truth, estimate, na_rm = TRUE, ...)
+
+ww_willmott_d_vec(truth, estimate, na_rm = TRUE, ...)
+
+ww_willmott_d1(data, ...)
+
+## S3 method for class 'data.frame'
+ww_willmott_d1(data, truth, estimate, na_rm = TRUE, ...)
+
+ww_willmott_d1_vec(truth, estimate, na_rm = TRUE, ...)
+
+ww_willmott_dr(data, ...)
+
+## S3 method for class 'data.frame'
+ww_willmott_dr(data, truth, estimate, na_rm = TRUE, ...)
+
+ww_willmott_dr_vec(truth, estimate, na_rm = TRUE, ...)
+
+ww_systematic_mse(data, ...)
+
+## S3 method for class 'data.frame'
+ww_systematic_mse(data, truth, estimate, na_rm = TRUE, ...)
+
+ww_systematic_mse_vec(truth, estimate, na_rm = TRUE, ...)
+
+ww_unsystematic_mse(data, ...)
+
+## S3 method for class 'data.frame'
+ww_unsystematic_mse(data, truth, estimate, na_rm = TRUE, ...)
+
+ww_unsystematic_mse_vec(truth, estimate, na_rm = TRUE, ...)
+
+ww_systematic_rmse(data, ...)
+
+## S3 method for class 'data.frame'
+ww_systematic_rmse(data, truth, estimate, na_rm = TRUE, ...)
+
+ww_systematic_rmse_vec(truth, estimate, na_rm = TRUE, ...)
+
+ww_unsystematic_rmse(data, ...)
+
+## S3 method for class 'data.frame'
+ww_unsystematic_rmse(data, truth, estimate, na_rm = TRUE, ...)
+
+ww_unsystematic_rmse_vec(truth, estimate, na_rm = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A <code>data.frame</code> containing the columns specified by the <code>truth</code>
+and <code>estimate</code> arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not currently used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truth</code></td>
+<td>
+<p>The column identifier for the true results
+(that is <code>numeric</code>). This should be an unquoted column name although
+this argument is passed by expression and supports
+quasiquotation (you can unquote column
+names). For <code style="white-space: pre;">⁠_vec()⁠</code> functions, a <code>numeric</code> vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimate</code></td>
+<td>
+<p>The column identifier for the predicted
+results (that is also <code>numeric</code>). As with <code>truth</code> this can be
+specified different ways but the primary method is to use an
+unquoted variable name. For <code style="white-space: pre;">⁠_vec()⁠</code> functions, a <code>numeric</code> vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na_rm</code></td>
+<td>
+<p>A <code>logical</code> value indicating whether <code>NA</code>
+values should be stripped before the computation proceeds.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Values of d and d1 range from 0 to 1, with 1 indicating perfect agreement.
+Values of
+dr range from -1 to 1, with 1 similarly indicating perfect agreement. Values
+of RMSE are in the same units as <code>truth</code> and <code>estimate</code>, while values of MSE
+are in squared units. <code>truth</code> and <code>estimate</code> must be the same length. This
+function is not explicitly spatial and as such can be applied to data with
+any number of dimensions and any coordinate reference system.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A tibble with columns .metric, .estimator, and .estimate and 1 row of values.
+For grouped data frames, the number of rows returned will be the same as the number of groups.
+For <code style="white-space: pre;">⁠_vec()⁠</code> functions, a single value (or NA).
+</p>
+
+
+<h3>References</h3>
+
+<p>Willmott, C. J. 1981. "On the Validation of Models". Physical Geography 2(2),
+pp 184-194, doi: 10.1080/02723646.1981.10642213.
+</p>
+<p>Willmott, C. J. 1982. "Some Comments on the Evaluation of Model Performance".
+Bulletin of the American Meteorological Society 63(11), pp 1309-1313,
+doi: 10.1175/1520-0477(1982)063&lt;1309:SCOTEO&gt;2.0.CO;2.
+</p>
+<p>Willmott C. J., Ackleson S. G., Davis R. E., Feddema J. J., Klink K. M.,
+Legates D. R., O’Donnell J., Rowe C. M. 1985. "Statistics for the
+evaluation of model performance." Journal of Geophysical Research
+90(C5): 8995–9005, doi: 10.1029/jc090ic05p08995
+</p>
+<p>Willmott, C. J., Robeson, S. M., and Matsuura, K. "A refined index of model
+performance". International Journal of Climatology 32, pp 2088-2094, doi:
+10.1002/joc.2419.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other agreement metrics: 
+<code>ww_agreement_coefficient()</code>
+</p>
+<p>Other yardstick metrics: 
+<code>ww_agreement_coefficient()</code>,
+<code>ww_global_geary_c()</code>,
+<code>ww_global_moran_i()</code>,
+<code>ww_local_geary_c()</code>,
+<code>ww_local_getis_ord_g()</code>,
+<code>ww_local_moran_i()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- c(6, 8, 9, 10, 11, 14)
+y &lt;- c(2, 3, 5, 5, 6, 8)
+
+ww_willmott_d_vec(x, y)
+ww_willmott_d1_vec(x, y)
+ww_willmott_dr_vec(x, y)
+ww_systematic_mse_vec(x, y)
+ww_unsystematic_mse_vec(x, y)
+ww_systematic_rmse_vec(x, y)
+ww_unsystematic_rmse_vec(x, y)
+
+example_df &lt;- data.frame(x = x, y = y)
+ww_willmott_d(example_df, x, y)
+ww_willmott_d1(example_df, x, y)
+ww_willmott_dr(example_df, x, y)
+ww_systematic_mse(example_df, x, y)
+ww_unsystematic_mse(example_df, x, y)
+ww_systematic_rmse(example_df, x, y)
+ww_unsystematic_rmse(example_df, x, y)
+
+</code></pre>
+
+
+</div>

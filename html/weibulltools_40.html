@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mcs_mileage</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Simulation of Unknown Covered Distances using a Monte Carlo Approach</h2>
+
+<h3>Description</h3>
+
+<p>This function simulates distances for units where these are unknown.
+</p>
+<p>First, random numbers of the annual mileage distribution, estimated by
+dist_mileage, are drawn. Second, the drawn annual distances are
+converted with respect to the actual operating times (in days) using a linear
+relationship. See 'Details'.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mcs_mileage(x, ...)
+
+## S3 method for class 'wt_mcs_mileage_data'
+mcs_mileage(x, distribution = c("lognormal", "exponential"), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>tibble</code> of class <code>wt_mcs_mileage_data</code> returned by mcs_mileage_data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the annual mileage.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><strong>Assumption of linear relationship</strong>: Imagine the distance of the vehicle
+is unknown. A distance of 3500.25 kilometers (km) was drawn from the annual
+distribution and the known operating time is 200 days (d). So the resulting
+distance of this vehicle is
+</p>
+<p style="text-align: center;"><code class="reqn">3500.25 km \cdot (\frac{200 d} {365 d}) = 1917.945 km</code>
+</p>
+
+
+
+<h3>Value</h3>
+
+<p>A list with class <code>wt_mcs_mileage</code> containing the following elements:
+</p>
+
+<ul>
+<li> <p><code>data</code> : A <code>tibble</code> returned by mcs_mileage_data where two modifications
+has been made:
+</p>
+
+<ul>
+<li>
+<p> If the column <code>status</code> exists, the <code>tibble</code> has additional classes
+<code>wt_mcs_data</code> and <code>wt_reliability_data</code>. Otherwise, the <code>tibble</code> only has
+the additional class <code>wt_mcs_data</code> (which is not supported by estimate_cdf).
+</p>
+</li>
+<li>
+<p> The column <code>mileage</code> is renamed to <code>x</code> (to be in accordance with
+reliability_data) and contains simulated distances for incomplete
+observations and input distances for the complete observations.
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>sim_data</code> : A <code>tibble</code> with column <code>sim_mileage</code> that holds the simulated
+distances for incomplete cases and <code>0</code> for complete cases.
+</p>
+</li>
+<li> <p><code>model_estimation</code> : A list returned by dist_mileage.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>dist_mileage for the determination of a parametric annual mileage
+distribution and estimate_cdf for the estimation of failure probabilities.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># MCS data preparation:
+mcs_tbl &lt;- mcs_mileage_data(
+  field_data,
+  mileage = mileage,
+  time = dis,
+  status = status,
+  id = vin
+)
+
+# Example 1 - Reproducibility of drawn random numbers:
+set.seed(1234)
+mcs_distances &lt;- mcs_mileage(
+  x = mcs_tbl,
+  distribution = "lognormal"
+)
+
+# Example 2 - MCS for distances with exponential annual mileage distribution:
+mcs_distances_2 &lt;- mcs_mileage(
+  x = mcs_tbl,
+  distribution = "exponential"
+)
+
+# Example 3 - MCS for distances with downstream probability estimation:
+## Apply 'estimate_cdf()' to *$data:
+prob_estimation &lt;- estimate_cdf(
+  x = mcs_distances$data,
+  methods = "kaplan"
+)
+
+## Apply 'plot_prob()':
+plot_prob_estimation &lt;- plot_prob(prob_estimation)
+
+</code></pre>
+
+
+</div>

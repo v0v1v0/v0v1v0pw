@@ -1,0 +1,77 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getDistributionSummary</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summary statistics from the fitted distribution</h2>
+
+<h3>Description</h3>
+
+<p>Summary statistics are calculated for the distribution with parameter estimates. Right now only the median is produced.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getDistributionSummary(distribution, paramVec, truncBounds = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>String indicating which distribution to use.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>paramVec</code></td>
+<td>
+<p>Numeric vector for the parameters associated with distribution. Assumed to be in the same order as the function indicated by <code>distribution</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truncBounds</code></td>
+<td>
+<p>Numeric, indicating bounds for the area correction calculation, see details. Default is NULL, and the bounds are set to <code>c(0,Inf)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to <code>integrate</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>truncBounds</code> argument defaults to zero as a lower bound and infinity
+as the upper bound. If a single value is provided, it is assumed as the upper
+bound with zero as the lower bound. If two or more values are provided, the
+<code>max(truncBounds)</code> is the upper bound and <code>min(truncBounds)</code> is the
+lower bound.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Data frame with the summary statistics.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+getDistributionSummary('norm',c(40,25),truncBounds=c(-Inf,Inf))
+
+getDistributionSummary('norm',c(40,25),truncBounds=NULL)
+
+getDistributionSummary('norm',c(40,25),truncBounds=c(0,30))
+
+</code></pre>
+
+
+</div>

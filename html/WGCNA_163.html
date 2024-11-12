@@ -1,0 +1,325 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>multiSetMEs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate module eigengenes. </h2>
+
+<h3>Description</h3>
+
+<p>Calculates module eigengenes for several sets.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">multiSetMEs(exprData, 
+            colors, 
+            universalColors = NULL, 
+            useSets = NULL, 
+            useGenes = NULL,
+            impute = TRUE, 
+            nPC = 1, 
+            align = "along average", 
+            excludeGrey = FALSE,
+            grey = if (is.null(universalColors)) {
+                       if (is.numeric(colors)) 0 else "grey"
+                   } else
+                       if (is.numeric(universalColors)) 0 else "grey",
+            subHubs = TRUE,
+            trapErrors = FALSE, 
+            returnValidOnly = trapErrors,
+            softPower = 6,
+            verbose = 1, indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>exprData</code></td>
+<td>
+<p>Expression data in a multi-set format (see <code>checkSets</code>). A vector of lists,
+with each list corresponding to one microarray dataset and expression data in the component <code>data</code>,
+that is <code>expr[[set]]$data[sample, probe]</code> is the expression of probe <code>probe</code> in sample
+<code>sample</code> in dataset <code>set</code>. The number of samples can be different between the sets, but the
+probes must be the same. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colors</code></td>
+<td>
+<p>A matrix of dimensions (number of probes, number of sets) giving the module assignment of
+each gene in each set. The color "grey" is interpreted as unassigned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>universalColors</code></td>
+<td>
+<p>Alternative specification of module assignment. A single vector of length
+(number of probes) giving the module assignment of each gene in all sets (that is the modules are common
+to all sets). If given, takes precedence over <code>color</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useSets</code></td>
+<td>
+<p>If calculations are requested in (a) selected set(s) only, the set(s) can be specified
+here. Defaults to all sets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useGenes</code></td>
+<td>
+<p>Can be used to restrict calculation to a subset of genes (the same subset in all
+sets). If given, <code>validColors</code> in the returned list will only contain colors for the genes
+specified in <code>useGenes</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>impute</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>, expression data will be checked for the presence of <code>NA</code>
+entries and if the latter are present, numerical data will be imputed, using function <code>impute.knn</code>
+and probes from the same module as the missing datum. The function <code>impute.knn</code> uses a fixed random
+seed giving repeatable results.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nPC</code></td>
+<td>
+<p>Number of principal components to be calculated. If only eigengenes are needed, it is best
+to set it to 1 (default). If variance explained is needed as well, use value <code>NULL</code>. This will cause
+all principal components to be computed, which is slower.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>align</code></td>
+<td>
+<p>Controls whether eigengenes, whose orientation is undetermined, should be aligned with
+average expression (<code>align = "along average"</code>, the default) or left as they are (<code>align = ""</code>).
+Any other value will trigger an error.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>excludeGrey</code></td>
+<td>
+<p>Should the improper module consisting of 'grey' genes be excluded from the
+eigengenes?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grey</code></td>
+<td>
+<p>Value of <code>colors</code> or <code>universalColors</code> (whichever applies)
+designating the improper module. Note that if the appropriate colors argument is a
+factor of numbers, the default value will be incorrect.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subHubs</code></td>
+<td>
+<p>Controls whether hub genes should be substituted for missing eigengenes. If
+<code>TRUE</code>, each missing eigengene (i.e., eigengene whose calculation failed and the error
+was trapped) will be replaced by a weighted average of the most connected hub genes in the
+corresponding module. If this calculation fails, or if <code>subHubs==FALSE</code>, the value of
+<code>trapErrors</code> will determine whether the offending module
+will be removed or whether the function will issue an error and stop.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trapErrors</code></td>
+<td>
+<p>Controls handling of errors from that may arise when there are too many
+<code>NA</code> entries in expression data. If <code>TRUE</code>, errors from calling these functions will be
+trapped without abnormal exit.
+If <code>FALSE</code>, errors will cause the function to stop. Note, however, that <code>subHubs</code> takes
+precedence in the sense that if <code>subHubs==TRUE</code> and <code>trapErrors==FALSE</code>, an error will be
+issued only if both the principal component and the hubgene calculations have failed. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnValidOnly</code></td>
+<td>
+<p>Boolean. Controls whether the returned data frames of module eigengenes 
+contain columns
+corresponding only to modules whose eigengenes or hub genes could be calculated correctly in every
+set (<code>TRUE</code>), or whether
+the data frame should have columns for each of the input color labels (<code>FALSE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>softPower</code></td>
+<td>
+<p>The power used in soft-thresholding the adjacency matrix. Only used when the
+hubgene approximation is necessary because the principal component calculation failed. It must be
+non-negative. The default
+value should only be changed if there is a clear indication that it leads to incorrect results.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Controls verbosity of printed progress messages. 0 means silent, up to (about) 5 the
+verbosity gradually increases.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p>A single non-negative integer controlling indentation of printed messages. 0 means no
+indentation, each unit above that adds two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function calls <code>moduleEigengenes</code> for each set in <code>exprData</code>.
+</p>
+<p>Module eigengene is defined as the first principal component of the expression matrix of the
+corresponding module. The calculation may fail if the expression data has too many missing entries.
+Handling of such errors is controlled by the arguments <code>subHubs</code> and
+<code>trapErrors</code>.
+If <code>subHubs==TRUE</code>, errors in principal component calculation will be trapped and a substitute
+calculation of hubgenes will be attempted. If this fails as well, behaviour depends on
+<code>trapErrors</code>: if <code>TRUE</code>, the offending
+module will be ignored and the return value will allow the user to remove the module from further
+analysis; if <code>FALSE</code>, the function will stop.
+If <code>universalColors</code> is given, any offending
+module will be removed from all sets (see <code>validMEs</code> in return value below). 
+</p>
+<p>From the user's point of view, setting <code>trapErrors=FALSE</code> ensures that if the function returns
+normally, there will be a valid eigengene (principal component or hubgene) for each of the input
+colors. If the user sets <code>trapErrors=TRUE</code>, all calculational (but not input) errors will be
+trapped, but the user should check the output (see below) to make sure all modules have a valid
+returned eigengene.
+</p>
+<p>While the principal component calculation can fail even on relatively sound data
+(it does not take all that many "well-placed" <code>NA</code> to torpedo the
+calculation),
+it takes many more irregularities in the data for the hubgene calculation to
+fail. In fact such a failure signals there likely is something seriously wrong with the data.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of lists similar in spirit to the input <code>exprData</code>. For each set there is a list with the
+following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Module eigengenes in a data frame, with each column corresponding to one eigengene.
+The columns are named by the corresponding color with an <code>"ME"</code> prepended, e.g., <code>MEturquoise</code>
+etc. Note that, when <code>trapErrors == TRUE</code> and <code>returnValidOnly==FALSE</code>, 
+this data frame also contains entries corresponding to 
+removed modules, if any. (<code>validMEs</code> below indicates which eigengenes are valid and <code>allOK</code>
+whether all module eigengens were successfully calculated.) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>averageExpr</code></td>
+<td>
+<p>If <code>align == "along average"</code>, a dataframe containing average normalized
+expression in each module. The columns are named by the corresponding color with an <code>"AE"</code>
+prepended, e.g., <code>AEturquoise</code> etc.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varExplained</code></td>
+<td>
+<p>A dataframe in which each column corresponds to a module, with the component
+<code>varExplained[PC, module]</code> giving the variance of module <code>module</code> explained by the principal
+component no. <code>PC</code>. This is only accurate if all principal components have been computed (input
+<code>nPC = NULL</code>). At most 5 principal components are recorded in this dataframe.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nPC</code></td>
+<td>
+<p>A copy of the input <code>nPC</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>validMEs</code></td>
+<td>
+<p>A boolean vector. Each component (corresponding to the columns in <code>data</code>)
+is <code>TRUE</code> if the corresponding eigengene is valid, and <code>FALSE</code>
+if it is invalid. Valid eigengenes include both principal components and their hubgene
+approximations.
+When <code>returnValidOnly==FALSE</code>, by definition all returned eigengenes are valid and the
+entries of <code>validMEs</code> are all <code>TRUE</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>validColors</code></td>
+<td>
+<p>A copy of the input colors (<code>universalColors</code> if set, otherwise 
+<code>colors[, set]</code>) with entries corresponding to invalid modules set to
+<code>grey</code> if given, otherwise 0 if the appropriate input colors are numeric and "grey" otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allOK</code></td>
+<td>
+<p>Boolean flag signalling whether all eigengenes have been calculated correctly, either
+as principal components or as the hubgene approximation. If <code>universalColors</code> is set, this flag
+signals whether all eigengenes are valid in all sets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allPC</code></td>
+<td>
+<p>Boolean flag signalling whether all returned eigengenes are principal components.
+This flag (as well as the subsequent ones) is set independently for each set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>isPC</code></td>
+<td>
+<p>Boolean vector. Each component (corresponding to the columns in <code>eigengenes</code>) is
+<code>TRUE</code> if the corresponding eigengene is the first principal component and <code>FALSE</code> if it
+is the hubgene approximation or is invalid. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>isHub</code></td>
+<td>
+<p>Boolean vector. Each component (corresponding to the columns in <code>eigengenes</code>) is
+<code>TRUE</code> if the corresponding eigengene is the hubgene approximation and <code>FALSE</code> if it
+is the first principal component or is invalid.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>validAEs</code></td>
+<td>
+<p>Boolean vector. Each component (corresponding to the columns in <code>eigengenes</code>) is
+<code>TRUE</code> if the corresponding module average expression is valid.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allAEOK</code></td>
+<td>
+<p>Boolean flag signalling whether all returned module average expressions contain
+valid data. Note that <code>returnValidOnly==TRUE</code> does not imply <code>allAEOK==TRUE</code>: 
+some invalid average expressions may be
+returned if their corresponding eigengenes have been calculated correctly.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder, <a href="mailto:Peter.Langfelder@gmail.com">Peter.Langfelder@gmail.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>moduleEigengenes</code></p>
+
+
+</div>

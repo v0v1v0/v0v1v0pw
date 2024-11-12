@@ -1,0 +1,167 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rpanet</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate PA networks.</h2>
+
+<h3>Description</h3>
+
+<p>Generate preferential attachment (PA) networks with linear or non-linear
+preference functions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rpanet(
+  nstep,
+  initial.network = list(edgelist = matrix(c(1, 2), nrow = 1), edgeweight = 1, directed =
+    TRUE),
+  control,
+  method = c("binary", "linear", "bagx", "bag")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>nstep</code></td>
+<td>
+<p>Number of steps.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initial.network</code></td>
+<td>
+<p>A <code>wdnet</code> object or a list representing the
+initial network. By default, <code>initial.network</code> has one directed edge
+from node 1 to node 2 with weight 1. It can contain the following components:
+a two-column matrix <code>edgelist</code> representing the edges; a vector
+<code>edgeweight</code> representing the weight of edges; a logical argument
+<code>directed</code> indicating whether the initial network is directed. If
+<code>edgeweight</code> is not specified, all edges from the initial network are
+assumed to have weight 1. In addition, an integer vector
+<code>nodegroup</code> can be added to the list for specifing node groups;
+<code>nodegroup</code> is defined for directed networks, if <code>NULL</code>, all
+nodes from the seed network are assumed to be in group 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>An <code>rpacontrol</code> object controlling the PA network
+generation process. If not specified, all the control parameters will be
+set to default. For more details, see <code>rpa_control_scenario()</code>,
+<code>rpa_control_newedge()</code>, <code>rpa_control_edgeweight()</code>,
+<code>rpa_control_preference</code> and <code>rpa_control_reciprocal()</code>. Under
+the default setup, at each step, a new edge of weight 1 is added from a new
+node <code>A</code> to an existing node <code>B</code> (<code>alpha</code> scenario), where
+<code>B</code> is chosen with probability proportional to its in-strength + 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Which method to use: <code>binary</code>, <code>linear</code>, <code>bagx</code>
+or <code>bag</code>. For <code>bag</code> and <code>bagx</code> methods, <code>beta.loop</code>
+must be <code>TRUE</code>, default preference functions must be used, and
+<code>sparams</code> should be set to <code>c(1, 1, 0, 0, a)</code>, <code>tparams</code> to
+<code>c(0, 0, 1, 1, b)</code>, and <code>param</code> to <code>c(1, c)</code>, where
+<code>a</code>, <code>b</code>, and <code>c</code> are non-negative constants; furthermore,
+reciprocal edges and sampling without replacement are not considered, i.e.,
+option <code>rpa_control_reciprocal()</code> must be set as default,
+<code>snode.replace</code>, <code>tnode.replace</code> and <code>node.replace</code> must be
+<code>TRUE</code>. In addition, <code>bag</code> method only works for unweighted
+networks and does not consider multiple edges, i.e.,
+<code>rpa_control_edgeweight()</code> and <code>rpa_control_newedge()</code> must be
+set as default.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a <code>wdnet</code> object that includes the following components:
+</p>
+
+<ul>
+<li> <p><code>directed</code>: Logical, whether the network is directed.
+</p>
+</li>
+<li> <p><code>weighted</code>: Logical, whether the network is weighted.
+</p>
+</li>
+<li> <p><code>edgelist</code>: A two-column matrix representing the edges.
+</p>
+</li>
+<li> <p><code>edge.attr</code>: A data frame including edge weights and edge
+scenarios (0: from initial network; 1: <code>alpha</code>; 2: <code>beta</code>;
+3: <code>gamma</code>; 4: <code>xi</code>; 5; <code>rho</code>; 6: reciprocal edge).
+</p>
+</li>
+<li> <p><code>node.attr</code>: A data frame including node out- and
+in-strength, node source and target preference scores (for directed
+networks), node strength and preference scores (for undirected
+networks), and node group (if applicable).
+</p>
+</li>
+<li> <p><code>newedge</code>: The number of new edges at each step, including
+reciprocal edges.
+</p>
+</li>
+<li> <p><code>control</code>: An <code>rpacontrol</code> object that is used to
+generate the network.
+</p>
+</li>
+</ul>
+<h3>Note</h3>
+
+<p>The <code>binary</code> method implements binary search algorithm;
+<code>linear</code> represents linear search algorithm; <code>bag</code> method
+implements the algorithm from Wan et al. (2017); <code>bagx</code> puts all the
+edges into a bag, then samples edges and find the source/target node of the
+sampled edge.
+</p>
+
+
+<h3>References</h3>
+
+<ul><li>
+<p> Wan P, Wang T, Davis RA, Resnick SI (2017).
+Fitting the Linear Preferential Attachment Model. Electronic Journal of
+Statistics, 11(2), 3738–3780.</p>
+</li></ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Control edge scenario and edge weight through rpa_control_scenario()
+# and rpa_control_edgeweight(), respectively,
+# while keeping rpa_control_newedge(),
+# rpa_control_preference() and rpa_control_reciprocal() as default.
+set.seed(123)
+control &lt;- rpa_control_scenario(alpha = 0.5, beta = 0.5) +
+  rpa_control_edgeweight(
+    sampler = function(n) rgamma(n, shape = 5, scale = 0.2)
+  )
+ret1 &lt;- rpanet(nstep = 1e3, control = control)
+
+# In addition, set node groups and probability of creating reciprocal edges.
+control &lt;- control + rpa_control_reciprocal(
+  group.prob = c(0.4, 0.6),
+  recip.prob = matrix(runif(4), ncol = 2)
+)
+ret2 &lt;- rpanet(nstep = 1e3, control = control)
+
+# Further, set the number of new edges in each step as Poisson(2) + 1 and use
+# ret2 as a seed network.
+control &lt;- control + rpa_control_newedge(
+  sampler = function(n) rpois(n, lambda = 2) + 1
+)
+ret3 &lt;- rpanet(nstep = 1e3, initial.network = ret2, control = control)
+
+</code></pre>
+
+
+</div>

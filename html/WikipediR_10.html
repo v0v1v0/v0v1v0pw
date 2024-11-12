@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>page_content</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieves MediaWiki page content</h2>
+
+<h3>Description</h3>
+
+<p>wiki_page retrieves the DOM of a particular MediaWiki page,
+as a HTML blob inside a JSON object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">page_content(
+  language = NULL,
+  project = NULL,
+  domain = NULL,
+  page_name,
+  page_id = NULL,
+  as_wikitext = FALSE,
+  clean_response = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>The language code of the project you wish to query,
+if appropriate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>The project you wish to query ("wikiquote"), if appropriate.
+Should be provided in conjunction with <code>language</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>domain</code></td>
+<td>
+<p>as an alternative to a <code>language</code> and <code>project</code> combination,
+you can also provide a domain ("rationalwiki.org") to the URL constructor, allowing
+for the querying of non-Wikimedia MediaWiki instances.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>page_name</code></td>
+<td>
+<p>The title of the page you want to retrieve</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>page_id</code></td>
+<td>
+<p>the pageID of the page you want to retrieve. Set to NULL by default,
+and an alternative to page_name; if both are provided, page_id will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>as_wikitext</code></td>
+<td>
+<p>whether to retrieve the wikimarkup (TRUE) or the HTML (FALSE).
+Set to FALSE by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clean_response</code></td>
+<td>
+<p>whether to do some basic sanitising of the resulting data structure.
+Set to FALSE by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments to pass to httr's GET.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>revision_diff</code> for retrieving 'diffs' between revisions,
+<code>revision_content</code> for retrieving the text of specified revisions.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+#Content from a Wikimedia project
+wp_content &lt;- page_content("en","wikipedia", page_name = "Aaron Halfaker")
+
+#Content by ID
+wp_content &lt;- page_content("en", "wikipedia", page_id = 12)
+
+#Content from a non-Wikimedia project
+rw_content &lt;- page_content(domain = "rationalwiki.org", page_name = "New Age")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

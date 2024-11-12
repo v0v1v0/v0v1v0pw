@@ -1,0 +1,179 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wstCV</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Performs two-fold cross-validation estimation using packet-ordered non-decimated wavelet transforms and one, global, threshold. </h2>
+
+<h3>Description</h3>
+
+<p>Performs Nason's 1996 two-fold cross-validation estimation using packet-ordered non-decimated wavelet transforms and one, global, threshold. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wstCV(ndata, ll = 3, type = "soft", filter.number = 10, family = 
+	"DaubLeAsymm", tol = 0.01, verbose = 0, plot.it = FALSE, norm = 
+	l2norm, InverseType = "average", uvdev = madmad)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ndata</code></td>
+<td>
+<p>the noisy data. This is a vector containing the signal plus noise. The length of this vector should be a power of two.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ll</code></td>
+<td>
+<p>the primary resolution for this estimation. Note that the primary resolution is <em>problem-specific</em>: you have to find out which is the best value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>whether to use hard or soft thresholding. See the explanation for this argument in the <code>threshold.wst</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.number</code></td>
+<td>
+<p>This selects the smoothness of wavelet that you want to use in the decomposition. By default this is 10, the Daubechies least-asymmetric orthonormal compactly supported wavelet with 10 vanishing moments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>specifies the family of wavelets that you want to use. The options are "DaubExPhase" and "DaubLeAsymm".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>the cross-validation tolerance which decides when an estimate is sufficiently close to the truth (or estimated to be so).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>If <code>TRUE</code> then informative messages are printed during the progression of the function, otherwise they are not.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.it</code></td>
+<td>
+<p>If <code>TRUE</code> then a plot of the progress of optimising the error estimate for different values of the threshold is generated as the algorithm proceeds. The algorithm tries to minimize the error estimate so you should see a “bowl” developing. After each iteration the error estimate is plotted with the iteration number so you should see the numbers tend to the bottom of the bowl.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>norm</code></td>
+<td>
+<p>which measure of distance to judge the dissimilarity between the estimates. The functions <code>l2norm</code> and <code>linfnorm</code> are suitable examples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>InverseType</code></td>
+<td>
+<p>The possible options are "average" or "minent". The former uses basis averaging to form estimates of the unknown function. The "minent" function selects a basis using the Coifman and Wickerhauser, 1992 algorithm to select a basis to invert.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uvdev</code></td>
+<td>
+<p>Universal thresholding is used to generate an upper bound for the ideal threshold. This argument provides the function that computes an estimate of the variance of the noise for use with the universal threshold calculation (see <code>threshold.wst</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function implements the cross-validation method detailed by Nason, 1996 for computing an estimate of the error between an estimate and the “truth”. The difference here is that it uses the <code>packet ordered non-decimated wavelet transform</code> rather than the standard Mallat <code>wd</code> discrete wavelet transform. As such it is an examples of the translation-invariant denoising of Coifman and Donoho, 1995 but uses cross-validation to choose the threshold rather than SUREshrink. 
+</p>
+<p>Note that the procedure outlined above can use <code>AvBasis</code> basis averaging or basis selection and inversion using the Coifman and Wickerhauser, 1992 best-basis algorithm 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list returning the results of the cross-validation algorithm. The list includes the following components: 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>ndata</code></td>
+<td>
+<p>a copy of the input noisy data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvwr</code></td>
+<td>
+<p>a reconstruction of the best estimate computed using this algorithm. It is the inverse (computed depending on what the InverseType argument was) of the <code>xvwrWSTt</code> component. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvwrWSTt</code></td>
+<td>
+<p>a thresholded version of the packet-ordered non-decimated wavelet transform of the noisy data using the best threshold discovered by this cross-validation algorithm.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uvt</code></td>
+<td>
+<p>the universal threshold used as the upper bound for the algorithm that tries to discover the optimal cross-validation threshold. The lower bound is always zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvthresh</code></td>
+<td>
+<p>the best threshold as discovered by cross-validation. Note that this is one number, the global threshold. The <code>wstCVl</code> function should be used to compute a level-dependent threshold. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xkeep</code></td>
+<td>
+<p>a vector containing the various thresholds used by the optimisation algorithm in trying to determine the best one. The length of this vector cannot be pre-determined but depends on the noisy data, thresholding method, and optimisation tolerance. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fkeep</code></td>
+<td>
+<p>a vector containing the value of the estimated error used by the optimisation algorithm in trying to minimize the estimated error. The length, like that of xkeep cannot be predetermined for the same reasons.</p>
+</td>
+</tr>
+</table>
+<h3>RELEASE</h3>
+
+<p>Version 3.6 Copyright Guy Nason 1995</p>
+
+
+<h3>Note</h3>
+
+<p>If <code>plot.it</code> is <code>TRUE</code> then a plot indicating the progression of the optimisation algorithm is plotted. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>GetRSSWST</code>, <code>linfnorm</code>, <code>linfnorm</code>, <code>threshold.wst</code>, <code>wst</code>, <code>wst.object</code>, <code>wstCVl</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Example PENDING
+#
+</code></pre>
+
+
+</div>

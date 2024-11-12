@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>lowerTri2matrix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Reconstruct a symmetric matrix from a distance (lower-triangular) representation
+</h2>
+
+<h3>Description</h3>
+
+<p>Assuming the input vector contains a vectorized form of the distance representation of a symmetric matrix,
+this function creates the corresponding matrix. This is useful when re-forming symmetric matrices that have
+been vectorized to save storage space.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">lowerTri2matrix(x, diag = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>a numeric vector 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>diag</code></td>
+<td>
+
+<p>value to be put on the diagonal. Recycled if necessary.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function assumes that <code>x</code> contains the vectorized form of the distance representation of a
+symmetric matrix. In particular, <code>x</code> must have a length that can be expressed as n*(n-1)/2, with n an
+integer. The result of the function is then an n times n matrix. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A symmetric matrix whose lower triangle is given by <code>x</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  # Create a symmetric matrix
+  m = matrix(c(1:16), 4,4)
+  mat = (m + t(m));
+  diag(mat) = 0;
+
+  # Print the matrix
+  mat
+
+  # Take the lower triangle and vectorize it (in two ways)
+  x1 = mat[lower.tri(mat)]
+  x2 = as.vector(as.dist(mat))
+
+  all.equal(x1, x2) # The vectors are equal
+
+  # Turn the vectors back into matrices
+  new.mat = lowerTri2matrix(x1, diag = 0);
+
+  # Did we get back the same matrix?
+
+  all.equal(mat, new.mat)
+
+</code></pre>
+
+
+</div>

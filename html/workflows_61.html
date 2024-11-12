@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>workflows-internals</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Internal workflow functions</h2>
+
+<h3>Description</h3>
+
+<p><code>.fit_pre()</code>, <code>.fit_model()</code>, and <code>.fit_finalize()</code> are internal workflow
+functions for <em>partially</em> fitting a workflow object. They are only exported
+for usage by the tuning package, <a href="https://github.com/tidymodels/tune">tune</a>,
+and the general user should never need to worry about them.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">.fit_pre(workflow, data)
+
+.fit_model(workflow, control)
+
+.fit_finalize(workflow)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>workflow</code></td>
+<td>
+<p>A workflow
+</p>
+<p>For <code>.fit_pre()</code>, this should be a fresh workflow.
+</p>
+<p>For <code>.fit_model()</code>, this should be a workflow that has already been trained
+through <code>.fit_pre()</code>.
+</p>
+<p>For <code>.fit_finalize()</code>, this should be a workflow that has been through
+both <code>.fit_pre()</code> and <code>.fit_model()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data frame of predictors and outcomes to use when fitting the
+workflow</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>A <code>control_workflow()</code> object</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(parsnip)
+library(recipes)
+library(magrittr)
+
+model &lt;- linear_reg() %&gt;%
+  set_engine("lm")
+
+wf_unfit &lt;- workflow() %&gt;%
+  add_model(model) %&gt;%
+  add_formula(mpg ~ cyl + log(disp))
+
+wf_fit_pre &lt;- .fit_pre(wf_unfit, mtcars)
+wf_fit_model &lt;- .fit_model(wf_fit_pre, control_workflow())
+wf_fit &lt;- .fit_finalize(wf_fit_model)
+
+# Notice that fitting through the model doesn't mark the
+# workflow as being "trained"
+wf_fit_model
+
+# Finalizing the workflow marks it as "trained"
+wf_fit
+
+# Which allows you to predict from it
+try(predict(wf_fit_model, mtcars))
+
+predict(wf_fit, mtcars)
+</code></pre>
+
+
+</div>

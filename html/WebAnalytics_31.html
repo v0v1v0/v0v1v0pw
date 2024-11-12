@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotSave</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Save a plot to a file with a generated name</h2>
+
+<h3>Description</h3>
+
+<p>These two functions save a base graphics plot function call or a ggplot object to a file with a generated name in the format (eps or jpg) specified and return the generated file name.   
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotSaveGG(thePlot, fileID, fileType = "jpg") 
+plotSave(thePlot,
+      fileID, 
+      fileType = "jpg", 
+      imageQuality=90, 
+      imageDefaultWidth=600, 
+      imageDefaultHeight=400) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>thePlot</code></td>
+<td>
+
+<p>Either a base graphics plot function call or a ggplot plot object.  The base graphics function call is valuated within the function, not at the time of the call (A peculiarity of the R language)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fileID</code></td>
+<td>
+
+<p>A unique ID for the file.  This ID is used to generate a hash which is used as the file name.  The ID may contain any characters and can, for example be a URL which would not otherwise be a valid filename.  
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fileType</code></td>
+<td>
+
+<p>Either eps or jpg depending on the file format required.  EPS files grow significantly as the number of data points grows.  For very large data sets jpg is preferable.    
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>imageQuality</code></td>
+<td>
+
+<p>The percent quality for JPG file construction.  EPS files are metafiles and do not have a percent quality.  
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>imageDefaultWidth</code></td>
+<td>
+
+<p>The width in pixels of the image 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>imageDefaultHeight</code></td>
+<td>
+
+<p>The height in pixels of the image 
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The function returns the generated file name after creating the file.  
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Greg Hunt &lt;greg@firmansyah.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+logFileName = logFileNamesGetLast(dataDirectory=datd, 
+  directoryNames=c(".", "."), 
+  fileNamePattern="*[.]log")[[1]]
+
+cols = logFileFieldsGetIIS(logFileName)
+
+logdf = logFileRead(logFileName, columnList=cols, 
+            logTimeZone = "", timeFormat = "")
+
+plotSaveGG(plotErrorRateByHour(logdf),"xxx", "eps")
+plotSave(plotResponseTimeScatter(logdf$ts, logdf$elapsed), "yyy", "jpg")
+
+</code></pre>
+
+
+</div>

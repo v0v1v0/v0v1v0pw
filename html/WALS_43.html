@@ -1,0 +1,262 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.wals</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Methods for wals and walsMatrix Objects</h2>
+
+<h3>Description</h3>
+
+<p>Methods for extracting information from fitted model-averaging objects of
+classes <code>"wals"</code> and <code>"walsMatrix"</code>. <code>"walsMatrix"</code> objects
+inherit from <code>"wals"</code>, so the methods for <code>"wals"</code> also work for
+objects of class <code>"walsMatrix"</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wals'
+predict(object, newdata, na.action = na.pass, ...)
+
+## S3 method for class 'walsMatrix'
+predict(object, newX1, newX2, ...)
+
+## S3 method for class 'wals'
+fitted(object, ...)
+
+## S3 method for class 'wals'
+residuals(object, ...)
+
+## S3 method for class 'wals'
+print(x, digits = max(3, getOption("digits") - 3), ...)
+
+## S3 method for class 'wals'
+summary(object, ...)
+
+## S3 method for class 'summary.wals'
+print(x, digits = max(3, getOption("digits") - 3), ...)
+
+## S3 method for class 'wals'
+coef(object, type = c("all", "focus", "aux"), transformed = FALSE, ...)
+
+## S3 method for class 'wals'
+vcov(object, type = c("all", "focus", "aux"), transformed = FALSE, ...)
+
+## S3 method for class 'wals'
+nobs(object, ...)
+
+## S3 method for class 'wals'
+terms(x, type = c("focus", "aux"), ...)
+
+## S3 method for class 'wals'
+model.matrix(object, type = c("focus", "aux"), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object, x</code></td>
+<td>
+<p>An object of class <code>"wals"</code>, <code>"walsMatrix"</code> or
+<code>"summary.wals"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>Optionally, a data frame in which to look for variables with
+which to predict. If omitted, the original observations are used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.action</code></td>
+<td>
+<p>Function determining what should be done with missing values
+in <code>newdata</code>. The default is to predict <code>NA</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newX1</code></td>
+<td>
+<p>Focus regressors matrix to be used for the prediction.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newX2</code></td>
+<td>
+<p>Auxiliary regressors matrix to be used for the prediction.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>The number of significant digits to display.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Character specifying the part of the model that should be returned.
+For details see below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transformed</code></td>
+<td>
+<p>Logical specifying whether the coefficients/covariance
+matrix of original regressors (<code>FALSE</code>, default) or the transformed
+regressors (<code>TRUE</code>) should be returned.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A set of standard extractor functions for fitted model objects is available
+for objects of class <code>"wals"</code> and <code>"walsMatrix"</code>, including methods to
+the generic functions <code>print</code> and <code>summary</code>
+which print the model-averaged estimation of the coefficients along with some
+further information. As usual, the <code>summary</code> method returns an object of
+class <code>"summary.wals"</code> containing the relevant summary statistics which
+can then be printed using the associated <code>print</code> method.
+Inspired by De Luca and Magnus (2011), the summary statistics
+also show <code>Kappa</code> which is an indicator for the numerical stability of
+the method, i.e. it shows the square root of the condition number of the
+matrix <code class="reqn">\Xi = \Delta_{2} X_{2}^{\top} M_{1} X_{2} \Delta_{2}</code>.
+The summary further provides information on the prior used along with its
+parameters. The <code>summary()</code>, <code>print.summary()</code>,
+<code>print()</code> and <code>logLik()</code> methods are also inspired by the corresponding
+methods for objects of class <code>"lm"</code> in <code>stats</code> version
+4.3.1 (2023-06-16) (R Core Team 2023), see e.g. <code>print.summary.lm</code>.
+</p>
+<p>The <code>residuals</code> method computes raw residuals
+(observed - fitted).
+</p>
+<p>For <code>coef</code> and <code>vcov</code>, the <code>type</code>
+argument, either <code>"all"</code>, <code>"focus"</code> or <code>"aux"</code>, specifies which
+part of the coefficient vector/covariance matrix of the estimates should be
+returned. Additionally, the <code>transformed</code> argument specifies whether to
+return the estimated  coefficients/covariance matrix for the original
+regressors <code class="reqn">X</code> or of the transformed regressors <code class="reqn">Z</code>.
+</p>
+<p>The extractors <code>terms</code> and <code>model.matrix</code>
+behave similarly to <code>coef</code>, but they only allow <code>type = "focus"</code>
+and <code>type = "aux"</code>. They extract the corresponding component of the model.
+This is similar to the implementation of these extractors in <code>countreg</code>
+version 0.2-1 (2023-06-13) (Zeileis and Kleiber 2023; Zeileis et al. 2008), see e.g.
+<code>terms.hurdle()</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>predict.wals()</code> and <code>predict.walsMatrix()</code> return a vector
+containing the predicted means.
+</p>
+<p><code>fitted.wals()</code> returns a vector containing the fitted means
+for the data used in fitting.
+</p>
+<p><code>residuals.wals()</code> returns the raw residuals of the fitted
+model, i.e. response - fitted mean.
+</p>
+<p><code>print.wals()</code> invisibly returns its input argument <code>x</code>,
+i.e. an object of object of class <code>"wals"</code>.
+</p>
+<p><code>summary.wals</code> returns an object of class <code>"summary.wals"</code>
+which contains the necessary fields for printing the summary in
+<code>print.summary.wals()</code>.
+</p>
+<p><code>print.summary.wals()</code> invisibly returns its input argument
+<code>x</code>, i.e. an object of object of class <code>"summary.wals"</code>.
+</p>
+<p><code>coef.wals()</code> returns a vector containing the fitted coefficients.
+If <code>type = "focus"</code>, only the coefficients of the focus regressors are
+returned and if <code>type = "aux"</code>, only the coefficients of auxiliary
+regressors are returned. Else if <code>type = "all"</code>, the coefficients
+of both focus and auxiliary regressors are returned. Additionally if
+<code>transformed = FALSE</code>, <code>coef.wals()</code> returns the estimated
+coefficients for the original regressors <code class="reqn">X</code> (<code class="reqn">\beta</code> coefficients)
+and else if <code>transformed = TRUE</code> the coefficients of the transformed
+regressors <code class="reqn">Z</code> (<code class="reqn">\gamma</code> coefficients).
+</p>
+<p><code>vcov.wals()</code> returns a matrix containing the estimated
+(co-)variances of the fitted regression coefficients. If <code>type = "focus"</code>,
+only the submatrix belonging to the focus regressors is returned and if
+<code>type = "aux"</code>, only the submatrix corresponding to the auxiliary
+regressors is returned. Else if <code>type = "all"</code>, the complete covariance
+matrix is returned. Additionally if <code>transformed = FALSE</code>,
+<code>vcov.wals()</code> returns the estimated covariance matrix for the original
+regressors <code class="reqn">X</code> (<code class="reqn">\beta</code> coefficients) and else if
+<code>transformed = TRUE</code> the covariance matrix of the transformed regressors
+<code class="reqn">Z</code> (<code class="reqn">\gamma</code> coefficients).
+</p>
+<p><code>nobs.wals()</code> returns the number of observations used for
+fitting the model.
+</p>
+<p><code>terms.wals()</code> returns the <em>terms</em> representation of the fitted
+model. It is of class <code>c("terms", "formula")</code>, see <code>terms</code>
+and <code>terms.object</code> for more details. If <code>type = "focus"</code>,
+then returns the terms for the focus regressors, else if <code>type = "aux"</code>
+returns the terms for the auxiliary regressors.
+</p>
+<p><code>model.matrix.wals()</code> either returns the design matrix of the
+focus regressors (<code>type = "focus"</code>) or of the auxiliary regressors
+(<code>type = "aux"</code>). See <code>model.matrix</code> for more details.
+</p>
+
+
+<h3>References</h3>
+
+<p>De Luca G, Magnus JR (2011).
+“Bayesian model averaging and weighted-average least squares: Equivariance, stability, and numerical issues.”
+<em>The Stata Journal</em>, <b>11</b>(4), 518–544.
+<a href="https://doi.org/10.1177/1536867X1201100402">doi:10.1177/1536867X1201100402</a>.<br><br> R Core Team (2023).
+<em>R: A Language and Environment for Statistical Computing</em>.
+R Foundation for Statistical Computing, Vienna, Austria.
+<a href="https://www.R-project.org/">https://www.R-project.org/</a>.<br><br> Zeileis A, Kleiber C (2023).
+<em>countreg: Count Data Regression</em>.
+R package version 0.2-1, <a href="https://r-forge.r-project.org/projects/countreg/">https://r-forge.r-project.org/projects/countreg/</a>.<br><br> Zeileis A, Kleiber C, Jackman S (2008).
+“Regression Models for Count Data in R.”
+<em>Journal of Statistical Software</em>, <b>27</b>(8), 1–25.
+<a href="https://doi.org/10.18637/jss.v027.i08">doi:10.18637/jss.v027.i08</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>wals
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Example for wals objects
+fitGrowth &lt;- wals(gdpgrowth ~ lgdp60 + equipinv + school60 + life60 + popgrowth |
+                law + tropics + avelf + confucian, data = GrowthMPP,
+                prior = laplace())
+summary(fitGrowth)
+fitted(fitGrowth)
+vcov(fitGrowth, type = "aux")
+familyPrior(fitGrowth)
+nobs(fitGrowth)
+
+## Example for walsMatrix objects
+X1 &lt;- model.matrix(fitGrowth, type = "focus")
+X2 &lt;- model.matrix(fitGrowth, type = "aux")
+y &lt;- GrowthMPP$gdpgrowth
+fitGrowthMatrix &lt;- wals(X1, X2, y, prior = laplace())
+coef(fitGrowthMatrix)
+
+</code></pre>
+
+
+</div>

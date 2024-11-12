@@ -1,0 +1,139 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>BD.getData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Various basic operations on <code>BlockwiseData</code> objects.
+</h2>
+
+<h3>Description</h3>
+
+<p>These functions implement basic operations on <code>BlockwiseData</code> objects.
+Blockwise here means
+that the data is too large to be loaded or processed in one piece and is therefore split into blocks that can
+be handled one by one in a divide-and-conquer manner.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">BD.actualFileNames(bwData)
+BD.nBlocks(bwData)
+BD.blockLengths(bwData)
+BD.getMetaData(bwData, blocks = NULL, simplify = TRUE)
+BD.getData(bwData, blocks = NULL, simplify = TRUE)
+BD.checkAndDeleteFiles(bwData)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>bwData</code></td>
+<td>
+
+<p>A <code>BlockwiseData</code> object.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blocks</code></td>
+<td>
+
+<p>Optional vector of integers specifying the blocks on which to execute the operation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simplify</code></td>
+<td>
+
+<p>Logical: if the <code>blocks</code> argument above is of length 1, should the returned list be simplified by
+removing the redundant outer <code>list</code> structure? 
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Several functions in this package use the concept of blockwise, or "divide-and-conquer", analysis. The
+BlockwiseData class is meant to hold the blockwise data, or all necessary information about blockwise data
+that is saved in disk files. 
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>BD.actualFileNames</code></td>
+<td>
+<p>returns a vector of character strings giving the file names in which the files are
+saved, or <code>NULL</code> if the data are held in-memory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>BD.nBlocks</code></td>
+<td>
+<p>returns the number of blocks in the input object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>BD.blockLengths</code></td>
+<td>
+<p>returns the block lengths (results of applying <code>length</code> to the data in
+each block).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>BD.getMetaData</code></td>
+<td>
+<p>returns a list with one component per block. Each component is in turn a list
+containing the stored meta-data for the corresponding block. If <code>blocks</code> is of length 1 and
+<code>simplify</code> is <code>TRUE</code>, the outer (redundant) <code>list</code> is removed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>BD.getData</code></td>
+<td>
+<p>returns a list with one component per block. Each component is in turn a list
+containing the stored data for the corresponding block. If <code>blocks</code> is of length 1 and
+<code>simplify</code> is <code>TRUE</code>, the outer (redundant) <code>list</code> is removed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>BD.checkAndDeleteFiles</code></td>
+<td>
+<p>deletes the files referenced in the input <code>bwData</code> if they exist.</p>
+</td>
+</tr>
+</table>
+<h3>Warning</h3>
+
+<p>The definition of <code>BlockwiseData</code> and the functions here 
+should be considered experimental and may change in
+the future.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Definition of and other functions on <code>BlockwiseData</code>:
+</p>
+<p><code>newBlockwiseData</code> for creating new <code>BlockwiseData</code> objects;
+</p>
+<p><code>mergeBlockwiseData</code> for merging blockwise data structure;
+</p>
+<p><code>addBlockToBlockwiseData</code> for adding a new block to existing blockwise data;
+</p>
+
+
+</div>

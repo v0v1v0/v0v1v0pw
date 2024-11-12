@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>to_raise</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set raise error condition</h2>
+
+<h3>Description</h3>
+
+<p>Set raise error condition
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">to_raise(.data, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.data</code></td>
+<td>
+<p>input. Anything that can be coerced to a <code>StubbedRequest</code>
+class object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>One or more HTTP exceptions from the <span class="pkg">fauxpas</span> package. Run
+<code>grep("HTTP*", getNamespaceExports("fauxpas"), value = TRUE)</code> for a list of
+possible exceptions</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The behavior in the future will be:
+</p>
+<p>When multiple exceptions are passed, the first is used on the first
+mock, the second on the second mock, and so on. Subsequent mocks use the
+last exception
+</p>
+<p>But for now, only the first exception is used until we get that fixed
+</p>
+
+
+<h3>Value</h3>
+
+<p>an object of class <code>StubbedRequest</code>, with print method describing
+the stub
+</p>
+
+
+<h3>Raise vs. Return</h3>
+
+<p><code>to_raise()</code> always raises a stop condition, while <code>to_return(status=xyz)</code> only
+sets the status code on the returned HTTP response object. So if you want to
+raise a stop condition then <code>to_raise()</code> is what you want. But if you
+don't want to raise a stop condition use <code>to_return()</code>. Use cases for each
+vary. For example, in a unit test you may have a test expecting a 503 error;
+in this case <code>to_raise()</code> makes sense. In another case, if a unit test
+expects to test some aspect of an HTTP response object that httr, httr2,
+or crul typically returns, then you'll want <code>to_return()</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>see examples in <code>stub_request()</code>
+</p>
+
+
+</div>

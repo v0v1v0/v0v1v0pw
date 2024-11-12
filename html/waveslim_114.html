@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>spin.covariance</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute Wavelet Cross-Covariance Between Two Time Series</h2>
+
+<h3>Description</h3>
+
+<p>Computes wavelet cross-covariance or cross-correlation between two time
+series.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">spin.covariance(x, y, lag.max = NA)
+
+spin.correlation(x, y, lag.max = NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>first time series</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>second time series, same length as <code>x</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lag.max</code></td>
+<td>
+<p>maximum lag to compute cross-covariance (correlation)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See references.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List structure holding the wavelet cross-covariances (correlations)
+according to scale.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>B. Whitcher
+</p>
+
+
+<h3>References</h3>
+
+<p>Gencay, R., F. Selcuk and B. Whitcher (2001) <em>An
+Introduction to Wavelets and Other Filtering Methods in Finance and
+Economics</em>, Academic Press.
+</p>
+<p>Whitcher, B., P. Guttorp and D. B. Percival (2000) Wavelet analysis of
+covariance with application to atmospheric time series, <em>Journal of
+Geophysical Research</em>, <b>105</b>, No. D11, 14,941-14,962.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wave.covariance</code>, <code>wave.correlation</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Figure 7.9 from Gencay, Selcuk and Whitcher (2001)
+data(exchange)
+returns &lt;- diff(log(exchange))
+returns &lt;- ts(returns, start=1970, freq=12)
+wf &lt;- "d4"
+demusd.modwt &lt;- modwt(returns[,"DEM.USD"], wf, 8)
+demusd.modwt.bw &lt;- brick.wall(demusd.modwt, wf)
+jpyusd.modwt &lt;- modwt(returns[,"JPY.USD"], wf, 8)
+jpyusd.modwt.bw &lt;- brick.wall(jpyusd.modwt, wf)
+n &lt;- dim(returns)[1]
+J &lt;- 6
+lmax &lt;- 36
+returns.cross.cor &lt;- NULL
+for(i in 1:J) {
+  blah &lt;- spin.correlation(demusd.modwt.bw[[i]], jpyusd.modwt.bw[[i]], lmax)
+  returns.cross.cor &lt;- cbind(returns.cross.cor, blah)
+}
+returns.cross.cor &lt;- ts(as.matrix(returns.cross.cor), start=-36, freq=1)
+dimnames(returns.cross.cor) &lt;- list(NULL, paste("Level", 1:J))
+lags &lt;- length(-lmax:lmax)
+lower.ci &lt;- tanh(atanh(returns.cross.cor) - qnorm(0.975) /
+                 sqrt(matrix(trunc(n/2^(1:J)), nrow=lags, ncol=J, byrow=TRUE)
+                      - 3))
+upper.ci &lt;- tanh(atanh(returns.cross.cor) + qnorm(0.975) /
+                 sqrt(matrix(trunc(n/2^(1:J)), nrow=lags, ncol=J, byrow=TRUE)
+                      - 3))
+par(mfrow=c(3,2), las=1, pty="m", mar=c(5,4,4,2)+.1)
+for(i in J:1) {
+  plot(returns.cross.cor[,i], ylim=c(-1,1), xaxt="n", xlab="Lag (months)",
+       ylab="", main=dimnames(returns.cross.cor)[[2]][i])
+  axis(side=1, at=seq(-36, 36, by=12))
+  lines(lower.ci[,i], lty=1, col=2)
+  lines(upper.ci[,i], lty=1, col=2)
+  abline(h=0,v=0)
+}
+
+</code></pre>
+
+
+</div>

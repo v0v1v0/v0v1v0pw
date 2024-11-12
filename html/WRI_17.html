@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summary.WRI</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summary Function of Wasserstein Regression Model</h2>
+
+<h3>Description</h3>
+
+<p>Summary Function of Wasserstein Regression Model
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'WRI'
+summary(object, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object returned by the <code>wass_regress</code> function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a list containing the following fields:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>function call of the Wasserstein regression</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r.square</code></td>
+<td>
+<p>Wasserstein <code class="reqn">R^2</code>, the Wasserstein coefficient of determination</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>global_wasserstein_F_stat</code></td>
+<td>
+<p>Wasserstein global F test statistic from the Satterthwaite method</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>global_F_pvalue</code></td>
+<td>
+<p>p value of global F test</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>global_wasserstein_F_df</code></td>
+<td>
+<p>degrees of freedom of satterthwaite approximated sampling distribution used in global F test</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>partial_F_table</code></td>
+<td>
+<p>Partial F test for individual effects</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(strokeCTdensity)
+predictor = strokeCTdensity$predictors
+dSup = strokeCTdensity$densitySupport
+densityCurves = strokeCTdensity$densityCurve
+
+res &lt;- wass_regress(rightside_formula = ~., Xfit_df = predictor,
+Ymat = densityCurves, Ytype = 'density', Sup = dSup)
+summary(res)
+</code></pre>
+
+
+</div>

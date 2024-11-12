@@ -1,0 +1,210 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dwt</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Discrete Wavelet Transform
+</h2>
+
+<h3>Description</h3>
+
+<p>Computes the discrete wavelet transform coefficients for a univariate
+or multivariate time series.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dwt(X, filter="la8", n.levels, boundary="periodic", fast=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>A univariate or multivariate time series. Numeric vectors,
+matrices and data frames are also accepted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>Either a <code>wt.filter</code> object, a character string
+indicating which wavelet filter to use in the decomposition, or a
+numeric vector of wavelet coefficients (not scaling coefficients). See
+<code>help(wt.filter)</code> for acceptable filter names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.levels</code></td>
+<td>
+<p>An integer specifying the level of the decomposition.
+By default this is the value J such that the length of <code class="reqn">X</code> is at
+least as great as the length of the level <code class="reqn">J</code> wavelet filter,
+but less than the length of the level <code class="reqn">J+1</code> wavelet
+filter. Thus, <code class="reqn">J \le \log{(\frac{N-1}{L-1}+1)}</code>, where <code class="reqn">N</code> is the length of <code class="reqn">X</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>A character string indicating which boundary method to
+use. <code>boundary = "periodic"</code> and <code>boundary = "reflection"</code>
+are the only supported methods at this time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fast</code></td>
+<td>
+<p>A logical flag which, if true, indicates that the pyramid
+algorithm is computed with an internal C function.  Otherwise, only
+R code is used in all computations.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The discrete wavelet transform is computed via the pyramid
+algorithm, using pseudocode written by Percival and Walden (2000),
+pp. 100-101. When <code>boundary="periodic"</code> the resulting wavelet and
+scaling coefficients are computed without making changes to the
+original series - the pyramid algorithm treats <code>X</code> as if it is
+circular. However, when <code>boundary="reflection"</code> a call is made to
+<code>extend.series</code>, resulting in a new series which is reflected to
+twice the length of the original series.  The wavelet and scaling
+coefficients are then computed by using a periodic boundary condition
+on the reflected sereis, resulting in twice as many wavelet and
+scaling coefficients at each level.</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an object of class <code>dwt</code>, which is an S4 object with
+slots 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p>A list with element <code class="reqn">i</code> comprised of a matrix containing
+the <code class="reqn">i</code>th level wavelet coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>V</code></td>
+<td>
+<p>A list with element <code class="reqn">i</code> comprised of a matrix containing
+the <code class="reqn">i</code>th level scaling coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>A <code>wt.filter</code> object containing information for
+the filter used in the decomposition. See <code>help(wt.filter)</code> for
+details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>An integer value representing the level of wavelet
+decomposition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.boundary</code></td>
+<td>
+<p>A numeric vector indicating the number of boundary
+coefficients at each level of the decomposition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>A character string indicating the boundary method used
+in the decomposition. Valid values are "periodic" or "reflection".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>series</code></td>
+<td>
+<p>The original time series, <code>X</code>, in matrix format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>class.X</code></td>
+<td>
+<p>A character string indicating the class of the input
+series.  Possible values are <code>"ts"</code>, <code>"mts"</code>,
+<code>"numeric"</code>, <code>"matrix"</code>, or <code>"data.frame"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>attr.X</code></td>
+<td>
+<p>A list containing the attributes information of the
+original time series, <code>X</code>.  This is useful if <code>X</code> is an
+object of class <code>ts</code> or <code>mts</code> and it is desired to retain
+relevant time information. If the original time series, <code>X</code>, is
+a matrix or has no attributes, then <code>attr.X</code> is an empty list.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aligned</code></td>
+<td>
+<p>A logical value indicating whether the wavelet and
+scaling coefficients have been phase shifted so as to be aligned
+with relevant time information from the original series. The value
+of this slot is initially FALSE and can only be changed to TRUE via
+the <code>align</code> function, with the <code>dwt</code> object as input.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coe</code></td>
+<td>
+<p>A logical value indicating whether the center of energy
+method was used in phase alignement of the wavelet and scaling
+coefficients. By default, this value is FALSE (and will always be
+FALSE when <code>aligned</code> is FALSE) and will be set to true if the
+<code>dwt</code> object is phase shifted via the <code>align</code> function and
+center of energy method.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Eric Aldrich. ealdrich@gmail.com.</p>
+
+
+<h3>References</h3>
+
+<p>Percival, D. B. and A. T. Walden (2000) <em>Wavelet Methods for Time
+Series Analysis</em>, Cambridge University Press.</p>
+
+
+<h3>See Also</h3>
+
+<p><code>modwt</code>,
+<code>wt.filter</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># obtain the two series listed in Percival and Walden (2000), page 42
+X1 &lt;- c(.2,-.4,-.6,-.5,-.8,-.4,-.9,0,-.2,.1,-.1,.1,.7,.9,0,.3)
+X2 &lt;- c(.2,-.4,-.6,-.5,-.8,-.4,-.9,0,-.2,.1,-.1,.1,-.7,.9,0,.3)
+
+# combine them and compute DWT
+newX &lt;- cbind(X1,X2)
+wt &lt;- dwt(newX, n.levels=3, boundary="reflection", fast=FALSE)
+</code></pre>
+
+
+</div>

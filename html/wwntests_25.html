@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Q_WS_hyp_test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute size alpha single-lag hypothesis test under weak or strong white noise assumption</h2>
+
+<h3>Description</h3>
+
+<p>'Q_WS_hyp_test' computes the size alpha test of a single lag hypothesis under a weak white noise
+or strong white noise assumption using a Welch-Satterthwaite Approximation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Q_WS_hyp_test(
+  f_data,
+  lag,
+  alpha = 0.05,
+  iid = FALSE,
+  M = NULL,
+  bootstrap = FALSE,
+  block_size = "adaptive",
+  straps = 300,
+  moving = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>f_data</code></td>
+<td>
+<p>The functional data matrix with observed functions in the columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lag</code></td>
+<td>
+<p>Positive integer value. The lag to use to compute the single lag test statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Numeric value between 0 and 1 specifying the significance level to be used in the specified
+hypothesis test. The default value is 0.05. Note, the significance value is only ever used to compute the
+1-alpha quantile of the limiting distribution of the specified test's test statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iid</code></td>
+<td>
+<p>A Boolean value, FALSE by default. If given TRUE, the hypothesis test will use a strong-white
+noise assumption (instead of a weak-white noise assumption).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>Positive integer value. Number of Monte-Carlo simulations for the Welch-Satterthwaite approximation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bootstrap</code></td>
+<td>
+<p>A Boolean value, FALSE by default. If given TRUE, the hypothesis test is done by
+approximating the limiting distribution of the test statistic via a block bootstrap process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>block_size</code></td>
+<td>
+<p>A positive Integer value, with the default value being computed via the adaptive
+bandwidth selection method in the "spectral" test. Determines the block size (of each block in each
+bootstrap sample) if the test is being bootstrapped.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>straps</code></td>
+<td>
+<p>A positive Integer, with a default value of 300. Determines the number of bootstrap samples
+to take if the test is being bootstrapped. Only used if 'bootstrap' == TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>moving</code></td>
+<td>
+<p>A Boolean value, FALSE by default. If given TRUE, the performed block bootstrap will be moving
+rather than stationary.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing the p-value, the quantile, and a boolean value indicating whether or not the
+hypothesis is rejected.
+</p>
+
+
+</div>

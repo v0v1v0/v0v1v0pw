@@ -1,0 +1,77 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>notify_synthetic</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Notify the user when synthetic data are being used</h2>
+
+<h3>Description</h3>
+
+<p>This function prints a notification message when some or all of
+the data used in a project are synthetic (see <code>closed_data</code> and
+<code>synthetic</code>). See details for important information.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">notify_synthetic(..., msg = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Objects of class <code>worcs_data</code>. The function will check if
+these are original or synthetic data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>msg</code></td>
+<td>
+<p>Expression containing the message to print in case not all
+<code>worcs_data</code> are original. This message may refer to <code>is_synth</code>,
+a logical vector indicating which <code>worcs_data</code> objects are synthetic.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The preferred way to use this function is to provide specific data
+objects in the function call, using the <code>...</code> argument.
+If no such objects are provided, <code>notify_synthetic</code> will scan the
+parent environment for objects of class <code>worcs_data</code>.
+</p>
+<p>This function is emphatically designed to be included in an 'R Markdown'
+file, to dynamically generate a notification message when a third party
+'Knits' such a document without having access to all original data.
+</p>
+
+
+<h3>Value</h3>
+
+<p>No return value. This function is called for its side effect of
+printing a notification message.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>closed_data synthetic add_synthetic
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">df &lt;- iris
+class(df) &lt;- c("worcs_data", class(df))
+attr(df, "type") &lt;- "synthetic"
+notify_synthetic(df, msg = "synthetic")
+</code></pre>
+
+
+</div>

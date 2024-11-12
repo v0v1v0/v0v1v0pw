@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ppPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Person probability plots
+</h2>
+
+<h3>Description</h3>
+
+<p>Plots a Wright Map for a single person (similar to a kidmap). On the person side, highlights their estimated ability and a range of one standard error. On the item side, draws lines representing item difficulties at which they are expected to have a 20%, 40%, 50%, 60%, and 80% chance of success.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ppPlot(thetas, thresholds, est, SE, main.title = "Person Probability Plot"
+, cut.left = 0, cut.right = .94, cut.lab.adj = c(1,.5),...)
+
+cutLines(cutpoints = NULL,cut.left = 0, cut.right = 1, cut.lab.text = NULL
+, cut.lab.adj = c(0,1),...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>thetas</code></td>
+<td>
+
+<p>a vector, matrix or data frame of person parameter estimates. Can also be a character string specifying a ConQuest output file of person parameter estimates, or a CQmodel object. Will be sent to the function <code>personData</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thresholds</code></td>
+<td>
+
+<p>matrix or data frame of item parameter estimates. Can also be a character string specifying a ConQuest show file. Will be sent to the function <code>itemData</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>est</code></td>
+<td>
+
+<p>estimated ability of the person
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SE</code></td>
+<td>
+
+<p>standard error of the estimate
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main.title</code></td>
+<td>
+
+<p>title of the Person Probability Plot.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cut.left</code></td>
+<td>
+
+<p>value between 0 and 1 describing where to place the lefthand side of the cutpoints, as a fraction of the item plot.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cut.right</code></td>
+<td>
+
+<p>value between 0 and 1 describing where to place the righthand side of the cutpoints, as a fraction of the item plot.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cut.lab.adj</code></td>
+<td>
+
+<p>similar to the <code>adj</code> parameter in <code>text</code>, describes where to place the text for the cutpoints as a pair of values between 0 and 1 in terms of left-right and up-down alignment. Left-right alignment is 0 for the left side of the item plot and 1 for the right side, while up-down alignment is 0 for below the line and 1 for above the line.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutpoints</code></td>
+<td>
+
+<p>argument to <code>cutLines</code> when called through <code>wrightMap</code> or one of the <code>item.side</code> functions. Specifies locations of cutlines. When <code>cutLines</code> is called through <code>ppPlot</code>, the cutpoints are calculated rather than specified. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cut.lab.text</code></td>
+<td>
+
+<p>argument to <code>cutLines</code> when called through <code>wrightMap</code> or one of the <code>item.side</code> functions. Specifies text to appear for each cut line. When <code>cutLines</code> is called through <code>ppPlot</code>, the text is always the percent chance of success given the estimated ability level and difficulty location. 	
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>additional arguments to pass to <code>wrightMap</code> or its associated functions.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>ppPlot</code> function is a wrapper for <code>wrightMap</code> that is specifically designed for person probability plots, and as such has access to all the parameters of wrightMap and its associated functions. It uses the <code>person.points</code>, <code>person.range</code>, <code>p.point.col</code>, and <code>p.range.col</code> parameters on the <code>person.side</code> function to draw a range of one standard error around the estimated ability level. On the item side, it calculates at what item difficulty the respondent is expected to have a 20%, 40%, 50%, 60%, and 80% chance of success and then uses the <code>cutLines</code> function to illustrate these cutpoints. The cutLines function should not be called on its own and may be hidden in future versions. It is included here to show the available parameters, which can be included in a call to <code>wrightMap</code> or any of the <code>item.side</code> functions.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Torres Irribarra and Rebecca Freund</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wrightMap</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">	
+	fpath &lt;- system.file("extdata", package="WrightMap")
+	model1 &lt;- CQmodel(p.est = file.path(fpath,"ex2.eap"), show = file.path(fpath,"ex2.shw"))
+	
+	#Person histogram, modern item
+	ppPlot(model1,est = 0, SE = 1) 
+	
+	#Person density, classic item
+	ppPlot(model1,est = 0, SE = 1, person.side = personDens,item.side = itemClassic) 
+	
+</code></pre>
+
+
+</div>

@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.sback</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Default sback plotting
+</h2>
+
+<h3>Description</h3>
+
+<p>Takes a fitted object produced by <code>sback()</code> and plots the estimates of the nonparametric functions on the scale of their respective covariates, no matter whether a particular nonparametric function is an additive component or a varying coefficient.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'sback'
+plot(x, composed = TRUE, ask = TRUE, select = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an object of class <code>sback</code> as produced by <code>sback()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>composed</code></td>
+<td>
+<p>a logical value. If <code>TRUE</code>, the default, the function plots the estimates of the composed (linear plus nonlinear) nonparametric functions (see Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ask</code></td>
+<td>
+<p>a logical value. If <code>TRUE</code>, the default, the user is asked for confirmation, before a new figure is drawn.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>select</code></td>
+<td>
+<p>Allows the plot for a single model term to be selected for printing. e.g. if you just want the plot for the second smooth term set select = 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other graphics parameters to pass on to plotting commands.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For identifiability purposes, the estimating algorithm implemented in the <code>wsbackfit</code> package decomposes each nonparametric function in two components: a linear (parametric) component and a nonlinear (nonparametric) component. For plotting, the user can choose to plot these components either separately in one graph (<code>composed = FALSE</code>), or to only plot the resulting composed function (<code>composed = TRUE</code>). Also, for the varying coefficient terms, the plots show the estimated surface spanned by <code class="reqn">(g_j , X_j , Z_j)</code>.</p>
+
+
+<h3>Value</h3>
+
+<p>None</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Javier Roca-Pardinas, Maria Xose Rodriguez-Alvarez and Stefan Sperlich</p>
+
+
+<h3>See Also</h3>
+
+<p><code>sback</code>, <code>summary.sback</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(wsbackfit)
+################################################
+# Gaussian Simulated Sample
+###############################################
+set.seed(123)
+# Define the data generating process
+n &lt;- 1000
+x1 &lt;- runif(n)*4-2
+x2 &lt;- runif(n)*4-2
+x3 &lt;- runif(n)*4-2
+x4 &lt;- runif(n)*4-2
+x5 &lt;- as.numeric(runif(n)&gt;0.6)
+
+f1 &lt;- 2*sin(2*x1)
+f2 &lt;- x2^2
+f3 &lt;- 0
+f4 &lt;- x4
+f5 &lt;- 1.5*x5
+
+mu &lt;- f1 + f2 + f3 + f4 + f5
+err &lt;- (0.5 + 0.5*x5)*rnorm(n)
+y &lt;- mu + err
+
+df &lt;- data.frame(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = as.factor(x5), y = y)
+
+# Fit the model with a fixed bandwidth for each covariate
+m0 &lt;- sback(formula = y ~ x5 + sb(x1, h = 0.1) + sb(x2, h = 0.13) 
+  + sb(x3, h = 0.1) + sb(x4, h = 0.1), kbin = 30, data = df)
+
+plot(m0)
+
+</code></pre>
+
+
+</div>

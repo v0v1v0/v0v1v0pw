@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fmax_test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>fmax.test</h2>
+
+<h3>Description</h3>
+
+<p>Performs Hartley's Fmax test for homogeneity of variances. This test assesses whether
+the variances of multiple groups are equal, given that the sample sizes are the same.
+It calculates the ratio of the maximum to the minimum variance and compares it to a
+critical value from the Fmax distribution to determine if there is significant
+deviation from homogeneity.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fmax_test(levels, n, sd)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>levels</code></td>
+<td>
+<p>a vector of group labels or identifiers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>A numeric vector of sample sizes for each group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd</code></td>
+<td>
+<p>A numeric vector of standard deviations for each group.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+
+<dl>
+<dt>fmax</dt>
+<dd>
+<p>The ratio of the maximum to minimum variance.</p>
+</dd>
+<dt>df</dt>
+<dd>
+<p>Degrees of freedom associated with the test.</p>
+</dd>
+<dt>k</dt>
+<dd>
+<p>Number of groups.</p>
+</dd>
+<dt>pval</dt>
+<dd>
+<p>The p-value of the test.</p>
+</dd>
+</dl>
+<p>The levels parameter is used determine the number of groups. The variances are computed as the squares of sd.
+Note: Applicable results assume normally distributed data with equal sample sizes
+</p>
+<p>Null Hypothesis: Assumes homogeneity of variances, which means all groups have the same variance.
+Alternative Hypothesis: Assumes that not all group variances are equal. This hypothesis is
+supported if the p-value is below the significance level.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+probe_data &lt;- data.frame(
+  group = c("probe_a", "probe_b", "probe_c"),
+  size = c(10, 10, 10),  # Equal sample sizes
+  mean = c(43.00000, 33.44444, 35.75000),
+  sd = c(4.027682, 9.302031, 16.298554)
+)
+
+# Perform Hartley's Fmax test
+result &lt;- fmax_test(
+  levels = probe_data$group,
+  n = probe_data$size,
+  sd = probe_data$sd
+)
+
+
+</code></pre>
+
+
+</div>

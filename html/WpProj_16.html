@@ -1,0 +1,150 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simulated_annealing_method_options</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Options For Use With the Simulated Annealing Selection Method</h2>
+
+<h3>Description</h3>
+
+<p>Options For Use With the Simulated Annealing Selection Method
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">simulated_annealing_method_options(
+  force = NULL,
+  method = c("binary program", "projection"),
+  transport.method = transport_options(),
+  OTmaxit = 100L,
+  epsilon = 0.05,
+  maxit = 1L,
+  temps = 1000L,
+  max.time = 3600,
+  proposal.method = c("covariance", "uniform"),
+  energy.distribution = c("boltzman", "bose-einstein"),
+  cooling.schedule = c("Geman-Geman", "exponential"),
+  model.size = NULL,
+  display.progress = FALSE,
+  parallel = NULL,
+  calc.theta = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>force</code></td>
+<td>
+<p>Any covariates to force into the model? Should be by column number or NULL if no variables to force into the model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Should covariates be selected as an approximate "binary program" or should a projection method be used. Default is the approximate binary program.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transport.method</code></td>
+<td>
+<p>Method for Wasserstein distance calculation. Should be one the outputs of <code>transport_options()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>OTmaxit</code></td>
+<td>
+<p>The number of iterations to run the Wasserstein distance solvers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsilon</code></td>
+<td>
+<p>A value &gt; 0 for the penalty parameter of if using the Sinkhorn method for optimal transport</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxit</code></td>
+<td>
+<p>Maximum number of iterations per temperature</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>temps</code></td>
+<td>
+<p>Number of temperatures to try</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.time</code></td>
+<td>
+<p>Maximum time in seconds to run the algorithm</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>proposal.method</code></td>
+<td>
+<p>The method to propose the next covariate to add. One of "covariance" or "random". "covariance" will randomly select from covariates with probability proportional to the absolute value of the covariance. "uniform" will select covariates uniformly at random.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>energy.distribution</code></td>
+<td>
+<p>The energy distribution to use for evaluating proposals. One of "boltzman" or "bose-einstein". Default is "boltzman".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cooling.schedule</code></td>
+<td>
+<p>The schedule to use for cooling temperatures. One of "Geman-Geman" or "exponential". Default is "Geman-Geman".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model.size</code></td>
+<td>
+<p>How many coefficients should the maximum final model have?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>display.progress</code></td>
+<td>
+<p>Logical. Should intermediate progress be displayed? TRUE or FALSE. Default is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>A cluster backend to be used by <code>foreach::foreach()</code>. See <code>foreach::foreach()</code> for details about how to set them up. The <code>WpProj</code> functions will register the cluster with the <code>doParallel::registerDoParallel()</code> function internally.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>calc.theta</code></td>
+<td>
+<p>Return the linear coefficients? Default is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A named list with the above arguments
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">simulated_annealing_method_options()
+</code></pre>
+
+
+</div>

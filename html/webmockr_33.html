@@ -1,0 +1,529 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>StubbedRequest</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>StubbedRequest</h2>
+
+<h3>Description</h3>
+
+<p>stubbed request class underlying <code>stub_request()</code>
+</p>
+
+
+<h3>Public fields</h3>
+
+<div class="r6-fields">
+
+<dl>
+<dt><code>method</code></dt>
+<dd>
+<p>(xx) xx</p>
+</dd>
+<dt><code>uri</code></dt>
+<dd>
+<p>(xx) xx</p>
+</dd>
+<dt><code>uri_regex</code></dt>
+<dd>
+<p>(xx) xx</p>
+</dd>
+<dt><code>uri_parts</code></dt>
+<dd>
+<p>(xx) xx</p>
+</dd>
+<dt><code>host</code></dt>
+<dd>
+<p>(xx) xx</p>
+</dd>
+<dt><code>query</code></dt>
+<dd>
+<p>(xx) xx</p>
+</dd>
+<dt><code>body</code></dt>
+<dd>
+<p>(xx) xx</p>
+</dd>
+<dt><code>basic_auth</code></dt>
+<dd>
+<p>(xx) xx</p>
+</dd>
+<dt><code>request_headers</code></dt>
+<dd>
+<p>(xx) xx</p>
+</dd>
+<dt><code>response_headers</code></dt>
+<dd>
+<p>(xx) xx</p>
+</dd>
+<dt><code>responses_sequences</code></dt>
+<dd>
+<p>(xx) xx</p>
+</dd>
+<dt><code>status_code</code></dt>
+<dd>
+<p>(xx) xx</p>
+</dd>
+<dt><code>counter</code></dt>
+<dd>
+<p>a StubCounter object</p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-StubbedRequest-new"><code>StubbedRequest$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-StubbedRequest-print"><code>StubbedRequest$print()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-StubbedRequest-with"><code>StubbedRequest$with()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-StubbedRequest-to_return"><code>StubbedRequest$to_return()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-StubbedRequest-to_timeout"><code>StubbedRequest$to_timeout()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-StubbedRequest-to_raise"><code>StubbedRequest$to_raise()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-StubbedRequest-to_s"><code>StubbedRequest$to_s()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-StubbedRequest-reset"><code>StubbedRequest$reset()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-StubbedRequest-clone"><code>StubbedRequest$clone()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-StubbedRequest-new"></a>
+
+
+
+<h4>Method <code>new()</code>
+</h4>
+
+<p>Create a new <code>StubbedRequest</code> object
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>StubbedRequest$new(method, uri = NULL, uri_regex = NULL)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>method</code></dt>
+<dd>
+<p>the HTTP method (any, head, get, post, put,
+patch, or delete). "any" matches any HTTP method. required.</p>
+</dd>
+<dt><code>uri</code></dt>
+<dd>
+<p>(character) request URI. either this or <code>uri_regex</code>
+required. <span class="pkg">webmockr</span> can match uri's without the "http" scheme,
+but does not match if the scheme is "https". required, unless
+<code>uri_regex</code> given. See UriPattern for more.</p>
+</dd>
+<dt><code>uri_regex</code></dt>
+<dd>
+<p>(character) request URI as regex. either this or <code>uri</code>
+required</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>A new <code>StubbedRequest</code> object
+</p>
+
+
+<hr>
+<a id="method-StubbedRequest-print"></a>
+
+
+
+<h4>Method <code>print()</code>
+</h4>
+
+<p>print method for the <code>StubbedRequest</code> class
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>StubbedRequest$print(x, ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>x</code></dt>
+<dd>
+<p>self</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>ignored</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-StubbedRequest-with"></a>
+
+
+
+<h4>Method <code>with()</code>
+</h4>
+
+<p>Set expectations for what's given in HTTP request
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>StubbedRequest$with(
+  query = NULL,
+  body = NULL,
+  headers = NULL,
+  basic_auth = NULL
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>query</code></dt>
+<dd>
+<p>(list) request query params, as a named list. optional</p>
+</dd>
+<dt><code>body</code></dt>
+<dd>
+<p>(list) request body, as a named list. optional</p>
+</dd>
+<dt><code>headers</code></dt>
+<dd>
+<p>(list) request headers as a named list. optional.</p>
+</dd>
+<dt><code>basic_auth</code></dt>
+<dd>
+<p>(character) basic authentication. optional.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>nothing returned; sets only
+</p>
+
+
+<hr>
+<a id="method-StubbedRequest-to_return"></a>
+
+
+
+<h4>Method <code>to_return()</code>
+</h4>
+
+<p>Set expectations for what's returned in HTTP response
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>StubbedRequest$to_return(status, body, headers)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>status</code></dt>
+<dd>
+<p>(numeric) an HTTP status code</p>
+</dd>
+<dt><code>body</code></dt>
+<dd>
+<p>(list) response body, one of: <code>character</code>, <code>json</code>,
+<code>list</code>, <code>raw</code>, <code>numeric</code>, <code>NULL</code>, <code>FALSE</code>, or a file connection
+(other connetion types not supported)</p>
+</dd>
+<dt><code>headers</code></dt>
+<dd>
+<p>(list) named list, response headers. optional.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>nothing returned; sets whats to be returned
+</p>
+
+
+<hr>
+<a id="method-StubbedRequest-to_timeout"></a>
+
+
+
+<h4>Method <code>to_timeout()</code>
+</h4>
+
+<p>Response should time out
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>StubbedRequest$to_timeout()</pre></div>
+
+
+
+<h5>Returns</h5>
+
+<p>nothing returned
+</p>
+
+
+<hr>
+<a id="method-StubbedRequest-to_raise"></a>
+
+
+
+<h4>Method <code>to_raise()</code>
+</h4>
+
+<p>Response should raise an exception <code>x</code>
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>StubbedRequest$to_raise(x)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>x</code></dt>
+<dd>
+<p>(character) an exception message</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>nothing returned
+</p>
+
+
+<hr>
+<a id="method-StubbedRequest-to_s"></a>
+
+
+
+<h4>Method <code>to_s()</code>
+</h4>
+
+<p>Response as a character string
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>StubbedRequest$to_s()</pre></div>
+
+
+
+<h5>Returns</h5>
+
+<p>(character) the response as a string
+</p>
+
+
+<hr>
+<a id="method-StubbedRequest-reset"></a>
+
+
+
+<h4>Method <code>reset()</code>
+</h4>
+
+<p>Reset the counter for the stub
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>StubbedRequest$reset()</pre></div>
+
+
+
+<h5>Returns</h5>
+
+<p>nothing returned; resets stub counter to no requests
+</p>
+
+
+<hr>
+<a id="method-StubbedRequest-clone"></a>
+
+
+
+<h4>Method <code>clone()</code>
+</h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>StubbedRequest$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt>
+<dd>
+<p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+<h3>See Also</h3>
+
+<p><code>stub_request()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+x &lt;- StubbedRequest$new(method = "get", uri = "api.crossref.org")
+x$method
+x$uri
+x$with(headers = list('User-Agent' = 'R', apple = "good"))
+x$to_return(status = 200, body = "foobar", headers = list(a = 5))
+x
+x$to_s()
+
+# many to_return's
+x &lt;- StubbedRequest$new(method = "get", uri = "httpbin.org")
+x$to_return(status = 200, body = "foobar", headers = list(a = 5))
+x$to_return(status = 200, body = "bears", headers = list(b = 6))
+x
+x$to_s()
+
+# raw body
+x &lt;- StubbedRequest$new(method = "get", uri = "api.crossref.org")
+x$to_return(status = 200, body = raw(0), headers = list(a = 5))
+x$to_s()
+x
+
+x &lt;- StubbedRequest$new(method = "get", uri = "api.crossref.org")
+x$to_return(status = 200, body = charToRaw("foo bar"),
+  headers = list(a = 5))
+x$to_s()
+x
+
+# basic auth
+x &lt;- StubbedRequest$new(method = "get", uri = "api.crossref.org")
+x$with(basic_auth = c("foo", "bar"))
+x$to_s()
+x
+
+# file path
+x &lt;- StubbedRequest$new(method = "get", uri = "api.crossref.org")
+f &lt;- tempfile()
+x$to_return(status = 200, body = file(f), headers = list(a = 5))
+x
+x$to_s()
+unlink(f)
+
+# to_file(): file path and payload to go into the file
+#   payload written to file during mocked response creation
+x &lt;- StubbedRequest$new(method = "get", uri = "api.crossref.org")
+f &lt;- tempfile()
+x$to_return(status = 200, body = mock_file(f, "{\"foo\": \"bar\"}"),
+  headers = list(a = 5))
+x
+x$to_s()
+unlink(f)
+
+# uri_regex
+(x &lt;- StubbedRequest$new(method = "get", uri_regex = ".+ossref.org"))
+x$method
+x$uri_regex
+x$to_s()
+
+# to timeout
+(x &lt;- StubbedRequest$new(method = "get", uri_regex = ".+ossref.org"))
+x$to_s()
+x$to_timeout()
+x$to_s()
+x
+
+# to raise
+library(fauxpas)
+(x &lt;- StubbedRequest$new(method = "get", uri_regex = ".+ossref.org"))
+x$to_s()
+x$to_raise(HTTPBadGateway)
+x$to_s()
+x
+
+## End(Not run)
+</code></pre>
+
+
+</div>

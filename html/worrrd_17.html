@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wordsearch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a wordsearch puzzle</h2>
+
+<h3>Description</h3>
+
+<p>Create a wordsearch puzzle
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wordsearch(
+  words = c("finding", "needles", "inside", "haystacks"),
+  clues = words,
+  r = 10,
+  c = 10,
+  image = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>words</code></td>
+<td>
+<p>a vector of hidden words (character/vector)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clues</code></td>
+<td>
+<p>a vector of word clues (optional; character/vector)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>number of rows</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c</code></td>
+<td>
+<p>number of columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>image</code></td>
+<td>
+<p>path to an image that the resulting grid should look like.NULL for no shape</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>wordsearch object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Example 1 ----
+words &lt;- c("dog", "cat", "horse", "frog", "cow", "fox")
+ex1 &lt;- wordsearch(words, r = 10, c = 10)
+plot(ex1, solution = TRUE)
+
+# Example 2 ----
+clues &lt;- c("Bark", "Meow", "Neigh", "Ribbit", "Moo", "Nee Nee Nee")
+ex2 &lt;- wordsearch(words = words, clues = clues)
+plot(ex2, solution = TRUE, title = "Animal Sounds", legend_size = 4)
+
+# Example 3 ----
+math &lt;- dplyr::tribble(
+  ~problem,  ~solution,
+  "2 + 2",   "four",
+  "5 + 3",   "eight",
+  "9 - 4",   "five",
+  "1 + 0",   "one",
+  "2 + 1",   "three",
+  "5 + 5",   "ten",
+  "6 - 6",   "zero"
+ )
+ ex3 &lt;- wordsearch(words = math$solution, clues = math$problem)
+ plot(ex3, solution = TRUE, title = "Math is Fun")
+
+</code></pre>
+
+
+</div>

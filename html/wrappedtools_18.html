@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ggcormat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Print graphical representation of a correlation matrix.</h2>
+
+<h3>Description</h3>
+
+<p><code>ggcormat</code> makes the same correlation matrix as cortestR
+and graphically represents it in a plot
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ggcormat(
+  cor_mat,
+  p_mat = NULL,
+  method = "Correlation",
+  title = "",
+  maxpoint = 2.1,
+  textsize = 5,
+  axistextsize = 2,
+  titlesize = 3,
+  breaklabels = NULL,
+  lower_only = TRUE,
+  .low = "blue3",
+  .high = "red2",
+  .legendtitle = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>cor_mat</code></td>
+<td>
+<p>correlation matrix as produced by cor.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p_mat</code></td>
+<td>
+<p>Optional matrix of p-values; if provided, this is used to define
+size of dots rather than absolute correlation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>text specifying type of correlation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>plot title.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxpoint</code></td>
+<td>
+<p>maximum for scale_size_manual, may need adjustment depending on plotsize.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>textsize</code></td>
+<td>
+<p>for theme text.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axistextsize</code></td>
+<td>
+<p>relative text size for axes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>titlesize</code></td>
+<td>
+<p>as you already guessed, relative text size for title.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>breaklabels</code></td>
+<td>
+<p>currently not used, intended for str_wrap.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower_only</code></td>
+<td>
+<p>should only lower triangle be plotted?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.low</code></td>
+<td>
+<p>Color for heatmap.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.high</code></td>
+<td>
+<p>Color for heatmap.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.legendtitle</code></td>
+<td>
+<p>Optional name for color legend.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A ggplot object, allowing further styling.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">coeff_pvalues &lt;- cortestR(mtcars[, c("wt", "mpg", "qsec", "hp")],
+  split = TRUE, sign_symbol = FALSE
+)
+# focus on coefficients:
+ggcormat(cor_mat = coeff_pvalues$corout, maxpoint = 5)
+# size taken from p-value:
+ggcormat(
+  cor_mat = coeff_pvalues$corout,
+  p_mat = coeff_pvalues$pout, maxpoint = 5)
+
+</code></pre>
+
+
+</div>

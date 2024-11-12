@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wkt_unnest</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Flatten nested geometry structures</h2>
+
+<h3>Description</h3>
+
+<p>Flatten nested geometry structures
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wkt_unnest(wkt, keep_empty = FALSE, keep_multi = TRUE, max_depth = 1)
+
+wkb_unnest(wkb, keep_empty = FALSE, keep_multi = TRUE, max_depth = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wkt</code></td>
+<td>
+<p>A character vector containing well-known text.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep_empty</code></td>
+<td>
+<p>If <code>TRUE</code>, a GEOMETRYCOLLECTION EMPTY is left as-is
+rather than collapsing to length 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep_multi</code></td>
+<td>
+<p>If <code>TRUE</code>, MULTI* geometries are not expanded to sub-features.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_depth</code></td>
+<td>
+<p>The maximum recursive GEOMETRYCOLLECTION depth to unnest.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wkb</code></td>
+<td>
+<p>A <code>list()</code> of <code>raw()</code> vectors, such as that
+returned by <code>sf::st_as_binary()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An unclassed vector with attribute <code>lengths</code>, which is an integer vector
+with the same length as the input denoting the length to which each
+feature was expanded.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wkt_unnest("GEOMETRYCOLLECTION (POINT (1 2), POINT (3 4))")
+wkt_unnest("GEOMETRYCOLLECTION EMPTY")
+wkt_unnest("GEOMETRYCOLLECTION EMPTY", keep_empty = TRUE)
+
+</code></pre>
+
+
+</div>

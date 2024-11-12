@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>AF</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Allison and Foster index</h2>
+
+<h3>Description</h3>
+
+<p>Computes Allison and Foster inequality measure of a given variable taking into account weights.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">AF(X, W = rep(1, length(X)), norm = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>is a data vector (numeric or ordered factor)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p>is a vector of weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>norm</code></td>
+<td>
+<p>(logical). If TRUE (default) then index is divided by a maximum possible value which is a difference between maximum and minimum of X</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Let <code class="reqn">c=(c_{1},...,c_{n})</code> be the vector of categories in increasing order, <code class="reqn">m</code> be the median category and <code class="reqn">p_i</code> be a share of <code class="reqn">i</code>-th category. The following index was proposed by Allison and Foster (2004):
+</p>
+<p style="text-align: center;"><code class="reqn">AF =  \frac{\sum_{i=m}^n c_{i} p_{i} }{\sum_{i=m}^n p_{i}} - \frac{\sum_{i=1}^{m-1} c_{i} p_{i}}{\sum_{i=1}^{m-1} p_{i}}</code>
+</p>
+
+<p>Note that above formula is valid only for numerical values. Thus, in order to compute AF for ordered factor, X is converted to numerical variable.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The value of Allison and Foster coefficient.
+</p>
+
+
+<h3>References</h3>
+
+<p>Allison R. A., Foster J E.: (2004) Measuring health inequality using qualitative data, Journal of Health Economics
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Compare weighted and unweighted result
+X=1:10
+W=1:10
+AF(X)
+AF(X,W)
+
+data(Well_being)
+# Allison and Foster index for health assessment with sample weights
+X=Well_being$V11
+W=Well_being$Weight
+AF(X,W)
+
+
+</code></pre>
+
+
+</div>

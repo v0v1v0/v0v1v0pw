@@ -1,0 +1,185 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>calcAC</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate the area correction value(s) with confidence intervals</h2>
+
+<h3>Description</h3>
+
+<p>Use a fitted carcass density distribution and data describing the search area to calculate area correction values and confidence intervals using a
+parametric bootstrap approach.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">calcAC(
+  distribution,
+  paramVec,
+  varcovVec = NULL,
+  proportionSearchDF,
+  distanceCol,
+  proportionCol,
+  additionalCol = NULL,
+  nBoot = NULL,
+  truncBounds = NULL,
+  ciLevel = 0.9,
+  randomSeed = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Character indicating the distribution, passed to
+<code>getDistanceProbability</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>paramVec</code></td>
+<td>
+<p>Numeric vector for the parameters associated with distribution. Assumed to be in the same order as the function indicated by <code>distribution</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varcovVec</code></td>
+<td>
+<p>Numeric vector for the variances and covariances for
+<code>paramVec</code>, default is NULL, see details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>proportionSearchDF</code></td>
+<td>
+<p>Data frame with at least two columns: distance of the outer edge of an annulus from
+turbine and proportion of area searched within each annulus.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distanceCol</code></td>
+<td>
+<p>Character indicating the column name for the distance from
+turbine</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>proportionCol</code></td>
+<td>
+<p>Character indicating the column name for the proportion of
+area searched.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>additionalCol</code></td>
+<td>
+<p>Character vector, default is NULL, indicating additional
+columns of how the area correction value should be calculated, see details and examples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nBoot</code></td>
+<td>
+<p>Integer, indicating the number of parametric
+bootstrap replicates to use. Default is NULL, and not confidence intervals are produced.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truncBounds</code></td>
+<td>
+<p>Numeric, indicating bounds for the area
+correction calculation, see details. Default is NULL, and the bounds are set to <code>c(0,Inf)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ciLevel</code></td>
+<td>
+<p>Numeric, default is 0.9, desired confidence level for the
+bootstrap confidence interval.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>randomSeed</code></td>
+<td>
+<p>Numeric value of random seed, default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to <code>getDistanceProbability</code> and <code>rmvnorm</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function <code>getDistanceProbability</code> is used to calculate
+the probability (fraction of carcasses) in the intervals between distances in <code>proportionSearchDF</code>.
+</p>
+<p>The <code>truncBounds</code> argument defaults to zero as a lower bound and infinity
+as the upper bound. If a single value is provided, it is assumed as the upper
+bound with zero as the lower bound. If two or more values are provided, the
+<code>max(truncBounds)</code> is the upper bound and <code>min(truncBounds)</code> is the
+lower bound.
+</p>
+<p>If <code>varcovVec</code> is NULL, then parametric bootstrapping is impossible and a confidence interval is not estimated. The
+<code>varcovVec</code> should be in such an order that correctly fills the lower
+triangle including the diagonal. The first column is filled, then the second,
+and so on. This forms the variance-covariance matrix for the parameters.
+</p>
+<p>If <code>nBoot</code> is greater than zero, a parametric bootstrap is done.
+Bootstrap parameters are generated using the <code>rmvnorm</code>
+function.
+</p>
+<p>If the additionalCol argument is not NULL, separate area corrections are estimated for each unique value within the column.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>windAC</code> object
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>weightedLikelihood</code> <code>weightedDistribution</code> <code>getDistanceProbability</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## proportion of area searched data
+data(proportionAreaSearched)
+
+## no parametric bootstrap
+noBootstrap &lt;- calcAC(distribution = 'gamma',
+                      paramVec = c(2.483323, 0.02495139),
+                      varcovVec = NULL,
+                      proportionSearchDF = proportionAreaSearched,
+                      distanceCol = 'distanceFromTurbine',
+                      proportionCol = 'proportionAreaSearched',
+                      additionalCol = 'plotType')
+
+## with a parametric bootstrap
+
+withBootstrap &lt;- calcAC(distribution = 'gamma',
+                        paramVec = c(2.483323, 0.02495139),
+                        varcovVec = c(0.041189428, 0.0008825275, 2.118081e-05),
+                        proportionSearchDF = proportionAreaSearched,
+                        distanceCol = 'distanceFromTurbine',
+                        proportionCol = 'proportionAreaSearched',
+                        additionalCol = 'plotType',
+                        nBoot = 10)
+
+</code></pre>
+
+
+</div>

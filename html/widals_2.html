@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>applystnd.Hs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Standardize Spacial Covariates with Existing Object 
+</h2>
+
+<h3>Description</h3>
+
+<p>Standardize spacial covariates with respect to both the space and time dimensions
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">applystnd.Hs(Hs0, x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Hs0</code></td>
+<td>
+
+<p>Spacial covariates (of interpolation sites).  An <code class="reqn">n</code>* x <code class="reqn">p_s</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>Spacial standardization object, as created by <code>stnd.Hs</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <code class="reqn">n</code>* x <code class="reqn">p_s</code> matrix.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>stnd.Hst.ls</code>, <code>applystnd.Hst.ls</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+n.all &lt;- 21
+Hs.all &lt;- cbind(1, rnorm(n.all, 1, 0.1), rnorm(n.all, -200, 21))
+
+ndx.interp &lt;- c(1,3,5)
+ndx.support &lt;- I(1:n.all)[ -ndx.interp ]
+
+
+Hs &lt;- Hs.all[ndx.support, , drop=FALSE]
+
+xsns.obj &lt;- stnd.Hs(Hs)
+
+Hs0 &lt;- Hs.all[ndx.interp, , drop=FALSE]
+
+sHs0 &lt;- applystnd.Hs(Hs0, xsns.obj)
+sHs0
+
+xsns.obj$sHs
+
+crossprod(xsns.obj$sHs) / nrow(Hs)
+
+crossprod(sHs0) / nrow(sHs0)
+
+
+## The function is currently defined as
+function (Hs0, x) 
+{
+    sHs0 &lt;- t((t(Hs0) - x$h.mean)/x$h.sd)
+    if (x$intercept) {
+        sHs0[, 1] &lt;- 1/sqrt(x$n)
+    }
+    return(sHs0)
+  }
+</code></pre>
+
+
+</div>

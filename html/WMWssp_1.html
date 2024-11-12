@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WMWssp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Sample size calculation for the Wilcoxon-Mann-Whitney test.</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates the sample size for a given power, type-I error rate and allocation rate t = n_1/N. Additionally, the actual achieved power can be simulated.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WMWssp(x, y, alpha = 0.05, power = 0.8, t = 1/2,
+  simulation = FALSE, nsim = 10^4)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>prior information for the first group</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>prior information for the second group</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>two sided type I error rate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>power</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t</code></td>
+<td>
+<p>proportion of subjects in the first group; or use t = "min" to use optimal proportion rate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simulation</code></td>
+<td>
+<p>TRUE if a power simulation should be carried out</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsim</code></td>
+<td>
+<p>number of simulations for the power simulation</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns an object from class WMWssp containing
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>result</code></td>
+<td>
+<p>A dataframe with the results.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t</code></td>
+<td>
+<p>The allocation rate which was used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>The type-I error rate which was used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simulation</code></td>
+<td>
+<p>The achieved power in a simulation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>The power which was used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>The sample size needed.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Brunner, E., Bathke A. C. and Konietschke, F. Rank- and Pseudo-Rank Procedures in Factorial Designs - Using R and SAS. Springer Verlag. to appear.
+</p>
+<p>Happ, M., Bathke, A. C., &amp; Brunner, E. (2019). Optimal Sample Size Planning for the Wilcoxon-Mann-Whitney-Test. Statistics in medicine, 38(3), 363-375.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Prior information for the reference group
+x &lt;- c(315,375,356,374,412,418,445,403,431,410,391,475,379)
+# generate data for treatment group based on a shift effect
+y &lt;- x - 20
+
+# calculate sample size
+ssp &lt;- WMWssp(x, y, alpha = 0.05, power = 0.8, t = 1/2)
+summary(ssp)
+</code></pre>
+
+
+</div>

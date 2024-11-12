@@ -1,0 +1,144 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ClevelandDotPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot a Cleveland dot plot.</h2>
+
+<h3>Description</h3>
+
+<p>Plot counts of a categorical variable.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ClevelandDotPlot(
+  frm,
+  xvar,
+  title,
+  ...,
+  sort = -1,
+  limit_n = NULL,
+  stem = TRUE,
+  color = "black"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frm</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar</code></td>
+<td>
+<p>name of the independent (input or model) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort</code></td>
+<td>
+<p>if TRUE sort data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit_n</code></td>
+<td>
+<p>if not NULL number of items to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stem</code></td>
+<td>
+<p>if TRUE add stems/whiskers to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color</code></td>
+<td>
+<p>color for points and stems</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Assumes that <code>xvar</code> is a factor or can be coerced to one (character or integral).
+</p>
+
+<ul>
+<li>
+<p> sort &lt; 0 sorts the factor levels in decreasing order (most frequent level first)
+</p>
+</li>
+<li>
+<p> sort &gt; 0 sorts the factor levels in increasing order (good when used in conjunction with coord_flip())
+</p>
+</li>
+<li>
+<p> sort = 0 leaves the factor levels in "natural order" – usually alphabetical
+</p>
+</li>
+<li>
+<p> stem = FALSE will plot only the dots, without the stem to the y=0 line.
+</p>
+</li>
+<li>
+<p> limit_n = NULL plots all the levels, N an integer limits to the top N most populous levels
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+set.seed(34903490)
+# discrete variable: letters of the alphabet
+# frequencies of letters in English
+# source: http://en.algoritmy.net/article/40379/Letter-frequency-English
+letterFreqs = c(8.167, 1.492, 2.782, 4.253, 12.702, 2.228,
+                2.015, 6.094, 6.966, 0.153, 0.772, 4.025, 2.406, 6.749, 7.507, 1.929,
+                0.095, 5.987, 6.327, 9.056, 2.758, 0.978, 2.360, 0.150, 1.974, 0.074)
+letterFreqs = letterFreqs/100
+letterFrame = data.frame(letter = letters, freq=letterFreqs)
+# now let's generate letters according to their letter frequencies
+N = 1000
+randomDraws = data.frame(draw=1:N,
+  letter=sample(letterFrame$letter, size=N,
+  replace=TRUE, prob=letterFrame$freq))
+WVPlots::ClevelandDotPlot(randomDraws, "letter",
+  title = "Example Cleveland-style dot plot")
+
+# # Note the use of sort = 0. Also note that the graph omits counts
+# # with no occurrences (5, and 7)
+# WVPlots::ClevelandDotPlot(mtcars, "carb", sort = 0, "Example of counting integer values")
+
+# # For counting integer values while including counts with no occurrences,
+# # use Discrete Distribution.
+# WVPlots::DiscreteDistribution(mtcars, "carb", "Better way to count integer values")
+</code></pre>
+
+
+</div>

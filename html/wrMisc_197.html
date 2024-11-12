@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderMatrToRef</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Order Lines of Matrix According to Reference (Character) Vector</h2>
+
+<h3>Description</h3>
+
+<p>This function orders lines of matrix <code>mat</code> according to a (character) reference vector <code>ref</code>.
+To do so, all columns of <code>mat</code> will be considered to use the first column from left with the best (partial) matching results.
+This function first looks for unambiguous perfect matches, and if not found successive rounds of more elaborte partial matching will be engaged: 
+In case of no perfect matches found, grep of <code>ref</code> on all columns of <code>mat</code> and/or grep of all columns of <code>mat</code> on <code>ref</code> (ie 'reverse grep') will be applied (finally a 'two way grep' approach).
+Until a perfect match is found each element of <code>ref</code> will be tested on <code>mat</code> and inversely (for each column) each element of <code>mat</code> will be tested on <code>ref</code>.
+The approach with the best number of (unique) matches will be chosen. In case of one-to-many matches, it will be tried to use most complete lines (see also last example).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderMatrToRef(
+  mat,
+  ref,
+  addRef = TRUE,
+  listReturn = TRUE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mat</code></td>
+<td>
+<p>(matrix, data.frame) main input of which rows should get re-ordered according to a (character) reference vector <code>ref</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ref</code></td>
+<td>
+<p>(character) reference imposing new order</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addRef</code></td>
+<td>
+<p>(logical) add <code>ref</code> to output as new column</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>listReturn</code></td>
+<td>
+<p>(logical) allows retrieving more information in form of list</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns, depending on <code>listReturn</code>, either the input-matrix in new order or a list with $mat (the input matrix in new order), $grep (matched matrix) and $col indicating the colum of <code>mat</code> finally used
+</p>
+
+
+<h3>See Also</h3>
+
+<p>for basic ordering see <code>match</code>; <code>checkGrpOrder</code> for testing each line for expected order, <code>checkStrictOrder</code> to check for strict (ascending or descending) order
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">mat1 &lt;- matrix(paste0("__",letters[rep(c(1,1,2,2,3),3) +rep(0:2,each=5)], rep(1:5)), ncol=3)
+orderMatrToRef(mat1, paste0(letters[c(3,4,5,3,4)],c(1,3,5,2,4)))
+
+mat2 &lt;- matrix(paste0("__",letters[rep(c(1,1,2,2,3),3) +rep(0:2,each=5)], 
+  c(rep(1:5,2),1,1,3:5 )), ncol=3)
+orderMatrToRef(mat2, paste0(letters[c(3,4,5,3,4)],c(1,3,5,1,4)))
+
+mat3 &lt;- matrix(paste0(letters[rep(c(1,1,2,2,3),3) +rep(0:2,each=5)], 
+  c(rep(1:5,2),1,1,3,3,5 )), ncol=3)
+orderMatrToRef(mat3, paste0("__",letters[c(3,4,5,3,4)],c(1,3,5,1,3)))
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotResponseTimeScatter</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generates a scatter plot of response times  
+</h2>
+
+<h3>Description</h3>
+
+<p>Scatter plot (base graphics object) of response times from a data.  The log form uses a log10 y axis.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotLogResponseTimeScatter(times, elapsed,timeDivisor = 1000, ylabText = "Time (log sec)") 
+plotResponseTimeScatter(times, elapsed,timeDivisor = 1000, ylabText = "Time (sec)") 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>times</code></td>
+<td>
+
+<p>POSIXct timestamps
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>elapsed</code></td>
+<td>
+
+<p>elapsed milliseconds 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timeDivisor</code></td>
+<td>
+
+<p>divisor to adjust times to seconds (the default value of 1000) or some other interval
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylabText</code></td>
+<td>
+
+<p>divisor to adjust times to seconds (the default value of 1000) or some other interval
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Generates a base graphics plot.  This function is intended to be wrapped in a call to <code>plotSave</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Greg Hunt &lt;greg@firmansyah.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>savePlot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+logFileName = logFileNamesGetLast(dataDirectory=datd, 
+  directoryNames=c(".", "."), 
+  fileNamePattern="*[.]log")[[1]] # only want one
+
+cols = logFileFieldsGetIIS(logFileName)
+
+logdf = logFileRead(logFileName, columnList=cols, 
+            logTimeZone = "", timeFormat = "")
+
+plotResponseTimeScatter(logdf$ts, logdf$elapsed) 
+plotLogResponseTimeScatter(logdf$ts, logdf$elapsed) 
+</code></pre>
+
+
+</div>

@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Ca</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Coefficient of Association</h2>
+
+<h3>Description</h3>
+
+<p>This function measures the dynamic interaction between two moving objects following
+the methods first described by Cole (1949), and more recently employed by Bauman (1998).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Ca(traj, traj2, tc = 0, dc = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>traj</code></td>
+<td>
+<p>an object of the class <code>move2</code> which contains the time-stamped movement fixes of at least two individuals. For more information on objects of this type see <code>help(mt_as_move2)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>traj2</code></td>
+<td>
+<p>(optional) same as traj, but for the second group of individuals. See <code>checkTO</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tc</code></td>
+<td>
+<p>temporal tolerance limit (in seconds) for defining when two fixes
+are simultaneous or together. Parameter passed to function <code>GetSimultaneous</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dc</code></td>
+<td>
+<p>distance tolerance limit (in appropriate units) for defining when 
+two fixes are spatially together.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function can be used to calculate the Cole (1949) measure of dynamic
+interaction between two animals. Termed a coefficient of association, the Ca
+statistic tests the number of fixes the animals are observed together against the
+total number of fixes following:
+</p>
+<p style="text-align: center;"><code class="reqn">Ca = \frac{2AB}{A+B}</code>
+</p>
+
+<p>where <code class="reqn">A</code> (respectively <code class="reqn">B</code>) is the number of times animal 1 (resp. 2) are
+observed, and <code class="reqn">AB</code> is the number of times the two animals are observed together.
+Several works, including Bauman (1998) have suggested that Ca &gt; 0.5 indicates
+affiliation or fidelity, while Ca &lt; 0.5 indicates no association between the
+two animals. Note that this function calls <code>GetSimultaneous</code> to identify the temporal
+component of identifying when fixes together.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a numeric result of the Ca statistic for each pair in the dataset.
+</p>
+
+
+<h3>References</h3>
+
+<p>Bauman, P.J. (1998) The Wind Cave National Park elk herd: home ranges, seasonal movements, and alternative control methods.
+M.S. Thesis. South Dakota State University, Brookings, South Dakota, USA. <br><br>
+Cole, L.C. (1949) The measurement of interspecific association. <em>Ecology</em>. <b>30</b>, 411–424.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>GetSimultaneous, Prox, HAI
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(deer)
+#tc = 7.5 minutes, dc = 50 meters
+Ca(deer, tc = 7.5*60, dc = 50)
+
+</code></pre>
+
+
+</div>

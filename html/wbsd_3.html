@@ -1,0 +1,190 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>theta</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>theta</h2>
+
+<h3>Description</h3>
+
+<p>This function computes theta as discussed in the article Pötscher and Preinerstorfer (2020).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">theta(
+X, R, r, hcmethod, restr.cov, wilddist, wildmult, 
+wildmult.restr, boot.res.restr,  boot.center.restr,    
+tol = 1e-07, as.tol = 1e-07, in.tol = 1e-05, comp.meth = "exact", 
+Boot.supp = NULL, checks = TRUE, cores = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Matrix (n times k, rank k).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+<p>Matrix (q times k, rank q).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>Vector (q dimensional).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hcmethod</code></td>
+<td>
+<p>Integer in [-1, 4]. Determines the method used in the construction of the covariance estimator
+used in the test statistic. The value -1 corresponds to uncorrected F statistic without df adjustment; the value 0 
+corresponds to the HC0 estimator; ...; the value 4 corresponds to the HC4 estimator. Cf. Pötscher 
+and Preinerstorfer (2020) and the references there for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>restr.cov</code></td>
+<td>
+<p>TRUE or FALSE. Covariance matrix estimator based on null-restricted (TRUE) or unrestricted (FALSE) residuals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wilddist</code></td>
+<td>
+<p>Distribution used to generate the bootstrap sample. Either “rademacher” or “mammen”. This is only used in case comp.meth = exact.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wildmult</code></td>
+<td>
+<p>Integer in [0, 4]. Determines the wild-bootstrap multiplier weights used. The value 0 corresponds to constant multiplieres of 1;
+the value 1 corresponds to multipliers that are obtained by taking the square of the HC1 weights; ...; the value
+4 corresonds to multipliers that are obtained by taking the square of the HC4 weights. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wildmult.restr</code></td>
+<td>
+<p>TRUE or FALSE. Bootstrap multiplier weights computed on null-restricted (TRUE) or unrestricted (FALSE) projection matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boot.res.restr</code></td>
+<td>
+<p>TRUE or FALSE. Bootstrap residuals based on null-restricted sample residuals (TRUE) or unrestricted sample residuals (FALSE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boot.center.restr</code></td>
+<td>
+<p>TRUE or FALSE. Bootstrap sample centered at null-restricted predictor (TRUE; or FALSE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>Real number. Tolerance parameter used in checking invertibility of the covariance matrix in the test statistic. This tolerance parameter is also used in checking <code class="reqn">R\hat{\beta}(e_i) \neq 0</code> in the computation of <code class="reqn">\vartheta_{2, Het}</code> and <code class="reqn">\vartheta_{2, uc}</code> (it is checked whether <code class="reqn">\|R\hat{\beta}(e_i)\|_{\infty} &gt; tol</code>. Default is 1e-07. A negativ input value will be converted to the machine epsilon. To check the stability of the numerical computations, it
+is recommended to try different values of tol and compare the obtained value of theta. Larger values of tol will lead to larger theta.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>as.tol</code></td>
+<td>
+<p>Real number. Tolerance parameter used in checking Assumptions 1 or 2. Default is 1e-07. 
+A negativ input value will be converted to the machine epsilon. To check the stability of the numerical computations, it
+is recommended to try different values of as.tol and compare the obtained value of theta. Larger values of as.tol will lead to larger theta.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>in.tol</code></td>
+<td>
+<p>Real number. Tolerance parameter used in checking a strict inequality in the theta computation. Default is 1e-05. 
+A negativ input value will be converted to the machine epsilon. To check the stability of the numerical computations, it
+is recommended to try different values of in.tol and compare the obtained value of theta. Larger values of in.tol will lead to larger theta.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>comp.meth</code></td>
+<td>
+<p>“exact” or “approximation”. Determines whether probabilities over the bootstrap distribution are computed exactly
+or approximately. Exact computations are only feasible for small sample sizes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Boot.supp</code></td>
+<td>
+<p>Bootstrap approximation distribution (e.g., obtained by drawing vectors each with n independent entries distributed according to a Rademacher distribution, or a Mammen distribution); (matrix, n rows, columns = number of bootstrap samples). This is only used if comp.meth = “approximation”; note that these vectors are further multiplied by wildmult weights.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checks</code></td>
+<td>
+<p>TRUE (default) or FALSE. Determines whether input checks are conducted (TRUE) or not (FALSE).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cores</code></td>
+<td>
+<p>Positive integer. Maximal number of cores used in the computations.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For details see the relevant sections in Pötscher 
+and Preinerstorfer (2020).
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>The value of theta; in case Assumptions are not satisfied NA is returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Aspt.sat</code></td>
+<td>
+<p>TRUE if checks passed, FALSE if checks did not pass.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Max.ind</code></td>
+<td>
+<p>The index that led to the minimum in the computation of theta. If Astp.sat = FALSE, then Max.ind = NA. Furthermore, Max.ind = NA in case theta was determined by the sufficient condition (k = q, boot.res.restr =       
+boot.center.restr = TRUE) for theta = 1 discussed in the paper</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Pötscher, B. M. and Preinerstorfer, D. (2020). How Reliable are Bootstrap-based Heteroskedastiity Robust Tests? &lt;arXiv:2005.04089&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">v1 &lt;- rnorm(10)
+X &lt;- cbind(rep(1, 10), rnorm(10), rnorm(10), sign(v1)*exp(v1))                         
+R &lt;- rbind(c(0, 0, 1, 0), c(0, 0, 0, 1))
+r &lt;- c(0, 0)
+
+theta(X, R, r, 3, FALSE, "rademacher", 3, FALSE, TRUE, TRUE)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>matchNamesWithReverseParts</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Value Matching with optional reversing of sub-parts of non-matching elements</h2>
+
+<h3>Description</h3>
+
+<p>This function provides a variant to <code>match</code>, where initially non-matching elements of <code>x</code>  
+will be tested by decomposing non-matching elements, reversing the parts in front and after the separator <code>sep</code> and re-matching.
+If separator <code>sep</code> does not occur, a warning will be issued, if it occurs more than once, 
+the parts before and after the first separartor will be used and a warning issued.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">matchNamesWithReverseParts(
+  x,
+  y,
+  sep = "-",
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(character) first vector for match</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>(character) second vector for match</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep</code></td>
+<td>
+<p>(character) separator between elements</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>index for matching (integer) x to y
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>match</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">tx1 &lt;- c("a-b","a-c","d-a","d-b","b-c","d-c")
+tmp &lt;- triCoord(4)
+tx2 &lt;- paste(letters[tmp[,1]],letters[tmp[,2]],sep="-")
+## Some matches won't be found, since 'a-d' got reversed to 'd-a', etc... 
+match(tx1,tx1)  
+matchNamesWithReverseParts(tx1,tx2)
+</code></pre>
+
+
+</div>

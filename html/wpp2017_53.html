@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>UNlocations</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+United Nations Table of Locations
+</h2>
+
+<h3>Description</h3>
+
+<p>United Nations table of locations, including regions, for statistical purposes as available in 2017.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">	data(UNlocations)
+	</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with one observations per country or region. It contains the following variables:
+</p>
+
+<dl>
+<dt><code>name</code></dt>
+<dd>
+<p>Name of country or region (following ISO 3166 official short names in English - see <br><a href="https://www.iso.org/obp/ui/#search/code/">https://www.iso.org/obp/ui/#search/code/</a> and United Nations Multilingual Terminology Database - see <a href="https://unterm.un.org/unterm">https://unterm.un.org/unterm</a>).</p>
+</dd>
+<dt><code>country_code</code></dt>
+<dd>
+<p>Numerical Location Code (3-digit codes following ISO 3166-1 numeric standard) - see <a href="http://en.wikipedia.org/wiki/ISO_3166-1_numeric">http://en.wikipedia.org/wiki/ISO_3166-1_numeric</a>.</p>
+</dd>
+<dt><code>reg_code</code></dt>
+<dd>
+<p>Code of the regions.</p>
+</dd>
+<dt><code>reg_name</code></dt>
+<dd>
+<p>Name of the regions.</p>
+</dd>
+<dt><code>area_code</code></dt>
+<dd>
+<p>Area code.</p>
+</dd>
+<dt><code>area_name</code></dt>
+<dd>
+<p>Area names, such as <code>Africa</code>, <code>Asia</code>, <code>Europe</code> <code>Latin America and the Caribbean</code>, <code>Northern America</code>, <code>Oceania</code>, <code>World</code>.</p>
+</dd>
+<dt><code>location_type</code></dt>
+<dd>
+<p>Code giving the type of the observation: 0=World, 2=Major Area, 3=Region, 4=Country/Area, 5=Development group, 12=Special groupings. Other numbers are allowed and they can be used for aggregation, see below.</p>
+</dd>
+<dt>
+<code>agcode_1500</code>, <code>agcode_1501</code>, <code>agcode_1502</code>, <code>agcode_1503</code>, <code>agcode_1517</code>, <code>agcode_901</code>, <code>agcode_902</code>, <code>agcode_921</code>, <code>agcode_934</code>, <code>agcode_941</code>, <code>agcode_947</code>, <code>agcode_948</code>
+</dt>
+<dd>
+<p>Optional columns that can be used for aggregations. To aggregate a region with <code>country_code</code>=<code class="reqn">x</code>, get the value of its <code>location_type</code>, say <code class="reqn">y</code>. Then look for the column <code>agcode_y</code> and locate all records with <code>agcode_y</code>=<code class="reqn">x</code> that have <code>location_type</code>=4, see Example below.</p>
+</dd>
+</dl>
+<h3>Source</h3>
+
+<p>Data provided by the United Nations Population Division.
+</p>
+<p>The designations employed in this dataset do not imply the expression of any opinion whatsoever on the part of the Secretariat of the United Nations concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(UNlocations)
+# Find high income countries in Africa (based on World Bank groups)
+grouprec &lt;- subset(UNlocations, name == "High-income countries")
+# grouprec$location_type is 1503, thus look for column agcode_1503 
+subset(UNlocations, agcode_1503 == grouprec$country_code &amp; 
+                            location_type == 4 &amp; area_name == "Africa")
+</code></pre>
+
+
+</div>

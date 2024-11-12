@@ -1,0 +1,153 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pwreg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fit a standard proportional win-fractions (PW) regression model</h2>
+
+<h3>Description</h3>
+
+<p>Fit a standard proportional win-fractions (PW) regression model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pwreg(
+  ID,
+  time,
+  status,
+  Z,
+  rho = 0,
+  strata = NULL,
+  fixedL = TRUE,
+  eps = 1e-04,
+  maxiter = 50
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ID</code></td>
+<td>
+<p>a vector of unique subject-level identifiers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>a vector of event times.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>a vector of event type labels. 0: censoring, 1:death
+and 2: non-fatal event.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+<p>a matrix or a vector of covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho</code></td>
+<td>
+<p>a non-negative number as the power of the survival function used
+in the weight. Default (<code>rho=0</code>) is recommended. If there is a 'strata' argument,
+then 'rho' is ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strata</code></td>
+<td>
+<p>a vector of stratifying variable if a stratified model is desired.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixedL</code></td>
+<td>
+<p>logical variable indicating which variance estimator to be used. If 'TRUE',
+the type I variance estimator (for a small number strata) is used; otherwise
+the type II variance estimator (for a large number strata) is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eps</code></td>
+<td>
+<p>precision for the convergence of Newton-Raphson algorithm.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxiter</code></td>
+<td>
+<p>maximum number of iterations allow for the Newton-Raphson
+algorithm.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class <code>pwreg</code> with the following components.
+<code>beta</code>:a vector of estimated regression coefficients. <code>Var</code>:estimated
+covariance matrix for <code>beta</code>. <code>conv:</code> boolean variable indicating
+whether the algorithm converged within the maximum number of iterations.
+</p>
+
+
+<h3>References</h3>
+
+<p>Mao, L. and Wang, T. (2020). A class of proportional win-fractions
+regression models for composite outcomes. Biometrics, 10.1111/biom.13382
+</p>
+<p>Wang, T. and Mao, L. (2021+). Stratified Proportional Win-fractions
+Regression Analysis.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>score.proc</code>, <code>print.pwreg</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(WR)
+head(non_ischemic)
+id_unique &lt;-unique(non_ischemic$ID)
+
+# Randomly sample 200 subjects from non_ischemic data
+set.seed(2019)
+id_sample &lt;- sample(id_unique, 200)
+non_ischemic_reduce &lt;- non_ischemic[non_ischemic$ID %in% id_sample, ]
+
+# Use the reduced non_ischemic data for analysis
+nr &lt;- nrow(non_ischemic_reduce)
+p &lt;- ncol(non_ischemic_reduce)-3
+ID &lt;- non_ischemic_reduce[,"ID"]
+time &lt;- non_ischemic_reduce[,"time"]
+status &lt;- non_ischemic_reduce[,"status"]
+Z &lt;- as.matrix(non_ischemic_reduce[,4:(3+p)],nr,p)
+## unstratified analysis
+pwreg.obj &lt;- pwreg(time=time,status=status,Z=Z,ID=ID)
+print(pwreg.obj)
+## Not run: 
+## stratified PW by sex
+sex&lt;-Z[,3]
+## take out sex from the covariate matrix
+Z1&lt;-Z[,-3]
+pwreg.obj1 &lt;- pwreg(time=time,status=status,Z=Z1,ID=ID,strata=sex)
+print(pwreg.obj1)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

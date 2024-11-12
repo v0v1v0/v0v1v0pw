@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>signifparam</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Computes the parameters significance</h2>
+
+<h3>Description</h3>
+
+<p>Computes a matrix with estimated coefficient and their significance.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">signifparam(
+  ar = NULL,
+  ma = NULL,
+  p = NULL,
+  q = NULL,
+  y,
+  sd.strong = NULL,
+  sd.weak = NULL,
+  meanparam = TRUE,
+  mu = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ar</code></td>
+<td>
+<p>Vector of AR coefficients, if <code>NULL</code>, MA process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ma</code></td>
+<td>
+<p>Vector of MA coefficients, if <code>NULL</code>, AR process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>Order of AR, if <code>NULL</code> MA process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>Order of MA, if <code>NULL</code> AR process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Univariate time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd.strong</code></td>
+<td>
+<p>Standard error of time series in the strong case computed in <code>omega</code>, if not provided the function will compute it.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd.weak</code></td>
+<td>
+<p>Standard error of time series in the weak case computed in <code>omega</code>, if not provided the function will compute it.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meanparam</code></td>
+<td>
+<p>If <code class="reqn">\mu</code> of the time series needs to be computed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mu</code></td>
+<td>
+<p>Value of <code class="reqn">\mu</code>, if it is known and if the <code>meanparam</code> is <code>TRUE</code>. If not known the function will compute it.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function needs at least one pair between: ar and/or ma, or p and/or q to be executed. It will be faster with all the parameters provided.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Matrix of the estimate coefficient with their significance.
+</p>
+
+<dl>
+<dt><code>coef</code></dt>
+<dd>
+<p>Estimation of each coefficient.</p>
+</dd>
+<dt><code>sd</code></dt>
+<dd>
+<p>Standard deviation in each case.</p>
+</dd>
+<dt><code>t-ratio</code></dt>
+<dd>
+<p>T-ratio corresponding to each coefficient.</p>
+</dd>
+<dt><code>signif</code></dt>
+<dd>
+<p>Significance of each parameter. 
+Must be small, if not the parameter is not significant.</p>
+</dd>
+</dl>
+<h3>Examples</h3>
+
+<pre><code class="language-R">signifparam(p = 1, q = 2, y = CAC40return.sq) #The last parameter is not significant.
+signifparam(p = 1, q = 1, y = CAC40return.sq) #All the parameters are significant.
+
+</code></pre>
+
+
+</div>

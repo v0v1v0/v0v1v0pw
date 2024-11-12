@@ -1,0 +1,179 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>seasyrplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot seasonal model response by years</h2>
+
+<h3>Description</h3>
+
+<p>Plot seasonal model response by years on a common axis
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">seasyrplot(dat_in, ...)
+
+## S3 method for class 'tidal'
+seasyrplot(
+  dat_in,
+  years = NULL,
+  tau = NULL,
+  predicted = TRUE,
+  logspace = TRUE,
+  col_vec = NULL,
+  grids = TRUE,
+  pretty = TRUE,
+  lwd = 0.5,
+  alpha = 1,
+  ...
+)
+
+## S3 method for class 'tidalmean'
+seasyrplot(
+  dat_in,
+  years = NULL,
+  tau = NULL,
+  predicted = TRUE,
+  logspace = TRUE,
+  col_vec = NULL,
+  grids = TRUE,
+  pretty = TRUE,
+  lwd = 0.5,
+  alpha = 1,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input tidal or tidalmean object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>years</code></td>
+<td>
+<p>numeric vector of years to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>numeric vector of quantiles to plot, defaults to all in object if not supplied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>predicted</code></td>
+<td>
+<p>logical indicating if standard predicted values are plotted, default <code>TRUE</code>, otherwise normalized predictions are plotted</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logspace</code></td>
+<td>
+<p>logical indicating if plots are in log space</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col_vec</code></td>
+<td>
+<p>chr string of plot colors to use, passed to <code>gradcols</code>.  Any color palette from RColorBrewer can be used as a named input. Palettes from grDevices must be supplied as the returned string of colors for each palette.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grids</code></td>
+<td>
+<p>logical indicating if grid lines are present</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pretty</code></td>
+<td>
+<p>logical indicating if my subjective idea of plot aesthetics is applied, otherwise the <code>ggplot</code> default themes are used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd</code></td>
+<td>
+<p>numeric value indicating width of lines</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>numeric value indicating transparency of points or lines</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The plot is similar to that produced by <code>seasplot</code> except the model estimates are plotted for each year as connected lines, as compared to loess lines fit to the model results.  <code>seasyrplot</code> is also similar to <code>sliceplot</code> except the x-axis and legend grouping variable are flipped. This is useful for evaluating between-year differences in seasonal trends.
+</p>
+<p>Multiple predictions per month are averaged for a smoother plot. 
+</p>
+<p>Note that the year variable used for color mapping is treated as a continuous variable although it is an integer by definition.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>ggplot</code> object that can be further modified
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>seasplot</code>, <code>sliceplot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## load a fitted tidal object
+data(tidfit)
+
+# plot using defaults
+seasyrplot(tidfit)
+
+# get the same plot but use default ggplot settings
+seasyrplot(tidfit, pretty = FALSE)
+
+# plot specific quantiles
+seasyrplot(tidfit, tau = c(0.9))
+
+# plot the normalized predictions
+seasyrplot(tidfit, predicted = FALSE)
+
+# modify the plot as needed using ggplot scales, etc.
+
+library(ggplot2)
+
+seasyrplot(tidfit, pretty = FALSE, linetype = 'dashed') + 
+ theme_classic() + 
+ scale_y_continuous(
+   'Chlorophyll', 
+   limits = c(0, 5)
+   )
+   
+# plot a tidalmean object
+data(tidfitmean)
+
+seasyrplot(tidfitmean)    
+</code></pre>
+
+
+</div>

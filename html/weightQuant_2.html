@@ -1,0 +1,240 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>bootwrq</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Bootstrap procedure for weighted quantile regressions
+</h2>
+
+<h3>Description</h3>
+
+<p>A subject-level bootstrap method for weighted quantile regressions is
+implemented in this function. Quantile regressions are estimated in a
+generalized estimating equation framework with independent working
+covariance matrix. Weights are estimated using <code>weightsIMD</code> or
+<code>weightsMMD</code> functions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">bootwrq(B, form, tau, data, Y, X1 = NULL, X2 = NULL, subject,
+death, time, interval.death = NULL, impute = NULL, weight = NULL,
+wcompute = 2, seed = NULL, intermittent, file = NULL,
+nproc = 1, MPI = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+
+<p>integer, number of bootstrap samples
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>form</code></td>
+<td>
+
+<p>formula indicating the quantile regression model to be estimated
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+
+<p>numeric vector indicating the quantiles to be estimated
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>data frame containing the data
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+
+<p>character indicating the name of the response outcome
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X1</code></td>
+<td>
+
+<p>optional character vector passed to the weight functions
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X2</code></td>
+<td>
+
+<p>optional character vector passed to the weight functions
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subject</code></td>
+<td>
+
+<p>character indicating the name of the subject identifier
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>death</code></td>
+<td>
+
+<p>optional character passed to the weight functions
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+
+<p>optional character passed to the weight functions
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interval.death</code></td>
+<td>
+
+<p>optional numeric vector passed to the weight function weightsMMD
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>impute</code></td>
+<td>
+
+<p>optional numeric vector passed to the weight function weightsIMD
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight</code></td>
+<td>
+
+<p>character indicating the name of the weight variable in data
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wcompute</code></td>
+<td>
+
+<p>integer indicating if weights should be estimated in each bootstrap
+sample. If wcompute=0, weights are supposed to be known. If
+wcompute=1, weights are re-estimated in each bootstrp sample. If
+wcompute=2, both results are returned.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+
+<p>optional integer vector of length B indicating the seeds.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intermittent</code></td>
+<td>
+
+<p>logical indicating if data contains intermittent missing data. If
+intermittent=TRUE, the weights are estimated using weightsIMD
+function, if intermittent=FALSE, the weights are estimated using weightsMMD
+function.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+
+<p>optional character indicating the name of the results file. If
+file=NULL, no results file is created.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nproc</code></td>
+<td>
+
+<p>number of processors to be used for parallel computing. Default to 1,
+sequential computation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MPI</code></td>
+<td>
+
+<p>logical indicating if MPI parallelization should be used. Default to FALSE.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a matrix with B columns containing the results on each
+bootstrap sample.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Viviane Philipps, Robert Darlin Mba
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>summary.bootwrq</code>,  <code>test.bootwrq</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## computation of the weights with intermittent missing data 
+w_simdata &lt;- weightsIMD(data=simdata,Y="Y",X1="X",X2=NULL,subject="id",
+death="death",time="time",impute=20,name="w_imd")$data
+
+## estimation of the weighted quantile regressions
+## for the first quartile and the median
+m_simdata &lt;- rq(Y~time*X,data=w_simdata,weights=w_imd,tau=c(0.25,0.5))
+
+## estimation of the standard erros using the bootstrap procedure
+boot_simdata &lt;- bootwrq(B=1000, form=Y~time*X, tau=c(0.25,0.5),
+data=w_simdata, Y="Y",X1="X",X2=NULL,subject="id",
+death="death",time="time",impute=20,wcompute=0,intermittent=TRUE)
+
+## the summary of the results
+summary(boot_simdata,m_simdata)
+
+## comparison of the covariate effects
+## between the first quartile and the median
+test.bootwrq(boot_simdata,m_simdata)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

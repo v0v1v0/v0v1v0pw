@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>convolve2D</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fast Column-wise Convolution of a Matrix</h2>
+
+<h3>Description</h3>
+
+<p>Use the Fast Fourier Transform to perform convolutions between a sequence
+and each column of a matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">convolve2D(x, y, conj = TRUE, type = c("circular", "open"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>MxN matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>numeric sequence of length N.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conj</code></td>
+<td>
+<p>logical; if <code>TRUE</code>, take the complex <em>conjugate</em>
+before back-transforming (default, and used for usual convolution).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>character; one of <code>circular</code>, <code>open</code> (beginning of
+word is ok).  For <code>circular</code>, the two sequences are treated as
+<em>circular</em>, i.e., periodic.
+</p>
+<p>For <code>open</code> and <code>filter</code>, the sequences are padded with zeros (from
+left and right) first; <code>filter</code> returns the middle sub-vector of
+<code>open</code>, namely, the result of running a weighted mean of <code>x</code> with
+weights <code>y</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is a corrupted version of <code>convolve</code> made by replacing <code>fft</code>
+with <code>mvfft</code> in a few places.  It would be nice to submit this to the R
+Developers for inclusion.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>B. Whitcher
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>convolve</code>
+</p>
+
+
+</div>

@@ -1,0 +1,69 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>anlz_perchg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimate percent change trends from GAM results for selected time periods</h2>
+
+<h3>Description</h3>
+
+<p>Estimate percent change trends from GAM results for selected time periods
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">anlz_perchg(mod, baseyr, testyr)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mod</code></td>
+<td>
+<p>input model object as returned by <code>anlz_gam</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>baseyr</code></td>
+<td>
+<p>numeric vector of starting years</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>testyr</code></td>
+<td>
+<p>numeric vector of ending years</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Working components of this function were taken from the gamDiff function in the baytrends package.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame of summary results for change between the years.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(dplyr)
+
+# data to model
+tomod &lt;- rawdat %&gt;%
+  filter(station %in% 34) %&gt;%
+  filter(param %in% 'chl')
+  
+mod &lt;- anlz_gam(tomod, trans = 'log10')
+anlz_perchg(mod, baseyr = 1990, testyr = 2016)
+</code></pre>
+
+
+</div>

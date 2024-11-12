@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wm_attr_data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get attribute data by AphiaID</h2>
+
+<h3>Description</h3>
+
+<p>Get attribute data by AphiaID
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wm_attr_data(id, include_inherited = FALSE, ...)
+
+wm_attr_data_(id = NULL, name = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>(numeric/integer) an AphiaID. For <code>wm_attr_data</code> it's
+required and must be <code>length(id) == 1</code>, for <code>wm_attr_data_</code> it's
+optional and can be <code>length(id) &gt;= 1</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_inherited</code></td>
+<td>
+<p>(logical) Include attributes inherited from
+its parent taxon. Default: <code>FALSE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>named curl options. see <code>curl::curl_options</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>(character) one or more taxonomic names. optional</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tibble/data.frame. when using underscore method, outputs from
+each input are binded together, but can be split by <code>id</code> column
+</p>
+
+
+<h3>Singular vs. plural</h3>
+
+<p>Of the two sister functions, the one without the underscore is the original
+function that wraps the relavant WoRMS API method - and only accepts
+one thing (i.e., name or AphiaID) per request.
+</p>
+<p>The sister function with the underscore at the end is the plural version,
+accepting more than one input. Internally this function loops over
+the non-underscore method, and labels output (whether it's a list or
+data.frame rows) with the input names or IDs so that you can easily
+parse output by your inputs.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+wm_attr_data(id = 127160)
+wm_attr_data(id = 126436)
+
+wm_attr_data_(id = c(127160, 126436))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

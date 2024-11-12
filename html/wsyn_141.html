@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotmap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Map clusters from a <code>clust</code> object</h2>
+
+<h3>Description</h3>
+
+<p>Produces a map of the locations of sampling for a <code>clust</code> object, with colors indicating 
+module (cluster) identity.
+The sizes of nodes (locations) are scaled according to the strength of membership in its module.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotmap(
+  inclust,
+  spltlvl = length(inclust$clusters),
+  nodesize = c(1, 3),
+  filename = NA
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>inclust</code></td>
+<td>
+<p>A <code>clust</code> object, as created with <code>wsyn::clust</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spltlvl</code></td>
+<td>
+<p>The split level in the clustering to use. This is the index of inclust$clusters.
+Default the final split.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nodesize</code></td>
+<td>
+<p>A length = 2 vector giving the minimum and maximum node size for plotting. Defaults to c(1,3).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+<p>a filename, possibly including path info, but without a file extension. If present,
+exports the plot as a .pdf using the specified filename. Default <code>NA</code> uses the default plotting
+device.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>plotmap</code> produces a map.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jonathan Walter, <a href="mailto:jaw3es@virginia.edu">jaw3es@virginia.edu</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Walter, J. A., et al. (2017) The geography of spatial synchrony. Ecology Letters. 
+doi: 10.1111/ele.12782
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>clust</code>, <code>browseVignettes("wsyn")</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">Tmax&lt;-500
+tim&lt;-1:Tmax
+ts1&lt;-sin(2*pi*tim/5)
+ts1s&lt;-sin(2*pi*tim/5+pi/2)
+ts2&lt;-sin(2*pi*tim/12)
+ts2s&lt;-sin(2*pi*tim/12+pi/2)
+gp1A&lt;-1:2
+gp1B&lt;-3:4
+gp2A&lt;-5:6
+gp2B&lt;-7:8
+d&lt;-matrix(NA,Tmax,8)
+d[,c(gp1A,gp1B)]&lt;-ts1
+d[,c(gp2A,gp2B)]&lt;-ts1s
+d[,c(gp1A,gp2A)]&lt;-d[,c(gp1A,gp2A)]+matrix(ts2,Tmax,4)
+d[,c(gp1B,gp2B)]&lt;-d[,c(gp1B,gp2B)]+matrix(ts2s,Tmax,4)
+d&lt;-d+matrix(rnorm(Tmax*8,0,2),Tmax,8)
+d&lt;-t(d)
+d&lt;-cleandat(d,1:Tmax,1)$cdat
+coords&lt;-data.frame(X=c(rep(1,4),rep(2,4)),Y=rep(c(1:2,4:5),times=2))
+cl5&lt;-clust(dat=d,times=1:Tmax,coords=coords,method="ReXWT",tsrange=c(4,6))
+plotmap(cl5)
+cl12&lt;-clust(dat=d,times=1:Tmax,coords=coords,method="ReXWT",tsrange=c(11,13))
+plotmap(cl12)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cs_control</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Control ChemSpider API requests</h2>
+
+<h3>Description</h3>
+
+<p>For some ChemSpider API requests, you can also specify various control
+options. This function is used to set these control options.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cs_control(
+  datasources = vector(),
+  order_by = "default",
+  order_direction = "default",
+  include_all = FALSE,
+  complexity = "any",
+  isotopic = "any"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datasources</code></td>
+<td>
+<p>character; specifies the databases to query. Use
+<code>cs_datasources()</code> to retrieve available ChemSpider data sources.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>order_by</code></td>
+<td>
+<p>character; specifies the sort order for the results.
+Valid values are <code>"default"</code>, <code>"recordId"</code>, <code>"massDefect"</code>,
+<code>"molecularWeight"</code>, <code>"referenceCount"</code>, <code>"dataSourceCount"</code>,
+<code>"pubMedCount"</code>, <code>"rscCount"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>order_direction</code></td>
+<td>
+<p>character; specifies the sort order for the results.
+Valid values are <code>"default"</code>, <code>"ascending"</code>, <code>"descending"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_all</code></td>
+<td>
+<p>logical; see details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>complexity</code></td>
+<td>
+<p>character; see details.
+Valid values are <code>"any"</code> <code>"single"</code>, <code>"multiple"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>isotopic</code></td>
+<td>
+<p>character; see details.
+Valid values are <code>"any"</code>, <code>"labeled"</code>, <code>"unlabeled"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The only function that currently uses <code>databases</code> is
+<code>get_csid()</code> and only when you query a CSID from a formula. This
+parameter is disregarded in all other queries.
+</p>
+<p>Setting <code>include_all</code> to <code>TRUE</code> will consider records
+which contain all of the filter criteria specified in the request. Setting
+it to <code>FALSE</code> will consider records which contain any of the filter
+criteria.
+</p>
+<p>A compound with a  <code>complexity</code> of <code>"multiple"</code> has more
+than one disconnected system in it or a metal atom or ion.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list of specified control options.
+</p>
+
+
+<h3>Note</h3>
+
+<p>This is a full list of all API control options.
+However, not all of these options are used in all functions.
+Each API uses a subset of these controls.
+The controls that are available for a given function are indicated within the
+documentation of the function.
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://developer.rsc.org/docs/compounds-v1-trial/1/overview">https://developer.rsc.org/docs/compounds-v1-trial/1/overview</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>get_csid</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">cs_control()
+cs_control(order_direction = "descending")
+</code></pre>
+
+
+</div>

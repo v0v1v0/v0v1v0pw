@@ -1,0 +1,326 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wpstats</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Deal Many Hands of a Wild Poker Variant Game</h2>
+
+<h3>Description</h3>
+
+<p>This function deals a large number of hands of poker and captures
+the game statistics as observations in a "raw" data frame, then summarizes the
+results into a "gstat" list, suitable for graphing with the <code>wpgraphs</code> 
+function.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wpstats(ngame, players, wcards = NULL, numdeal = 1000, seed = 52, raw = FALSE)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ngame</code></td>
+<td>
+<p> This is any supported game, such as "Seven Card Stud" or "Baseball". See
+<code>wpsupportedgames</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>players</code></td>
+<td>
+<p>An integer value, must be at least 2 and is limited by the number
+of cards that can be physically dealt.  (eg, Seven Card Stud has a max of 7 players)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wcards</code></td>
+<td>
+<p>A vector of string values which are either supported wildcard aliases or
+individual cards.  These cards are in addition to any wildcards that are a natural
+part of the poker game variant chosen with "ngame".  The table below shows the 
+supported aliases and their individual card vector equivalnets:
+</p>
+
+<ul>
+<li> <p><code>"Suicide King" or "KH"</code>	
+</p>
+</li>
+<li> <p><code>"One Eyed Jacks" or c("JH", "JS")</code>   
+</p>
+</li>
+<li> <p><code>"Deuces" or c("2H", "2C", "2D", "2S")</code>	
+</p>
+</li>
+<li> <p><code>"Heinz 57" or c("5H", "5C", "5D", "5S", "7H", "7C", "7D", "7S")</code>
+</p>
+</li>
+<li> <p><code>"Pregnant Threes" or  c("3H", "3C", "3D", "3S", "6H", "6C", "6D", "6S", "9H", "9C", "9D", "9S")</code>
+</p>
+</li>
+<li> <p><code>"Dr Pepper" or c("2H", "2C", "2D", "2S", "4H", "4C", "4D", "4S", "10H", "10C", "10D", "10S")</code>
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numdeal</code></td>
+<td>
+<p>Number of hands to deal, must be positive integer</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>random number seed set at beginning, must be positive integer</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>raw</code></td>
+<td>
+<p>If TRUE the full "raw" data frame is returned instead of the gstat list</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This program calls the <code>wpgame</code> function <code>numdeal</code> times,
+generating a raw data frame.  This data frame is then consolidated into
+a gstat list, whose format depends on <code>ngame</code>.</p>
+
+
+<h3>Value</h3>
+
+<p>if raw is TRUE, returns a rawstat data frame, # of rows = numdeal
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+    [,1] </td>
+<td style="text-align: left;"> game </td>
+<td style="text-align: left;"> chr </td>
+<td style="text-align: left;"> pname parameter </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+    [,2] </td>
+<td style="text-align: left;"> pnum </td>
+<td style="text-align: left;"> numeric </td>
+<td style="text-align: left;"> players parameter </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+    [,3] </td>
+<td style="text-align: left;"> wild  </td>
+<td style="text-align: left;"> chr </td>
+<td style="text-align: left;"> wcard parameter</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+    [,4] </td>
+<td style="text-align: left;"> mwtype </td>
+<td style="text-align: left;"> chr </td>
+<td style="text-align: left;"> Winning hand type of Main hand</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+    [,5] </td>
+<td style="text-align: left;"> swtype </td>
+<td style="text-align: left;"> chr </td>
+<td style="text-align: left;"> Winning hand type of Split hand</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+    [,6] </td>
+<td style="text-align: left;"> mwscore </td>
+<td style="text-align: left;"> numeric </td>
+<td style="text-align: left;"> score of winning main hand</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+    [,7] </td>
+<td style="text-align: left;"> msscore </td>
+<td style="text-align: left;"> numeric </td>
+<td style="text-align: left;"> Num players score = winning Main score </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+    [,8] </td>
+<td style="text-align: left;"> mstype  </td>
+<td style="text-align: left;"> numeric </td>
+<td style="text-align: left;"> Num players type = winning Main type </td>
+</tr>
+<tr>
+<td style="text-align: right;"> 
+    [,9] </td>
+<td style="text-align: left;"> swscore </td>
+<td style="text-align: left;"> numeric </td>
+<td style="text-align: left;"> score of winning Split hand</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+    [,10] </td>
+<td style="text-align: left;"> ssscore </td>
+<td style="text-align: left;"> numeric </td>
+<td style="text-align: left;"> Num players score = winning Split score </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+    [,11] </td>
+<td style="text-align: left;"> sstype  </td>
+<td style="text-align: left;"> numeric </td>
+<td style="text-align: left;"> Num players type = winning Split type </td>
+</tr>
+<tr>
+<td style="text-align: right;"> 
+    [,12] </td>
+<td style="text-align: left;"> mppct </td>
+<td style="text-align: left;"> numeric </td>
+<td style="text-align: left;"> percent won if Main hand is won</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+    [,13] </td>
+<td style="text-align: left;"> sppct </td>
+<td style="text-align: left;"> numeric </td>
+<td style="text-align: left;"> percent won if Split hand is won </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+    [,14] </td>
+<td style="text-align: left;"> bppct  </td>
+<td style="text-align: left;"> numeric </td>
+<td style="text-align: left;"> percent won if Both hands are won </td>
+</tr>
+<tr>
+<td style="text-align: right;"> 
+    [,15] </td>
+<td style="text-align: left;"> wcdeck </td>
+<td style="text-align: left;"> numeric </td>
+<td style="text-align: left;"> wildcards in deck before the deal </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+    [,16] </td>
+<td style="text-align: left;"> wcdeal  </td>
+<td style="text-align: left;"> numeric </td>
+<td style="text-align: left;"> wildcards in deck after the deal </td>
+</tr>
+<tr>
+<td style="text-align: right;">         
+  </td>
+</tr>
+</table>
+<p>if raw is FALSE, returns a gstat list
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>$game</code></td>
+<td>
+<p>a vector of the pname, players and wcards parameters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$stats</code></td>
+<td>
+<p>a vector of the numdeal &amp; seed parameters, and the number of
+wildcards added to the deck by the wcards parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$pmain</code></td>
+<td>
+<p>a table used for graphing win percentage chance of Main hand type by number of players</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$cmain</code></td>
+<td>
+<p>a table used for graphing count of winnning Main hand types by number of players</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$wmain</code></td>
+<td>
+<p>a table used for graphing count of winning Main hand types by wildcard count</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$psplit</code></td>
+<td>
+<p>a table used for graphing win percentage chance of Split hand type by number of players</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$csplit</code></td>
+<td>
+<p>a table used for graphing count of winnning Split hand types by number of players</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$wsplit</code></td>
+<td>
+<p>a table used for graphing count of winning Split hand types by wildcard count</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>$potpct</code></td>
+<td>
+<p>a table used for graphing count of percentage of pot won if a hand wins</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>This function is intended to allow exposing the raw data behind the pre-calculated results
+normally used by wpgraphs or to allow running for different random number seeds, number of hands
+dealt, nonstandard additional wildcards or (when games allow) more than eight players.
+</p>
+<p>It takes about .005 seconds to evaluate each hand - 6 players takes 3 times as long as 2 players,
+a split hand variant takes twice as long as a variant that has only a main hand.  Dealing 1000
+rounds of most variants takes a minute or two, but Omaha and Courcheval build hands out of subsets
+of the player hands, requiring up to 70 separate hand evaluations for each player.  This means that
+1000 hands of those variants can take a couple of hours to generate.
+</p>
+<p>For this reason, gstat values for all supported game variants have already been calculated for
+2-8 players and 0-7 additional wildcards - if interested in any of these standard combinations,
+there is no need to call the <code>wpstats</code> function, <code>wpgraphs</code> has the required gstat list 
+already.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Maintainer: Bradley Shanrock-Solberg  
+<a href="mailto:greblosb@gmail.com">greblosb@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+<p><a href="http://www.poker.com/game/index.htm">poker.com</a> has an excellent reference on game variants which was the 
+primary source for games rules not encountered in my own play.</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wpgame</code>, <code>wpgraphs</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># example of the wpstats run to generate raw statistics
+rawstat &lt;- wpstats("Iron Cross Last Wild", 6, "Deuces", numdeal = 10, raw = TRUE)
+head(rawstat)
+
+# example of wpstats run to generate a gstat object, used by wpgraphs
+wpstats("Seven Stud Hi-Lo", 4, numdeal = 10, seed = 100)
+
+
+</code></pre>
+
+
+</div>

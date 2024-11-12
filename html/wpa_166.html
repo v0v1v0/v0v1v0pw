@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>subject_classify</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a new logical variable that classifies meetings by patterns in
+subject lines</h2>
+
+<h3>Description</h3>
+
+<p>Take a meeting query with subject lines and create a new
+TRUE/FALSE column which classifies meetings by a provided set of patterns in
+the subject lines.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">subject_classify(
+  data,
+  var_name = "class",
+  keywords = NULL,
+  pattern = NULL,
+  ignore_case = FALSE,
+  return = "data"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A Meeting Query dataset in the form of a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var_name</code></td>
+<td>
+<p>String containing the name of the new column to be created.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keywords</code></td>
+<td>
+<p>Character vector containing the keywords to match.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pattern</code></td>
+<td>
+<p>String to use for regular expression matching instead of
+<code>keywords</code>. When both <code>keywords</code> and <code>pattern</code> are supplied, <code>pattern</code>
+takes priority and is used instead.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ignore_case</code></td>
+<td>
+<p>Logical value to determine whether to ignore case when
+performing pattern matching.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String specifying what output to return.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">class_df &lt;-
+  mt_data %&gt;%
+  subject_classify(
+    var_name = "IsSales",
+    keywords = c("sales", "marketing")
+  )
+
+class_df %&gt;% dplyr::count(IsSales)
+
+# Return a table directly
+mt_data %&gt;% subject_classify(pattern = "annual", return = "table")
+
+</code></pre>
+
+
+</div>

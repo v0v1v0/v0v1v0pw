@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>completeManualPage</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Complete Manual Page</h2>
+
+<h3>Description</h3>
+
+<p>Complete a manual page</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">completeManualPage(filename_s_1, processingContext_o,
+                   add_b_1 = TRUE, verbosity_b_1 = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>filename_s_1</code></td>
+<td>
+<p>A single <em><code>string</code></em> value that is a file name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>processingContext_o</code></td>
+<td>
+<p> a single processing <em><code>object</code></em>.
+See <em><b>codeProcessingContext</b></em>. Only
+<code>postProcessing_l</code> parameter is considered by this function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add_b_1</code></td>
+<td>
+<p>a <em><code>boolean</code></em> flag. When <em><code>TRUE</code></em> add content
+to existing content. Otherwise patch content. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbosity_b_1</code></td>
+<td>
+<p>a single <em><code>boolean</code></em> flag, to set or unset verbosity</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function adds or patches on-demand sections of a manual page file.
+</p>
+<p>You may consider twice prior using this function. It is a convenience that aims
+to sustain your productivity. You may get very quick results using it, but at the
+probable cost of non reproducibility in comparison with manual pages produced using
+function <code>ManualPageBuilder</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+<p>Maintainer: Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">f &lt;- function() {}
+ic &lt;- InputContext(NULL, 'f')
+p &lt;- produceManualPage(ic)
+# WARNING: File /tmp/Rtmpvk4BG5/f.Rd
+# checkRd: (5) /tmp/Rtmpvk4BG5/f.Rd:0-9: Must have a \description
+
+
+completeManualPage(p$context$filename,
+   ProcessingContext(postProcessing_l = list(
+      details = function(content_s) 'some more details',
+      concept = function(content_s) 'yet another concept'
+   )), verbosity = TRUE
+)
+# adding details
+# adding concept
+# [1] TRUE
+</code></pre>
+
+
+</div>

@@ -1,0 +1,159 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>w3c_markup_validate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Validate Markup of Web Documents using W3C Markup Validation
+Services</h2>
+
+<h3>Description</h3>
+
+<p>Check the markup validity of web documents in <abbr><span class="acronym">HTML</span></abbr>,
+<abbr><span class="acronym">XHTML</span></abbr>, etc., using a W3C Markup Validation service.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">w3c_markup_validate(baseurl = w3c_markup_validate_baseurl(),
+                    uri = NULL, file = NULL, string = NULL,
+                    opts = list())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>baseurl</code></td>
+<td>
+<p>a character string giving the URL of the W3C Markup
+Validation service to employ.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uri</code></td>
+<td>
+<p>a character string giving the URI to validate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>a character string giving the path of a file to validate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>string</code></td>
+<td>
+<p>a character string with the markup to validate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opts</code></td>
+<td>
+<p>a named list or <code>curlOptions</code> object
+with options to use for accessing the validation service via
+<code>getURL</code> (in case <code>uri</code> is given) or
+<code>postForm</code> (in case <code>file</code> or <code>string</code>
+are given).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Exactly one of <code>uri</code>, <code>file</code> or <code>string</code> must be given.
+</p>
+<p>Validation is then performed by using the W3C Markup Validation
+service at the given <abbr><span class="acronym">URL</span></abbr>, using the (still declared
+“experimental”) SOAP 1.2 API of such a service (see
+<a href="https://validator.w3.org/docs/api.html">https://validator.w3.org/docs/api.html</a> for more information).
+</p>
+<p>If a SOAP validation response could be obtained,
+<code>w3c_markup_validate()</code> returns the information in the response
+organized into an object of class <code>"w3c_markup_validate"</code>, which
+is a list with the following elements:
+</p>
+
+<dl>
+<dt><code>valid</code></dt>
+<dd>
+<p>a logical indicating the validity of the web
+document checked (TRUE iff there were no errors)</p>
+</dd>
+<dt><code>errorcount</code></dt>
+<dd>
+<p>an integer giving the number of errors
+found.</p>
+</dd>
+<dt><code>errors</code></dt>
+<dd>
+<p>a data frame with variables ‘line’,
+‘col’, ‘message’, ‘messageid’,
+‘explanation’ and ‘source’ with the obvious
+meanings, or <code>NULL</code>.</p>
+</dd>
+<dt><code>warningcount</code></dt>
+<dd>
+<p>an integer giving the number of warnings
+found.</p>
+</dd>
+<dt><code>warnings</code></dt>
+<dd>
+<p>a data frame with variables as for
+<code>errors</code>, or <code>NULL</code>.</p>
+</dd>
+</dl>
+<p>This class has methods for <code>print</code> for compactly
+summarizing the results, an <code>inspect</code> method for inspecting
+details, and an <code>as.data.frame</code> method for collapsing the
+errors and warnings into a “flat” data frame useful for further
+analyses.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The validation service provided by the W3C used by default for
+validation is a shared and free resource, and the W3C asks (see
+<a href="https://validator.w3.org/docs/api.html">https://validator.w3.org/docs/api.html</a>) for considerate use and
+possibly installing a local instance of the validation service: 
+excessive use of the service will be blocked.  In fact, it seems that
+since May 2015 W3C blocks access to the SOAP API, so one needs to use
+a different (local) validation service.
+</p>
+<p>On Debian-based systems, a local instance can conveniently be
+installed via the system command
+<code>apt-get install w3c-markup-validator</code>
+and following the instructions for providing the validator as a web
+service.
+</p>
+<p>One can use the environment variable
+<span class="env">W3C_MARKUP_VALIDATOR_BASEURL</span> to specify the service to be
+employed by default.  E.g., one can set this to
+<code>"http://localhost/w3c-validator/check"</code>
+for Debian-based systems as discussed above.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>w3c_markup_validate_baseurl</code> for getting and setting the
+<abbr><span class="acronym">URL</span></abbr> of the validation service.
+</p>
+<p><code>w3c_markup_validate_db</code> for combining and analyzing
+collections of single validation results.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not much to show with this as it should validate ok
+## (provided that the validation service is accessible):
+tryCatch(w3c_markup_validate(uri = "https://CRAN.R-project.org"),
+         error = identity)
+</code></pre>
+
+
+</div>

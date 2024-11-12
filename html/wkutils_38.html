@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wkt_set_srid</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Modify well-known geometries</h2>
+
+<h3>Description</h3>
+
+<p>Modify well-known geometries
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wkt_set_srid(wkt, srid, precision = 16, trim = TRUE)
+
+wkb_set_srid(wkb, srid)
+
+wkt_set_z(wkt, z, precision = 16, trim = TRUE)
+
+wkb_set_z(wkb, z)
+
+wkt_transform(wkt, trans, precision = 16, trim = TRUE)
+
+wkb_transform(wkb, trans)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wkt</code></td>
+<td>
+<p>A character vector containing well-known text.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>srid</code></td>
+<td>
+<p>An integer spatial reference identifier with a user-defined meaning.
+Use <code>NA</code> to unset this value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>precision</code></td>
+<td>
+<p>The rounding precision to use when writing
+(number of decimal places).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim</code></td>
+<td>
+<p>Trim unnecessary zeroes in the output?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wkb</code></td>
+<td>
+<p>A <code>list()</code> of <code>raw()</code> vectors, such as that
+returned by <code>sf::st_as_binary()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>A Z value that will be assigned to every coordinate in each feature.
+Use <code>NA</code> to unset this value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trans</code></td>
+<td>
+<p>A 3x3 transformation matrix that will be applied to all coordinates
+in the input.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An unclassed well-known vector with the same type
+as the input.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wkt_set_srid("POINT (30 10)", 1234)
+wkt_set_z("POINT (30 10)", 1234)
+wkt_transform(
+  "POINT (0 0)",
+  # translation +12 +13
+  matrix(c(1, 0, 0, 0, 1, 0, 12, 13, 1), ncol = 3)
+)
+
+</code></pre>
+
+
+</div>

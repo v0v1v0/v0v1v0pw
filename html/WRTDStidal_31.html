@@ -1,0 +1,196 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gridplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot variable response to salinity/flow as a gridded surface for all months</h2>
+
+<h3>Description</h3>
+
+<p>Plot the relationship between the response variable and salinity/flow across the time series using a gridded surface for all months.   The response is shaded by relative values across all dates for comparison.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">gridplot(dat_in, ...)
+
+## S3 method for class 'tidal'
+gridplot(
+  dat_in,
+  month = c(1:12),
+  tau = NULL,
+  years = NULL,
+  col_vec = NULL,
+  col_lim = NULL,
+  logspace = TRUE,
+  floscl = TRUE,
+  allflo = FALSE,
+  flo_fac = 3,
+  yr_fac = 3,
+  ncol = NULL,
+  grids = FALSE,
+  pretty = TRUE,
+  ...
+)
+
+## S3 method for class 'tidalmean'
+gridplot(
+  dat_in,
+  month = c(1:12),
+  years = NULL,
+  col_vec = NULL,
+  col_lim = NULL,
+  logspace = TRUE,
+  floscl = TRUE,
+  allflo = FALSE,
+  flo_fac = 3,
+  yr_fac = 3,
+  ncol = NULL,
+  grids = FALSE,
+  pretty = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input tidal or tidalmean object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>month</code></td>
+<td>
+<p>numeric indicating months to plot or chr string 'all' to indicate all months with no plot facets</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>numeric vector of quantile to plot.  The function will plot the 'middle' quantile if none is specified, e.g., if 0.2, 0.3, and 0.4 are present in the fitted model object then 0.3 will be plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>years</code></td>
+<td>
+<p>numeric vector for range of years to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col_vec</code></td>
+<td>
+<p>chr string of plot colors to use, passed to <code>gradcols</code> and <code>scale_fill_gradientn</code> for grid shading.  Any color palette from RColorBrewer can be used as a named input. Palettes from grDevices must be supplied as the returned string of colors for each palette.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col_lim</code></td>
+<td>
+<p>numeric vector of length two that defines the range of the color ramp in the legend, passed to <code>scale_fill_gradient</code>.  This is useful for fixing the color range to evaluate multiple plots.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logspace</code></td>
+<td>
+<p>logical indicating if plots are in log space</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>floscl</code></td>
+<td>
+<p>logical indicating if salinity/flow on x-axis is standardized (default) or in original scale</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allflo</code></td>
+<td>
+<p>logical indicating if the salinity/flow values for plotting are limited to the fifth and ninety-fifth percentile of observed values for the month of interest</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flo_fac</code></td>
+<td>
+<p>numeric value indicating the factor for smoothing the response variable across salinity/flow values. Increasing the value creates more smoothing and setting the value to 1 removes all smoothing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yr_fac</code></td>
+<td>
+<p>numeric value indicating the factor for smoothing the response variable across integer years. Increasing the value creates more smoothing and setting the value to 1 removes all smoothing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncol</code></td>
+<td>
+<p>numeric argument passed to <code>facet_wrap</code> indicating number of facet columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grids</code></td>
+<td>
+<p>logical indicating if grid lines are present</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pretty</code></td>
+<td>
+<p>logical indicating if my subjective idea of plot aesthetics is applied, otherwise the <code>ggplot</code> default themes are used</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>These plots can be used to examine how the relationship between the response variable and salinity/flow varies throughout the time series for multiple months.  The plot is similar to that returned by <code>dynaplot</code> except changes in the response are shown on a gridded surface of salinity/flow versus time.  Multiple months can also be viewed.  Color shading is in proportion to the value of the response variable and is relative across the plotted months.  The interpolation grid that is stored as an attribute in a fitted tidal object is used to create the plot.  By default, the plots are constrained to the fifth and ninety-fifth percentile of observed salinity/flow values during each month to limit the predictions within the data domain. This behavior can be suppressed by changing the <code>allflo</code> argument, although the predicted values of the response variable that are outside of the salinity/flow range for the plotted month are typically unrealistic.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>ggplot</code> object that can be further modified
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dynaplot</code>, <code>fitplot</code>, <code>gridplot</code>, <code>prdnrmplot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## load a fitted tidal object
+data(tidfit)
+
+## defaults to the fiftieth quantile
+gridplot(tidfit)
+
+## no facets, all months
+gridplot(tidfit, month = 'all')
+
+## change the defaults
+gridplot(tidfit, tau = c(0.1), month = c(3, 6, 9, 12), 
+ col_vec = c('red', 'blue', 'green'), flo_fac = 1)
+ 
+## plot a tidalmean object
+data(tidfitmean)
+
+gridplot(tidfitmean)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

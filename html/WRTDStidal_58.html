@@ -1,0 +1,208 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>prdnrmplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot combined predicted and normalized results from a tidal object</h2>
+
+<h3>Description</h3>
+
+<p>Plot combined predicted and normalized results from a tidal object to evaluate the influence of salinity or flow changes on the response variable. The plot is similar to that produced by <code>fitplot</code> except predicted values are shown as points and observed values are removed.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">prdnrmplot(dat_in, ...)
+
+## S3 method for class 'tidal'
+prdnrmplot(
+  dat_in,
+  tau = NULL,
+  annuals = TRUE,
+  logspace = TRUE,
+  dt_rng = NULL,
+  col_vec = NULL,
+  lwd = 1,
+  size = 2,
+  alpha = 1,
+  min_mo = 9,
+  mo_strt = 10,
+  pretty = TRUE,
+  plot = TRUE,
+  ...
+)
+
+## S3 method for class 'tidalmean'
+prdnrmplot(
+  dat_in,
+  annuals = TRUE,
+  logspace = TRUE,
+  dt_rng = NULL,
+  col_vec = NULL,
+  lwd = 1,
+  size = 2,
+  alpha = 1,
+  min_mo = 9,
+  mo_strt = 10,
+  pretty = TRUE,
+  plot = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input tidal or tidalmean object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to <code>geom_line</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>numeric vector of quantiles to plot, defaults to all in object if not supplied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annuals</code></td>
+<td>
+<p>logical indicating if plots are annual aggregations of results</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logspace</code></td>
+<td>
+<p>logical indicating if plots are in log space</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dt_rng</code></td>
+<td>
+<p>Optional chr string indicating the date range of the plot. Must be two values in the format 'YYYY-mm-dd' which is passed to <code>as.Date</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col_vec</code></td>
+<td>
+<p>chr string of plot colors to use, passed to <code>gradcols</code>.  Any color palette from RColorBrewer can be used as a named input. Palettes from grDevices must be supplied as the returned string of colors for each palette.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd</code></td>
+<td>
+<p>numeric value indicating width of lines</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>numeric value indicating size of points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>numeric value indicating transparency of points or lines</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_mo</code></td>
+<td>
+<p>numeric value from one to twelve indicating the minimum number of months with observations for averaging by years, applies only if <code>annuals = TRUE</code>.  See <code>annual_agg</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mo_strt</code></td>
+<td>
+<p>numeric indicating month to start aggregation years, defaults to October for USGS water year from October to September, applies only if <code>annuals = TRUE</code>.  See <code>annual_agg</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pretty</code></td>
+<td>
+<p>logical indicating if my subjective idea of plot aesthetics is applied, otherwise the <code>ggplot</code> default themes are used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>logical if plot is returned, otherwise data used in the plot</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>ggplot</code> object that can be further modified
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fitplot</code>, <code>sliceplot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## load a fitted tidal object
+data(tidfit)
+
+## plot using defaults
+prdnrmplot(tidfit)
+
+## get the same plot but use default ggplot settings
+prdnrmplot(tidfit, pretty = FALSE)
+
+## plot in log space
+prdnrmplot(tidfit, logspace = TRUE)
+
+## plot specific quantiles
+prdnrmplot(tidfit, tau = c(0.1, 0.9))
+
+## plot the normalized predictions
+prdnrmplot(tidfit, predicted = FALSE)
+
+## plot as monthly values
+prdnrmplot(tidfit, annuals = FALSE) 
+
+## format the x-axis is using annual aggregations
+library(ggplot2)
+
+prdnrmplot(tidfit, annual = TRUE) + 
+ scale_x_date(limits = as.Date(c('2000-01-01', '2012-01-01')))
+
+## modify the plot as needed using ggplot scales, etc.
+prdnrmplot(tidfit, pretty = FALSE, linetype = 'dashed') + 
+ theme_classic() + 
+ scale_y_continuous(
+   'Chlorophyll', 
+   limits = c(0, 50)
+   ) +
+ scale_colour_manual( 
+   '', 
+   labels = c('lo', 'md', 'hi'), 
+   values = c('red', 'green', 'blue'), 
+   guide = guide_legend(reverse = TRUE)
+   ) 
+ 
+ ## plot a tidalmean object
+ data(tidfitmean)
+ 
+ prdnrmplot(tidfitmean)
+ 
+</code></pre>
+
+
+</div>

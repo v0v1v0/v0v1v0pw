@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rm.cols.Hst.ls</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Remove Space-Time Covariates from Model
+</h2>
+
+<h3>Description</h3>
+
+<p>Remove spacial covariates from space-time covariate list
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rm.cols.Hst.ls(Hst.ls, rm.col.ndx)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Hst.ls</code></td>
+<td>
+
+<p>Space-time covariates (of supporting sites).  A list of length <code class="reqn">\tau</code>, each element should be a numeric <code class="reqn">n</code> x <code class="reqn">p_st</code> matrix. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rm.col.ndx</code></td>
+<td>
+
+<p>Which columns of <code>Hst.ls</code> to remove.  A positive scalar integer.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An unnamed list of length <code class="reqn">\tau</code>, each element will be a numeric <code class="reqn">n</code> x <code class="reqn">p_st - p_rm</code> matrix, where <code class="reqn">p_rm</code> is the length of <code>rm.col.ndx</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">	
+tau &lt;- 21
+n &lt;- 7
+	
+pst &lt;- 5
+Hst.ls &lt;- list()
+for(i in 1:tau) { Hst.ls[[i]] &lt;- matrix(1:pst, n, pst, byrow=TRUE) }
+
+rm.cols.Hst.ls(Hst.ls, c(1,3))
+
+
+## The function is currently defined as
+function (Hst.ls, rm.col.ndx) 
+{
+    tau &lt;- length(Hst.ls)
+    for (i in 1:tau) {
+        Hst.ls[[i]] &lt;- Hst.ls[[i]][, -rm.col.ndx, drop = FALSE]
+    }
+    return(Hst.ls)
+  }
+</code></pre>
+
+
+</div>

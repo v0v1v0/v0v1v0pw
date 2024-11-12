@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wm_records_common</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get records by vernacular name, optional fuzzy matching</h2>
+
+<h3>Description</h3>
+
+<p>Get records by vernacular name, optional fuzzy matching
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wm_records_common(name, fuzzy = FALSE, offset = 1, ...)
+
+wm_records_common_(name, fuzzy = FALSE, offset = 1, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>(character) a species common name. required. For
+<code>wm_records_common</code> must be <code>length(name) == 1</code>; for <code>wm_records_common_</code>
+can be <code>length(name) &gt;= 1</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fuzzy</code></td>
+<td>
+<p>(logical) fuzzy search. default: <code>FALSE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+<p>(integer) record to start at. default: 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>named curl options. see <code>curl::curl_options</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tibble/data.frame. when using underscore method, outputs from
+each input are binded together, but can be split by <code>id</code> column
+</p>
+
+
+<h3>Singular vs. plural</h3>
+
+<p>Of the two sister functions, the one without the underscore is the original
+function that wraps the relavant WoRMS API method - and only accepts
+one thing (i.e., name or AphiaID) per request.
+</p>
+<p>The sister function with the underscore at the end is the plural version,
+accepting more than one input. Internally this function loops over
+the non-underscore method, and labels output (whether it's a list or
+data.frame rows) with the input names or IDs so that you can easily
+parse output by your inputs.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+wm_records_common(name = 'dolphin')
+wm_records_common(name = 'clam')
+
+wm_records_common_(name = c('dolphin', 'clam'))
+
+wm_records_common(name = 'dolphin', fuzzy = TRUE)
+wm_records_common(name = 'clam', fuzzy = TRUE, offset = 5)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

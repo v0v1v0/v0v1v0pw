@@ -1,0 +1,500 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pwfe</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fitting the Weighted Fixed Effects Model with Propensity Score Weighting</h2>
+
+<h3>Description</h3>
+
+<p><code>pwfe</code> is used to fit weighted fixed effects model for causal
+inference after transforming outcome variable based on estimated
+propensity score. <code>pwfe</code> also derives the regression weights for
+different causal quantity of interest.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pwfe(formula, treat = "treat.name", outcome, data, pscore = NULL,
+     unit.index, time.index = NULL, method = "unit", within.unit = TRUE,
+     qoi = c("ate", "att"), estimator = NULL, C.it = NULL,
+     White = TRUE, White.alpha = 0.05,
+     hetero.se = TRUE, auto.se = TRUE, unbiased.se = FALSE,
+     verbose = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>a symbolic description of the model for estimating
+propensity score. The formula should not include dummmies for
+fixed effects. The details of model specifications are given
+under ‘Details’.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>treat</code></td>
+<td>
+<p>a character string indicating the name of treatment
+variable used in the models. The treatment should be binary
+indicator (integer with 0 for the control group and 1 for the
+treatment group).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outcome</code></td>
+<td>
+<p>a character string indicating the name of outcome
+variable.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>data frame containing the variables in the model.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pscore</code></td>
+<td>
+<p>an optional character string indicating the name of
+estimated propensity score. Note that pre-specified propensity score
+should be bounded away from zero and one.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unit.index</code></td>
+<td>
+<p>a character string indicating the name of unit
+variable used in the models. The index of unit should be factor.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time.index</code></td>
+<td>
+<p>a character string indicating the name of time
+variable used in the models. The index of time should be factor.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>method for weighted fixed effects regression, either
+<code>unit</code> for unit fixed effects; <code>time</code> for time fixed
+effects. The default is <code>unit</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>within.unit</code></td>
+<td>
+<p>a logical value indicating whether propensity score
+is estimated within unit. The default is <code>TRUE</code>. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qoi</code></td>
+<td>
+<p>one of <code>"ate"</code> or <code>"att"</code>. The default is
+<code>"ate"</code>. <code>"fd"</code> and <code>"did"</code> are not compatible with
+<code>pwfe</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimator</code></td>
+<td>
+<p>an optional character string <code>"fd"</code> indicating
+whether the first-difference estimator will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>C.it</code></td>
+<td>
+<p>an optional non-negative numeric vector specifying
+relative weights for each unit of analysis.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>White</code></td>
+<td>
+<p>a logical value indicating whether White misspecification
+statistics should be calculated. The default is <code>TRUE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>White.alpha</code></td>
+<td>
+<p>level of functional specification test. See White
+(1980) and Imai . The default is <code>0.05</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hetero.se</code></td>
+<td>
+<p>a logical value indicating whether heteroskedasticity
+across units is allowed in calculating standard errors. The default
+is <code>TRUE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>auto.se</code></td>
+<td>
+<p>a logical value indicating whether arbitrary
+autocorrelation is allowed in calculating standard errors. The
+default is <code>TRUE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unbiased.se</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, bias-asjusted
+heteroskedasticity-robust standard errors are used. See Stock and
+Watson (2008). Should be used only for balanced panel. The default
+is <code>FALSE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, helpful messages along with
+a progress report of the weight calculation are printed
+on the screen. The default is <code>TRUE</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>To fit the weighted unit (time) fixed effects model with propensity
+score weighting, use the syntax for the formula, <code>~ x1 + x2</code>,
+where <code>x1</code> and <code>x2</code> are unit (time) varying
+covariates.
+</p>
+<p>One can provide his/her own estimated <code>pscore</code> which can be used
+to transform the outcome varialbe. If so, one does not need to specify
+<code>formula</code>.
+</p>
+<p>If <code>pscore</code> is not provided, <code>bayesglm</code> will be used to
+estimate propensity scores. If <code>within.unit = TRUE</code>, propensity
+score will be separately estimated within time (unit) when
+<code>method</code> is <code>unit</code> (<code>time</code>). Otherwise, propensity
+score will be estimated on entire data at once.
+</p>
+<p>The estimated propensity scores will be used to transform the
+<code>outcome</code> variable as described in Imai and Kim (2018).
+</p>
+<p><code>pwfe</code> calculates weights based on different underlying causal
+quantity of interest: Average Treatment Effect (<code>qoi = "ate"</code>) or
+Average Treatment Effect for the Treated (<code>qoi = "att"</code>).
+</p>
+<p>One can further set estimating methods: First-Difference
+(<code>estimator ="fd"</code>) or Difference-in-differences (<code>estimator
+  = "did"</code>).
+</p>
+<p>To specify different ex-ante weights for each unit of analysis, use
+non-negative weights <code>C.it</code>. For instance, using the survey
+weights for <code>C.it</code> enables the estimation fo the average
+treatement effect for the target population.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>pwfe</code> returns an object of class "pwfe", a list that contains the
+components listed below.
+</p>
+<p>The function <code>summary</code> (i.e., <code>summary.pwfe</code>) can be used to
+obtain a table of the results.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>coefficients</code></td>
+<td>
+<p>a named vector of coefficients</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>residuals</code></td>
+<td>
+<p>the residuals, that is respons minus fitted values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>the degree of freedom</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p>weight matrix calculated from the model. Row and column
+indices can be found from unit.name, time.name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>the matched call</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>causal</code></td>
+<td>
+<p>causal quantity of interest</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimator</code></td>
+<td>
+<p>the estimating method</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unit.name</code></td>
+<td>
+<p>a vector containing unique unit names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unit.index</code></td>
+<td>
+<p>a vector containing unique unit index number</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time.name</code></td>
+<td>
+<p>a vector containing unique time names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time.index</code></td>
+<td>
+<p>a vector containing unique time index number</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>call of the method used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vcov</code></td>
+<td>
+<p>the variance covariance matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>White.alpha</code></td>
+<td>
+<p>the alpha level for White specification test</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>White.pvalue</code></td>
+<td>
+<p>the p-value for White specification test</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>White.stat</code></td>
+<td>
+<p>the White statistics</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>the design matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>the response vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mf</code></td>
+<td>
+<p>the model frame</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>In Song Kim, Massachusetts Institute of Technology, <a href="mailto:insong@mit.edu">insong@mit.edu</a>		
+and Kosuke Imai, Princeton University, <a href="mailto:imai@harvard.edu">imai@harvard.edu</a>	</p>
+
+
+<h3>References</h3>
+
+<p> Imai, Kosuke and In Song Kim. (2018) “When Should We Use
+Unit Fixed Effects Regression Models for Causal Inference with
+Longitudinal Data?" American Journal of Political Science,
+Forthcoming.
+</p>
+<p>Stock, James and Mark Watson. (2008) “Heteroskedasticity-Robust
+Standard Errors for Fixed Effect Panel Data Regression” Econometrica,
+76, 1.
+</p>
+<p>White, Halbert. (1980) 'Using Least Squares to Approximate Unknown
+Regression Functions.”  International Economic Review, 21, 1,
+149–170.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wfe</code> for fitting weighted fixed effect models.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">### NOTE: this example illustrates the use of wfe function with randomly
+### generated panel data with arbitrary number of units and time.
+
+## generate panel data with number of units = N, number of time = Time
+## Not run: 
+
+N &lt;- 10 # number of distinct units
+Time &lt;- 15 # number of distinct time
+
+## generate treatment variable
+treat &lt;- matrix(rbinom(N*Time, size = 1, 0.25), ncol = N)
+## make sure at least one observation is treated for each unit
+while ((sum(apply(treat, 2, mean) == 0) &gt; 0) | (sum(apply(treat, 2, mean) == 1) &gt; 0) |
+       (sum(apply(treat, 1, mean) == 0) &gt; 0) | (sum(apply(treat, 1, mean) == 1) &gt; 0)) {
+  treat &lt;- matrix(rbinom(N*Time, size = 1, 0.25), ncol = N)
+}
+treat.vec &lt;- c(treat)
+
+## unit fixed effects
+alphai &lt;- rnorm(N, mean = apply(treat, 2, mean))
+
+## geneate two random covariates
+x1 &lt;- matrix(rnorm(N*Time, 0.5,1), ncol=N)
+x2 &lt;- matrix(rbeta(N*Time, 5,1), ncol=N)
+pscore &lt;- matrix(runif(N*Time, 0,1), ncol=N)
+x1.vec &lt;- c(x1)
+x2.vec &lt;- c(x2)
+pscore &lt;- c(pscore)
+
+## generate outcome variable
+y &lt;- matrix(NA, ncol = N, nrow = Time)
+for (i in 1:N) {
+    y[, i] &lt;- alphai[i] + treat[, i] + x1[,i] + x2[,i] + rnorm(Time)
+}
+y.vec &lt;- c(y)
+
+## generate unit and time index
+unit.index &lt;- rep(1:N, each = Time)
+time.index &lt;- rep(1:Time, N)
+
+Data.str &lt;- as.data.frame(cbind(y.vec, treat.vec, unit.index, x1.vec, x2.vec))
+colnames(Data.str) &lt;- c("y", "tr", "strata.id", "x1", "x2")
+
+Data.obs &lt;- as.data.frame(cbind(y.vec, treat.vec, unit.index, time.index, x1.vec, x2.vec, pscore))
+colnames(Data.obs) &lt;- c("y", "tr", "unit", "time", "x1", "x2", "pscore")
+
+
+############################################################
+# Example 1: Stratified Randomized Experiments
+############################################################
+
+## run the weighted fixed effect regression with strata fixed effect.
+## Note: the quantity of interest is Average Treatment Effect ("ate")
+## and the standard errors allow heteroskedasticity and arbitrary
+## autocorrelation.
+
+
+### Average Treatment Effect
+ps.ate &lt;- pwfe(~ x1+x2, treat = "tr", outcome = "y", data = Data.str, 
+               unit.index = "strata.id", method = "unit", within.unit = TRUE,
+               qoi = "ate", hetero.se=TRUE, auto.se=TRUE)
+## summarize the results
+summary(ps.ate)
+
+### Average Treatment Effect for the Treated
+ps.att &lt;- pwfe(~ x1+x2, treat = "tr", outcome = "y", data = Data.str, 
+               unit.index = "strata.id", method = "unit", within.unit = TRUE,
+               qoi = "att", hetero.se=TRUE, auto.se=TRUE)
+## summarize the results
+summary(ps.att)
+
+
+############################################################
+# Example 2: Observational Studies with Unit Fixed-effects
+############################################################
+
+## run the weighted fixed effect regression with unit fixed effect.
+## Note: the quantity of interest is Average Treatment Effect ("ate")
+## and the standard errors allow heteroskedasticity and arbitrary
+## autocorrelation.
+
+### Average Treatment Effect
+ps.obs &lt;- pwfe(~ x1+x2, treat = "tr", outcome = "y", data = Data.obs, 
+               unit.index = "unit", time.index = "time",
+               method = "unit", within.unit = TRUE,
+               qoi = "ate", hetero.se=TRUE, auto.se=TRUE)
+
+## summarize the results
+summary(ps.obs)
+
+## extracting weigths
+summary(ps.obs)$Weights
+
+### Average Treatment Effect with First-difference
+
+ps.fd &lt;- pwfe(~ x1+x2, treat = "tr", outcome = "y", data = Data.obs,
+              unit.index = "unit", time.index = "time",
+              method = "unit", within.unit = TRUE,
+              qoi = "ate", estimator = "fd", hetero.se=TRUE, auto.se=TRUE)
+
+## summarize the results
+summary(ps.fd)
+
+
+############################################################
+# Example 3: Estimation with pre-specified propensity score
+############################################################
+
+### Average Treatment Effect with Pre-specified Propensity Scores
+
+mod.ps &lt;- pwfe(treat = "tr", outcome = "y", data = Data.obs, pscore = "pscore",
+               unit.index = "unit", time.index = "time",
+               method = "unit", within.unit = TRUE,
+               qoi = "ate", hetero.se=TRUE, auto.se=TRUE)
+
+## summarize the results
+summary(mod.ps)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

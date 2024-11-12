@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>checkForLegLoc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find best place on plot for placing legend</h2>
+
+<h3>Description</h3>
+
+<p>This function tries to find the best location for placing a legend of a bivariate plot, ie scatter-plot.
+All 4 corners of the data to plot are inspected for the least occupation by data plotted while displaying the content of <code>sampleGrp</code>.
+Alternatively, by setting the argument <code>showLegend</code> the user-defined legend will be returned
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">checkForLegLoc(
+  matr,
+  sampleGrp = NULL,
+  showLegend = TRUE,
+  suplSpace = 4,
+  testCorner = 1:4,
+  silent = TRUE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>matr</code></td>
+<td>
+<p>(matrix, list or data.frame) main data of plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sampleGrp</code></td>
+<td>
+<p>(character or factor) with this option the text to be displayed in the legend may be taken into consideration for its length</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>showLegend</code></td>
+<td>
+<p>(logical or character) decide if <code>matr</code> should be checked for best location; if <code>showLegend</code> contains any of the standard legend-location designations (eg 'topleft') it will be used in the output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suplSpace</code></td>
+<td>
+<p>(numeric) allows to consider extra room taken in legend by symbol and surrounding space, interpreted as n additional characters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>testCorner</code></td>
+<td>
+<p>(integer) which corners should be considered (1=left-top, 2=right-top, right-bottom, left-bottom)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additonal messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>list with $showL indicating if legend is desired and $loc for the proposition of the best location, $nConflicts gives the counts of conflicts
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>legend</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">dat1 &lt;- matrix(c(1:5,1,1:5,5), ncol=2)
+grp &lt;- c("abc","efghijk")
+(legLoc &lt;- checkForLegLoc(dat1, grp)) 
+plot(dat1, cex=3)
+legend(legLoc$loc, legend=grp, text.col=2:3, pch=1, cex=0.8)
+</code></pre>
+
+
+</div>

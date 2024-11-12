@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pull_related_recs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Pull related records</h2>
+
+<h3>Description</h3>
+
+<p>Pull the records that have at least one citation in common with a publication
+of interest.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pull_related_recs(uts, num_recs, editions = c("SCI", "SSCI", "AHCI",
+  "ISTP", "ISSHP", "BSCI", "BHCI", "IC", "CCR", "ESCI"),
+  sid = auth(Sys.getenv("WOS_USERNAME"), Sys.getenv("WOS_PASSWORD")),
+  ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>uts</code></td>
+<td>
+<p>The documents whose related records you want to pull.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num_recs</code></td>
+<td>
+<p>Number of related records to pull for each UT. This value
+must be &lt;= 100.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>editions</code></td>
+<td>
+<p>Web of Science editions to query. Possible values are listed
+<a href="http://ipscience-help.thomsonreuters.com/wosWebServicesLite/dbEditionsOptionsGroup/databaseEditionsWos.html">here</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sid</code></td>
+<td>
+<p>Session identifier (SID). The default setting is to get a fresh
+SID each time you query WoS via a call to <code>auth</code>. However,
+you should try to reuse SIDs across queries so that you don't run into the
+throttling limits placed on new sessions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments passed along to <code>POST</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data frame with the following columns:
+</p>
+
+<dl>
+<dt>ut</dt>
+<dd>
+<p>The publications that you passed into <code>pull_related_recs</code>.
+If one of your publications doesn't have any related records, it won't
+appear here.</p>
+</dd>
+<dt>related_rec</dt>
+<dd>
+<p>The publication that is related to <code>ut</code>.</p>
+</dd>
+<dt>rec_num</dt>
+<dd>
+<p>The related record's ordering in the result set returned
+by the API. Records that share more citations with your UTs will have
+smaller <code>rec_num</code>s.</p>
+</dd>
+</dl>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+sid &lt;- auth("your_username", password = "your_password")
+uts &lt;- c("WOS:000272877700013", "WOS:000272366800025")
+out &lt;- pull_related_recs(uts, 5, sid = sid)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

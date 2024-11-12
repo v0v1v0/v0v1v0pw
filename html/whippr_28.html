@@ -1,0 +1,66 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>undoHistory</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Undo/Redo History Buttons</h2>
+
+<h3>Description</h3>
+
+<p>This is a simple Shiny module for undo/redo history. The Shiny module accepts
+an arbitrary reactive data value. Changes in the state of this reactive value
+are tracked and added to the user's history. The user can then repeatedly
+undo and redo to walk through this stack. The module returns the current
+selected value of the reactive from this historical stack, or <code>NULL</code> when
+the app state was changed by the user. Because this reactive can hold
+arbitrary data about the state of the Shiny app, it is up to the app
+developer to use the returned current value to update the Shiny apps' inputs
+and UI elements.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">undoHistory(id, value, value_debounce_rate = 500)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>The module id</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>The reactive expression with the values should be saved for the
+user's history. This expression can contain arbitrary data and be of any
+structure as long as it returns a single value (or list). Each change in
+this value is stored, so the module may not work well for storing large
+data sets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value_debounce_rate</code></td>
+<td>
+<p>Debounce rate in milliseconds for the <code>value</code>
+reactive expression. To avoid saving spurious changes in <code>value</code>, the
+expression is debounced. See <code>shiny::debounce()</code> for more information.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The <code>undoHistory()</code> module returns the currently selected history
+item as the user moves through the stack, or <code>NULL</code> if the last update
+was the result of user input. The returned value has the same structure as
+the reactive <code>value</code> passed to <code>undoHistory()</code>.
+</p>
+
+
+</div>

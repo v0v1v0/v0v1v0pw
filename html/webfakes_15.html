@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mw_static</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Middleware function to serve static files</h2>
+
+<h3>Description</h3>
+
+<p>The content type of the response is set automatically from the
+extension of the file. Note that this is a terminal middleware
+handler function. If a file is served, then the rest of the handler
+functions will not be called. If a file was not found, however,
+the rest of the handlers are still called.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mw_static(root, set_headers = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>root</code></td>
+<td>
+<p>Root path of the served files. Everything under this
+directory is served automatically. Directory lists are not currently
+supports.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>set_headers</code></td>
+<td>
+<p>Callback function to call before a file is served.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Handler function.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other middleware: 
+<code>mw_cgi()</code>,
+<code>mw_cookie_parser()</code>,
+<code>mw_etag()</code>,
+<code>mw_json()</code>,
+<code>mw_log()</code>,
+<code>mw_multipart()</code>,
+<code>mw_range_parser()</code>,
+<code>mw_raw()</code>,
+<code>mw_text()</code>,
+<code>mw_urlencoded()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">root &lt;- system.file(package = "webfakes", "examples", "static", "public")
+app &lt;- new_app()
+app$use(mw_static(root = root))
+app
+</code></pre>
+
+
+</div>

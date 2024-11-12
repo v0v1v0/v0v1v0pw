@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>thermalTime</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate thermal time using cardinal temperatures</h2>
+
+<h3>Description</h3>
+
+<p>Calculate thermal time using cardinal temperatures
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">thermalTime(weather, x_temp, y_temp, method = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>weather</code></td>
+<td>
+<p>WeaAna object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x_temp</code></td>
+<td>
+<p>The cardinal temperatures</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y_temp</code></td>
+<td>
+<p>The effective thermal time</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>The method to calculate thermal time. 
+The default method is ( maxt + mint ) / 2 - base. 
+The three hour temperature methods will be used if method = '3hr'</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data.frame with three columns: year, day and thermalTime.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">met_file &lt;- system.file("extdata/WeatherRecordsDemo1.met", package = "weaana")
+records &lt;- readWeatherRecords(met_file)
+x_temp &lt;- c(0, 26, 34)
+y_temp &lt;- c(0, 26, 0)
+res &lt;- thermalTime(records, x_temp, y_temp)
+head(res)
+res &lt;- thermalTime(records, x_temp, y_temp, method = "3hr")
+head(res)
+</code></pre>
+
+
+</div>

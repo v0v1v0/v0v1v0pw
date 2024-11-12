@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>tm_cooc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Analyse word co-occurrence in subject lines and return a network plot</h2>
+
+<h3>Description</h3>
+
+<p>This function generates a word co-occurrence network plot, with options to
+return a table. This function is used within <code>meeting_tm_report()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">tm_cooc(data, stopwords = NULL, seed = 100, return = "plot", lmult = 0.05)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A Meeting Query dataset in the form of a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stopwords</code></td>
+<td>
+<p>A character vector OR a single-column data frame labelled
+<code>'word'</code> containing custom stopwords to remove.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>A numeric vector to set seed for random generation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String specifying what to return. This must be one of the
+following strings:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>
+</p>
+</li>
+<li> <p><code>"table"</code>
+</p>
+</li>
+</ul>
+<p>See <code>Value</code> for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lmult</code></td>
+<td>
+<p>A multiplier to adjust the line width in the output plot.
+Defaults to 0.05.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function uses <code>tm_clean()</code> as the underlying data wrangling function.
+There is an option to remove stopwords by passing a data frame into the
+<code>stopwords</code> argument.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A different output is returned depending on the value passed to the <code>return</code>
+argument:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>: 'ggplot' and 'ggraph' object. A network plot.
+</p>
+</li>
+<li> <p><code>"table"</code>: data frame. A summary table.
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Carlos Morales <a href="mailto:carlos.morales@microsoft.com">carlos.morales@microsoft.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Text-mining: 
+<code>meeting_tm_report()</code>,
+<code>pairwise_count()</code>,
+<code>subject_validate()</code>,
+<code>subject_validate_report()</code>,
+<code>tm_clean()</code>,
+<code>tm_freq()</code>,
+<code>tm_wordcloud()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Demo using a subset of `mt_data`
+mt_data %&gt;%
+  dplyr::slice(1:20) %&gt;%
+  tm_cooc(lmult = 0.01)
+
+
+</code></pre>
+
+
+</div>

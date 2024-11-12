@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ShadedDensity</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot the distribution of a variable with a tail shaded</h2>
+
+<h3>Description</h3>
+
+<p>Plot the distribution of a variable with a tail shaded. Annotate with the area of the shaded region.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ShadedDensity(
+  frame,
+  xvar,
+  threshold,
+  title,
+  ...,
+  tail = "left",
+  linecolor = "darkgray",
+  shading = "darkblue",
+  annotate_area = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frame</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar</code></td>
+<td>
+<p>name of the variable to be density plotted</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>boundary value for the tail</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tail</code></td>
+<td>
+<p>which tail to shade, 'left' (default) or 'right'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>linecolor</code></td>
+<td>
+<p>color of density curve</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shading</code></td>
+<td>
+<p>color of shaded region and boundaries</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annotate_area</code></td>
+<td>
+<p>if TRUE (default), report the area of the shaded region</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>ShadedDensityCenter</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+set.seed(52523)
+d = data.frame(meas=rnorm(100))
+threshold = -1.5
+WVPlots::ShadedDensity(d, "meas", threshold,
+                       title="Example shaded density plot, left tail")
+if (FALSE) {
+WVPlots::ShadedDensity(d, "meas", -threshold, tail="right",
+                       title="Example shaded density plot, right tail")
+}
+
+</code></pre>
+
+
+</div>

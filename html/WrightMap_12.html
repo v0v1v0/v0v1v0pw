@@ -1,0 +1,178 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fitgraph</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Item Fit Graphs
+</h2>
+
+<h3>Description</h3>
+
+<p>This function creates a graphical summary of the item fit information.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+## Default S3 method:
+fitgraph(fitEst, fitLB, fitUB, itemLabels, mainTitle = "Fit Plot", 
+pch = 18, fitColours = c("gray70", "gray60", "gray50", "gray40", "gray0"), 
+xlab = "Items", cex = 1.25, ...)
+## S3 method for class 'numeric'
+fitgraph(fitEst, fitLB, fitUB, itemLabels, mainTitle = "Fit Plot", 
+pch = 18, fitColours = c("gray70", "gray60", "gray50", "gray40", "gray0"), 
+xlab = "Items", cex = 1.25, ...)
+## S3 method for class 'CQmodel'
+fitgraph(fitEst, table = NULL, fit.type = "W", itemLabels = NULL, ...)
+## S3 method for class 'character'
+fitgraph(fitEst, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<p>fitgraph arguments: 	
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>fitEst</code></td>
+<td>
+
+<p>vector of item fit estimates. Could also be a CQmodel object or name of a ConQuest show file.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitLB</code></td>
+<td>
+
+<p>vector of lower bounds for critical intervals for each item.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitUB</code></td>
+<td>
+
+<p>vector of upper bounds for critical intervals for each item.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>itemLabels</code></td>
+<td>
+
+<p>vector of item labels.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mainTitle</code></td>
+<td>
+
+<p>string containing the title of the plot.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pch</code></td>
+<td>
+
+<p>number or vector indicating the type of symbols to be used for each item.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitColours</code></td>
+<td>
+
+<p>Color that will be used to shade the critical inteval area.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+
+<p>Label of the x-axis. The default is 'items'.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex</code></td>
+<td>
+
+<p>Size of the x-axis label.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Additional parameters.
+</p>
+</td>
+</tr>
+</table>
+<p>Argument to use when passing a CQmodel object:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>table</code></td>
+<td>
+
+<p>Name of the RMP table that for which the fit will be plotted. By default <code>fitgraph</code> will plot the first RMP table of the CQmodel object, this argument overrides this default.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fit.type</code></td>
+<td>
+
+<p>Type of fit estimate that will be used, it can be <code>W</code> for Weighted Fit (i.e. Infit, the default), or <code>U</code> for Unweighted Fit (i.e. Outfit). Called <code>type</code> in previous versions; use of that parameter is deprecated to avoid collision with the <code>type</code> parameter in the <code>link{plot}</code> function.
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>David Torres Irribarra and Rebecca Freund.
+</p>
+
+
+<h3>References</h3>
+
+<p>Wilson, M. (2005). Constructing measures: An item response modeling approach. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Generating mock data
+sampleLabels &lt;- paste('item',1:10)
+
+fitBounds &lt;- (abs(rnorm(10, mean = 0, sd = .05)) * 2)
+fitEst &lt;- rnorm(10, mean = 1, sd = .1)
+
+fitLB &lt;- 1 - fitBounds
+fitUB &lt;- 1 + fitBounds
+par("mar")
+# running fitgraph
+fitgraph(fitEst,fitLB,fitUB,itemLabels=sampleLabels)
+
+#From ConQuest output:
+	
+	fpath &lt;- system.file("extdata", package="WrightMap")
+
+	fitgraph(file.path(fpath,"ex2.shw"))
+
+
+
+</code></pre>
+
+
+</div>

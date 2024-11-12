@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>matchLabels</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Relabel module labels to best match the given reference labels </h2>
+
+<h3>Description</h3>
+
+<p>Given a <code>source</code> and  <code>reference</code> vectors of module labels, the function produces a module
+labeling that is equivalent to <code>source</code>, but individual modules are re-labeled so that modules with
+significant overlap in <code>source</code> and <code>reference</code> have the same labels.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">matchLabels(source, 
+            reference, 
+            pThreshold = 5e-2,
+            na.rm = TRUE,
+            ignoreLabels = if (is.numeric(reference)) 0 else "grey",
+            extraLabels = if (is.numeric(reference)) c(1:1000) else standardColors()
+            )
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>source</code></td>
+<td>
+<p> a vector or a matrix of reference labels. The labels may be numeric or character. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reference</code></td>
+<td>
+<p> a vector of reference labels. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pThreshold</code></td>
+<td>
+<p> threshold of Fisher's exact test for considering modules to have a significant
+overlap. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>logical: should missing values in either <code>source</code> or <code>reference</code> be removed? If
+not, missing values may be treated as a standard label or the function may throw an error 
+(exact behaviour depends on whether the input labels
+are numeric or not).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ignoreLabels</code></td>
+<td>
+<p>labels in <code>source</code> and <code>reference</code> to be considered unmatchable. These
+labels are excluded from the re-labeling procedure.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>extraLabels</code></td>
+<td>
+<p>a vector of labels for modules in <code>source</code> that cannot be matched to any modules
+in <code>reference</code>. The user should ensure that this vector contains enough labels since the function
+automatically removes a values that occur in either <code>source</code>, <code>reference</code> or <code>ignoreLabels</code>,
+to avoid possible confusion. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Each column of <code>source</code> is treated separately. Unlike in previous version of this function, source
+and reference labels can be any labels, not necessarily of the same type.
+</p>
+<p>The function calculates the overlap of the <code>source</code> and <code>reference</code> modules using Fisher's
+exact test. It then attempts to relabel <code>source</code> modules such that each <code>source</code> module gets the
+label of the <code>reference</code> module that it overlaps most with, subject to not renaming two <code>source</code>
+modules to the same <code>reference</code> module. (If two <code>source</code> modules point to the same
+<code>reference</code> module, the one with the more significant overlap is chosen.)
+</p>
+<p>Those <code>source</code> modules that cannot be matched to a <code>reference</code> module are labeled using
+those labels from <code>extraLabels</code> that do not occur in either of <code>source</code>, <code>reference</code> or
+<code>ignoreLabels</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector (if the input <code>source</code> labels are a vector) or a matrix (if the input <code>source</code>
+labels are a matrix) of the new labels.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder </p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code>overlapTable</code> for calculation of overlap counts and p-values;
+</p>
+<p><code>standardColors</code> for standard non-numeric WGCNA labels.
+</p>
+
+
+</div>

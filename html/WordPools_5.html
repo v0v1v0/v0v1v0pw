@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pickList</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Select Items from a Word Pool in Given Ranges</h2>
+
+<h3>Description</h3>
+
+<p>This is a convenience function to provide the capability to 
+select items from a given word pool, with restrictions on the
+range of any numeric variables.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pickList(data, ranges, nitems = 10, nlists = 1, replace = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data.frame, typically a word list like <code>Paivio</code> or <code>TWP</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ranges</code></td>
+<td>
+<p>A data.frame of two rows, and with column names corresponding to a subset of the column names 
+in <code>data</code>.  The two rows give the minimum and maximum values, respectively, of variables in <code>data</code>. 
+Alternatively, you can supply a named list containing the minimum and maximum 
+values for one or more variables in <code>data</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nitems</code></td>
+<td>
+<p>Number of items per list</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlists</code></td>
+<td>
+<p>Number of lists</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>replace</code></td>
+<td>
+<p>A logical value, indicating whether the sampling of items (rows) of <code>data</code> is to allow 
+sampling with replacement.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>sample</code> will generate an error if fewer than <code>nitems * nlists</code> items are 
+within the specified <code>ranges</code> and <code>replace=FALSE</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame of the same shape as <code>data</code> containing the selected items prefixed by 
+the <code>list</code> number.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Michael Friendly
+</p>
+
+
+<h3>References</h3>
+
+<p>A related word list generator: Friendly, M. Word list generator. <a href="http://datavis.ca/online/paivio/">http://datavis.ca/online/paivio/</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>sample</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(Paivio)
+# 2 lists, no selection on any variables
+pickList(Paivio, nlists=2)
+
+# Define ranges for low and high on imagery, concreteness, meaningfulness
+# These go from low - median, and median-high on each variable
+vars &lt;- 3:5
+(low &lt;- as.data.frame(apply(Paivio[,vars], 2, fivenum))[c(1,3),])
+(high &lt;- as.data.frame(apply(Paivio[,vars], 2, fivenum))[c(3,5),])
+
+# select two lists of 10 low/high imagery items
+lowI &lt;- pickList(Paivio, low[,"imagery", drop=FALSE], nitems=10, nl=2)
+highI &lt;- pickList(Paivio, high[,"imagery", drop=FALSE], nitems=10, nl=2)
+
+# compare means
+colMeans(lowI[,c(4:8)])
+colMeans(highI[,c(4:8)])
+
+# using a list of ranges
+L &lt;- list(imagery=c(1,5), concreteness=c(1,4))
+pickList(Paivio, L)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,77 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simbase_list</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Wrapper for the <code>simbase_*</code> functions for grouped data</h2>
+
+<h3>Description</h3>
+
+<p>If a function of the <code>simbase_*</code> family encounters grouped <code>data</code>
+(as caused by <code>group_by</code>), it should invoke <code>simbase_list</code>
+to create a collection of separate simbases for each group.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">simbase_list(data, simbase_constructor, ..., suffix = "_lst")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A grouped dataset (see <code>group_by</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simbase_constructor</code></td>
+<td>
+<p>A function which returns a <code>simbase_*</code>
+object, like <code>simbase_covar</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to the <code>simbase_*</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suffix</code></td>
+<td>
+<p>Suffix to be added to the individual simbase labels if they are
+all the same (see details).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>simbase_list</code> object; this is essentially a
+<code>tibble</code> with the grouping columns of <code>data</code> and a column
+<code>.simbase</code> which contains the <code>simbase_*</code> objects.
+</p>
+
+
+<h3>Technical details</h3>
+
+<p>Currently, the "<code>simbase_*</code> family" only consists of
+<code>simbase_covar</code> (although, in a broader sense,
+<code>simbase_list</code> can also be thought to be part of this "family").
+It is planned to add further simulation types in a later release.
+</p>
+<p>The functions of the <code>simbase_*</code> family support label
+generation (see e.g. <code>simbase_covar</code>). These functions should
+generate the label <em>before</em> invoking <code>simbase_list</code>, so that there
+is a common label for all of the simbases; <code>simbase_list</code> adds a suffix
+<code>suffix</code>. A warning is issued if the labels of the different simbases
+are not all equal; no suffix is added in this case.
+</p>
+
+
+</div>

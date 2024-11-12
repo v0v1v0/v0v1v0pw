@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>convert_parameters</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert Parameters</h2>
+
+<h3>Description</h3>
+
+<p>convert_parameters
+Applies a list of converters to each values on a list.
+If a value is modified during the conversion (successfull conversion)
+then, no further convert will be applied to this value, so values are
+only converted once.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">convert_parameters(args, converters)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>args</code></td>
+<td>
+<p>a named list, which values will be converted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>converters</code></td>
+<td>
+<p>a vector of function. Each function will be applied to
+each values with the exception of values already converted by a
+previous converter.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a named <code>list</code> object with values converted by converters.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>L.Pavot
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">boolean_converter &lt;- function(x) {
+  return(if (x == "TRUE") TRUE else if (x == "FALSE") FALSE else x)
+}
+parameters &lt;- W4MRUtils::convert_parameters(
+  list("x" = "TRUE"),
+  c(boolean_converter)
+)
+print(parameters$`some-parameter`)
+## "TRUE" has becomes TRUE.
+
+</code></pre>
+
+
+</div>

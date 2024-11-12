@@ -1,0 +1,166 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.mwd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Use plot on an mwd object. </h2>
+
+<h3>Description</h3>
+
+<p>Plots the wavelet coefficients of a <code>mwd</code> class object. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'mwd'
+plot(x, first.level = 1, main = "Wavelet Decomposition Coefficients",
+        scaling = "compensated", rhlab = FALSE, sub = x$filter$name,
+	NotPlotVal = 0.05, xlab = "Translate", ylab = "Resolution level",
+	return.scale = TRUE, colour = (2:(npsi + 1)), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The <code>mwd</code> object whose coefficients you wish to plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>first.level</code></td>
+<td>
+<p>The first resolution level to begin plotting at. This argument can be quite useful when you want to supress some of the coarser levels in the diagram.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>The main title of the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scaling</code></td>
+<td>
+<p>How you want the coefficients to be scaled. The options are: "<code>global</code>" - one scale factor is chosen for the whole plot. The scale factor depends on the coefficient to be included on the plot that has the largest absolute value. The global option is useful when comparing coefficients that might appear anywhere in the plot; "<code>by.level</code>" - a scale factor is chosen for each resolution level in the plot. The scale factor for a level depends on the coefficient in that level that has the largest absolute value. The "<code>by.level</code>" option is useful when you wish to compare coefficients within a resolution level. 
+</p>
+<p>The other option is "<code>compensated</code>" which is the same as "<code>global</code>" except for that finer scales' coefficients are scaled up by a factor of SQRT(2) for <code>compensated</code>. This latter options is sometimes useful. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rhlab</code></td>
+<td>
+<p>If <code>T</code> then a set of labels is produced on the right hand axis. The axis labels in this case refer to the scale factors used to scale each level and correspond to value of the largest coefficient (in absolute value) in each scale (when <code>scaling=="by.level"</code>) or absolutely (when <code>scaling="global"</code>). If the <code>rhlab</code> argument is <code>FALSE</code> then no right hand axis labels are produced.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sub</code></td>
+<td>
+<p>A subtitle for the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NotPlotVal</code></td>
+<td>
+<p>Doesn't seem to be implemented.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>A title for the x-axis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>A title for the y-axis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return.scale</code></td>
+<td>
+<p>If true (default) the scale for each resolution level is returned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colour</code></td>
+<td>
+<p>A vector of length <code>mwd$npsi</code>, the values of which are the colours used to plot the coefficients, one for each distinct type of wavelet (with apologies to our American cousins for spelling colour correctly!)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments to be supplied to plot.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Produces a plot similar to the ones in Donoho and Johnstone, 1994. 
+</p>
+<p>Wavelet coefficients for each resolution level are plotted one above the other, with the high resolution coefficients at the bottom, and the low resolution at the top. Each vector is represented by <code>mwd$npsi</code> lines one for each element in the coefficient vector. If colour is supported by the device each element will be represented by a different coulour. The coefficients are plotted using the <code>segment</code> function, with a large positive coefficient being plotted above an imaginary horizontal centre line, and a large negative coefficient plotted below it. The position of a coefficient along a line is indicative of the wavelet basis function's translate number. 
+</p>
+<p>The resolution levels are labelled on the left-hand side axis, and the maximum values of the absolute values of the coefficients for the particular level form the right-hand side axis. 
+</p>
+<p>The levels of coefficients can be scaled in three ways. If you are not interested in comparing the relative scales of coefficients from different levels, then the default scaling option, "<code>by.level</code>" is what you need. This computes the maximum of the absolute value of the coefficients at a particular level and scales the so that the fit nicely onto the plot. For this option, each level is scaled <b>DIFFERENTLY</b>. To obtain a uniform scale for all the levels specify the "<code>global</code>" option to the <code>scaling</code> argument. This will allow you to make inter-level comparisons. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>Axis labels for each resolution level unless <code>return.scale=F</code> when <code>NULL</code> is returned. The axis values are the maximum of the absolute value of the coefficients at that resolution level. They are returned because they are sometimes hard to read on the plot. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.9.6 (Although Copyright Tim Downie 1995-6). </p>
+
+
+<h3>Note</h3>
+
+<p>A plot of the coefficients contained within the <code>mwd</code> object at each resolution level is produced.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>accessC.mwd</code>, <code>accessD.mwd</code>, <code>draw.mwd</code>, <code>mfirst.last</code>, <code>mfilter.select</code>, <code>mwd</code>, <code>mwd.object</code>, <code>mwr</code>, <code>print.mwd</code>, <code>putC.mwd</code>, <code>putD.mwd</code>, <code>summary.mwd</code>, <code>threshold.mwd</code>, <code>wd</code>, <code>wr.mwd</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Generate some test data
+#
+test.data &lt;- example.1()$y
+## Not run: ts.plot(test.data)
+#
+# Decompose test.data with multiple wavelet transform and
+# plot the wavelet coefficients
+#
+tdmwd &lt;- mwd(test.data)
+## Not run: plot(tdmwd)
+#[1] 1.851894 1.851894 1.851894 1.851894 1.851894 1.851894 1.851894
+#
+# You should see a plot with wavelet coefficients like in
+# plot.wd but at each coefficient position
+# there are two coefficients in two different colours one for each of
+# the wavelets at that position.
+#
+# Note the scale for each level is returned by the function. 
+</code></pre>
+
+
+</div>

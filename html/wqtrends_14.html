@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>anlz_sumtrndseason</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimate seasonal rates of change based on average estimates for multiple window widths</h2>
+
+<h3>Description</h3>
+
+<p>Estimate seasonal rates of change based on average estimates for multiple window widths
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">anlz_sumtrndseason(
+  mod,
+  doystr = 1,
+  doyend = 364,
+  justify = c("center", "left", "right"),
+  win = 5:15,
+  yromit = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mod</code></td>
+<td>
+<p>input model object as returned by <code>anlz_gam</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doystr</code></td>
+<td>
+<p>numeric indicating start Julian day for extracting averages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doyend</code></td>
+<td>
+<p>numeric indicating ending Julian day for extracting averages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>justify</code></td>
+<td>
+<p>chr string indicating the justification for the trend window</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>win</code></td>
+<td>
+<p>numeric vector indicating number of years to use for the trend window</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yromit</code></td>
+<td>
+<p>optional numeric vector for years to omit from the plot, see details</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The optional <code>yromit</code> vector can be used to omit years from the plot and trend assessment. This may be preferred if seasonal estimates for a given year have very wide confidence intervals likely due to limited data, which can skew the trend assessments.
+</p>
+<p>This function is a wrapper to <code>anlz_trndseason</code> to loop across values in <code>win</code>, using <code>useave = TRUE</code> for quicker calculation of average seasonal metrics.  It does not work with any other seasonal metric calculations.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame of slope estimates and p-values for each year
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other analyze: 
+<code>anlz_trans()</code>,
+<code>anlz_trndseason()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(dplyr)
+
+# data to model
+tomod &lt;- rawdat %&gt;%
+  filter(station %in% 34) %&gt;%
+  filter(param %in% 'chl') %&gt;% 
+  filter(yr &gt; 2015)
+
+mod &lt;- anlz_gam(tomod, trans = 'log10')
+anlz_sumtrndseason(mod, doystr = 90, doyend = 180, justify = 'center', win = 2:3)
+</code></pre>
+
+
+</div>

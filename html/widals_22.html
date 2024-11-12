@@ -1,0 +1,330 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>MSS.snow</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Metaheuristic Stochastic Search
+</h2>
+
+<h3>Description</h3>
+
+<p>Locate WIDALS hyperparameters
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">MSS.snow(FUN.source, current.best, p.ndx.ls, f.d, sds.mx, k.glob, k.loc.coef, X = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>FUN.source</code></td>
+<td>
+
+<p>Search function definitions (see Details).  A path to source code, or function, e.g., <code>fun.load.widals.a</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>current.best</code></td>
+<td>
+
+<p>An initial cost.  A scalar.  Setting to NA will cause <code>MSS.snow</code> to make an initial pass over the data to create an initial cost to beat.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.ndx.ls</code></td>
+<td>
+
+<p>Hyperparameter indices (of <code>GP</code>) to search.  A list of vectors.  For example, <code>list( c(1,2), c(3,4,5) )</code> will instruct <code>MSS.snow</code>, for each local search, to search over the first two hyperparameters as a pair, then to search the last three as a group.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f.d</code></td>
+<td>
+
+<p>Local search functions.  A list of functions (one for each element of GP).  Typically, for WIDALS, all five will be <code>dlog.norm</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sds.mx</code></td>
+<td>
+
+<p>The standard deviations for <code>f.d</code>.  An <em>k.glob</em> x <em>q</em> matrix, where <em>q</em> is the number of hyperparameters, i.e., the length of GP.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k.glob</code></td>
+<td>
+
+<p>The number of global searches.  A scalar integer.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k.loc.coef</code></td>
+<td>
+
+<p>The coeficient for the number of local searches to make.  A scalar integer.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+
+<p>A placeholder for values to be passed between functions inside <code>MSS.snow</code> (see Details).
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function requires the presence of a number of values and functions out-of-scope.  It is assumed that these are available in the Global Environment.  They are: <code>run.parallel</code> (boolean), <code>FUN.MH</code> (a function that creates, for a given <code>GP</code>, a cost), <code>FUN.GP</code> (a function that applies constraints to <code>GP</code>), <code>FUN.I</code> (a function that does something when local searches have reduced the cost), <code>FUN.EXIT</code> (a function that does something when <code>MSS.snow</code> is done). 
+</p>
+<p>Examine the code for <code>fun.load.widals.a</code> for an example of the four functions described above.  Note that these four functions may themselves require objects out-of-scope.
+</p>
+<p>In general, for a given <code>R</code> session, special care should be taken concerning the naming and assigning of the following objects: <code>Z</code> (the space-time data), <code>Z.na</code> (a boolean matrix indicating missing values in <code>Z</code>), <code>locs</code> (site locations), <code>Hs</code> (spacial covariates), <code>Ht</code> (temporal covariates), <code>Hst.ls</code> (space-time covariates), <code>lags</code> (temporal lag vector), <code>b.lag</code> (the ALS lag), <code>cv</code> (cross-validation switch), <code>xgeodesic</code> (boolean), <code>ltco</code> (weight cut-off), <code>GP</code> (hyperparameter vector), <code>run.parralel</code> (boolean), <code>stnd.d</code> (boolean), <code>train.rng</code> (time index vector), <code>test.rng</code> (time index vector).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Nothing.  After completion, the best hyperparameters, <code>GP</code>, are assigned to the Global Environment.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Hals.fastcv.snow</code>, <code>Hals.snow</code>, <code>widals.snow</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+##### simulate a state-space system (using pkg SSsimple)
+
+## Not run: 
+
+### using dontrun because of excessive run time for CRAN submission
+
+set.seed(9999)
+
+library(SSsimple)
+
+
+tau &lt;- 77 #### number of time points
+
+d.alpha &lt;- 2
+R.scale &lt;- 1
+sigma2 &lt;- 0.01
+F &lt;- 0.999
+Q &lt;- 0.1
+
+udom &lt;- (0:300)/100
+plot( udom,    R.scale * exp(-d.alpha*udom) ,  type="l", col="red" ) #### see the covariogram
+
+n.all &lt;- 70 ##### number of spacial locations
+
+set.seed(9999)
+locs.all &lt;- cbind(runif(n.all, -1, 1), runif(n.all, -1, 1)) #### random location of sensors
+
+D.mx &lt;- distance(locs.all, locs.all, FALSE) #### distance matrix
+
+#### create measurement variance using distance and covariogram
+R.all &lt;- exp(-d.alpha*D.mx) + diag(sigma2, n.all) 
+
+Hs.all &lt;- matrix(1, n.all, 1) #### constant mean function
+
+##### use SSsimple to simulate system
+xsssim &lt;- SS.sim(F=F, H=Hs.all, Q=Q, R=R.all, length.out=tau, beta0=0)
+
+Z.all &lt;- xsssim$Z ###### system observation matrix
+
+	
+	
+########### now make assignments required by MSS.snow
+	
+
+
+##### randomly remove five sites to serve as interpolation points
+ndx.interp &lt;- sample(1:n.all, size=5) 
+ndx.support &lt;- I(1:n.all)[ -ndx.interp ] ##### support sites
+
+
+
+########### what follows are important assignments, 
+########### since MSS.snow and the four helper functions
+########### will look for these in the Global Environment 
+########### to commence fitting the model (as noted in Details above)
+train.rng &lt;- 30:(tau) ; test.rng &lt;- train.rng
+
+Z &lt;- Z.all[ , ndx.support ] 
+Hs &lt;- Hs.all[ ndx.support, , drop=FALSE] 
+locs &lt;- locs.all[ndx.support, , drop=FALSE] 
+
+Ht &lt;- NULL
+Hst.ls &lt;- NULL
+
+lags &lt;- c(0) 
+b.lag &lt;- c(-1) 
+cv &lt;- -2
+xgeodesic &lt;- FALSE
+stnd.d &lt;- FALSE
+ltco &lt;- -10
+GP &lt;- c(1/10, 1, 20, 20, 1) ### -- initial hyperparameter values
+run.parallel &lt;- TRUE 
+
+if( cv==2 ) { rm.ndx &lt;- create.rm.ndx.ls( nrow(Hs), 14 ) } else { rm.ndx &lt;- 1:nrow(Hs) }
+rgr.lower.limit &lt;- 10^(-7) ; d.alpha.lower.limit &lt;- 10^(-3) ; rho.upper.limit &lt;- 10^(4)
+
+
+############## tell snowfall to use two threads for local searches
+sfInit(TRUE, cpus=2)
+fun.load.widals.a()
+
+
+######## now, finally, search for best fit over support
+######## Note that p.ndx.ls and f.d are produced inside fun.load.widals.a()
+MSS.snow(fun.load.widals.a, NA, p.ndx.ls, f.d, matrix(1/10, 10, length(GP)), 10, 7)
+sfStop()
+
+######## we can use these hyperparameters to interpolate to the 
+######## deliberately removed sites, and measure MSE, RMSE
+Z0.hat &lt;- widals.predict(Z, Hs, Ht, Hst.ls, locs, lags, b.lag, 
+Hs0=Hs.all[ ndx.interp, , drop=FALSE ], 
+Hst0.ls=NULL, locs0=locs.all[ ndx.interp, , drop=FALSE],
+geodesic = xgeodesic, wrap.around = NULL, GP, stnd.d = stnd.d, ltco = ltco)
+
+resids.wid &lt;- ( Z.all[ , ndx.interp ] - Z0.hat )
+mse.wid &lt;- mean( resids.wid[ test.rng, ]^2 )
+mse.wid
+sqrt(mse.wid)
+
+
+
+
+
+
+########################################### Simulated Imputation with WIDALS
+Z.all &lt;- xsssim$Z
+Z.missing &lt;- Z.all
+
+Z.na.all &lt;- matrix( sample(c(TRUE, FALSE), size=n.all*tau, prob=c(0.01, 0.99), replace=TRUE), 
+tau, n.all)
+Z.missing[ Z.na.all ] &lt;- NA
+
+
+Z &lt;- Z.missing
+Z[ is.na(Z) ] &lt;- mean(Z, na.rm=TRUE)
+X &lt;- list("Z.fill"=Z)
+
+Z.na &lt;- Z.na.all
+Hs &lt;- Hs.all
+locs &lt;- locs.all
+Ht &lt;- NULL
+Hst.ls &lt;- NULL
+lags &lt;- c(0)
+b.lag &lt;- c(-1)
+cv &lt;- -2
+xgeodesic &lt;- FALSE
+ltco &lt;- -10
+if( cv==2 ) { rm.ndx &lt;- create.rm.ndx.ls( nrow(Hs), 14 ) } else { rm.ndx &lt;- 1:nrow(Hs) }
+
+GP &lt;- c(1/10, 1, 20, 20, 1)
+
+rgr.lower.limit &lt;- 10^(-7) ; d.alpha.lower.limit &lt;- 10^(-3) ; rho.upper.limit &lt;- 10^(4)
+
+run.parallel &lt;- TRUE
+
+sfInit(TRUE, cpus=2)
+fun.load.widals.fill()
+
+MSS.snow(fun.load.widals.fill, NA, p.ndx.ls, f.d, 
+seq(2, 0.01, length=10)*matrix(1/10, 10, length(GP)), 10, 7, X=X)
+sfStop()
+
+sqrt(mean(( (Z.all[train.rng, ] - Z.fill[train.rng, ])^2 )[ Z.na[ train.rng, ] ]))
+
+
+
+    
+    
+    
+    
+
+############################################ Now Try with ALS alone
+
+Z.all &lt;- xsssim$Z
+
+GP &lt;- c(1/10, 1) ### -- initial hyperparameter values
+
+############## tell snowfall to use two threads for local searches
+sfInit(TRUE, cpus=2)
+fun.load.hals.a()
+
+######## now, finally, search for best fit over support
+######## Note that p.ndx.ls and f.d are produced inside fun.load.widals.a()
+MSS.snow(fun.load.hals.a, NA, p.ndx.ls, f.d, matrix(1/10, 10, length(GP)), 10, 7)
+sfStop()
+
+######## we can use these hyperparameters to interpolate to the deliberately removed sites, 
+######## and measure MSE, RMSE
+hals.obj &lt;- H.als.b(Z, Hs, Ht, Hst.ls, rho=GP[1], reg=GP[2], b.lag = b.lag, 
+Hs0 = Hs.all[ ndx.interp, , drop=FALSE ], Ht0 = NULL, Hst0.ls = NULL)
+Z0.hat &lt;- hals.obj$Z0.hat
+
+resids.als &lt;- ( Z.all[ , ndx.interp ] - Z0.hat )
+mse.als &lt;- mean( resids.als[ test.rng, ]^2 )
+mse.als
+sqrt(mse.als)
+
+
+
+########################################### Simulated Imputation with ALS
+Z.all &lt;- xsssim$Z
+Z.missing &lt;- Z.all
+
+set.seed(99)
+Z.na.all &lt;- matrix( sample(c(TRUE, FALSE), size=n.all*tau, prob=c(0.03, 0.97), replace=TRUE), 
+tau, n.all)
+Z.missing[ Z.na.all ] &lt;- NA
+
+
+Z &lt;- Z.missing
+Z[ is.na(Z) ] &lt;- 0 #mean(Z, na.rm=TRUE)
+X &lt;- list("Z.fill"=Z)
+    
+Z.na &lt;- Z.na.all
+
+Hs &lt;- Hs.all
+
+GP &lt;- c(1/10, 1) ### -- initial hyperparameter values
+
+sfInit(TRUE, cpus=2)
+fun.load.hals.fill()
+
+MSS.snow(fun.load.hals.fill, NA, p.ndx.ls, f.d, 
+seq(3, 0.01, length=10)*matrix(1, 10, length(GP)), 10, 7, X=X)
+sfStop()
+
+sqrt(mean(( (Z.all[train.rng, ] - Z.fill[train.rng, ])^2 )[ Z.na[ train.rng, ] ]))
+
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

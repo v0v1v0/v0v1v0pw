@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>secrFit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Spatially Explicit Capture-Recapture
+</h2>
+
+<h3>Description</h3>
+
+<p>A wrapper for <code>secr::secr.fit</code>. In <code>secr</code> v. 4, <code>secr.fit</code> gains a new option, <code>fastproximity</code>. If TRUE, some data sets are compressed and reconfigured to run much faster. This cannot be implemented for all models. The default is <code>fastproximity=TRUE</code>. This means that you can have a set of models where some have been reconfigured, others not, and AICs are not comparable across these models. The function <code>secrFit</code> simply calls <code>secr.fit</code> with <code>fastproximity = FALSE</code>, making it easy to run models with consistent settings.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">secrFit (capthist, model = list(D~1, g0~1, sigma~1), mask = NULL, buffer = NULL,
+    CL = FALSE, detectfn = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>capthist</code></td>
+<td>
+
+<p>a <code>capthist</code> object as defined in package <code>secr</code> including capture data and detector (trap) layout </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+
+<p>list with optional components each symbolically defining a linear predictor for one real parameter using formula notation
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mask</code></td>
+<td>
+
+<p>a mask object or (for a multi-session analysis) a list of mask objects, one for each session
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>buffer</code></td>
+<td>
+
+<p>scalar mask buffer radius if mask is not specified (default 100 m)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CL</code></td>
+<td>
+
+<p>logical, if true then the model is fitted by maximizing the conditional likelihood
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detectfn</code></td>
+<td>
+
+<p>integer code or character string for shape of detection function 0 = halfnormal, 1 = hazard rate etc. - see <code>detectfn</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>other arguments to pass to <code>secr.fit</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>returns an object of class secr representing the fitted SECR model.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>This wrapper by Mike Meredith
+</p>
+
+
+</div>

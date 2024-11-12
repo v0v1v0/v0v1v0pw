@@ -1,0 +1,81 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>BMI</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Data on BMI of Dutch citizens</h2>
+
+<h3>Description</h3>
+
+<p>The <code>BMI</code> data contains information on Dutch individuals' BMI, in addition to select socio-demographic variables.</p>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 3323 observations on the following 6 variables.
+</p>
+
+<dl>
+<dt><code>sex</code></dt>
+<dd>
+<p>a factor with levels <code>male</code> and <code>female</code></p>
+</dd>
+<dt><code>education</code></dt>
+<dd>
+<p>a factor with levels <code>lowest</code>, <code>middle</code>, and <code>highest</code></p>
+</dd>
+<dt><code>year</code></dt>
+<dd>
+<p>a factor with levels <code>2000</code>, <code>2005</code>, and <code>2011</code></p>
+</dd>
+<dt><code>BMI</code></dt>
+<dd>
+<p>interval variable representing respondents' Body Mass Index (BMI)</p>
+</dd>
+<dt><code>childless</code></dt>
+<dd>
+<p>a factor with levels <code>no</code> and <code>yes</code></p>
+</dd>
+<dt><code>log_age</code></dt>
+<dd>
+<p>interval variable representing the natural log of respondents' age</p>
+</dd>
+<dt><code>age_categorical</code></dt>
+<dd>
+<p>a factor with levels <code>Young (18-30)</code>, <code>Middle (31-59)</code> and <code>Older (60-70)</code></p>
+</dd>
+</dl>
+<h3>Source</h3>
+
+<p>These data are a subset from three waves of the ‘Socio-Cultural Developments in the Netherlands’ (SOCON) datasets, collected at the Radboud University in the Netherlands (see references for original codebooks).</p>
+
+
+<h3>References</h3>
+
+<p>Eisinga, R., G., Kraaykamp, P. Scheepers, P. Thijs (2012). <em>Religion in Dutch society 2011-2012. Documentation of a national survey on religious and secular attitudes and behaviour in 2011-2012</em>, DANS Data Guide 11, The Hague: DANS/Pallas Publications  Amsterdam University Press, 184p.
+</p>
+<p>Eisinga, R., A. Need, M. Coenders, N.D. de Graaf, M. Lubbers, P. Scheepers, M. Levels, P. Thijs (2012).
+<em>Religion in Dutch society 2005. Documentation of a national survey on religious and secular attitudes and behaviour in 2005</em>, DANS Data Guide 10, The Hague: DANS/Pallas Publications  Amsterdam University Press, 246p.
+</p>
+<p>Eisinga, R., M. Coenders, A. Felling, M. te Grotenhuis, S. Oomens, P. Scheepers (2002). <em>Religion in Dutch society 2000. Documentation of a national survey on religious and secular attitudes in 2000</em>, Amsterdam: NIWI-Steinmetz Archive, 374p.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(BMI)
+
+# Without Controls
+model.dummy &lt;- lm(BMI ~ education, data=BMI)
+summary(model.dummy)
+
+# With Controls
+model.dummy.controls &lt;- lm(BMI ~ education + sex + log_age + childless + year, data=BMI)
+summary(model.dummy.controls)
+
+</code></pre>
+
+
+</div>

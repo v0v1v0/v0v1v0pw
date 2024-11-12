@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>independence_test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Independence Test</h2>
+
+<h3>Description</h3>
+
+<p>'independence_test' Computes the independence test with a user-specified number of principal components
+and range of lags.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">independence_test(
+  f_data,
+  components,
+  lag,
+  alpha = 0.05,
+  suppress_raw_output = FALSE,
+  suppress_print_output = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>f_data</code></td>
+<td>
+<p>The functional data matrix with observed functions in the columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>components</code></td>
+<td>
+<p>A positive Integer specifying the number of principal components to project the data on;
+ranked in order of importance (importance is determined by the proportion of the variance that is explained
+by the individual principal component.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lag</code></td>
+<td>
+<p>A positive Integer value, specifying the maximum lag to include - this can be seen as the bandwidth
+or lag-window.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Numeric value between 0 and 1 specifying the significance level to be used in the specified
+hypothesis test. The default value is 0.05. Note, the significance value is only ever used to compute the
+1-alpha quantile of the limiting distribution of the specified test's test statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suppress_raw_output</code></td>
+<td>
+<p>Boolean value, FALSE by default. If TRUE, the function will not return the list
+containing the p-value, quantile, and statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suppress_print_output</code></td>
+<td>
+<p>Boolean value, FALSE by default. If TRUE, the function will not print any
+output to the console.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The "independence" portmanteau test is a test of independence and identical distribution based on a
+dimensionality reduction by projecting the data onto the most important functional principal components.
+It is based on the resulting lagged cross-variances. This test is not for general white noise series, and
+may not hold under functional conditionally heteroscedastic assumptions. Please consult the vignette for a
+deeper exposition, and consult the reference for a complete treatment.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If suppress_raw_output = FALSE, a list containing the test statistic, the 1-alpha quantile of the
+limiting distribution, and the p-value computed from the specified hypothesis test. Also prints output
+containing a short description of the test, the p-value, and additional information about the test if
+suppress_print_output = FALSE.
+</p>
+
+
+<h3>References</h3>
+
+<p>[1] Gabrys R., &amp; Kokoszka P. (2007). Portmanteau Test of Independence for Functional Observations.
+Journal of the American Statistical Association, 102:480, 1338-1348, DOI: 10.1198/016214507000001111.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">b &lt;- brown_motion(250, 100)
+independence_test(b, components = 3, lag = 5)
+
+</code></pre>
+
+
+</div>

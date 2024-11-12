@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>trapezoidal_integration</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Approximate the definite integral via the trapezoidal rule</h2>
+
+<h3>Description</h3>
+
+<p>Mostly meant for internal use in our analysis functions, but made available
+for other use cases. Accordingly, it does not strictly rely on objects of
+class <code>muscle_stim</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">trapezoidal_integration(x, f)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a variable, e.g. vector of positions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f</code></td>
+<td>
+<p>integrand, e.g. vector of forces</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In the functions <code>analyze_workloop()</code>, <code>read_analyze_wl()</code>
+, and <code>read_analyze_wl_dir()</code>, work is calculated as the difference
+between the integral of the upper curve and the integral of the lower curve
+of a work loop.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numerical value indicating the value of the integral.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Vikram B. Baliga
+</p>
+
+
+<h3>References</h3>
+
+<p>Atkinson, Kendall E. (1989), An Introduction to Numerical
+Analysis (2nd ed.), New York: John Wiley &amp; Sons
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>analyze_workloop</code>,
+<code>read_analyze_wl</code>,
+<code>read_analyze_wl_dir</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# create a circle centered at (x = 10, y = 20) with radius 2
+t &lt;- seq(0, 2 * pi, length = 1000)
+coords &lt;- t(rbind(10 + sin(t) * 2, 20 + cos(t) * 2))
+
+
+# use the function to get the area
+trapezoidal_integration(coords[, 1], coords[, 2])
+
+# does it match (pi * r^2)?
+3.14159265358 * (2^2) # very close
+
+</code></pre>
+
+
+</div>

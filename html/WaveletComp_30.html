@@ -1,0 +1,540 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wt.sel.phases</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Plot phases for selected periodic components of a single time series
+</h2>
+
+<h3>Description</h3>
+
+<p>This function plots the phases for selected periodic components of a time series, 
+which are provided by an object of class <code>"analyze.wavelet"</code>, or alternatively of class
+<code>"analyze.coherency"</code>. (In the latter case, the series number or name must be specified.)
+</p>
+<p>Periodic components can be selected by specification of a single
+Fourier period or of a period band. In the latter case, and in the
+default case (no specification at all), there is an option to
+average the phases across periods. Other options: restriction to the 
+cone of influence, restriction to an area of significance (with respect 
+to wavelet power).
+</p>
+<p>(The time axis can be altered to give dates, see e.g. <code>wt.image</code>.
+In particular, an option is given to individualize the phase and/or time axis
+by specifying tick marks and labels.)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wt.sel.phases(WT, my.series = 1,
+      sel.period = NULL, sel.lower = NULL, sel.upper = NULL, 
+      only.coi = FALSE,
+      only.sig = TRUE, siglvl = 0.05, 
+      show.avg.phase = FALSE, phase.avg.col = "black", 
+      label.time.axis = TRUE, 
+      show.date = FALSE, date.format = NULL, date.tz = NULL, 
+      timelab = NULL, timetck = 0.02, timetcl = 0.5,
+      spec.time.axis = list(at = NULL, labels = TRUE, 
+                            las = 1, hadj = NA, padj = NA),
+      label.phase.axis = TRUE, 
+      phaselab = NULL, phasetck = 0.02, phasetcl = 0.5,
+      spec.phase.axis = list(at = NULL, labels = TRUE, 
+                             las = 1, hadj = NA, padj = NA),
+      main = NULL, sub = NULL, 
+      lwd = 1, lwd.axis = 1,
+      verbose = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>WT</code></td>
+<td>
+<p>an object of class <code>"analyze.wavelet"</code> or <code>"analyze.coherency"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>my.series</code></td>
+<td>
+<p>In case <code>class(WT) = "analyze.coherency"</code>: number (<code>1</code> or <code>2</code>) or name of the series to be analyzed. 
+</p>
+<p>Default: <code>1</code>. </p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>sel.period</code></td>
+<td>
+<p>a single number which determines the (closest available) Fourier period to be selected. 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sel.lower</code></td>
+<td>
+<p>a number to define a lower Fourier period (or the closest available) for the selection 
+of a band of periods (effective if <code>sel.period</code> is <code>NULL</code>). 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sel.upper</code></td>
+<td>
+<p>a number to define an upper Fourier period (or the closest available) for the selection 
+of a band of periods (effective if <code>sel.period</code> is <code>NULL</code>). 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>only.coi</code></td>
+<td>
+<p>Exclude borders influenced by edge effects, i.e. include the cone of influence only? Logical. 
+</p>
+<p>Default: <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>only.sig</code></td>
+<td>
+<p>Use wavelet power significance to decide about the inclusion of (parts of) the phases' series? Logical. 
+</p>
+<p>Default: <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>siglvl</code></td>
+<td>
+<p>level of wavelet power significance. Default: <code>0.05</code>.</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>show.avg.phase</code></td>
+<td>
+<p>Show average phases over selected periods? (Effective only if a band of periods is selected.) Logical. 
+</p>
+<p>Default: <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phase.avg.col</code></td>
+<td>
+<p>color of line of phase averages. Default: "black".</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>label.time.axis</code></td>
+<td>
+<p>Label the time axis? Logical. 
+</p>
+<p>Default: <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show.date</code></td>
+<td>
+<p>Show calendar dates? (Effective only if dates are available as row names or by variable 
+<code>date</code> in the data frame which is analyzed.) Logical. 
+</p>
+<p>Default: <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>date.format</code></td>
+<td>
+<p>the format of calendar date given as a character string, e.g. <code>"%Y-%m-%d"</code>, or equivalently <code>"%F"</code>; 
+see <code>strptime</code> for a list of implemented date conversion specifications. Explicit information given here will overturn any specification 
+stored in <code>WT</code>. If unspecified, date formatting is attempted according to <code>as.Date</code>. 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date.tz</code></td>
+<td>
+<p>a character string specifying the time zone of calendar date; see <code>strptime</code>. Explicit information given here will overturn 
+any specification stored in <code>WT</code>. If unspecified, <code>""</code> (the local time zone) is used. 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>timelab</code></td>
+<td>
+<p>Time axis label.  
+</p>
+<p>Default: <code>"index"</code>; in case of a calendar axis: <code>"calendar date"</code>.</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>timetck</code></td>
+<td>
+<p>length of tick marks on the time axis as a fraction of the smaller of the width or height of the plotting region; see <code>par</code>.  
+If <code>timetck &gt;= 0.5</code>, <code>timetck</code> is interpreted as a fraction of the length of the time axis, so if <code>timetck = 1</code> 
+(and <code>timetcl = NULL</code>), vertical grid lines will be drawn. <br>
+Setting <code>timetck = NA</code> is to use <code>timetcl = -0.5</code> (which is the R default setting of <code>tck</code> and <code>tcl</code>).
+</p>
+<p>Default here: <code>0.02</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timetcl</code></td>
+<td>
+<p>length of tick marks on the time axis as a fraction of the height of a line of text; see <code>par</code>. 
+With <code>timetcl = -0.5</code> (which is the R default setting of <code>tcl</code>), ticks will be drawn outward. 
+</p>
+<p>Default here: <code>0.5</code>.</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>spec.time.axis</code></td>
+<td>
+<p>a list of tick mark and label specifications for individualized time axis labeling 
+(only effective if <code>label.time.axis = TRUE</code>):
+</p>
+
+<ul>
+<li>
+<p>[<code>at</code>:] locations of tick marks (when <code>NULL</code>, default plotting will be applied).
+Valid tick marks can be provided as numerical values or as dates. Dates are used only in the case <code>show.date = TRUE</code>, however, 
+and date formats should conform to <code>as.Date</code> or the format given in <code>date.format</code>. <br>
+Default: <code>NULL</code>. 
+</p>
+</li>
+<li>
+<p>[<code>labels</code>:] either a logical value specifying whether annotations at the tick marks are the tick marks themselves, 
+or any vector of labels. If <code>labels</code> is non-logical, <code>at</code> should be of same length. <br>
+Default: <code>TRUE</code>. 
+</p>
+</li>
+<li>
+<p>[<code>las</code>:] the style of axis labels, see <code>par</code>. <br>
+Default: <code>1</code> (always horizontal). 
+</p>
+</li>
+<li>
+<p>[<code>hadj</code>:] adjustment of labels horizontal to the reading direction, see <code>axis</code>. <br>
+Default: <code>NA</code> (centering is used). 
+</p>
+</li>
+<li>
+<p>[<code>padj</code>:] adjustment of labels perpendicular to the reading direction (this can be a vector of adjustments for each label), 
+see <code>axis</code>. <br>
+Default: <code>NA</code> (centering is used).                           
+</p>
+</li>
+</ul>
+<p>Mismatches will result in a reset to default plotting.                               
+</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>label.phase.axis</code></td>
+<td>
+<p>Label the phase axis? Logical. 
+</p>
+<p>Default: <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phaselab</code></td>
+<td>
+<p>Phase axis label. 
+</p>
+<p>Default: <code>"phase"</code>.</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>phasetck</code></td>
+<td>
+<p>length of tick marks on the phase axis as a fraction of the smaller of the width or height of the plotting region; see <code>par</code>.  
+If <code>phasetck &gt;= 0.5</code>, <code>phasetck</code> is interpreted as a fraction of the length of the phase axis, so if <code>phasetck = 1</code> 
+(and <code>phasetcl = NULL</code>), horizontal grid lines will be drawn. <br>
+Setting <code>phasetck = NA</code> is to use <code>phasetcl = -0.5</code> (which is the R default setting of <code>tck</code> and <code>tcl</code>).
+</p>
+<p>Default here: <code>0.02</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phasetcl</code></td>
+<td>
+<p>length of tick marks on the phase axis as a fraction of the height of a line of text; see <code>par</code>. 
+With <code>phasetcl = -0.5</code> (which is the R default setting of <code>tcl</code>), ticks will be drawn outward. 
+</p>
+<p>Default here: <code>0.5</code>.</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>spec.phase.axis</code></td>
+<td>
+<p>a list of tick mark and label specifications for individualized phase axis labeling 
+(only effective if <code>label.phase.axis = TRUE</code>):
+</p>
+
+<ul>
+<li>
+<p>[<code>at</code>:] locations of tick marks (when <code>NULL</code>, default plotting will be applied). Valid tick marks can be provided as 
+numerical values between <code>-pi</code> and <code>pi</code>. <br>
+Default: <code>NULL</code>. 
+</p>
+</li>
+<li>
+<p>[<code>labels</code>:] either a logical value specifying whether annotations at the tick marks are the tick marks themselves, 
+or any vector of labels. If <code>labels</code> is non-logical, <code>at</code> should be of same length. <br>
+Default: <code>TRUE</code>. 
+</p>
+</li>
+<li>
+<p>[<code>las</code>:] the style of axis labels, see <code>par</code>. <br>
+Default: <code>1</code> (always horizontal). 
+</p>
+</li>
+<li>
+<p>[<code>hadj</code>:] adjustment of labels horizontal to the reading direction, see <code>axis</code>. <br>
+Default: <code>NA</code> (centering is used).
+</p>
+</li>
+<li>
+<p>[<code>padj</code>:] adjustment of labels perpendicular to the reading direction (this can be a vector of adjustments for each label), 
+see <code>axis</code>. <br>
+Default: <code>NA</code> (centering is used).                           
+</p>
+</li>
+</ul>
+<p>Mismatches will result in a reset to default plotting.                               
+</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>an overall title for the plot. 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sub</code></td>
+<td>
+<p>a subtitle for the plot. 
+</p>
+<p>Default: <code>NULL</code>. In this case, the selected period range will be given in the subtitle.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd</code></td>
+<td>
+<p>line width of phases. 
+</p>
+<p>Default: <code>1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd.axis</code></td>
+<td>
+<p>line width of axes. 
+</p>
+<p>Default: <code>1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Print verbose output on the screen? Logical.
+</p>
+<p>Default: <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of class <code>"sel.phases"</code> with the following elements:
+
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Period</code></td>
+<td>
+<p>the selected period (or period band)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Phase</code></td>
+<td>
+<p>time series of (average) phases at the selected period (or period band)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>only.coi</code></td>
+<td>
+<p>Is the influence of edge effects excluded? I.e. is the cone of influence used only?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>only.sig</code></td>
+<td>
+<p>Was wavelet power significance used in selection of phases?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>siglvl</code></td>
+<td>
+<p>level of wavelet power significance</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>date</code></td>
+<td>
+<p>time series of calendar date (if available)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date.format</code></td>
+<td>
+<p>the format of calendar date (if available)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date.tz</code></td>
+<td>
+<p>the time zone of calendar date (if available)</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>axis.1</code></td>
+<td>
+<p>tick levels corresponding to the time steps used for (cross-)wavelet transformation: <code>1, 1+dt, 1+2dt, ...</code>.
+The default time axis in plot functions provided by <code>WaveletComp</code> is determined by observation epochs, however; "epoch" meaning point in time. </p>
+</td>
+</tr></table>
+<h3>Author(s)</h3>
+
+<p>Angi Roesch and Harald Schmidbauer</p>
+
+
+<h3>References</h3>
+
+<p>Aguiar-Conraria L., and Soares M.J., 2011. 
+The Continuous Wavelet Transform: A Primer. 
+NIPE Working Paper Series 16/2011.
+</p>
+<p>Carmona R., Hwang W.-L., and Torresani B., 1998. 
+Practical Time Frequency Analysis. Gabor and Wavelet Transforms with an Implementation in S.
+Academic Press, San Diego.
+</p>
+<p>Cazelles B., Chavez M., Berteaux, D., Menard F., Vik J.O., Jenouvrier S., and Stenseth N.C., 2008.
+Wavelet analysis of ecological time series.
+Oecologia 156, 287–304.
+</p>
+<p>Liu Y., Liang X.S., and Weisberg R.H., 2007.
+Rectification of the Bias in the Wavelet Power Spectrum. 
+Journal of Atmospheric and Oceanic Technology 24, 2093–2102.
+</p>
+<p>Torrence C., and Compo G.P., 1998. 
+A practical guide to wavelet analysis. 
+Bulletin of the American Meteorological Society 79 (1), 61–78.
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code>analyze.wavelet</code>, <code>wt.image</code>, <code>wt.avg</code>, <code>wt.phase.image</code>, 
+<code>reconstruct</code> 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## The following example is adopted from Liu et al., 2007:
+
+series.length &lt;- 6*128*24
+x1 &lt;- periodic.series(start.period = 1*24, length = series.length)
+x2 &lt;- periodic.series(start.period = 8*24, length = series.length)
+x3 &lt;- periodic.series(start.period = 32*24, length = series.length)
+x4 &lt;- periodic.series(start.period = 128*24, length = series.length)
+
+x &lt;- x1 + x2 + x3 + x4
+
+plot(x, type = "l", xlab = "index", ylab = "", xaxs = "i",
+     main = "hourly series with periods of 1, 8, 32, 128 days")
+     
+my.date &lt;- seq(as.POSIXct("2014-10-14 00:00:00", format = "%F %T"), 
+               by = "hour", 
+               length.out = series.length)     
+my.data &lt;- data.frame(date = my.date, x = x)
+
+## Computation of wavelet power:
+## a natural choice of 'dt' in the case of hourly data is 'dt = 1/24', 
+## resulting in one time unit equaling one day.
+## This is also the time unit in which periods are measured.
+my.wt &lt;- analyze.wavelet(my.data, "x", 
+                         loess.span = 0, 
+                         dt = 1/24, dj = 1/20, 
+                         lowerPeriod = 1/4, 
+                         make.pval = TRUE, n.sim = 10)
+
+## Plot of wavelet power spectrum with equidistant color breakpoints:  
+wt.image(my.wt, color.key = "i", main = "wavelet power spectrum",
+   legend.params = list(lab = "wavelet power levels (equidistant)"),
+   periodlab = "period (days)")                       
+
+## Select period 8 and plot corresponding phases across time:
+wt.sel.phases(my.wt, sel.period = 8)
+
+## With time elapsed in days 
+## (starting from 0 and proceeding in steps of 50 days) 
+## instead of the (default) time index:
+index.ticks  &lt;- seq(1, series.length, by = 50*24)
+index.labels &lt;- (index.ticks-1)/24
+wt.sel.phases(my.wt, sel.period = 8,  
+   timelab = "time elapsed (days)",
+   spec.time.axis = list(at = index.ticks, labels = index.labels))
+
+## The same plot, but with (automatically produced) calendar axis:
+wt.sel.phases(my.wt, sel.period = 8,  
+   show.date = TRUE, date.format = "%F %T")
+
+## For further axis plotting options:
+## Please see the examples in our guide booklet,
+## URL http://www.hs-stat.com/projects/WaveletComp/WaveletComp_guided_tour.pdf.        
+
+## In the following, no period is selected.
+## By setting 'show.avg.phase = TRUE', the plot shows average phases 
+## instead of individual phases: 
+wt.sel.phases(my.wt, show.avg.phase = TRUE)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

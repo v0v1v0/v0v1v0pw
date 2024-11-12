@@ -1,0 +1,154 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ww_global_geary_c</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Global Geary's C statistic</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the global Geary's C statistic for model residuals.
+<code>ww_global_geary_c()</code> returns the statistic itself, while
+<code>ww_global_geary_pvalue()</code> returns the associated p value.
+These functions are meant to help assess model predictions, for instance by
+identifying if there are clusters of higher residuals than expected. For
+statistical testing and inference applications, use
+<code>spdep::geary.test()</code> instead.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ww_global_geary_c(data, ...)
+
+ww_global_geary_c_vec(truth, estimate, wt, na_rm = FALSE, ...)
+
+ww_global_geary_pvalue(data, ...)
+
+ww_global_geary_pvalue_vec(truth, estimate, wt = NULL, na_rm = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A <code>data.frame</code> containing the columns specified by the <code>truth</code>
+and <code>estimate</code> arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to <code>spdep::geary()</code> (for
+<code>ww_global_geary_c()</code>) or <code>spdep::geary.test()</code> (for
+<code>ww_global_geary_pvalue()</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truth</code></td>
+<td>
+<p>The column identifier for the true results
+(that is <code>numeric</code>). This should be an unquoted column name although
+this argument is passed by expression and supports
+quasiquotation (you can unquote column
+names). For <code style="white-space: pre;">⁠_vec()⁠</code> functions, a <code>numeric</code> vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimate</code></td>
+<td>
+<p>The column identifier for the predicted
+results (that is also <code>numeric</code>). As with <code>truth</code> this can be
+specified different ways but the primary method is to use an
+unquoted variable name. For <code style="white-space: pre;">⁠_vec()⁠</code> functions, a <code>numeric</code> vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wt</code></td>
+<td>
+<p>A <code>listw</code> object, for instance as created with <code>ww_build_weights()</code>.
+For data.frame input, may also be a function that takes <code>data</code> and returns a
+<code>listw</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na_rm</code></td>
+<td>
+<p>A <code>logical</code> value indicating whether <code>NA</code>
+values should be stripped before the computation proceeds.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>These functions can be used for geographic or projected coordinate reference
+systems and expect 2D data.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A tibble with columns .metric, .estimator, and .estimate and 1 row of values.
+For grouped data frames, the number of rows returned will be the same as the
+number of groups.
+For <code style="white-space: pre;">⁠_vec()⁠</code> functions, a single value (or NA).
+</p>
+
+
+<h3>References</h3>
+
+<p>Geary, R. C. (1954). "The Contiguity Ratio and Statistical Mapping". The
+Incorporated Statistician. 5 (3): 115–145. doi:10.2307/2986645.
+</p>
+<p>Cliff, A. D., Ord, J. K. 1981 Spatial processes, Pion, p. 17.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other autocorrelation metrics: 
+<code>ww_global_moran_i()</code>,
+<code>ww_local_geary_c()</code>,
+<code>ww_local_getis_ord_g()</code>,
+<code>ww_local_moran_i()</code>
+</p>
+<p>Other yardstick metrics: 
+<code>ww_agreement_coefficient()</code>,
+<code>ww_global_moran_i()</code>,
+<code>ww_local_geary_c()</code>,
+<code>ww_local_getis_ord_g()</code>,
+<code>ww_local_moran_i()</code>,
+<code>ww_willmott_d()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">guerry_model &lt;- guerry
+guerry_lm &lt;- lm(Crm_prs ~ Litercy, guerry_model)
+guerry_model$predictions &lt;- predict(guerry_lm, guerry_model)
+
+ww_global_geary_c(guerry_model, Crm_prs, predictions)
+ww_global_geary_pvalue(guerry_model, Crm_prs, predictions)
+
+wt &lt;- ww_build_weights(guerry_model)
+
+ww_global_geary_c_vec(
+  guerry_model$Crm_prs,
+  guerry_model$predictions,
+  wt = wt
+)
+ww_global_geary_pvalue_vec(
+  guerry_model$Crm_prs,
+  guerry_model$predictions,
+  wt = wt
+)
+
+</code></pre>
+
+
+</div>

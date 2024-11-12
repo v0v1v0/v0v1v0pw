@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>output_to_df</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Provide WH model Fit Results as a Data.frame</h2>
+
+<h3>Description</h3>
+
+<p>Provide WH model Fit Results as a Data.frame
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">output_to_df(object, dim1 = "x", dim2 = "t")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>An object of class  <code>"WH_1d"</code> or <code>"WH_2d"</code> returned
+by one of the eponymous functions <code>WH_1d()</code> or <code>WH_2d()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dim1</code></td>
+<td>
+<p>The optional name to be given to the first dimension</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dim2</code></td>
+<td>
+<p>The optional name to be given to the second dimension</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data.frame regrouping information about the fitted and predicted
+values, the model variance, residuals and effective degrees of freedom...
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">d &lt;- portfolio_mort$d
+ec &lt;- portfolio_mort$ec
+
+y &lt;- log(d / ec)
+y[d == 0] &lt;- - 20
+wt &lt;- d
+
+fit_1d &lt;- WH_1d(d, ec)
+output_to_df(fit_1d)
+
+keep_age &lt;- which(rowSums(portfolio_LTC$ec) &gt; 5e2)
+keep_duration &lt;- which(colSums(portfolio_LTC$ec) &gt; 1e3)
+
+d  &lt;- portfolio_LTC$d[keep_age, keep_duration]
+ec &lt;- portfolio_LTC$ec[keep_age, keep_duration]
+
+y &lt;- log(d / ec) # observation vector
+y[d == 0] &lt;- - 20
+wt &lt;- d
+
+# Maximum likelihood
+fit_2d &lt;- WH_2d(d, ec)
+output_to_df(fit_2d)
+
+</code></pre>
+
+
+</div>

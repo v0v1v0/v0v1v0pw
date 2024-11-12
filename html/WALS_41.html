@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predictCounts</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Internal methods: Predict probability for counts</h2>
+
+<h3>Description</h3>
+
+<p>Predicts the probability of counts given a family object of class
+<code>"familyWALScount"</code>. Only works for count data models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">predictCounts(x, ...)
+
+## S3 method for class 'familyWALScount'
+predictCounts(x, yUnique, rowNames, eta, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>object of class <code>"familyWALScount"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further parameters passed to <code>density()</code> function in
+<code>family</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yUnique</code></td>
+<td>
+<p>vector. The counts (larger or equal to zero) which to predict
+probabilities for.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rowNames</code></td>
+<td>
+<p>vector. The names of the observations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eta</code></td>
+<td>
+<p>vector. The fitted linear link <code class="reqn">\hat{\eta}</code> of the model.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>"familyWALScount"</code> objects are used in the fitting methods
+<code>walsNB</code>, <code>walsNBmatrix</code>,
+<code>walsGLM</code> or <code>walsGLMmatrix</code>. For the
+latter two, only the family <code>poissonWALS</code> is currently
+supported.
+</p>
+<p><code>predictCounts()</code> is not available for objects of any class except for
+<code>"familyWALScount"</code>.
+</p>
+<p>The <code>predictCounts.familyWALScount()</code> method is a modified version of the
+<code>predict.hurdle()</code> method from the <code>countreg</code> package
+version 0.2-1 (2023-06-13) (Zeileis and Kleiber 2023; Zeileis et al. 2008) using the argument
+<code>type = "prob"</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a matrix of dimension <code>length(eta)</code> times
+<code>length{yUnique}</code> with the predicted probabilities of the counts given
+in <code>yUnique</code> for every observation in <code>eta</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Zeileis A, Kleiber C (2023).
+<em>countreg: Count Data Regression</em>.
+R package version 0.2-1, <a href="https://r-forge.r-project.org/projects/countreg/">https://r-forge.r-project.org/projects/countreg/</a>.<br><br> Zeileis A, Kleiber C, Jackman S (2008).
+“Regression Models for Count Data in R.”
+<em>Journal of Statistical Software</em>, <b>27</b>(8), 1–25.
+<a href="https://doi.org/10.18637/jss.v027.i08">doi:10.18637/jss.v027.i08</a>.
+</p>
+
+
+</div>

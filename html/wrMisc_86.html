@@ -1,0 +1,130 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>adjustUnitPrefix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Adjust Value With Different Decimal Prefixes To Single Prefix Plus Unit</h2>
+
+<h3>Description</h3>
+
+<p>This function provides help converting values with with different unit-prefixes to a single prefix-unit type.
+This can be used to convert a vector of mixed prefixes like 'p' and 'n'.
+Any text to the right of the unit will be ignored.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">adjustUnitPrefix(
+  x,
+  pref = c("z", "a", "f", "p", "n", "u", "m", "", "k", "M", "G"),
+  unit = "sec",
+  sep = c("_", ".", " ", ""),
+  minTrimNChar = 0,
+  returnType = c("NAifInvalid", "allText"),
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(character) vector containing digit uunit-prefix and unit terms</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pref</code></td>
+<td>
+<p>(character) multiplicative unit-prefixes, assumes as increasing factors of 1000</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unit</code></td>
+<td>
+<p>(character) unit name, the numeric part may be sepatated by one space-character</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep</code></td>
+<td>
+<p>(character) separator characters that may appear between integer numeric value and unit description</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minTrimNChar</code></td>
+<td>
+<p>(integer) min number of text characters when trimming adjacent text on left and right of main numeric+prefix+unit</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnType</code></td>
+<td>
+<p>(character) set options for retuning results : 'NAifInvalid' .. return NA for invalid parts,'allText' .. return initial text if problem, 'trim'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The aim of this function if to allow adjusting a vector containing '100pMol' and '1nMol' to '100pMol' and '1000pMol' for better downstream analysis.
+Please note that the current version recognizes and converts only interger values; decimals or scientific writing won't be recognized properly.
+The resultant numeric vector expresses all values as lowest prefix unit level.
+In case of invalid entries <code>NA</code>s will be returned.
+</p>
+<p>Please note that decimal/comma digits will not be recognized properly, since the function will consider (by default) the decimal sign as just another separator.
+</p>
+<p>To avoid special characters (which may not work on all operating-systems) the letter 'u' is used for 'micro'.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a character vector (same length as input) with adjusted unified decimal prefix and adjusted numeric content, the numeric content only is also giben in the names of the output
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>convToNum</code>; <code>checkUnitPrefix</code>; <code>trimRedundText</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">adjustUnitPrefix(c("2.psec abc","20 fsec etc"), unit="sec")
+
+x1 &lt;- c("50_amol", "5_fmol","250_amol","100_amol", NA, "500_amol", "500_amol", "1_fmol")
+adjustUnitPrefix(x1, unit="mol")                   
+
+x2 &lt;- c("abCc 500_nmol ABC", "abEe5_umol", "", "abFF_100_nmol_G", "abGg 2_mol", "abH.1 mmol")
+rbind( adjustUnitPrefix(x2, unit="mol", returnType="allText") , 
+  adjustUnitPrefix(x2, unit="mol", returnType="trim"),
+  adjustUnitPrefix(x2, unit="mol", returnType=""))
+</code></pre>
+
+
+</div>

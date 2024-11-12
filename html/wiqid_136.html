@@ -1,0 +1,61 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>toves</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Simulated detection/non-detection data for a fictitious species
+</h2>
+
+<h3>Description</h3>
+
+<p>A data set for single-season occupancy modelling together with habitat covariates. See <code>predictAvg</code> for an example of its use.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data("toves")</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with detection (1) vs non-detection data for 2 species at 160 sites on three occasions.
+</p>
+
+<dl>
+<dt>y1, y2, y3, y4</dt>
+<dd>
+<p> detection histories for 4 occasions</p>
+</dd>
+<dt>x1, x2, x3</dt>
+<dd>
+<p> simulated habitat covariates</p>
+</dd>
+</dl>
+<h3>Source</h3>
+
+<p>Simulated data
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(toves)
+str(toves)
+
+# Extract detection histories
+DH &lt;- toves[, 1:4]
+
+# Fit some models
+m.1 &lt;- occSS(DH, psi ~ x1, data=toves)
+m.12 &lt;- occSS(DH, psi ~ x1 + x2, data=toves)
+m.13 &lt;- occSS(DH, psi ~ x1 + x3, data=toves)
+m.123 &lt;- occSS(DH, psi ~ x1 + x2 + x3, data=toves)
+m.23 &lt;- occSS(DH, psi ~ x2 + x3, data=toves)
+AICtable(AIC(m.1, m.12, m.13, m.123, m.23))
+</code></pre>
+
+
+</div>

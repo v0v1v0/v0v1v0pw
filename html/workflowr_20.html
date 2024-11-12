@@ -1,0 +1,143 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wflow_rename_proj</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Rename a workflowr project</h2>
+
+<h3>Description</h3>
+
+<p>If you want to rename an existing workflowr project, use
+<code>wflow_rename_proj</code> to update the name throughout all the project files.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wflow_rename_proj(
+  name,
+  rproj = TRUE,
+  remote = TRUE,
+  navbar = TRUE,
+  readme = TRUE,
+  commit = TRUE,
+  directory = TRUE,
+  project = "."
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>character. The new name for the workflowr project.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rproj</code></td>
+<td>
+<p>logical (default: TRUE). Rename the RStudio Project file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remote</code></td>
+<td>
+<p>logical (default: TRUE). Rename the remote URL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>navbar</code></td>
+<td>
+<p>logical (default: TRUE). Rename the navbar title.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>readme</code></td>
+<td>
+<p>logical (default: TRUE). Rename the README title.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>commit</code></td>
+<td>
+<p>logical (default: TRUE). Commit the changes to Git.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>directory</code></td>
+<td>
+<p>logical (default: TRUE). Rename the project directory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>character (default: ".") By default the function assumes the
+current working directory is within the project. If this is not true,
+you'll need to provide the path to the project directory.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>wflow_rename_proj</code> performs the following steps and then commits the
+changes:
+</p>
+
+<ul>
+<li>
+<p> Rename RStudio Project file (<code>.Rproj</code>)
+</p>
+</li>
+<li>
+<p> Update URL of remote repository (see <code>wflow_git_remote</code>)
+</p>
+</li>
+<li>
+<p> Update project name in the navigation bar (defined in <code>_site.yml</code>)
+</p>
+</li>
+<li>
+<p> Update title of README file
+</p>
+</li>
+<li>
+<p> Rename the project directory itself
+</p>
+</li>
+</ul>
+<p>After renaming the project with <code>wflow_rename_proj</code>, you should
+republish the R Markdown files with <code>wflow_publish(republish = TRUE)</code>.
+Also, you should go to the settings of your Git repository on the online Git
+hosting platform to change its name.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Invisibly returns the path to the project directory
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wflow_publish</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+wflow_rename_proj("new-project-name")
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

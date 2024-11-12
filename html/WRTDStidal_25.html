@@ -1,0 +1,132 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getwts</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get weights for regression</h2>
+
+<h3>Description</h3>
+
+<p>Get weights for WRTDS for a single observation using a tri-cubic weighting function
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getwts(dat_in, ...)
+
+## Default S3 method:
+getwts(
+  dat_in,
+  ref_in,
+  wt_vars = c("day_num", "dec_time", "flo"),
+  wins = list(0.5, 10, NULL),
+  all = FALSE,
+  slice = TRUE,
+  ngrzero = FALSE,
+  wins_only = FALSE,
+  min_obs = 100,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input tidal object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to or from other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ref_in</code></td>
+<td>
+<p>row of tidal object as reference for weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wt_vars</code></td>
+<td>
+<p>chr string of three elements indicating names of columns in tidal object that are used for reference row weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wins</code></td>
+<td>
+<p>list of half-window widths for time, year, and flow</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>all</code></td>
+<td>
+<p>logical to return individual weights rather than the product of all three, default <code>FALSE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>slice</code></td>
+<td>
+<p>logical indicating if data are subset by observations within the maximum window width for faster calculations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ngrzero</code></td>
+<td>
+<p>logical indicating if count of observations with weights greater than zero is returned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wins_only</code></td>
+<td>
+<p>logical if the half-window widths should be returned as a list</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_obs</code></td>
+<td>
+<p>numeric vector for window widening if the number of observations with non-zero weights is less than the specified value, use <code>min_obs = NULL</code> to suppress this behavior</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The default half-window widths for <code>day_num</code>, <code>year</code>, and <code>flow</code> are half a day (12 hours), 10 years, and half the range of salinity/flow in the input data.  The half-window widths are expanded by 10% until at least 100 observations have weights greater than zero.  This behavior can be suppressed by setting <code>min_obs = NULL</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of weights with length equal to the number of observations (rows) in the tidal object.  Vectors for all three weighting variables are returned if <code>all = TRUE</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##
+data(tidobj)
+
+# get weights for first row
+first &lt;- tidobj[1, ]
+wts &lt;- getwts(tidobj, first)
+
+plot(wts, type = 'l')
+
+## Not run: 
+
+# get count of observations with grzero weights
+sapply(1:nrow(tidobj), function(row) getwts(tidobj, tidobj[row, ], 
+ ngrzero = TRUE))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

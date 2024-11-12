@@ -1,0 +1,162 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>denproj</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate empirical scaling function coefficients of a p.d.f.</h2>
+
+<h3>Description</h3>
+
+<p>Calculates empirical scaling function coefficients of the probability
+density function from sample of data from that density,
+usually at some "high" resoloution.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">denproj(x, tau=1, J, filter.number=10, family="DaubLeAsymm", covar=FALSE, nT=20)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Vector containing the data. This can be of any length.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>The resolution level at which the empirical scaling function
+coefficients are to be calculated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>This parameter allows non-dyadic resolutions to be used,
+since the resolution is specified as <code>tau * 2J</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.number</code></td>
+<td>
+<p>The filter number of the wavelet basis to be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>The family of wavelets to use, can be "DaubExPhase" or
+"DaubLeAsymm".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>covar</code></td>
+<td>
+<p>Logical variable. If TRUE then covariances of the empirical
+scaling function coefficients are also calculated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nT</code></td>
+<td>
+<p>The number of iterations to be performed in the
+Daubechies-Lagarias algorithm,
+which is used to evaluate the scaling functions of the specified wavelet basis at the data points.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This projection of data onto a high resolution wavelet space is described in
+detail in Chapter 3 of Herrick (2000).
+The maximum and minimum values of <code>k</code> for which the empirical scaling
+function coefficient is non-zero are determined and
+the coefficients calculated for all k between these limits as
+<code>sum(phiJk(xi))/n</code>.
+The scaling functions are evaluated at the data points efficiently,
+using the Daubechies-Lagarias algorithm (Daubechies &amp; Lagarias (1992)).
+Coded kindly by Brani Vidakovic.
+</p>
+<p>Herrick, D.R.M. (2000) Wavelet Methods for Curve and Surface Estimation. PhD Thesis, University of Bristol.
+</p>
+<p>Daubechies, I. &amp; Lagarias, J.C. (1992). Two-Scale Difference Equations II. Local Regularity, Infinite Products of Matrices and Fractals. SIAM Journal on Mathematical Analysis, 24(4), 1031–1079.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>coef</code></td>
+<td>
+<p>A vector containing the empirical scaling function coefficients. This starts with the first non-zero coefficient, ends with the last non-zero coefficient and contains all coefficients, including zeros, in between.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>covar</code></td>
+<td>
+<p>Matrix containing the covariances, if requested.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>klim</code></td>
+<td>
+<p>The maximum and minimum values of k for which the empirical
+scaling function coefficients cJk are non-zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>The primary resolution <code>tau * 2J</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>A list containing the filter.number and family specified inthe function call.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The length of the data vector x.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res</code></td>
+<td>
+<p>A list containing the values of <code>p</code>, <code>tau</code> and <code>J</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>David Herrick</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Chires5</code>, <code>Chires6</code>, <code>denwd</code>,
+<code>denwr</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Simulate data from the claw density and find the 
+# empirical scaling function coefficients
+data &lt;- rclaw(100)
+datahr &lt;- denproj(data, J=8, filter.number=4,family="DaubLeAsymm")
+</code></pre>
+
+
+</div>

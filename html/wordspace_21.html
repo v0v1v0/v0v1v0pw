@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dsm.canonical.matrix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Canonical Formats for a DSM Co-occurrence Matrix (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>Test whether a co-occurrence matrix is represented in a DSM canonical
+format, or convert matrix to canonical format.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+dsm.is.canonical(x, nonneg.check = FALSE)
+
+dsm.canonical.matrix(x, triplet = FALSE, annotate = FALSE, nonneg.check = FALSE)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>a dense or sparse DSM co-occurrence matrix
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nonneg.check</code></td>
+<td>
+
+<p>if <code>TRUE</code>, check whether all elements of the matrix are non-negative
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>triplet</code></td>
+<td>
+
+<p>if <code>TRUE</code> and if <code>x</code> is sparse, return a matrix in triplet format (class <code>dgTMatrix</code>) rather than in column-compressed format (class <code>dgCMatrix</code>).  Note that this is <em>not</em> a canonical DSM format.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annotate</code></td>
+<td>
+
+<p>if <code>TRUE</code>, annotate <code>x</code> with attributes <code>sparse</code> and <code>nonneg</code>, indicating whether the matrix is in sparse representation and non-negative, respectively.  Non-negativity is only checked if <code>nonneg.check=TRUE</code>; otherwise an existing attribute will be passed through without validation.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note that conversion into canonical format may result in unnecessary copying of <code>x</code>, especially if <code>annotate=TRUE</code>.
+For optimal performance, set <code>annotate=FALSE</code> whenever possible and do not call <code>dsm.canonical.matrix()</code> as a no-op.
+</p>
+<p>Instead of </p>
+<pre>    M &lt;- dsm.canonical.matrix(M, annotate=TRUE, nonneg=TRUE)</pre>
+<p>use </p>
+<pre>    M.flags &lt;- dsm.is.canonical(M, nonneg=FALSE)
+    if (!M.flags$canonical) M &lt;- dsm.canonical.matrix(M)
+    M.flags &lt;- dsm.is.canonical(M, nonneg=TRUE)</pre>
+<p>If <code>nonneg.check=FALSE</code> and <code>x</code> has an attribute <code>nonneg</code>, its value is accepted without validation.
+</p>
+<p>Checking non-negativity can be expensive and create substantial memory overhead.  It is guaranteed to be efficient for a matrix in canonical format.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>dsm.is.canonical()</code> returns a data frame containing a single row with the following items:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>sparse</code></td>
+<td>
+<p>whether <code>x</code> is a sparse (<code>TRUE</code>) or dense (<code>TRUE</code>) matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>canonical</code></td>
+<td>
+<p>whether <code>x</code> is in canonical format</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nonneg</code></td>
+<td>
+<p>whether all cells of <code>x</code> are non-negative; may be <code>NA</code> if <code>nonneg.check=FALSE</code></p>
+</td>
+</tr>
+</table>
+<p><code>dsm.canonical.matrix()</code> returns a matrix in canonical DSM format, i.e.
+</p>
+
+<ul>
+<li>
+<p>of class <code>matrix</code> for a dense matrix (even if <code>x</code> is a <code>denseMatrix</code> object);
+</p>
+</li>
+<li>
+<p>of class <code>dgCMatrix</code> for a sparse matrix.
+</p>
+</li>
+</ul>
+<p>If <code>triplet=TRUE</code> and <code>x</code> is sparse, it returns a matrix of class <code>dgTMatrix</code>, which is <em>not</em> a canonical format.
+</p>
+<p>If <code>annotate=TRUE</code>, the returned matrix has attributes <code>sparse</code> and <code>nonneg</code> (possibly <code>NA</code>).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+</div>

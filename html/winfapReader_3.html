@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_pot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>A function to obtain Peaks-Over-Threshold (POT) data using the NRFA API</h2>
+
+<h3>Description</h3>
+
+<p>The function queries the NRFA API for the .PT file similar to the WINFAP file for a given stations. It then processes the file in a fashion similar to <code>read_pot</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_pot(station, getAmax = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>station</code></td>
+<td>
+<p>the NRFA station number for which peaks over threshold information should be obtained. It can also be a vector of station numbers</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getAmax</code></td>
+<td>
+<p>logical. If <code>TRUE</code> information on the annual maxima values will be retrieved and attached to the <code>WaterYearInfo</code> table</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Like <code>read_pot</code> a list of three objects <code>tablePOT</code>, <code>WaterYearInfo</code> and <code>dateRange</code>.
+</p>
+<p><code>tablePOT</code> contains a table with all the peaks above the threshold present in the record
+</p>
+<p><code>WaterYearInfo</code> a table containing the information on the percentage of missing values
+in any water year for which some data is available in the POT record. This is useful to assess
+whether the lack of exceedances is genuine or the result of missing data and to assess whether the threshold
+exceedances present in <code>tablePOT</code> can be deemed to be representative of the whole year
+</p>
+<p><code>dateRange</code> a vector with the first and last date of recording for the POT record as provided in the [POT Details] field.
+Note that this period might be different than the period for which annual maxima records are available
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read_pot</code>. Information on the peaks over threshold records and river flow gauging in the UK can be found at the National River Flow Archive website <a href="https://nrfa.ceh.ac.uk">https://nrfa.ceh.ac.uk</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+  ### the example take longer than 5 seconds to run
+  p40003 &lt;- get_pot(40003) # the Medway at Teston / East Farleigh
+  p40003$tablePOT[p40003$tablePOT$WaterYear &gt; 1969 &amp;
+        p40003$tablePOT$WaterYear &lt; 1977,]
+  ### no events in 1971 nor 1975
+  p40003$WaterYearInfo[p40003$WaterYearInfo$WaterYear &gt; 1969 &amp;
+        p40003$WaterYearInfo$WaterYear &lt; 1977,]
+  # in 1971 all records are valid,
+  # in 1975 no exceedances
+  # might be due to the fact that almost no valid record are available
+
+  p40003 &lt;- get_pot(40003, getAmax = TRUE)
+  p40003$WaterYearInfo[p40003$WaterYearInfo$WaterYear &gt; 1969 &amp;
+       p40003$WaterYearInfo$WaterYear &lt; 1977,]
+  # the annual maximum in 1971 and 1975 was below the threshold
+  # no events exceeded the threshold
+
+</code></pre>
+
+
+</div>

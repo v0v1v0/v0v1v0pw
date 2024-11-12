@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>multiGSub</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Analogs of grep(l) and (g)sub for multiple patterns and relacements
+</h2>
+
+<h3>Description</h3>
+
+<p>These functions provide convenient pattern finding and substitution for multiple patterns.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">multiGSub(patterns, replacements, x, ...)
+multiSub(patterns, replacements, x, ...)
+multiGrep(patterns, x, ..., sort = TRUE, value = FALSE, invert = FALSE)
+multiGrepl(patterns, x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>patterns</code></td>
+<td>
+
+<p>A character vector of patterns.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>replacements</code></td>
+<td>
+
+<p>A character vector of replacements; must be of the same length as <code>patterns</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>Character vector of strings in which the pattern finding and replacements should be carried out.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort</code></td>
+<td>
+<p>Logical: should the output indices be sorted in increasing order?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>Logical: should value rather than the index of the value be returned?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>invert</code></td>
+<td>
+<p>Logical: should the search be inverted and only indices of elements of <code>x</code> matching none
+of the patterns be returned?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Other arguments to <code>sub</code> or <code>grep</code>
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For each element of <code>x</code>, patterns are sequentiall searched for and (for <code>multiSub</code> and
+<code>multiGSub</code> substituted with the corresponding replacement.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>multiSub</code> and <code>multiGSub</code> return a character vector of the same length as <code>x</code>, with all
+patterns replaces by their replacements in each element of <code>x</code>. <code>multiSub</code> replaces each pattern in
+each element of <code>x</code> only once, <code>multiGSub</code> as many times as the pattern is found.
+</p>
+<p><code>multiGrep</code> returns the indices of those elements in <code>x</code> in which at least one of <code>patterns</code>
+was found, or, if <code>invert</code> is TRUE, the indices of elements in which none of the patterns were found. If <code>value</code>
+is TRUE, values rather than indices are returned.
+</p>
+<p><code>multiGrepl</code> returns a logical vector of the same length as <code>x</code>, with <code>TRUE</code> is any of the
+patterns matched the element of <code>x</code>, and <code>FALSE</code> otherwise. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p>The workhorse functions <code>sub</code>, <code>gsub</code>, <code>grep</code> and <code>grepl</code>.
+</p>
+
+
+</div>

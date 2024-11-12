@@ -1,0 +1,163 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>accessC.wd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get smoothed data from wavelet object (wd)</h2>
+
+<h3>Description</h3>
+
+<p>The smoothed and original data from a wavelet decomposition structure
+(returned from <code>wd</code>) are packed into a single vector in that
+structure.  This function extracts the data corresponding to a
+particular resolution level.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wd'
+accessC(wd, level = nlevelsWT(wd), boundary=FALSE, aspect, ...)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wd</code></td>
+<td>
+
+<p>wavelet decomposition structure from which you wish to extract the
+smoothed or original data if the structure is from a wavelet decomposition,
+or the reconstructed data if the structure is from a wavelet reconstruction.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+
+<p>the level that you wish to extract.  By default, this is the level with
+most detail (in the case of structures from a decomposition this is the
+original data, in the case of structures from a reconstruction this is the
+top-level reconstruction).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>logical;
+if <code>TRUE</code> then all of the boundary correction values
+will be returned as well (note: the length of the returned vector
+may not be a power of 2).<br>
+If <code>boundary</code> is false, then just the coefficients will be returned.
+</p>
+<p>If the decomposition (or reconstruction)
+was done with periodic boundary conditions, this option has no effect.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aspect</code></td>
+<td>
+<p>Applies a function to the coefficients before return.
+Supplied as a text string which gets converted to a function.
+For example, "Mod" for complex-valued arguments</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The wd (<code>wr.wd</code>) function produces a wavelet decomposition (reconstruction)
+structure.
+</p>
+<p>For decomposition, the top level contains the original data, and
+subsequent lower levels contain the successively smoothed data.
+So if there are <code class="reqn">2^m</code> original data points, there will be m+1 levels
+indexed 0,1,...,m. So
+</p>
+<p><code>accessC.wd(wdobj, level=m)</code>
+</p>
+<p>pulls out the original data, as does
+</p>
+<p><code>accessC.wd(wdobj)</code>
+</p>
+<p>To get hold of lower levels just specify the level that you're interested
+in, e.g.
+</p>
+<p><code>accessC.wd(wdobj, level=2)</code>
+</p>
+<p>gets hold of the second level.
+</p>
+<p>For reconstruction, the top level contains the ultimate step in the
+Mallat pyramid reconstruction algorithm, lower levels are intermediate
+steps.
+</p>
+<p>The need for this function is a consequence of the pyramidal structure
+of Mallat's algorithm and the memory efficiency gain achieved by
+storing the pyramid as a linear vector. AccessC obtains information about
+where the smoothed data appears from the fl.dbase component of
+an wd.object, in particular the array <code>fl.dbase$first.last.c</code> which
+gives a complete specification of index numbers and offsets for
+<code>wd.object$C</code>.
+</p>
+<p>Note that this function is method for the generic function <code>accessC</code>.
+When the <code>wd.object</code> is definitely a wd class object then you only need use the generic version of this function. 
+</p>
+<p>Note that this function only gets information from <code>wd</code> class
+objects. To insert coefficients etc. into <code>wd</code> structures you have to
+use the <code>putC</code> function (or more precisely, the <code>putC.wd</code> method).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of the extracted data.
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.5.3 Copyright Guy Nason 1994</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>References</h3>
+
+<p>Mallat, S. G. (1989) A theory for multiresolution signal decomposition: 
+the wavelet representation. <em>IEEE Transactions on Pattern Analysis
+and Machine Intelligence</em> <b>11</b>, 674–693.
+</p>
+<p>Nason, G. P. and Silverman, B. W. (1994). The discrete wavelet transform in S. 
+<em>Journal of Computational and Graphical Statistics,</em> <b>3</b>, 163–191. 
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>wr</code>, <code>wd</code>, <code>accessD</code>, <code>accessD.wd</code>,
+<code>filter.select</code>, <code>threshold</code>, <code>putC.wd</code>, <code>putD.wd</code>.</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Get the 3rd level of smoothed data from a decomposition
+dat &lt;- rnorm(64)
+accessC(wd(dat), level=3)
+</code></pre>
+
+
+</div>

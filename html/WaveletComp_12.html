@@ -1,0 +1,700 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>reconstruct</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Reconstruction of a (detrended) time series from output provided by an
+object of class <code>"analyze.wavelet"</code> or <code>"analyze.coherency"</code>
+</h2>
+
+<h3>Description</h3>
+
+<p>This function reconstructs a (detrended) time series analyzed
+by wavelet transformation using either function
+<code>analyze.wavelet</code> or function <code>analyze.coherency</code>, subject to
+optional criteria concerning: minimum wavelet power, significance of wavelet power at a
+given significance level, specification of (Fourier) periods or
+period bands, exclusive use of the power ridge and/or the cone of influence.
+An option is provided to prevent the reconstructed series from final rescaling 
+(applying the original (detrended) series' mean and standard deviation).
+</p>
+<p>(If the object provided as input is of class <code>"analyze.coherency"</code>, 
+then the number or name of the time series must be specified.)  
+</p>
+<p>Optional: plot of wavelets used for reconstruction, plot of 
+reconstructed series against original (detrended)
+series. An option is given to individualize the time axis 
+by specifying tick marks and labels.
+</p>
+<p>Output includes the original (detrended) and the reconstructed
+time series, along with reconstruction waves and parameters.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">reconstruct(WT, my.series = 1, lvl = 0, 
+      only.coi = FALSE, 
+      only.sig = TRUE, siglvl = 0.05, 
+      only.ridge = FALSE, 
+      sel.period = NULL, sel.lower = NULL, sel.upper = NULL,  
+      rescale = TRUE,
+      plot.waves = FALSE, plot.rec = TRUE, 
+      lty = 1, lwd = 1, col = 1:2, ylim = NULL,
+      show.legend = TRUE, 
+      legend.coords = "topleft", legend.horiz = FALSE, legend.text = NULL,
+      label.time.axis = TRUE, 
+      show.date = FALSE, date.format = NULL, date.tz = NULL,
+      timelab = NULL, timetck = 0.02, timetcl = 0.5,
+      spec.time.axis = list(at = NULL, labels = TRUE, 
+                            las = 1, hadj = NA, padj = NA),
+      main.waves = NULL, main.rec = NULL, main = NULL, 
+      lwd.axis = 1, 
+      verbose = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>WT</code></td>
+<td>
+<p>an object of class <code>"analyze.wavelet"</code> or <code>"analyze.coherency"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>my.series</code></td>
+<td>
+<p>In case <code>class(WT) = "analyze.coherency"</code>: number (<code>1</code> or <code>2</code>) or name of the series to be analyzed. 
+</p>
+<p>Default: <code>1</code>. </p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>lvl</code></td>
+<td>
+<p>minimum level of wavelet power to be applied for the inclusion of reconstruction waves. 
+</p>
+<p>Default: <code>0</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>only.coi</code></td>
+<td>
+<p>Exclude borders influenced by edge effects in reconstruction, i.e. include the cone of influence only? Logical. 
+</p>
+<p>Default: <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>only.sig</code></td>
+<td>
+<p>Use wavelet power significance in reconstruction? Logical. 
+</p>
+<p>Default: <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>siglvl</code></td>
+<td>
+<p>level of wavelet power significance to be applied for the inclusion of reconstruction waves. 
+</p>
+<p>Default: 0.05.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>only.ridge</code></td>
+<td>
+<p>Select only the wavelet power ridge? Logical.
+</p>
+<p>Default: <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>sel.period</code></td>
+<td>
+<p>a vector of numbers to select Fourier periods (or closest available periods)
+and corresponding wavelets for the reconstruction. 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sel.lower</code></td>
+<td>
+<p>a number to define a lower Fourier period (or the closest available) for the selection 
+of a band of wavelets for the reconstruction.<br> 
+(Only effective if <code>sel.period = NULL</code>.) 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sel.upper</code></td>
+<td>
+<p>a number to define an upper Fourier period (or the closest available) for the selection
+of a band of wavelets for the reconstruction.<br> 
+(Only effective if <code>sel.period = NULL</code>.) 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>rescale</code></td>
+<td>
+<p>Shall the reconstructed series finally be rescaled to attain the original (detrended) series' mean and standard deviation? Logical.
+</p>
+<p>Default: <code>TRUE</code>.</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>plot.waves</code></td>
+<td>
+<p>Shall reconstruction waves be plotted? Logical. 
+</p>
+<p>Default: <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.rec</code></td>
+<td>
+<p>Shall the reconstructed series (together with the original (detrended) series) be plotted? Logical. 
+</p>
+<p>Default: <code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>lty</code></td>
+<td>
+<p>parameter for the plot of original vs. reconstructed series: line type, e.g. <code>1:2</code>. 
+</p>
+<p>Default: <code>1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd</code></td>
+<td>
+<p>parameter for the plot of original vs. reconstructed series: line width, e.g. <code>1:2</code>. 
+</p>
+<p>Default: <code>1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>parameter for the plot of original vs. reconstructed series: color of lines. 
+</p>
+<p>Default: <code>1:2</code>.</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>ylim</code></td>
+<td>
+<p>numeric vector of length <code>2</code>, providing the range of vertical coordinates for the plot. 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>show.legend</code></td>
+<td>
+<p>Include legend into the plot of original vs. reconstructed series? Logical.
+</p>
+<p>Default: <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend.coords</code></td>
+<td>
+<p>coordinates to position the legend (as in function <code>legend</code>). 
+</p>
+<p>Default: <code>"topleft"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend.horiz</code></td>
+<td>
+<p>Set the legend horizontally rather than vertically? Logical. 
+</p>
+<p>Default: <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend.text</code></td>
+<td>
+<p>legend text. Default: <code>c("original (detrended)", "reconstructed")</code>.</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>label.time.axis</code></td>
+<td>
+<p>Label the time axis? Logical. 
+</p>
+<p>Default: <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show.date</code></td>
+<td>
+<p>Show calendar dates? (Effective only if dates are available as row names or by variable 
+<code>date</code> in the data frame which is analyzed.) Logical. 
+</p>
+<p>Default: <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>date.format</code></td>
+<td>
+<p>the format of calendar date given as a character string, e.g. <code>"%Y-%m-%d"</code>, or equivalently <code>"%F"</code>; 
+see <code>strptime</code> for a list of implemented date conversion specifications. Explicit information given here will overturn any specification 
+stored in <code>WT</code>. If unspecified, date formatting is attempted according to <code>as.Date</code>. 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date.tz</code></td>
+<td>
+<p>a character string specifying the time zone of calendar date; see <code>strptime</code>. Explicit information given here will overturn 
+any specification stored in <code>WT</code>. If unspecified, <code>""</code> (the local time zone) is used. 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>timelab</code></td>
+<td>
+<p>Time axis label.  
+</p>
+<p>Default: <code>"index"</code>; in case of a calendar axis: <code>"calendar date"</code>.</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>timetck</code></td>
+<td>
+<p>length of tick marks on the time axis as a fraction of the smaller of the width or height of the plotting region; see <code>par</code>.  
+If <code>timetck &gt;= 0.5</code>, <code>timetck</code> is interpreted as a fraction of the length of the time axis, so if <code>timetck = 1</code> 
+(and <code>timetcl = NULL</code>), vertical grid lines will be drawn. <br>
+Setting <code>timetck = NA</code> is to use <code>timetcl = -0.5</code> (which is the R default setting of <code>tck</code> and <code>tcl</code>).
+</p>
+<p>Default here: <code>0.02</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timetcl</code></td>
+<td>
+<p>length of tick marks on the time axis as a fraction of the height of a line of text; see <code>par</code>. 
+With <code>timetcl = -0.5</code> (which is the R default setting of <code>tcl</code>), ticks will be drawn outward. 
+</p>
+<p>Default here: <code>0.5</code>.</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>spec.time.axis</code></td>
+<td>
+<p>a list of tick mark and label specifications for individualized time axis labeling 
+(only effective if <code>label.time.axis = TRUE</code>):
+</p>
+
+<ul>
+<li>
+<p>[<code>at</code>:] locations of tick marks (when <code>NULL</code>, default plotting will be applied).
+Valid tick marks can be provided as numerical values or as dates. Dates are used only in the case <code>show.date = TRUE</code>, however, 
+and date formats should conform to <code>as.Date</code> or the format given in <code>date.format</code>. <br>
+Default: <code>NULL</code>. 
+</p>
+</li>
+<li>
+<p>[<code>labels</code>:] either a logical value specifying whether annotations at the tick marks are the tick marks themselves, 
+or any vector of labels. If <code>labels</code> is non-logical, <code>at</code> should be of same length. <br>
+Default: <code>TRUE</code>. 
+</p>
+</li>
+<li>
+<p>[<code>las</code>:] the style of axis labels, see <code>par</code>. <br>
+Default: <code>1</code> (always horizontal). 
+</p>
+</li>
+<li>
+<p>[<code>hadj</code>:] adjustment of labels horizontal to the reading direction, see <code>axis</code>. <br>
+Default: <code>NA</code> (centering is used). 
+</p>
+</li>
+<li>
+<p>[<code>padj</code>:] adjustment of labels perpendicular to the reading direction (this can be a vector of adjustments for each label), 
+see <code>axis</code>. <br>
+Default: <code>NA</code> (centering is used).                           
+</p>
+</li>
+</ul>
+<p>Mismatches will result in a reset to default plotting.                               
+</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>main.waves</code></td>
+<td>
+<p>an overall title for the plot of reconstruction waves. 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main.rec</code></td>
+<td>
+<p>an overall title for the plot of original vs. reconstructed series. 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>an overall title for both plots. 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd.axis</code></td>
+<td>
+<p>line width of axes. 
+</p>
+<p>Default: <code>1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Print verbose output on the screen? Logical. 
+</p>
+<p>Default: <code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of class <code>reconstruct</code> with the following elements:
+
+</p>
+<table><tr style="vertical-align: top;">
+<td><code>series</code></td>
+<td>
+<p>a data frame building on <code>WT$series</code> with the following columns:
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;"> date             </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> the calendar date (if available as column</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">                  </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;"> in WT$series) </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;"> &lt;x&gt;              </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> series &lt;x&gt;, with original name retained </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;">                  </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> (detrended, if <code>loess.span != 0</code>) </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;"> &lt;x&gt;.trend        </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> the trend series (if <code>loess.span != 0</code>) </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                     </td>
+<td style="text-align: left;"> &lt;x&gt;.r            </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> the reconstructed (detrended) series
+                     </td>
+</tr>
+</table>
+<p>Row names are taken over from WT$series, and so are dates if given as row names.
+If <code>WT</code> is of class <code>analyze.coherency</code>, the second series in the coherency analysis is retained; 
+if <code>loess.span != 0</code>, the second series is retained in the detrended version, and the trend is retained as well.   
+</p>
+</td>
+</tr></table>
+<table><tr style="vertical-align: top;">
+<td><code>rec.waves</code></td>
+<td>
+<p>data frame of scaled waves used for reconstruction</p>
+</td>
+</tr></table>
+<table><tr style="vertical-align: top;">
+<td><code>loess.span</code></td>
+<td>
+<p>parameter <code>alpha</code> in <code>loess</code> controlling the degree of time series smoothing, 
+if the time series was detrended; no detrending if <code>loess.span = 0</code>.</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>lvl</code></td>
+<td>
+<p>minimum level of wavelet power for waves (wave segments) to be included
+in the reconstruction</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>only.coi</code></td>
+<td>
+<p>Was the influence of edge effects excluded? I.e. was the cone of influence used only?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>only.sig</code></td>
+<td>
+<p>Was wavelet power significance used in reconstruction?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>siglvl</code></td>
+<td>
+<p>level of wavelet power significance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>only.ridge</code></td>
+<td>
+<p>Was the wavelet power ridge used only?</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>rnum.used</code></td>
+<td>
+<p>the vector of Fourier period numbers used for reconstruction </p>
+</td>
+</tr></table>
+<table><tr style="vertical-align: top;">
+<td><code>rescale</code></td>
+<td>
+<p>Was the reconstructed series rescaled according to the mean and standard deviation 
+taken from the original (detrended) series?</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>dt</code></td>
+<td>
+<p>time resolution, i.e. sampling resolution in the time domain, <code>1/dt</code> = number of observations per time unit</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dj</code></td>
+<td>
+<p>frequency resolution, i.e. sampling resolution in the frequency domain, <code>1/dj</code> = number of suboctaves (voices per octave)</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Period</code></td>
+<td>
+<p>the Fourier periods 
+(measured in time units determined by <code>dt</code>, see the explanations concerning <code>dt</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Scale</code></td>
+<td>
+<p>the scales (the Fourier periods divided by the Fourier factor)</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>nc</code></td>
+<td>
+<p>number of columns = number of observations = number of observation epochs; "epoch" meaning point in time</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nr</code></td>
+<td>
+<p>number of rows = number of scales (Fourier periods)</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>axis.1</code></td>
+<td>
+<p>tick levels corresponding to the time steps used for (cross-)wavelet transformation: <code>1, 1+dt, 1+2dt, ...</code>.
+The default time axis in plot functions provided by <code>WaveletComp</code> is determined by observation epochs, however; "epoch" meaning point in time. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axis.2</code></td>
+<td>
+<p>tick levels corresponding to the log of Fourier periods: <code>log2(Period)</code>. This determines the period axis in plot functions provided by <code>WaveletComp</code>.</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>date.format</code></td>
+<td>
+<p>the format of calendar date (if available)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date.tz</code></td>
+<td>
+<p>the time zone of calendar date (if available)</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Angi Roesch and Harald Schmidbauer</p>
+
+
+<h3>References</h3>
+
+<p>Carmona R., Hwang W.-L., and Torresani B., 1998. 
+Practical Time Frequency Analysis. Gabor and Wavelet Transforms with an Implementation in S.
+Academic Press, San Diego.
+</p>
+<p>Liu Y., Liang X.S., and Weisberg R.H., 2007.
+Rectification of the Bias in the Wavelet Power Spectrum. 
+Journal of Atmospheric and Oceanic Technology 24, 2093–2102.
+</p>
+<p>Torrence C., and Compo G.P., 1998. 
+A practical guide to wavelet analysis.
+Bulletin of the American Meteorological Society 79 (1), 61–78.
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code>analyze.wavelet</code>, <code>wt.image</code>, <code>wt.avg</code>, <code>wt.sel.phases</code>, <code>wt.phase.image</code>, <code>analyze.coherency</code>, 
+<code>wc.image</code>, <code>wc.avg</code>, <code>wc.sel.phases</code>, <code>wc.phasediff.image</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## The following example is adopted from Liu et al., 2007:
+
+series.length = 6*128*24
+x1 &lt;- periodic.series(start.period = 1*24, length = series.length)
+x2 &lt;- periodic.series(start.period = 8*24, length = series.length)
+x3 &lt;- periodic.series(start.period = 32*24, length = series.length)
+x4 &lt;- periodic.series(start.period = 128*24, length = series.length)
+
+x &lt;- x1 + x2 + x3 + x4
+
+plot(x, type = "l", xlab = "index", ylab = "", xaxs = "i",
+     main = "hourly series with periods of 1, 8, 32, 128 days")
+  
+my.data &lt;- data.frame(x = x)
+
+## Computation of wavelet power:
+## a natural choice of 'dt' in the case of hourly data is 'dt = 1/24', 
+## resulting in one time unit equaling one day. 
+## This is also the time unit in which periods are measured.
+my.w &lt;- analyze.wavelet(my.data, "x", 
+                       loess.span = 0, 
+                       dt = 1/24, dj = 1/20, 
+                       lowerPeriod = 1/4, 
+                       make.pval = TRUE, n.sim = 10)
+
+## Plot of wavelet power spectrum (with equidistant color breakpoints):  
+wt.image(my.w, color.key = "interval", 
+   legend.params = list(lab = "wavelet power levels"),
+   periodlab = "period (days)")
+
+## Reconstruction of the time series, 
+## including significant components only: 
+reconstruct(my.w)
+
+## The same reconstruction, but showing wave components first:
+reconstruct(my.w, plot.waves = TRUE)
+
+## Reconstruction, including all components whether significant or not: 
+reconstruct(my.w, only.sig = FALSE)
+
+## Reconstruction, including significant components, 
+## but selected periods only (e.g. ignoring period 8):  
+reconstruct(my.w, sel.period = c(1,32,128))
+
+## Reconstruction, including significant components,
+## but the ridge only:
+reconstruct(my.w, only.ridge = TRUE)
+
+## Alternate styles of the time axis:
+
+## The plot with time elapsed in days, starting from 0 and proceeding 
+## in steps of 50 days (50*24 hours),
+## instead of the (default) time index:
+index.ticks  &lt;- seq(1, series.length, by = 50*24)
+index.labels &lt;- (index.ticks-1)/24
+
+## Insert your specification of time axis: 
+reconstruct(my.w, only.ridge = TRUE,
+   timelab = "time elapsed (days)",
+   spec.time.axis = list(at = index.ticks, labels = index.labels))
+            
+## See the periods involved:
+my.rec &lt;- reconstruct(my.w, only.ridge = TRUE)
+print(my.rec$Period[my.rec$rnum.used])
+
+## The original and reconstructed time series can be retrieved:
+plot(my.rec$series$x, type = "l", xlab = "index", ylab = "")
+lines(my.rec$series$x.r, col="red")
+legend("topleft", legend = c("original","reconstructed"), 
+       lty = 1, col = c("black","red"))
+
+## Please see also the examples in our guide booklet,
+## URL http://www.hs-stat.com/projects/WaveletComp/WaveletComp_guided_tour.pdf.
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

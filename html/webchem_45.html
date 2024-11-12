@@ -1,0 +1,220 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>nist_ri</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve retention indices from NIST</h2>
+
+<h3>Description</h3>
+
+<p>This function scrapes NIST for literature retention indices
+given a query or vector of queries as input. The query can be a cas
+number, IUPAC name, or International Chemical Identifier (<code>inchikey</code>),
+according to the value of the <code>from</code> argument. Retention indices are
+stored in tables by <code>type</code>, <code>polarity</code> and temperature program
+(<code>temp_prog</code>). The function can take multiple arguments for these
+parameters and will return any retention times matching the specified
+criteria in a single table.
+</p>
+<p>If a non-cas query is provided, the function will try to resolve the query
+by searching the NIST WebBook for a corresponding CAS number. If
+<code>from == "name"</code>, phonetic spellings of Greek stereo-descriptors
+(e.g. "alpha", "beta", "gamma") will be automatically
+converted to the corresponding letters to match the form used by NIST. If
+a CAS number is found, it will be returned in a <code>tibble</code> with the
+corresponding information from the NIST retention index database.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">nist_ri(
+  query,
+  from = c("cas", "inchi", "inchikey", "name"),
+  type = c("kovats", "linear", "alkane", "lee"),
+  polarity = c("polar", "non-polar"),
+  temp_prog = c("isothermal", "ramp", "custom"),
+  cas = NULL,
+  verbose = getOption("verbose")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>character; the search term</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>character; type of search term. can be one of <code>"name"</code>,
+<code>"inchi"</code>, <code>"inchikey"</code>, or <code>"cas"</code>. Using an identifier is
+preferred to <code>"name"</code> since <code>NA</code> is returned in the event of
+multiple matches to a query. Using an identifier other than a CAS number
+will cause this function to run slower as CAS numbers are used as internal
+identifiers by NIST.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Retention index type: <code>"kovats"</code>, <code>"linear"</code>,
+<code>"alkane"</code>, and/or <code>"lee"</code>. See details for more.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>polarity</code></td>
+<td>
+<p>Column polarity: <code>"polar"</code> and/or <code>"non-polar"</code>
+to get RIs calculated for polar or non-polar columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>temp_prog</code></td>
+<td>
+<p>Temperature program: <code>"isothermal"</code>,
+<code>"ramp"</code>, and/or <code>"custom"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cas</code></td>
+<td>
+<p>deprecated.  Use <code>query</code> instead.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical; should a verbose output be printed on the console?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The types of retention indices included in NIST include Kovats
+(<code>"kovats"</code>), Van den Dool and Kratz (<code>"linear"</code>), normal alkane
+(<code>"alkane"</code>), and Lee (<code>"lee"</code>). Details about how these are
+calculated are available on the NIST website:
+<a href="https://webbook.nist.gov/chemistry/gc-ri/">https://webbook.nist.gov/chemistry/gc-ri/</a>
+</p>
+
+
+<h3>Value</h3>
+
+<p>returns a tibble of literature RIs with the following columns:
+</p>
+
+<ul>
+<li>
+<p><code>query</code> is the query provided to the NIST server
+</p>
+</li>
+<li>
+<p><code>cas</code> is the CAS number or unique record identified used by NIST
+</p>
+</li>
+<li>
+<p><code>RI</code> is retention index
+</p>
+</li>
+<li>
+<p><code>type</code> is the type of RI (e.g. "kovats", "linear", "alkane", or "lee")
+</p>
+</li>
+<li>
+<p><code>polarity</code> is the polarity of the column (either "polar" or "non-polar")
+</p>
+</li>
+<li>
+<p><code>temp_prog</code> is the type of temperature program (e.g. "isothermal", "ramp", or "custom")
+</p>
+</li>
+<li>
+<p><code>column</code> is the column type, e.g. "capillary"
+</p>
+</li>
+<li>
+<p><code>phase</code> is the stationary phase (column phase)
+</p>
+</li>
+<li>
+<p><code>length</code> is column length in meters
+</p>
+</li>
+<li>
+<p><code>gas</code> is the carrier gas used
+</p>
+</li>
+<li>
+<p><code>substrate</code>
+</p>
+</li>
+<li>
+<p><code>diameter</code> is the column diameter in mm
+</p>
+</li>
+<li>
+<p><code>thickness</code> is the phase thickness in µm
+</p>
+</li>
+<li>
+<p><code>program</code>. various columns depending on the value of
+<code>temp_prog</code>
+</p>
+</li>
+<li>
+<p><code>reference</code> is where this retention index was published
+</p>
+</li>
+<li>
+<p><code>comment</code>. I believe this denotes the database these data
+were aggregated from
+</p>
+</li>
+</ul>
+<h3>Note</h3>
+
+<p>Copyright for NIST Standard Reference Data is governed by the Standard
+Reference Data Act, <a href="https://www.nist.gov/srd/public-law">https://www.nist.gov/srd/public-law</a>.
+</p>
+
+
+<h3>References</h3>
+
+<p>NIST Mass Spectrometry Data Center, William E. Wallace, director,
+"Retention Indices" in NIST Chemistry WebBook, NIST Standard Reference
+Database Number 69, Eds. P.J. Linstrom and W.G. Mallard,
+National Institute of Standards and Technology, Gaithersburg MD, 20899,
+<a href="https://doi.org/10.18434/T4D303">doi:10.18434/T4D303</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>is.cas</code> <code>as.cas</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+myRIs &lt;-
+  nist_ri(
+    c("78-70-6", "13474-59-4"),
+    from = "cas",
+    type = c("linear", "kovats"),
+    polarity = "non-polar",
+    temp_prog = "ramp"
+  )
+myRIs
+## End(Not run)
+</code></pre>
+
+
+</div>

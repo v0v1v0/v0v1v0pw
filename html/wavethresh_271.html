@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WTEnv</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Environment that exists to store intermediate calculations for re-use within the same R session.</h2>
+
+<h3>Description</h3>
+
+<p>Environment that stores results of long calculations so that they can be made available for immediate reuse.
+</p>
+
+
+<h3>Details</h3>
+
+<p>This environment is created on package load by wavethresh. The results of some intermediate calculations get stored in here (notably by
+<code>PsiJ</code>, <code>PsiJmat</code> and <code>ipndacw</code>). The
+reason for this is that the calculations are typically lengthy and it saves
+wavethresh time to search the <code>WTEnv</code> for pre-computed results.
+For example, <code>ipndacw</code> computes matrices of various orders.
+Matrices of low order form the upper-left corner of matrices of higher order
+so higher order matrix calculations can make use of the lower order instances.
+</p>
+<p>A similar functionality was present in wavethresh in versions 4.6.1 and
+prior to this. In previous versions computations were saved in the users
+current data directory. However, the user was never notified about this
+nor permission sought. 
+</p>
+<p>The environment <code>WTEnv</code> disappears when the package disappears
+and the R session stops - and results of all intermediate calculations
+disappear too. This might not matter if you never use the larger objects
+(as it will not take much time to recompute). 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.9 Copyright Guy Nason 1998 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ipndacw</code>, <code>PsiJ</code>, <code>PsiJmat</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# See what it is
+#
+WTEnv
+#&lt;environment: 0x102fc3830&gt;
+#
+# Compute something that uses the environment
+#
+fred &lt;- PsiJ(-5)
+#
+# Now let's see what got put in
+#
+ls(envir=WTEnv)
+#[1] "Psi.5.10.DaubLeAsymm"
+</code></pre>
+
+
+</div>

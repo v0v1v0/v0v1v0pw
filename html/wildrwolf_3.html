@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>run_fwer_sim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Family Wise Error Rate Simulations</h2>
+
+<h3>Description</h3>
+
+<p>Run a MC simulation study on family-wise error rates (FWERs)
+for the Holm and Romano &amp; Wolf Methods multiple
+hypothesis adjustment methods given true null effects
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">run_fwer_sim(
+  n_sims = 100,
+  rho = c(0, 0.25, 0.5, 0.75),
+  seed = 114411,
+  B = 499,
+  N = 1000,
+  s = 6,
+  G = 20
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n_sims</code></td>
+<td>
+<p>The number of Monte Carlo iterations. 100 by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho</code></td>
+<td>
+<p>The correlation between the outcome variables. Vectorized 
+c(0, 0.25, 0.5, .75) by default</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>A random seed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+<p>The number of bootstrap draws. 499 by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>The number of observations. 1000 by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p>The number of dependent variables. 6 by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>G</code></td>
+<td>
+<p>The number of clusters. If NULL, no clustering. 20 by default</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data frame containing familiy wise rejection rates for uncorrected 
+pvalues and corrected pvalues using Holm's and the Romano-Wolf method.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>reject_5</code></td>
+<td>
+<p>The family wise rejection rate at a 5%  level</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reject_10</code></td>
+<td>
+<p>The family wise rejection rate at a 10%  level</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho</code></td>
+<td>
+<p>The correlation between the outcome variables. See function
+argument'rho' for more information.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+# N, B, n_sims, chosen so that the example runs quicker
+# for a higher quality simulation, increase all values
+res &lt;- run_fwer_sim(
+  seed = 123,
+  n_sims = 10,
+  B = 199,
+  N = 100,
+  s = 10, 
+  rho = 0
+)
+
+
+</code></pre>
+
+
+</div>

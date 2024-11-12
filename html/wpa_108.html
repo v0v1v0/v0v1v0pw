@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>import_to_fst</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read a Workplace Analytics query in '.csv' using and create a '.fst'
+file in the same directory for faster reading</h2>
+
+<h3>Description</h3>
+
+<p>Uses <code>import_wpa()</code> to read a Workplace Analytics query in
+'.csv' and convert this into the serialized '.csv' format which is much
+faster to read. The 'fst' package must be installed, or an error message is
+returned.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">import_to_fst(path, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>String containing the path to the Workplace Analytics query to be
+imported. The input file must be a CSV file, and the file extension must be
+explicitly entered, e.g. <code>"/files/standard query.csv"</code>. The converted FST
+file will be saved in the same directory with a different file extension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to pass to <code>import_wpa()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <a href="https://www.fstpackage.org/">fst</a> package provides a way to serialize
+data frames in R which makes loading data much faster than CSV.
+<code>import_to_fst()</code> converts a CSV file into a FST file in the specified
+directory.
+</p>
+<p>Once this FST file is created, it can be read into R using
+<code>fst::read_fst()</code>. Since <code>import_to_fst()</code> only does conversion but not
+loading, it should normally only be run once at the beginning of each piece
+of analysis, and <code>fst::read_fst()</code> should take over the job of data loading
+at the start of your analysis script.
+</p>
+<p>Internally, <code>import_to_fst()</code> uses <code>import_wpa()</code>, and additional arguments
+to <code>import_wpa()</code> can be passed with <code>...</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>There is no return value. A file with '.fst' extension is written to the same
+directory where the '.csv' file is read in.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Import and Export: 
+<code>copy_df()</code>,
+<code>create_dt()</code>,
+<code>export()</code>,
+<code>import_wpa()</code>,
+<code>standardise_pq()</code>
+</p>
+
+
+</div>

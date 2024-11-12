@@ -1,0 +1,159 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Survival (RD)</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Survival from mark-recapture data with robust design
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculation of apparent survival and recruitment rate from data collected using Pollock's robust design, ie, with multiple capture occasions within each season, where the population is closed within each season. 
+</p>
+<p>Function <code>survRDah</code> implements the second stage of a two-stage analysis, where abundance and recapture probability are estimated using closed-capture function for each season. 
+</p>
+<p>Function <code>survRD</code> combines the two stages into a single maximum likelihood estimation step, using model M0 for the within-season data.
+</p>
+<p>NOTE: These are preliminary attempts at coding these models and have not been properly tested or benchmarked.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">survRD(DH, freq=1, occsPerSeason)
+
+survRDah(DH, freq=1, occsPerSeason, N, pStar)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>DH</code></td>
+<td>
+
+<p>a 1/0 matrix with detection histories with a row for each animal captured and a column for each capture occasion.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>freq</code></td>
+<td>
+
+<p>a scalar or a vector of length <code>nrow(DH)</code> with the frequency of each detection history. Negative values indicate trap losses.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>occsPerSeason</code></td>
+<td>
+
+<p>the number of survey occasions per season; currently this must be scalar and the number of occasions must be the same for all seasons.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+
+<p>a vector with an element for each season giving the number of animals available for capture as estimated in the first stage of a 2-stage analysis. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pStar</code></td>
+<td>
+
+<p>a vector with an element for each season giving the probability of recapture as estimated in the first stage of a 2-stage analysis. 
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>phiHat </code></td>
+<td>
+<p>Estimates of apparent survival for each interval between seasons.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bHat </code></td>
+<td>
+<p>Estimates of the recruitment rate for each interval.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pStarHat </code></td>
+<td>
+<p>The estimated probability of capture during each season.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Nhat </code></td>
+<td>
+<p>The estimated number of animals available for capture during each season.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pHat </code></td>
+<td>
+<p>The estimated probability of capture on one occasion for each season.</p>
+</td>
+</tr>
+</table>
+<p>For <code>survRDah</code>, the values of <code>pStarHat</code> and <code>Nhat</code> will equal the values of <code>pStar</code> and <code>N</code> input, and <code>pHat</code> with be NULL.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith
+</p>
+
+
+<h3>References</h3>
+
+<p>Kendall, Pollock, and Brownie (1995) A likelihood-based approach to capture-recapture estimation of demographic parameters under the robust design. <em>Biometrics</em> 51:293-308
+</p>
+<p>Kendall, Nichols, Hines (1997) Estimating temporary emigration using capture-recapture data with Pollock's robust design. <em>Ecology</em> 78(2):563-578 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(MeadowVoles)
+# Extract detection histories:
+DH &lt;- MeadowVoles[, 1:30]
+freq &lt;- MeadowVoles$freq
+
+# With single stage maximum likelihood estimation:
+survRD(DH, freq=freq, occsPerSeason=5)
+
+# The 2-stage approach:
+# Stage 1 - using the jackknife estimator to estimate N and p for each season:
+MhResult &lt;- matrix(NA, 6, 2)
+colnames(MhResult) &lt;- c("N", "p")
+seasonID &lt;- rep(1:6, each=5)
+for(i in 1:6) {
+  dh &lt;- DH[, seasonID==i]
+  MhResult[i, ] &lt;- closedCapMhJK(dh)$real[, 1]
+}
+MhResult
+# Calculate the probability of being captured at least once in the season:
+pStar &lt;- 1 - (1 - MhResult[, "p"])^5
+
+# Stage 2 - pass N and pStar to a modified CJS estimation routine:
+survRDah(DH, freq=freq, occsPerSeason=5, N=MhResult[, "N"], pStar=pStar)
+
+</code></pre>
+
+
+</div>

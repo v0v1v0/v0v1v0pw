@@ -1,0 +1,165 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>multi_DTW</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>A wrapper on <code>dtwDist</code> for comparing multivariate contours</h2>
+
+<h3>Description</h3>
+
+<p><code>multi_DTW</code> is a wrapper on <code>dtwDist</code> that simplify applying dynamic time warping on multivariate contours.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">multi_DTW(
+  ts.df1 = NULL,
+  ts.df2 = NULL,
+  pb = TRUE,
+  parallel = 1,
+  window.type = "none",
+  open.end = FALSE,
+  scale = FALSE,
+  dist.mat = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ts.df1</code></td>
+<td>
+<p>Optional. Data frame with frequency contour time series of signals to be compared.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ts.df2</code></td>
+<td>
+<p>Optional. Data frame with frequency contour time series of signals to be compared.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Logical argument to control progress bar. Default is <code>TRUE</code>. Note that progress bar is only used
+when parallel = 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Numeric. Controls whether parallel computing is applied.
+It specifies the number of cores to be used. Default is 1 (i.e. no parallel computing). Not available in Windows OS.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>window.type</code></td>
+<td>
+<p><code>dtw</code> windowing control parameter. Character: "none", "itakura", or a function (see <code>dtw</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>open.end</code></td>
+<td>
+<p><code>dtw</code> control parameter. Performs
+open-ended alignments (see <code>dtw</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> dominant frequency values are z-transformed using the <code>scale</code> function, which "ignores" differences in absolute frequencies between the signals in order to focus the
+comparison in the frequency contour, regardless of the pitch of signals. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist.mat</code></td>
+<td>
+<p>Logical controlling whether a distance matrix (<code>TRUE</code>,
+default) or a tabular data frame (<code>FALSE</code>) is returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to be passed to <code>track_freq_contour</code> for customizing
+graphical output.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function extracts the dominant frequency values as a time series and
+then calculates the pairwise acoustic dissimilarity using dynamic time warping.
+The function uses the <code>approx</code> function to interpolate values between dominant
+frequency  measures. If 'img' is  <code>TRUE</code> the function also produces image files
+with the spectrograms of the signals listed in the input data frame showing the
+location of the dominant frequencies.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix with the pairwise dissimilarity values. If img is
+<code>FALSE</code> it also produces image files with the spectrograms of the signals listed in the
+input data frame showing the location of the dominant frequencies.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>freq_ts</code>
+</p>
+<p>Other spectrogram creators: 
+<code>color_spectro()</code>,
+<code>freq_DTW()</code>,
+<code>phylo_spectro()</code>,
+<code>snr_spectrograms()</code>,
+<code>spectrograms()</code>,
+<code>track_freq_contour()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# load data
+data(list = c("Phae.long1", "Phae.long2", "Phae.long3", "Phae.long4", "lbh_selec_table"))
+
+writeWave(Phae.long1, file.path(tempdir(), "Phae.long1.wav")) # save sound files
+writeWave(Phae.long2, file.path(tempdir(), "Phae.long2.wav"))
+writeWave(Phae.long3, file.path(tempdir(), "Phae.long3.wav"))
+writeWave(Phae.long4, file.path(tempdir(), "Phae.long4.wav"))
+
+# measure
+df &lt;- freq_ts(X = lbh_selec_table, threshold = 10, img = FALSE, path = tempdir())
+se &lt;- freq_ts(X = lbh_selec_table, threshold = 10, img = FALSE, path = tempdir(), type = "entropy")
+
+# run function
+multi_DTW(df, se)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

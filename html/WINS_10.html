@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>win.strategy.default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+The Default Win Strategy Function.
+</h2>
+
+<h3>Description</h3>
+
+<p>An intermediate function to determine the win status for each pair based on the default win strategy. Specifically, one compares each subject in the treatment group with every subject in the control group to determine the win status.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">win.strategy.default(trt_con, priority, tau, np_direction)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>trt_con</code></td>
+<td>
+<p>Given N_t subjects in the treatment group and N_c subjects in the control group, there are N_t*N_c pairs, each row represents a pair. The analysis dataset trt_con contains the following variables:
+</p>
+
+<dl>
+<dt>stratum: </dt>
+<dd>
+<p>A vector for the stratum number of the unmatched pairs.</p>
+</dd>
+<dt>pid_trt: </dt>
+<dd>
+<p>A vector for the subject id of the individuals from the treatment group within each unmatched pair.</p>
+</dd>
+<dt>pid_con: </dt>
+<dd>
+<p>A vector for the subject id of the individuals from the control group within each unmatched pair.</p>
+</dd>
+<dt>Delta_j_trt: </dt>
+<dd>
+<p>A vector for the event status of the j-th endpoint (1=event, 0=censored) for the individuals from the treatment group in each unmatched pair. If the outcome type for the endpoint is continuous/binary, then the event status is 1 for all.</p>
+</dd>
+<dt>Delta_j_con: </dt>
+<dd>
+<p>A vector for the event status of the j-th endpoint (1=event, 0=censored) for the individuals from the control group in each unmatched pair. If the outcome type for the endpoint is continuous/binary, then the event status is 1 for all.</p>
+</dd>
+<dt>Y_j_trt: </dt>
+<dd>
+<p>A vector for the outcome of the j-th endpoint for the individuals from the treatment group in each unmatched pair. For a time-to-event outcome, it would be a vector of observed time-to-event observations.</p>
+</dd>
+<dt>Y_j_con: </dt>
+<dd>
+<p>A vector for the outcome of the j-th endpoint for the individuals from the control group in each unmatched pair. For a time-to-event outcome, it would be a vector of observed time-to-event observations.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>priority</code></td>
+<td>
+<p>Importance order (from the most to the least important). For example, given three endpoints with the importance order as Endpoint 3, Endpoint 2, and Endpoint 1, input priority = c(3,2,1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>A vector of numerical value for the magnitude of difference to determine win/loss/tie for each endpoint. Tau is applicable for TTE endpoints and continuous endpoints; tau is fixed as 0 for binary endpoints. Default is 0 for all endpoints.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>np_direction</code></td>
+<td>
+<p>A vector of character for the direction to define a better result for each endpoint.
+</p>
+
+<dl>
+<dt>"larger": </dt>
+<dd>
+<p>The treatment group wins if min(T_trt, C_trt, C_con + tau) &gt; T_con + tau, for time-to-event outcomes; "the larger value wins" for continuous outcome, value 1 wins over the value 0 for binary outcome.</p>
+</dd>
+<dt>"smaller": </dt>
+<dd>
+<p>The treatment group wins if min(T_trt, C_trt, C_con - tau) &lt; T_con - tau, for time-to-event outcomes; "the smaller value wins" for continuous outcome, value 0 wins over the value 1 for binary outcome.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Users can define their own win strategy function and input the function with the argument "win.strategy" in the "win.stat" function.
+</p>
+
+
+<h3>Value</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>win_status</code></td>
+<td>
+<p>A data frame for the win status of each pair for each endpoint.</p>
+</td>
+</tr></table>
+</div>

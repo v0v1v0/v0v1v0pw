@@ -1,0 +1,259 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rank_regression.default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Rank Regression for Parametric Lifetime Distributions</h2>
+
+<h3>Description</h3>
+
+<p>This function fits a regression model to a linearized parametric lifetime
+distribution for complete and (multiple) right-censored data. The parameters
+are determined in the frequently used (log-)location-scale parameterization.
+</p>
+<p>For the Weibull, estimates are additionally transformed such that they are in
+line with the parameterization provided by the <em>stats</em> package
+(see Weibull).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+rank_regression(
+  x,
+  y,
+  status,
+  distribution = c("weibull", "lognormal", "loglogistic", "sev", "normal", "logistic",
+    "weibull3", "lognormal3", "loglogistic3", "exponential", "exponential2"),
+  conf_level = 0.95,
+  direction = c("x_on_y", "y_on_x"),
+  control = list(),
+  options = list(),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector which consists of lifetime data. Lifetime data
+could be every characteristic influencing the reliability of a product,
+e.g. operating time (days/months in service), mileage (km, miles), load
+cycles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A numeric vector which consists of estimated failure probabilities
+regarding the lifetime data in <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>A vector of binary data (0 or 1) indicating whether a unit is
+a right censored observation (= 0) or a failure (= 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the random variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conf_level</code></td>
+<td>
+<p>Confidence level of the interval.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>direction</code></td>
+<td>
+<p>Direction of the dependence in the regression model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>A list of control parameters (see optim).
+</p>
+<p><code>control</code> is in use only if a three-parametric distribution was specified.
+If this is the case, <code>optim</code> (always with <code>method = "L-BFGS-B"</code> and
+<code>control$fnscale = -1</code>) is called to determine the threshold parameter
+(see r_squared_profiling).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>options</code></td>
+<td>
+<p>A list of named options. See 'Options'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The confidence intervals of the parameters are computed on the basis of a
+heteroscedasticity-consistent (<strong>HC</strong>) covariance matrix. Here it should be
+said that there is no statistical foundation to determine the standard errors
+of the parameters using <em>Least Squares</em> in context of <em>Rank Regression</em>.
+For an accepted statistical method use maximum likelihood.
+</p>
+<p>If <code>options = list(conf_method = "Mock")</code>, the argument <code>distribution</code> must be
+one of <code>"weibull"</code> and <code>"weibull3"</code>. The approximated confidence intervals
+for the Weibull parameters can then only be estimated on the following
+confidence levels (see 'References' <em>(Mock, 1995)</em>):
+</p>
+
+<ul>
+<li> <p><code>conf_level = 0.90</code>
+</p>
+</li>
+<li> <p><code>conf_level = 0.95</code>
+</p>
+</li>
+<li> <p><code>conf_level = 0.99</code>
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A list with classes <code>wt_model</code>, <code>wt_rank_regression</code> and <code>wt_model_estimation</code>
+which contains:
+</p>
+
+<ul>
+<li> <p><code>coefficients</code> : A named vector of estimated coefficients (parameters of the
+assumed distribution). <strong>Note</strong>: The parameters are given in the
+(log-)location-scale-parameterization.
+</p>
+</li>
+<li> <p><code>confint</code> : Confidence intervals for the (log-)location-scale parameters.
+For threshold distributions no confidence interval for the threshold parameter
+can be computed. If <code>direction = "y_on_x"</code>, back-transformed confidence
+intervals are provided.
+</p>
+</li>
+<li> <p><code>shape_scale_coefficients</code> : Only included if <code>distribution</code> is <code>"weibull"</code>
+or <code>"weibull3"</code> (parameterization used in Weibull).
+</p>
+</li>
+<li> <p><code>shape_scale_confint</code> : Only included if <code>distribution</code> is <code>"weibull"</code>
+or <code>"weibull3"</code>. Approximated confidence intervals for scale <code class="reqn">\eta</code> and
+shape <code class="reqn">\beta</code> (and threshold <code class="reqn">\gamma</code> if <code>distribution = "weibull3"</code>).
+</p>
+</li>
+<li> <p><code>varcov</code> : Only provided if <code>options = list(conf_method = "HC")</code> (default).
+Estimated heteroscedasticity-consistent (<strong>HC</strong>) variance-covariance matrix
+for the (log-)location-scale parameters.
+</p>
+</li>
+<li> <p><code>r_squared</code> : Coefficient of determination.
+</p>
+</li>
+<li> <p><code>data</code> : A <code>tibble</code> with columns <code>x</code>, <code>status</code> and <code>prob</code>.
+</p>
+</li>
+<li> <p><code>distribution</code> : Specified distribution.
+</p>
+</li>
+<li> <p><code>direction</code> : Specified direction.
+</p>
+</li>
+</ul>
+<h3>Options</h3>
+
+<p>Argument <code>options</code> is a named list of options:</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   Name </td>
+<td style="text-align: left;"> Value </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>conf_method</code> </td>
+<td style="text-align: left;"> <code>"HC"</code> (default) or <code>"Mock"</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+
+<ul>
+<li>
+<p> Mock, R., Methoden zur Datenhandhabung in Zuverlässigkeitsanalysen,
+vdf Hochschulverlag AG an der ETH Zürich, 1995
+</p>
+</li>
+<li>
+<p> Meeker, William Q; Escobar, Luis A., Statistical methods for reliability data,
+New York: Wiley series in probability and statistics, 1998
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>rank_regression
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Vectors:
+obs &lt;- seq(10000, 100000, 10000)
+status_1 &lt;- c(0, 1, 1, 0, 0, 0, 1, 0, 1, 0)
+
+cycles &lt;- alloy$cycles
+status_2 &lt;- alloy$status
+
+# Example 1 - Fitting a two-parametric weibull distribution:
+tbl_john &lt;- estimate_cdf(
+  x = obs,
+  status = status_1,
+  method = "johnson"
+)
+
+rr &lt;- rank_regression(
+  x = tbl_john$x,
+  y = tbl_john$prob,
+  status = tbl_john$status,
+  distribution = "weibull",
+  conf_level = 0.90
+)
+
+# Example 2 - Fitting a three-parametric lognormal distribution:
+tbl_kaplan &lt;- estimate_cdf(
+  x = cycles,
+  status = status_2,
+  method = "kaplan"
+)
+
+rr_2 &lt;- rank_regression(
+  x = tbl_kaplan$x,
+  y = tbl_kaplan$prob,
+  status = tbl_kaplan$status,
+  distribution = "lognormal3"
+)
+
+</code></pre>
+
+
+</div>

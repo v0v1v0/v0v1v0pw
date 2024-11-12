@@ -1,0 +1,232 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>preservationNetworkConnectivity</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Network preservation calculations </h2>
+
+<h3>Description</h3>
+
+<p>This function calculates several measures of gene network preservation. Given gene expression data in
+several individual data sets, it calculates the individual adjacency matrices, forms the preservation
+network and finally forms several summary measures of adjacency preservation for each node (gene) in the
+network.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">preservationNetworkConnectivity(
+   multiExpr,
+   useSets = NULL, useGenes = NULL,
+   corFnc = "cor", corOptions = "use='p'",
+   networkType = "unsigned",
+   power = 6,
+   sampleLinks = NULL, nLinks = 5000,
+   blockSize = 1000,
+   setSeed = 12345,
+   weightPower = 2,
+   verbose = 2, indent = 0)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>multiExpr</code></td>
+<td>
+<p> expression data in the multi-set format (see <code>checkSets</code>). A vector of
+lists, one per set. Each set must contain a component <code>data</code> that contains the expression data, with
+rows corresponding to samples and columns to genes or probes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useSets</code></td>
+<td>
+<p> optional specification of sets to be used for the preservation calculation. Defaults to
+using all sets. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useGenes</code></td>
+<td>
+<p> optional specification of genes to be used for the preservation calculation. Defaults
+to all genes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corFnc</code></td>
+<td>
+<p> character string containing the name of the function to calculate correlation. Suggested
+functions include <code>"cor"</code> and <code>"bicor"</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corOptions</code></td>
+<td>
+<p> further argument to the correlation function. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkType</code></td>
+<td>
+<p> a character string encoding network type. Recognized values are (unique
+abbreviations of) <code>"unsigned"</code>, <code>"signed"</code>, and <code>"signed hybrid"</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p> soft thresholding power for network construction. Should be a number greater than 1. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sampleLinks</code></td>
+<td>
+<p> logical: should network connections be sampled (<code>TRUE</code>) or should all
+connections be used systematically (<code>FALSE</code>)? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nLinks</code></td>
+<td>
+<p> number of links to be sampled. Should be set such that <code>nLinks * nNeighbors</code> be
+several times larger than the number of genes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blockSize</code></td>
+<td>
+<p> correlation calculations will be split into square blocks of this size, to prevent
+running out of memory for large gene sets.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>setSeed</code></td>
+<td>
+<p>  seed to be used for sampling, for repeatability. If a seed already exists, it is saved
+before the sampling starts and restored upon exit. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weightPower</code></td>
+<td>
+<p> power with which higher adjacencies will be weighted in weighted means </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The preservation network is formed from adjacencies of compared sets. For 'complete' preservations, all
+given sets are compared at once; for 'pairwise' preservations, the sets are compared in pairs. Unweighted
+preservations are simple mean preservations for each node; their weighted counterparts are weighted
+averages in which a preservation of adjacencies <code class="reqn">A^{(1)}_{ij}</code> and 
+<code class="reqn">A^{(2)}_{ij}</code> of nodes <code class="reqn">i,j</code> between sets 1 and 2
+is weighted by 
+<code class="reqn">[ (A^{(1)}_{ij} + A^{(2)}_{ij} )/2]^weightPower</code>.
+The hyperbolic preservation is based on 
+<code class="reqn">tanh[( max - min)/(max+min)^2]</code>, where <code class="reqn">max</code> and
+<code class="reqn">min</code> are the componentwise maximum and minimum of the compared adjacencies, respectively.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>pairwise</code></td>
+<td>
+<p> a matrix with rows corresponding to genes and columns to unique pairs of given sets,
+giving the pairwise preservation of the adjacencies connecting the gene to all other genes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>complete</code></td>
+<td>
+<p> a vector with one entry for each input gene containing the complete mean preservation
+of the adjacencies connecting the gene to all other genes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pairwiseWeighted</code></td>
+<td>
+<p> a matrix with rows corresponding to genes and columns to unique pairs of given
+sets, giving the pairwise weighted preservation of the adjacencies connecting the gene to all other genes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>completeWeighted</code></td>
+<td>
+<p> a vector with one entry for each input gene containing the complete weighted 
+mean preservation of the adjacencies connecting the gene to all other genes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pairwiseHyperbolic</code></td>
+<td>
+<p> a matrix with rows corresponding to genes and columns to unique 
+pairs of given sets, giving the pairwise hyperbolic preservation of the adjacencies connecting the gene
+to all other genes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>completeHyperbolic</code></td>
+<td>
+<p> a vector with one entry for each input gene containing the complete mean
+hyperbolic preservation of the adjacencies connecting the gene to all other genes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pairwiseWeightedHyperbolic</code></td>
+<td>
+<p> a matrix with rows corresponding to genes and columns to unique
+pairs of given sets, giving the pairwise weighted hyperbolic preservation of the adjacencies connecting
+the gene to all other genes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>completeWeightedHyperbolic</code></td>
+<td>
+<p> a vector with one entry for each input gene containing the complete
+weighted hyperbolic  mean preservation of the adjacencies connecting the gene to all other genes.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder </p>
+
+
+<h3>References</h3>
+
+<p> Langfelder P, Horvath S (2007) Eigengene networks for studying the relationships between
+co-expression modules. BMC Systems Biology 2007, 1:54 </p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code>adjacency</code> for calculation of adjacency; 
+</p>
+
+
+</div>

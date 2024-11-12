@@ -1,0 +1,132 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>identify_privacythreshold</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Identify groups under privacy threshold</h2>
+
+<h3>Description</h3>
+
+<p>This function scans a standard query output for groups with of employees
+under the privacy threshold. The method consists in reviewing each individual
+HR attribute, and count the distinct people within each group.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">identify_privacythreshold(
+  data,
+  hrvar = extract_hr(data),
+  mingroup = 5,
+  return = "table"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A Standard Person Query dataset in the form of a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hrvar</code></td>
+<td>
+<p>A list of HR Variables to consider in the scan.
+Defaults to all HR attributes identified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mingroup</code></td>
+<td>
+<p>Numeric value setting the privacy threshold / minimum group
+size. Defaults to 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String specifying what to return. This must be one of the
+following strings:
+</p>
+
+<ul>
+<li> <p><code>"table"</code>
+</p>
+</li>
+<li> <p><code>"text"</code>
+</p>
+</li>
+</ul>
+<p>See <code>Value</code> for more information.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A different output is returned depending on the value passed to the <code>return</code>
+argument:
+</p>
+
+<ul>
+<li> <p><code>"table"</code>: data frame. A summary table of groups that fall below the
+privacy threshold.
+</p>
+</li>
+<li> <p><code>"text"</code>: string. A diagnostic message.
+</p>
+</li>
+</ul>
+<p>Returns a ggplot object by default, where 'plot' is passed in <code>return</code>.
+When 'table' is passed, a summary table is returned as a data frame.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Data Validation: 
+<code>check_query()</code>,
+<code>extract_hr()</code>,
+<code>flag_ch_ratio()</code>,
+<code>flag_em_ratio()</code>,
+<code>flag_extreme()</code>,
+<code>flag_outlooktime()</code>,
+<code>hr_trend()</code>,
+<code>hrvar_count()</code>,
+<code>hrvar_count_all()</code>,
+<code>hrvar_trend()</code>,
+<code>identify_churn()</code>,
+<code>identify_holidayweeks()</code>,
+<code>identify_inactiveweeks()</code>,
+<code>identify_nkw()</code>,
+<code>identify_outlier()</code>,
+<code>identify_query()</code>,
+<code>identify_shifts()</code>,
+<code>identify_shifts_wp()</code>,
+<code>identify_tenure()</code>,
+<code>remove_outliers()</code>,
+<code>standardise_pq()</code>,
+<code>subject_validate()</code>,
+<code>subject_validate_report()</code>,
+<code>track_HR_change()</code>,
+<code>validation_report()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Return a summary table
+dv_data %&gt;% identify_privacythreshold(return = "table")
+
+# Return a diagnostic message
+dv_data %&gt;% identify_privacythreshold(return = "text")
+
+</code></pre>
+
+
+</div>

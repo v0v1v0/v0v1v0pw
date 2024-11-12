@@ -1,0 +1,155 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>r_series</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Data Frame Series (Repeated Measures)</h2>
+
+<h3>Description</h3>
+
+<p>Produce a <code>tbl_df</code> data frame of repeated measures from a
+wakefield variable function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">r_series(fun, j, n, ..., integer = FALSE, relate = NULL, rep.sep = "_")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>A <span class="pkg">wakefield</span> variable function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>j</code></td>
+<td>
+<p>The number of columns to produce.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The number of rows to produce.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>integer</code></td>
+<td>
+<p>logical.  If <code>TRUE</code> factor columns will be coerced to
+integer.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>relate</code></td>
+<td>
+<p>Allows the user to specify the relationship between columns.
+May be a named list of <code>c("operation", "mean", "sd")</code> or a string of
+the form of "fM_sd" where 'f' is one of (+, -, *, /), 'M' is a mean value, and
+'sd' is a standard deviation of the mean value (e.g., <code>"*4_1"</code>).  See
+<code>relate</code> for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rep.sep</code></td>
+<td>
+<p>A separator to use for repeated variable names.  For example
+if the <code>age</code> is used three times
+(<code>r_data_frame(age, age, age)</code>), the name "Age" will be assigned to all
+three columns.  The results in column names <code>c("Age_1", "Age_2", "Age_3")</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to <code>fun</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a <code>tbl_df</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://github.com/trinker/wakefield/issues/1/#issuecomment-96166910">https://github.com/trinker/wakefield/issues/1/#issuecomment-96166910</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>r_list</code>,
+<code>r_data_frame</code>
+<code>r_dummy</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">r_series(grade, 5, 10)
+
+## Custom name prefix
+r_series(likert, 5, 10, name = "Question")
+
+## Convert factors to integers
+r_series(likert_7, 5, 10, integer = TRUE)
+
+## Related variables
+r_series(likert, 10, 200, relate = list(operation = "*", mean = 2, sd = 1))
+r_series(likert, 10, 200, relate = "--3_1")
+r_series(age, 10, 200, relate = "+5_0")
+
+## Change sd to reduce/increase correlation
+round(cor(r_series(grade, 10, 10, relate = "+1_2")), 2)
+round(cor(r_series(grade, 10, 10, relate = "+1_0")), 2)
+round(cor(r_series(grade, 10, 10, relate = "+1_.5")), 2)
+round(cor(r_series(grade, 10, 10, relate = "+1_20")), 2)
+
+## Plot Example 1
+library(dplyr); library(ggplot2)
+
+dat &lt;- r_data_frame(12,
+    name,
+    r_series(likert, 10, relate = "+1_.5")
+)
+
+# Suggested use of tidyr or reshape2 package here instead
+dat &lt;- data.frame(
+    ID = rep(dat[[1]], ncol(dat[-1])),
+    stack(dat[-1])
+)
+
+dat[["Time"]] &lt;- factor(sub("Variable_", "", dat[["ind"]]), levels = 1:10)
+ggplot(dat, aes(x = Time, y = values, color = ID, group = ID)) +
+    geom_line(size=.8)
+
+## Plot Example 2
+dat &lt;- r_data_frame(12,
+    name,
+    r_series(grade, 100, relate = "+1_2")
+)
+
+# Suggested use of tidyr or reshape2 package here instead
+dat &lt;- data.frame(
+    ID = rep(dat[[1]], ncol(dat[-1])),
+    ind = rep(colnames(dat[-1]), each = nrow(dat)),
+    values = unlist(dat[-1])
+)
+
+
+dat[["Time"]] &lt;- as.numeric(sub("Grade_", "", dat[["ind"]]))
+ggplot(dat, aes(x = Time, y = values, color = ID, group = ID)) +
+    geom_line(size=.8) + theme_bw()
+</code></pre>
+
+
+</div>

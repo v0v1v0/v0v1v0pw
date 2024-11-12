@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>PlotResult</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Visualizes the wind farm layout optimization result.</h2>
+
+<h3>Description</h3>
+
+<p>This function draws the adjusted yields of the wind farm under investigation using <code>image</code>, superimposes a contour plot using <code>contour</code> and arrows for the wind directions using <code>ImposeVectorField</code> and then draws the points for the turbines' locations (aligned to their respective raster grid centers).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">PlotResult(Result, ImageData = NULL, DoLabels = FALSE, Labels = "IDs")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Result</code></td>
+<td>
+
+<p>must be an optimization result as returned by an optimizer such as <code>optim</code>. Usually, this will be a <code>list</code> at least containing '$par'. Most optimizers comply with this R standard. If your optimizer does not, wrap its result into a list containing an object '$par' containing the optimization result (i.e., a vector of points).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ImageData</code></td>
+<td>
+
+<p>a matrix containing the data for the background, processed via <code>image</code>. If not provided (or NULL), uses the data in <code>FarmData[[1]]</code> or, if present, <code>e$FarmData[[1]]</code>. Defaults to NULL.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DoLabels</code></td>
+<td>
+
+<p>a boolean that indicates whether labels should be plotted next to the points. Defaults to FALSE.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Labels</code></td>
+<td>
+
+<p>a vector of length n = N / 2, can be numeric values or strings. Defines the labels to be shown if <code>DoLabels = TRUE</code>. Defaults to "IDs", in which case the points are sequently numbered from 1:n. <code>Labels</code> is ignored if <code>DoLabels = FALSE</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For maximum convenience and compatibility with numeric optimizers of most kinds, this function expects nothing but the usual optimization result <code>list</code>. This, however, requires that the <code>FarmData</code> dataset as well as the <code>FarmVars</code> object is present defining additional settings.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>PlotResult</code> returns nothing.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Carsten Croonenbroeck
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Use <code>Profit</code> to obtain an optimization result.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#Will not provide a very good result
+NumTurbines &lt;- 4
+set.seed(1357)
+Result &lt;- optim(par = runif(NumTurbines * 2), fn = Profit,
+  method = "L-BFGS-B", lower = rep(0, NumTurbines * 2),
+  upper = rep(1, NumTurbines * 2))
+Result
+PlotResult(Result)
+</code></pre>
+
+
+</div>

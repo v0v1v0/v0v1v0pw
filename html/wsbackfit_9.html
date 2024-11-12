@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summary.sback</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Summary for a <code>sback</code> fitted object
+</h2>
+
+<h3>Description</h3>
+
+<p>Takes a fitted object produced by <code>sback()</code> and produces various useful summaries from it.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'sback'
+summary(object, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object of class <code>sback</code> as produced by <code>sback()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments (not implemented)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class <code>summary.sback</code> with the information needed to print the results.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Javier Roca-Pardinas, Maria Xose Rodriguez-Alvarez, Stefan Sperlich
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>sback</code>, <code>plot.sback</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(wsbackfit)
+set.seed(123)
+###############################################
+# Gaussian Simulated Sample
+###############################################
+set.seed(123)
+# Define the data generating process
+n &lt;- 1000
+x1 &lt;- runif(n)*4-2
+x2 &lt;- runif(n)*4-2
+x3 &lt;- runif(n)*4-2
+x4 &lt;- runif(n)*4-2
+x5 &lt;- as.numeric(runif(n)&gt;0.6)
+
+f1 &lt;- 2*sin(2*x1)
+f2 &lt;- x2^2
+f3 &lt;- 0
+f4 &lt;- x4
+f5 &lt;- 1.5*x5
+
+mu &lt;- f1 + f2 + f3 + f4 + f5
+err &lt;- (0.5 + 0.5*x5)*rnorm(n)
+y &lt;- mu + err
+
+df &lt;- data.frame(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = as.factor(x5), y = y)
+
+# Fit the model with a fixed bandwidth for each covariate
+m0 &lt;- sback(formula = y ~ x5 + sb(x1, h = 0.1) + sb(x2, h = 0.13) 
+  + sb(x3, h = 0.1) + sb(x4, h = 0.1), kbin = 30, data = df)
+
+summary(m0)
+</code></pre>
+
+
+</div>

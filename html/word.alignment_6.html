@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cross.table</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Constructing  Cross Tables of the Source Language Words vs the Target Language Words of Sentence Pairs
+</h2>
+
+<h3>Description</h3>
+
+<p>It is a function to create the cross tables of the source language words vs the target language words of sentence pairs  as the gold standard or as the alignment matrix of another software. For the gold standard, the created cross table is filled by an expert. He/she sets '1' for Sure alignments and '2' for Possible alignments in cross between the source and the target words. For alignment results of another software, '1' in cross between each aligned source and target words is set by the user.
+</p>
+<p>It works with two formats: 
+</p>
+<p>For the first format, it constructs a cross table  of the source language words vs the target language words of a given sentence pair.  Then, after filling as mentioned above sentence by sentence, it builds a list of cross tables and finally, it saves the created list as "file.align.RData". 
+</p>
+<p>In the second format, it creates an excel file with <code>n</code> sheets. Each sheet includes a cross table of the two language words related each sentence pair.  The file is as "file.align.xlsx". The created file  to be filled as mentioned above.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cross.table( ..., 
+             null.tokens = TRUE, 
+             out.format = c('rdata','excel'), 
+             file.align = 'alignment')
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Further agguments to be passed to <code>prepare.data</code> and <code>align.test</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>null.tokens</code></td>
+<td>
+
+<p>logical. If <code>TRUE</code>,  "null" is added at the first of each source and target sentence, when we use RData format.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>out.format</code></td>
+<td>
+
+<p>a character string including two options.For <code>"rdata"</code> format, it constructs a cross table of the source language words vs the target language words of a given
+sentence pair. Then, after filling it as mentioned in the description sentence
+by sentence, it builds a list of cross tables and finally, it saves the created list as "file.align.RData". In the <code>"excel"</code> format, it creates
+an excel file with n sheets. Each sheet includes a cross table of the two language
+words related to each sentence pair. The file is as "file.align.xlsx". The
+created file to be filled as mentioned in description.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file.align</code></td>
+<td>
+
+<p>the output file name. 
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>an RData object as "file.align.RData" or an excel file as "file.align.xlsx".
+
+
+
+
+</p>
+
+
+<h3>Note</h3>
+
+<p>If you have not the non-ascii problem, you can set <code>out.format</code> as <code>'rdata'</code>. 
+</p>
+<p>If ypu assign <code>out.format</code> to <code>'excel'</code>, it is necessary to bring two notes into consideration. The first note is that in order to use the created excel file for <code>evaluation</code> function, don't forget to use <code>excel2rdata</code> function to convert the excel file into required R format. The second note focouses on this:
+ocassionally, there is a problem with 'openxlsx' package which is used in the function and it might be solved by  'installr::install.rtools() on Windows'.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Neda Daneshgar and Majid Sarmad.
+</p>
+
+
+<h3>References</h3>
+
+<p>Holmqvist M., Ahrenberg L. (2011), "A Gold Standard for English-Swedish Word Alignment.", NODALIDA 2011 Conference Proceedings, 106 - 113.
+</p>
+<p>Och F., Ney H.(2003), "A Systematic Comparison Of Various Statistical Alignment Models.", 2003 Association for Computational Linguistics, J03-1002, 29(1).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>evaluation</code>, <code>excel2rdata</code>, <code>scan</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+cross.table('http://www.um.ac.ir/~sarmad/word.a/euro.bg',
+           'http://www.um.ac.ir/~sarmad/word.a/euro.en',
+           n = 10, encode.sorc = 'UTF-8')
+
+cross.table('http://www.um.ac.ir/~sarmad/word.a/euro.bg',
+           'http://www.um.ac.ir/~sarmad/word.a/euro.en', 
+           n = 5, encode.sorc = 'UTF-8', out.format = 'excel')
+
+## End(Not run)
+</code></pre>
+
+
+</div>

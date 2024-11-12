@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>normalize.rows</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Normalize Rows or Columns of Matrix to Unit Length (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>Efficiently normalize the row or column vectors of a dense or sparse matrix to unit length.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+normalize.rows(M, method = "euclidean", p = 2, ..., 
+               tol = 1e-6, inplace = FALSE)
+
+normalize.cols(M, method = "euclidean", p = 2, ...,
+               tol = 1e-6, inplace = FALSE)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>a dense or sparse numeric matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>norm to be computed, see <code>rowNorms</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>exponent of Minkowski p-norm in the range <code class="reqn">0 &lt; p \le \infty</code>. Note that normalization is not possible for very small values of <code class="reqn">p</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any further arguments are passed to <code>rowNorms</code> (or <code>colNorms</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>row/column vectors with norm below <code>tol</code> are assumed to be all zeroes and cannot be normalized (see “Details” below)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inplace</code></td>
+<td>
+<p>if <code>TRUE</code>, modify the matrix <code>M</code> in place.  Don't ever set this argument to <code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>These functions return a matrix with row (or column) vectors rescaled to a length of 1 according to the selected norm.
+</p>
+<p>All-zero vectors (with <code class="reqn">\|0\| = 0</code>) cannot be normalized.  In order to avoid scaling up rounding errors, rows (or columns) with <code class="reqn">\|x\| &lt; tol</code> are explicitly set to 0 (and thus not normalized). Since a suitable threshold for rounding errors depends on the scaling behaviour of the selected norm and the provenance of <code class="reqn">M</code>, it is advisable to set <code>tol</code> explicitly to an appropriate value. Pass <code>tol = 0</code> to normalize all nonzero vectors.
+</p>
+<p>The generalized Minkowski norm with <code class="reqn">p &lt; 1</code> is not homogeneous but can still be normalized.  This is numerically unstable for very small values of <code class="reqn">p</code>, which will be rejected with an error message.  The Hamming length (<code class="reqn">p = 0</code>) cannot be normalized at all.  See <code>rowNorms</code> for more information.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A row-normalized (or column-normalized) matrix with the same dimensions as <code class="reqn">M</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+<h3>See Also</h3>
+
+<p>See <code>rowNorms</code> for details on available norms and their parameters.
+</p>
+
+
+</div>

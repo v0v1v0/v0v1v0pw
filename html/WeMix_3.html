@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>waldTest</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Mixed Model Wald Tests</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates the Wald test for either fixed effects or variance parameters.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">waldTest(fittedModel, type = c("beta", "Lambda"), coefs = NA, hypothesis = NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fittedModel</code></td>
+<td>
+<p>a  model of class <code>WeMixResults</code> that is the result of a call to <code>mix</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>a string, one of "beta" (to test the fixed effects) or "Lambda" (to test the variance-covariance parameters for the random effects)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coefs</code></td>
+<td>
+<p>a vector containing the names of the coefficients to test. For <code>type="beta"</code> these must be
+the variable names exactly as they appear in the fixed effects table of the summary. For <code>type="Lambda"</code>
+these must be the names exactly as they appear in the theta element of the fitted model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hypothesis</code></td>
+<td>
+<p>the hypothesized values of beta or Lambda. If <code>NA</code> (the default) 0 will be used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>By default this function tests against the null hypothesis that all coefficients are zero.
+To identify which coefficients to test use the name exactly as it appears in 
+the summary of the object.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Object of class <code>WeMixWaldTest</code>. 
+This is a list with the following elements: 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>wald</code></td>
+<td>
+<p>the value of the test statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>the p-value for the test statistic. Based on the probabilty of the test statistic
+under the chi-squared distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>degrees of freedom used to calculate p-value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>H0</code></td>
+<td>
+<p>The vector (for a test of beta) or matrix (for tests of Lambda) containing the 
+null hypothesis for the test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>HA</code></td>
+<td>
+<p>The vector (for a test of beta) or matrix (for tests of Lambda) containing the 
+alternative hypothesis for the test (i.e. the values calculated by the fitted model being 
+tested.)</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+library(lme4) #to use the example data 
+sleepstudyU &lt;- sleepstudy
+sleepstudyU$weight1L1 &lt;- 1
+sleepstudyU$weight1L2 &lt;- 1
+wm0 &lt;- mix(Reaction ~ Days + (1|Subject), data=sleepstudyU, 
+            weights=c("weight1L1", "weight1L2"))
+wm1 &lt;- mix(Reaction ~ Days + (1 +Days|Subject), data=sleepstudyU, 
+           weights=c("weight1L1", "weight1L2"))
+
+waldTest(wm0, type="beta")  #test all betas 
+#test only beta for days 
+waldTest(wm0, type="beta", coefs="Days")  
+#test only beta for intercept against hypothesis that it is 1
+waldTest(wm0, type="beta", coefs="(Intercept)", hypothesis=c(1))  
+
+waldTest(wm1,type="Lambda")  #test all values of Lambda
+ #test only some Lambdas.The names are the same as names(wm1$theta)
+waldTest(wm1,type="Lambda", coefs="Subject.(Intercept)") 
+#specify  test values
+waldTest(wm1,type="Lambda", coefs="Subject.(Intercept)", hypothesis=c(1))  
+
+## End(Not run)
+</code></pre>
+
+
+</div>

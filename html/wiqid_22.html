@@ -1,0 +1,212 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Closed Captures</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Analysis of mark-recapture data for closed populations
+</h2>
+
+<h3>Description</h3>
+
+<p>Functions to analyse the classical models for closed populations without individual covariates, ie. full likelihood models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">closedCapM0(CH, ci = 0.95, ciType=c("normal", "MARK"), ...)
+
+closedCapMb(CH, ci = 0.95, ciType=c("normal", "MARK"), ...)
+
+closedCapMt(CH, ci = 0.95, ciType=c("normal", "MARK"), ...)
+
+closedCapMtcov(CH, model=list(p~1), data=NULL, ci = 0.95,
+    ciType=c("normal", "MARK"), ...)
+
+closedCapMh2(CH, ci = 0.95, ciType=c("normal", "MARK"), ...)
+
+closedCapMhJK(CH, ci = 0.95)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>CH</code></td>
+<td>
+
+<p>a 0/1 capture history matrix, animals x occasions; NAs not permitted. For functions <code>closedCapM0</code>, <code>closedCapMh2</code> and <code>closedCapMhJK</code>, <code>CH</code> can be a vector of capture frequencies of length equal to the number of occasions - trailing zeros are required.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+
+<p>a list of formulae symbolically defining a linear predictor for p in terms of covariates.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>a data frame containing the variables in the model, with one row for each occasion.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci</code></td>
+<td>
+
+<p>the required confidence interval.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ciType</code></td>
+<td>
+
+<p>the method used to calculate the confidence interval for population size (N); see Details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>other arguments passed to <code>nlm</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Model M0 assumes all animals have the same capture probability.
+</p>
+<p>Model Mb allows for a permanent behavioural response: capture probability is different for animals that have already been captured at least once.
+</p>
+<p>Model Mh2 and the jackknife estimator allow for heterogeneity in capture probability.
+</p>
+<p>The likelihood maximization routine produces an estimate and standard error for beta = log(<em>f0</em>), where <em>f0</em> is the number of animals never captured. If <code>ciType == "normal"</code>, a confidence interval for beta is calculated as beta +/- crit * SE.beta, where crit is the appropriate multiplier for the confidence interval required, 1.96 for a 95% CI. This confidence interval is then back-transformed to the real scale and added to the number of animals captured (M[t+1]) to give estimates of N.
+</p>
+<p>If <code>ciType == "MARK"</code>, the method used by MARK to calculate confidence intervals is used (see MARK help page for Closed Capture Models and Burnham et al (1987, p212)).
+The beta values are back-transformed with f0.hat = exp(beta) and SE.f0 = SE.beta * f0.hat, and hence CV = SE.f0 / f0.hat. The confidence limits are then
+</p>
+<p>Lower = f0.hat / C + M[t+1]
+</p>
+<p>Upper = f0.hat * C + M[t+1]
+</p>
+<p>where C = exp(crit * sqrt(log(1 + CV^2))).
+</p>
+<p>Confidence intervals for capture probabilities are always calculated on the logit scale and back-transformed to real values.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an object of class <code>wiqid</code>, which is a list with the following elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>The call used to produce the results</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p>Values of the coefficients of the terms in the linear predictors, with standard errors and confidence intervals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta.vcv </code></td>
+<td>
+<p>The variance-covariance matrix for the beta estimates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>real</code></td>
+<td>
+<p>Estimates of population size (N) and probability of detection on the real scale, with confidence intervals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logLik</code></td>
+<td>
+<p>a vector with elements for log(likelihood), number of parameters, and effective sample size. If the variance-covariance matrix cannot be calculated, the second element should be <code>NA</code>.</p>
+</td>
+</tr>
+</table>
+<p>The jackknife estimator does not use likelihood maximisation, so elements <code>beta</code> and <code>beta.vcv</code> are NULL and <code>logLik = NA</code>.
+</p>
+<p>There are <code>print</code>, <code>logLik</code>, and <code>nobs</code> methods for class <code>wiqid</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith
+</p>
+
+
+<h3>References</h3>
+
+<p>Basic work on mark-recapture for closed populations is in:
+</p>
+<p>Otis, D L; K P Burnham; G C White; D R Anderson. 1978. Statistical inference from capture data on closed animal populations. <em>Wildlife Monographs</em> 62:1-135.
+</p>
+<p>White, G C; D R Anderson; K P Burnham; D L Otis. 1982. <em>Capture-recapture and removal methods for sampling closed populations</em>. Los Alamos National Laboratory, Los Alamos NM.
+</p>
+<p>Calculation of the confidence interval for N is in:
+</p>
+<p>Burnham, K.P., Anderson, D.R., White, G.C., Brownie, C., &amp; Pollock, K.H. 1987. <em>Design and analysis methods for fish survival experiments based on release-recapture</em>. American Fisheries Society, Bethesda MD.
+</p>
+<p>The jackknife estimator is described in:
+</p>
+<p>Burnham, K P; W S Overton. 1979. Robust estimation of population size when capture probabilities vary among animals. <em>Ecology</em> 60:927-936.
+</p>
+<p>Rexstad, E; K Burnham 1992. <em>User's guide for interactive program CAPTURE</em>. USGS Patuxent.
+</p>
+<p>Data sets in the examples are from:
+</p>
+<p>White et al, op. cit.
+</p>
+<p>Karanth, Nichols, Kumar, Link, Hines (2004) Tigers and their prey: Predicting carnivore densities from prey abundance. PNAS 101:4854-4858
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Data from White et al (1982):
+freq1 &lt;- c(50, 46, 35, 24, 14, 5, 0) # there were 7 capture occasions
+closedCapM0(freq1)
+closedCapM0(freq1, ci=0.8)
+closedCapMh2(freq1)
+closedCapMhJK(freq1)
+
+# Kanha tiger data from Karanth et al (2004)
+data(KanhaTigers)
+closedCapM0(KanhaTigers)
+closedCapMb(KanhaTigers)
+closedCapMh2(KanhaTigers)
+closedCapMhJK(KanhaTigers)
+closedCapMt(KanhaTigers)
+closedCapMtcov(KanhaTigers, p~.Time)
+# Generate some mythical covariates:
+covars &lt;- data.frame(Temp = runif(ncol(KanhaTigers), 15, 25),
+  Cloud = sample(0:8, ncol(KanhaTigers), replace=TRUE))
+closedCapMtcov(KanhaTigers, p~Cloud, data=covars)
+
+# Compare the normal (default) and MARK confidence intervals for N:
+rbind(closedCapMt(KanhaTigers)$real[1, ],
+      closedCapMt(KanhaTigers, ciType="MARK")$real[1, ])
+</code></pre>
+
+
+</div>

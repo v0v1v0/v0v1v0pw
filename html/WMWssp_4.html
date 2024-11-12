@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WMWssp_noether</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Sample size calculation for the Wilcoxon-Mann-Whitney test using the Noether formula</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates the sample size for given type-I and type-II error probabilities using Noether's formula.
+If ties are present then prior information is needen.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WMWssp_noether(alpha, power, t, p, x = c(0), ties = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>two sided type I error rate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>power: detect a relative effect p at least with the specified power</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t</code></td>
+<td>
+<p>proportion of subjects in the first group (between 0 and 1)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>relative effect</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>prior information is only needed in case of ties</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ties</code></td>
+<td>
+<p>TRUE if ties are possible (non continuous distribution), otherwise FALSE</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns an object from class WMWssp containing
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>result</code></td>
+<td>
+<p>A dataframe with the results.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t</code></td>
+<td>
+<p>The allocation rate which was used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>The type-I error rate which was used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>The power which was used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>The sample size needed.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Noether, G. E. (1987). Sample Size Determination for Some Common Nonparametric Tests. Journal of the American Statistical Association 85, 645.647.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Prior information for the reference group
+x &lt;- c(315,375,356,374,412,418,445,403,431,410,391,475,379)
+# generate data for treatment group based on a shift effect
+y &lt;- x - 20
+# this data leads to a relative effect of p = 0.349
+
+# calculate sampe size for a balanced design
+ssp &lt;- WMWssp_noether(alpha = 0.05, power = 0.8, t =1/2, p = 0.349)
+summary(ssp)
+</code></pre>
+
+
+</div>

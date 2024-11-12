@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WACSestim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimation of the parameters of a WACS model</h2>
+
+<h3>Description</h3>
+
+<p>Estimation of the parameters of a WACS model
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WACSestim(
+  wacsdata,
+  spar = 0.7,
+  trend.norm = "L2",
+  rain.model = "Gamma",
+  method = "MLE",
+  Vsel = NULL,
+  Nclusters = NULL,
+  clustering = "soft",
+  plot.it = FALSE,
+  DIR = "./"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wacsdata</code></td>
+<td>
+<p>Data, as returned by WACSdata</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spar</code></td>
+<td>
+<p>Smoothing parameter for estimating annual cycle</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trend.norm</code></td>
+<td>
+<p>Type of norm used in for computing central tendency
+and variation. Must be  <code>"L1"</code> or <code>"L2"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rain.model</code></td>
+<td>
+<p>Model for precipitation. Must be <code>"Gamma"</code> or <code>"None"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p><code>"MLE"</code> or <code>"MOM"</code>. Estimation method for the rain model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Vsel</code></td>
+<td>
+<p>Variables (other than rain) on which clustering is 
+performed when <code>Vsel=NULL</code>, all variables are considered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Nclusters</code></td>
+<td>
+<p>Number of clusters to consider. When <code>Nclusters = NULL</code>,
+absolute best clustering is sought for wet and dry weather
+states in each season (up to 4).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clustering</code></td>
+<td>
+<p>Indicates whether <code>"hard"</code> or <code>"soft"</code> clustering is
+considered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.it</code></td>
+<td>
+<p>Boolean indicating whether plots are produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DIR</code></td>
+<td>
+<p>Directory in which placing plot</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing all parameters; see the user guide for details.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Larger values of <code>spar</code> produce smoother estimates. Smaller values produce less smooth estimates. <code>spar=0.7</code> 
+is a good compromise
+</p>
+<p>Soft clustering means that days have probabilities to belong to each weather state. With hard clustering, 
+this probability is set to 1 to the most likely weather state and 0 to all others. Density parameter estimates 
+are more robust with <code>clustering="soft"</code>. Clustering is done by means of the mclust package with 
+<span class="env">modelNames="VVV"</span>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+ ## For an estimation with default setting 
+ ThisPar  = WACSestim(ThisData)
+
+ ## For an estimation with max. 2 dry and wet weather types per season, 
+ ## and production of plots
+ ThisPar  = WACSestim(ThisData, Nclusters = 1:2, plot.it = TRUE) 
+
+ ## For an estimation with exactly 2 dry and wet weather states per season, 
+ ## clustering on variables 3 and 5 only and no production of plots
+ ThisPar  = WACSestim(ThisData, Nclusters = 2, Vsel = c(3,5)) 
+ 
+## End(Not run)
+
+
+</code></pre>
+
+
+</div>

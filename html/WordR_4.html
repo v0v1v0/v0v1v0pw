@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>renderAll</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read Word document and apply functions <code>body_add_flextables</code>,<code>renderInlineCode</code>,<code>addPlots</code>.</h2>
+
+<h3>Description</h3>
+
+<p>Read Word document and apply functions <code>body_add_flextables</code>,<code>renderInlineCode</code>,<code>addPlots</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">renderAll(
+  docxIn,
+  docxOut,
+  flextables = NULL,
+  Plots = NULL,
+  height = 6,
+  width = 6,
+  debug = F
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>docxIn</code></td>
+<td>
+<p>String of length one; path to Word file with bookmarks OR officer::rdocx object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>docxOut</code></td>
+<td>
+<p>String of length one; path for output Word file or NA</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flextables</code></td>
+<td>
+<p>Named list of flextables; Tables to be inserted into the Word file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Plots</code></td>
+<td>
+<p>Named list of functions (or plots - for plots which are stored as objects e.g., ggplot) creating plots to be inserted into the Word file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>height</code></td>
+<td>
+<p>height of the plots in output in inches, either of length 1 (and will be recycled), or same length as Plots</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+<p>width of the plots in output in inches, either of length 1 (and will be recycled), or same length as Plots</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>Boolean of length one; If <code>True</code> then <code>browser()</code> is called at the beginning of the function</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Path to the rendered Word file if the operation was successfull OR officer::rdocx object if docxOut is NA
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(flextable)
+library(ggplot2)
+ft_mtcars &lt;- flextable(mtcars)
+FT &lt;- list(mtcars=ft_mtcars)
+Plots &lt;- list(mtcars1 = ggplot(mtcars, aes(x = wt, y = hp, col = as.factor(cyl))) + geom_point())
+renderAll(docxIn=paste0(examplePath(), "templates/templateAll.docx"),
+          docxOut=paste0(tempdir(), "/resultsAll.docx"),
+          flextables=FT,
+          Plots=Plots)
+
+</code></pre>
+
+
+</div>

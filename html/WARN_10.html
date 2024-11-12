@@ -1,0 +1,251 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>warn</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Weaning parameter estimation with approximate Bayesian computation
+</h2>
+
+<h3>Description</h3>
+
+<p><code>warn</code> estimates weaning parameters (i.e., weaning ages, enrichment factor, and nitrogen isotope ratio (d15N) of weaning food derived collagen) for a given skeletal population under the flamework of approximate Bayesian computation (ABC).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+warn(age, d15N, female.mean, female.sd = NA,
+  fraction = "collagen",
+  prior = c(0.5, 3, 3, 3, 1.9, 0.9, female.mean, 3, 0, 1),
+  num.particle = 10000, form = "parabolic",
+  tolerances = c(2.0, 1.0, 0.5, 0.25, 0.125, 0.0625, 0))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>age</code></td>
+<td>
+<p>a vector of estimated ages in year of the non-adult skeletons. Ages greater than 10 years are not allowed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d15N</code></td>
+<td>
+<p>a vector of bone collagen d15N of non-adult skeletons. Other geochemical values (e.g., d18O, Sr/Ca, and Ba/Ca) can be used with this argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>female.mean</code></td>
+<td>
+<p>the mean d15N of the adult females, single value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>female.sd</code></td>
+<td>
+<p>the one standard deviation of adult female d15Ns, an optional single value. Utilized later in <code>plot.warn</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fraction</code></td>
+<td>
+<p>fraction of bone analyzed. The allowed values are <code>collagen</code> and <code>mineral</code>. The turnover rate specific to each fraction will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior</code></td>
+<td>
+<p>a vector of hyper parameter values for prior distributions of the weaning parameters and the individual error term. Mean and SD for t1 (age at the start of weaning), t2 (age at the end of weaning), enrichment of d15N, d15N of weaning food derived collagen, and sigma used in ABC-SMC, in sequence. The values are succeeded to <code>mean</code> and <code>sd</code> arguments of <code>rnorm</code>. The default is <code>c(0.5, 3, 3, 3, 1.9, 0.9, female.mean, 3, 0, 1)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num.particle</code></td>
+<td>
+<p>number of particles in sequential Monte Carlo (SMC) sampling; defaults to 10000.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>form</code></td>
+<td>
+<p>form of the model curve for the weaning process. The allowed values are <code>"linear"</code>, <code>"parabolic"</code> (the default), <code>"reverse"</code>, and <code>"sigmoid"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tolerances</code></td>
+<td>
+<p>a vector of decreasing torelances used in the SMC sampling. The default is <code>c(2.0, 1.0, 0.5, 0.25, 0.125, 0.0625, 0)</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>warn</code> esimates the age at the start and end of weaning, enrichment of d15N through maternal to infant tissue, and d15N value of collagen synthesized entirely from weaning foods with their posterior probabilities. Other geochemical values that change with breastfeeding and weaning can also be analyzed (e.g., d18O, Sr/Ca, and Ba/Ca). Probabilities are estimated by SMC with partial rejection control, and the algorithm was derived from Sisson et al. (2007, 2009). The posterior probabilities are obtained as a result of kernel density estimation, a product of <code>kde2d</code> in <span class="pkg">MASS</span> package for weaning ages, and <code>density</code> for enrichment and weaning foods. The model used to describe the change in d15N during weaning contains a new estimate of bone collagen turnover rates in non-adults, and is shown in Tsutaya and Yoneda (2013).
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>warn</code> returns an object of <code>class</code> <code>"warn"</code>.<br>
+The function <code>summary</code> and <code>plot</code> are used to obtain and indicate a summary and figure of the results, respectively.<br>
+An object of class <code>"warn"</code> is a list containing at least the following components:<br></p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>mde</code></td>
+<td>
+<p>the maximum density estimators and their marginal probabilities for the weaning parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prob.2d.age</code></td>
+<td>
+<p>the joint probability for combination of the maximum density weaning ages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist.mde</code></td>
+<td>
+<p>the mean squared distance between the measured and modeled d15Ns of non-adults.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kde.age</code></td>
+<td>
+<p>two-dimensional kernel density estimates of the weaning ages. A product of <code>kde2d</code> in <span class="pkg">MASS</span> package.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kde.enrich</code></td>
+<td>
+<p>kernel density estimates of the enrichment factor from mother to infant. A product of <code>density</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kde.wnfood</code></td>
+<td>
+<p>kernel density estimates of the d15N of collagen synthesized entirely form weaning foods. A product of <code>density</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>posterior</code></td>
+<td>
+<p>a matrix of final particles in SMC sampling.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>age</code></td>
+<td>
+<p>the non-adult ages used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d15N</code></td>
+<td>
+<p>the measuerd d15Ns of non-adult bone collagen used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>female.mean</code></td>
+<td>
+<p>the mean d15N of adult females used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>female.sd</code></td>
+<td>
+<p>the one standard deviation of adult female d15Ns used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fraction</code></td>
+<td>
+<p>the fraction of bone analyzed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior</code></td>
+<td>
+<p>a vector of the hyper parameter values for the prior distributions used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>particle</code></td>
+<td>
+<p>the number of particles used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>form</code></td>
+<td>
+<p>the form of the model curve used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>the matched call.</p>
+</td>
+</tr>
+</table>
+<p><br>
+The band-width of kernel density estimation (i.e., <code>h</code> in <code>kde2d</code> and <code>bw</code> in <code>density</code>) is selected by SJ method, <code>width.SJ</code> in <span class="pkg">MASS</span>, with "direct plug-in".
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Takumi Tsutaya developed this model.
+</p>
+
+
+<h3>References</h3>
+
+<p>Sisson, S. A., Fan, Y., and Tanaka, M. M. (2007, 2009). Sequential Monte Carlo without likelihoods. <em>Proc. Natl. Acad. Sci.</em> <b>104</b>, 1760–1765.<br><br>
+Tsutaya, T., and Yoneda, M. (2013). Quantitative reconstruction of weaning ages in archaeological human populations using bone collagen nitrogen isotope ratios and approximate Bayesian computation. <em>PLoS ONE</em> <b>8</b>, e72327.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>WARN</code>, <code>warnCI</code>, <code>warnProb</code>, <code>summary.warn</code>, <code>plot.warn</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Data from the Lerna population.
+nonadult &lt;- subset(lerna, lerna$age &lt;= 10)
+adult &lt;- subset(lerna, lerna$age &gt; 17)
+female &lt;- subset(adult, adult$sex == "f")
+
+## Calculate maximum density estimators using ABC.
+warn.lerna &lt;- warn(
+  age = nonadult$age,
+  d15N = nonadult$d15N,
+  female.mean = mean(female$d15N),
+  num.particle = 500,
+  female.sd = sd(female$d15N),
+  prior = c(0.2, 0.2, 1.6, 0.2, 2.5, 0.2, 8.1, 0.2, 0, 0.7),
+  tolerances = c(1.5, 0.7))
+
+## Indicate summary.
+summary(warn.lerna)
+
+## Plot.
+plot(warn.lerna)
+
+## Plot with adult mean.
+plot(warn.lerna,
+  hline.adult = TRUE,
+  adult.mean = mean(adult$d15N),
+  adult.sd = sd(adult$d15N),
+  is.female = FALSE)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sumNAperGroup</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Count number of NAs per sub-set of columns</h2>
+
+<h3>Description</h3>
+
+<p>This function will count the number of <code>NA</code>s per group (defined by argument <code>grp</code>) while summing over all lines of a matrix or data.frame.
+The row-position has no influence on the counting.
+Using the argument <code>asRelative=TRUE</code> the result will be given as (average) number of <code>NA</code>s per row and group.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sumNAperGroup(
+  x,
+  grp,
+  asRelative = FALSE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>matrix or data.frame which may contain <code>NA</code>s</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grp</code></td>
+<td>
+<p>factor describing which column of 'dat' belongs to which group</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>asRelative</code></td>
+<td>
+<p>(logical) return as count of <code>NA</code>s per row and group</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns an integer vector with count of <code>NA</code>s per group
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>NA</code>, filter <code>NA</code>s by line <code>presenceFilt</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">mat &lt;- matrix(1:25, ncol=5) 
+mat[lower.tri(mat)] &lt;- NA
+sumNAperGroup(mat, rep(1:2,c(3,2)))
+sumNAperGroup(mat, rep(1:2,c(3,2)), asRelative=TRUE)
+
+</code></pre>
+
+
+</div>

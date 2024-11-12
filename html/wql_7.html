@@ -1,0 +1,153 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>eof</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Empirical orthogonal function analysis</h2>
+
+<h3>Description</h3>
+
+<p>Finds and rotates empirical orthogonal functions (EOFs).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">eof(x, n, scale. = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a data frame or matrix, with no missing values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>number of EOFs to retain for rotation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.</code></td>
+<td>
+<p>logical indicating whether the (centered) variables should be
+scaled to have unit variance</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>EOF analysis is used to study patterns of variability (“modes”) in a
+matrix time series and how these patterns change with time
+(“amplitude time series”). Hannachi et al. (2007) give a detailed
+discussion of this exploratory approach with emphasis on meteorological
+data. In oceanography and climatology, the time series represent
+observations at different spatial locations (columns) over time (rows). But
+columns can also be seasons of the year (Jassby et al. 1999) or even a
+combination of seasons and depth layers (Jassby et al. 1990). EOF analysis
+uses the same techniques as principal component analysis, but the time
+series are observations of the same variable in the same units. Scaling the
+data is optional, but it is the default here.
+</p>
+<p>Eigenvectors (unscaled EOFs) and corresponding eigenvalues (amount of
+explained variance) are found by singular value decomposition of the
+centered and (optionally) scaled data matrix using <code>prcomp</code>. In
+order to facilitate a physical interpretation of the variability modes, a
+subset consisting of the <code>n</code> most important EOFs is rotated (Richman
+1986). <code>eofNum</code> can be used to help choose <code>n</code>. Hannachi et
+al. (2007) recommend orthogonal rotation of EOFs scaled by the square root
+of the corresponding eigenvalues to avoid possible computation problems and
+reduce sensitivity to the choice of <code>n</code>. We follow this recommendation
+here, using the <code>varimax</code> method for the orthogonal rotation.
+</p>
+<p>Note that the signs of the EOFs are arbitrary.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following members: </p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>REOF</code></td>
+<td>
+<p>a matrix with rotated
+EOFs</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>amplitude</code></td>
+<td>
+<p>a matrix with amplitude time series of
+<abbr><span class="acronym">REOF</span></abbr>s</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eigen.pct</code></td>
+<td>
+<p>all eigenvalues of correlation matrix as
+percent of total variance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variance</code></td>
+<td>
+<p>variance explained by retained
+EOFs</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Alan Jassby, James Cloern
+</p>
+
+
+<h3>References</h3>
+
+<p>Hannachi, A., Jolliffe, I.T., and Stephenson, D.B. (2007)
+Empirical orthogonal functions and related techniques in atmospheric
+science: A review. <em>International Journal of Climatology</em> <b>27,</b>
+1119–1152.
+</p>
+<p>Jassby, A.D., Powell, T.M., and Goldman, C.R. (1990) Interannual
+fluctuations in primary production: Direct physical effects and the trophic
+cascade at Castle Lake, California (USA). <em>Limnology and Oceanography</em>
+<b>35,</b> 1021–1038.
+</p>
+<p>Jassby, A.D., Goldman, C.R., Reuter, J.E., and Richards, R.C. (1999) Origins
+and scale dependence of temporal variability in the transparency of Lake
+Tahoe, California-Nevada. <em>Limnology and Oceanography</em> <b>44,</b>
+282–294.
+</p>
+<p>Richman, M. (1986) Rotation of principal components. <em>Journal of
+Climatology</em> <b>6,</b> 293–335.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>eofNum</code>, <code>eofPlot</code>,
+<code>monthCor</code>, <code>ts2df</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Create an annual matrix time series
+chla1 &lt;- aggregate(sfbayChla, 1, mean, na.rm = TRUE)
+chla1 &lt;- chla1[, 1:12]  # remove stations with missing years
+# eofNum (see examples) suggests n = 1
+eof(chla1, 1)
+
+</code></pre>
+
+
+</div>

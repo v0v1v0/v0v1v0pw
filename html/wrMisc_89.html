@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>asSepList</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Organize Data as Separate List-Entries</h2>
+
+<h3>Description</h3>
+
+<p><code>asSepList</code> allows reorganizing most types of input into a list with separate numeric vectors. For example, matrixes or data.frames will be split into separate columns
+(differnt to <code>partUnlist</code> which maintains the original structure). This function also works with lists of lists.
+This function may be helpful for reorganizing data for plots.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">asSepList(
+  y,
+  minLen = 4,
+  asNumeric = TRUE,
+  exclElem = NULL,
+  sep = "_",
+  fillNames = TRUE,
+  silent = FALSE,
+  callFrom = NULL,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>list to be separated/split in vectors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minLen</code></td>
+<td>
+<p>(integer) min length (or number of rows), as add'l element to eliminate arguments given without names when asSepList is called in vioplot2</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>asNumeric</code></td>
+<td>
+<p>(logical) to transform all list-elements in simple numeric vectors (won't work if some entries are character)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclElem</code></td>
+<td>
+<p>(character) optinal names to exclude if any (lazy matching) matches (to exclude other arguments be misinterpreted as data)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep</code></td>
+<td>
+<p>(character) separator when combining name of list-element to colames</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fillNames</code></td>
+<td>
+<p>(logical) add names for list-elements/ series when not given</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a list, partially unlisted to vectors
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>partUnlist</code>, <code>unlist</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">bb &lt;- list(fa=gl(2,2), c=31:33, L2=matrix(21:28,nc=2),
+  li=list(li1=11:14, li2=data.frame(41:44)))
+asSepList(bb)
+## multi data-frame examples
+ca &lt;- data.frame(a=11:15, b=21:25, c=31:35)
+cb &lt;- data.frame(a=51:53, b=61:63)
+cc &lt;- list(gl(3,2), ca, cb, 91:94, short=81:82, letters[1:5])
+asSepList(cc)
+cd &lt;- list(e1=gl(3,2), e2=ca, e3=cb, e4=91:94, short=81:82, e6=letters[1:5])
+asSepList(cd)
+</code></pre>
+
+
+</div>

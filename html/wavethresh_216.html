@@ -1,0 +1,151 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>support</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Returns support of compactly supported wavelets.</h2>
+
+<h3>Description</h3>
+
+<p>Returns the support for compactly supported wavelets. This information is useful for drawing wavelets for annotating axes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">support(filter.number=10, family="DaubLeAsymm", m=0, n=0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>filter.number</code></td>
+<td>
+<p>The member index of a wavelet within the family.
+For Daubechies' compactly supported wavelet this is the number of
+vanishing moments which is related to the smoothness.
+See <code>filter.select</code> for more information on the
+wavelets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>The family of wavelets.
+See <code>filter.select</code> for more information on the wavelets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>Optional scale value (in usual wavelet terminology this is j)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Optional translation value (in usual wavelet terminology, this is k)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>It is useful to know the support of a wavelet when drawing it to annotate
+labels. Other functions, such as wavelet density estimation
+(<code>CWavDE</code>), also use this information.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components (each one is a single numeric value)
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>lh</code></td>
+<td>
+<p>Left hand support of the wavelet with scale m and translation n.
+These values change as m and n (although when m=0 the function
+confusingly returns the next coarser wavelet where you might
+expect it to return the mother. The mother is indexed by m=-1)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rh</code></td>
+<td>
+<p>As lh but returns the rh end.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>psi.lh</code></td>
+<td>
+<p>left hand end of the support interval for the mother wavelet
+(remains unchanged no matter what m or n are)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>psi.rh</code></td>
+<td>
+<p>right hand end of the support interval for the mother wavelet
+(remains unchanged no matter what m or n are)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phi.lh</code></td>
+<td>
+<p>left hand end of the support interval for the father wavelet
+(remains unchanged no matter what m or n are)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phi.rh</code></td>
+<td>
+<p>right hand end of the support interval for the father wavelet (remains unchanged no matter what m or n are)</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>CWavDE</code>,
+<code>draw.default</code>,
+<code>filter.select</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# What is the support of a Haar wavelet?
+#
+support(filter.number=1, family="DaubExPhase", m=0, n=0)
+#$lh
+#[1] 0
+#
+#$rh
+#[1] 2
+#
+#$psi.lh
+#[1] 0
+#
+#$psi.rh
+#[1] 1
+#
+#$phi.lh
+#[1] 0
+#
+#$phi.rh
+#[1] 1
+#
+# So the mother and father wavelet have support [0,1]
+#
+</code></pre>
+
+
+</div>

@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>import2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Import two W4M tables</h2>
+
+<h3>Description</h3>
+
+<p>import2
+Function to import a metadata table file and its corresponding
+dataMatrix file.
+import2 performs checks to ensure the identifiers match between
+the two tables and stops with an explicit error message in case
+identifiers do not match.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">import2(pathDM, pathMeta, typeMeta, disable_comm = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>pathDM</code></td>
+<td>
+<p>a path to a file corresponding to the dataMatrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pathMeta</code></td>
+<td>
+<p>a path to a file corresponding to the metadata table</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>typeMeta</code></td>
+<td>
+<p>"sample" or "variable" depending on the metadata content</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>disable_comm</code></td>
+<td>
+<p>a <code>boolean</code> with default to <code>TRUE</code> to indicate
+whether the comment character <code>#</code> should be disabled as a comment tag
+for the import of the metadata file; when <code>TRUE</code>, <code>#</code> in the
+metadata table's columns will be considered as any other character.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a <code>list</code> containing two elements:
+</p>
+
+<ul>
+<li>
+<p> dataMatrix a <code>data.frame</code> corresponding to the imported dataMatrix table;
+</p>
+</li>
+<li>
+<p> metadata a <code>data.frame</code> corresponding to the imported metadata table
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>M.Petera
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+dm_path &lt;- system.file(
+  "extdata",
+  "mini_datamatrix.txt",
+  package="W4MRUtils"
+)
+meta_path &lt;- system.file(
+  "extdata",
+  "mini_variablemetadata.txt",
+  package="W4MRUtils"
+)
+
+## import considering # is not a comment character
+A &lt;- W4MRUtils::import2(dm_path, meta_path, "variable")
+print(A$dataMatrix[1:5, 1:5])
+print(A$metadata[1:5, ])
+
+## import considering # is a comment character
+B &lt;- W4MRUtils::import2(dm_path, meta_path, "variable", disable_comm = FALSE)
+print(B$dataMatrix[1:5, 1:5])
+print(B$metadata[1:5, ])
+
+
+</code></pre>
+
+
+</div>

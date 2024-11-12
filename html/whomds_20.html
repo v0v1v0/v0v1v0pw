@@ -1,0 +1,180 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rasch_model</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Run the Rasch Model and print diagnostic results</h2>
+
+<h3>Description</h3>
+
+<p>Run the Rasch Model and print diagnostic results
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rasch_model(
+  df,
+  vars_metric,
+  vars_id,
+  print_results = FALSE,
+  path_output = NULL,
+  LIDcutoff = 0.2
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>a data frame of individual survey data, where each row is an individual</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vars_metric</code></td>
+<td>
+<p>a character vector of items to use in the Rasch Analysis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vars_id</code></td>
+<td>
+<p>a string with column name uniquely identifying individuals</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print_results</code></td>
+<td>
+<p>a logical value indicating whether or not to print various files displaying results from the Rasch Model. Default is FALSE, to not print the files.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path_output</code></td>
+<td>
+<p>a string with the path to the output folder. Default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>LIDcutoff</code></td>
+<td>
+<p>either a numeric value between 0 and 1 indicating the cut-off for significant local item dependence, or the string "christensen" to use the cut-off suggested by Christensen et al. 2017 (see reference). If "christensen" cut-off fails, defaults to 0.2.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The Rasch Model is calculated using the function <code>eRm::PCM()</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a list with results from the Rasch Model:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>the results from the Rasch Model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df_score</code></td>
+<td>
+<p>a tibble with the items used in the analysis and the person abilities</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thresholds</code></td>
+<td>
+<p>the item thresholds (i.e., crossings)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>person_parameters</code></td>
+<td>
+<p>person abilities</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PSI</code></td>
+<td>
+<p>the person-separation index</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item_fit</code></td>
+<td>
+<p>infit and outfit statistics per item</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>residuals_PCM</code></td>
+<td>
+<p>the standardized person residuals</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>LID</code></td>
+<td>
+<p>matrix with the item residual correlations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>targeting</code></td>
+<td>
+<p>a matrix with information on the targeting of the model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fit_results</code></td>
+<td>
+<p>a string with results of the item fit</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>LID_results</code></td>
+<td>
+<p>a string with results of the local item dependency</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>disordered_results</code></td>
+<td>
+<p>a string listing items with disordered thresholds</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Christensen, K. B., Makransky, G., &amp; Horton, M. (2017). Critical Values for Yen’s Q 3 : Identification of Local Dependence in the Rasch Model Using Residual Correlations.  Applied Psychological Measurement, 41(3), 178-194. <a href="https://doi.org/10.1177/0146621616677520">doi:10.1177/0146621616677520</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other rasch functions: 
+<code>rasch_DIF()</code>,
+<code>rasch_df_nest()</code>,
+<code>rasch_drop()</code>,
+<code>rasch_factor()</code>,
+<code>rasch_mds_children()</code>,
+<code>rasch_mds()</code>,
+<code>rasch_model_children()</code>,
+<code>rasch_quality_children_print()</code>,
+<code>rasch_quality_children()</code>,
+<code>rasch_rawscore()</code>,
+<code>rasch_recode()</code>,
+<code>rasch_rescale_children()</code>,
+<code>rasch_rescale()</code>,
+<code>rasch_split_age()</code>,
+<code>rasch_split()</code>,
+<code>rasch_testlet()</code>
+</p>
+
+
+</div>

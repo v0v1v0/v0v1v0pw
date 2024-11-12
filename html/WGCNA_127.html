@@ -1,0 +1,548 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>labeledHeatmap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Produce a labeled heatmap plot </h2>
+
+<h3>Description</h3>
+
+<p>Plots a heatmap plot with color legend, row and column annotation, and optional text within th heatmap.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">labeledHeatmap(
+  Matrix, 
+  xLabels, yLabels = NULL, 
+  xSymbols = NULL, ySymbols = NULL, 
+  colorLabels = NULL, 
+  xColorLabels = FALSE, yColorLabels = FALSE, 
+  checkColorsValid = TRUE,
+  invertColors = FALSE, 
+  setStdMargins = TRUE, 
+  xLabelsPosition = "bottom",
+  xLabelsAngle = 45,
+  xLabelsAdj = 1,
+  yLabelsPosition = "left",
+  xColorWidth = 2 * strheight("M"),
+  yColorWidth = 2 * strwidth("M"), 
+  xColorOffset = strheight("M")/3, 
+  yColorOffset = strwidth("M")/3,
+  colorMatrix = NULL,
+  colors = NULL, 
+  naColor = "grey",
+  textMatrix = NULL, 
+  cex.text = NULL, 
+  textAdj = c(0.5, 0.5),
+  cex.lab = NULL, 
+  cex.lab.x = cex.lab,
+  cex.lab.y = cex.lab,
+  colors.lab.x = 1,
+  colors.lab.y = 1,
+  font.lab.x = 1,
+  font.lab.y = 1,
+
+  bg.lab.x = NULL,
+  bg.lab.y = NULL,
+  x.adj.lab.y = 1,
+
+  plotLegend = TRUE, 
+  keepLegendSpace = plotLegend,
+  legendLabel = "",
+  cex.legendLabel = 1,
+
+  # Separator line specification                   
+  verticalSeparator.x = NULL,
+  verticalSeparator.col = 1,
+  verticalSeparator.lty = 1,
+  verticalSeparator.lwd = 1,
+  verticalSeparator.ext = 0,
+  verticalSeparator.interval = 0,
+
+  horizontalSeparator.y = NULL,
+  horizontalSeparator.col = 1,
+  horizontalSeparator.lty = 1,
+  horizontalSeparator.lwd = 1,
+  horizontalSeparator.ext = 0,
+  horizontalSeparator.interval = 0,
+  # optional restrictions on which rows and columns to actually show
+  showRows = NULL,
+  showCols = NULL,
+  ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Matrix</code></td>
+<td>
+<p> numerical matrix to be plotted in the heatmap. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xLabels</code></td>
+<td>
+<p> labels for the columns. See Details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yLabels</code></td>
+<td>
+<p> labels for the rows. See Details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xSymbols</code></td>
+<td>
+<p> additional labels used when <code>xLabels</code> are interpreted as colors. See Details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ySymbols</code></td>
+<td>
+<p> additional labels used when <code>yLabels</code> are interpreted as colors. See Details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorLabels</code></td>
+<td>
+<p> logical: should <code>xLabels</code> and <code>yLabels</code> be interpreted as colors? If
+given, overrides <code>xColorLabels</code> and <code>yColorLabels</code> below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xColorLabels</code></td>
+<td>
+<p> logical: should <code>xLabels</code> be interpreted as colors? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yColorLabels</code></td>
+<td>
+<p> logical: should <code>yLabels</code> be interpreted as colors? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checkColorsValid</code></td>
+<td>
+<p> logical: should given colors be checked for validity 
+against the output of <code>colors()</code> ? If this argument is <code>FALSE</code>, invalid color specification
+will trigger an error.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>invertColors</code></td>
+<td>
+<p> logical: should the color order be inverted? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>setStdMargins</code></td>
+<td>
+<p> logical: should standard margins be set before calling the plot function?
+Standard margins depend on <code>colorLabels</code>: they are wider for text labels and narrower for color
+labels. The defaults are static, that is the function does not attempt to guess the optimal margins. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xLabelsPosition</code></td>
+<td>
+<p> a character string specifying the position of labels for the columns.
+Recognized values are (unique abbreviations of) <code>"top", "bottom"</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xLabelsAngle</code></td>
+<td>
+<p> angle by which the column labels should be rotated. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xLabelsAdj</code></td>
+<td>
+<p> justification parameter for column labels. See <code>par</code> and the
+description of parameter <code>"adj"</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yLabelsPosition</code></td>
+<td>
+<p> a character string specifying the position of labels for the columns.
+Recognized values are (unique abbreviations of) <code>"left", "right"</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xColorWidth</code></td>
+<td>
+<p> width of the color labels for the x axis expressed in user corrdinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yColorWidth</code></td>
+<td>
+<p> width of the color labels for the y axis expressed in user coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xColorOffset</code></td>
+<td>
+<p> gap between the y axis and color labels, in user coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yColorOffset</code></td>
+<td>
+<p> gap between the x axis and color labels, in user coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorMatrix</code></td>
+<td>
+<p> optional explicit specification for the color of the heatmap cells. If given, overrides values
+specified in <code>colors</code> and <code>naColor</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colors</code></td>
+<td>
+<p> color pallette to be used in the heatmap. Defaults to <code>heat.colors</code>. Only used if
+<code>colorMatrix</code> is not given. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>naColor</code></td>
+<td>
+<p> color to be used for encoding missing data. Only used if <code>colorMatrix</code> is not used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>textMatrix</code></td>
+<td>
+<p> optional text entries for each cell. Either a matrix of the same dimensions as
+<code>Matrix</code> or a vector of the same length as the number of entries in <code>Matrix</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.text</code></td>
+<td>
+<p> character expansion factor for <code>textMatrix</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>textAdj</code></td>
+<td>
+<p>Adjustment for the entries in the text matrix. See the <code>adj</code> argument to
+<code>text</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.lab</code></td>
+<td>
+<p> character expansion factor for text labels labeling the axes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.lab.x</code></td>
+<td>
+<p> character expansion factor for text labels labeling the x axis. Overrides <code>cex.lab</code>
+above. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.lab.y</code></td>
+<td>
+<p> character expansion factor for text labels labeling the y axis. Overrides <code>cex.lab</code>  
+above. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colors.lab.x</code></td>
+<td>
+<p>colors for character labels or symbols along x axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colors.lab.y</code></td>
+<td>
+<p>colors for character labels or symbols along y axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>font.lab.x</code></td>
+<td>
+<p>integer specifying font for labels or symbols along x axis. See <code>text</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>font.lab.y</code></td>
+<td>
+<p>integer specifying font for labels or symbols along y axis. See <code>text</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bg.lab.x</code></td>
+<td>
+<p>background color for the margin along the x axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bg.lab.y</code></td>
+<td>
+<p>background color for the margin along the y axs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x.adj.lab.y</code></td>
+<td>
+<p>Justification of labels for the y axis along the x direction. A value of 0
+produces left-justified text, 0.5 (the default) centered
+text and 1 right-justified text. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotLegend</code></td>
+<td>
+<p> logical: should a color legend be plotted? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepLegendSpace</code></td>
+<td>
+<p> logical: if the color legend is not drawn, should the space be left empty
+(<code>TRUE</code>), or should the heatmap fill the space (<code>FALSE</code>)?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legendLabel</code></td>
+<td>
+<p>character string to be shown next to the label analogous to an axis label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.legendLabel</code></td>
+<td>
+<p>character expansion factor for the legend label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verticalSeparator.x</code></td>
+<td>
+<p>indices of columns in input <code>Matrix</code> after 
+which separator lines (vertical lines between columns) 
+should be drawn. <code>NULL</code> means no lines will be drawn.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verticalSeparator.col</code></td>
+<td>
+<p>color(s) of the vertical separator lines. Recycled if need be. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verticalSeparator.lty</code></td>
+<td>
+<p>line type of the vertical separator lines. Recycled if need be. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verticalSeparator.lwd</code></td>
+<td>
+<p>line width of the vertical separator lines. Recycled if need be. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verticalSeparator.ext</code></td>
+<td>
+<p>number giving the extension of the separator line into the margin as a fraction
+of the margin width. 0 means no extension, 1 means extend all the way through the margin. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verticalSeparator.interval</code></td>
+<td>
+<p>number giving the interval for vertical separators. If larger than zero, vertical
+separators will be drawn after every <code>verticalSeparator.interval</code> of displayed columns. 
+Used only when length of <code>verticalSeparator.x</code> is zero. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>horizontalSeparator.y</code></td>
+<td>
+<p>indices of columns in input <code>Matrix</code> after which separator lines (horizontal lines
+between columns) should be drawn. <code>NULL</code> means no lines will be drawn.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>horizontalSeparator.col</code></td>
+<td>
+<p> color(s) of the horizontal separator lines. Recycled if need be. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>horizontalSeparator.lty</code></td>
+<td>
+<p>line type of the horizontal separator lines. Recycled if need be. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>horizontalSeparator.lwd</code></td>
+<td>
+<p>line width of the horizontal separator lines. Recycled if need be. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>horizontalSeparator.ext</code></td>
+<td>
+<p>number giving the extension of the separator line into the margin as a
+fraction of the margin width. 0 means no extension, 1 means extend all the way through the margin. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>horizontalSeparator.interval</code></td>
+<td>
+<p>number giving the interval for horizontal separators. If larger than zero, horizontal
+separators will be drawn after every <code>horizontalSeparator.interval</code> of displayed rows. 
+Used only when length of <code>horizontalSeparator.y</code> is zero. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>showRows</code></td>
+<td>
+<p>A numeric vector giving the indices of rows that are actually to be shown. Defaults to all rows.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>showCols</code></td>
+<td>
+<p>A numeric vector giving the indices of columns that are actually to be shown. Defaults to all columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p> other arguments to function <code>heatmap</code>. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function basically plots a standard heatmap plot of the given <code>Matrix</code> and embellishes it with
+row and column labels and/or with text within the heatmap entries. Row and column labels can be either
+character strings or color squares, or both. 
+</p>
+<p>To get simple text labels, use <code>colorLabels=FALSE</code> and pass the desired row and column labels in
+<code>yLabels</code> and <code>xLabels</code>, respectively. 
+</p>
+<p>To label rows and columns by color squares, use
+<code>colorLabels=TRUE</code>; <code>yLabels</code> and <code>xLabels</code> are then expected to represent valid colors.
+For reasons of compatibility with other functions, each entry in <code>yLabels</code> and <code>xLabels</code> is
+expected to consist of a color designation preceded by 2 characters: an example would be
+<code>MEturquoise</code>. The first two characters can be arbitrary, they are stripped. 
+Any labels that do not represent valid colors will be considered text labels and printed in full,
+allowing the user to mix text and color labels.
+</p>
+<p>It is also possible to label rows and columns by both color squares and additional text annotation. To
+achieve this, use the above technique to get color labels and, additionally, pass the desired text
+annotation in the <code>xSymbols</code> and <code>ySymbols</code> arguments. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>None.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>heatmap</code>, <code>colors</code> </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# This example illustrates 4 main ways of annotating columns and rows of a heatmap.
+# Copy and paste the whole example into an R session with an interactive plot window;
+# alternatively, you may replace the command sizeGrWindow below by opening 
+# another graphical device such as pdf.
+
+# Generate a matrix to be plotted
+
+nCol = 8; nRow = 7;
+mat = matrix(runif(nCol*nRow, min = -1, max = 1), nRow, nCol);
+
+rowColors = standardColors(nRow);
+colColors = standardColors(nRow + nCol)[(nRow+1):(nRow + nCol)];
+
+rowColors;
+colColors;
+
+sizeGrWindow(9,7)
+par(mfrow = c(2,2))
+par(mar = c(4, 5, 4, 6));
+
+# Label rows and columns by text:
+
+labeledHeatmap(mat, xLabels = colColors, yLabels = rowColors, 
+               colors = greenWhiteRed(50),
+               setStdMargins = FALSE, 
+               textMatrix = signif(mat, 2),
+               main = "Text-labeled heatmap");
+
+# Label rows and columns by colors:
+
+rowLabels = paste("ME", rowColors, sep="");
+colLabels = paste("ME", colColors, sep="");
+
+labeledHeatmap(mat, xLabels = colLabels, yLabels = rowLabels,
+               colorLabels = TRUE,
+               colors = greenWhiteRed(50),
+               setStdMargins = FALSE,
+               textMatrix = signif(mat, 2),
+               main = "Color-labeled heatmap");
+
+# Mix text and color labels:
+
+rowLabels[3] = "Row 3";
+colLabels[1] = "Column 1";
+
+labeledHeatmap(mat, xLabels = colLabels, yLabels = rowLabels,
+               colorLabels = TRUE,
+               colors = greenWhiteRed(50),
+               setStdMargins = FALSE,
+               textMatrix = signif(mat, 2), 
+               main = "Mix-labeled heatmap");
+
+# Color labels and additional text labels
+
+rowLabels = paste("ME", rowColors, sep="");
+colLabels = paste("ME", colColors, sep="");
+
+extraRowLabels = paste("Row", c(1:nRow));
+extraColLabels = paste("Column", c(1:nCol));
+
+# Extend margins to fit all labels
+par(mar = c(6, 6, 4, 6));
+labeledHeatmap(mat, xLabels = colLabels, yLabels = rowLabels,
+               xSymbols = extraColLabels,
+               ySymbols = extraRowLabels,
+               colorLabels = TRUE,
+               colors = greenWhiteRed(50),
+               setStdMargins = FALSE,
+               textMatrix = signif(mat, 2),
+               main = "Text- + color-labeled heatmap");
+
+</code></pre>
+
+
+</div>

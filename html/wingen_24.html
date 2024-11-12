@@ -1,0 +1,201 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>resist_gd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a moving window map of genetic diversity based on resistance</h2>
+
+<h3>Description</h3>
+
+<p>Generate a continuous raster map of genetic diversity using resistance distances calculated with a conductivity surface
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">resist_gd(
+  gen,
+  coords,
+  lyr,
+  maxdist,
+  distmat = NULL,
+  stat = "pi",
+  fact = 0,
+  rarify = FALSE,
+  rarify_n = 2,
+  rarify_nit = 5,
+  min_n = 2,
+  fun = mean,
+  L = "nvariants",
+  rarify_alleles = TRUE,
+  sig = 0.05,
+  transitionFunction = mean,
+  directions = 8,
+  geoCorrection = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>gen</code></td>
+<td>
+<p>genetic data either as an object of type vcf or a path to a vcf file (<em>note:</em> order matters! The coordinate and genetic data should be in the same order; there are currently no checks for this)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coords</code></td>
+<td>
+<p>coordinates of samples as sf points, a two-column matrix, or a data.frame representing x and y coordinates (see Details for important information about projections)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lyr</code></td>
+<td>
+<p>conductivity layer (higher values should mean greater conductivity) to move window across. Can be either a SpatRaster or RasterLayer.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxdist</code></td>
+<td>
+<p>maximum cost distance used to define neighborhood; any samples further than this cost distance will not be included (this can be thought of as the neighborhood radius, but in terms of cost distance).
+Can either be (1) a single numeric value or (2) a SpatRaster where each pixel is the maximum distance to be used for that cell on the landscape (must be the same spatial scale as <code>lyr</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distmat</code></td>
+<td>
+<p>distance matrix output from get_resdist (optional; can be used to save time on distance calculations)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stat</code></td>
+<td>
+<p>genetic diversity statistic(s) to calculate (see Details, defaults to <code>"pi"</code>). Can be a single statistic or a vector of statistics</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fact</code></td>
+<td>
+<p>aggregation factor to apply to <code>lyr</code> (defaults to 0; <em>note:</em> increasing this value reduces computational time)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rarify</code></td>
+<td>
+<p>if rarify = TRUE, rarefaction is performed (defaults to FALSE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rarify_n</code></td>
+<td>
+<p>if rarify = TRUE, number of points to use for rarefaction (defaults to min_n)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rarify_nit</code></td>
+<td>
+<p>if rarify = TRUE, number of iterations to use for rarefaction (defaults to 5). Can also be set to <code>"all"</code> to use all possible combinations of samples of size <code>rarify_n</code> within the window.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_n</code></td>
+<td>
+<p>minimum number of samples to use in calculations (any focal cell with a window containing less than this number of samples will be assigned a value of NA; defaults to 2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>function to use to summarize rarefaction results (defaults to mean, must take <code>na.rm = TRUE</code> as an argument)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>for calculating <code>"pi"</code>, L argument in pi.dosage function. Return the average nucleotide diversity per nucleotide given the length L of the sequence. The wingen default is L = "nvariants", which sets L to the number of variants in the VCF. If L = NULL, returns the sum over SNPs of nucleotide diversity (<em>note:</em> L = NULL is the pi.dosage default which wingen does not use)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rarify_alleles</code></td>
+<td>
+<p>for calculating <code>"biallelic_richness"</code>, whether to perform rarefaction of allele counts as in allelic.richness (defaults to TRUE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sig</code></td>
+<td>
+<p>for calculating <code>"hwe"</code>, significance threshold (i.e., alpha level) to use for hardy-weinberg equilibrium tests (defaults to 0.05)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transitionFunction</code></td>
+<td>
+<p>function to calculate transition values from grid values (defaults to mean)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>directions</code></td>
+<td>
+<p>directions in which cells are connected (4, 8, 16, or other), see adjacent (defaults to 8)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geoCorrection</code></td>
+<td>
+<p>whether to apply correction to account for local distances (defaults to TRUE). Geographic correction is necessary for all objects of the class Transition that are either: (1) based on a grid in a geographic (lonlat) projection and covering a large area; (2) made with directions &gt; 4 (see geoCorrection for more details).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Coordinates and rasters should be in a Euclidean coordinate system (i.e., UTM coordinates) such that raster cell width and height are equal distances.
+As such, longitude-latitude systems should be transformed before using dist_gd. Transformation can be performed using st_set_crs for coordinates or project for rasters (see vignette for more details).
+</p>
+<p>Coordinates and rasters should be in a projected (planar) coordinate system such that raster cells are of equal sizes.
+Therefore, spherical systems (including latitute-longitude coordinate systems) should be projected prior to use.
+Transformation can be performed using st_set_crs for coordinates or project for rasters (see vignette for more details).
+</p>
+<p>Current genetic diversity metrics that can be specified with <code>stat</code> include:
+</p>
+
+<ul>
+<li> <p><code>"pi"</code> for nucleotide diversity (default) calculated using <code>hierfstat</code> pi.dosage. Use the <code>L</code> argument to set the sequence length (defaults to dividing by the number of variants).
+</p>
+</li>
+<li> <p><code>"Ho"</code> for average observed heterozygosity across all sites
+</p>
+</li>
+<li> <p><code>"allelic_richness"</code> for average number of alleles across all sites
+</p>
+</li>
+<li> <p><code>"biallelic_richness"</code> for average allelic richness across all sites for a biallelic dataset (this option is faster than <code>"allelic_richness"</code>)
+</p>
+</li>
+<li> <p><code>"hwe"</code> for the proportion of sites that are not in Hardy–Weinberg equilibrium, calculated using <code>pegas</code> hw.test at the 0.05 level (other alpha levels  can be specified by adding the sig argument; e.g., <code>sig = 0.10</code>).
+</p>
+</li>
+<li> <p><code>"basic_stats"</code> for a series of statistics produced by <code>hierfstat</code> basic.stats including
+mean observed heterozygosity (same as Ho), mean gene diversities within population (Hs),
+Gene diversities overall (Ht), and Fis following Nei (1987). Population-based statistics (e.g., FST) normally reported by basic.stats
+are not included as they are not meaningful within the individual-based moving windows.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>SpatRaster that includes a raster layer of genetic diversity and a raster layer of the number of samples within the window for each cell
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">load_mini_ex()
+rpi &lt;- resist_gd(mini_vcf, mini_coords, mini_lyr, maxdist = 50)
+</code></pre>
+
+
+</div>

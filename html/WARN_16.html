@@ -1,0 +1,130 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>warnProb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Calculate posterior probability of the weaning parameters
+</h2>
+
+<h3>Description</h3>
+
+<p><code>warnProb</code> calculate posterior probabilities under a given class <code>"warn"</code> object and a given parameter range.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+warnProb(object, weaning.par = "age", range.x, range.y = NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object of class <code>"warn"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weaning.par</code></td>
+<td>
+<p>character for the intended weanig parameter. The allowed values are <code>"age"</code> (the default), <code>"enrich"</code>, and <code>"wnfood"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>range.x, range.y</code></td>
+<td>
+<p>numeric vectors of length 2, giving the range of the intended weanig parameters. For example, <code>range.x</code> corresponds to the age at the start of weaning if <code>weaning.par = "age"</code>. <code>range.y</code> is used only if <code>weaning.par = "age"</code>, and corresponds to the age at the end of weaning. Fractional point lower than e-002 is rounded.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>warnProb</code> calculates posterior probability of the weaning parameter that ranges between designated range. Parameter distribution is represented as the product of kernel density estimation performed in <code>warn</code>. Weaning ages are estimated from two-dimensional probability distribution, and nitrogen isotope ratios (d15Ns) of enrichment factor and weaning food derived collagen are from one-dimensional.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>warnProb</code> returns an object of <code>class</code> <code>"warnProb"</code> which is a subclass of <code>"warn"</code>.<br>
+The functions <code>summary</code> and <code>plot</code> are used to obtain and indicate a summary and figure of the results, respectively.<br>
+An object of class <code>"warnProb"</code> at least has following list components in addition to those succeeded from <code>"warn"</code>:<br></p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>probability</code></td>
+<td>
+<p>posterior probability of parameter that range between the designated range.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>range</code></td>
+<td>
+<p>a vector giving the range of the intended weanig parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weaning.par</code></td>
+<td>
+<p>a character indicating the weaning parameter used.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Takumi Tsutaya developed this model.
+</p>
+
+
+<h3>References</h3>
+
+<p>Tsutaya, T., and Yoneda, M. (2013). Quantitative reconstruction of weaning ages in archaeological human populations using bone collagen nitrogen isotope ratios and approximate Bayesian computation. <em>PLoS ONE</em> <b>8</b>, e72327.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>WARN</code>, <code>warn</code>, <code>warnCI</code>, <code>summary.warnProb</code>, <code>plot.warnProb</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Data from the Lerna population.
+nonadult &lt;- subset(lerna, lerna$age &lt;= 10)
+adult &lt;- subset(lerna, lerna$age &gt; 17)
+female &lt;- subset(adult, adult$sex == "f")
+
+## Calculate maximum density estimators using ABC.
+warn.lerna &lt;- warn(
+  age = nonadult$age,
+  d15N = nonadult$d15N,
+  female.mean = mean(female$d15N),
+  num.particle = 500,
+  female.sd = sd(female$d15N),
+  prior = c(0.2, 0.2, 1.6, 0.2, 2.5, 0.2, 8.1, 0.2, 0, 0.7),
+  tolerances = c(1.5, 0.7))
+
+## Calculate probabilities for a given parameter range.
+warnprob.age &lt;- warnProb(warn.lerna, "age", c(0.0, 1.1), c(0.8, 2.3))
+warnprob.enrich &lt;- warnProb(warn.lerna, "enrich", c(1.5, 3.5))
+warnprob.wnfood &lt;- warnProb(warn.lerna, "wnfood", c(7.3, 8.8))
+
+## Indicate summary.
+summary(warnprob.age)
+summary(warnprob.enrich)
+
+## Plot.
+plot(warnprob.age)
+plot(warnprob.wnfood)
+
+## Plot with image.
+plot(warnprob.age, is.image = TRUE)
+</code></pre>
+
+
+</div>

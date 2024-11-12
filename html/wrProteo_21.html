@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>isolNAneighb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Isolate NA-neighbours</h2>
+
+<h3>Description</h3>
+
+<p>This functions extracts all replicate-values where at least one of the replicates is <code>NA</code> and sorts by number of <code>NA</code>s per group.
+A list with all <code>NA</code>-neighbours organized by the number of <code>NA</code>s gets returned.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">isolNAneighb(mat, gr, silent = FALSE, debug = FALSE, callFrom = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mat</code></td>
+<td>
+<p>(matrix or data.frame) main data (may contain <code>NA</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gr</code></td>
+<td>
+<p>(character or factor) grouping of columns of 'mat', replicate association</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a list with NA-neighbours sorted by number of NAs in replicate group
+</p>
+
+
+<h3>See Also</h3>
+
+<p>This function gets used by <code>matrixNAneighbourImpute</code> and <code>testRobustToNAimputation</code>; estimation of mode <code>stableMode</code>; detection of NAs <code>na.fail</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">mat1 &lt;- c(22.2, 22.5, 22.2, 22.2, 21.5, 22.0, 22.1, 21.7, 21.5, 22, 22.2, 22.7,
+  NA, NA, NA, NA, NA, NA, NA, 21.2,   NA, NA, NA, NA,
+  NA, 22.6, 23.2, 23.2,  22.4, 22.8, 22.8, NA,  23.3, 23.2, NA, 23.7,
+  NA, 23.0, 23.1, 23.0,  23.2, 23.2, NA, 23.3,  NA, NA, 23.3, 23.8)
+mat1 &lt;- matrix(mat1, ncol=12, byrow=TRUE)
+gr4 &lt;- gl(3, 4)
+isolNAneighb(mat1, gr4)
+</code></pre>
+
+
+</div>

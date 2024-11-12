@@ -1,0 +1,56 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fotmob_get_match_players</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get fotmob match player details by match id</h2>
+
+<h3>Description</h3>
+
+<p>Returns match details from fotmob.com
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fotmob_get_match_players(match_ids)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>match_ids</code></td>
+<td>
+<p>a vector of strings or numbers representing matches</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>returns a dataframe of match players
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+try({
+library(dplyr)
+library(tidyr)
+## single match
+players &lt;- fotmob_get_match_players(3610132)
+salah_id &lt;- "292462"
+players %&gt;%
+  dplyr::filter(id == salah_id) %&gt;%
+  dplyr::select(player_id = id, stats) %&gt;%
+  tidyr::unnest(stats)
+
+## multiple matches
+fotmob_get_match_players(c(3609987, 3609979))
+})
+
+</code></pre>
+
+
+</div>

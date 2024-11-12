@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>numbers2colors</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Color representation for a numeric variable </h2>
+
+<h3>Description</h3>
+
+<p>The function creates a color represenation for the given numeric input.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">numbers2colors(
+   x, 
+   signed = NULL, 
+   centered = signed, 
+   lim = NULL, 
+   commonLim = FALSE,
+   colors = if (signed) blueWhiteRed(100) else blueWhiteRed(100)[51:100],
+   naColor = "grey")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> a vector or matrix of numbers. Missing values are allowed and will be assigned the color
+given in <code>naColor</code>. If a matrix, each column of the matrix is processed separately and the return
+value will be a matrix of colors. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signed</code></td>
+<td>
+<p> logical: should <code>x</code> be considered signed? If <code>TRUE</code>, the default setting is to
+use to use a palette that starts with green for the most negative values, continues with white for
+values around zero and turns red for positive values. If <code>FALSE</code>, the default palette ranges from 
+white for minimum values to red for maximum values. If not given, the behaviour is controlled by values in
+<code>x</code>: if there are both positive and negative values, <code>signed</code> will be considered <code>TRUE</code>,
+otherwise <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>centered</code></td>
+<td>
+<p> logical. If <code>TRUE</code> and <code>signed==TRUE</code>, numeric value zero will
+correspond to the middle of the color palette. If <code>FALSE</code> or <code>signed==FALSE</code>, the middle of
+the color palette will correspond to the average of the minimum and maximum value. If neither <code>signed</code>
+nor <code>centered</code> are given, <code>centered</code> will follow <code>signed</code> (see above).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lim</code></td>
+<td>
+<p> optional specification of limits, that is numeric values that should correspond to the
+first and last entry of <code>colors</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>commonLim</code></td>
+<td>
+<p>logical: should limits be calculated separately for each column of x, or should the
+limits be the same for all columns? Only applies if <code>lim</code> is <code>NULL</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colors</code></td>
+<td>
+<p> color palette to represent the given numbers. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>naColor</code></td>
+<td>
+<p> color to represent missing values in <code>x</code>. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Each column of <code>x</code> is processed individually, meaning that the color palette is adjusted
+individually for each column of <code>x</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector or matrix (of the same dimensions as <code>x</code>) of colors.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder </p>
+
+
+<h3>See Also</h3>
+
+ <p><code>labels2colors</code> for color coding of ordinal labels. </p>
+
+
+</div>

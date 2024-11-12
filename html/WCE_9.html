@@ -1,0 +1,65 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>vcov.WCE</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Obtain variance-covariance matrix from WCE models</h2>
+
+<h3>Description</h3>
+
+<p>This function extracts the knots placement for the spline function used to fit the WCE models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'WCE'
+vcov(object, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A <code>WCE</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Optional; other parameters to be passed through to <code>vcov</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function returns the variance-covariance matrix of the estimated regression coefficients from a WCE model.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The function returns variance-covariance matrices with the estimated regression coefficients for the supplied WCE model object. The number of matrices returned is equivalent to the length of the <code>nknots</code> vector (or one matrix, if <code>nknots</code> is a scalar) passed to the <code>WCE</code> function when fitting the model.
+</p>
+
+
+<h3>References</h3>
+
+<p>Sylvestre, M. P., &amp; Abrahamowicz, M. (2009). Flexible modeling of the cumulative effects of time-dependent exposures on the hazard. Statistics in medicine, 28(27), 3437-3453.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wce &lt;- WCE(drugdata, "Cox", 1, 90, constrained = "R", id = "Id", event = "Event",
+start = "Start", stop = "Stop", expos = "dose", covariates = c("age", "sex"))
+vcov(wce)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,259 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>method_super</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Propensity Score Weighting Using SuperLearner</h2>
+
+<h3>Description</h3>
+
+<p>This page explains the details of estimating weights from SuperLearner-based propensity scores by setting <code>method = "super"</code> in the call to <code>weightit()</code> or <code>weightitMSM()</code>. This method can be used with binary, multi-category, and continuous treatments.
+</p>
+<p>In general, this method relies on estimating propensity scores using the SuperLearner algorithm for stacking predictions and then converting those propensity scores into weights using a formula that depends on the desired estimand. For binary and multi-category treatments, one or more binary classification algorithms are used to estimate the propensity scores as the predicted probability of being in each treatment given the covariates. For continuous treatments, regression algorithms are used to estimate generalized propensity scores as the conditional density of treatment given the covariates. This method relies on <code>SuperLearner::SuperLearner()</code> from the <a href="https://CRAN.R-project.org/package=SuperLearner"><span class="pkg">SuperLearner</span></a> package.
+</p>
+
+
+<h4>Binary Treatments</h4>
+
+<p>For binary treatments, this method estimates the propensity scores using <code>SuperLearner::SuperLearner()</code>. The following estimands are allowed: ATE, ATT, ATC, ATO, ATM, and ATOS. Weights can also be computed using marginal mean weighting through stratification for the ATE, ATT, and ATC. See <code>get_w_from_ps()</code> for details.
+</p>
+
+
+
+<h4>Multi-Category Treatments</h4>
+
+<p>For multi-category treatments, the propensity scores are estimated using several calls to <code>SuperLearner::SuperLearner()</code>, one for each treatment group; the treatment probabilities are not normalized to sum to 1. The following estimands are allowed: ATE, ATT, ATC, ATO, and ATM. The weights for each estimand are computed using the standard formulas or those mentioned above. Weights can also be computed using marginal mean weighting through stratification for the ATE, ATT, and ATC. See <code>get_w_from_ps()</code> for details.
+</p>
+
+
+
+<h4>Continuous Treatments</h4>
+
+<p>For continuous treatments, the generalized propensity score is estimated using <code>SuperLearner::SuperLearner()</code>. In addition, kernel density estimation can be used instead of assuming a normal density for the numerator and denominator of the generalized propensity score by setting <code>density = "kernel"</code>. Other arguments to <code>density()</code> can be specified to refine the density estimation parameters. <code>plot = TRUE</code> can be specified to plot the density for the numerator and denominator, which can be helpful in diagnosing extreme weights.
+</p>
+
+
+
+<h4>Longitudinal Treatments</h4>
+
+<p>For longitudinal treatments, the weights are the product of the weights estimated at each time point.
+</p>
+
+
+
+<h4>Sampling Weights</h4>
+
+<p>Sampling weights are supported through <code>s.weights</code> in all scenarios.
+</p>
+
+
+
+<h4>Missing Data</h4>
+
+<p>In the presence of missing data, the following value(s) for <code>missing</code> are allowed:
+</p>
+
+<dl>
+<dt>
+<code>"ind"</code> (default)</dt>
+<dd>
+<p>First, for each variable with missingness, a new missingness indicator variable is created which takes the value 1 if the original covariate is <code>NA</code> and 0 otherwise. The missingness indicators are added to the model formula as main effects. The missing values in the covariates are then replaced with the covariate medians (this value is arbitrary and does not affect estimation). The weight estimation then proceeds with this new formula and set of covariates. The covariates output in the resulting <code>weightit</code> object will be the original covariates with the <code>NA</code>s.
+</p>
+</dd>
+</dl>
+<h4>M-estimation</h4>
+
+<p>M-estimation is not supported.
+</p>
+
+
+
+<h3>Details</h3>
+
+<p>SuperLearner works by fitting several machine learning models to the treatment and covariates and then taking a weighted combination of the generated predicted values to use as the propensity scores, which are then used to construct weights. The machine learning models used are supplied using the <code>SL.library</code> argument; the more models are supplied, the higher the chance of correctly modeling the propensity score. The predicted values are combined using the method supplied in the <code>SL.method</code> argument (which is nonnegative least squares by default). A benefit of SuperLearner is that, asymptotically, it is guaranteed to perform as well as or better than the best-performing method included in the library. Using Balance SuperLearner by setting <code>SL.method = "method.balance"</code> works by selecting the combination of predicted values that minimizes an imbalance measure.
+</p>
+
+
+<h3>Additional Arguments</h3>
+
+
+<dl>
+<dt><code>discrete</code></dt>
+<dd>
+<p>if <code>TRUE</code>, uses discrete SuperLearner, which simply selects the best performing method. Default <code>FALSE</code>, which finds the optimal combination of predictions for the libraries using <code>SL.method</code>.</p>
+</dd>
+</dl>
+<p>An argument to <code>SL.library</code> <strong>must</strong> be supplied. To see a list of available entries, use <code>SuperLearner::listWrappers()</code>.
+</p>
+<p>All arguments to <code>SuperLearner::SuperLearner()</code> can be passed through <code>weightit()</code> or <code>weightitMSM()</code>, with the following exceptions:
+</p>
+
+<ul>
+<li> <p><code>obsWeights</code> is ignored because sampling weights are passed using <code>s.weights</code>.
+</p>
+</li>
+<li> <p><code>method</code> in <code>SuperLearner()</code> is replaced with the argument <code>SL.method</code> in <code>weightit()</code>.
+</p>
+</li>
+</ul>
+<p>For continuous treatments only, the following arguments may be supplied:
+</p>
+
+<dl>
+<dt><code>density</code></dt>
+<dd>
+<p>A function corresponding to the conditional density of the treatment. The standardized residuals of the treatment model will be fed through this function to produce the numerator and denominator of the generalized propensity score weights. If blank, <code>dnorm()</code> is used as recommended by Robins et al. (2000). This can also be supplied as a string containing the name of the function to be called. If the string contains underscores, the call will be split by the underscores and the latter splits will be supplied as arguments to the second argument and beyond. For example, if <code>density = "dt_2"</code> is specified, the density used will be that of a t-distribution with 2 degrees of freedom. Using a t-distribution can be useful when extreme outcome values are observed (Naimi et al., 2014).
+</p>
+<p>Can also be <code>"kernel"</code> to use kernel density estimation, which calls <code>density()</code> to estimate the numerator and denominator densities for the weights. (This used to be requested by setting <code>use.kernel = TRUE</code>, which is now deprecated.)</p>
+</dd>
+<dt>
+<code>bw</code>, <code>adjust</code>, <code>kernel</code>, <code>n</code>
+</dt>
+<dd>
+<p>If <code>density = "kernel"</code>, the arguments to <code>density()</code>. The defaults are the same as those in <code>density()</code> except that <code>n</code> is 10 times the number of units in the sample.</p>
+</dd>
+<dt><code>plot</code></dt>
+<dd>
+<p>If <code>density = "kernel"</code>, whether to plot the estimated densities.</p>
+</dd>
+</dl>
+<h4>Balance SuperLearner</h4>
+
+<p>In addition to the methods allowed by <code>SuperLearner()</code>, one can specify <code>SL.method = "method.balance"</code> to use "Balance SuperLearner" as described by Pirracchio and Carone (2018), wherein covariate balance is used to choose the optimal combination of the predictions from the methods specified with <code>SL.library</code>. Coefficients are chosen (one for each prediction method) so that the weights generated from the weighted combination of the predictions optimize a balance criterion, which must be set with the <code>criterion</code> argument, described below.
+</p>
+
+<dl>
+<dt><code>criterion</code></dt>
+<dd>
+<p>A string describing the balance criterion used to select the best weights. See <code>cobalt::bal.compute()</code> for allowable options for each treatment type. For binary and multi-category treatments, the default is <code>"smd.mean"</code>, which minimizes the average absolute standard mean difference among the covariates between treatment groups. For continuous treatments, the default is <code>"p.mean"</code>, which minimizes the average absolute Pearson correlation between the treatment and covariates.
+</p>
+</dd>
+</dl>
+<p>Note that this implementation differs from that of Pirracchio and Carone (2018) in that here, balance is measured only on the terms included in the model formula (i.e., and not their interactions unless specifically included), and balance results from a sample weighted using the estimated predicted values as propensity scores, not a sample matched using propensity score matching on the predicted values. Binary and continuous treatments are supported, but currently multi-category treatments are not.
+</p>
+
+
+
+<h3>Additional Outputs</h3>
+
+
+<dl>
+<dt><code>info</code></dt>
+<dd>
+<p>For binary and continuous treatments, a list with two entries, <code>coef</code> and <code>cvRisk</code>. For multi-category treatments, a list of lists with these two entries, one for each treatment level.
+</p>
+
+<dl>
+<dt><code>coef</code></dt>
+<dd>
+<p>The coefficients in the linear combination of the predictions from each method in <code>SL.library</code>. Higher values indicate that the corresponding method plays a larger role in determining the resulting predicted value, and values close to zero indicate that the method plays little role in determining the predicted value. When <code>discrete = TRUE</code>, these correspond to the coefficients that would have been estimated had <code>discrete</code> been <code>FALSE</code>.
+</p>
+</dd>
+<dt><code>cvRisk</code></dt>
+<dd>
+<p>The cross-validation risk for each method in <code>SL.library</code>. Higher values indicate that the method has worse cross-validation accuracy. When <code>SL.method = "method.balance"</code>, the sample weighted balance statistic requested with <code>criterion</code>. Higher values indicate worse balance.
+</p>
+</dd>
+</dl>
+</dd>
+<dt><code>obj</code></dt>
+<dd>
+<p>When <code>include.obj = TRUE</code>, the SuperLearner fit(s) used to generate the predicted values. For binary and continuous treatments, the output of the call to <code>SuperLearner::SuperLearner()</code>. For multi-category treatments, a list of outputs to calls to <code>SuperLearner::SuperLearner()</code>.
+</p>
+</dd>
+</dl>
+<h3>Note</h3>
+
+<p>Some methods formerly available in <span class="pkg">SuperLearner</span> are now in <span class="pkg">SuperLearnerExtra</span>, which can be found on GitHub at <a href="https://github.com/ecpolley/SuperLearnerExtra">https://github.com/ecpolley/SuperLearnerExtra</a>.
+</p>
+<p>The <code>criterion</code> argument used to be called <code>stop.method</code>, which is its name in <span class="pkg">twang</span>. <code>stop.method</code> still works for backward compatibility. Additionally, the criteria formerly named as <code>es.mean</code>, <code>es.max</code>, and <code>es.rms</code> have been renamed to <code>smd.mean</code>, <code>smd.max</code>, and <code>smd.rms</code>. The former are used in <span class="pkg">twang</span> and will still work with <code>weightit()</code> for backward compatibility.
+</p>
+<p>As of version 1.2.0, the default behavior for binary and multi-category treatments is to stratify on the treatment when performing cross-validation to ensure all treatment groups are represented in cross-validation. To recover previous behavior, set <code>cvControl = list(stratifyCV = FALSE)</code>.
+</p>
+
+
+<h3>References</h3>
+
+
+
+<h4>Binary treatments</h4>
+
+<p>Pirracchio, R., Petersen, M. L., &amp; van der Laan, M. (2015). Improving Propensity Score Estimators’ Robustness to Model Misspecification Using Super Learner. <em>American Journal of Epidemiology</em>, 181(2), 108–119. <a href="https://doi.org/10.1093/aje/kwu253">doi:10.1093/aje/kwu253</a>
+</p>
+
+
+
+<h4>Continuous treatments</h4>
+
+<p>Kreif, N., Grieve, R., Díaz, I., &amp; Harrison, D. (2015). Evaluation of the Effect of a Continuous Treatment: A Machine Learning Approach with an Application to Treatment for Traumatic Brain Injury. <em>Health Economics</em>, 24(9), 1213–1228. <a href="https://doi.org/10.1002/hec.3189">doi:10.1002/hec.3189</a>
+</p>
+
+
+
+<h4>Balance SuperLearner (<code>SL.method = "method.balance"</code>)</h4>
+
+<p>Pirracchio, R., &amp; Carone, M. (2018). The Balance Super Learner: A robust adaptation of the Super Learner to improve estimation of the average treatment effect in the treated based on propensity score matching. <em>Statistical Methods in Medical Research</em>, 27(8), 2504–2518. <a href="https://doi.org/10.1177/0962280216682055">doi:10.1177/0962280216682055</a>
+</p>
+<p>See <code>method_glm</code> for additional references.
+</p>
+
+
+
+<h3>See Also</h3>
+
+<p><code>weightit()</code>, <code>weightitMSM()</code>, <code>get_w_from_ps()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library("cobalt")
+data("lalonde", package = "cobalt")
+
+#Balancing covariates between treatment groups (binary)
+(W1 &lt;- weightit(treat ~ age + educ + married +
+                  nodegree + re74, data = lalonde,
+                method = "super", estimand = "ATT",
+                SL.library = c("SL.glm", "SL.stepAIC",
+                               "SL.glm.interaction")))
+summary(W1)
+bal.tab(W1)
+
+#Balancing covariates with respect to race (multi-category)
+(W2 &lt;- weightit(race ~ age + educ + married +
+                  nodegree + re74, data = lalonde,
+                method = "super", estimand = "ATE",
+                SL.library = c("SL.glm", "SL.stepAIC",
+                               "SL.glm.interaction")))
+summary(W2)
+bal.tab(W2)
+
+#Balancing covariates with respect to re75 (continuous)
+#assuming t(8) conditional density for treatment
+(W3 &lt;- weightit(re75 ~ age + educ + married +
+                  nodegree + re74, data = lalonde,
+                method = "super", density = "dt_8",
+                SL.library = c("SL.glm", "SL.ridge",
+                               "SL.glm.interaction")))
+summary(W3)
+bal.tab(W3)
+
+#Balancing covariates between treatment groups (binary)
+# using balance SuperLearner to minimize the maximum
+# KS statistic
+(W4 &lt;- weightit(treat ~ age + educ + married +
+                  nodegree + re74, data = lalonde,
+                method = "super", estimand = "ATT",
+                SL.library = c("SL.glm", "SL.stepAIC",
+                               "SL.lda"),
+                SL.method = "method.balance",
+                criterion = "ks.max"))
+summary(W4)
+bal.tab(W4, stats = c("m", "ks"))
+
+</code></pre>
+
+
+</div>

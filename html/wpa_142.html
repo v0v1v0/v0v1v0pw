@@ -1,0 +1,136 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>network_summary</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summarise node centrality statistics with an igraph object</h2>
+
+<h3>Description</h3>
+
+<p>Pass an igraph object to the function and obtain centrality statistics for
+each node in the object as a data frame. This function works as a wrapper of
+the centralization functions in 'igraph'.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">network_summary(graph, hrvar = NULL, return = "table")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>graph</code></td>
+<td>
+<p>'igraph' object that can be returned from <code>network_g2g()</code> or
+<code>network_p2p()</code>when the <code>return</code> argument is set to <code>"network"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hrvar</code></td>
+<td>
+<p>String containing the name of the HR Variable by which to split
+metrics. Defaults to <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String specifying what output to return. Valid inputs include:
+</p>
+
+<ul>
+<li> <p><code>"table"</code>
+</p>
+</li>
+<li> <p><code>"network"</code>
+</p>
+</li>
+<li> <p><code>"plot"</code>
+</p>
+</li>
+</ul>
+<p>See <code>Value</code> for more information.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>By default, a data frame containing centrality statistics. Available
+statistics include:
+</p>
+
+<ul>
+<li>
+<p> betweenness: number of shortest paths going through a node.
+</p>
+</li>
+<li>
+<p> closeness: number of steps required to access every other node from a
+given node.
+</p>
+</li>
+<li>
+<p> degree: number of connections linked to a node.
+</p>
+</li>
+<li>
+<p> eigenvector: a measure of the influence a node has on a network.
+</p>
+</li>
+<li>
+<p> pagerank: calculates the PageRank for the specified vertices.
+Please refer to the igraph package documentation for the detailed technical
+definition.
+</p>
+</li>
+</ul>
+<p>When <code>"network"</code> is passed to <code>"return"</code>, an 'igraph' object is returned with
+additional node attributes containing centrality scores.
+</p>
+<p>When <code>"plot"</code> is passed to <code>"return"</code>, a summary table is returned showing
+the average centrality scores by HR attribute. This is currently available if
+there is a valid HR attribute.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Network: 
+<code>external_network_plot()</code>,
+<code>g2g_data</code>,
+<code>internal_network_plot()</code>,
+<code>network_describe()</code>,
+<code>network_g2g()</code>,
+<code>network_p2p()</code>,
+<code>p2p_data_sim()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Simulate a p2p network
+p2p_data &lt;- p2p_data_sim(size = 100)
+g &lt;- network_p2p(data = p2p_data, return = "network")
+
+# Return summary table
+network_summary(graph = g, return = "table")
+
+# Return network with node centrality statistics
+network_summary(graph = g, return = "network")
+
+# Return summary plot
+network_summary(graph = g, return = "plot", hrvar = "Organization")
+
+# Simulate a g2g network and return table
+g2 &lt;- g2g_data %&gt;% network_g2g(return = "network")
+network_summary(graph = g2, return = "table")
+
+</code></pre>
+
+
+</div>

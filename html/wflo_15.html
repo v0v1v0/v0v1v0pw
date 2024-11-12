@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>GetFarmFromLonLat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Accesses full FarmData set and returns a compatible list object for the requested location.</h2>
+
+<h3>Description</h3>
+
+<p>This function accepts a pair longitude (decimal system, east) and latitude (decimal system, north) coordinates as well a a desired edge length in m and if valid, returns a list object similar to <code>FarmData</code>, but at the specified location and with the specified size.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">GetFarmFromLonLat(Top, Left, EdgeLen, DoPlot = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Top</code></td>
+<td>
+
+<p>longitude value (decimal system, east).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Left</code></td>
+<td>
+
+<p>latitude value (decimal system, north).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>EdgeLen</code></td>
+<td>
+
+<p>edge length in meters. Note that the returned farm data object is always a square area and thus, contains square matrices.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DoPlot</code></td>
+<td>
+
+<p>optionally plots the annual energy production (AEP) 'landscape' in the returned object using a <code>terrain.colors</code> coloring scheme, together with a color key.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Requires that the full <code>FarmData</code> dataset is loaded. See <code>AcquireData</code> on how to obtain it.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list object following the structure of <code>FarmData</code>, but only containing the farm area starting from the top-left point specified and as many 'tiles' required to meet the desired edge length at 200 m tiles resolution.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Carsten Croonenbroeck
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See <code>Index2GK</code> to convert index coordinates to Gauss-Kruger coordinates, and <code>GK2LonLat</code> to convert Gauss-Kruger coordinates to longitude/latitude coordinates.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># This will return a farm at the specified location, edge length 5,000 m (5 km).
+# Requires full data set to be loaded.
+## Not run: 
+MyFarm &lt;- GetFarmFromLonLat(51.49594, 11.58818, 5000, DoPlot = FALSE)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

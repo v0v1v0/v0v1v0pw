@@ -1,0 +1,73 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>htmlSpecCharConv</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Html Special Character Conversion</h2>
+
+<h3>Description</h3>
+
+<p>Converts 'txt' so that (the most common) special characters (like 'beta','micro','square' etc) will be displayed correctly whe used for display in html (eg at mouse-over).
+Note : The package <a href="https://CRAN.R-project.org/package=stringi">stringi</a> is required for the conversions (the input will get returned if <code>stringi</code> is not available).
+Currently only the 16 most common special characters are implemented.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">htmlSpecCharConv(txt, silent = FALSE, callFrom = NULL, debug = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>txt</code></td>
+<td>
+<p>character vector, including special characters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a corrected character vector adopted for html display
+</p>
+
+
+<h3>See Also</h3>
+
+<p>tables on <a href="https://www.htmlhelp.com/reference/html40/entities/latin1.html">https://www.htmlhelp.com/reference/html40/entities/latin1.html</a>,  
+<a href="https://www.degraeve.com/reference/specialcharacters.php">https://www.degraeve.com/reference/specialcharacters.php</a>, or <code>https://ascii.cl/htmlcodes.htm</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## we'll use the package stringi to generate text including the 'micro'-symbol as input
+x &lt;- if(requireNamespace("stringi", quietly=TRUE)) {
+  stringi::stri_unescape_unicode("\\u00b5\\u003d\\u0061\\u0062")} else "\"x=axb\""
+htmlSpecCharConv(x)
+</code></pre>
+
+
+</div>

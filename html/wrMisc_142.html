@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>extrSpcText</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract specific text</h2>
+
+<h3>Description</h3>
+
+<p>This function extracts/cuts text-fragments out of <code>txt</code> following specific anchors defined by arguments <code>cutFrom</code> and <code>cutTo</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">extrSpcText(
+  txt,
+  cutFrom = " GN=",
+  cutTo = " PE=",
+  missingAs = NA,
+  exclFromTag = TRUE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>txt</code></td>
+<td>
+<p>character vector to be treated</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutFrom</code></td>
+<td>
+<p>(character) text where to start cutting</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutTo</code></td>
+<td>
+<p>(character) text where to stop cutting</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>missingAs</code></td>
+<td>
+<p>(character) specific content of output at line/location of 'exclLi'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclFromTag</code></td>
+<td>
+<p>(logical) to exclude text given in 'cutFrom' from result</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In case <code>cutFrom</code> is not found <code>missingAs</code> will be returned.
+In case <code>cutTo</code> is not found, text gets extracted with <code>chaMaxEl</code> characters.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a modified character vector
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>substr</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">extrSpcText(c(" ghjg GN=thisText PE=001"," GN=_ PE=", NA, "abcd"))
+extrSpcText(c("ABCDEF.3-6","05g","bc.4-5"), cutFr="\\.", cutT="-")
+</code></pre>
+
+
+</div>

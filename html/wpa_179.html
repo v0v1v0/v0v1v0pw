@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>totals_reorder</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Reorder a value to the top of the summary table</h2>
+
+<h3>Description</h3>
+
+<p>For a given data frame, reorder a row to the first row of that
+data frame through matching a <em>value</em> of a <em>variable</em>. The intended usage
+of this function is to be used for reordering the "Total" row, and <em>not</em>
+with "flat" data. This can be used in conjunction with <code>totals_bind()</code>,
+which is used to create a "Total" row in the data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">totals_reorder(data, target_col, target_value = "Total")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Summary table in the form of a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target_col</code></td>
+<td>
+<p>Character value of the column in which to reorder</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target_value</code></td>
+<td>
+<p>Character value of the value in <code>target_col</code> to match</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>data frame with the 'Total' row reordered to the bottom.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Support: 
+<code>camel_clean()</code>,
+<code>check_inputs()</code>,
+<code>combine_signals()</code>,
+<code>cut_hour()</code>,
+<code>extract_date_range()</code>,
+<code>extract_hr()</code>,
+<code>heat_colours()</code>,
+<code>is_date_format()</code>,
+<code>maxmin()</code>,
+<code>p_test()</code>,
+<code>pairwise_count()</code>,
+<code>plot_WOE()</code>,
+<code>read_preamble()</code>,
+<code>rgb2hex()</code>,
+<code>totals_bind()</code>,
+<code>totals_col()</code>,
+<code>tstamp()</code>,
+<code>us_to_space()</code>,
+<code>wrap()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">sq_data %&gt;%
+  totals_bind(target_col = "LevelDesignation",
+              target_value = "Total") %&gt;%
+  collab_sum(hrvar = "LevelDesignation",
+             return = "table") %&gt;%
+  totals_reorder(target_col = "group", target_value = "Total")
+
+</code></pre>
+
+
+</div>

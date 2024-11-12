@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict_spectra</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Use provided model object to predict trait values with input dataset</h2>
+
+<h3>Description</h3>
+
+<p>Loads an existing model and cross-validation performance
+statistics (created with <code>save_model</code>) and makes predictions
+based on new spectra.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">predict_spectra(
+  input.data,
+  model.stats.location,
+  model.location,
+  model.method = "pls",
+  wavelengths = deprecated()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>input.data</code></td>
+<td>
+<p><code>data.frame</code> object of spectral data for input into a
+spectral prediction model. First column contains unique identifiers
+followed by spectral columns. Include no other columns to right of spectra!
+Column names of spectra must start with "X".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model.stats.location</code></td>
+<td>
+<p>String containing file path (including file name)
+to save location of "(model.name)_stats.csv" as output from the
+<code>save_model</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model.location</code></td>
+<td>
+<p>String containing file path (including file name) to
+location where the trained model ("(model.name).Rds") was saved as output
+by the <code>save_model</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model.method</code></td>
+<td>
+<p>Model type to use for training. Valid options include:
+</p>
+ <ul>
+<li>
+<p> "pls": Partial least squares regression (Default) </p>
+</li>
+<li>
+<p>"rf": Random forest </p>
+</li>
+<li>
+<p> "svmLinear": Support vector machine with linear
+kernel </p>
+</li>
+<li>
+<p> "svmRadial": Support vector machine with radial kernel </p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wavelengths</code></td>
+<td>
+<p>DEPRECATED <code>wavelengths</code> is no
+longer supported; this information is now inferred from <code>input.data</code>
+column names</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>data.frame</code> object of predictions for each sample (row). First
+column is unique identifier supplied by <code>input.data</code> and second is
+predicted values
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jenna Hershberger <a href="mailto:jmh579@cornell.edu">jmh579@cornell.edu</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+ikeogu.2017 %&gt;%
+  dplyr::select(sample.id, dplyr::starts_with("X")) %&gt;%
+  predict_spectra(
+    input.data = .,
+    model.stats.location = paste0(
+      getwd(),
+      "/my_model_stats.csv"
+    ),
+    model.location = paste0(getwd(), "/my_model.Rds")
+  )
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

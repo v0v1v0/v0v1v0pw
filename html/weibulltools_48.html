@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mixture_em_cpp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>EM-Algorithm using Newton-Raphson Method</h2>
+
+<h3>Description</h3>
+
+<p>This method uses the EM-Algorithm to estimate the parameters of a univariate
+mixture model. Until now, the mixture model can consist of k two-parametric
+Weibull distributions. The Weibull distributions are parameterized with scale
+<code class="reqn">\eta</code> and shape <code class="reqn">\beta</code>. In M-step these parameters are estimated using
+Newton-Raphson. This function is implemented in c++ and is called in function
+<code>mixmod_em</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mixture_em_cpp(
+  x,
+  status,
+  post,
+  distribution = "weibull",
+  k = 2L,
+  method = "EM",
+  n_iter = 100L,
+  conv_limit = 1e-06
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a numeric vector which consists of lifetime data. Lifetime
+data could be every characteristic influencing the reliability of a product,
+e.g. operating time (days/months in service), mileage (km, miles), load
+cycles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>a vector of binary data (0 or 1) indicating whether unit <em>i</em>
+is a right censored observation (= 0) or a failure (= 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>post</code></td>
+<td>
+<p>a numeric matrix specifying initial a-posteriori probabilities.
+The number of rows have to be in line with observations <code>x</code> and the
+number of columns must equal the mixture components <code>k</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>supposed distribution of mixture model components.
+The value must be <code>"weibull"</code>. Other distributions have not been
+implemented yet.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>integer of mixture components, default is 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>default method is <code>"EM"</code>. Other methods have not been
+implemented yet.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_iter</code></td>
+<td>
+<p>integer defining the maximum number of iterations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conv_limit</code></td>
+<td>
+<p>numeric value defining the convergence limit.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a list with the following components:
+</p>
+
+<ul>
+<li> <p><code>coefficients</code> : A matrix with estimated Weibull parameters. In the
+first row the estimated scale parameters <code class="reqn">\eta</code> and in the second the
+estimated shape parameters <code class="reqn">\beta</code> are provided. The first column belongs
+to the first mixture component and so forth.
+</p>
+</li>
+<li> <p><code>posteriori</code> : A matrix with estimated a-posteriori probabilities.
+</p>
+</li>
+<li> <p><code>priori</code> : A vector with estimated a-priori probabilities.
+</p>
+</li>
+<li> <p><code>logL</code> : The value of the complete log-likelihood.</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Doganaksoy, N.; Hahn, G.; Meeker, W. Q., Reliability Analysis by
+Failure Mode, Quality Progress, 35(6), 47-52, 2002
+</p>
+
+
+</div>

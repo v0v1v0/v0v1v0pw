@@ -1,0 +1,174 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>iee.ord</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Maximum Likelihood for Ordinal Model 
+</h2>
+
+<h3>Description</h3>
+
+<p>Maximum Likelihood for Ordinal Probit and Logit: 
+Newton-Raphson minimization of negative log-likelihood. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">iee.ord(x,y,link,iprint=0,maxiter=20,toler=1.e-6)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>vector or matrix of explanatory variables. Each row corresponds
+to an observation and each column to a variable.  The number of rows of x
+should equal the number of data values in y, and there should be fewer 
+columns than rows.  Missing values are not allowed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>numeric vector containing the ordinal response. 
+The values must be in the range 1,2,..., number of categories.
+Missing values are not allowed. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+<p>The link function.Choices are  “logit” for 
+the logit link function, and “probit” for 
+the probit link function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iprint</code></td>
+<td>
+
+<p>logical indicator, default is FALSE, for whether the iterations for 
+numerical maximum likelihood should be printed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxiter</code></td>
+<td>
+
+<p>maximum number of Newton-Raphson iterations, default = 20.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>toler</code></td>
+<td>
+
+<p>tolerance for convergence in Newton-Raphson iterations, default = 1.e-6.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The ordinal probit model is similar to the ordinal logit model.
+The parameter estimate of ordinal logit are roughly 1.8 to 2 times
+those of ordinal probit. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>list of MLE of parameters and their associated standard 
+errors, in the order cutpt1,...,cutpt(number of categ-1),b1,...b(number of covariates).
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>negloglik</code></td>
+<td>
+
+<p>value of negative log-likelihood, evaluated at MLE
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gam</code></td>
+<td>
+
+<p>MLE of ordered cutpoint parameters
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reg</code></td>
+<td>
+
+<p>MLE of regression parameters
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cov</code></td>
+<td>
+
+<p>estimated covariance matrix of the parameters
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Aristidis K. Nikoloulopoulos <a href="mailto:A.Nikoloulopoulos@uea.ac.uk">A.Nikoloulopoulos@uea.ac.uk</a><br>
+Harry Joe <a href="mailto:harry.joe@ubc.ca">harry.joe@ubc.ca</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Anderson, J.A. and Pemberton, J.D. (1985). The grouped continuous model for
+multivariate ordered categorical variables and covariate adjustment.  
+<em>Biometrics</em>,  <b>41</b>, 875–885.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  ################################################################################
+  #                         Ordinal regression 
+  ################################################################################
+  ################################################################################
+  #                      read and set up data set
+  ################################################################################
+  data(arthritis)
+  nn=nrow(arthritis)
+  bas2&lt;-bas3&lt;-bas4&lt;-bas5&lt;-rep(0,nn)
+  bas2[arthritis$b==2]&lt;-1
+  bas3[arthritis$b==3]&lt;-1
+  bas4[arthritis$b==4]&lt;-1
+  bas5[arthritis$b==5]&lt;-1
+  t2&lt;-t3&lt;-rep(0,nn)
+  t2[arthritis$ti==3]&lt;-1
+  t3[arthritis$ti==5]&lt;-1
+  xdat=cbind(t2,t3,arthritis$trt,bas2,bas3,bas4,bas5,arthritis$age) 
+  ydat=arthritis$y
+  ################################################################################
+  #                      select the link
+  ################################################################################
+  link="probit"
+  ################################################################################
+  i.est&lt;- iee.ord(xdat,ydat,link)
+  print(i.est)
+</code></pre>
+
+
+</div>

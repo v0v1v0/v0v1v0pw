@@ -1,0 +1,187 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>write_wikidata</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Write statements to Wikidata</h2>
+
+<h3>Description</h3>
+
+<p>Upload data to wikidata, including creating items,
+adding statements to existing items (via the quickstatements format and API).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">write_wikidata(
+  items,
+  properties = NULL,
+  values = NULL,
+  qual.properties = NULL,
+  qual.values = NULL,
+  src.properties = NULL,
+  src.values = NULL,
+  remove = FALSE,
+  format = "tibble",
+  api.username = NULL,
+  api.token = NULL,
+  api.format = "v1",
+  api.batchname = NULL,
+  api.submit = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>items</code></td>
+<td>
+<p>a vector of strings indicating the items to which to add statements (as QIDs or labels).
+Note: if labels are provided, and multiple items match, the first matching item will be used
+(see <code>as_qid</code> function), so use with caution.
+New QIDs can be created by using the "CREATE_xyz", where "_xyz" is any unique string.
+Using the same id will add additional statemnts to those new items</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>properties</code></td>
+<td>
+<p>a vector of strings indicating the properties to add as statements (as PIDs or labels).
+Note: if labels are provided, and multiple items match, the first matching item will be used
+(see <code>as_pid</code> function), so use with caution.
+Four special properties can also be used: labels, aliases, descriptions and sitelinks.
+See [this link](https://www.wikidata.org/wiki/Help:QuickStatements#Adding_labels,_aliases,_descriptions_and_sitelinks) for the syntax.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>a vector of strings indicating the values to add as statements (as QIDs or strings).
+Note: if strings are provided, they will be treated as plain text.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qual.properties</code></td>
+<td>
+<p>a vector, data frame, or tibble of strings indicating the properties to add as qualifiers to statements (as PIDs or labels).
+Note: if labels are provided, and multiple items match, the first matching item will be used
+(see <code>as_pid</code> function), so use with caution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qual.values</code></td>
+<td>
+<p>a vector, data frame, or tibble of strings indicating the values to add as statements (as QIDs or strings).
+Note: if strings are provided, they will be treated as plain text.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>src.properties</code></td>
+<td>
+<p>a vector, data frame, or tibble of strings indicating the properties to add as reference sources to statements (as SIDs or labels).
+Note: if labels are provided, and multiple items match, the first matching item will be used
+(see <code>as_sid</code> function), so use with caution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>src.values</code></td>
+<td>
+<p>a vector, data frame, or tibble of strings indicating the values to add reference sources to statements (as QIDs or strings).
+Note: if strings are provided, they will be treated as plain text.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remove</code></td>
+<td>
+<p>a vector of boolians for each statemnt indicating whether it should
+be removed from the item rather than added (default = FALSE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>output format as a string. Options include:
+</p>
+
+<dl>
+<dt>tibble</dt>
+<dd>
+<p>easiest format to further manuipulation in R</p>
+</dd>
+<dt>csv</dt>
+<dd>
+<p>can be copy-pasted to [the QuickStatements website](https://quickstatements.toolforge.org/) (or manipulated in a spreadsheet programs)</p>
+</dd>
+<dt>api</dt>
+<dd>
+<p>a url that can be copy-pasted into a web browser, or automatically submitted (see <code>api.submit</code> parameter)</p>
+</dd>
+<dt>website</dt>
+<dd>
+<p>open a [QuickStatements](https://quickstatements.toolforge.org/) web browser window summarising the edits to be made to Wikidata)</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api.username</code></td>
+<td>
+<p>a string indicating your wikimedia username</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api.token</code></td>
+<td>
+<p>a string indicating your api token (the unique identifier that you can find listed at [your user page](https://quickstatements.toolforge.org/#/user))</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api.format</code></td>
+<td>
+<p>a string indicateing which version of the quickstatement format used to submit the api (default = "v1")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api.batchname</code></td>
+<td>
+<p>a string create a named batch (listed at [your batch history page](https://quickstatements.toolforge.org/#/batches)) and tag in the edit summaries</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api.submit</code></td>
+<td>
+<p>boolian indicating whether to submit instruction directly to wikidata (else returns the URL that can be copy-pasted into a web browser)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>data formatted to upload to wikidata (via quickstatemsnts),
+optionally also directly uploded to wikidata (see <code>format</code> parameter).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Add a statement to the "Wikidata sandbox" item (Q4115189)
+# to say that it is an "instance of" (P31) of Q1 (the universe).
+# The instruction will submit directly to wikidata via the API
+# (if you include your wikimedia username and token)
+
+write_wikidata(items        = "Wikidata Sandbox",
+               properties   = "instance of",
+               values       = "Q1",
+               format       = "api",
+               api.username = "myusername", 
+               api.token    = , #REDACTED#
+               )
+#note: 
+
+</code></pre>
+
+
+</div>

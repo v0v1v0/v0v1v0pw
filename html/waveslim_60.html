@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cplxdual2D</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Dual-tree Complex 2D Discrete Wavelet Transform</h2>
+
+<h3>Description</h3>
+
+<p>Dual-tree complex 2D discrete wavelet transform (DWT).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cplxdual2D(x, J, Faf, af)
+
+icplxdual2D(w, J, Fsf, sf)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>2D array.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>number of stages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Faf</code></td>
+<td>
+<p>first stage analysis filters for tree i.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>af</code></td>
+<td>
+<p>analysis filters for the remaining stages on tree i.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+<p>wavelet coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Fsf</code></td>
+<td>
+<p>last stage synthesis filters for tree i.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sf</code></td>
+<td>
+<p>synthesis filters for the preceeding stages.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>For the analysis of <code>x</code>, the output is </p>
+<table><tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+<p>wavelet
+coefficients indexed by <code>[[j]][[i]][[d1]][[d2]]</code>, where
+<code class="reqn">j=1,\ldots,J</code> (scale), <code class="reqn">i=1</code> (real part) or <code class="reqn">i=2</code> (imag part),
+<code class="reqn">d1=1,2</code> and <code class="reqn">d2=1,2,3</code> (orientations).</p>
+</td>
+</tr></table>
+<p> For the synthesis of
+<code>w</code>, the output is </p>
+<table><tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>output signal.</p>
+</td>
+</tr></table>
+<h3>Author(s)</h3>
+
+<p>Matlab: S. Cai, K. Li and I. Selesnick; R port: B. Whitcher
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>FSfarras</code>, <code>farras</code>, <code>afb2D</code>,
+<code>sfb2D</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+## EXAMPLE: cplxdual2D
+x = matrix(rnorm(32*32), 32, 32)
+J = 5
+Faf = FSfarras()$af
+Fsf = FSfarras()$sf
+af = dualfilt1()$af
+sf = dualfilt1()$sf
+w = cplxdual2D(x, J, Faf, af)
+y = icplxdual2D(w, J, Fsf, sf)
+err = x - y
+max(abs(err))
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

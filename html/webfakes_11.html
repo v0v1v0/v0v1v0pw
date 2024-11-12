@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mw_log</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Log requests to the standard output or other connection</h2>
+
+<h3>Description</h3>
+
+<p>A one line log entry for every request. The output looks like this:
+</p>
+<div class="sourceCode"><pre>GET http://127.0.0.1:3000/image 200 3 ms - 4742
+</pre></div>
+<p>and contains
+</p>
+
+<ul>
+<li>
+<p> the HTTP method,
+</p>
+</li>
+<li>
+<p> the full request URL,
+</p>
+</li>
+<li>
+<p> the HTTP status code of the response,
+</p>
+</li>
+<li>
+<p> how long it took to process the response, in ms,
+</p>
+</li>
+<li>
+<p> and the size of the response body, in bytes.
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">mw_log(format = "dev", stream = "stdout")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>Log format. Not implemented currently.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stream</code></td>
+<td>
+<p>R connection to log to. <code>"stdout"</code> means the standard
+output, <code>"stderr"</code> is the standard error. You can also supply a
+connection object, but then you need to be sure that it will be
+valid when the app is actually running.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Handler function.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other middleware: 
+<code>mw_cgi()</code>,
+<code>mw_cookie_parser()</code>,
+<code>mw_etag()</code>,
+<code>mw_json()</code>,
+<code>mw_multipart()</code>,
+<code>mw_range_parser()</code>,
+<code>mw_raw()</code>,
+<code>mw_static()</code>,
+<code>mw_text()</code>,
+<code>mw_urlencoded()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">app &lt;- new_app()
+app$use(mw_log())
+app
+</code></pre>
+
+
+</div>

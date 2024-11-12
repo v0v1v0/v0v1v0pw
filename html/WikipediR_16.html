@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>random_page</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve the page content of a random MediaWiki page</h2>
+
+<h3>Description</h3>
+
+<p>wiki_page retrieves the DOM of a particular MediaWiki page,
+as a HTML blob inside a JSON object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">random_page(
+  language = NULL,
+  project = NULL,
+  domain = NULL,
+  namespaces = NULL,
+  as_wikitext = FALSE,
+  limit = 1,
+  clean_response = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>The language code of the project you wish to query,
+if appropriate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>The project you wish to query ("wikiquote"), if appropriate.
+Should be provided in conjunction with <code>language</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>domain</code></td>
+<td>
+<p>as an alternative to a <code>language</code> and <code>project</code> combination,
+you can also provide a domain ("rationalwiki.org") to the URL constructor, allowing
+for the querying of non-Wikimedia MediaWiki instances.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>namespaces</code></td>
+<td>
+<p>The namespaces to consider pages from. By default, pages from any namespace are
+considered; alternately, a numeric vector of accepted namespaces (which are described
+<a href="https://www.mediawiki.org/wiki/Manual:Namespace#Built-in_namespaces">here</a>) can be
+provided, and only pages within those namespaces will be considered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>as_wikitext</code></td>
+<td>
+<p>whether to retrieve the wikimarkup (TRUE) or the HTML (FALSE).
+Set to FALSE by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit</code></td>
+<td>
+<p>the number of pages to return. 1 by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clean_response</code></td>
+<td>
+<p>whether to do some basic sanitising of the resulting data structure.
+Set to FALSE by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments to pass to httr's GET.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>page_content</code> for retrieving the content of a specific page,
+<code>revision_diff</code> for retrieving 'diffs' between revisions,
+<code>revision_content</code> for retrieving the text of specified revisions.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+#A page from Wikipedia
+wp_content &lt;- random_page("en","wikipedia")
+
+#A page from the mainspace on Wikipedia
+wp_article_content &lt;- random_page("en","wikipedia", namespaces = 0)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

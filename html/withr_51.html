@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>with_collate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Collation Order</h2>
+
+<h3>Description</h3>
+
+<p>Temporarily change collation order by changing the value of the
+<code>LC_COLLATE</code> locale.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">with_collate(new, code)
+
+local_collate(new = list(), .local_envir = parent.frame())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>new</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[character(1)]⁠</code><br> New collation order</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>code</code></td>
+<td>
+<p><code>[any]</code><br> Code to execute in the temporary environment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.local_envir</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[environment]⁠</code><br> The environment to use for scoping.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>[any]</code><br> The results of the evaluation of the <code>code</code>
+argument.
+</p>
+
+
+<h3>Examples</h3>
+
+<div class="sourceCode"><pre># Modify collation order:
+x &lt;- c("bernard", "bérénice", "béatrice", "boris")
+
+with_collate("fr_FR", sort(x))
+#&gt; [1] "béatrice" "bérénice" "bernard"  "boris"   
+
+with_collate("C", sort(x))
+#&gt; [1] "bernard"  "boris"    "béatrice" "bérénice"
+</pre></div>
+
+
+<h3>See Also</h3>
+
+<p><code>withr</code> for examples
+</p>
+
+
+</div>

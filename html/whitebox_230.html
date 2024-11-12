@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wbt_install</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download and Install 'WhiteboxTools'</h2>
+
+<h3>Description</h3>
+
+<p>This function downloads the 'WhiteboxTools' binary if needed. Pre-compiled binaries are
+only available for download for 64-bit Linux (default compiled with glibc on Ubuntu 22.04;
+use <code>platform="linux_musl"</code> for musl/earlier versions of glibc), Windows and Mac OS (ARM and
+Intel) platforms. If you need WhiteboxTools for another platform follow the instructions to
+build from source: <a href="https://github.com/jblindsay/whitebox-tools">https://github.com/jblindsay/whitebox-tools</a>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wbt_install(
+  pkg_dir = wbt_data_dir(),
+  platform = NULL,
+  force = FALSE,
+  remove = FALSE
+)
+
+install_whitebox(
+  pkg_dir = wbt_data_dir(),
+  platform = NULL,
+  force = FALSE,
+  remove = FALSE
+)
+
+wbt_install_extension(
+  extension = c("GeneralToolsetExtension", "AgricultureToolset",
+    "DemAndSpatialHydrologyToolset", "LidarAndRemoteSensingToolset"),
+  platform = NULL,
+  destdir = dirname(wbt_exe_path(shell_quote = FALSE))
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>pkg_dir</code></td>
+<td>
+<p>default install path is to whitebox package "WBT" folder</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>platform</code></td>
+<td>
+<p>character. Optional: suffix used for alternate platform names. On Linux, you can choose <code>"linux_amd64"</code> (default; Linux) or <code>"linux_musl"</code> for older glibc versions. On macOS Darwin you can choose <code>"darwin_amd64"</code> (default; macOS) or <code>"darwin_m_series"</code> for Apple M series hardware. Note that for <code>wbt_install_extension()</code> on the Apple M series use <code>"MacOS_ARM"</code>. Only one Windows binary is available: <code>"win_amd64"</code> (default; Windows).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>force</code></td>
+<td>
+<p>logical. Force install? Default <code>FALSE</code>. When <code>remove=TRUE</code> passed to <code>unlink()</code> to change permissions to allow removal of files/directories.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remove</code></td>
+<td>
+<p>logical. Remove contents of "WBT" folder from <code>pkg_dir</code>? Default: <code>FALSE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>extension</code></td>
+<td>
+<p>Extension name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>destdir</code></td>
+<td>
+<p>Directory to create <code style="white-space: pre;">⁠/plugins/⁠</code> directory for extracting extensions</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>'WhiteboxTools' and all of its extensions can be uninstalled by passing the <code>remove=TRUE</code> argument.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Prints out the location of the WhiteboxTools binary, if found. <code>NULL</code> otherwise.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+install_whitebox()
+
+## End(Not run)
+</code></pre>
+
+
+</div>

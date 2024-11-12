@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wbsearch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Search indicator information available through the World Bank API</h2>
+
+<h3>Description</h3>
+
+<p>This function allows finds indicators that match a search term and returns
+a data frame of matching results
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wbsearch(
+  pattern = "poverty",
+  fields = c("indicator", "indicatorDesc"),
+  extra = FALSE,
+  cache
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>pattern</code></td>
+<td>
+<p>Character string or regular expression to be matched</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fields</code></td>
+<td>
+<p>Character vector of column names through which to search</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>extra</code></td>
+<td>
+<p>if <code>FALSE</code>, only the indicator ID and short name are returned,
+if <code>TRUE</code>, all columns of the <code>cache</code> parameter's indicator data frame
+are returned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cache</code></td>
+<td>
+<p>List of data frames returned from <code>wbcache</code>. If omitted,
+<code>wb_cachelist_dep</code> is used</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Data frame with indicators that match the search pattern.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wbsearch(pattern = "education")
+
+wbsearch(pattern = "Food and Agriculture Organization", fields = "sourceOrg")
+
+# with regular expression operators
+# 'poverty' OR 'unemployment' OR 'employment'
+wbsearch(pattern = "poverty|unemployment|employment")
+</code></pre>
+
+
+</div>

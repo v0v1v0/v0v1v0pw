@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>smooth_hist</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Histogram smoothing for whitestripe</h2>
+
+<h3>Description</h3>
+
+<p>Uses a generalized additive model (GAM) to smooth a 
+histogram for whitestripe
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">smooth_hist(
+  x,
+  y,
+  deg = 4,
+  k = floor(min(250, length(x)/2)),
+  method = "REML",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>values of midpoints from <code>hist</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>values of counts from <code>hist</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>deg</code></td>
+<td>
+<p>degree of polynomials used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>Number of knots</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Method for smoothing for GAM</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments passed to <code>gam</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>List of objects: x and y coordinates of histogram, coefficients from GAM, 
+fitted values from GAM, the GAM model, the knots fitted, and degrees of polynomials
+</p>
+
+
+<h3>See Also</h3>
+
+<p>gam
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(t2.voi.hist)
+y = t2.voi.hist$counts
+x = t2.voi.hist$mids
+x = x[!is.na(y)];
+y = y[!is.na(y)]
+# 30 used for speed of example
+s.hist = smooth_hist(x, y, k=30)
+plot(t2.voi.hist, border="red")
+lines(s.hist)
+</code></pre>
+
+
+</div>

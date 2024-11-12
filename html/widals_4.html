@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>create.rm.ndx.ls</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Cross-Validation Indices
+</h2>
+
+<h3>Description</h3>
+
+<p>Create a list of vectors of indices to remove for <em>k</em>-fold cross-validation
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">create.rm.ndx.ls(n, xincmnt = 10)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+
+<p>Number of sites.  A scalar integer.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xincmnt</code></td>
+<td>
+
+<p>How many cv folds, i.e., <em>k</em>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The name of the object produced by this function is commonly <code>rm.ndx</code> in this documentation.  See <code>MSS.snow</code> for a reminder that this object is passed out-of-scope when using <code>MSS.snow</code>.
+</p>
+<p>In this package <code>rm.ndx</code> is used by <code>Hals.fastcv.snow</code> and <code>widals.snow</code>; however, creating this object as a list using this function is only necessary when using <code>widals.snow</code> with <code>cv=2</code> (i.e., 'true' cross-validation).
+</p>
+
+
+<h3>Value</h3>
+
+<p>An unnamed list of integer (&gt;0) vectors.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">n &lt;- 100
+xincmnt &lt;- 7
+rm.ndx &lt;- create.rm.ndx.ls(n=n, xincmnt=xincmnt)
+rm.ndx
+
+######## if we want randomization of indices:
+n &lt;- 100
+xincmnt &lt;- 7
+rm.ndx &lt;- create.rm.ndx.ls(n=n, xincmnt=xincmnt)
+
+rnd.ndx &lt;- sample(I(1:n))
+for(i in 1:length(rm.ndx)) { rm.ndx[[i]] &lt;- rnd.ndx[rm.ndx[[i]]] }
+rm.ndx
+
+## The function is currently defined as
+function (n, xincmnt = 10) 
+{
+    rm.ndx.ls &lt;- list()
+    for (i in 1:xincmnt) {
+        xrm.ndxs &lt;- seq(i, n + xincmnt, by = xincmnt)
+        xrm.ndxs &lt;- xrm.ndxs[xrm.ndxs &lt;= n]
+        rm.ndx.ls[[i]] &lt;- xrm.ndxs
+    }
+    return(rm.ndx.ls)
+}
+</code></pre>
+
+
+</div>

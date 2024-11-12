@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_wis_rasters</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>General function to pull Raster layers from a MapServer or ImageServer</h2>
+
+<h3>Description</h3>
+
+<p>This is a non-exported function that is used as the engine for
+<code>get_wis_landcover</code> and <code>get_wis_imagery</code>. It
+converts watersheds, counties, etc. to the appropriate sf_object and
+queries the desired service using the function specified in
+<code>get_raster_function</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_wis_rasters(
+  service,
+  get_raster_function,
+  county = NULL,
+  watershed_code = NULL,
+  watershed_name = NULL,
+  sf_object = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>service</code></td>
+<td>
+<p>Text string describing which service to pull. Will get matched
+by <code>match_services(service)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>get_raster_function</code></td>
+<td>
+<p>The <code>arcpullr</code> function to use: either
+<code>get_map_layer</code> or
+<code>get_image_layer</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>county</code></td>
+<td>
+<p>A character object specifying a county name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>watershed_code</code></td>
+<td>
+<p>A character object specifying the HUC code for a
+watershed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>watershed_name</code></td>
+<td>
+<p>A character object specifying the HUC name for a
+watershed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sf_object</code></td>
+<td>
+<p>Any sf polygon object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to pass to the <code>get_raster_function</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A Raster* object dependent on <code>get_raster_function</code>
+</p>
+
+
+</div>

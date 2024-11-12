@@ -1,0 +1,144 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>nobsplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot number of observations in a WRTDS interpolation grid</h2>
+
+<h3>Description</h3>
+
+<p>Plot number of observations for each point in a WRTDS interpolation grid.  This is a diagnostic plot to identify sample size for each unique location in the domain of the time series that is considered during model fitting.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">nobsplot(dat_in, ...)
+
+## Default S3 method:
+nobsplot(
+  dat_in,
+  month = "all",
+  years = NULL,
+  col_vec = NULL,
+  allflo = TRUE,
+  ncol = NULL,
+  grids = FALSE,
+  pretty = TRUE,
+  ...
+)
+
+## S3 method for class 'tidal'
+nobsplot(dat_in, ...)
+
+## S3 method for class 'tidalmean'
+nobsplot(dat_in, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input tidal or tidalmean object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>month</code></td>
+<td>
+<p>numeric indicating months to plot or chr string 'all' to indicate all months with no plot facets</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>years</code></td>
+<td>
+<p>numeric vector of years to plot, defaults to all</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col_vec</code></td>
+<td>
+<p>chr string of plot colors to use, passed to <code>gradcols</code> and <code>scale_fill_gradientn</code> for grid shading.  Any color palette from RColorBrewer can be used as a named input. Palettes from grDevices must be supplied as the returned string of colors for each palette.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allflo</code></td>
+<td>
+<p>logical indicating if the salinity/flow values for plotting are limited to the fifth and ninety-fifth percentile of observed values for the month of interest</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncol</code></td>
+<td>
+<p>numeric argument passed to <code>facet_wrap</code> indicating number of facet columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grids</code></td>
+<td>
+<p>logical indicating if grid lines are present</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pretty</code></td>
+<td>
+<p>logical indicating if my subjective idea of plot aesthetics is applied, otherwise the <code>ggplot</code> default themes are used</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The plots can be used sample size as an indication of model fit for each unique location in the domain space of the time series.  The plots show grids of the number of observations with weights greater than zero for each unique date and salinity/flow combination.  The <code>obs</code> attribute in the <code>tidal</code> or <code>tidalmean</code> object is created during model fitting and has the same dimensions as the interpolation grid.  Each row is a unique date in the original dataset and each column is a salinity/flow value used to fit each regression (i.e., values in the <code>flo_grd</code> attribute). In general, low points in the grid may indicate locations in the time series where insufficient data could affect model fit.
+</p>
+<p>Unlike <code>gridplot</code>, interpolation of the grids for a smoother appearance is not allowed because the objective is to identify specific locations with low sample size.  For the former function, the objective is to characterize general trends over time rather values at specific locations.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>ggplot</code> object that can be further modified
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wtsplot</code> for an alternative to evaluating weights with different window width combinations
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## load a fitted tidal object
+data(tidfit)
+
+## default plot
+nobsplot(tidfit)
+
+## no facets, all months
+nobsplot(tidfit)
+
+## change the defaults
+nobsplot(tidfit, tau = c(0.1), month = c(3, 6, 9, 12), 
+ col_vec = c('red', 'blue', 'green'), flo_fac = 1)
+ 
+## plot a tidalmean object
+data(tidfitmean)
+
+nobsplot(tidfitmean)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

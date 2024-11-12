@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>combineMultFilterNAimput</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Combine Multiple Filters On NA-imputed Data</h2>
+
+<h3>Description</h3>
+
+<p>In most omics data-analysis one needs to employ a certain number of filtering strategies to avoid getting artifacts to the step of statistical testing.
+<code>combineMultFilterNAimput</code> takes on one side the origial data and on the other side NA-imputed data to create several differnet filters and to finally combine them.
+A filter aiming to take away the least abundant values (using the imputede data) can be fine-tuned by the argument <code>abundThr</code>. 
+This step compares the means for each group and line, at least one grou-mean has to be &gt; the threshold (based on hypothesis 
+that if all conditions represent extrememy low measures their diffrenetial may not be determined with certainty).
+In contrast, the filter addressing the number of missing values (<code>NA</code>) uses the original data, the arguments <code>colTotNa</code>,<code>minSpeNo</code> and <code>minTotNo</code> 
+are used at this step. Basically, this step allows defining a minimum content of 'real' (ie non-NA) values for further considering the measurements as reliable.
+This part uses internally <code>presenceFilt</code> for filtering elevated content of <code>NA</code> per line.
+Finally, this function combines both filters (as matrix of <code>FALSE</code> and <code>TRUE</code>) on NA-imputed and original data 
+and retruns a vector of logical values if corresponding lines passe all filter criteria.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">combineMultFilterNAimput(
+  dat,
+  imputed,
+  grp,
+  annDat = NULL,
+  abundThr = NULL,
+  colRazNa = NULL,
+  colTotNa = NULL,
+  minSpeNo = 1,
+  minTotNo = 2,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(matrix or data.frame) main data (may contain <code>NA</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>imputed</code></td>
+<td>
+<p>(character)  same as 'dat' but with all <code>NA</code> imputed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grp</code></td>
+<td>
+<p>(character or factor) define groups of replicates (in columns of 'dat')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annDat</code></td>
+<td>
+<p>(matrix or data.frame) annotation data (should match lines of 'dat')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abundThr</code></td>
+<td>
+<p>(numeric) optional threshold filter for minimumn abundance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colRazNa</code></td>
+<td>
+<p>(character) if razor peptides are used: column name for razor peptide count</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colTotNa</code></td>
+<td>
+<p>(character) column name for total peptide count</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minSpeNo</code></td>
+<td>
+<p>(integer) minimum number of specific peptides for maintaining proteins</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minTotNo</code></td>
+<td>
+<p>(integer) minimum total ie max razor number of peptides</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a vector of logical values if corresponding line passes filter criteria
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>presenceFilt</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2013)
+datT6 &lt;- matrix(round(rnorm(300)+3,1), ncol=6,
+  dimnames=list(paste0("li",1:50), letters[19:24]))
+datT6 &lt;- datT6 +matrix(rep(1:nrow(datT6),ncol(datT6)), ncol=ncol(datT6))
+datT6[6:7,c(1,3,6)] &lt;- NA
+datT6[which(datT6 &lt; 11 &amp; datT6 &gt; 10.5)] &lt;- NA
+datT6[which(datT6 &lt; 6 &amp; datT6 &gt; 5)] &lt;- NA
+datT6[which(datT6 &lt; 4.6 &amp; datT6 &gt; 4)] &lt;- NA
+datT6b &lt;- matrixNAneighbourImpute(datT6, gr=gl(2,3))
+datT6c &lt;- combineMultFilterNAimput(datT6, datT6b, grp=gl(2,3), abundThr=2)
+
+</code></pre>
+
+
+</div>

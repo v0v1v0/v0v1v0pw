@@ -1,0 +1,150 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>tidalmean</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a tidalmean class object</h2>
+
+<h3>Description</h3>
+
+<p>Prepare water quality data for weighted regression for the mean response by creating a tidalmean class object
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">tidalmean(
+  dat_in,
+  ind = c(1, 2, 3, 4),
+  reslab = NULL,
+  flolab = NULL,
+  reslog = TRUE,
+  rm_miss = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>Input data frame for a water quality time series with four columns for date (Y-m-d format), response variable, salinity/flow, and detection limit for left-censored data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ind</code></td>
+<td>
+<p>four element numeric vector indicating column positions of date, response variable, salinity/flow, and detection limit of input data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reslab</code></td>
+<td>
+<p>character string or expression for labelling the response variable in plots, defaults to log-chlorophyll in ug/L</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flolab</code></td>
+<td>
+<p>character string or expression for labelling the flow variable in plots, defaults to Salinity</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reslog</code></td>
+<td>
+<p>logical indicating if input response variable is already in log-space, default <code>TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rm_miss</code></td>
+<td>
+<p>logical indicating if missing observations in the input data are removed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed from other methods</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is a simple wrapper to <code>structure</code> that is used to create a tidalmean object for use with weighted regression in tidal waters, specifically to model the mean response as compared to a conditional quantile. Input data should be a four-column <code>data.frame</code> with date, response variable, salinity/flow data, and detection limit for each observation of the response.  The response data are assumed to be log-transformed, otherwise use <code>reslog = FALSE</code>.  Salinity data can be provided as fraction of freshwater or as parts per thousand.  The limit column can be entered as a sufficiently small number if all values are above the detection limit or no limit exists.  The current implementation of weighted regression for tidal waters only handles left-censored data.  Missing observations are also removed.  
+</p>
+<p>The tidalmean object structure is almost identical to the tidal object, with the exception of an additional attribute for the back-transformed interpolation grid.  This is included to account for retransformation bias of log-transformed variables associated with mean models.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A tidalmean object as a data frame and attributes.  The data frame has columns ordered as date, response variable, salinity/flow (rescaled to 0, 1 range), detection limit, logical for detection limit, day number, month, year, and decimal time.  The attributes are as follows:
+</p>
+
+<dl>
+<dt><code>names</code></dt>
+<dd>
+<p>Column names of the data frame</p>
+</dd>
+<dt><code>row.names</code></dt>
+<dd>
+<p>Row names of the data frame</p>
+</dd>
+<dt><code>class</code></dt>
+<dd>
+<p>Class of the object</p>
+</dd>
+<dt><code>half_wins</code></dt>
+<dd>
+<p>List of numeric values used for half-window widths for model fitting, in the same order as the wt_vars argument passed to <code>getwts</code>. Initially will be <code>NULL</code> if <code>wrtds</code> has not been used.</p>
+</dd>
+<dt><code>fits</code></dt>
+<dd>
+<p>List with a single element with fits for the WRTDS mean interpolation grid.  Initially will be NULL if <code>wrtds</code> has not been used.</p>
+</dd>
+<dt><code>predonobs</code></dt>
+<dd>
+<p>A <code>data.frame</code> of predictions using the observed data that were used to fit the model.  This is required for <code>wrtdsperf</code> if a novel dataset is used for predictions after fitting the model. Initially will be NULL if <code>respred</code> has not been used.</p>
+</dd>
+<dt><code>bt_fits</code></dt>
+<dd>
+<p>List with a single element with back-transformed fits for the WRTDS mean interpolation grid.  Initially will be NULL if <code>wrtds</code> has not been used.</p>
+</dd>
+<dt><code>flo_grd</code></dt>
+<dd>
+<p>Numeric vector of salinity/flow values that was used for the interpolation grids</p>
+</dd>
+<dt><code>floobs_rng</code></dt>
+<dd>
+<p>Two element vector indicating the salinity/flow range of the observed data</p>
+</dd>
+<dt><code>nobs</code></dt>
+<dd>
+<p>List with one matrix showing the number of weights greater than zero for each date and salinity/flow combination used to create the fit matrices in <code>fits</code>.  Initially will be <code>NULL</code> if <code>wrtds</code> has not been used.</p>
+</dd>
+<dt><code>reslab</code></dt>
+<dd>
+<p>expression or character string for response variable label in plots</p>
+</dd>
+<dt><code>flolab</code></dt>
+<dd>
+<p>expression or character string for flow variable label in plots</p>
+</dd>
+</dl>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## raw data
+
+data(chldat)
+
+## format
+chldat &lt;- tidalmean(chldat)
+
+</code></pre>
+
+
+</div>

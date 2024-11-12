@@ -1,0 +1,192 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WGScan.VCF.chr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Scan a VCF file to study the association between an quantitative/dichotomous outcome variable and a region or whole chromosome by score type statistics allowing for multiple functional annotation scores.
+</h2>
+
+<h3>Description</h3>
+
+<p>Once the preliminary work is done by "WGScan.prelim()", this function scan a target region or chromosome, and output results for all windows as well as an estimated significance threshold. For genome-wide scan, users can scan each chromosome individually, then the genome-wide significance threshold can be obtained by combining chromosome-wise thresholds:
+</p>
+<p>alpha=1/(1/alpha_1+1/alpha_2+...+1/alpha_22).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WGScan.VCF.chr(result.prelim,vcf.filename,chr,pos.min=NULL,pos.max=NULL,
+Gsub.id=NULL,annot.filename=NULL,cell.type=NULL,MAF.weights='beta',
+test='combined',window.size=c(5000,10000,15000,20000,25000,50000),
+MAF.threshold=1,impute.method='fixed')
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>result.prelim</code></td>
+<td>
+
+<p>The output of function "WGScan.prelim()"
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vcf.filename</code></td>
+<td>
+
+<p>A character specifying the directory (including the file name) of the vcf file.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chr</code></td>
+<td>
+
+<p>Chromosome number.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pos.min</code></td>
+<td>
+
+<p>Minimum position of the scan. The default is NULL, where the scan starts at the first base pair.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pos.max</code></td>
+<td>
+
+<p>Maximum position of the scan. The default is NULL, where the scan ends at the last base pair, according to the chromosome sizes at:
+</p>
+<p>http://hgdownload.cse.ucsc.edu/goldenPath/hg19/bigZips/hg19.chrom.sizes.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Gsub.id</code></td>
+<td>
+
+<p>The subject id corresponding to the genotype matrix, an n dimensional vector. This is used to match phenotype with genotype. The default is NULL, where the subject id in the vcf file is used.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annot.filename</code></td>
+<td>
+
+<p>A character specifying the directory (including the file name) of functional annotations. Currently WGScan supports GenoNet scores across 127 tissues/cell types, which can be downloaded at:
+</p>
+<p>http://www.openbioinformatics.org/annovar/download/GenoNetScores/
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cell.type</code></td>
+<td>
+
+<p>A character specifying the tissue/cell type integrated in the analysis, in addition to standard dispersion and/or burden tests. The default is NULL, where no functional annotation is included. If cell.type='all', GenoNet scores across all 127 tissues/cell types are incorperated.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MAF.weights</code></td>
+<td>
+
+<p>Minor allele frequency based weight. Can be 'beta' to up-weight rare variants or 'equal' for a flat weight. The default is 'beta'.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>test</code></td>
+<td>
+
+<p>Can be 'dispersion', 'burden' or 'combined'. The test is 'combined', both dispersion and burden tests are applied. The default is 'combined'.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>window.size</code></td>
+<td>
+
+<p>Candidate window sizes in base pairs. The default is c(5000,10000,15000,20000,25000,50000). Note that extemely small window size (e.g. 1) requires large sample size.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MAF.threshold</code></td>
+<td>
+
+<p>Threshold for minor allele frequency. Variants above MAF.threshold are ignored. The default is 1.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>impute.method</code></td>
+<td>
+
+<p>Choose the imputation method when there is missing genotype. Can be "random", "fixed" or "bestguess". Given the estimated allele frequency, "random" simulates the genotype from binomial distribution; "fixed" uses the genotype expectation; "bestguess" uses the genotype with highest probability.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>window.summary</code></td>
+<td>
+
+<p>Results for all windows. Each row presents a window.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+
+<p>Estimated number of effective tests.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+
+<p>Estimated threshold, 0.05/M.
+</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# load example vcf file from package "seqminer"
+vcf.filename = system.file("vcf/all.anno.filtered.extract.vcf.gz", package = "seqminer")
+
+# simulated outcomes, covariates and inidividual id.
+Y&lt;-as.matrix(rnorm(3,0,1))
+X&lt;-as.matrix(rnorm(3,0,1))
+id&lt;-c("NA12286", "NA12341", "NA12342")
+
+# fit null model
+result.prelim&lt;-WGScan.prelim(Y,X=X,id=id,out_type="C",B=5000)
+
+# scan the vcf file
+result&lt;-WGScan.VCF.chr(result.prelim,vcf.filename,chr=1,pos.min=196621007,pos.max=196716634)
+
+
+## this is how the actual genotype matrix from package "seqminer" looks like
+example.G &lt;- t(readVCFToMatrixByRange(vcf.filename, "1:196621007-196716634",annoType='')[[1]])
+
+</code></pre>
+
+
+</div>

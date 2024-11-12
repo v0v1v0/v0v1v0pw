@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>PlotDistCountNormal</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot distribution details as a histogram plus matching normal</h2>
+
+<h3>Description</h3>
+
+<p>Compares empirical data to a normal distribution with the same mean and standard deviation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">PlotDistCountNormal(
+  frm,
+  xvar,
+  title,
+  ...,
+  binWidth = c(),
+  hist_color = "black",
+  normal_color = "blue",
+  mean_color = "blue",
+  sd_color = "blue"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frm</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar</code></td>
+<td>
+<p>name of the independent (input or model) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binWidth</code></td>
+<td>
+<p>width of histogram bins</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hist_color</code></td>
+<td>
+<p>color of empirical histogram</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normal_color</code></td>
+<td>
+<p>color of matching theoretical normal</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mean_color</code></td>
+<td>
+<p>color of mean line</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd_color</code></td>
+<td>
+<p>color of 1-standard deviation lines (can be NULL)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Plots the histograms of the empirical distribution and of the matching normal distribution.
+Also plots the mean and plus/minus one standard deviation.
+</p>
+<p>Bin width for the histogram is calculated automatically to yield approximately 50 bins across the
+range of the data, unless the <code>binWidth</code> argument is explicitly passed in. <code>binWidth</code> is reported
+in the subtitle of the plot.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+set.seed(52523)
+d &lt;- data.frame(wt=100*rnorm(100))
+PlotDistCountNormal(d,'wt','example')
+
+# # no sd lines
+# PlotDistCountNormal(d, 'wt', 'example', sd_color=NULL)
+
+</code></pre>
+
+
+</div>

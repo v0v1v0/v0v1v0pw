@@ -1,0 +1,59 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>anlz_backtrans</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Back-transform response variable</h2>
+
+<h3>Description</h3>
+
+<p>Back-transform response variable after fitting GAM
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">anlz_backtrans(dat)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>input data with <code>trans</code> argument</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p><code>dat</code> can be output from <code>anlz_trans</code> or <code>anlz_prd</code>
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>dat</code> with the <code>value</code> column back-transformed using info from the <code>trans</code> column
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(dplyr)
+
+tomod &lt;- rawdat %&gt;% 
+  filter(station %in% 34) %&gt;% 
+  filter(param %in% 'chl')
+dat &lt;- anlz_trans(tomod, trans = 'log10')
+backtrans &lt;- anlz_backtrans(dat)
+head(backtrans)
+
+mod &lt;- anlz_gam(tomod, trans = 'log10')
+dat &lt;- anlz_prd(mod)
+backtrans &lt;- anlz_backtrans(dat)
+head(backtrans)
+</code></pre>
+
+
+</div>

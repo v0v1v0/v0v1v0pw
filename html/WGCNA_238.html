@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>scaleFreeFitIndex</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Calculation of fitting statistics for evaluating scale free topology fit.
+</h2>
+
+<h3>Description</h3>
+
+<p>The function scaleFreeFitIndex calculates several indices (fitting statistics) for evaluating scale free
+topology fit.  The input is a vector (of connectivities) k. Next k is discretized into nBreaks number of
+equal-width bins.  Let's denote the resulting vector dk.  The relative frequency for each bin is denoted
+p.dk. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">scaleFreeFitIndex(k, nBreaks = 10, removeFirst = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+
+<p>numeric vector whose components contain non-negative values
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nBreaks</code></td>
+<td>
+
+<p>positive integer. This determines the number of equal width bins.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>removeFirst</code></td>
+<td>
+
+<p>logical. If TRUE then the first bin will be removed.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Data frame with columns
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Rsquared.SFT</code></td>
+<td>
+<p>the model fitting index (R.squared) from the following model lm(log.p.dk ~ log.dk)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>slope.SFT</code></td>
+<td>
+<p>the slope estimate from model lm(log(p(k))~log(k))</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truncatedExponentialAdjRsquared</code></td>
+<td>
+<p>the adjusted R.squared measure from the truncated exponential model
+given by lm2 = lm(log.p.dk ~ log.dk + dk).</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Steve Horvath
+</p>
+
+
+</div>

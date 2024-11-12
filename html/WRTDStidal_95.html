@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wrtdsperf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get WRTDS performance metrics</h2>
+
+<h3>Description</h3>
+
+<p>Get WRTDS performance metrics including goodness of fit, root mean square error, and normalized mean square error.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wrtdsperf(dat_in, ...)
+
+## S3 method for class 'tidal'
+wrtdsperf(dat_in, logspace = TRUE, ...)
+
+## S3 method for class 'tidalmean'
+wrtdsperf(dat_in, logspace = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input tidal object which must already have fitted model data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to or from other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logspace</code></td>
+<td>
+<p>logical if performance metrics use back-transformed residuals</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Goodness of fit is calculated using the <code>goodfit</code> function for quantile regression described in Koenker and Mochado 1999.  Root mean square error is based on square root of the mean of the squared residuals.  Normalized mean square error described in Gershenfeld and Weigend 1993 is the sum of the squared errors divided by the sum of the non-conditional errors (i.e., sum of the squared values of the observed minus the mean of the observed).  This measure allows comparability of error values for data with different ranges, although the interpretation for quantile models is not clear.  The value is provided as a means of comparison for WRTDS models created from the same data set but with different window widths during model fitting.
+</p>
+<p>Performance metrics are only valid for observations and model residuals in log-space.  Metrics also only apply to the data used to fit the model, i.e., performance will not be evaluated for novel data if the <code>dat_pred</code> argument was used with  <code>respred</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>data.frame</code> with the metrics for each quantile model
+</p>
+
+
+<h3>References</h3>
+
+<p>Gershenfeld, N.A., Weigend, A.S. 1993. The future of time series: learning and understanding. In: Weigend, A.S., Gershenfeld, N.A. (eds). Time Series Prediction: Forecasting the Future and Understanding the Past., second ed. Addison-Wesley, Santa Fe, New Mexico. pp. 1-70.
+</p>
+<p>Koenker, R., Machado, J.A.F. 1999. Goodness of fit and related inference processes for quantile regression. Journal of the American Statistical Association. 94(448):1296-1310.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wrtdsrsd</code> for residuals, <code>goodfit</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## load a fitted model object
+data(tidfit)
+
+## get performance metrics
+wrtdsperf(tidfit)
+</code></pre>
+
+
+</div>

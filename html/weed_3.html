@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>located_in_box</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Locations In the Box</h2>
+
+<h3>Description</h3>
+
+<p>Creates a new column (in_box) that tells whether the lat/long is in a certain box or not.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">located_in_box(
+  .,
+  lat_column = "lat",
+  lng_column = "lng",
+  top_left_lat,
+  top_left_lng,
+  bottom_right_lat,
+  bottom_right_lng
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.</code></td>
+<td>
+<p>Data Frame that has been locationized. see <code>weed::split_locations</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lat_column</code></td>
+<td>
+<p>Name of column containing Latitude data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lng_column</code></td>
+<td>
+<p>Name of column containing Longitude data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>top_left_lat</code></td>
+<td>
+<p>Latitude at top left corner of box</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>top_left_lng</code></td>
+<td>
+<p>Longitude at top left corner of box</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bottom_right_lat</code></td>
+<td>
+<p>Latitude at bottom right corner of box</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bottom_right_lng</code></td>
+<td>
+<p>Longitude at bottom right corner of box</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A dataframe that contains the latlong box data
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">d &lt;- tibble::tribble(
+~value,  ~location_word,                    ~Country,     ~lat,       ~lng,
+"city of new york",      "new york",                       "USA", 40.71427,  -74.00597,
+"kerala, chennai municipality, and san francisco",  "kerala", "India", 10.41667,       76.5,
+"kerala, chennai municipality, and san francisco",  "chennai",  "India", 13.08784,   80.27847)
+located_in_box(d, lat_column = "lat",
+lng_column = "lng",
+top_left_lat = 45,
+bottom_right_lat = 12,
+top_left_lng = -80,
+bottom_right_lng = 90)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,227 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>as.clustrange</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Build a clustrange object to compare different clustering solutions.
+</h2>
+
+<h3>Description</h3>
+
+<p>Build a clustrange object to compare different clustering solutions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">as.clustrange(object, diss, weights=NULL, R=1,  samplesize=NULL, ...)
+## S3 method for class 'twins'
+as.clustrange(object, diss, weights=NULL, R=1, samplesize=NULL, 
+		ncluster=20, ...) 
+## S3 method for class 'hclust'
+as.clustrange(object, diss, weights=NULL, R=1, samplesize=NULL, 
+		ncluster=20, ...) 
+## S3 method for class 'dtclust'
+as.clustrange(object, diss, weights=NULL, R=1, samplesize=NULL, 
+		ncluster=20, labels = TRUE, ...)
+## S3 method for class 'clustrange'
+plot(x, stat="noCH", legendpos="bottomright", 
+    norm="none", withlegend=TRUE, lwd=1, col=NULL, ylab="Indicators", 
+	xlab="N clusters", conf.int=0.9, ci.method="none", ci.alpha=.3, line="t0", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>The object to convert such as a data.frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>diss</code></td>
+<td>
+<p>A dissimilarity matrix or a dist object (see <code>dist</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>Optional numerical vector containing weights.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+<p>Optional number of bootstrap that can be used to build confidence intervals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>samplesize</code></td>
+<td>
+<p>Size of bootstrap sample. Default to sum of weights.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncluster</code></td>
+<td>
+<p>Integer. Maximum number of cluster. The range will include all clustering solution starting from two to <code>ncluster</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>, rules to assign an object to a sequence is used to label the cluster (instead of a number).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>clustrange</code> object to be plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stat</code></td>
+<td>
+<p>Character. The list of statistics to plot or "noCH" to plot all statistics except "CH" and "CHsq" or "all" for all statistics. See <code>wcClusterQuality</code> for a list of possible values. It is also possible to use "RHC" to plot the quality measure 1-HC. Unlike HC, RHC should be maximized as all other quality measures.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legendpos</code></td>
+<td>
+<p>Character. legend position, see <code>legend</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>norm</code></td>
+<td>
+<p>Character. Normalization method of the statistics can be one of "none" (no normalization), "range" (given as (value -min)/(max-min), "zscore" (adjusted by mean and standard deviation) or "zscoremed" (adjusted by median and median of the difference to the median).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>withlegend</code></td>
+<td>
+<p>Logical. If <code>FALSE</code>, the legend is not plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd</code></td>
+<td>
+<p>Numeric. Line width, see <code>par</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>A vector of line colors, see <code>par</code>. If <code>NULL</code>, a default set of color is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>x axis label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>y axis label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conf.int</code></td>
+<td>
+<p>Confidence to build the confidence interval (default: 0.9).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci.method</code></td>
+<td>
+<p>Method used to build the confidence interval (only if bootstrap has been used, see R above). One of "none" (do not plot confidence interval), "norm" (based on normal approximation), "perc" (based on percentile).)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci.alpha</code></td>
+<td>
+<p>alpha color value used to plot the interval.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>line</code></td>
+<td>
+<p>Which value should be plotted by the line? One of "t0" (value for actual sample), "mean" (average over all bootstraps), "median"(median over all bootstraps).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additionnal parameters passed to/from methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>as.clustrange</code> convert objects to <code>clustrange</code> objects. <code>clustrange</code> objects contains a list of clustering solution with associated statistics and can be used to find the optimal clustering solution.
+</p>
+<p>If <code>object</code> is a <code>data.frame</code> or a <code>matrix</code>, each column should be a clustering solution to be evaluated.
+</p>
+<p>If <code>object</code> is an <code>hclust</code> or <code>twins</code> objects (i.e. hierarchical clustering output, see <code>hclust</code>, <code>diana</code> or <code>agnes</code>), the function compute all clustering solution ranging from two to <code>ncluster</code> and compute the associated statistics.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>clustrange</code> with the following elements:
+</p>
+
+<dl>
+<dt>
+<code>clustering</code>:</dt>
+<dd>
+<p>A <code>data.frame</code> of all clustering solutions.</p>
+</dd>
+<dt>
+<code>stats</code>:</dt>
+<dd>
+<p>A <code>matrix</code> containing the clustering statistics of each cluster solution.</p>
+</dd>
+</dl>
+<h3>See Also</h3>
+
+<p>See also <code>clustassoc</code> (other cluster quality measures), <code>wcKMedRange</code>, <code>wcClusterQuality</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(mvad)
+## Aggregating state sequence
+aggMvad &lt;- wcAggregateCases(mvad[, 17:86], weights=mvad$weight)
+
+## Creating state sequence object
+mvad.seq &lt;- seqdef(mvad[aggMvad$aggIndex, 17:86], weights=aggMvad$aggWeights)
+
+## COmpute distance using Hamming distance
+diss &lt;- seqdist(mvad.seq, method="HAM")
+
+## Ward clustering
+wardCluster &lt;- hclust(as.dist(diss), method="ward", members=aggMvad$aggWeights)
+
+## Computing clustrange from Ward clustering
+wardRange &lt;- as.clustrange(wardCluster, diss=diss, 
+		weights=aggMvad$aggWeights, ncluster=15)
+
+## Plot all statistics (standardized)
+plot(wardRange, stat="all", norm="zscoremed", lwd=3)
+
+## Plot HC, RHC and ASW
+plot(wardRange, stat=c("HC", "RHC", "ASWw"), norm="zscore", lwd=3)
+
+</code></pre>
+
+
+</div>

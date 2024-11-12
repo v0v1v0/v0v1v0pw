@@ -1,0 +1,178 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>nearest.neighbours</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Find Nearest Neighbours in DSM Space (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>Find the nearest neighbours of a term vector in a DSM, given either as a scored cooccurrence matrix or a pre-computed distance matrix.  The target term can be selected by name (in which case the cooccurrence or distance matrix must be labelled appropriately) or specified as a vector (if the DSM is given as a matrix).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+nearest.neighbours(M, term, n = 10, M2 = NULL, byrow = TRUE,
+                   drop = TRUE, skip.missing = FALSE, dist.matrix = FALSE,
+                   ..., batchsize=50e6, verbose=FALSE)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+
+<p>either a dense or sparse matrix representing a scored DSM (or an object of class <code>dsm</code>), or a pre-computed distance matrix returned by <code>dist.matrix</code> (as an object of class <code>dist.matrix</code>).  Note that the compact representation produced by the <code>dist</code> function (class <code>dist</code>) is not accepted.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>term</code></td>
+<td>
+
+<p>either a character vector specifying one or more target terms for which nearest neighbours will be found, or a matrix specifying the target vectors directly. A plain vector is interpreted as a single-row matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+
+<p>an integer giving the number of nearest neighbours to be returned for each target term
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M2</code></td>
+<td>
+
+<p>an optional dense or sparse matrix (or object of class <code>dsm</code>). If specified, nearest neighbours are found among the rows (default) or columns (<code>byrow=FALSE</code>) of <code>M2</code>, allowing for NN search in a cross-distance setting.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>byrow</code></td>
+<td>
+
+<p>whether target terms are looked up in rows (default) or columns (<code>byrow=FALSE</code>) of <code>M</code>.  NB: Target vectors in the <code>term</code> argument are always given as row vectors, even if <code>byrow=FALSE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drop</code></td>
+<td>
+
+<p>if <code>TRUE</code>, the return value is simplified to a vector (or distance matrix) if it contains nearest neighbours for exactly one target term (default).  Set <code>drop=FALSE</code> to ensure that <code>nearest.neighbours</code> always returns a list.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skip.missing</code></td>
+<td>
+
+<p>if <code>TRUE</code>, silently ignores target terms not found in the DSM or distance matrix.  By default (<code>skip.missing=FALSE</code>) an error is raised in this case.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist.matrix</code></td>
+<td>
+
+<p>if <code>TRUE</code>, return a full distance matrix between the target term and its nearest neighbours (instead of a vector of neighbours).  Note that a pre-computed distance matrix <code>M</code> must be symmetric in this case.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>additional arguments are passed to <code>dist.matrix</code> if <code>M</code> is a scored DSM matrix.  See the manpage of <code>dist.matrix</code> for details on available parameters and settings.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>batchsize</code></td>
+<td>
+<p>if <code>term</code> is a long list of lookup terms, it will automatically be processed in batches.  The number of terms per batch is chosen in such a way that approximately <code>batchsize</code> intermediate similarity values have to be computed and stored at a time (not used if <code>M</code> is a pre-computed distance matrix).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>if <code>TRUE</code>, display some progress messages indicating how data are split into batches</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In most cases, the target term itself is automatically excluded from the list of neighbours.  There are two exceptions:
+</p>
+
+<ol>
+<li>
+<p>The target term is given as a vector rather than by name.
+</p>
+</li>
+<li>
+<p>Nearest neighbours are determined in a cross-distance setting.  This is the case if (i) <code>M2</code> is specified or (ii) <code>M</code> is a pre-computed distance matrix and not marked to be symmetric.
+</p>
+</li>
+</ol>
+<p>With <code>dist.matrix=TRUE</code>, the returned distance matrix always includes the target term.
+</p>
+<p><code>M</code> can also be a pre-computed distance or similarity matrix from an external source, which must be marked with <code>as.distmat</code>.  If <code>M</code> is a sparse similarity matrix, only non-zero cells will be considered when looking for the nearest neighbours.  Keep in mind that <code>dist.matrix=TRUE</code> is only valid if <code>M</code> is a symmetric matrix and marked as such.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with one entry for each target <code>term</code> found in <code>M</code>, giving
+</p>
+
+<ul>
+<li>
+<p><code>dist.matrix=FALSE</code> (default): the nearest neighbours as a numeric vector of distances or similarities labelled with the corresponding terms and ordered by distance
+</p>
+</li>
+<li>
+<p><code>dist.matrix=TRUE</code>: a full distance or similarity matrix for the target term and its nearest neighbours (as an object of class <code>dist.matrix</code>). An additional attribute <code>selected</code> contains a logical vector indicating the position of the target term in the matrix.
+</p>
+</li>
+</ul>
+<p>If <code>drop=TRUE</code>, a list containing only a single target term will be simplified to a plain vector or distance matrix.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dist.matrix</code> for more information on available distance metrics and similarity measures
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+nearest.neighbours(DSM_Vectors, c("apple_N", "walk_V"), n=10)
+
+nearest.neighbours(DSM_Vectors, "apple_N", n=10, method="maximum")
+
+as.dist(nearest.neighbours(DSM_Vectors, "apple_N", n=10, dist.matrix=TRUE))
+
+</code></pre>
+
+
+</div>

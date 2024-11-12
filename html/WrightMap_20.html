@@ -1,0 +1,191 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>item.person.data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Processing CQmodel objects for plotting
+</h2>
+
+<h3>Description</h3>
+
+<p>The <code>itemData</code> and <code>personData</code> functions take CQmodel objects (or ConQuest output files) as inputs and return a vector or matrix. They were originally developed for use by <code>wrightMap</code>, but are separated out here to allow the outputs to be sent to other plotting functions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">itemData(thresholds, ...)
+## Default S3 method:
+itemData(thresholds, item.type = "deltas",...)
+## S3 method for class 'character'
+itemData(thresholds, p.type = NULL, equation = NULL, ...)
+## S3 method for class 'CQmodel'
+itemData(thresholds, item.table = NULL, interactions = NULL, 
+step.table = NULL, item.type = "default", throld = 0.5, ...)
+
+personData(thetas,...)
+## Default S3 method:
+personData(thetas,...)
+## S3 method for class 'character'
+personData(thetas, p.type = NULL,...)
+## S3 method for class 'CQmodel'
+personData(thetas,...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<p>itemData arguments:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>thresholds</code></td>
+<td>
+
+<p>Usually, a CQmodel object or the name of a ConQuest show file. Will also accept a matrix, but this is only really for use within other functions. In general <code>make.thresholds</code> should be used instead.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item.type</code></td>
+<td>
+
+<p>Indicates whether to use <code>thresholds</code> or <code>deltas</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>equation</code></td>
+<td>
+
+<p>string giving the model equation, if the Summary of Estimation table was not included in the show file.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item.table</code></td>
+<td>
+
+<p>Name of RMP table to use for the main effect of the item parameters.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interactions</code></td>
+<td>
+
+<p>Name of RMP interaction table to use in addition to <code>item.table</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>step.table</code></td>
+<td>
+
+<p>Name of RMP table to use in addition to <code>item.table</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>throld</code></td>
+<td>
+
+<p>The probability level to be used for calculating thresholds.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Additional parameters to pass to <code>make.thresholds</code>.
+</p>
+</td>
+</tr>
+</table>
+<p>personData arguments:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>thetas</code></td>
+<td>
+<p>a CQModel object or the name of the Conquest person parameters file (EAPs, MLEs, etc.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.type</code></td>
+<td>
+<p> Type of person parameter estimate (EAP, MLE or WLE). </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The itemData and personData functions are usually called by <code>wrightMap</code>. They can also be called directly.
+</p>
+<p>For the itemData function, note that the <code>item.table</code>, <code>interactions</code>, and <code>step.table</code> parameters must be the exact name of specific RMP tables. You cannot specify an interactions table or a step table without also specifying an item table (although JUST an item table is fine). If your model equation is more complicated, you will have to either use a GIN table or specify in the function call which tables to use for what. A model of the form item + item * step + booklet, for example, will not run unless there is a GIN table or you have defined at least the item.table.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The itemData functions return a vector of item parameters, or a matrix in which the rows are items and the columns are steps. The personData functions return a vector of person paramenters, or a matrix in which the rows are persons and the columns are dimensions.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Rebecca Freund and David Torres Irribarra </p>
+
+
+<h3>See Also</h3>
+
+<p><code>item.side</code>
+<code>person.side</code>
+<code>make.thresholds</code>
+<code>make.deltas</code>
+<code>wrightMap</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">	
+#As a call from wrightMap:
+
+fpath &lt;- system.file("extdata", package="WrightMap")
+
+model1 &lt;- CQmodel(file.path(fpath,"ex2a.eap"), file.path(fpath,"ex2a.shw"))
+# Making thresholds if there are no GIN tables (partial credit model)
+	wrightMap(model1, type = "thresholds") 
+	
+#Complex model:
+
+model2 &lt;- CQmodel(file.path(fpath,"ex4a.mle"), file.path(fpath,"ex4a.shw")) 
+wrightMap(model2, item.table = "rater")
+	wrightMap(model2, item.table = "rater", interactions = "rater*topic", 
+  step.table = "topic")
+
+
+# Plotting item results
+	
+	fpath &lt;- system.file("extdata", package="WrightMap")
+	model3 &lt;- CQmodel(file.path(fpath,"ex2a.eap"), file.path(fpath,"ex2a.shw"))
+	m3.item &lt;- itemData(model3)
+	
+	dev.new(width=10, height=10)
+	
+	#control of oma allows us to give more space to longer item names
+	itemModern(m3.item, label.items.srt= 90, oma = c(2,0,0,2)) 
+	itemClassic(m3.item)
+	itemHist(m3.item)
+	
+	m3.person &lt;- personData(model3)
+	personHist(m3.person)
+	personDens(m3.person)
+  </code></pre>
+
+
+</div>

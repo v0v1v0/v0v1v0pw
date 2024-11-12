@@ -1,0 +1,259 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>verboseIplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Scatterplot with density 
+</h2>
+
+<h3>Description</h3>
+
+<p>Produce a scatterplot that shows density with color and is annotated by the correlation, MSE, and regression line.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">verboseIplot(
+             x, y, 
+             xlim = NA, ylim = NA, 
+             nBinsX = 150, nBinsY = 150, 
+             ztransf = function(x) {x}, gamma = 1, 
+             sample = NULL, corFnc = "cor", corOptions = "use = 'p'", 
+             main = "", xlab = NA, ylab = NA, cex = 1, 
+             cex.axis = 1.5, cex.lab = 1.5, cex.main = 1.5, 
+             abline = FALSE, abline.color = 1, abline.lty = 1, 
+             corLabel = corFnc, showMSE = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>numerical vector to be plotted along the x axis.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>numerical vector to be plotted along the y axis.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim</code></td>
+<td>
+
+<p>define the range in x axis
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylim</code></td>
+<td>
+
+<p>define the range in y axis
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nBinsX</code></td>
+<td>
+
+<p>number of bins along the x axis
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nBinsY</code></td>
+<td>
+
+<p>number of bins along the y axis
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ztransf</code></td>
+<td>
+
+<p>Function to transform the number of counts per pixel, which will be mapped by the function in colramp to well defined colors. The user has to make sure that the transformed density lies in the range [0,zmax], where zmax is any positive number (&gt;=2). 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma</code></td>
+<td>
+
+<p>color correction power 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sample</code></td>
+<td>
+
+<p>either a number of points to be sampled or a vector of indices input <code>x</code> and <code>y</code> 
+for points to be plotted.  Useful when the input vectors are large and plotting all points is not practical.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corFnc</code></td>
+<td>
+
+<p>character string giving the correlation function to annotate the plot.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corOptions</code></td>
+<td>
+
+<p>character string giving further options to the correlation function.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+
+<p>main title for the plot.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+
+<p>label for the x-axis.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+
+<p>label for the y-axis.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex</code></td>
+<td>
+
+<p>character expansion factor for plot annotations.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.axis</code></td>
+<td>
+
+<p>character expansion factor for axis annotations.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.lab</code></td>
+<td>
+
+<p>character expansion factor for axis labels.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.main</code></td>
+<td>
+
+<p>character expansion factor for the main title.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abline</code></td>
+<td>
+
+<p>logical: should the linear regression fit line be plotted?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abline.color</code></td>
+<td>
+
+<p>color specification for the fit line.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abline.lty</code></td>
+<td>
+
+<p>line type for the fit line.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corLabel</code></td>
+<td>
+
+<p>character string to be used as the label for the correlation value printed in the main title.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>showMSE</code></td>
+<td>
+
+<p>logical: should the MSE be added to the main title?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>other arguments to the function plot.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Irrespective of the specified correlation function, the MSE is always calculated based on the residuals of a
+linear model.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If sample above is given, the indices of the plotted points are returned invisibly.
+</p>
+
+
+<h3>Note</h3>
+
+<p>This funtion is based on verboseScatterplot (Steve Horvath and Peter Langfelder), iplot (Andreas Ruckstuhl, Rene Locher) and greenWhiteRed(Peter Langfelder )
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Chaochao Cai, Steve Horvath
+</p>
+
+
+<h3>See Also</h3>
+
+<p>image for more parameters
+</p>
+
+
+</div>

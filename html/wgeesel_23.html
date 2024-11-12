@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>QICW.gee</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+QICWr and QICWp for WGEE
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the QICW<code class="reqn">_{r}</code> and QICW<code class="reqn">_{p}</code> (an information criterion based on the weighted quasi-likelihood function) for selection of mean model and correlation structure based on the WGEE.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">QICW.gee(object)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>a fitted model object of class <code>"wgee"</code>.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Return a data frame of QICW<code class="reqn">_{r}</code>, QICW<code class="reqn">_{p}</code> and Wquasi_lik.
+</p>
+
+
+<h3>Note</h3>
+
+<p>QICW<code class="reqn">_{r}</code> can be used for variable selection and for selecting the correlation structure in WGEE analyses. QICW<code class="reqn">_{p}</code> is a simplified version of QICW<code class="reqn">_{r}</code>, which can not be applied to select the optimal working correlation structure in WGEE.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Cong Xu, Zheng Li and Ming Wang
+</p>
+
+
+<h3>References</h3>
+
+<p>Gosho, M., 2015. Model selection in the weighted generalized estimating equations for longitudinal data with dropout. <em>Biometrical Journal</em>.
+</p>
+<p>Platt, R.W., Brookhart, M.A., Cole, S.R., Westreich, D. and Schisterman, E.F., 2013. An information criterion for marginal structural models. <em>Statistics in medicine</em>, 32(8), pp.1383-1393.
+</p>
+<p>Robins, J.M., Rotnitzky, A. and Zhao, L.P., 1995. Analysis of semiparametric regression models for repeated outcomes in the presence of missing data. <em>Journal of the American Statistical Association</em>, 90(429), pp.106-121.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wgee</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(imps)
+
+### variable selection by QICWr, not rum###
+#fit &lt;- wgee(IMPS79 ~ Drug+Sex+Time, mismodel= R ~ Drug+Time, data=imps,
+##           id=imps$ID, family="gaussian", corstr="exchangeable")
+##QICW.gee(fit)
+
+#fit &lt;- wgee(IMPS79 ~ Drug+Sex+Time+Time:Sex+Time:Drug, mismodel= R ~ Drug+Time,
+#        data=imps, id=imps$ID, family="gaussian", corstr="exchangeable")
+##QICW.gee(fit)
+</code></pre>
+
+
+</div>

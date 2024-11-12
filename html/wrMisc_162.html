@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>keepCommonText</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract Longest Common Text Out Of Character Vector</h2>
+
+<h3>Description</h3>
+
+<p>This function allows recovering the single longest common text-fragments (from center, head or tail) out of character vector <code>txt</code>.
+Only the first of all of the longest solutions will be returned.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">keepCommonText(
+  txt,
+  minNchar = 1,
+  side = "center",
+  hiResol = TRUE,
+  silent = TRUE,
+  callFrom = NULL,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>txt</code></td>
+<td>
+<p>character vector to be treated</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minNchar</code></td>
+<td>
+<p>(integer) minumin number of characters that must remain</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>side</code></td>
+<td>
+<p>(character) may be be either 'center', 'any', 'terminal', 'left' or 'right'; only with <code>side='center'</code> or <code>'any'</code> internal text-segments may be found</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hiResol</code></td>
+<td>
+<p>(logical) find best solution, but at much higher comptational cost (eg 3x slower, however <code>hiResol=FALSE</code> rather finds anchor which may need to get extended)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Please note, that finding common parts between chains of characters is not a completely trivial task. 
+This topic still has ongoing research for the application of sequence-alignments, where chains of characters to be compared get very long.
+This function uses a k-mer inspirated approach.
+The initial aim with this function was allowing to treat smaller chains of characters (and finding shorter strteches of common text), like eg with column-names.
+</p>
+<p>Important : This function identifies only the first best hit, ie other shared/common character-chains of the same length will not be found !
+</p>
+<p>Using the argument <code>hiResol=FALSE</code> it is possible to accelerate the search aprox 3x (with larger character-vectors), however, frequently the very best solution may not be found. 
+This means, that in this case the result should rather be considered a 'seed', allowing check if further extension may improve the result, 
+ie for identifying a (slightly) longer chain of common characters.
+</p>
+<p>With longer vectors and longer character chains this may get demanding on computational reesources, the argument <code>hiResol=FALSE</code> allows reducing this at the price of missing the best solution.
+With this argument single common/matching characters will not be searched if all text-elements are longer than 500 characters, an empty character vector will be returned. 
+</p>
+<p>When argument <code>side</code> is either <code>left</code>, <code>right</code> or <code>terminal</code> only terminal common text may be found (a potentially even longer internal text will be lost).
+Of course, choosing this option makes searches much faster.  
+</p>
+<p>This function does not return the position of the shared/common characters within the text, you may use <code>gregexpr</code> or <code>regexec</code> to locate them.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a character vector of length=1, ie only one (normally the longest) common sequence of characters is identified.
+If nothing is found common/shared an empty character-vector is returned
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Use <code>gregexpr</code> or <code>regexec</code> in <code>grep</code> for locating the identified common characters in the initial query.
+</p>
+<p>Inverse : Trim redundant text (from either side) to keep only varaible part using <code>trimRedundText</code>; 
+you may also look for related functions in package <a href="https://CRAN.R-project.org/package=stringr">stringr</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">txt1 &lt;- c("abcd_abc_kjh", "bcd_abc123", "cd_abc_po")
+keepCommonText(txt1, side="center")       # trim from right
+
+txt2 &lt;- c("ddd_ab","ddd_bcd","ddd_cde")
+trimRedundText(txt2, side="left")          #  
+keepCommonText(txt2, side="center")        # 
+</code></pre>
+
+
+</div>

@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>finner_prod_maxp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The function finds the value which yields the maximum inner product
+(CUSUM) of a a time series located between <code class="reqn">100(1-p)\%</code> and <code class="reqn">100p\%</code> of its support
+</h2>
+
+<h3>Description</h3>
+
+<p>This function is an internal C++ function wrapped by cr.rand.max.inner.prod.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">finner_prod_maxp(x,p)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>A time series.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+
+<p>A scalar in (0.67,1]
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>1</code></td>
+<td>
+<p>maximum cusum value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>2</code></td>
+<td>
+<p>the location of a point with the maximum cusum value</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>K. Korkas and P. Fryzlewicz
+</p>
+
+
+<h3>References</h3>
+
+<p>K. Korkas and P. Fryzlewicz (2017), Multiple change-point detection for non-stationary time series using Wild Binary Segmentation. Statistica Sinica, 27, 287-311. (http://stats.lse.ac.uk/fryzlewicz/WBS_LSW/WBS_LSW.pdf)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"> 
+#cps=seq(from=1000,to=2000,by=200)
+#y=sim.pw.arma(N =3000,sd_u = c(1,1.5,1,1.5,1,1.5,1),
+#b.slope=rep(0.99,7),b.slope2 = rep(0.,7), mac = rep(0.,7),br.loc = cps)[[2]]
+#z=ews.trans(y,scales=c(11,9,8,7,6))
+##balanced
+#finner_prod_maxp(z[,1],0.51)
+##unbalanced
+#finner_prod_maxp(z[,1],0.99)
+</code></pre>
+
+
+</div>

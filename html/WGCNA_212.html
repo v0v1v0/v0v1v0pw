@@ -1,0 +1,77 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>prependZeros</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Pad numbers with leading zeros to specified total width
+</h2>
+
+<h3>Description</h3>
+
+<p>These functions pad the specified numbers with zeros to a specified total width.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">prependZeros(x, width = max(nchar(x)))
+prependZeros.int(x, width = max(nchar(as.integer(x))))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>Vector of numbers to be padded. For <code>prependZeros</code>, the vector may be real (non-integer) or even character (and
+not necessarily representing numbers). For <code>prependZeros</code>, the vector must be numeric and non-integers get rounded
+down to the nearest integer.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+
+<p>Width to pad the numbers to.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>prependZeros.int</code> version works better with numbers such as 100000 which may get converted to character as 1e5 and
+hence be incorrectly padded in the <code>prependZeros</code> function. On the flip side, prependZeros works also for non-integer
+inputs.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Character vector with the 0-padded numbers.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">prependZeros(1:10)
+prependZeros(1:10, 4)
+# more exotic examples
+prependZeros(c(1, 100000), width = 6) ### Produces incorrect output
+prependZeros.int(c(1, 100000))  ### Correct output
+prependZeros(c("a", "b", "aa")) ### pads the shorter strings using zeros.
+</code></pre>
+
+
+</div>

@@ -1,0 +1,263 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Distance Measures</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Plug-in distance-measure functions for <code>distShell</code>.
+</h2>
+
+<h3>Description</h3>
+
+<p>Each function takes two (interchangeable) vectors of data and returns a measure of distance between them. Vectors may be just 1/0 values (presence-absence data) or non-negative integers (count data).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">distBrayCurtis(d1, d2)
+distChaoJaccCorr(d1, d2)
+distChaoJaccNaive(d1, d2)
+distChaoSorCorr(d1, d2)
+distChaoSorNaive(d1, d2)
+distChord(d1, d2)
+distJaccard(d1, d2)
+distMatching(d1, d2)
+distMorisitaHorn(d1, d2)
+distOchiai(d1, d2)
+distPreston(d1, d2)
+distRogersTanimoto(d1, d2)
+distSimRatio(d1, d2)
+distSorensen(d1, d2)
+distWhittaker(d1, d2)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>d1, d2</code></td>
+<td>
+
+<p>vectors of equal length, specifying the two cases to be compared.
+</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+
+<dl>
+<dt>distBrayCurtis</dt>
+<dd>
+<p>Complement of the Bray-Curtis index, see Magurran p.246, where it is referred to as the 'quantitative Sorensen' index. Based on count data.
+</p>
+</dd>
+<dt>distChaoJaccCorr, distChaoJaccNaive, distChaoSorCorr, distChaoSorNaive</dt>
+<dd>
+<p>Each is the complement of one of a series of similarity indices which allow for (1) relative abundance of shared species and (2) estimation of number of shared species not detected. Based on count data. See Chao et al. 2005.
+</p>
+</dd>
+<dt>distChord</dt>
+<dd>
+<p>Both vectors are normalized so that the sum of squares = 1, ie. they lie on the surface of a sphere of unit radius. The distance measure is the length of the cord joining the two points through the sphere, which is in [0, sqrt(2)], ie. it is sqrt(2) for sites with no species in common. Based on count data. See Zuur et al 2007:166, Legendre &amp; Legendre 1998:279.
+</p>
+</dd>
+<dt>distJaccard</dt>
+<dd>
+<p>Complement of the Jaccard index of similarity; also known as "Marczewski-Steinhaus distance". Based on presence-absence data. No. of shared species / Overall number of species.
+</p>
+</dd>
+<dt>distMatching</dt>
+<dd>
+<p>A simple matching index: the proportion of elements which match in two presence-absence vectors (ie. present in both or absent in both). Zuur et al 2007:165.
+</p>
+</dd>
+<dt>distMorisitaHorn</dt>
+<dd>
+<p>The complement of the Morisita-Horn index of similarity. Based on count data. See Magurran 2004:246 The Morisita-Horn index is also known as "simplified Morisita". The "Morisita" and "Horn" indices are different again! See Krebs 1999:470-471.
+</p>
+</dd>
+<dt>distOchiai</dt>
+<dd>
+<p>Complement of the Ochiai coefficient of similarity. Based on count data. See Zuur et al 2007:167, Legendre &amp; Legendre 1998:276.
+</p>
+</dd>
+<dt>distPreston</dt>
+<dd>
+<p>Preston's coefficient of faunal dissimilarity (z). Based on presence-absence data. See Preston 1962:418.
+</p>
+</dd>
+<dt>distRogersTanimoto</dt>
+<dd>
+<p>Complement of Rogers and Tanimoto's coefficient of similarity. Based on presence-absence data. See Zuur et al 2007:165.
+</p>
+</dd>
+<dt>distSimRatio</dt>
+<dd>
+<p>Complement of the Similarity Ratio. Based on count data. See Zuur et al 2007:167.
+</p>
+</dd>
+<dt>distSorensen</dt>
+<dd>
+<p>Complement of Sorensen (or Dice) index of similarity. Based on presence-absence data. No. of shared species / Average number of species. Same as Whittaker's distance measure for Incidence (presence-absence) data minus one (Magurran 2004:244).
+</p>
+</dd>
+<dt>distWhittaker</dt>
+<dd>
+<p>Whittaker's index of association for Abundance (count) data. See Zuur et al 2007:170.
+</p>
+</dd>
+</dl>
+<h3>Value</h3>
+
+<p>a scalar, the distance between the two vectors.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith
+</p>
+
+
+<h3>References</h3>
+
+
+<ul>
+<li>
+<p> Chao, A; R L Chazdon; R K Colwell; T-J Shen. 2005. A new statistical
+approach for assessing similarity of species composition with incidence
+and abundance data. <em>Ecology Letters</em> 8:148-159.
+</p>
+</li>
+<li>
+<p> Krebs, C J 1999. Ecological Methodology. Addison Wesley Longman.
+</p>
+</li>
+<li>
+<p> Magurran, A E 2004. <em>Measuring biological diversity</em>. Blackwell. 
+</p>
+</li>
+<li>
+<p> Preston, F W. 1962. The canonical distribution of commonness and rarity: Part II. <em>Ecology</em> 43:410-432. 
+</p>
+</li>
+<li>
+<p> Zuur, A F; E N Ieno; G M Smith 2007. <em>Analysing ecological data</em>. Springer. 
+</p>
+</li>
+<li>
+<p> Legendre, P; L Legendre 1998. <em>Numerical ecology</em>. Elsevier, Amsterdam NL.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>The basic distance computation function is <code>dist</code> in package stats. Other functions are <code>vegan::vegdist</code> and <code>labdsv::dsvdis</code>.
+</p>
+<p>These functions provide the following distance measures:
+</p>
+
+<ul>
+<li>
+<p>       binary (in dist) = asymmetric binary = Steinhaus
+</p>
+</li>
+<li>
+<p>       binomial (in vegdist)
+</p>
+</li>
+<li>
+<p>       bray/curtis (in dsvdis) = bray (in vegdist)
+</p>
+</li>
+<li>
+<p>       canberra (in dist and vegdist)
+</p>
+</li>
+<li>
+<p>       chao (in vegdist)
+</p>
+</li>
+<li>
+<p>       chisq  (in dsvdis)
+</p>
+</li>
+<li>
+<p>       euclidean (in dist and vegdist)
+</p>
+</li>
+<li>
+<p>       gower (in vegdist)
+</p>
+</li>
+<li>
+<p>       horn (in vegdist) = Morisita-Horn or simplified Morisita 
+</p>
+</li>
+<li>
+<p>       jaccard (in vegdist)
+</p>
+</li>
+<li>
+<p>       kulczynski (in vegdist)
+</p>
+</li>
+<li>
+<p>       manhattan (in dist and vegdist)
+</p>
+</li>
+<li>
+<p>       maximum (in dist)
+</p>
+</li>
+<li>
+<p>       minkowski (in dist)
+</p>
+</li>
+<li>
+<p>       morisita (not simplified!) (in vegdist)
+</p>
+</li>
+<li>
+<p>       mountford (in vegdist)
+</p>
+</li>
+<li>
+<p>       ochiai (in dsvdis)
+</p>
+</li>
+<li>
+<p>       raup (in vegdist) = Raup-Crick
+</p>
+</li>
+<li>
+<p>       roberts  (in dsvdis)
+</p>
+</li>
+<li>
+<p>       ruzicka (in dsvdis)
+</p>
+</li>
+<li>
+<p>       sorensen  (in dsvdis)
+</p>
+</li>
+<li>
+<p>       steinhaus (in dsvdis)= binary 
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(distTestData)
+
+distShell(distTestData, distJaccard)
+
+distShell(distTestData, distMorisitaHorn)
+</code></pre>
+
+
+</div>

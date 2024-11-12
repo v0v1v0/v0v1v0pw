@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pull_wos_apply</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Run <code>pull_wos</code> across multiple queries</h2>
+
+<h3>Description</h3>
+
+<p>Run <code>pull_wos</code> across multiple queries
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pull_wos_apply(queries, editions = c("SCI", "SSCI", "AHCI", "ISTP",
+  "ISSHP", "BSCI", "BHCI", "IC", "CCR", "ESCI"),
+  sid = auth(Sys.getenv("WOS_USERNAME"), Sys.getenv("WOS_PASSWORD")),
+  ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>queries</code></td>
+<td>
+<p>Vector of queries to issue to the WoS API and pull data for.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>editions</code></td>
+<td>
+<p>Web of Science editions to query. Possible values are listed
+<a href="http://ipscience-help.thomsonreuters.com/wosWebServicesLite/dbEditionsOptionsGroup/databaseEditionsWos.html">here</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sid</code></td>
+<td>
+<p>Session identifier (SID). The default setting is to get a fresh
+SID each time you query WoS via a call to <code>auth</code>. However,
+you should try to reuse SIDs across queries so that you don't run into the
+throttling limits placed on new sessions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments passed along to <code>POST</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The same set of data frames that <code>pull_wos</code> returns, with
+the addition of a data frame named <code>query</code>. This data frame frame tells
+you which publications were returned by a given query.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+queries &lt;- c('TS = "dog welfare"', 'TS = "cat welfare"')
+# we can name the queries so that these names appear in the queries data
+# frame returned by pull_wos_apply():
+names(queries) &lt;- c("dog welfare", "cat welfare")
+pull_wos_apply(queries)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

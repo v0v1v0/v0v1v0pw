@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>nonAmbiguousNum</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>make numeric vector non-ambiguous (ie unique)</h2>
+
+<h3>Description</h3>
+
+<p><code>nonAmbiguousNum</code> makes (named) values of numeric vector 'x' unique. 
+Note: for non-numeric use  <code>firstOfRepeated</code> - but 1000x slower !
+Return sorted non-ambigous numeric vector (or list if 'asList'=TRUE and 'uniqOnly'=FASLSE)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">nonAmbiguousNum(
+  x,
+  uniqOnly = FALSE,
+  asList = FALSE,
+  nameMod = "amb_",
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(numeric) main input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uniqOnly</code></td>
+<td>
+<p>(logical) if=TRUE return unique only, if =FALSE return unique and single representative of non-unique values (with ” added to name), selection of representative of repeated: first (of sorted) or middle if &gt;2 instances</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>asList</code></td>
+<td>
+<p>(logical) return list</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nameMod</code></td>
+<td>
+<p>(character) text to add in case on ambiguous values, default="amb_"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>sorted non-ambigous numeric vector (or list if 'asList'=TRUE and 'uniqOnly'=FALSE)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>firstOfRepeated</code> for non-numeric use (much slower !!!), <code>duplicated</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2017); aa &lt;- round(rnorm(100),2); names(aa) &lt;- 1:length(aa)
+str(nonAmbiguousNum(aa))
+str(nonAmbiguousNum(aa,uniq=FALSE,asLi=TRUE))
+</code></pre>
+
+
+</div>

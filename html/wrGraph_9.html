@@ -1,0 +1,216 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>addBagPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add bagplot to existing plot</h2>
+
+<h3>Description</h3>
+
+<p>This function adds a bagplot on an existing (scatter-)plot allowing to highlight the central area of the data.
+Briefly, a bagplot is a bivariate boxplot, see <a href="https://en.wikipedia.org/wiki/Bagplot">Bagplot</a>, following the basic idea of a boxplot in two dimensions.
+Of course, multimodal distributions - if not separated first - may likely lead to mis-interpretation, similarly as it is known for interpreting boxplots.
+If a group of data consists only of 2 data-points, they will be conected using a straight line.
+It is recommended using transparent colors to highlight the core part of a group (if only 2 points are available, they will be conected using a straight line),
+in addition, one could use the option to re-plot all (non-outlyer) points (arguments <code>reCol</code>, <code>rePch</code> and <code>reCex</code> must be used).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">addBagPlot(
+  x,
+  lev1 = 0.5,
+  outCoef = 2,
+  bagCol = NULL,
+  bagCont = bagCol,
+  bagLwd = 1.5,
+  nCore = 4,
+  outlCol = 2,
+  outlPch = NULL,
+  outlCex = 0.6,
+  reCol = NULL,
+  rePch = NULL,
+  reCex = NULL,
+  ctrPch = NULL,
+  ctrCol = NULL,
+  ctrCex = NULL,
+  addSubTi = TRUE,
+  returnOutL = FALSE,
+  silent = TRUE,
+  callFrom = NULL,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(matrix, list or data.frame) main numeric input of data/points to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lev1</code></td>
+<td>
+<p>(numeric) min content of data for central area (default 0.5 for 50 percent)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outCoef</code></td>
+<td>
+<p>(numeric) parameter for defining outliers (equivalent to <code>range</code> in <code>boxplot</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bagCol</code></td>
+<td>
+<p>(character or integer) color for filling center part of bagplot (default light transparent grey); Note: It is highly suggested to use transparency, otherwise points underneith will be covered</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bagCont</code></td>
+<td>
+<p>(character) color for inner and outer contours of bagplot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bagLwd</code></td>
+<td>
+<p>(numeric) line width for outer contour, set to <code>NULL</code> for not diaplaying outer contour (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nCore</code></td>
+<td>
+<p>(integer) decide when center should be determined by median or mean: if number of points reach <code>nCore</code> the median will be used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outlCol</code></td>
+<td>
+<p>(character or integer) color for highlighting outlyers (for text and replottig outlyers points), set to <code>NULL</code> for not highlighting outlyers at all</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outlPch</code></td>
+<td>
+<p>(integer) symbol replotting highlighted outlyers (for text and replottig outlyers points), set to <code>NULL</code> for not replotting outlyer-points (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outlCex</code></td>
+<td>
+<p>(numeric) cex type expansion factor for labels of highlighted outlyers, set to <code>NULL</code> for not printing (row)names of outlyers (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reCol</code></td>
+<td>
+<p>(character or integer) color for replotting (non-outlyer) points, default set to <code>NULL</code> for not replotting</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rePch</code></td>
+<td>
+<p>(integer) symbol for replotting (non-outlyer) points, default set to <code>NULL</code> for not re-plotting (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reCex</code></td>
+<td>
+<p>(numeric) cex type expansion factor for lfor replotting (non-outlyer) points, default set to <code>NULL</code> for not replotting</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ctrPch</code></td>
+<td>
+<p>(integer) symbol for showing group center (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ctrCol</code></td>
+<td>
+<p>(character or integer) color for group center symbol</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ctrCex</code></td>
+<td>
+<p>(numeric) cex type expansion factor for size of group center (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addSubTi</code></td>
+<td>
+<p>(logical) decide if subtitle (stating that potential outlyers were displayed separatetly) should be added in plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnOutL</code></td>
+<td>
+<p>(logical) decide if rownames of (potential) outlyer values should be returned when running the function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The outlyer detection works similar to the one used in <code>boxplot</code>: The distance of a given point is compared to the median distance of all points to their respective group-center plus
+the 25 - 75 quantile-distance (of all points) times the multiplicative factor of argument <code>outCoef</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns primarily a plot, optionally it may return of matrix with outlyers (if argument <code>returnOutL=TRUE</code>)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>plotPCAw</code>, <code>princomp</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2020); dat1 &lt;- matrix(round(rnorm(2000),3),ncol=2); rownames(dat1) &lt;- 1:nrow(dat1)
+dat1 &lt;- dat1 + 5*matrix(rep(c(0,1,1,0,0,0,1,1),nrow(dat1)/4), byrow=TRUE, ncol=2)
+col1 &lt;- rgb(red=c(153,90,203,255), green=c(143,195,211,125), blue=c(204,186,78,115),
+  alpha=90, maxColorValue=255)
+## suppose we know the repartition into 4 subgroups which we would like to highlight them
+grp1 &lt;- rep(1:4, nrow(dat1)/4)
+plot(dat1, col=grey(0.8), xlab="x", ylab="y", las=1, pch=grp1)
+for(i in 1:4) addBagPlot(dat1[which(grp1==i),], bagCol=col1[i])
+## slightly improved
+library(wrMisc)
+col2 &lt;- convColorToTransp(col1, 255)
+plot(dat1, col=grey(0.8), xlab="x", ylab="y", las=1, pch=grp1)
+for(i in 1:4) addBagPlot(dat1[which(grp1==i),], bagCol=col1[i], outlPch=i,
+  outlCol=col2[i], bagLwd=3)
+</code></pre>
+
+
+</div>

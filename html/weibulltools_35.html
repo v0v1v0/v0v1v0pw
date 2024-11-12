@@ -1,0 +1,219 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mcs_delay_data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>MCS Delay Data</h2>
+
+<h3>Description</h3>
+
+<p>Create consistent <code>mcs_delay_data</code> based on an existing <code>data.frame</code> (preferred)
+or on multiple equal length vectors.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mcs_delay_data(
+  data = NULL,
+  date_1,
+  date_2,
+  time,
+  status = NULL,
+  id = NULL,
+  .keep_all = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Either <code>NULL</code> or a <code>data.frame</code>. If data is <code>NULL</code>, <code>date_1</code>, <code>date_2</code>,
+<code>time</code>, <code>status</code> and <code>id</code> must be vectors containing the data. Otherwise <code>date_1</code>,
+<code>date_2</code>, <code>time</code>, <code>status</code> and <code>id</code> can be either column names or column positions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date_1</code></td>
+<td>
+<p>A date of class <code>character</code> or <code>Date</code> in the format "yyyy-mm-dd",
+representing the earlier of the two dates belonging to a particular delay.
+Use <code>NA</code> for missing elements.
+</p>
+<p>If more than one delay is to be considered, use a list for the vector-based
+approach and a vector of column names or positions for the data-based approach.
+The first element is the earlier date of the first delay, the second element is the
+earlier date of the second delay, and so forth (see 'Examples').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date_2</code></td>
+<td>
+<p>A date of class <code>character</code> or <code>Date</code> in the format "yyyy-mm-dd".
+<code>date_2</code> is the counterpart of <code>date_1</code> and is used the same as <code>date_1</code>, just with
+the later date(s) of the particular delay(s). Use <code>NA</code> for missing elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>Operating times. Use <code>NA</code> for missing elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>Optional argument. If used, it must contain binary data
+(0 or 1) indicating whether a unit is a right censored observation (= 0) or a
+failure (= 1).
+</p>
+<p>If <code>status</code> is provided, class <code>wt_reliability_data</code> is assigned to the
+output of mcs_delay, which enables the direct application of estimate_cdf
+on operating times.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>Identification of every unit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.keep_all</code></td>
+<td>
+<p>If <code>TRUE</code> keep remaining variables in <code>data</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>tibble</code> with class <code>wt_mcs_delay_data</code> that is formed for the downstream
+Monte Carlo method mcs_delay.
+It contains the following columns (if <code>.keep_all = FALSE</code>):
+</p>
+
+<ul>
+<li>
+<p> Column(s) preserving the input of <code>date_1</code>. For the vector-based approach
+with unnamed input, column name(s) is (are) <code>date_1</code>
+(<code>date_1.1</code>, <code>date_1.2</code>, <code>...</code>, <code>date_1.i</code>).
+</p>
+</li>
+<li>
+<p> Column(s) preserving the input of <code>date_2</code>. For the vector-based approach
+with unnamed input, column name(s) is (are) <code>date_2</code>
+(<code>date_2.1</code>, <code>date_2.2</code>, <code>...</code>, <code>date_2.i</code>).
+</p>
+</li>
+<li> <p><code>time</code> : Input operating times.
+</p>
+</li>
+<li> <p><code>status</code> (<strong>optional</strong>) :
+</p>
+
+<ul>
+<li>
+<p> If <code>is.null(status)</code> column <code>status</code> does not exist.
+</p>
+</li>
+<li>
+<p> If <code>status</code> is provided the column contains the entered binary
+data (0 or 1).
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>id</code> : Identification for every unit.
+</p>
+</li>
+</ul>
+<p>If <code>.keep_all = TRUE</code>, the remaining columns of <code>data</code> are also preserved.
+</p>
+<p>The attributes <code>mcs_start_dates</code> and <code>mcs_end_dates</code> hold the name(s) of the
+column(s) that preserve the input of <code>date_1</code> and <code>date_2</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>dist_delay for the determination of a parametric delay distribution
+and mcs_delay for the Monte Carlo method with respect to delays.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Example 1 -  Based on an existing data.frame/tibble and column names:
+mcs_tbl &lt;- mcs_delay_data(
+  data = field_data,
+  date_1 = production_date,
+  date_2 = registration_date,
+  time = dis,
+  status = status
+)
+
+# Example 2 - Based on an existing data.frame/tibble and column positions:
+mcs_tbl_2 &lt;- mcs_delay_data(
+  data = field_data,
+  date_1 = 7,
+  date_2 = 8,
+  time = 2,
+  id = 1
+)
+
+# Example 3 - Keep all variables of the tibble/data.frame entered to argument data:
+mcs_tbl_3 &lt;- mcs_delay_data(
+  data = field_data,
+  date_1 = production_date,
+  date_2 = registration_date,
+  time = dis,
+  status = status,
+  id = vin,
+  .keep_all = TRUE
+)
+
+# Example 4 - For multiple delays (data-based):
+mcs_tbl_4 &lt;- mcs_delay_data(
+  data = field_data,
+  date_1 = c(production_date, repair_date),
+  date_2 = c(registration_date, report_date),
+  time = dis,
+  status = status
+)
+
+# Example 5 - Based on vectors:
+mcs_tbl_5 &lt;- mcs_delay_data(
+  date_1 = field_data$production_date,
+  date_2 = field_data$registration_date,
+  time = field_data$dis,
+  status = field_data$status,
+  id = field_data$vin
+)
+
+# Example 6 - For multiple delays (vector-based):
+mcs_tbl_6 &lt;- mcs_delay_data(
+  date_1 = list(field_data$production_date, field_data$repair_date),
+  date_2 = list(field_data$registration_date, field_data$report_date),
+  time = field_data$dis,
+  status = field_data$status,
+  id = field_data$vin
+)
+
+# Example 7 - For multiple delays (vector-based with named dates):
+mcs_tbl_7 &lt;- mcs_delay_data(
+  date_1 = list(d11 = field_data$production_date, d12 = field_data$repair_date),
+  date_2 = list(d21 = field_data$registration_date, d22 = field_data$report_date),
+  time = field_data$dis,
+  status = field_data$status,
+  id = field_data$vin
+)
+
+</code></pre>
+
+
+</div>

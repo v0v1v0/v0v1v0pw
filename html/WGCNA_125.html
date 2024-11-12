@@ -1,0 +1,167 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>kMEcomparisonScatterplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Function to plot kME values between two comparable data sets.  </h2>
+
+<h3>Description</h3>
+
+<p>Plots the kME values of genes in two groups of expression data for each module in an inputted color vector.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">kMEcomparisonScatterplot(
+   datExpr1, datExpr2, colorh, 
+   inA = NULL, inB = NULL, MEsA = NULL, MEsB = NULL, 
+   nameA = "A", nameB = "B", 
+   plotAll = FALSE, noGrey = TRUE, maxPlot = 1000, pch = 19, 
+   fileName = if (plotAll) paste("kME_correlations_between_",nameA,"_and_",
+                                 nameB,"_all.pdf",sep="") else
+                           paste("kME_correlations_between_",nameA,"_and_",
+                                 nameB,"_inMod.pdf",sep=""), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datExpr1</code></td>
+<td>
+
+<p>The first expression matrix (samples=rows, genes=columns).  This can either include only the data for group A (in which case dataExpr2 must be entered), or can contain all of the data for groups A and B (in which case inA and inB must be entered).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>datExpr2</code></td>
+<td>
+
+<p>The second expression matrix, or set to NULL if all data is from same expression matrix.  If entered, datExpr2 must contain the same genes as datExpr1 in the same order.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorh</code></td>
+<td>
+
+<p>The common color vector (module labels) corresponding to both sets of expression data.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inA, inB</code></td>
+<td>
+
+<p>Vectors of TRUE/FALSE indicating whether a sample is in group A/B, or a vector of numeric indices indicating which samples are in group A/B. If datExpr2 is entered, these inputs are ignored (thus default = NULL).  For these and all other A/B inputs, "A" corresponds to datExpr1 and "B" corresponds to datExpr2 if datExpr2 is entered; otherwise "A" corresponds to datExpr1[inA,] while "B" corresponds to datExpr1[inB,].
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MEsA, MEsB</code></td>
+<td>
+
+<p>Either the module eigengenes or NULL (default) in which case the module eigengenes will be calculated.  In inputted, MEs MUST be calculated using "moduleEigengenes(&lt;parameters&gt;)$eigengenes" for function to work properly.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nameA, nameB</code></td>
+<td>
+
+<p>The names of these groups (defaults = "A" and "B").  The resulting file name (see below) and x and y axis labels for each scatter plot depend on these names.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotAll</code></td>
+<td>
+
+<p>If TRUE, plot gene-ME correlations for all genes.  If FALSE, plot correlations for only genes in the plotted module (default).  Note that the output file name will be different depending on this parameter, so both can be run without overwriting results.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>noGrey</code></td>
+<td>
+
+<p>If TRUE (default), the grey module genes are ignored.  This parameter is only used if MEsA and MEsB are calculated.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxPlot</code></td>
+<td>
+
+<p>The maximum number of random genes to include (default=1000).  Smaller values lead to smaller and less cluttered plots, usually without significantly affecting the resulting correlations. This parameter is only used if plotAll=TRUE.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pch</code></td>
+<td>
+
+<p>See help file for "points". Setting pch=19 (default) produces solid circles.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fileName</code></td>
+<td>
+<p> Name of the file to hold the plots. Since the output format is pdf, the extension should
+be .pdf .</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Other plotting parameters that are allowable inputs to verboseScatterplot.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The default output is a file called "kME_correlations_between_[nameA]_and_[nameB]_[all/inMod].pdf", where
+[nameA] and [nameB] correspond to the nameA and nameB input parameters, and [all/inMod] depends on whether
+plotAll=TRUE or FALSE. This output file contains all of the plots as separate pdf images, and will be
+located in the current working directory.  
+</p>
+
+
+<h3>Note</h3>
+
+<p>The function "pdf", which can be found in the grDevices library, is required to run this function.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jeremy Miller
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Example output file ("kME_correlations_between_A_and_B_inMod.pdf") using simulated data.
+## Not run: 
+set.seed = 100
+ME=matrix(0,50,5)
+for (i in 1:5) ME[,i]=sample(1:100,50)
+simData1 = simulateDatExpr5Modules(MEturquoise=ME[,1],MEblue=ME[,2],
+                          MEbrown=ME[,3],MEyellow=ME[,4], MEgreen=ME[,5])
+simData2 = simulateDatExpr5Modules(MEturquoise=ME[,1],MEblue=ME[,2],
+                          MEbrown=ME[,3],MEyellow=ME[,4], MEgreen=ME[,5])
+kMEcomparisonScatterplot(simData1$datExpr,simData2$datExpr,simData1$truemodule)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

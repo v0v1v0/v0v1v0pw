@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pairwise_cor</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Correlations of pairs of items</h2>
+
+<h3>Description</h3>
+
+<p>Find correlations of pairs of items in a column, based on a "feature" column
+that links them together. This is an example of the spread-operate-retidy pattern.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pairwise_cor(
+  tbl,
+  item,
+  feature,
+  value,
+  method = c("pearson", "kendall", "spearman"),
+  use = "everything",
+  ...
+)
+
+pairwise_cor_(
+  tbl,
+  item,
+  feature,
+  value,
+  method = c("pearson", "kendall", "spearman"),
+  use = "everything",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tbl</code></td>
+<td>
+<p>Table</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item</code></td>
+<td>
+<p>Item to compare; will end up in <code>item1</code> and
+<code>item2</code> columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>feature</code></td>
+<td>
+<p>Column describing the feature that links one item to others</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>Value column. If not given, defaults to all values being 1 (thus
+a binary correlation)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Correlation method</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use</code></td>
+<td>
+<p>Character string specifying the behavior of correlations
+with missing values; passed on to <code>cor</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Extra arguments passed on to <code>squarely</code>,
+such as <code>diag</code> and <code>upper</code></p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(dplyr)
+library(gapminder)
+
+gapminder %&gt;%
+  pairwise_cor(country, year, lifeExp)
+
+gapminder %&gt;%
+  pairwise_cor(country, year, lifeExp, sort = TRUE)
+
+# United Nations voting data
+if (require("unvotes", quietly = TRUE)) {
+  country_cors &lt;- un_votes %&gt;%
+    mutate(vote = as.numeric(vote)) %&gt;%
+    pairwise_cor(country, rcid, vote, sort = TRUE)
+}
+
+</code></pre>
+
+
+</div>

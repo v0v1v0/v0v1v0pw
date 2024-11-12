@@ -1,0 +1,143 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>margmodel</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>DENSITY AND CDF OF THE UNIVARIATE MARGINAL DISTRIBUTION</h2>
+
+<h3>Description</h3>
+
+<p>Density and cdf of the univariate marginal distribution.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dmargmodel(y,mu,gam,invgam,margmodel)
+pmargmodel(y,mu,gam,invgam,margmodel)
+dmargmodel.ord(y,mu,gam,link)
+pmargmodel.ord(y,mu,gam,link)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Vector of (non-negative integer) quantiles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mu</code></td>
+<td>
+<p>The parameter <code class="reqn">\mu</code> of the univariate distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gam</code></td>
+<td>
+<p>The parameter(s) <code class="reqn">\gamma</code> that are not regression parameters. <code class="reqn">\gamma</code> is NULL for Poisson and Bernoulli distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>invgam</code></td>
+<td>
+<p>The  inverse of parameter <code class="reqn">\gamma</code> of negative binomial
+distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>margmodel</code></td>
+<td>
+
+<p>Indicates the marginal model.
+Choices are “poisson” for Poisson, “bernoulli” for Bernoulli, 
+and  “nb1” , “nb2” for the NB1 and NB2 parametrization 
+of negative binomial in Cameron and Trivedi (1998). See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+<p>The link function. 
+Choices are  “logit” for 
+the logit link function, and “probit” for 
+the probit link function. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Negative binomial distribution
+NB<code class="reqn">(\tau,\xi)</code> allows for overdispersion
+and its probability mass function (pmf) is  given by
+</p>
+<p style="text-align: center;"><code class="reqn"> f(y;\tau,\xi)=\frac{\Gamma(\tau+y)}{\Gamma(\tau)\; y!}
+  \frac{\xi^y}{(1+\xi)^{\tau + y}},\quad \begin{matrix} y=0,1,2,\ldots, \\
+                                          \tau&gt;0,\; \xi&gt;0,\end{matrix}  </code>
+</p>
+
+<p>with mean <code class="reqn">\mu=\tau\,\xi=\exp(\beta^T x)</code> and variance <code class="reqn">\tau\,\xi\,(1+\xi)</code>.
+</p>
+<p>Cameron and Trivedi (1998) present the NBk parametrization where
+<code class="reqn">\tau=\mu^{2-k}\gamma^{-1}</code> and <code class="reqn">\xi=\mu^{k-1}\gamma</code>, <code class="reqn">1\le k\le 2</code>.
+In this function we use the NB1 parametrization
+<code class="reqn">(\tau=\mu\gamma^{-1},\; \xi=\gamma)</code>, and the NB2 parametrization
+<code class="reqn">(\tau=\gamma^{-1},\; \xi=\mu\gamma)</code>; the latter
+is the same as in Lawless (1987).
+</p>
+<p><code>margmodel.ord</code> is a variant of the code for ordinal (probit and logistic) model. In this case, the response <code class="reqn">Y</code> is assumed to have density
+</p>
+<p style="text-align: center;"><code class="reqn">f_1(y;\nu,\gamma)=F(\alpha_{y}+\nu)-F(\alpha_{y-1}+\nu),</code>
+</p>
+
+<p>where <code class="reqn">\nu=x\beta</code> is a function of <code class="reqn">x</code>
+and the <code class="reqn">p</code>-dimensional regression vector <code class="reqn">\beta</code>, and <code class="reqn">\gamma=(\alpha_1,\ldots,\alpha_{K-1})</code> is the $q$-dimensional vector of the univariate cutpoints (<code class="reqn">q=K-1</code>). Note that <code class="reqn">F</code> normal leads to the probit model and <code class="reqn">F</code> logistic
+leads to the cumulative logit model for ordinal response.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The density and cdf of the univariate distribution.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Aristidis K. Nikoloulopoulos <a href="mailto:A.Nikoloulopoulos@uea.ac.uk">A.Nikoloulopoulos@uea.ac.uk</a><br>
+Harry Joe <a href="mailto:harry.joe@ubc.ca">harry.joe@ubc.ca</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Cameron, A. C. and Trivedi, P. K. (1998)
+<em>Regression Analysis of Count Data.</em>
+Cambridge: Cambridge University Press.
+</p>
+<p>Lawless, J. F. (1987)
+Negative binomial and mixed Poisson regression.
+<em>The Canadian Journal
+of Statistics</em>, <b>15</b>, 209–225.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">y&lt;-3
+gam&lt;-2.5
+invgam&lt;-1/2.5
+mu&lt;-0.5
+margmodel&lt;-"nb2"
+dmargmodel(y,mu,gam,invgam,margmodel)
+pmargmodel(y,mu,gam,invgam,margmodel)
+link="probit"
+dmargmodel.ord(y,mu,gam,link)
+pmargmodel.ord(y,mu,gam,link)
+
+</code></pre>
+
+
+</div>

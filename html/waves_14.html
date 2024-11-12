@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pretreat_spectra</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Pretreat spectral data according to user-designated method</h2>
+
+<h3>Description</h3>
+
+<p>Pretreatment, also known as preprocessing, is often used to
+increase the signal to noise ratio in vis-NIR datasets. The <em>waves</em>
+function <code>pretreat_spectra</code> applies common spectral pretreatment
+methods such as standard normal variate and the Savitzky-Golay filter.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pretreat_spectra(
+  df,
+  test.data = NULL,
+  pretreatment = 1,
+  preprocessing.method = deprecated(),
+  wavelengths = deprecated()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p><code>data.frame</code> object containing spectral data. First column(s)
+(optional) include metadata (with or without reference value column)
+followed by spectral columns. Spectral column names must be formatted as
+"X" followed by wavelength Include no other columns to right of spectra! No
+missing values permitted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>test.data</code></td>
+<td>
+<p><code>data.frame</code> object with same format as train.data.
+Will be appended to <code>df</code> during pretreatment so that the same
+transformations are applied to each row. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pretreatment</code></td>
+<td>
+<p>Number or list of numbers 1:13 corresponding to
+desired pretreatment method(s):
+</p>
+
+<ol>
+<li>
+<p> Raw data (default)
+</p>
+</li>
+<li>
+<p> Standard normal variate (SNV)
+</p>
+</li>
+<li>
+<p> SNV and first derivative
+</p>
+</li>
+<li>
+<p> SNV and second derivative
+</p>
+</li>
+<li>
+<p> First derivative
+</p>
+</li>
+<li>
+<p> Second derivative
+</p>
+</li>
+<li>
+<p> Savitzky–Golay filter (SG)
+</p>
+</li>
+<li>
+<p> SNV and SG
+</p>
+</li>
+<li>
+<p> Gap-segment derivative (window size = 11)
+</p>
+</li>
+<li>
+<p> SG and first derivative (window size = 5)
+</p>
+</li>
+<li>
+<p> SG and first derivative (window size = 11)
+</p>
+</li>
+<li>
+<p> SG and second derivative (window size = 5)
+</p>
+</li>
+<li>
+<p> SG and second derivative (window size = 11)
+</p>
+</li>
+</ol>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>preprocessing.method</code></td>
+<td>
+<p>DEPRECATED <code>preprocessing.method</code>
+has been renamed "pretreatment"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wavelengths</code></td>
+<td>
+<p>DEPRECATED <code>wavelengths</code> is no
+longer supported; this information is now inferred from <code>df</code>
+column names</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Pretreated <code>df</code>' (or list of <code>data.frame</code>s) with
+reference column intact
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jenna Hershberger <a href="mailto:jmh579@cornell.edu">jmh579@cornell.edu</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">pretreat_spectra(df = ikeogu.2017, pretreatment = 3)[1:5, 1:5]
+</code></pre>
+
+
+</div>

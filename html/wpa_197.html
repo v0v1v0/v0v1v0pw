@@ -1,0 +1,258 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>workpatterns_rank</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a rank table of working patterns</h2>
+
+<h3>Description</h3>
+
+<p>Takes in an Hourly Collaboration query and returns a count
+table of working patterns, ranked from the most common to the
+least.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">workpatterns_rank(
+  data,
+  signals = c("email", "IM"),
+  start_hour = "0900",
+  end_hour = "1700",
+  top = 10,
+  mode = "binary",
+  return = "plot"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data frame containing hourly collaboration data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signals</code></td>
+<td>
+<p>Character vector to specify which collaboration metrics to
+use:
+</p>
+
+<ul>
+<li> <p><code>"email"</code> (default) for emails only
+</p>
+</li>
+<li> <p><code>"IM"</code> for Teams messages only
+</p>
+</li>
+<li> <p><code>"unscheduled_calls"</code> for Unscheduled Calls only
+</p>
+</li>
+<li> <p><code>"meetings"</code> for Meetings only
+</p>
+</li>
+<li>
+<p> or a combination of signals, such as <code>c("email", "IM")</code>
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_hour</code></td>
+<td>
+<p>A character vector specifying starting hours,
+e.g. "<code style="white-space: pre;">⁠0900"⁠</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end_hour</code></td>
+<td>
+<p>A character vector specifying starting hours,
+e.g. <code>"1700"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>top</code></td>
+<td>
+<p>numeric value specifying how many top working patterns to display in plot,
+e.g. <code>"10"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>string specifying aggregation method for plot. Valid
+options include:
+</p>
+
+<ul>
+<li> <p><code>"binary"</code>: convert hourly activity into binary blocks. In the plot, each
+block would display as solid.
+</p>
+</li>
+<li> <p><code>"prop"</code>: calculate proportion of signals in each hour over total signals
+across 24 hours, then average across all work weeks. In the plot, each
+block would display as a heatmap.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String specifying what to return. This must be one of the
+following strings:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>
+</p>
+</li>
+<li> <p><code>"table"</code>
+</p>
+</li>
+</ul>
+<p>See <code>Value</code> for more information.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A different output is returned depending on the value passed to the <code>return</code>
+argument:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>: ggplot object. A plot with the y-axis showing the top ten
+working patterns and the x-axis representing each hour of the day.
+</p>
+</li>
+<li> <p><code>"table"</code>: data frame. A summary table for the top working patterns.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>Other Visualization: 
+<code>afterhours_dist()</code>,
+<code>afterhours_fizz()</code>,
+<code>afterhours_line()</code>,
+<code>afterhours_rank()</code>,
+<code>afterhours_summary()</code>,
+<code>afterhours_trend()</code>,
+<code>collaboration_area()</code>,
+<code>collaboration_dist()</code>,
+<code>collaboration_fizz()</code>,
+<code>collaboration_line()</code>,
+<code>collaboration_rank()</code>,
+<code>collaboration_sum()</code>,
+<code>collaboration_trend()</code>,
+<code>create_bar()</code>,
+<code>create_bar_asis()</code>,
+<code>create_boxplot()</code>,
+<code>create_bubble()</code>,
+<code>create_dist()</code>,
+<code>create_fizz()</code>,
+<code>create_inc()</code>,
+<code>create_line()</code>,
+<code>create_line_asis()</code>,
+<code>create_period_scatter()</code>,
+<code>create_rank()</code>,
+<code>create_sankey()</code>,
+<code>create_scatter()</code>,
+<code>create_stacked()</code>,
+<code>create_tracking()</code>,
+<code>create_trend()</code>,
+<code>email_dist()</code>,
+<code>email_fizz()</code>,
+<code>email_line()</code>,
+<code>email_rank()</code>,
+<code>email_summary()</code>,
+<code>email_trend()</code>,
+<code>external_dist()</code>,
+<code>external_fizz()</code>,
+<code>external_line()</code>,
+<code>external_network_plot()</code>,
+<code>external_rank()</code>,
+<code>external_sum()</code>,
+<code>hr_trend()</code>,
+<code>hrvar_count()</code>,
+<code>hrvar_trend()</code>,
+<code>internal_network_plot()</code>,
+<code>keymetrics_scan()</code>,
+<code>meeting_dist()</code>,
+<code>meeting_fizz()</code>,
+<code>meeting_line()</code>,
+<code>meeting_quality()</code>,
+<code>meeting_rank()</code>,
+<code>meeting_summary()</code>,
+<code>meeting_trend()</code>,
+<code>meetingtype_dist()</code>,
+<code>meetingtype_dist_ca()</code>,
+<code>meetingtype_dist_mt()</code>,
+<code>meetingtype_summary()</code>,
+<code>mgrcoatt_dist()</code>,
+<code>mgrrel_matrix()</code>,
+<code>one2one_dist()</code>,
+<code>one2one_fizz()</code>,
+<code>one2one_freq()</code>,
+<code>one2one_line()</code>,
+<code>one2one_rank()</code>,
+<code>one2one_sum()</code>,
+<code>one2one_trend()</code>,
+<code>period_change()</code>,
+<code>workloads_dist()</code>,
+<code>workloads_fizz()</code>,
+<code>workloads_line()</code>,
+<code>workloads_rank()</code>,
+<code>workloads_summary()</code>,
+<code>workloads_trend()</code>,
+<code>workpatterns_area()</code>
+</p>
+<p>Other Working Patterns: 
+<code>flex_index()</code>,
+<code>identify_shifts()</code>,
+<code>identify_shifts_wp()</code>,
+<code>plot_flex_index()</code>,
+<code>workpatterns_area()</code>,
+<code>workpatterns_classify()</code>,
+<code>workpatterns_classify_bw()</code>,
+<code>workpatterns_classify_pav()</code>,
+<code>workpatterns_hclust()</code>,
+<code>workpatterns_report()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Plot by default
+workpatterns_rank(
+  data = em_data,
+  signals = c(
+    "email",
+    "IM",
+    "unscheduled_calls",
+    "meetings"
+  )
+  )
+
+# Plot with prop / heatmap mode
+workpatterns_rank(
+  data = em_data,
+  mode = "prop"
+)
+
+
+</code></pre>
+
+
+</div>

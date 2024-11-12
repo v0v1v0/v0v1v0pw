@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>AucROC</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>AUC from ROC-curves</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates the AUC (area under the curve) from ROC data in matrix of specificity and sensitivity values,
+as provided in the output from  <code>summarizeForROC</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">AucROC(
+  dat,
+  useCol = c("spec", "sens"),
+  returnIfInvalid = NA,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(matrix or data.frame) main inut containig sensitivity and specificity data (from <code>summarizeForROC</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useCol</code></td>
+<td>
+<p>(character or integer) column names to be used: 1st for specificity and 2nd for sensitivity count columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnIfInvalid</code></td>
+<td>
+<p>(<code>NA</code> or <code>NULL</code>) what to return if data for calculating ROC is invalid or incomplete</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a matrix including imputed values or list of final and matrix with number of imputed by group (plus optional plot)
+</p>
+
+
+<h3>See Also</h3>
+
+<p>preparing ROC data <code>summarizeForROC</code>, (re)plot the ROC figure <code>plotROC</code>;
+note that numerous other packages also provide support for working with ROC-curves : Eg <a href="https://CRAN.R-project.org/package=dlstats">rocPkgShort</a>,
+<a href="https://CRAN.R-project.org/package=ROCR">ROCR</a>, <a href="https://CRAN.R-project.org/package=pROC">pROC</a> or <a href="https://CRAN.R-project.org/package=ROCit">ROCit</a>, etc.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2019); test1 &lt;- list(annot=cbind(Species=c(rep("b",35), letters[sample.int(n=3,
+  size=150,replace=TRUE)])), BH=matrix(c(runif(35,0,0.01), runif(150)), ncol=1))
+roc1 &lt;- summarizeForROC(test1, spec=c("a","b","c"), annotCol="Species")
+AucROC(roc1)
+</code></pre>
+
+
+</div>

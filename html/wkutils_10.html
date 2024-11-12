@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wkb_draw_points</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Draw well-known geometries</h2>
+
+<h3>Description</h3>
+
+<p>These functions send well-known geometry vectors to a
+graphics device using <code>graphics::points()</code>,
+<code>graphics::lines()</code>, and <code>graphics::polypath()</code>. These are
+minimal wrappers aimed at developers who need to visualize
+test data: they do not check geometry type and are unlikely
+to work with vectorized graphical parameters in <code>...</code>. Use
+the <code style="white-space: pre;">⁠wk*_plot_new()⁠</code> functions to initialize a plot using the
+extent of all coordinates in the vector.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wkb_draw_points(wkb, ...)
+
+wkt_draw_points(wkt, ...)
+
+wkb_draw_lines(wkb, ...)
+
+wkt_draw_lines(wkt, ...)
+
+wkb_draw_polypath(wkb, ..., rule = "evenodd")
+
+wkt_draw_polypath(wkt, ..., rule = "evenodd")
+
+wkb_plot_new(
+  wkb,
+  ...,
+  asp = 1,
+  xlab = "",
+  ylab = "",
+  main = deparse(substitute(wkb))
+)
+
+wkt_plot_new(
+  wkt,
+  ...,
+  asp = 1,
+  xlab = "",
+  ylab = "",
+  main = deparse(substitute(wkt))
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wkb</code></td>
+<td>
+<p>A <code>list()</code> of <code>raw()</code> vectors, such as that
+returned by <code>sf::st_as_binary()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Passed to <code>graphics::points()</code>,
+<code>graphics::lines()</code>, or <code>graphics::polypath()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wkt</code></td>
+<td>
+<p>A character vector containing well-known text.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rule</code></td>
+<td>
+<p>Passed to <code>graphics::polypath()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>asp, xlab, ylab, main</code></td>
+<td>
+<p>Passed to <code>graphics::plot()</code> to
+initialize a new plot.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The input, invisibly
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))"
+
+wkt_plot_new(x)
+wkt_draw_polypath(x, col = "grey90")
+wkt_draw_lines(x, col = "red")
+wkt_draw_points(x)
+
+</code></pre>
+
+
+</div>

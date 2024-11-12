@@ -1,0 +1,248 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>individualTOMs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Calculate individual correlation network matrices
+</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates correlation network matrices (adjacencies or topological overlaps), after optionally
+first pre-clustering input data into blocks.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">individualTOMs(
+   multiExpr,
+   multiWeights = NULL,
+   multiExpr.imputed = NULL,  
+
+   # Data checking options
+   checkMissingData = TRUE,
+
+   # Blocking options
+   blocks = NULL,
+   maxBlockSize = 5000,
+   blockSizePenaltyPower = 5,
+   nPreclusteringCenters = NULL,
+   randomSeed = 54321,
+
+   # Network construction options
+   networkOptions,
+
+   # Save individual TOMs? 
+   saveTOMs = TRUE,
+   individualTOMFileNames = "individualTOM-Set%s-Block%b.RData",
+
+   # Behaviour options
+   collectGarbage = TRUE,
+   verbose = 2, indent = 0)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>multiExpr</code></td>
+<td>
+<p> expression data in the multi-set format (see <code>checkSets</code>). A vector of
+lists, one per set. Each set must contain a component <code>data</code> that contains the expression data, with
+rows corresponding to samples and columns to genes or probes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multiWeights</code></td>
+<td>
+<p> optional observation weights in the same format (and dimensions) as <code>multiExpr</code>.
+These weights are used for correlation calculations with data in  <code>multiExpr</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multiExpr.imputed</code></td>
+<td>
+
+<p>Optional version of <code>multiExpr</code> with missing data imputed. If not given and <code>multiExpr</code> contains
+missing data, they will be imputed using the function <code>impute.knn</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checkMissingData</code></td>
+<td>
+<p>logical: should data be checked for excessive numbers of missing entries in
+genes and samples, and for genes with zero variance? See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blocks</code></td>
+<td>
+<p> optional specification of blocks in which hierarchical clustering and module detection
+should be performed. If given, must be a numeric vector with one entry per gene
+of <code>multiExpr</code> giving the number of the block to which the corresponding gene belongs. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxBlockSize</code></td>
+<td>
+<p> integer giving maximum block size for module detection. Ignored if <code>blocks</code>
+above is non-NULL. Otherwise, if the number of genes in <code>datExpr</code> exceeds <code>maxBlockSize</code>, genes
+will be pre-clustered into blocks whose size should not exceed <code>maxBlockSize</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blockSizePenaltyPower</code></td>
+<td>
+<p>number specifying how strongly blocks should be penalized for exceeding the
+maximum size. Set to a lrge number or <code>Inf</code> if not exceeding maximum block size is very important.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nPreclusteringCenters</code></td>
+<td>
+<p>number of centers to be used in the preclustering. Defaults to smaller of
+<code>nGenes/20</code> and <code>100*nGenes/maxBlockSize</code>, where <code>nGenes</code> is the nunber of genes (variables)
+in
+<code>multiExpr</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>randomSeed</code></td>
+<td>
+<p> integer to be used as seed for the random number generator before the function
+starts. If a current seed exists, it is saved and restored upon exit. If <code>NULL</code> is given, the
+function will not save and restore the seed. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkOptions</code></td>
+<td>
+
+<p>A single list of class <code>NetworkOptions</code> giving options for network calculation for all of the
+networks, or a <code>multiData</code> structure containing one such list for each input data set. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>saveTOMs</code></td>
+<td>
+<p>logical: should individual TOMs be saved to disk (<code>TRUE</code>) or retuned directly in the
+return value (<code>FALSE</code>)?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>individualTOMFileNames</code></td>
+<td>
+<p>character string giving the file names to save individual TOMs into. The
+following tags should be used to make the file names unique for each set and block: <code>%s</code> will be
+replaced by the set number; <code>%N</code> will be replaced by the set name (taken from <code>names(multiExpr)</code>)
+if it exists, otherwise by set number; <code>%b</code> will be replaced by the block number. If the file names
+turn out to be non-unique, an error will be generated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>collectGarbage</code></td>
+<td>
+
+<p>Logical: should garbage collection be called after each block calculation? This can be useful when the data
+are large, but could unnecessarily slow down calculation with small data.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> Integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> Indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function starts by optionally filtering out samples that have too many missing entries and genes
+that have either too many missing entries or zero variance in at least one set. Genes that are filtered
+out are excluded from the network calculations.
+</p>
+<p>If <code>blocks</code> is not given and
+the number of genes (columns) in <code>multiExpr</code> 
+exceeds <code>maxBlockSize</code>, genes are pre-clustered into blocks using the function
+<code>consensusProjectiveKMeans</code>; otherwise all genes are treated in a single block. Any missing data
+in <code>multiExpr</code> will be imputed; if imputed data are already available, they can be supplied separately.
+</p>
+<p>For each block of genes, the network adjacency is constructed and (if requested) topological overlap is calculated
+in each set. The topological overlaps can be saved to disk as RData files, or returned directly within the
+return value (see below). Note that the matrices can be big and returning them within the return value can
+quickly exhaust the system's memory. In particular, if the block-wise calculation is necessary, it is
+usually impossible to return all matrices in the return value.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>blockwiseAdjacencies</code></td>
+<td>
+<p>A <code>multiData</code> structure containing (possibly blockwise) network
+matrices for each input data set. The network matrices are stored as <code>BlockwiseData</code> objects.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>setNames</code></td>
+<td>
+<p>A copy of <code>names(multiExpr)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nSets</code></td>
+<td>
+<p>Number of sets in <code>multiExpr</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blockInfo</code></td>
+<td>
+<p>A list of class <code>BlockInformation</code>, giving information about blocks and gene and
+sample filtering.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkOptions</code></td>
+<td>
+<p>The input <code>networkOptions</code>, returned as a <code>multiData</code> structure with
+one entry per input data set.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Input arguments and output components of this function use <code>multiData</code>,
+<code>NetworkOptions</code>, <code>BlockwiseData</code>, and <code>BlockInformation</code>.
+</p>
+<p>Underlying functions of interest include <code>consensusProjectiveKMeans</code>,
+<code>TOMsimilarityFromExpr</code>.
+</p>
+
+
+</div>

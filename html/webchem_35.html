@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_etoxid</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get ETOX ID</h2>
+
+<h3>Description</h3>
+
+<p>Query ETOX: Information System Ecotoxicology and Environmental Quality
+Targets <a href="https://webetox.uba.de/webETOX/index.do">https://webetox.uba.de/webETOX/index.do</a> for their substance ID
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_etoxid(
+  query,
+  from = c("name", "cas", "ec", "gsbl", "rtecs"),
+  match = c("all", "best", "first", "ask", "na"),
+  verbose = getOption("verbose")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>character; The searchterm</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>character; Type of input, can be one of "name" (chemical name),
+"cas" (CAS Number), "ec" (European Community number for regulatory purposes),
+"gsbl" (Identifier used by <a href="https://www.chemikalieninfo.de/">https://www.chemikalieninfo.de/</a>) and "rtecs"
+(Identifier used by the Registry of Toxic Effects of Chemical Substances
+database).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>match</code></td>
+<td>
+<p>character; How should multiple hits be handeled? "all" returns
+all matched IDs, "first" only the first match, "best" the best matching (by
+name) ID, "ask" is a interactive mode and the user is asked for input, "na"
+returns <code>NA</code> if multiple hits are found.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical; print message during processing to console?</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a tibble with 3 columns: the query, the match, and the etoxID
+</p>
+
+
+<h3>Note</h3>
+
+<p>Before using this function, please read the disclaimer
+<a href="https://webetox.uba.de/webETOX/disclaimer.do">https://webetox.uba.de/webETOX/disclaimer.do</a>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Eduard Szöcs, Tamás Stirling, Eric R. Scott, Andreas Scharmüller,
+Ralf B. Schäfer (2020). webchem: An R Package to Retrieve Chemical
+Information from the Web. Journal of Statistical Software, 93(13).
+<a href="https://doi.org/10.18637/jss.v093.i13">doi:10.18637/jss.v093.i13</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>etox_basic</code> for basic information,
+<code>etox_targets</code> for quality targets and
+<code>etox_tests</code> for test results.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# might fail if API is not available
+get_etoxid("Triclosan")
+# multiple inputs
+comps &lt;- c("Triclosan", "Glyphosate")
+get_etoxid(comps)
+get_etoxid(comps, match = "all")
+get_etoxid("34123-59-6", from = "cas") # Isoproturon
+get_etoxid("133483", from = "gsbl") # 3-Butin-1-ol
+get_etoxid("203-157-5", from = "ec") # Paracetamol
+
+## End(Not run)
+</code></pre>
+
+
+</div>

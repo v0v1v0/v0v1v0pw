@@ -1,0 +1,60 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>DSM_Vectors</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Pre-Compiled DSM Vectors for Selected Words (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>A matrix of 50-dimensional pre-compiled DSM vectors for selected English content words, covering most of the words needed for several basic evaluation tasks included in the package.
+Targets are given as disambiguated lemmas in the form <code>&lt;headword&gt;_&lt;pos&gt;</code>, e.g. <code>walk_V</code> and <code>walk_N</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  
+DSM_Vectors
+
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A numeric matrix with 1667 rows and 50 columns.
+</p>
+<p>Row labels are disambiguated lemmas of the form <code>&lt;headword&gt;_&lt;pos&gt;</code>, where the part-of-speech code is one of
+<code>N</code> (noun), <code>V</code> (verb), <code>J</code> (adjective) or <code>R</code> (adverb).
+</p>
+<p>Attribute <code>"sigma"</code> contains singular values that can be used for post-hoc power scaling of the latent dimensions (see <code>dsm.projection</code>).
+</p>
+
+
+<h3>Details</h3>
+
+<p>The vocabulary of this DSM covers several basic evaluation tasks, including <code>RG65</code>, <code>WordSim353</code> and <code>ESSLLI08_Nouns</code>, as well as the target nouns <em>bank</em> and <em>vessel</em> from <code>SemCorWSD</code>.  In addition, 40 nearest neighbours each of the words <code>white_J</code>, <code>apple_N</code>, <code>kindness_N</code> and <code>walk_V</code> are included.
+</p>
+<p>Co-occurrence frequency data were extracted from a collection of Web corpora with a total size of ca. 9 billion words, using a L4/R4 surface window and 30,000 lexical words as feature terms.  They were scored with sparse simple log-likelihood with an additional log transformation, normalized to Euclidean unit length, and projected into 1000 latent dimensions using randomized SVD (see <code>rsvd</code>.  For size reasons, the vectors have been compressed into 50 latent dimensions and renormalized.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+nearest.neighbours(DSM_Vectors, "walk_V", 25)
+
+eval.similarity.correlation(RG65, DSM_Vectors) # fairly good
+
+# post-hoc power scaling: whitening (correspond to power=0 in dsm.projection)
+sigma &lt;- attr(DSM_Vectors, "sigma")
+M &lt;- scaleMargins(DSM_Vectors, cols=1 / sigma)
+eval.similarity.correlation(RG65, M) # very good
+
+</code></pre>
+
+
+</div>

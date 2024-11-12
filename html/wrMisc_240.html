@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>scaleXY</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Scale data to given minimum and maxiumum</h2>
+
+<h3>Description</h3>
+
+<p>This is a convenient way to scale data to given minimum and maxiumum without full standarization, ie without deviding by the sd.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">scaleXY(x, min = 0, max = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(numeric) vector to rescacle</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min</code></td>
+<td>
+<p>(numeric) minimum value in output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max</code></td>
+<td>
+<p>(numeric) maximum value in output</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>vector of rescaled data (in dimensions as input)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>scale</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">dat &lt;- matrix(2*round(runif(100),2), ncol=4)
+range(dat)
+dat1 &lt;- scaleXY(dat, 1,100)
+range(dat1)
+summary(dat1)
+
+## scale for each column individually
+dat2 &lt;- apply(dat, 2, scaleXY, 1, 100)
+range(dat2)
+summary(dat2)
+</code></pre>
+
+
+</div>

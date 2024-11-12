@@ -1,0 +1,175 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>threshold.irregwd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>hold irregularly spaced wavelet decomposition object</h2>
+
+<h3>Description</h3>
+
+<p>This function provides various ways to threshold a <code>irregwd</code> class object. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'irregwd'
+threshold(irregwd,
+    levels = 3:(nlevelsWT(wd) - 1), type = "hard", policy = "universal",
+    by.level = FALSE, value = 0, dev = var, boundary = FALSE,
+    verbose = FALSE, return.threshold = FALSE, 
+    force.sure=FALSE, cvtol = 0.01, Q = 0.05, alpha=0.05, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>irregwd</code></td>
+<td>
+<p>The irregularly spaced wavelet decomposition object that you wish to threshold.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>levels</code></td>
+<td>
+<p>a vector of integers which determines which scale levels are thresholded in the decomposition. Each integer in the vector must refer to a valid level in the <code>irregwd</code> object supplied. This is usually any integer from 0 to <code>nlevelsWT</code>(irregwd)-1 inclusive. Only the levels in this vector contribute to the computation of the threshold and its application.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>determines the type of thresholding this can be "hard" or "soft".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>policy</code></td>
+<td>
+<p>selects the technique by which the threshold value is selected. Each policy corresponds to a method in the literature. At present the different policies are: <code>"universal"</code>, <code>"LSuniversal"</code>, <code>"sure"</code>, <code>"cv"</code>, <code>"fdr"</code>, <code>"op1"</code>, <code>"op2"</code>, <code>"manual"</code>, <code>"mannum"</code>, <code>"probability"</code>. A description of the policies can be obtained by clicking on the above links.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>by.level</code></td>
+<td>
+<p>If <code>FALSE</code> then a global threshold is computed on and applied to all scale levels defined in levels. If <code>TRUE</code> a threshold is computed and applied separately to each scale level.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>This argument conveys the user supplied threshold. If the <code>policy="manual"</code> then value is the actual threshold value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dev</code></td>
+<td>
+<p>this argument supplies the function to be used to compute the spread of the absolute values coefficients. The function supplied must return a value of spread on the variance scale (i.e. not standard deviation) such as the <code>var()</code> function. A popular, useful and robust alternative is the <code>madmad</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>If this argument is <code>TRUE</code> then the boundary bookeeping values are included for thresholding, otherwise they are not.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>if <code>TRUE</code> then the function prints out informative messages as it progresses.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return.threshold</code></td>
+<td>
+<p>If this option is <code>TRUE</code> then the actual <em>value</em> of the threshold is returned. If this option is <code>FALSE</code> then a thresholded version of the input is returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>force.sure</code></td>
+<td>
+<p>If <code>TRUE</code> then the <code>SURE</code> threshold is computed on a vector even when that vector is very sparse. If <code>FALSE</code> then the normal SUREshrink procedure is followed whereby the universal threshold is used for sparse vectors of coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cvtol</code></td>
+<td>
+<p>Parameter for the cross-validation <code>"cv"</code> policy.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Q</code></td>
+<td>
+<p>Parameter for the false discovery rate <code>"fdr"</code> policy.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Parameter for Ogden and Parzen's first <code>"op1"</code> and <code>"op2"</code> policies.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function thresholds or shrinks wavelet coefficients stored in a <code>irregwd</code> object and returns the coefficients in a modified <code>irregwd</code> object. The thresholding step is an essential component of denoising. 
+</p>
+<p>The basic idea of thresholding is very simple. In a signal plus noise model the wavelet transform of signal is very sparse, the wavelet transform of noise is not (in particular, if the noise is iid Gaussian then so if the noise contained in the wavelet coefficients). Thus since the signal gets concentrated in the wavelet coefficients and the noise remains "spread" out it is "easy" to separate the signal from noise by keeping large coefficients (which correspond to signal) and delete the small ones (which correspond to noise). However, one has to have some idea of the noise level (computed using the dev option in threshold functions). If the noise level is very large then it is possible, as usual, that no signal "sticks up" above the noise. 
+</p>
+<p>For thresholding of an <em>irregularly spaced wavelet decomposition</em> things are a little different. The original data are irregularly spaced (i.e. [x,y] where the <code class="reqn">x_i</code> are irregularly spaced) and even if one assumes iid error on the original data once this has been interpolated to a grid by the <code>makegrid</code> function the interpolated data values are not independent. The <code>irregwd</code> function computes the wavelet transform of the interpolated data but also computes the variance of each coefficient using a fast transform. This variance information is stored in the c component of <code>irregwd</code> objects and this function, <code>threshold.irregwd</code>, makes use of this variance information when thresholding each coefficient. For more details see Kovac and Silverman, 2000 
+</p>
+<p>Some issues to watch for: 
+</p>
+
+<dl>
+<dt>levels</dt>
+<dd>
+<p>The default of <code>levels = 3:(wd$nlevelsWT - 1)</code> for the <code>levels</code> option most certainly does not work globally for all data problems and situations. The level at which thresholding begins (i.e. the given threshold and finer scale wavelets) is called the <em>primary resolution</em> and is unique to a particular problem.
+In some ways choice of the primary resolution is very similar to choosing the bandwidth in kernel regression albeit on a logarithmic scale. See Hall and Patil, (1995) and Hall and Nason (1997) for more information. For each data problem you need to work out which is the best primary resolution. This can be done by gaining experience at what works best, or using prior knowledge. It is possible to "automatically" choose a "best" primary resolution using cross-validation (but not yet in WaveThresh).
+</p>
+<p>Secondly the levels argument computes and applies the threshold at the levels specified in the levels argument. It does this for all the levels specified. Sometimes, in wavelet shrinkage, the threshold is computed using only the finest scale coefficients (or more precisely the estimate of the overall noise level).
+If you want your threshold variance estimate only to use the finest scale coefficients (e.g. with universal thresholding) then you will have to apply the <code>threshold.wd</code> function twice. Once (with levels set equal to <code>nlevelsWT</code>(wd)-1 and with <code>return.threshold=TRUE</code> to return the threshold computed on the finest scale and then apply the threshold function with the manual option supplying the value of the previously computed threshold as the value options.</p>
+</dd>
+<dt>by.level</dt>
+<dd>
+<p>for a <code>wd</code> object which has come from data with noise that is correlated then you should have a threshold computed for each resolution level. See the paper by Johnstone and Silverman, 1997.</p>
+</dd>
+</dl>
+<h3>Value</h3>
+
+<p>An object of class <code>irregwd</code>. This object contains the thresholded wavelet coefficients. Note that if the <code>return.threshold</code> option is set to <code>TRUE</code> then the threshold values will be returned rather than the thresholded object. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.6 Copyright Guy Nason 1997 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>Arne Kovac</p>
+
+
+<h3>See Also</h3>
+
+<p><code>makegrid</code>, <code>irregwd</code>, <code>irregwd</code> object, <code>accessc</code>,
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# See main examples of these functions in the help to makegrid
+#
+</code></pre>
+
+
+</div>

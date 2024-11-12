@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>info_sound_files</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get sound file parameter information</h2>
+
+<h3>Description</h3>
+
+<p><code>info_sound_files</code> summariz sound file information
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">info_sound_files(
+  path = NULL,
+  files = NULL,
+  parallel = 1,
+  pb = TRUE,
+  skip.error = FALSE,
+  file.format = "\\.wav$|\\.wac$|\\.mp3$|\\.flac$"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Character string containing the directory path where the sound files are located.
+If <code>NULL</code> (default) then the current working directory is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>character vector indicating the set of files that will be consolidated. File names should not include the full file path. Optional.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Numeric. Controls whether parallel computing is applied.
+It specifies the number of cores to be used. Default is 1 (i.e. no parallel computing).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Logical argument to control progress bar and messages. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skip.error</code></td>
+<td>
+<p>Logical to control if errors are omitted. If so, files that could not be read will be excluded and their name printed in the console. Default is <code>FALSE</code>, which will return an error if some files are problematic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file.format</code></td>
+<td>
+<p>Character string with the format of sound files. By default all sound file formats supported by warbleR are included ("\\.wav$|\\.wac$|\\.mp3$|\\.flac$"). Note that several formats can be included using regular expression syntax as in <code>grep</code>. For instance <code>"\\.wav$|\\.mp3$"</code> will only include .wav and .mp3 files.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is a wrapper for <code>selection_table</code> that returns a data frame with the following descriptive parameters for each sound file in the working directory (or 'path'):
+</p>
+
+<ul>
+<li> <p><code>duration</code>: duration of selection in seconds
+</p>
+</li>
+<li> <p><code>sample.rate</code>: sampling rate in kHz
+</p>
+</li>
+<li> <p><code>channels</code>: number of channels
+</p>
+</li>
+<li> <p><code>bits</code>: bit depth
+</p>
+</li>
+<li> <p><code>wav.size</code>: sound file size in MB
+</p>
+</li>
+<li> <p><code>samples</code>: number of samples in the sound file
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A data frame with descriptive information about the sound files in the working directory (or 'path'). See "details".
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fix_wavs</code>, <code>selection_table</code> &amp; <code>check_sels</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">{
+data(list = c("Phae.long1", "Phae.long2", "Phae.long3", "Phae.long4", "lbh_selec_table"))
+writeWave(Phae.long1, file.path(tempdir(), "Phae.long1.wav"))
+writeWave(Phae.long2, file.path(tempdir(), "Phae.long2.wav"))
+writeWave(Phae.long3, file.path(tempdir(), "Phae.long3.wav"))
+writeWave(Phae.long4, file.path(tempdir(), "Phae.long4.wav"))
+
+#get info
+info_sound_files(path = tempdir())
+}
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,189 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sliceplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot time slices within a tidal object</h2>
+
+<h3>Description</h3>
+
+<p>Plot time slices within a tidal object to view response variable observations, predictions, and normalized results at regular annual intervals.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sliceplot(dat_in, ...)
+
+## S3 method for class 'tidal'
+sliceplot(
+  dat_in,
+  slices = c(1, 7),
+  tau = NULL,
+  dt_rng = NULL,
+  col_vec = NULL,
+  predicted = TRUE,
+  logspace = TRUE,
+  grids = TRUE,
+  pretty = TRUE,
+  lwd = 1,
+  size = 2,
+  alpha = 1,
+  ...
+)
+
+## S3 method for class 'tidalmean'
+sliceplot(
+  dat_in,
+  slices = c(1, 7),
+  predicted = TRUE,
+  dt_rng = NULL,
+  col_vec = NULL,
+  logspace = TRUE,
+  grids = TRUE,
+  pretty = TRUE,
+  lwd = 1,
+  size = 2,
+  alpha = 1,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input tidal or tidalmean object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>slices</code></td>
+<td>
+<p>numeric vector of calender months to plot, i.e., 1 - 12</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>numeric vector of quantile to plot.  The function will plot the 'middle' quantile if none is specified, e.g., if 0.2, 0.3, and 0.4 are present in the fitted model object then 0.3 will be plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dt_rng</code></td>
+<td>
+<p>Optional chr string indicating the date range of the plot. Must be two values in the format 'YYYY-mm-dd' which is passed to <code>as.Date</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col_vec</code></td>
+<td>
+<p>chr string of plot colors to use, passed to <code>gradcols</code>.  Any color palette from RColorBrewer can be used as a named input. Palettes from grDevices must be supplied as the returned string of colors for each palette.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>predicted</code></td>
+<td>
+<p>logical indicating if standard predicted values are plotted, default <code>TRUE</code>, otherwise normalized predictions are plotted</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logspace</code></td>
+<td>
+<p>logical indicating if plots are in log space</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grids</code></td>
+<td>
+<p>logical indicating if grid lines are present</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pretty</code></td>
+<td>
+<p>logical indicating if my subjective idea of plot aesthetics is applied, otherwise the <code>ggplot</code> default themes are used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd</code></td>
+<td>
+<p>numeric value indicating width of lines</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>numeric value indicating size of points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>numeric value indicating transparency of points or lines</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is a modification of <code>fitplot</code> that can be used to plot selected time slices from the results of a fitted <code>tidal</code> object.  For example, all results for a particular month across all years can be viewed.  This is useful for evaluating between-year differences in results for constant season.  Only one quantile fit can be shown per plot because the grouping variable is mapped to the slices.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>ggplot</code> object that can be further modified
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fitplot</code>, <code>prdnrmplot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## load a fitted tidal object
+data(tidfit)
+
+# plot using defaults
+sliceplot(tidfit)
+
+# get different months - march and september
+sliceplot(tidfit, slices = c(3, 9))
+
+# normalized predictions, 10th percentile
+sliceplot(tidfit, tau = 0.1, predicted = FALSE)
+
+# normalized values all months, change line aesthetics, log-space, 90th 
+# add title
+library(ggplot2)
+sliceplot(tidfit, 
+ slices = 1:12, 
+ size = 1.5, 
+ tau = 0.9, 
+ alpha = 0.6, 
+ predicted = FALSE, 
+ logspace = TRUE
+) + 
+ggtitle('Normalized predictions for all months, 90th percentile')
+
+ ## plot a tidalmean object
+ data(tidfitmean)
+ 
+ sliceplot(tidfitmean)
+</code></pre>
+
+
+</div>

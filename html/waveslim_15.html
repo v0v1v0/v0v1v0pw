@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>basis</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Produce Boolean Vector from Wavelet Basis Names</h2>
+
+<h3>Description</h3>
+
+<p>Produce a vector of zeros and ones from a vector of basis names.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">basis(x, basis.names)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Output from the discrete wavelet package transfrom (DWPT).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>basis.names</code></td>
+<td>
+<p>Vector of character strings that describe leaves on the
+DWPT basis tree.  See the examples below for appropriate syntax.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>None.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Vector of zeros and ones.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dwpt</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(acvs.andel8)
+## Not run: 
+x &lt;- hosking.sim(1024, acvs.andel8[,2])
+x.dwpt &lt;- dwpt(x, "la8", 7)
+## Select orthonormal basis from wavelet packet tree
+x.basis &lt;- basis(x.dwpt, c("w1.1","w2.1","w3.0","w4.3","w5.4","w6.10",
+                           "w7.22","w7.23"))
+for(i in 1:length(x.dwpt))
+  x.dwpt[[i]] &lt;- x.basis[i] * x.dwpt[[i]]
+## Resonstruct original series using selected orthonormal basis
+y &lt;- idwpt(x.dwpt, x.basis)
+par(mfrow=c(2,1), mar=c(5-1,4,4-1,2))
+plot.ts(x, xlab="", ylab="", main="Original Series")
+plot.ts(y, xlab="", ylab="", main="Reconstructed Series")
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

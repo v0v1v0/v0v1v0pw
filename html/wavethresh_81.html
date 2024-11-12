@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getpacket.wp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get packet of coefficients from a wavelet packet object (wp).</h2>
+
+<h3>Description</h3>
+
+<p>This function extracts and returns a packet of coefficients from a wavelet packet (<code>wp</code>) object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wp'
+getpacket(wp, level, index, ... )
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wp</code></td>
+<td>
+<p>Wavelet packet object from which you wish to extract the packet from.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>The resolution level of the coefficients that you wish to extract.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>index</code></td>
+<td>
+<p>The index number within the resolution level of the packet of coefficients that you wish to extract.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>wp</code> produces a wavelet packet object. The coefficients in this structure can be organised into a binary tree with each node in the tree containing a packet of coefficients. 
+</p>
+<p>Each packet of coefficients is obtained by chaining together the effect of the <em>two packet operators</em> DG and DH: these are the high and low pass quadrature mirror filters of the Mallat pyramid algorithm scheme followed by decimation (see Mallat~(1989b)). 
+</p>
+<p>Starting with data <code class="reqn">c^J</code> at resolution level J containing
+<code class="reqn">2^J</code> data points the wavelet packet algorithm operates as follows.
+First DG and DH are applied to <code class="reqn">c^J</code> producing
+<code class="reqn">d^{J-1}</code> and <code class="reqn">c^{J-1}</code> respectively.
+Each of these sets of coefficients is of length one half of the original data:
+i.e. <code class="reqn">2^{J-1}</code>.
+Each of these sets of coefficients is a set of
+<em>wavelet packet coefficients</em>.
+The algorithm then applies both DG and DH to both
+<code class="reqn">d^{J-1}</code> and <code class="reqn">c^{J-1}</code> to form a four sets of coefficients at level
+J-2. Both operators are used again on the four sets to produce 8 sets, then again on the 8 sets to form 16 sets and so on. At level j=J,...,0 there are
+<code class="reqn">2^{J-j}</code> packets of coefficients each containing <code class="reqn">2^j</code> coefficients. 
+</p>
+<p>This function enables whole packets of coefficients to be extracted at any resolution level. The index argument chooses a particular packet within each level and thus ranges from 0 (which always refer to the father wavelet coefficients), 1 (which always refer to the mother wavelet coefficients) up to <code class="reqn">2^{J-j}</code>. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector containing the packet of wavelet packet coefficients that you wished to extract. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.9 Copyright Guy Nason 1998 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wp</code>, <code>putpacket.wp</code>, <code>basisplot.wp</code>, <code>draw.wp</code>, <code>InvBasis.wp</code>, <code>MaNoVe.wp</code>, <code>nlevelsWT.wp</code>, <code>plot.wp</code>. <code>threshold.wp</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Take the wavelet packet transform of some random data
+#
+MyWP &lt;- wp(rnorm(1:512))
+#
+# The above data set was 2^9 in length. Therefore there are
+# coefficients at resolution levels 0, 1, 2, ..., and 8.
+#
+# The high resolution coefficients are at level 8.
+# There should be 256 DG coefficients and 256 DH coefficients
+#
+length(getpacket(MyWP, level=8, index=0))
+#[1] 256
+length(getpacket(MyWP, level=8, index=1))
+#[1] 256
+#
+# The next command shows that there are only two packets at level 8
+#
+## Not run: getpacket(MyWP, level=8, index=2)
+#Index was too high, maximum for this level is  1 
+#Error in getpacket.wp(MyWP, level = 8, index = 2): Error occured
+#Dumped
+#
+# There should be 4 coefficients at resolution level 2
+#
+# The father wavelet coefficients are (index=0)
+getpacket(MyWP, level=2, index=0)
+#[1] -0.9736576  0.5579501  0.3100629 -0.3834068
+#
+# The mother wavelet coefficients are (index=1)
+#
+#[1]  0.72871405  0.04356728 -0.43175307  1.77291483
+#
+# There will be 127 packets at this level.
+#
+</code></pre>
+
+
+</div>

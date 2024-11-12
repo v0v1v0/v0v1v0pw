@@ -1,0 +1,190 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>find_stations_in</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find Stations Within a Geospatially Defined Geographic Area of Interest</h2>
+
+<h3>Description</h3>
+
+<p>Given an <a href="https://CRAN.R-project.org/package=sf"><span class="pkg">sf</span></a> polygon or a bounding box as a vector with the minimum
+and maximum longitude and latitude values, find <abbr><span class="acronym">DPIRD</span></abbr> or
+<abbr><span class="acronym">BOM</span></abbr> stations in the <abbr><span class="acronym">SILO</span></abbr> network that fall within that
+defined area or the station nearest the centroid of the area of interest.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">find_stations_in(
+  x,
+  centroid = FALSE,
+  api_key = NULL,
+  which_api = "all",
+  include_closed = FALSE,
+  crs = "EPSG:7844"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>One of three types of object:
+</p>
+
+<ul>
+<li>
+<p> A <code>Vector</code> A four-digit vector defining a bounding box of the area
+of interest in this order, ‘xmin’, ‘ymin’, ‘xmax’,
+‘ymax’, or
+</p>
+</li>
+<li>
+<p> An object of class <a href="https://CRAN.R-project.org/package=sf"><span class="pkg">sf</span></a> defining the area of interest.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>centroid</code></td>
+<td>
+<p><code>Boolean</code> A value of <code>TRUE</code> or <code>FALSE</code> indicating whether
+you want the centroid only to be used to find the nearest station to the
+centre of the area of interest.  If “n” polygons are supplied,
+“n” stations are returned.  Defaults to <code>FALSE</code> with all stations
+within the area of interest returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_key</code></td>
+<td>
+<p>A <code>character</code> string containing your <abbr><span class="acronym">API</span></abbr> key from
+<abbr><span class="acronym">DPIRD</span></abbr>, <a href="https://www.agric.wa.gov.au/web-apis">https://www.agric.wa.gov.au/web-apis</a>, for the
+<abbr><span class="acronym">DPIRD</span></abbr> Weather 2.0 <abbr><span class="acronym">API</span></abbr>.  If left as <code>NULL</code>, defaults to
+automatically detecting your key from your local .Renviron, .Rprofile or
+similar.  Alternatively, you may directly provide your key as a string
+here.  If nothing is provided, you will be prompted on how to set up your
+<span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> session so that it is auto-detected.  Only used  when <var>which_api</var> is
+<code>DPIRD</code> or <code>all</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>which_api</code></td>
+<td>
+<p>A <code>string</code> value that indicates which <abbr><span class="acronym">API</span></abbr> to use.
+Defaults to <code>silo</code> only.  Valid values are <code>all</code>, for both <abbr><span class="acronym">SILO</span></abbr>
+(<abbr><span class="acronym">BOM</span></abbr>) and <abbr><span class="acronym">DPIRD</span></abbr> weather station networks; <code>silo</code> for
+only stations in the <abbr><span class="acronym">SILO</span></abbr> network; or <code>dpird</code> for stations in the
+<abbr><span class="acronym">DPIRD</span></abbr> network.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_closed</code></td>
+<td>
+<p>A <code>Boolean</code> value that indicates whether closed
+stations in the <abbr><span class="acronym">DPIRD</span></abbr> network should be included in the results.
+Defaults to <code>FALSE</code> with closed stations not included.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crs</code></td>
+<td>
+<p>A <code>string</code> value that provides the coordinate reference system,
+AKA, "projection" to be used for the point extraction.  Defaults to
+GDA 2020, EPSG:7844.  <strong>NOTE</strong> This will override any <code>crs</code> value that your
+.  <code>polygon</code> provides unless you specify it again here, <em>e.g.</em>,
+<code>crs = sf::st_crs(polygon_object_name)</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a <a href="https://CRAN.R-project.org/package=data.table"><span class="pkg">data.table</span></a> object of weather station(s) within the
+defined area of interest in an unprojected format, EPSG:4326, WGS 84 –
+WGS84 - World Geodetic System 1984, used in <abbr><span class="acronym">GPS</span></abbr> format.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other DPIRD: 
+<code>dpird_extreme_weather_values</code>,
+<code>dpird_minute_values</code>,
+<code>dpird_summary_values</code>,
+<code>find_nearby_stations()</code>,
+<code>get_dpird_apsim()</code>,
+<code>get_dpird_availability()</code>,
+<code>get_dpird_extremes()</code>,
+<code>get_dpird_minute()</code>,
+<code>get_dpird_summaries()</code>,
+<code>get_stations_metadata()</code>
+</p>
+<p>Other SILO: 
+<code>find_nearby_stations()</code>,
+<code>get_data_drill()</code>,
+<code>get_data_drill_apsim()</code>,
+<code>get_patched_point()</code>,
+<code>get_patched_point_apsim()</code>,
+<code>get_stations_metadata()</code>,
+<code>silo_daily_values</code>
+</p>
+<p>Other metadata: 
+<code>find_forecast_towns()</code>,
+<code>find_nearby_stations()</code>,
+<code>get_available_imagery()</code>,
+<code>get_available_radar()</code>,
+<code>get_dpird_availability()</code>,
+<code>get_stations_metadata()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+# using a (generous) bounding box for Melbourne, Vic using only the SILO API
+# for BOM stations, so no API key is needed.
+
+bbox &lt;- find_stations_in(
+  x = c(144.470215, -38.160476, 145.612793, -37.622934),
+  which_api = "SILO",
+  include_closed = TRUE
+)
+bbox
+
+# Use the same bounding box but only find a single station nearest
+# the centroid using only the SILO API for BOM stations
+
+centroid &lt;- find_stations_in(
+  x = c(144.470215, -38.160476, 145.612793, -37.622934),
+  which_api = "SILO",
+  include_closed = TRUE,
+  centroid = TRUE
+)
+centroid
+
+# Use the `south_west_agricultural_region` data to fetch stations only in the
+# south-western portion of WA and plot it with {ggplot2} showing open/closed
+# stations just to be sure they're inside the area of interest.
+
+# As this is in WA, we can use the DPIRD network, so we need our API key.
+# Using the `south_west_agricultural_region` {sf} object provided.
+
+sw_wa &lt;- find_stations_in(
+  x = south_west_agricultural_region,
+  api_key = "your_api_key",
+  include_closed = TRUE
+)
+
+sw_wa
+
+</code></pre>
+
+
+</div>

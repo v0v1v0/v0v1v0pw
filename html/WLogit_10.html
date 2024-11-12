@@ -1,0 +1,272 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WhiteningLogit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Variable selection in high-dimensional logistic regression models using a whitening approach
+</h2>
+
+<h3>Description</h3>
+
+<p>Variable selection in high-dimensional logistic regression models using a whitening approach
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WhiteningLogit(X = X, y = y, nlambda = 50, maxit = 100, gamma = 0.9999, 
+top_grill=c(1:100))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+
+<p>Design matrix of the logistic model considered.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>Binary response of the logistic model considered.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlambda</code></td>
+<td>
+
+<p>Number of lambda
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxit</code></td>
+<td>
+
+<p>Integer specifying the maximum number of steps for the generalized Lasso algorithm. It should not be smaller than nlambda.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma</code></td>
+<td>
+
+<p>Parameter <code class="reqn">\gamma</code> defined in the paper Zhu et al. (2022) given in the references. Its default value is 0.95.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>top_grill</code></td>
+<td>
+
+<p>A grill of provided for the thresholding
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a list with the following components
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>lambda </code></td>
+<td>
+<p>different values of the parameter <code class="reqn">\lambda</code> considered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta </code></td>
+<td>
+<p>matrix of the estimations of <code class="reqn">\beta</code> for all the <code class="reqn">\lambda</code> considered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta.min </code></td>
+<td>
+<p>estimation of <code class="reqn">\beta</code> which minimize the MSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log.likelihood </code></td>
+<td>
+<p>Log-likelihood for all the <code class="reqn">\lambda</code> considered.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Wencan Zhu, Celine Levy-Leduc, Nils Ternes
+</p>
+
+
+<h3>References</h3>
+
+<p>W. Zhu, C. Levy-Leduc, N. Ternes. "Variable selection in high-dimensional logistic regression models using a whitening approach". (2022)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">X0 &lt;- matrix( rnorm(50*10,mean=0,sd=1), 50, 10)  
+y0 &lt;- c(rep(1,25), rep(0,25))
+mod &lt;- WhiteningLogit(X=X0, y=y0)
+plot(mod$beta.min)
+
+##---- Should be DIRECTLY executable !! ----
+##-- ==&gt;  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function(X=X, y=y,
+                   nlambda=50,
+                   maxit=100,
+                   gamma=0.9999,
+                   top_grill=c(1:100)){
+  
+  p=ncol(X)
+  n=nrow(X)
+  
+  mod_ridge &lt;- cv.glmnet(x=as.matrix(X), y=y, alpha=0.5, intercept=FALSE, family="binomial")
+  pr_est &lt;- predict(mod_ridge, as.matrix(X), s = "lambda.min", type="response")
+  beta_ini &lt;- predict(mod_ridge, as.matrix(X), s = "lambda.min", type="coefficients")[-1]
+  diag_w &lt;- pr_est*(1-pr_est)
+  square_root_w &lt;- diag(sqrt(as.vector(diag_w)), nrow=n)
+  X_new &lt;- square_root_w
+  
+  Cov_est &lt;- cvCovEst(
+    dat = X_new,
+    estimators = c(
+      linearShrinkLWEst, thresholdingEst, sampleCovEst
+    ),
+    estimator_params = list(
+      thresholdingEst = list(gamma = seq(0.1, 0.3, 0.1))
+    ),
+    center = TRUE,
+    scale = TRUE
+  )
+  
+  Sigma_est &lt;- Cov_est$estimate
+  
+  SVD_new &lt;- fast.svd(Sigma_est)
+  U_sigma_new &lt;- SVD_new$u
+  D_sigma_new &lt;- SVD_new$d
+  inv_transmat &lt;- U_sigma_new
+  inv_diag_new &lt;- ifelse(D_sigma_new&lt;0.000001, 0, 1/sqrt(D_sigma_new))
+  trans_mat &lt;- U_sigma_new
+  
+  
+  if (p &lt;= 50) {
+    top_grill &lt;- seq(1, p, 2)
+  }else if (p &lt;= 200) {
+    top_grill &lt;- c(1:50, seq(52, p, 2))
+  }else if (p &lt;= 300) {
+    top_grill &lt;- c(1:50, seq(52, 100, 2), seq(105, 200, 5), 
+                   seq(210, p, 10))
+  }else {
+    top_grill &lt;- c(1:50, seq(52, 100, 2), seq(105, 200, 5), 
+                   seq(210, 300, 10))
+  }
+  
+  X_tilde &lt;- X
+  
+  beta_tilde_ini &lt;-  inv_transmat
+  Px &lt;- CalculPx(X_tilde, beta=beta_tilde_ini)
+  wt &lt;- CalculWeight(Px)
+  # wt &lt;- ifelse(wt0==0, 0.0001, wt0)
+  ystar &lt;- WorkingResp(y=y, Px=Px, X=X_tilde, beta=beta_tilde_ini)
+  X_tilde_weighted &lt;- sweep(X, MARGIN=1, sqrt(wt), `*`)
+  ystar_weighted &lt;- sqrt(wt)*ystar
+  
+  gen.model0 &lt;- genlasso(y=ystar_weighted, X=X_tilde_weighted, 
+                         D=trans_mat, maxsteps = 50)
+  parameter_tmp &lt;- beta_tilde_ini
+  beta_final &lt;- matrix(NA, length(gen.model0$lambda), p)
+  skip_i &lt;- TRUE
+  eval_final &lt;- c()
+  defaultW &lt;- getOption("warn") 
+  
+  options(warn = -1) 
+  
+  
+  for(i in 1:length(gen.model0$lambda)){
+    #inner loop
+    epsilon=10
+    j=0
+    if(skip_i){parameter_tmp &lt;- beta_tilde_ini
+    } else {parameter_tmp &lt;- parameter_current}
+    skip_i &lt;-FALSE
+    
+    while(epsilon &gt; 0.001){
+      j=j+1
+      parameter_current &lt;- parameter_tmp
+      Px &lt;- CalculPx(X_tilde, beta=parameter_current)
+      wt0 &lt;- CalculWeight(Px)
+      wt &lt;- ifelse(round(wt0,4)==0, 0.0001, wt)
+      ystar &lt;- WorkingResp(y=y, Px=Px, X=X_tilde, beta=parameter_current)
+      X_tilde_weighted &lt;- sweep(X, MARGIN=1, sqrt(wt), `*`)
+      ystar_weighted &lt;- sqrt(wt)*ystar
+      
+      gen.model &lt;- genlasso(y=ystar_weighted, X=X_tilde_weighted, D=trans_mat, maxsteps =   maxit)
+      
+      if(gen.model0$lambda[i] &lt; min(gen.model$lambda)){
+        parameter_tmp &lt;- parameter_current
+        break
+      } else {
+        parameter_tmp &lt;- coef(gen.model, lambda=gen.model0$lambda[i],
+                              type = "primal")$beta
+        beta_current &lt;- parameter_tmp
+        if(sum(is.na(parameter_tmp))&gt;0){
+          skip_i &lt;-TRUE 
+          parameter_tmp &lt;- rep(0,p)
+          break}
+        epsilon &lt;- max(abs(parameter_current-parameter_tmp))
+        if(epsilon &gt;=100){
+          skip_i &lt;-TRUE 
+          break}
+        if (j==maxit){
+          skip_i &lt;-TRUE 
+          break}
+      }
+    }
+    
+    if(skip_i){
+      beta_final[i, ] &lt;- rep(NA, p)
+      eval_final[i] &lt;- NA
+    } else{
+      
+      correction &lt;- Thresholding(X_tilde, y, coef=parameter_tmp, TOP=top_grill)
+      opt_top_tilde &lt;- correction$opt_top
+      beta_tilde_opt &lt;- top_thresh(vect=parameter_tmp, thresh = opt_top_tilde)
+      beta_final0 &lt;- trans_mat
+      
+      correction &lt;- Thresholding(X, y, coef=beta_final0, TOP=top_grill)
+      opt_top_final &lt;- correction$opt_top
+      beta_final[i, ] &lt;- beta_opt_final &lt;- top(vect=beta_final0, thresh = opt_top_final)
+      
+      beta_refit &lt;- Refit_glm(X=X, beta_pred = beta_opt_final, y=y)
+      pr_est &lt;- CalculPx(X, beta_refit)
+      ll &lt;- pr_est^y*(1-pr_est)^(1-y)
+      #ll &lt;- ifelse(ll&lt;0.000001, 1, ll)
+      eval_final[i] &lt;- -log(prod(ll))
+      
+    }
+    beta.min &lt;- beta_final[which.min(eval_final), ]
+  }
+  options(warn = defaultW)
+  return(list(beta=beta_final, lambda=gen.model0$lambda, beta.min=beta.min, 
+              log.likelihood=eval_final))
+}
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,254 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mgrrel_matrix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Manager Relationship 2x2 Matrix</h2>
+
+<h3>Description</h3>
+
+<p>Generate the Manager-Relationship 2x2 matrix, returning a 'ggplot' object by
+default. Additional options available to return a "wide" or "long" summary
+table.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mgrrel_matrix(
+  data,
+  hrvar = NULL,
+  mingroup = 5,
+  return = "plot",
+  plot_colors = c("#fe7f4f", "#b4d5dd", "#facebc", "#fcf0eb"),
+  threshold = 15
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Standard Person Query data to pass through. Accepts a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hrvar</code></td>
+<td>
+<p>HR Variable by which to split metrics. Accepts a character
+vector, e.g. "Organization". Defaults to <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mingroup</code></td>
+<td>
+<p>Numeric value setting the privacy threshold / minimum group
+size. Defaults to 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String specifying what to return. This must be one of the
+following strings:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>
+</p>
+</li>
+<li> <p><code>"table"</code>
+</p>
+</li>
+<li> <p><code>"data"</code>
+</p>
+</li>
+</ul>
+<p>See <code>Value</code> for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_colors</code></td>
+<td>
+<p>Pass a character vector of length 4 containing HEX codes
+to specify colors to use in plotting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>Specify a numeric value to determine threshold (in minutes) for 1:1 manager hours.
+Defaults to 15.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A different output is returned depending on the value passed to the <code>return</code>
+argument:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>: ggplot object. When <code>NULL</code> is passed to <code>hrvar</code>, a two-by-two
+grid where the size of the grid represents total percentage of employees is
+returned. Otherwise, a horizontal stacked bar plot is returned.
+</p>
+</li>
+<li> <p><code>"table"</code>: data frame. A summary table is returned.
+</p>
+</li>
+<li> <p><code>"data"</code>: data frame. A long table grouped at the <code>PersonId</code> level with
+the following columns:
+</p>
+
+<ul>
+<li> <p><code>PersonId</code>
+</p>
+</li>
+<li>
+<p> HR variable supplied to <code>hrvar</code>
+</p>
+</li>
+<li> <p><code>CoattendanceRate</code>
+</p>
+</li>
+<li> <p><code>Meeting_hours_with_manager_1_on_1</code>
+</p>
+</li>
+<li> <p><code>mgr1on1</code>
+</p>
+</li>
+<li> <p><code>Type</code>
+</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Lucas Hogner <a href="mailto:lucas.hogner@microsoft.com">lucas.hogner@microsoft.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Visualization: 
+<code>afterhours_dist()</code>,
+<code>afterhours_fizz()</code>,
+<code>afterhours_line()</code>,
+<code>afterhours_rank()</code>,
+<code>afterhours_summary()</code>,
+<code>afterhours_trend()</code>,
+<code>collaboration_area()</code>,
+<code>collaboration_dist()</code>,
+<code>collaboration_fizz()</code>,
+<code>collaboration_line()</code>,
+<code>collaboration_rank()</code>,
+<code>collaboration_sum()</code>,
+<code>collaboration_trend()</code>,
+<code>create_bar()</code>,
+<code>create_bar_asis()</code>,
+<code>create_boxplot()</code>,
+<code>create_bubble()</code>,
+<code>create_dist()</code>,
+<code>create_fizz()</code>,
+<code>create_inc()</code>,
+<code>create_line()</code>,
+<code>create_line_asis()</code>,
+<code>create_period_scatter()</code>,
+<code>create_rank()</code>,
+<code>create_sankey()</code>,
+<code>create_scatter()</code>,
+<code>create_stacked()</code>,
+<code>create_tracking()</code>,
+<code>create_trend()</code>,
+<code>email_dist()</code>,
+<code>email_fizz()</code>,
+<code>email_line()</code>,
+<code>email_rank()</code>,
+<code>email_summary()</code>,
+<code>email_trend()</code>,
+<code>external_dist()</code>,
+<code>external_fizz()</code>,
+<code>external_line()</code>,
+<code>external_network_plot()</code>,
+<code>external_rank()</code>,
+<code>external_sum()</code>,
+<code>hr_trend()</code>,
+<code>hrvar_count()</code>,
+<code>hrvar_trend()</code>,
+<code>internal_network_plot()</code>,
+<code>keymetrics_scan()</code>,
+<code>meeting_dist()</code>,
+<code>meeting_fizz()</code>,
+<code>meeting_line()</code>,
+<code>meeting_quality()</code>,
+<code>meeting_rank()</code>,
+<code>meeting_summary()</code>,
+<code>meeting_trend()</code>,
+<code>meetingtype_dist()</code>,
+<code>meetingtype_dist_ca()</code>,
+<code>meetingtype_dist_mt()</code>,
+<code>meetingtype_summary()</code>,
+<code>mgrcoatt_dist()</code>,
+<code>one2one_dist()</code>,
+<code>one2one_fizz()</code>,
+<code>one2one_freq()</code>,
+<code>one2one_line()</code>,
+<code>one2one_rank()</code>,
+<code>one2one_sum()</code>,
+<code>one2one_trend()</code>,
+<code>period_change()</code>,
+<code>workloads_dist()</code>,
+<code>workloads_fizz()</code>,
+<code>workloads_line()</code>,
+<code>workloads_rank()</code>,
+<code>workloads_summary()</code>,
+<code>workloads_trend()</code>,
+<code>workpatterns_area()</code>,
+<code>workpatterns_rank()</code>
+</p>
+<p>Other Managerial Relations: 
+<code>mgrcoatt_dist()</code>,
+<code>one2one_dist()</code>,
+<code>one2one_fizz()</code>,
+<code>one2one_freq()</code>,
+<code>one2one_line()</code>,
+<code>one2one_rank()</code>,
+<code>one2one_sum()</code>,
+<code>one2one_trend()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Return matrix
+mgrrel_matrix(sq_data)
+
+# Return stacked bar plot
+mgrrel_matrix(sq_data, hrvar = "Organization")
+
+## Visualize coaching style types
+# Ensure dplyr is loaded
+library(dplyr)
+
+# Extract PersonId and Coaching Type
+match_df &lt;-
+  sq_data %&gt;%
+  mgrrel_matrix(return = "data") %&gt;%
+  select(PersonId, Type)
+
+# Join and visualize baseline
+sq_data %&gt;%
+  left_join(match_df, by = "PersonId") %&gt;%
+  keymetrics_scan(hrvar = "Type",
+                  return = "plot")
+
+</code></pre>
+
+
+</div>

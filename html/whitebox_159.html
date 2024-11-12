@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wbt_file_path</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Prepare File Paths for WhiteboxTools Commands</h2>
+
+<h3>Description</h3>
+
+<p>Performs path expansion with <code>path.expand()</code> and shell quotes with <code>shQuote()</code> the input paths.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wbt_file_path(x, shell_quote = TRUE, delimiter = ",", check_exists = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>character or <code>terra</code> object. Vector of file paths or strings of file paths for passing as arguments to WhiteboxTools. If the object is of class <code>SpatRaster</code>, <code>SpatRasterCollection</code>, <code>SpatVector</code> or <code>SpatVectorProxy</code> the sources are extracted with <code>terra::sources()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shell_quote</code></td>
+<td>
+<p>logical. Shell quotes around result? Default: <code>TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delimiter</code></td>
+<td>
+<p>character. Either <code>","</code> (default) or <code>";"</code> allowed by WhiteboxTools.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>check_exists</code></td>
+<td>
+<p>logical. Check if file(s) in x exist? Useful for input values. Default: <code>FALSE</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If an input vector contains <code>";"</code> or <code>","</code> this is considered, path expansion is performed on the substrings. If the input vector has length greater than <code>1</code>, the vector is concatenated with <code>","</code> or <code>";"</code> to create a single output string.
+</p>
+
+
+<h3>Value</h3>
+
+<p>character. Length 1. A safe input string for use in WhiteboxTools commands, with paths expanded and concatenated, if necessary, and optionally shell quoted.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+wbt_file_path("./abc.tif")
+
+wbt_file_path("./abc.tif;./def.tif")
+
+wbt_file_path("./abc.tif,./def.tif")
+
+wbt_file_path(c("./abc.tif", "./def.tif"))
+
+wbt_file_path("~/abc.tif", shell_quote = FALSE)
+
+wbt_file_path(c("~/abc.tif", "~/def.tif"))
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,247 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>modfuns</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Internal model fitting functions</h2>
+
+<h3>Description</h3>
+
+<p>These functions are intended for internal use only. Users should use the
+<code>predict_race()</code> interface rather any of these functions directly.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">.predict_race_old(
+  voter.file,
+  census.surname = TRUE,
+  surname.only = FALSE,
+  surname.year = 2020,
+  name.dictionaries = NULL,
+  census.geo,
+  census.key = Sys.getenv("CENSUS_API_KEY"),
+  census.data = NULL,
+  age = FALSE,
+  sex = FALSE,
+  year = "2020",
+  party,
+  retry = 3,
+  impute.missing = TRUE,
+  use.counties = FALSE
+)
+
+predict_race_new(
+  voter.file,
+  names.to.use,
+  year = "2020",
+  age = FALSE,
+  sex = FALSE,
+  census.geo = c("tract", "block", "block_group", "county", "place", "zcta"),
+  census.key = Sys.getenv("CENSUS_API_KEY"),
+  name.dictionaries,
+  surname.only = FALSE,
+  census.data = NULL,
+  retry = 0,
+  impute.missing = TRUE,
+  skip_bad_geos = FALSE,
+  census.surname = FALSE,
+  use.counties = FALSE
+)
+
+predict_race_me(
+  voter.file,
+  names.to.use,
+  year = "2020",
+  age = FALSE,
+  sex = FALSE,
+  census.geo = c("tract", "block", "block_group", "county", "place", "zcta"),
+  census.key = Sys.getenv("CENSUS_API_KEY"),
+  name.dictionaries,
+  surname.only = FALSE,
+  census.data = NULL,
+  retry = 0,
+  impute.missing = TRUE,
+  census.surname = FALSE,
+  use.counties = FALSE,
+  race.init,
+  ctrl
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>voter.file</code></td>
+<td>
+<p>See documentation in <code>race_predict</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>census.surname</code></td>
+<td>
+<p>See documentation in <code>race_predict</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>surname.only</code></td>
+<td>
+<p>See documentation in <code>race_predict</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>surname.year</code></td>
+<td>
+<p>See documentation in <code>race_predict</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name.dictionaries</code></td>
+<td>
+<p>See documentation in <code>race_predict</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>census.geo</code></td>
+<td>
+<p>See documentation in <code>race_predict</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>census.key</code></td>
+<td>
+<p>A character object specifying user's Census API key.
+Required if <code>census.geo</code> is specified, because a valid Census API key is
+required to download Census geographic data.
+</p>
+<p>If <code>NULL</code>, the default, attempts to find a census key stored in an
+environment variable named <code>CENSUS_API_KEY</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>census.data</code></td>
+<td>
+<p>See documentation in <code>race_predict</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>age</code></td>
+<td>
+<p>See documentation in <code>race_predict</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sex</code></td>
+<td>
+<p>See documentation in <code>race_predict</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>year</code></td>
+<td>
+<p>See documentation in <code>race_predict</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>party</code></td>
+<td>
+<p>See documentation in <code>race_predict</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>retry</code></td>
+<td>
+<p>See documentation in <code>race_predict</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>impute.missing</code></td>
+<td>
+<p>See documentation in <code>race_predict</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use.counties</code></td>
+<td>
+<p>A logical, defaulting to FALSE. Should census data be filtered by counties available in <var>census.data</var>?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>names.to.use</code></td>
+<td>
+<p>See documentation in <code>race_predict</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skip_bad_geos</code></td>
+<td>
+<p>See documentation in <code>race_predict</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>race.init</code></td>
+<td>
+<p>See documentation in <code>race_predict</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ctrl</code></td>
+<td>
+<p>See <code>control</code> in documentation for <code>predict_race()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>These functions fit different versions of WRU. <code>.predict_race_old</code> fits
+the original WRU model, also known as BISG with census-based surname dictionary.
+<code>.predict_race_new</code> fits a new version of BISG which uses a new, augmented
+surname dictionary, and can also accommodate the use of first and middle
+name information. Finally, <code>.predict_race_me</code> fits a fully Bayesian Improved
+Surname Geocoding model (fBISG), which fits a model with measurement-error
+correction of erroneous zeros in census tables, in addition to also accommodating
+the augmented surname dictionary, and the first and middle name
+dictionaries when making predictions.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Output will be an object of class <code>data.frame</code>. It will
+consist of the original user-input <code>voter.file</code> with additional columns with
+predicted probabilities for each of the five major racial categories:
+<code><var>pred.whi</var></code> for White,
+<code><var>pred.bla</var></code> for Black,
+<code><var>pred.his</var></code> for Hispanic/Latino,
+<code><var>pred.asi</var></code> for Asian/Pacific Islander, and
+<code><var>pred.oth</var></code> for Other/Mixed.
+</p>
+
+
+<h3>.predict_race_old</h3>
+
+<p>Original WRU race prediction function, implementing classical BISG with census-based
+surname dictionary.
+</p>
+
+
+<h3>.predict_race_new </h3>
+
+<p>New race prediction function, implementing classical BISG with augmented
+surname dictionary, as well as first and middle name information.
+</p>
+
+
+<h3>.predict_race_me</h3>
+
+<p>New race prediction function, implementing fBISG (i.e. measurement
+error correction, fully Bayesian model) with augmented
+surname dictionary, as well as first and middle name information.
+</p>
+
+
+</div>

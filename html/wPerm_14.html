@@ -1,0 +1,203 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>perm.relation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+
+Permutation Test for a Relationship
+</h2>
+
+<h3>Description</h3>
+
+
+<p>Performs a permutation (randomization) test for a relationship (correlation,
+association) for two quantitative variables, using Pearson's r (product moment
+correlation coefficient), Spearman's rho (rank correlation coefficient), or
+Kendall's tau as the test statistic.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">perm.relation(x, y, method = c("pearson", "kendall", "spearman"),
+              alternative = c("two.sided", "less", "greater"),
+              R = 9999)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+
+<p>a numeric vector of data values representing the first variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+
+<p>a numeric vector of data values representing the second variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+
+
+<p>a character string indicating which method is to be used for the test;
+one of "pearson" (default), "kendall", or "spearman".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alternative</code></td>
+<td>
+
+
+<p>a character string specifying the alternative hypothesis; must be one
+of "two.sided" (default), "less", or "greater".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+
+
+<p>number of replications (default = 9999).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+<p>The null hypothesis is that there is no relationship between the variables.
+</p>
+<p>The possible alternative hypotheses are:
+</p>
+<p>Two tailed ("two.sided"): There is a relationship between the
+variables—"relation".
+</p>
+<p>Left tailed ("less"): There is a negative relationship between the
+variables—"neg.relation".
+</p>
+<p>Right tailed ("greater"): There is a positive relationship between the
+variables—"pos.relation".
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with class "perm.two.var" containing the following components:
+
+
+
+
+
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Perm.values </code></td>
+<td>
+<p>the values of the test statistic obtained from the permutations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Header </code></td>
+<td>
+<p>the main title for the output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Variable.1 </code></td>
+<td>
+<p>the name of the first variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Variable.2 </code></td>
+<td>
+<p>the name of the second variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n </code></td>
+<td>
+<p>the sample size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Statistic </code></td>
+<td>
+<p>the test statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Observed </code></td>
+<td>
+<p>the observed value of the test statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Null </code></td>
+<td>
+<p>the null hypothesis; here, always no relation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Alternative </code></td>
+<td>
+<p>the alternative hypothesis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>P.value </code></td>
+<td>
+<p>the P-value or a statement like P &lt; 0.001.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value </code></td>
+<td>
+<p>the P-value.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+
+<p>Neil A. Weiss
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Prices, in euros, of a 50cl bottle of water and distances, in meters,
+# of convenience stores from the Contemporary Art Museum in El Raval,
+# Barcelona.
+data("water")
+str(water)
+attach(water)
+
+# Permutation test to decide whether a negative relationship exists
+# between price and distance, using Pearson's r as the test statistic.
+perm.relation(PRICE, DISTANCE, alternative = "less")
+
+# Permutation test to decide whether a negative relationship exists
+# between price and distance, using Kendall's tau as the test statistic.
+perm.relation(PRICE, DISTANCE, "kendall", "less")
+
+# Permutation test to decide whether a negative relationship exists
+# between price and distance, using Spearman's rho as the test statistic.
+perm.relation(PRICE, DISTANCE, "spearman", "less")
+
+detach(water)  # clean up.
+</code></pre>
+
+
+</div>

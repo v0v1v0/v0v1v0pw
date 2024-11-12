@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>occs_userOccs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>occs_userOccs Loads user provided occurrence records</h2>
+
+<h3>Description</h3>
+
+<p>Load user database with species occurrence records. Returns a list of lists,
+one per species provided in database in each species list with a set of
+appropriate fields
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">occs_userOccs(txtPath, txtName, txtSep = ",", txtDec = ".", logger = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>txtPath</code></td>
+<td>
+<p>path to database including database name and extension</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>txtName</code></td>
+<td>
+<p>name of database without the extension. Database must have
+at least three columns named 'scientific_name', 'longitude', 'latitude'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>txtSep</code></td>
+<td>
+<p>field separator used in database (as in read.delim)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>txtDec</code></td>
+<td>
+<p>decimal separator used for coordinates in database</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+<p>Stores all notification messages to be displayed in the Log
+Window of Wallace GUI. Insert the logger reactive list here for running
+in shiny, otherwise leave the default NULL</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is called by the module occs_queryDb to load a user provided
+database for species occurrence records, subset to only those records with
+coordinates, remove records with duplicate coordinates, and select some
+columns with fields appropriate to studies in biogeography.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List of lists. One list per species with occurrence records. Each
+individual species list with appropriate fields for analysis
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jamie Kass &lt;jamie.m.kass@gmail.com&gt;
+</p>
+<p>Gonzalo E. Pinilla-Buitrago &lt;gepinillab@gmail.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">txtPath &lt;- system.file("extdata/Bassaricyon_alleni.csv", package = "wallace")
+txtName &lt;- 'Bassaricyon_alleni'
+user.occs &lt;- occs_userOccs(txtPath, txtName)
+
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,146 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>softConnectivity</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Calculates connectivity of a weighted network. </h2>
+
+<h3>Description</h3>
+
+<p>Given expression data or a similarity, the function constructs the adjacency matrix and for each
+node calculates its connectivity, that is the sum of the adjacency to the other nodes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">softConnectivity(
+  datExpr, 
+  corFnc = "cor", corOptions = "use = 'p'", 
+  weights = NULL,
+  type = "unsigned",
+  power = if (type == "signed") 15 else 6, 
+  blockSize = 1500, 
+  minNSamples = NULL, 
+  verbose = 2, indent = 0)
+
+softConnectivity.fromSimilarity(
+  similarity, 
+  type = "unsigned",
+  power = if (type == "signed") 15 else 6,
+  blockSize = 1500, 
+  verbose = 2, indent = 0)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datExpr</code></td>
+<td>
+<p> a data frame containing the expression data, with rows corresponding to samples and
+columns to genes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>similarity</code></td>
+<td>
+<p> a similarity matrix: a square symmetric matrix with entries between -1 and 1. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corFnc</code></td>
+<td>
+<p> character string giving the correlation function to be used for the adjacency
+calculation. Recommended choices are <code>"cor"</code> and <code>"bicor"</code>, but other functions can be used as
+well. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corOptions</code></td>
+<td>
+<p>  character string giving further options to be passed to the correlation function. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>optional observation weights for <code>datExpr</code> to be used in correlation calculation.
+A matrix of the same dimensions as <code>datExpr</code>, containing non-negative weights. Only used with Pearson
+correlation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>network type. Allowed values are (unique abbreviations of) <code>"unsigned"</code>,
+<code>"signed"</code>, <code>"signed hybrid"</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p> soft thresholding power. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blockSize</code></td>
+<td>
+<p> block size in which adjacency is to be calculated. Too low (say below 100) may make
+the calculation inefficient, while too high may cause R to run out of physical memory and slow down the
+computer. Should be chosen such that an array of doubles of size (number of genes) * (block size) fits
+into available physical memory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minNSamples</code></td>
+<td>
+<p> minimum number of samples available for the calculation of adjacency for the
+adjacency to be considered valid.  If not given, defaults to the greater of <code>..minNSamples</code>
+(currently 4) and number of samples divided by 3.  If the number of samples falls below this threshold,
+the connectivity of the corresponding gene will be returned as <code>NA</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A vector with one entry per gene giving the connectivity of each gene in the weighted network.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Steve Horvath </p>
+
+
+<h3>References</h3>
+
+ 
+<p>Bin Zhang and Steve Horvath (2005) "A General Framework for Weighted Gene Co-Expression Network
+Analysis", Statistical Applications in Genetics and Molecular Biology: Vol. 4: No. 1, Article 17 
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>adjacency</code> </p>
+
+
+</div>

@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ScatterHistN</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot a height scatter plot with marginals.</h2>
+
+<h3>Description</h3>
+
+<p>Plot a scatter plot conditioned on a continuous variable, with marginal conditional density plots.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ScatterHistN(
+  frame,
+  xvar,
+  yvar,
+  zvar,
+  title,
+  ...,
+  annot_size = 3,
+  colorPalette = "RdYlBu",
+  nclus = 3,
+  adjust_x = 1,
+  adjust_y = 1
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frame</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar</code></td>
+<td>
+<p>name of the x variable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yvar</code></td>
+<td>
+<p>name of the y variable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zvar</code></td>
+<td>
+<p>name of height variable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annot_size</code></td>
+<td>
+<p>numeric: scale annotation text (if present)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorPalette</code></td>
+<td>
+<p>name of a Brewer palette (see https://colorbrewer2.org/ )</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nclus</code></td>
+<td>
+<p>scalar: number of z-clusters to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adjust_x</code></td>
+<td>
+<p>numeric: adjust x density plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adjust_y</code></td>
+<td>
+<p>numeric: adjust y density plot</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>xvar</code> and <code>yvar</code> are the coordinates of the points, and <code>zvar</code> is the
+continuous conditioning variable. <code>zvar</code> is partitioned into <code>nclus</code> disjoint
+ranges (by default, 3), which are then treated as discrete categories.The scatterplot and marginal density plots
+are color-coded by these categories.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ScatterHistC</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+set.seed(34903490)
+frm = data.frame(x=rnorm(50),y=rnorm(50))
+frm$z &lt;- frm$x+frm$y
+WVPlots::ScatterHistN(frm, "x", "y", "z", title="Example Joint Distribution")
+
+</code></pre>
+
+
+</div>

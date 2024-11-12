@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>label_wsj</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Label plots like the wall street journal
+i.e. display the units only on the top tick of the graph</h2>
+
+<h3>Description</h3>
+
+<p>Label plots like the wall street journal
+i.e. display the units only on the top tick of the graph
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">label_wsj(prefix = "$", suffix = "", rm.bottom = TRUE, accuracy = NA, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>prefix</code></td>
+<td>
+<p>character, the unit label to prefix on the max number of the y-axis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suffix</code></td>
+<td>
+<p>character, the unit label to append on the max number of the y-axis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rm.bottom</code></td>
+<td>
+<p>logical, remove the lowest number?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>accuracy</code></td>
+<td>
+<p>double, the precision for labels e.g. 1, 0.1, or 0.01</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>args passed to scales::label_comma(...)</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(ggplot2)
+`%&gt;%` &lt;- magrittr::`%&gt;%`
+
+plt &lt;- economics_long %&gt;%
+  dplyr::filter(variable %in% c("psavert", "uempmed")) %&gt;%
+  ggplot(aes(date, value, color = variable)) +
+  geom_line() +
+  scale_y_continuous(
+      labels = label_wsj(prefix = "$", suffix = " %")
+  ) +
+  theme_wsj() +
+  labs(
+    title = "Some Economics Plot",
+    caption = "Source: Top secret."
+  )
+
+</code></pre>
+
+
+</div>

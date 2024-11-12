@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>scoreChargeCatch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Scoring of charge catching potential for peptides</h2>
+
+<h3>Description</h3>
+
+<p>Make score based on cumulative search for AA with given potential to catch charge (H+, or optionally any charge).
+Note : at current cumulative scoring large peptides may get priviliged.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">scoreChargeCatch(
+  resTab,
+  pepCol = "seq",
+  scale01 = TRUE,
+  chargeMode = "pos",
+  silent = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>resTab</code></td>
+<td>
+<p>(matrix or data.frame) matrix or data.frame of results for SINGLE protein (here only the column specified with argument 'pepCol' will be used)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pepCol</code></td>
+<td>
+<p>(character) column name of 'resTab' containing the peptide sequence to be scored</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale01</code></td>
+<td>
+<p>(logical) linear rescale output to maximum 1.0</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chargeMode</code></td>
+<td>
+<p>(character) this value may be 'pos' (default) for the positively charged amino-acids K,R and H or, 
+if this argument has any other value, than all charged amino-acids (K,R,H, S,T,N,Q, D,E, W and Y) will be considered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>numeric vector with score for each peptide of resTab (even if <code>scale01=TRUE</code> minimum may be &gt;0 if all peptides do contain charge-catching AAs)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fragmentSeq</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">resTa &lt;- matrix(c(1:4,"PEPTID","PEPTIK","PEPTRK","AGV"), ncol=2,
+  dimnames=list(NULL,c("predInd","seq"))) 
+scoreChargeCatch(resTa)
+
+</code></pre>
+
+
+</div>

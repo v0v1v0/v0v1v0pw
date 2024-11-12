@@ -1,0 +1,171 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sound_pressure_level</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Measure relative sound pressure level</h2>
+
+<h3>Description</h3>
+
+<p><code>sound_pressure_level</code> measures relative (uncalibrated) sound pressure level in signals referenced in a selection table.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sound_pressure_level(
+  X,
+  reference = 20,
+  parallel = 1,
+  path = NULL,
+  pb = TRUE,
+  type = "single",
+  wl = 100,
+  bp = NULL,
+  remove.bgn = FALSE,
+  mar = NULL,
+  envelope = "abs"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>object of class 'selection_table', 'extended_selection_table' or any data frame with columns
+for sound file name (sound.files), selection number (selec), and start and end time of signal
+(start and end).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reference</code></td>
+<td>
+<p>Numeric vector of length 1 indicating the pressure (in µPa) to be used as reference. Alternatively, a character vector with the name of a numeric column containing reference values for each row can be supplied. Default is 20 (µPa). NOT YET IMPLEMENTED.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Numeric. Controls whether parallel computing is applied.
+It specifies the number of cores to be used. Default is 1 (i.e. no parallel computing). It can also be
+set globally using the 'parallel' option (see <code>warbleR_options</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Character string containing the directory path where the sound files are located.
+If <code>NULL</code> (default) then the current working directory is used. It can also be
+set globally using the 'wav.path' option (see <code>warbleR_options</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Logical argument to control if progress bar is shown. Default is <code>TRUE</code>. It can also be
+set globally using the 'pb' option (see <code>warbleR_options</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Character string controlling how SPL is measured: #' </p>
+
+<ul>
+<li> <p><code>single</code>: single SPL value obtained on the entire signal. Default.
+</p>
+</li>
+<li> <p><code>mean</code>: average of SPL values measured across the signal.
+</p>
+</li>
+<li> <p><code>peak</code>: maximum of several SPL values measured across the signal.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wl</code></td>
+<td>
+<p>A numeric vector of length 1 specifying the spectrogram window length. Default is 512.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bp</code></td>
+<td>
+<p>Numeric vector of length 2 giving the lower and upper limits of a frequency bandpass filter (in kHz). Alternatively, when set to 'freq.range', the function will use the 'bottom.freq' and 'top.freq' for each signal as the bandpass range. Default is <code>NULL</code> (no bandpass filter).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remove.bgn</code></td>
+<td>
+<p>Logical argument to control if SPL from background noise is excluded from the measured signal SPL. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mar</code></td>
+<td>
+<p>numeric vector of length 1. Specifies the margins adjacent to
+the start point of selection over which to measure background noise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>envelope</code></td>
+<td>
+<p>Character string vector with the method to calculate amplitude envelopes (in which SPL is measured), as in <code>env</code>. Must be either 'abs' (absolute envelope, default) or 'hil' (Hilbert transformation).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Sound pressure level (SPL) is a logarithmic measure of the effective pressure of a sound relative to a reference, so it's a measure of sound intensity. SPL is measured as the root mean square of the amplitude vector, and as such is only a useful metric of the variation in loudness for signals within the same recording (or recorded with the same equipment and gain).
+</p>
+
+
+<h3>Value</h3>
+
+<p>The object supplied in 'X' with a new variable
+with the sound pressure level values ('SPL' or 'peak.amplitude' column, see argument 'peak.amplitude') in decibels.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>) and Grace Smith Vidaurre
+</p>
+
+
+<h3>References</h3>
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+<a href="https://en.wikipedia.org/wiki/Sound_pressure">Wikipedia: Sound pressure level</a>
+
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>sig2noise</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">{
+  data(list = c("Phae.long1", "lbh_selec_table"))
+  writeWave(Phae.long1, file.path(tempdir(), "Phae.long1.wav")) # save sound files
+
+  spl &lt;- sound_pressure_level(
+    X = lbh_selec_table[grep("Phae.long1", lbh_selec_table$sound.files), ],
+    parallel = 1, pb = TRUE, path = tempdir()
+  )
+}
+
+</code></pre>
+
+
+</div>

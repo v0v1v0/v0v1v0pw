@@ -1,0 +1,198 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sbps</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Subgroup Balancing Propensity Score</h2>
+
+<h3>Description</h3>
+
+<p>Implements the subgroup balancing propensity score (SBPS), which is an
+algorithm that attempts to achieve balance in subgroups by sharing
+information from the overall sample and subgroups (Dong, Zhang, Zeng, &amp; Li,
+2020; DZZL). Each subgroup can use either weights estimated using the whole
+sample, weights estimated using just that subgroup, or a combination of the
+two. The optimal combination is chosen as that which minimizes an imbalance
+criterion that includes subgroup as well as overall balance.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sbps(
+  obj,
+  obj2 = NULL,
+  moderator = NULL,
+  formula = NULL,
+  data = NULL,
+  smooth = FALSE,
+  full.search
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>obj</code></td>
+<td>
+<p>a <code>weightit</code> object containing weights estimated in the
+overall sample.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>obj2</code></td>
+<td>
+<p>a <code>weightit</code> object containing weights estimated in the
+subgroups. Typically this has been estimated by including <code>by</code> in the
+call to <code>weightit()</code>. Either <code>obj2</code> or <code>moderator</code> must be
+specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>moderator</code></td>
+<td>
+<p>optional; a string containing the name of the variable in
+<code>data</code> for which weighting is to be done within subgroups or a
+one-sided formula with the subgrouping variable on the right-hand side. This
+argument is analogous to the <code>by</code> argument in <code>weightit()</code>, and in
+fact it is passed on to <code>by</code>. Either <code>obj2</code> or <code>moderator</code>
+must be specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>an optional formula with the covariates for which balance is
+to be optimized. If not specified, the formula in <code>obj$call</code> will be
+used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>an optional data set in the form of a data frame that contains
+the variables in <code>formula</code> or <code>moderator</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>smooth</code></td>
+<td>
+<p><code>logical</code>; whether the smooth version of the SBPS should
+be used. This is only compatible with <code>weightit</code> methods that return a
+propensity score.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>full.search</code></td>
+<td>
+<p><code>logical</code>; when <code>smooth = FALSE</code>, whether every
+combination of subgroup and overall weights should be evaluated. If
+<code>FALSE</code>, a stochastic search as described in DZZL will be used instead.
+If <code>TRUE</code>, all <code class="reqn">2^R</code> combinations will be checked, where <code class="reqn">R</code> is
+the number of subgroups, which can take a long time with many subgroups. If
+unspecified, will default to <code>TRUE</code> if <code class="reqn">R &lt;= 8</code> and <code>FALSE</code>
+otherwise.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The SBPS relies on two sets of weights: one estimated in the overall sample
+and one estimated within each subgroup. The algorithm decides whether each
+subgroup should use the weights estimated in the overall sample or those
+estimated in the subgroup. There are 2^R permutations of overall and
+subgroup weights, where R is the number of subgroups. The optimal
+permutation is chosen as that which minimizes a balance criterion as
+described in DZZL. The balance criterion used here is, for binary and
+multi-category treatments, the sum of the squared standardized mean differences
+within subgroups and overall, which are computed using
+<code>cobalt::col_w_smd()</code>, and for continuous treatments, the
+sum of the squared correlations between each covariate and treatment within
+subgroups and overall, which are computed using <code>cobalt::col_w_corr()</code>.
+</p>
+<p>The smooth version estimates weights that determine the relative
+contribution of the overall and subgroup propensity scores to a weighted
+average propensity score for each subgroup. If P_O are the propensity scores
+estimated in the overall sample and P_S are the propensity scores estimated
+in each subgroup, the smooth SBPS finds R coefficients C so that for each
+subgroup, the ultimate propensity score is <code class="reqn">C*P_S + (1-C)*P_O</code>, and
+weights are computed from this propensity score. The coefficients are
+estimated using <code>optim()</code> with <code>method = "L-BFGS-B"</code>. When C is
+estimated to be 1 or 0 for each subgroup, the smooth SBPS coincides with the
+standard SBPS.
+</p>
+<p>If <code>obj2</code> is not specified and <code>moderator</code> is, <code>sbps()</code> will
+attempt to refit the model specified in <code>obj</code> with the <code>moderator</code>
+in the <code>by</code> argument. This relies on the environment in which
+<code>obj</code> was created to be intact and can take some time if <code>obj</code> was
+hard to fit. It's safer to estimate <code>obj</code> and <code>obj2</code> (the latter
+simply by including the moderator in the <code>by</code> argument) and supply
+these to <code>sbps()</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>weightit.sbps</code> object, which inherits from <code>weightit</code>.
+This contains all the information in <code>obj</code> with the weights, propensity
+scores, call, and possibly covariates updated from <code>sbps()</code>. In
+addition, the <code>prop.subgroup</code> component contains the values of the
+coefficients C for the subgroups (which are either 0 or 1 for the standard
+SBPS), and the <code>moderator</code> component contains a data.frame with the
+moderator.
+</p>
+<p>This object has its own summary method and is compatible with <span class="pkg">cobalt</span>
+functions. The <code>cluster</code> argument should be used with <span class="pkg">cobalt</span>
+functions to accurately reflect the performance of the weights in balancing
+the subgroups.
+</p>
+
+
+<h3>References</h3>
+
+<p>Dong, J., Zhang, J. L., Zeng, S., &amp; Li, F. (2020). Subgroup
+balancing propensity score. Statistical Methods in Medical Research, 29(3),
+659–676. <a href="https://doi.org/10.1177/0962280219870836">doi:10.1177/0962280219870836</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>weightit()</code>, <code>summary.weightit()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library("cobalt")
+data("lalonde", package = "cobalt")
+
+#Balancing covariates between treatment groups within races
+(W1 &lt;- weightit(treat ~ age + educ + married +
+                nodegree + race + re74, data = lalonde,
+                method = "glm", estimand = "ATT"))
+
+(W2 &lt;- weightit(treat ~ age + educ + married +
+                nodegree + race + re74, data = lalonde,
+                method = "glm", estimand = "ATT",
+                by = "race"))
+S &lt;- sbps(W1, W2)
+print(S)
+summary(S)
+bal.tab(S, cluster = "race")
+
+#Could also have run
+#  sbps(W1, moderator = "race")
+
+S_ &lt;- sbps(W1, W2, smooth = TRUE)
+print(S_)
+summary(S_)
+bal.tab(S_, cluster = "race")
+</code></pre>
+
+
+</div>

@@ -1,0 +1,233 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>widals.predict</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+WIDALS Interpolation
+</h2>
+
+<h3>Description</h3>
+
+<p>Interpolate to unmonitored sites using WIDALS
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">widals.predict(Z, Hs, Ht, Hst.ls, locs, lags, b.lag, Hs0, Hst0.ls, locs0, 
+geodesic = FALSE, wrap.around = NULL, GP, stnd.d = FALSE, ltco = -16)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+
+<p>Space-time data.  A <code class="reqn">\tau</code> x <code class="reqn">n</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hs</code></td>
+<td>
+
+<p>Spacial covariates (of supporting sites).  An <code class="reqn">n</code> x <code class="reqn">p_s</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ht</code></td>
+<td>
+
+<p>Temporal covariates (of supporting sites).  A <code class="reqn">\tau</code> x <code class="reqn">p_t</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hst.ls</code></td>
+<td>
+
+<p>Space-time covariates (of supporting sites).  A list of length <code class="reqn">\tau</code>, each element should be a <code class="reqn">n</code> x <code class="reqn">p_st</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locs</code></td>
+<td>
+
+<p>Locations of supporting sites.  An <em>n</em> x 2 numeric matrix, first column is spacial <code class="reqn">x</code>, second column is spacial <code class="reqn">y</code>.  If the <code>geodesic</code> is <code>TRUE</code>, make sure latitude is in the first column.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lags</code></td>
+<td>
+
+<p>Temporal lags for stochastic smoothing.  An integer vector or scalar.  E.g., if the data's time increment is daily, then <code>lags = c(-1,0,1)</code> would tell the enclosed function <code>crispify</code> smooth today's predictions using yesterdays, today's, and tomorrow's observed residuals.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b.lag</code></td>
+<td>
+
+<p>ALS lag.  A scalar integer, typically -1 (<em>a-prior</em>), or 0 (<em>a-posteriori</em>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hs0</code></td>
+<td>
+
+<p>Spacial covariates (of interpolation sites).  An <code class="reqn">n</code>* x <code class="reqn">p_s</code> matrix, or <code>NULL</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hst0.ls</code></td>
+<td>
+
+<p>Space-time covariates (of interpolation sites).  A list of length <code class="reqn">\tau</code>, each element should be a numeric <code class="reqn">n</code> x <code class="reqn">p_st</code> matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locs0</code></td>
+<td>
+
+<p>Locations of interpolation sites.  An <em>n</em>* x 2 numeric matrix.  See <code>locs</code> argument above.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geodesic</code></td>
+<td>
+
+<p>Use geodesic distance?  Boolean.  If true, distance (used internally) is in units kilometers.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wrap.around</code></td>
+<td>
+
+<p>**Unused.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>GP</code></td>
+<td>
+
+<p>Widals hyperparameters.  A non-negative vector.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stnd.d</code></td>
+<td>
+
+<p>Spacial compression.  Boolean.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ltco</code></td>
+<td>
+
+<p>Weight threshold.  A scalar number.  A value of, e.g., -10, will instruct <code>crispify</code> to ignore weights less than 10^(-10) when smoothing.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code class="reqn">\tau</code> x <code class="reqn">n</code>* matrix.  The WIDALS predictions at <code>locs0</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>crispify</code>, <code>H.als.b</code>, <code>widals.snow</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">	
+#### similar to example provided in H.als.b.
+	
+set.seed(99999)
+
+
+library(SSsimple)
+
+tau &lt;- 70
+n.all &lt;- 14
+
+Hs.all &lt;- matrix(rnorm(n.all), nrow=n.all)
+Ht &lt;- matrix(rnorm(tau*2), nrow=tau)
+Hst.ls.all &lt;- list()
+for(i in 1:tau) { Hst.ls.all[[i]] &lt;- matrix(rnorm(n.all*2), nrow=n.all) }
+
+Hst.combined &lt;- list()
+for(i in 1:tau) { 
+    Hst.combined[[i]] &lt;- cbind( Hs.all, matrix(Ht[i, ], nrow=n.all, ncol=ncol(Ht), 
+    byrow=TRUE), Hst.ls.all[[i]] ) 
+}
+
+locs.all &lt;- cbind(runif(n.all, -1, 1), runif(n.all, -1, 1))
+D.mx.all &lt;- distance(locs.all, locs.all, FALSE)
+R.all &lt;- exp(-2*D.mx.all) + diag(0.01, n.all)
+
+######## use SSsimple to simulate
+sssim.obj &lt;- SS.sim.tv( 0.999, Hst.combined, 0.01, R.all, tau )
+
+
+ndx.support &lt;- 1:10
+ndx.interp &lt;- 11:14
+
+locs &lt;- locs.all[ndx.support, ]
+locs0 &lt;- locs.all[ndx.interp, ]
+
+Z.all &lt;- sssim.obj$Z
+Z &lt;- Z.all[ , ndx.support]
+Z0 &lt;- Z.all[ , ndx.interp]
+
+Hst.ls &lt;- subsetsites.Hst.ls(Hst.ls.all, ndx.support)
+Hst0.ls &lt;- subsetsites.Hst.ls(Hst.ls.all, ndx.interp)
+
+Hs &lt;- Hs.all[ ndx.support, , drop=FALSE]
+Hs0 &lt;- Hs.all[ ndx.interp, , drop=FALSE]
+
+test.rng &lt;- 20:tau
+
+
+################# use ALS
+xrho &lt;- 1/10
+xreg &lt;- 1/10
+xALS &lt;- H.als.b(Z=Z, Hs=Hs, Ht=Ht, Hst.ls=Hst.ls, rho=xrho, reg=xreg, 
+b.lag=-1, Hs0=Hs0, Ht0=Ht, Hst0.ls=Hst0.ls) 
+
+errs.sq &lt;- (Z0 - xALS$Z0.hat)^2
+sqrt( mean(errs.sq[test.rng, ]) )
+
+################# now use WIDALS
+
+GP &lt;- c(1/10, 1/10, 2, 0, 1)
+Zwid &lt;- widals.predict(Z=Z, Hs=Hs, Ht=Ht, Hst.ls=Hst.ls, locs=locs, lags=c(0), 
+b.lag=-1, Hs0=Hs0, Hst0.ls=Hst0.ls, locs0=locs0, FALSE, NULL, GP) 
+
+errs.sq &lt;- (Z0 - Zwid)^2
+sqrt( mean(errs.sq[test.rng, ]) )
+
+
+</code></pre>
+
+
+</div>

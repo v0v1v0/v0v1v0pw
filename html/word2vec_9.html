@@ -1,0 +1,220 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>word2vec.list</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Train a word2vec model on text</h2>
+
+<h3>Description</h3>
+
+<p>Construct a word2vec model on text. The algorithm is explained at <a href="https://arxiv.org/pdf/1310.4546.pdf">https://arxiv.org/pdf/1310.4546.pdf</a>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'list'
+word2vec(
+  x,
+  type = c("cbow", "skip-gram"),
+  dim = 50,
+  window = ifelse(type == "cbow", 5L, 10L),
+  iter = 5L,
+  lr = 0.05,
+  hs = FALSE,
+  negative = 5L,
+  sample = 0.001,
+  min_count = 5L,
+  stopwords = character(),
+  threads = 1L,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a character vector with text or the path to the file on disk containing training data or a list of tokens. See the examples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>the type of algorithm to use, either 'cbow' or 'skip-gram'. Defaults to 'cbow'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dim</code></td>
+<td>
+<p>dimension of the word vectors. Defaults to 50.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>window</code></td>
+<td>
+<p>skip length between words. Defaults to 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iter</code></td>
+<td>
+<p>number of training iterations. Defaults to 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lr</code></td>
+<td>
+<p>initial learning rate also known as alpha. Defaults to 0.05</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hs</code></td>
+<td>
+<p>logical indicating to use hierarchical softmax instead of negative sampling. Defaults to FALSE indicating to do negative sampling.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>negative</code></td>
+<td>
+<p>integer with the number of negative samples. Only used in case hs is set to FALSE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sample</code></td>
+<td>
+<p>threshold for occurrence of words. Defaults to 0.001</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_count</code></td>
+<td>
+<p>integer indicating the number of time a word should occur to be considered as part of the training vocabulary. Defaults to 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stopwords</code></td>
+<td>
+<p>a character vector of stopwords to exclude from training</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threads</code></td>
+<td>
+<p>number of CPU threads to use. Defaults to 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed on to the methods <code>word2vec.character</code>, <code>word2vec.list</code> as well as the C++ function <code>w2v_train</code> - for expert use only</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Some advice on the optimal set of parameters to use for training as defined by Mikolov et al.
+</p>
+
+<ul>
+<li>
+<p>argument type: skip-gram (slower, better for infrequent words) vs cbow (fast)
+</p>
+</li>
+<li>
+<p>argument hs: the training algorithm: hierarchical softmax (better for infrequent words) vs negative sampling (better for frequent words, better with low dimensional vectors)
+</p>
+</li>
+<li>
+<p>argument dim: dimensionality of the word vectors: usually more is better, but not always
+</p>
+</li>
+<li>
+<p>argument window: for skip-gram usually around 10, for cbow around 5
+</p>
+</li>
+<li>
+<p>argument sample: sub-sampling of frequent words: can improve both accuracy and speed for large data sets (useful values are in range 0.001 to 0.00001)
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>an object of class <code>w2v_trained</code> which is a list with elements 
+</p>
+
+<ul>
+<li>
+<p>model: a Rcpp pointer to the model
+</p>
+</li>
+<li>
+<p>data: a list with elements file: the training data used, stopwords: the character vector of stopwords, n
+</p>
+</li>
+<li>
+<p>vocabulary: the number of words in the vocabulary
+</p>
+</li>
+<li>
+<p>success: logical indicating if training succeeded
+</p>
+</li>
+<li>
+<p>error_log: the error log in case training failed
+</p>
+</li>
+<li>
+<p>control: as list of the training arguments used, namely min_count, dim, window, iter, lr, skipgram, hs, negative, sample, split_words, split_sents, expTableSize and expValueMax
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p><a href="https://github.com/maxoodf/word2vec">https://github.com/maxoodf/word2vec</a>, <a href="https://arxiv.org/pdf/1310.4546.pdf">https://arxiv.org/pdf/1310.4546.pdf</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>predict.word2vec</code>, <code>as.matrix.word2vec</code>, <code>word2vec</code>, <code>word2vec.character</code>, <code>word2vec.list</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(udpipe)
+data(brussels_reviews, package = "udpipe")
+x     &lt;- subset(brussels_reviews, language == "nl")
+x     &lt;- tolower(x$feedback)
+toks  &lt;- strsplit(x, split = "[[:space:][:punct:]]+")
+model &lt;- word2vec(x = toks, dim = 15, iter = 20)
+emb   &lt;- as.matrix(model)
+head(emb)
+emb   &lt;- predict(model, c("bus", "toilet", "unknownword"), type = "embedding")
+emb
+nn    &lt;- predict(model, c("bus", "toilet"), type = "nearest", top_n = 5)
+nn
+
+## 
+## Example of word2vec with a list of tokens
+## which gives the same embeddings as with a similarly tokenised character vector of texts 
+## 
+txt   &lt;- txt_clean_word2vec(x, ascii = TRUE, alpha = TRUE, tolower = TRUE, trim = TRUE)
+table(unlist(strsplit(txt, "")))
+toks  &lt;- strsplit(txt, split = " ")
+set.seed(1234)
+modela &lt;- word2vec(x = toks, dim = 15, iter = 20)
+set.seed(1234)
+modelb &lt;- word2vec(x = txt, dim = 15, iter = 20, split = c(" \n\r", "\n\r"))
+all.equal(as.matrix(modela), as.matrix(modelb))
+
+</code></pre>
+
+
+</div>

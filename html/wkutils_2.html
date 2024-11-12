@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>coords_point_translate_wkt</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Parse coordinates into well-known formats</h2>
+
+<h3>Description</h3>
+
+<p>These functions provide the reverse function of <code>wkt_coords()</code>
+and company: they parse vectors of coordinate values into well-known
+formats. Polygon rings are automatically closed, as
+closed rings are assumed or required by many parsers.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">coords_point_translate_wkt(x, y, z = NA, m = NA, precision = 16, trim = TRUE)
+
+coords_point_translate_wkb(
+  x,
+  y,
+  z = NA,
+  m = NA,
+  endian = wk::wk_platform_endian(),
+  buffer_size = 2048
+)
+
+coords_linestring_translate_wkt(
+  x,
+  y,
+  z = NA,
+  m = NA,
+  feature_id = 1L,
+  precision = 16,
+  trim = TRUE
+)
+
+coords_linestring_translate_wkb(
+  x,
+  y,
+  z = NA,
+  m = NA,
+  feature_id = 1L,
+  endian = wk::wk_platform_endian(),
+  buffer_size = 2048
+)
+
+coords_polygon_translate_wkt(
+  x,
+  y,
+  z = NA,
+  m = NA,
+  feature_id = 1L,
+  ring_id = 1L,
+  precision = 16,
+  trim = TRUE
+)
+
+coords_polygon_translate_wkb(
+  x,
+  y,
+  z = NA,
+  m = NA,
+  feature_id = 1L,
+  ring_id = 1L,
+  endian = wk::wk_platform_endian(),
+  buffer_size = 2048
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x, y, z, m</code></td>
+<td>
+<p>Vectors of coordinate values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>precision</code></td>
+<td>
+<p>The rounding precision to use when writing
+(number of decimal places).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim</code></td>
+<td>
+<p>Trim unnecessary zeroes in the output?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>endian</code></td>
+<td>
+<p>Force the endian of the resulting WKB.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>buffer_size</code></td>
+<td>
+<p>The buffer size to use when converting to WKB.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>feature_id, ring_id</code></td>
+<td>
+<p>Vectors for which a change in
+sequential values indicates a new feature or ring. Use <code>factor()</code>
+to convert from a character vector.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code style="white-space: pre;">⁠*_translate_wkt()⁠</code> returns a character vector of
+well-known text; <code style="white-space: pre;">⁠*_translate_wkb()⁠</code> returns a list
+of raw vectors.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">coords_point_translate_wkt(1:3, 2:4)
+coords_linestring_translate_wkt(1:5, 2:6, feature_id = c(1, 1, 1, 2, 2))
+coords_polygon_translate_wkt(c(0, 10, 0), c(0, 0, 10))
+
+</code></pre>
+
+
+</div>

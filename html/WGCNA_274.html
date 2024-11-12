@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>transposeBigData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Transpose a big matrix or data frame
+</h2>
+
+<h3>Description</h3>
+
+<p>This transpose command partitions a big matrix (or data frame) into blocks and applies the t() function to
+each block separately.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">transposeBigData(x, blocksize = 20000)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a matrix or data frame
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blocksize</code></td>
+<td>
+<p>a positive integer larger than 1, which determines the block size. Default is 20k.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Assume you have a very large matrix with say 500k columns. In this case, the standard transpose function of
+R <code>t()</code> can take a long time. Solution: Split the original matrix into sub-matrices by dividing the
+columns into blocks. Next apply  <code>t()</code> to each sub-matrix. The same holds if the large matrix contains
+a large number of rows.  The function <code>transposeBigData</code> automatically checks whether the large matrix
+contains more rows or more columns. If the number of columns is larger than or equal to the number of rows
+then the block wise splitting will be applied to columns otherwise to the rows.  </p>
+
+
+<h3>Value</h3>
+
+<p>A matrix or data frame (depending on the input <code>x</code> ) which is the transpose of <code>x</code>. 
+
+
+
+
+
+</p>
+
+
+<h3>Note</h3>
+
+<p>This function can be considered a wrapper of <code>t()</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steve Horvath, UCLA
+</p>
+
+
+<h3>References</h3>
+
+<p>Any linear algebra book will explain the transpose.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>The standard function <code>t</code> .
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x=data.frame(matrix(1:10000,nrow=4,ncol=2500))
+dimnames(x)[[2]]=paste("Y",1:2500,sep="")
+xTranspose=transposeBigData(x)
+x[1:4,1:4]
+xTranspose[1:4,1:4]
+
+</code></pre>
+
+
+</div>

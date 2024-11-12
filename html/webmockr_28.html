@@ -1,0 +1,289 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>RequestRegistry</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>RequestRegistry</h2>
+
+<h3>Description</h3>
+
+<p>keeps track of HTTP requests
+</p>
+
+
+<h3>Public fields</h3>
+
+<div class="r6-fields">
+
+<dl>
+<dt><code>request_signatures</code></dt>
+<dd>
+<p>a HashCounter object</p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-RequestRegistry-print"><code>RequestRegistry$print()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-RequestRegistry-reset"><code>RequestRegistry$reset()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-RequestRegistry-register_request"><code>RequestRegistry$register_request()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-RequestRegistry-times_executed"><code>RequestRegistry$times_executed()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-RequestRegistry-clone"><code>RequestRegistry$clone()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-RequestRegistry-print"></a>
+
+
+
+<h4>Method <code>print()</code>
+</h4>
+
+<p>print method for the <code>RequestRegistry</code> class
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>RequestRegistry$print(x, ...)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>x</code></dt>
+<dd>
+<p>self</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>ignored</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-RequestRegistry-reset"></a>
+
+
+
+<h4>Method <code>reset()</code>
+</h4>
+
+<p>Reset the registry to no registered requests
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>RequestRegistry$reset()</pre></div>
+
+
+
+<h5>Returns</h5>
+
+<p>nothing returned; ressets registry to no requests
+</p>
+
+
+<hr>
+<a id="method-RequestRegistry-register_request"></a>
+
+
+
+<h4>Method <code>register_request()</code>
+</h4>
+
+<p>Register a request
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>RequestRegistry$register_request(request)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>request</code></dt>
+<dd>
+<p>a character string of the request, serialized from
+a <code>RequestSignature$new(...)$to_s()</code></p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>nothing returned; registers the request
+</p>
+
+
+<hr>
+<a id="method-RequestRegistry-times_executed"></a>
+
+
+
+<h4>Method <code>times_executed()</code>
+</h4>
+
+<p>How many times has a request been made
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>RequestRegistry$times_executed(request_pattern)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>request_pattern</code></dt>
+<dd>
+<p>an object of class <code>RequestPattern</code></p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Details</h5>
+
+<p>if no match is found for the request pattern, 0 is returned
+</p>
+
+
+
+<h5>Returns</h5>
+
+<p>integer, the number of times the request has been made
+</p>
+
+
+<hr>
+<a id="method-RequestRegistry-clone"></a>
+
+
+
+<h4>Method <code>clone()</code>
+</h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>RequestRegistry$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt>
+<dd>
+<p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+<h3>See Also</h3>
+
+<p><code>stub_registry()</code> and StubRegistry
+</p>
+<p>Other request-registry: 
+<code>HashCounter</code>,
+<code>request_registry()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- RequestRegistry$new()
+z1 &lt;- RequestSignature$new("get", "http://scottchamberlain.info")
+z2 &lt;- RequestSignature$new("post", "https://httpbin.org/post")
+x$register_request(request = z1)
+x$register_request(request = z1)
+x$register_request(request = z2)
+# print method to list requests
+x
+
+# more complex requests
+w &lt;- RequestSignature$new(
+  method = "get",
+  uri = "https:/httpbin.org/get",
+  options = list(headers = list(`User-Agent` = "foobar", stuff = "things"))
+)
+w$to_s()
+x$register_request(request = w)
+x
+
+
+# hashes, and number of times each requested
+x$request_signatures$hash
+
+# times_executed method
+pat &lt;- RequestPattern$new(
+  method = "get",
+  uri = "https:/httpbin.org/get",
+  headers = list(`User-Agent` = "foobar", stuff = "things")
+)
+pat$to_s()
+x$times_executed(pat)
+z &lt;- RequestPattern$new(method = "get", uri = "http://scottchamberlain.info")
+x$times_executed(z)
+w &lt;- RequestPattern$new(method = "post", uri = "https://httpbin.org/post")
+x$times_executed(w)
+
+## pattern with no matches - returns 0 (zero)
+pat &lt;- RequestPattern$new(
+  method = "get",
+  uri = "http://recology.info/"
+)
+pat$to_s()
+x$times_executed(pat)
+
+# reset the request registry
+x$reset()
+</code></pre>
+
+
+</div>

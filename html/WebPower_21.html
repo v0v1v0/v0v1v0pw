@@ -1,0 +1,160 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wp.correlation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Statistical Power Analysis for Correlation</h2>
+
+<h3>Description</h3>
+
+<p>This function is for power analysis for correlation. Correlation measures whether and how a pair of variables are related. The Pearson Product Moment correlation coefficient (r) is adopted here.
+The power calculation for correlation is conducted based on Fisher's z transformation of Pearson correlation coefficent <cite>(Fisher, 1915, 1921)</cite>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wp.correlation(n = NULL, r = NULL, power = NULL, p = 0, rho0 = 0,
+  alpha = 0.05, alternative = c("two.sided", "less", "greater"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Sample size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>Effect size or correlation. According to <cite>Cohen (1988)</cite>, a correlation coefficient of 0.10, 0.30, and 0.50 are considered as an effect size of "small", "medium", and "large", respectively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>Statistical power.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>Number of variables to partial out.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho0</code></td>
+<td>
+<p>Null correlation coefficient.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Significance level chosed for the test. It equals 0.05 by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alternative</code></td>
+<td>
+<p>Direction of the alternative hypothesis (<code>"two.sided"</code> or <code>"less"</code> or <code>"greater"</code>). The default is "two.sided".</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of the power analysis.
+</p>
+
+
+<h3>References</h3>
+
+<p>Cohen, J. (1988). Statistical power analysis for the behavioral sciences (2nd Ed). Hillsdale, NJ: Lawrence Erlbaum Associates.
+</p>
+<p>Fisher, R. A. (1915). Frequency distribution of the values of the correlation coefficient in samples from an indefinitely large population. Biometrika, 10(4), 507-521.
+</p>
+<p>Fisher, R. A. (1921). On the probable error of a coefficient of correlation deduced from a small sample. Metron, 1, 3-32.
+</p>
+<p>Zhang, Z., &amp; Yuan, K.-H. (2018). Practical Statistical Power Analysis Using Webpower and R (Eds). Granger, IN: ISDSA Press.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wp.correlation(n=50,r=0.3, alternative="two.sided")
+#  Power for correlation
+#
+#     n   r alpha     power
+#    50 0.3  0.05 0.5728731
+#        
+#  URL: http://psychstat.org/correlation
+
+#To calculate the power curve with a sequence of sample sizes:
+res &lt;- wp.correlation(n=seq(50,100,10),r=0.3, alternative="two.sided")
+res
+#  Power for correlation
+#
+#      n   r alpha     power
+#     50 0.3  0.05 0.5728731
+#     60 0.3  0.05 0.6541956
+#     70 0.3  0.05 0.7230482
+#     80 0.3  0.05 0.7803111
+#     90 0.3  0.05 0.8272250
+#    100 0.3  0.05 0.8651692
+#
+#  URL: http://psychstat.org/correlation
+
+#To plot the power curve:
+plot(res, type='b')
+
+#To estimate the sample size with a given power:
+wp.correlation(n=NULL, r=0.3, power=0.8, alternative="two.sided")
+#  Power for correlation
+#
+#           n   r alpha power
+#    83.94932 0.3  0.05   0.8
+#
+#  URL: http://psychstat.org/correlation
+
+#To estimate the minimum detectable effect size with a given power:
+wp.correlation(n=NULL,r=0.3, power=0.8, alternative="two.sided")
+#  Power for correlation
+#
+#           n   r alpha power
+#    83.94932 0.3  0.05   0.8
+#
+#  URL: http://psychstat.org/correlation
+#
+#To calculate the power curve with a sequence of effect sizes:
+res &lt;- wp.correlation(n=100,r=seq(0.05,0.8,0.05), alternative="two.sided")
+res
+#	 Power for correlation
+#
+#      n    r alpha      power
+#    100 0.05  0.05 0.07854715
+#    100 0.10  0.05 0.16839833
+#    100 0.15  0.05 0.32163978
+#    100 0.20  0.05 0.51870091
+#    100 0.25  0.05 0.71507374
+#    100 0.30  0.05 0.86516918
+#    100 0.35  0.05 0.95128316
+#    100 0.40  0.05 0.98724538
+#    100 0.45  0.05 0.99772995
+#    100 0.50  0.05 0.99974699
+#    100 0.55  0.05 0.99998418
+#    100 0.60  0.05 0.99999952
+#    100 0.65  0.05 0.99999999
+#    100 0.70  0.05 1.00000000
+#    100 0.75  0.05 1.00000000
+#    100 0.80  0.05 1.00000000
+#
+#	 URL: http://psychstat.org/correlation
+</code></pre>
+
+
+</div>

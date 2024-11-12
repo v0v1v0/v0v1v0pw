@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>IV_by_period</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Identify the WPA metrics that have the biggest change between two
+periods.</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+</p>
+<p>This function uses the Information Value algorithm to predict
+which Workplace Analytics metrics are most explained by the change in dates.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">IV_by_period(
+  data,
+  before_start = min(as.Date(data$Date, "%m/%d/%Y")),
+  before_end,
+  after_start = as.Date(before_end) + 1,
+  after_end = max(as.Date(data$Date, "%m/%d/%Y")),
+  mybins = 10,
+  return = "table"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Person Query as a dataframe including date column named "Date"
+This function assumes the data format is <code>MM/DD/YYYY</code> as is standard in a
+Workplace Analytics query output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>before_start</code></td>
+<td>
+<p>Start date of "before" time period in <code>YYYY-MM-DD</code>.
+Defaults to earliest date in dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>before_end</code></td>
+<td>
+<p>End date of "before" time period in <code>YYYY-MM-DD</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>after_start</code></td>
+<td>
+<p>Start date of "after" time period in <code>YYYY-MM-DD</code>.
+Defaults to day after before_end.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>after_end</code></td>
+<td>
+<p>End date of "after" time period in <code>YYYY-MM-DD</code>. Defaults to
+latest date in dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mybins</code></td>
+<td>
+<p>Number of bins to cut the data into for Information Value
+analysis. Defaults to 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String specifying what to return. The current only valid
+option is <code>"table"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>data frame containing all the variables and the corresponding Information
+Value.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mark Powers <a href="mailto:mark.powers@microsoft.com">mark.powers@microsoft.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Variable Association: 
+<code>IV_report()</code>,
+<code>create_IV()</code>,
+<code>plot_WOE()</code>
+</p>
+<p>Other Information Value: 
+<code>IV_report()</code>,
+<code>create_IV()</code>,
+<code>plot_WOE()</code>
+</p>
+<p>Other Time-series: 
+<code>create_line()</code>,
+<code>create_line_asis()</code>,
+<code>create_period_scatter()</code>,
+<code>create_trend()</code>,
+<code>period_change()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Returns a data frame
+sq_data %&gt;%
+  IV_by_period(
+    before_start = "2019-12-15",
+    before_end = "2019-12-29",
+    after_start = "2020-01-05",
+    after_end = "2020-01-26"
+  )
+
+</code></pre>
+
+
+</div>

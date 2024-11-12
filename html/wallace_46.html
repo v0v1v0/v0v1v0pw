@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>xfer_draw</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>xfer_draw Draw extent of transfer</h2>
+
+<h3>Description</h3>
+
+<p>This function creates a polygon object from coordinates of user
+drawn poylgon in the GUI.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">xfer_draw(polyXfXY, polyXfID, drawXfBuf, logger = NULL, spN = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>polyXfXY</code></td>
+<td>
+<p>coordinates of polygon endpoints obtained from user
+drawn polygon</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>polyXfID</code></td>
+<td>
+<p>numeric .ID to be used in the generation of the polygon</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drawXfBuf</code></td>
+<td>
+<p>the buffer to be used in generating the
+SpatialPolygonsDataFrame, must be &gt;=0 . A number must be specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+<p>Stores all notification messages to be displayed in the
+Log Window of Wallace GUI. Insert the logger reactive list here for
+running in shiny, otherwise leave the default NULL</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spN</code></td>
+<td>
+<p>character. Used to obtain species name for logger messages</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is used in the transfer model component. In the GUI, the user
+draws a polygon to be used as the extent of transfer and may include a
+buffer to the given polygon. The function returns a
+SpatialPolygonsDataFrame object of the desired extent (+ buffer).
+</p>
+
+
+<h3>Value</h3>
+
+<p>This functions returns a SpatialPolygons object based on the user
+specified coordinates (drawn on map). This SpatialPolygonsDataFrame may be
+larger than specified if drawBgBuf &gt; 0.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Gonzalo Pinilla &lt;gepinillab@gmail.com&gt;
+</p>
+<p>Bethany A. Johnson &lt;bjohnso005@citymail.cuny.edu&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>xfer_userEnvs</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">longitude &lt;- c(-27.78641, -74.09170, -84.01930, -129.74867,
+               -142.19085, -45.55045, -28.56050)
+latitude &lt;- c(-40.40539, -37.02010, 2.28455, 40.75350,
+              56.35954, 54.55045, -7.11861)
+userDrawPoly &lt;- matrix(c(longitude, latitude), byrow = FALSE,
+                       ncol = 2)
+drawXfBuf &lt;- 0.5
+polyXfID &lt;- 1
+polygonTest &lt;- xfer_draw(polyXfXY = userDrawPoly, polyXfID,
+                         drawXfBuf)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,151 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>seqnull</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Generate nonclustered sequence data according to different null models. 
+</h2>
+
+<h3>Description</h3>
+
+<p>This function generates sequence data that is similar to the original sequence data, but nonclusterd on specific aspects related to the sequencing, timing or time spend in the different states. The function is typically used by only specifying a model among <code>"combined"</code>, <code>"duration"</code>, <code>"sequencing"</code>, <code>"stateindep"</code> or 
+<code>"Markov"</code>. The <code>"userpos"</code> model allows to fully specify a sequence generating model using a starting distribution and a transition rate matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">seqnull(seqdata, model = c("combined", "duration", "sequencing", 
+        "stateindep", "Markov", "userpos"), imp.trans = NULL, 
+		imp.trans.limit = -1, trate = "trate", begin = "freq", 
+		time.varying = TRUE, weighted = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>seqdata</code></td>
+<td>
+
+<p>State sequence object of class <code>stslist</code>.
+The sequence data to use.
+Use <code>seqdef</code> to create such an object.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+
+<p>String.
+The model used to generate the nonclustered data. It can be one of <code>"combined"</code>, <code>"duration"</code>, <code>"sequencing"</code>, <code>"stateindep"</code>,
+<code>"Markov"</code> or <code>"userpos"</code>. See the Details section.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>imp.trans</code></td>
+<td>
+
+<p>Optional named character vector listing impossible transitions. Names indicates starting states, while value destinations. Only used for <code>"combined"</code>, <code>"duration"</code> and <code>"sequencing"</code> models.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>imp.trans.limit</code></td>
+<td>
+
+<p>Numeric. Optional. All transitions with a transition rates below (or equal) this value are considered impossible. Only used for <code>"combined"</code>, <code>"duration"</code> and <code>"sequencing"</code> models.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trate</code></td>
+<td>
+
+<p>String, matrix or array. Only used to specify the <code>"userpos"</code> model. It can be either a method to compute the time-varying transition rates, a matrix of transition rates used for all time points, or a time-varying transition rates matrix specified as an array. String values <code>"freq"</code> to use state distribution or <code>"trate"</code> to use transition rates.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>begin</code></td>
+<td>
+
+<p>String or vector. Only used to specify the <code>"userpos"</code> model. Either a vector of probability for the first state in the sequence, or a method to compute it. String values <code>"freq"</code> to use state distribution at first time point or <code>"ofreq"</code> to use the overall (time-independent) state distribution.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time.varying</code></td>
+<td>
+
+<p>Logical. If <code>TRUE</code>, the state distribution or the transition rate specified by the <code>trate</code> arguement (using a string) are computed separately for each time point. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weighted</code></td>
+<td>
+
+<p>Logicel. If <code>TRUE</code>, state distribution and transition rates are computed using the weights specified in <code>seqdata</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function generates sequence data that is similar to the original sequence data, but nonclusterd on specific aspects related to the sequencing, timing or time spend in the different states. The function is typically used by only specifying a model among <code>"combined"</code>, <code>"duration"</code>, <code>"sequencing"</code>, <code>"stateindep"</code> or 
+<code>"Markov"</code>. The models are shortly described below. More information about their usefulness can be found in Studer (2021) (see below).
+</p>
+<p>The <code>"combined"</code>, <code>"duration"</code> and <code>"sequencing"</code> models generate sequence in spell format, by generating a vector of state and their attached durations. The <code>"combined"</code> model generate random sequencing and duration. The <code>"duration"</code> model only randomizes duration, while keeping the original sequencing of the states found in the data. Finally, the <code>"sequencing"</code> only randomizes the sequencing of the states and keep the time spent in a state as found in the data. 
+</p>
+<p>The <code>"stateindep"</code> model generate sequence by randomly selecting a state at each time point without taking into account the previous one. It can generate highly unlikely sequence because it doesn't account for coherence of trajectories over time. 
+</p>
+<p>The <code>"Markov"</code> model use a time-invariant (homogeneouns) transition rate matrix to generate the sequences. It can reveals difference in the timing of transitions.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A state sequence object of class <code>stslist</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Studer, M. (2021). Validating Sequence Analysis Typologies Using Parametric Bootstrap. <em>Sociological Methodology</em>. <a href="https://doi.org/10.1177/00811750211014232">doi:10.1177/00811750211014232</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See Also <code>seqnullcqi</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(biofam)
+
+bf.seq &lt;- seqdef(biofam[1:200,10:25])
+
+##Plot the sequences generated by different null models.
+seqdplot(seqnull(bf.seq, model="combined"))
+
+seqdplot(seqnull(bf.seq, model="duration"))
+
+seqdplot(seqnull(bf.seq, model="sequencing"))
+
+seqdplot(seqnull(bf.seq, model="stateindep"))
+
+seqdplot(seqnull(bf.seq, model="Markov"))
+
+</code></pre>
+
+
+</div>

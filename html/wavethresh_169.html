@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>print.wpstCL</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Prints some information about a wpstCL object</h2>
+
+<h3>Description</h3>
+
+<p>Prints basic information about a wpstCL object
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wpstCL'
+print(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>wpstCL object to print info about</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Description says all
+</p>
+
+
+<h3>Value</h3>
+
+<p>Nothing
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>makewpstDO</code>,<code>wpstCLASS</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Use BabySS and BabyECG data for this example.
+#
+# Want to predict future values of BabySS from future values of BabyECG
+#
+# Build model on first 256 values of both
+#
+# See example in makewpstDO from which this one originates
+#
+data(BabyECG)
+data(BabySS)
+BabyModel &lt;- makewpstDO(timeseries=BabyECG[1:256], groups=BabySS[1:256],
+	mincor=0.5)
+#
+# Now, suppose we get some new data for the BabyECG time series.
+# For the purposes of this example, this is just the continuing example
+# ie BabyECG[257:512]. We can use our new discriminant model to predict
+# new values of BabySS
+#
+BabySSpred &lt;- wpstCLASS(newTS=BabyECG[257:512], BabyModel)
+#
+BabySSpred
+#wpstCL class object
+#Results of applying discriminator to time series
+#Components:  BasisMatrix BasisMatrixDM wpstDO PredictedOP PredictedGroups 
+</code></pre>
+
+
+</div>

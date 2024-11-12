@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>make_codebook</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create codebook for a dataset</h2>
+
+<h3>Description</h3>
+
+<p>Creates a codebook for a dataset in 'R Markdown' format, and
+renders it to 'markdown' for 'GitHub'. A codebook contains metadata and
+documentation for a data file.
+We urge users to customize the automatically generated 'R Markdown'
+document and re-knit it, for example, to add a paragraph with details on
+the data collection procedures. The variable descriptives are stored in
+a <code>.csv</code> file, which can be edited in 'R' or a spreadsheet program.
+Columns can be appended, and we encourage users to complete at least the
+following two columns in this file:
+</p>
+
+<dl>
+<dt>category</dt>
+<dd>
+<p>Describe the type of variable in this column. For example:
+"morality".</p>
+</dd>
+<dt>description</dt>
+<dd>
+<p>Provide a plain-text description of the variable. For
+example, the full text of a questionnaire item: "People should be willing to
+do anything to help a member of their family".</p>
+</dd>
+</dl>
+<p>Re-knitting the 'R Markdown' file (using <code>render</code>) will
+transfer these changes to the 'markdown' file for 'GitHub'.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">make_codebook(
+  data,
+  filename = "codebook.Rmd",
+  render_file = TRUE,
+  csv_file = gsub("rmd$", "csv", filename, ignore.case = TRUE),
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data.frame for which to create a codebook.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+<p>Character. File name to write the codebook <code>rmarkdown</code>
+file to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>render_file</code></td>
+<td>
+<p>Logical. Whether or not to render the document.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>csv_file</code></td>
+<td>
+<p>Character. File name to write the codebook <code>rmarkdown</code>
+file to. By default, uses the filename stem of the <code>filename</code> argument.
+Set to <code>NULL</code> to write the codebook only to the 'R Markdown' file, and
+not to <code>.csv</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical. Whether or not to print status messages to
+the console. Default: TRUE</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>Logical</code>, indicating whether or not the operation was
+successful. This function is mostly called for its side effect of rendering
+an 'R Markdown' codebook.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if(rmarkdown::pandoc_available("2.0")){
+  library(rmarkdown)
+  library(knitr)
+  filename &lt;- tempfile("codebook", fileext = ".Rmd")
+  make_codebook(iris, filename = filename, csv_file = NULL)
+  unlink(c(
+    ".worcs",
+    filename,
+    gsub("\\.Rmd", "\\.md", filename),
+    gsub("\\.Rmd", "\\.html", filename),
+    gsub("\\.Rmd", "_files", filename)
+  ), recursive = TRUE)
+}
+</code></pre>
+
+
+</div>

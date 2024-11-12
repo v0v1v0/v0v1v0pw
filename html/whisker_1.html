@@ -1,0 +1,68 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>whisker-package</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Mustache for R</h2>
+
+<h3>Description</h3>
+
+<p>Whisker is a templating engine for R conforming to the Mustache specification.
+Mustache is a logicless templating language, meaning that no programming source
+code can be used in your templates. This may seem very limited, but Mustache is nonetheless
+powerful and has the advantage of being able to be used unaltered in many programming 
+languages. For example it make it very easy to write a web application in R using Mustache templates
+and where the browser can template using javascript's "Mustache.js"
+</p>
+
+
+<h3>Details</h3>
+
+<p>Mustache (and therefore <code>whisker</code>) takes a simple but different approach to templating compared to 
+most templating engines. Most templating libraries for example <code>Sweave</code> and <code>brew</code> allow the user
+to mix programming code and text throughout the template. This is powerful, but ties a template directly
+to a programming language. Furthermore that approach makes it difficult to seperate programming code 
+from templating code.
+</p>
+<p>Whisker on the other hand, takes a Mustache template and uses the variables of the current environment (or the
+supplied <code>list</code>) to fill in the variables.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">template &lt;- 
+'Hello {{name}}
+You have just won ${{value}}!
+{{#in_ca}}
+Well, ${{taxed_value}}, after taxes.
+{{/in_ca}}'
+
+data &lt;- list( name = "Chris"
+            , value = 10000
+            , taxed_value = 10000 - (10000 * 0.4)
+            , in_ca = TRUE
+            )
+
+whisker.render(template, data)
+
+
+
+
+base &lt;-
+'&lt;h2&gt;Names&lt;/h2&gt;
+{{#names}}
+  {{&gt; user}}
+{{/names}}'
+
+user &lt;- '&lt;strong&gt;{{name}}&lt;/strong&gt;'
+
+names &lt;- list(list(name="Alice"), list(name="Bob"))
+
+whisker.render(base, partials=list(user=user))
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>signcount</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Efficiently Count Positive, Negative and Zero Values (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>This function counts the number of positive, negative and zero elements in a numeric vector or matrix,
+including some types of dense and sparse representations in the <code>Matrix</code> package.
+</p>
+<p>It can be used to test for non-negativity and compute nonzero counts efficiently, without any memory overhead.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+signcount(x, what = c("counts", "nonneg", "nnzero"))
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>a numeric vector or array, or a numeric <code>Matrix</code> (supported formats are <code>dgeMatrix</code>,  <code>dgCMatrix</code> and  <code>dgRMatrix</code>)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>what</code></td>
+<td>
+
+<p>whether to return the counts of positive, negative and zero elements (<code>counts</code>), the number of nonzero elements (<code>nnzero</code>), or to test for non-negativity (<code>nonneg</code>); see ‘Value’ below
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>x</code> must not contain any undefined values; <code>signcount</code> does not check whether this is actually the case.
+</p>
+
+
+<h3>Value</h3>
+
+
+<dl>
+<dt><code>what="counts"</code></dt>
+<dd>
+<p>A labelled numeric vector of length 3 with the counts of positive (<code>pos</code>), zero (<code>zero</code>) and negative (<code>neg</code>) values.
+</p>
+</dd> 
+<dt><code>what="nonneg"</code></dt>
+<dd>
+<p>A single logical value: <code>TRUE</code> if <code>x</code> is non-negative, <code>FALSE</code> otherwise.
+</p>
+</dd>
+<dt><code>what="nonzero"</code></dt>
+<dd>
+<p>A single numeric value, the total number of nonzero elements in <code>x</code>.
+</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">signcount(DSM_TermTermMatrix)     # dense matrix
+signcount(DSM_TermContextMatrix)  # sparse dgCMatrix
+signcount(DSM_TermContextMatrix, "nonneg") # confirm that it is non-negative
+</code></pre>
+
+
+</div>

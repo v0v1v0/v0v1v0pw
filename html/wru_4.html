@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>as_fips_code</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert between state names, postal abbreviations, and FIPS codes</h2>
+
+<h3>Description</h3>
+
+<p>Convert between state names, postal abbreviations, and FIPS codes
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">as_fips_code(x)
+
+as_state_abbreviation(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric or character vector of state names,
+postal abbreviations, or FIPS codes.
+Matches for state names and abbreviations are not case sensitive.
+FIPS codes may be matched from numeric or character vectors,
+with or without leading zeroes.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+
+<dl>
+<dt><code>as_state_fips_code()</code></dt>
+<dd>
+<p>A character vector of two-digit FIPS codes.
+One-digit FIPS codes are prefixed with a leading zero,
+e.g., <code>"06"</code> for California.
+</p>
+</dd>
+<dt><code>as_state_abbreviation()</code></dt>
+<dd>
+<p>A character vector of two-letter postal abbreviations,
+e.g., <code>"CA"</code> for California.
+</p>
+</dd>
+</dl>
+<h3>Examples</h3>
+
+<pre><code class="language-R">as_fips_code("california")
+as_state_abbreviation("california")
+
+# Character vector matches ignore case
+as_fips_code(c("DC", "Md", "va"))
+as_state_abbreviation(c("district of columbia", "Maryland", "VIRGINIA"))
+
+# Note that `3` and `7` are standardized to `NA`,
+# because no state is assigned those FIPS codes
+as_fips_code(1:10)
+as_state_abbreviation(1:10)
+
+# You can even mix methods in the same vector
+as_fips_code(c("utah", "NM", 8, "04"))
+as_state_abbreviation(c("utah", "NM", 8, "04"))
+
+</code></pre>
+
+
+</div>

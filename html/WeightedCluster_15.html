@@ -1,0 +1,210 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wcCmpCluster</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Automatic comparison of clustering methods.
+</h2>
+
+<h3>Description</h3>
+
+<p>Automatically compute different clustering solutions and associated quality measures to help identifying the best one.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wcCmpCluster(diss, weights = NULL, maxcluster, method = "all", pam.combine = TRUE)
+## S3 method for class 'clustrangefamily'
+print(x, max.rank=1, ...)
+## S3 method for class 'clustrangefamily'
+summary(object, max.rank=1, ...)
+## S3 method for class 'clustrangefamily'
+plot(x, group="stat", method="all", pam.combine=FALSE, 
+    stat="noCH", norm="none", withlegend=TRUE, lwd=1, col=NULL, legend.prop=NA, 
+	rows=NA, cols=NA, main=NULL, xlab="", ylab="", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>diss</code></td>
+<td>
+<p>A dissimilarity matrix or a dist object (see <code>dist</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>Optional numerical vector containing weights.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxcluster</code></td>
+<td>
+<p>Integer. Maximum number of cluster. The range will include all clustering solution starting from two to <code>ncluster</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>A vector of hierarchical clustering methods to compute or <code>"all"</code> for all methods. 
+Possible values include "ward", "single", "complete", "average", "mcquitty", "median", "centroid" (using <code>hclust</code>), 
+"pam" (using <code>wcKMedRange</code>), "diana" (only for unweighted datasets using <code>diana</code>), 
+"beta.flexible" (only for unweighted datasets using <code>agnes</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pam.combine</code></td>
+<td>
+<p>Logical. Should we try all combinations of hierarchical and PAM clustering?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>clustrangefamily</code> object to plot or print</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A <code>clustrangefamily</code> object to summarize</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.rank</code></td>
+<td>
+<p>Integer. The different number of solution to print/summarize</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group</code></td>
+<td>
+<p>One of <code>"stat"</code> or <code>"method"</code>. If <code>"stat"</code>, plots are grouped by statistics, otherwise by clustering methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stat</code></td>
+<td>
+<p>Character. The list of statistics to plot or "noCH" to plot all statistics except "CH" and "CHsq" or "all" for all statistics. See <code>wcClusterQuality</code> for a list of possible values. It is also possible to use "RHC" to plot the quality measure 1-HC. Unlike HC, RHC should be maximized as all other quality measures.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>norm</code></td>
+<td>
+<p>Character. Normalization method of the statistics can be one of "none" (no normalization), "range" (given as (value -min)/(max-min), "zscore" (adjusted by mean and standard deviation) or "zscoremed" (adjusted by median and median of the difference to the median).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>withlegend</code></td>
+<td>
+<p>Logical. If <code>FALSE</code>, the legend is not plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd</code></td>
+<td>
+<p>Numeric. Line width, see <code>par</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>A vector of line colors, see <code>par</code>. If <code>NULL</code>, a default set of color is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend.prop</code></td>
+<td>
+<p>When <code>withlegend=TRUE</code>, sets the proportion of the graphic area used for plotting the legend. Default value is set according to the place (bottom or right of the graphic area) where the legend is plotted. Values from 0 to 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rows,cols</code></td>
+<td>
+<p>optional arguments to arrange plots.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>x axis label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>y axis label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>main title of the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additionnal parameters passed to <code>lines</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class <code>clustrangefamily</code> with the following elements:
+</p>
+
+<dl>
+<dt>Method name:</dt>
+<dd>
+<p>the results of <code>as.clustrange</code> objects under each method name (see argument <code>method</code> for a list of possible values)</p>
+</dd>
+<dt>
+<code>allstats</code>:</dt>
+<dd>
+<p>A <code>matrix</code> containing the clustering statistics for each cluster solution and method.</p>
+</dd>
+<dt>
+<code>param</code>:</dt>
+<dd>
+<p>The parameters set when the function was called.</p>
+</dd>
+</dl>
+<h3>See Also</h3>
+
+<p>See Also <code>as.clustrange</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(mvad)
+
+#Creating state sequence object
+mvad.seq &lt;- seqdef(mvad[, 17:86])
+
+# COmpute distance using Hamming distance
+diss &lt;- seqdist(mvad.seq, method="HAM")
+
+#Ward clustering
+allClust &lt;- wcCmpCluster(diss, maxcluster=15, method=c("average", "pam", "beta.flexible"), 
+                         pam.combine=FALSE)
+
+summary(allClust, max.rank=3)
+
+##Plot PBC, RHC and ASW
+plot(allClust, stat=c("PBC", "RHC", "ASW"), norm="zscore", lwd=2)
+
+
+##Plot PBC, RHC and ASW grouped by cluster method
+plot(allClust, group="method", stat=c("PBC", "RHC", "ASW"), norm="zscore", lwd=2)
+</code></pre>
+
+
+</div>

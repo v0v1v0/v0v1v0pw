@@ -1,0 +1,208 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>linModelSelect</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Test multiple starting levels for linear regression model, select best and plot</h2>
+
+<h3>Description</h3>
+
+<p>The aim of this function is to select the data suiting set of levels of the main input data to construct a linear regression model. 
+In real world measurements one may be confronted to the case of very low level analytes below the detection limit (LOD) and resulting read-outs fluctuate around around a common baseline (instead of <code>NA</code>). 
+With such data it may be preferable to omit the read-outs for the lowest concentrations/levels of analytes if they are spread around a base-line value.
+This function allows trying to omit all starting levels designed in <code>startLev</code>, then the resulting p-values for the linear regression slopes will be checked and the best p-value chosen. 
+The input may also be a MArrayLM-type object from package <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a> or from <code>moderTestXgrp</code> or <code>moderTest2grp</code>.
+In the graphical representation all points assocoated to levels omitted are shown in light green.
+For the graphical display additional information can be used : If the  <code>dat</code> is list or MArrayLM-type object, 
+the list-elements $raw (according to argument <code>lisNa</code> will be used to display points initially given as NA ad imputed lateron in grey.
+Logarithmic (ie log-linear) data can be treated by settting argument <code>logExpect=TRUE</code>. Then the levels will be taken as exponent of 2 for the regression, while the original values will be displayed in the figure.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">linModelSelect(
+  rowNa,
+  dat,
+  expect,
+  logExpect = FALSE,
+  startLev = NULL,
+  lisNa = c(raw = "raw", annot = "annot", datImp = "datImp"),
+  plotGraph = TRUE,
+  tit = NULL,
+  pch = c(1, 3),
+  cexLeg = 0.95,
+  cexSub = 0.85,
+  xLab = NULL,
+  yLab = NULL,
+  cexXAxis = 0.85,
+  cexYAxis = 0.9,
+  xLabLas = 1,
+  cexLab = 1.1,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>rowNa</code></td>
+<td>
+<p>(character, length=1) rowname for line to be extracted from <code>dat</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(matrix, list or MArrayLM-object from limma) main input of which columns should get re-ordered, may be output from <code>moderTestXgrp</code> or <code>moderTest2grp</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expect</code></td>
+<td>
+<p>(numeric of character) the expected levels; if character, constant unit-characters will be stripped away to extact the numeric content</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logExpect</code></td>
+<td>
+<p>(logical) toggle to <code>TRUE</code> if the main data are logarithmic but <code>expect</code> is linear</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>startLev</code></td>
+<td>
+<p>(integer) specify all starting levels to test for omitting here (multiple start sites for modelling linear regression may be specified to finally pick the best model)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lisNa</code></td>
+<td>
+<p>(character) in case <code>dat</code> is list or MArrayLM-type object, the list-elements with these names will be used as $raw (for indicating initial <code>NA</code>-values,
+$datImp (the main quantitation data to use) and $annot for displaying the corresponding value from the "Accession"-column.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotGraph</code></td>
+<td>
+<p>(logical) display figure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tit</code></td>
+<td>
+<p>(character) optional custom title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pch</code></td>
+<td>
+<p>(integer) symbols to use n optional plot; 1st for regular values, 2nd for values not used in regression</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexLeg</code></td>
+<td>
+<p>(numeric) size of text in legend</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexSub</code></td>
+<td>
+<p>(numeric) text-size for line (as subtitle) giving regression details of best linear model)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xLab</code></td>
+<td>
+<p>(character) custom x-axis label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yLab</code></td>
+<td>
+<p>(character) custom y-axis label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexXAxis</code></td>
+<td>
+<p>(character) <code>cex</code>-type for size of text for x-axis labels</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexYAxis</code></td>
+<td>
+<p>(character) <code>cex</code>-type for size of text for y-axis labels</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xLabLas</code></td>
+<td>
+<p>(integer) <code>las</code>-type orientation of x-axis labels (set to 2 for vertical axix-labels)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexLab</code></td>
+<td>
+<p>(numeric) <code>cex</code>-type for size of text in x &amp; y axis labels (will be passed to <code>cex.lab</code> in <code>plot()</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a list with $coef (coefficients), $name (as/from input <code>rowNa</code>), $startLev the best starting level)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>moderTestXgrp</code> for single comparisons, <code>order</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Construct data
+li1 &lt;- rep(c(4,3,3:6),each=3) + round(runif(18)/5,2)
+names(li1) &lt;- paste0(rep(letters[1:5], each=3), rep(1:3,6))
+li2 &lt;- rep(c(6,3:7), each=3) + round(runif(18)/5, 2)
+dat2 &lt;- rbind(P1=li1, P2=li2)
+exp2 &lt;- rep(c(11:16), each=3)
+
+## Check &amp; plot for linear model 
+linModelSelect("P2", dat2, expect=exp2)
+
+## Log-Linear data
+## Suppose dat2 is result of measures in log2, but exp4 is not
+exp4 &lt;- rep(c(3,10,30,100,300,1000), each=3)
+linModelSelect("P2", dat2, expect=exp4, logE=FALSE)    # bad
+linModelSelect("P2", dat2, expect=exp4, logE=TRUE)
+
+</code></pre>
+
+
+</div>

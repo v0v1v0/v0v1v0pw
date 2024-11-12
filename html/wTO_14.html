@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wTO.export</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>wTO.export</h2>
+
+<h3>Description</h3>
+
+<p>Exports the significative interactions, the wTO weight and pvalues into a .txt file, tab separeted. This file can be imported in other visualization tools (Cytoscape for example).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wTO.export(DATA, path, sign = TRUE, pvalue = 0.05, padj = 0.05, prop.NA = 0.5)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>DATA</code></td>
+<td>
+<p>Output from the function wTO.Complete or wTO.Consensus.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Path and file name where the .txt file should be saved.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sign</code></td>
+<td>
+<p>Should the network contain the results for the signed network or unsigned? Only for data coming from wTO.Complete.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pvalue</code></td>
+<td>
+<p>cutoff p-value for the network. Only for data coming from wTO.Complete.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>padj</code></td>
+<td>
+<p>cutoff adjusted p-value for the network. Only for data coming from wTO.Complete.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prop.NA</code></td>
+<td>
+<p>cutoff proportion of NAs for the network. Only for data coming from wTO.Consensus.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+EXAMPLE =  wTO.Complete( k =1, n = 200, Data = Microarray_Expression2,
+                                      Overlap = ExampleGRF$x, method = "p")
+wTO.export(EXAMPLE , './EXAMPLE.txt')
+
+#Selection of only the significative ones for the Consensus
+Ex_k1_cor_p_boot_p005_sig = subset(EXAMPLE$wTO,
+EXAMPLE$wTO$pval_sig &lt; 0.05,
+select = c("Node.1", "Node.2", "wTO_sign"))
+Ex_k1_cor_p_boot_p005_abs = subset(EXAMPLE$wTO,
+EXAMPLE$wTO$pval_abs &lt; 0.05,
+select = c("Node.1", "Node.2", "wTO_abs"))
+# Constructing the consensus network
+CN = wTO.Consensus(data = list(Ex_k1_cor_p_boot_p005_sig,
+Ex_k1_cor_p_boot_p005_abs))
+wTO.export(CN, './CN.txt')
+### You can store the result on the workspace.
+y = wTO.export(CN, './CN.txt')
+head(y)
+
+## End(Not run)
+
+
+
+</code></pre>
+
+
+</div>

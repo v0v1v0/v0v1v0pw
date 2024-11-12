@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>extr1chan</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract just one series, ie channel, of list of arrays</h2>
+
+<h3>Description</h3>
+
+<p>This function was designed for handeling measurements stored as list of multiple arrays, like eg compound-screens using microtiter-plates where multiple parameters ('channels') 
+were recorded for each well (element).
+The elements (eg compounds screened) are typcally stored in the 1st dimension of the arrays, the replicated in the secon dimension and different measure types/parameters in the 3rd chanel. 
+In order to keep the structure of of individual microtiter-plates, typically each plate forms a separate array (of same dimensions) in a list.  
+The this function allows extracting a single channel of the list of arrays (3rd dim of each array) and return row-appended matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">extr1chan(arrLst, cha, na.rm = TRUE, rowSep = "__")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>arrLst</code></td>
+<td>
+<p>(list) list of arrays (typically 1st and 2nd dim for specific genes/objects, 3rd for different measures associated with)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cha</code></td>
+<td>
+<p>(integer) channel number</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>(logical) default =TRUE to remove NAs</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rowSep</code></td>
+<td>
+<p>(character) separator for rows</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>list with just single channel extracted
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>organizeAsListOfRepl</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">arr1 &lt;- array(1:24,dim=c(4,3,2),dimnames=list(c(LETTERS[1:4]),
+  paste("col",1:3,sep=""),c("ch1","ch2")))
+arr2 &lt;- array(74:51,dim=c(4,3,2),dimnames=list(c(LETTERS[1:4]),
+  paste("col",1:3,sep=""),c("ch1","ch2")))
+arrL1 &lt;- list(pl1=arr1,pl2=arr2)
+extr1chan(arrL1,ch=2)
+</code></pre>
+
+
+</div>

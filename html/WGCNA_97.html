@@ -1,0 +1,171 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>formatLabels</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Break long character strings into multiple lines
+</h2>
+
+<h3>Description</h3>
+
+<p>This function attempts to break lomg character strings into multiple lines by replacing a given pattern by
+a newline character.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">formatLabels(
+   labels, 
+   maxCharPerLine = 14, 
+   maxWidth = NULL,
+   maxLines = Inf,
+   cex = 1,
+   font = 1,
+   split = " ", 
+   fixed = TRUE, 
+   newsplit = split,
+   keepSplitAtEOL = TRUE, 
+   capitalMultiplier = 1.4,
+   eol = "\n", 
+   ellipsis = "...")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>Character strings to be formatted.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxCharPerLine</code></td>
+<td>
+
+<p>Integer giving the maximum number of characters per line.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxWidth</code></td>
+<td>
+<p>Maximum width in user coordinates. If given, overrides <code>maxCharPerLine</code> above and
+usually gives a much more efficient formatting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxLines</code></td>
+<td>
+<p>Maximum lines to retain. If a label extends past the maximum number of lines,
+<code>ellipsis</code> is added at the end of the last line.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex</code></td>
+<td>
+<p>Character expansion factor that the user intends to use when adding <code>labels</code> to the current
+figure. Only used when <code>maxWidth</code> is specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>font</code></td>
+<td>
+<p>Integer specifying the font. See <code>par</code> for details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>split</code></td>
+<td>
+
+<p>Pattern to be replaced by newline ('\n') characters.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixed</code></td>
+<td>
+
+<p>Logical: Should the pattern be interpreted literally (<code>TRUE</code>) or as a regular expression (<code>FALSE</code>)?
+See <code>strsplit</code> and its argument <code>fixed</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newsplit</code></td>
+<td>
+
+<p>Character string to replace the occurrences of <code>split</code> above with.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepSplitAtEOL</code></td>
+<td>
+
+<p>When replacing an occurrence of <code>split</code> with a newline character, should the <code>newsplit</code> be added
+before the newline as well? 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>capitalMultiplier</code></td>
+<td>
+<p>A multiplier for capital letters which typically occupy more space than lowercase
+letters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eol</code></td>
+<td>
+<p>Character string to separate lines in the output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ellipsis</code></td>
+<td>
+<p>Chararcter string to add to the last line if the input label is longer than fits on
+<code>maxLines</code> lines.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Each given element of <code>labels</code> is processed independently. The character string is split using
+<code>strsplit</code>, with <code>split</code> as the splitting pattern. The resulting shorter character strings are
+then concatenated together with <code>newsplit</code> as the separator. Whenever the length (adjusted using the
+capital letter multiplier) of the combined
+result from the start or the previous newline character exceeds <code>maxCharPerLine</code>, or
+<code>strwidth</code> exceeds <code>maxWidth</code>, the character specified by <code>eol</code>
+is inserted (at the previous split). 
+</p>
+<p>Note that individual segements (i.e., sections of the input between occurrences of <code>split</code>) whose
+number of characters exceeds <code>maxCharPerLine</code> will not be split.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A character vector of the same length as input <code>labels</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">s = "A quick hare jumps over the brown fox";
+formatLabels(s);
+</code></pre>
+
+
+</div>

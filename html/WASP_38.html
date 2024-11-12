@@ -1,0 +1,62 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>SPI.calc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate Standardized Precipitation Index, SPI</h2>
+
+<h3>Description</h3>
+
+<p>Calculate Standardized Precipitation Index, SPI
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">SPI.calc(prec.zoo, sc = 24, method = "mle")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>prec.zoo</code></td>
+<td>
+<p>A zoo series contain date and rainfall vector/matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sc</code></td>
+<td>
+<p>The accumulation period in months. Commonly 6, 12, 24, 36, and 48 months.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>A character string coding for the fitting method: "mle" for 'maximum likelihood estimation', "mme" for 'moment matching estimation', "qme" for 'quantile matching estimation' and "mge" for 'maximum goodness-of-fit estimation'.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A matrix of time series.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(rain.mon)
+
+## compute SPI
+SPI &lt;- SPI.calc(window(rain.mon, start = c(1949, 1), end = c(2009, 12)), sc = 12)
+
+## plot
+par(mfrow = c(3, 5))
+for (i in seq_len(ncol(SPI))) plot(SPI[, i])
+</code></pre>
+
+
+</div>

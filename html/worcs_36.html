@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>reproduce</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Reproduce WORCS Project</h2>
+
+<h3>Description</h3>
+
+<p>Evaluate the recipe contained in a WORCS project to derive its
+endpoints.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">reproduce(worcs_directory = ".", verbose = TRUE, check_endpoints = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>worcs_directory</code></td>
+<td>
+<p>Character, indicating the WORCS project directory
+to which to save data. The default value "." points to the current directory.
+Default: '.'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical. Whether or not to print status messages to the
+console. Default: <code>TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>check_endpoints</code></td>
+<td>
+<p>Logical. Whether or not to call <code>check_endpoints()</code>
+after reproducing the recipe. Default: <code>TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>No return value. This function is called for its side effects.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>add_endpoint</code>
+<code>snapshot_endpoints</code>
+<code>check_endpoints</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Create directory to run the example
+old_wd &lt;- getwd()
+test_dir &lt;- file.path(tempdir(), "reproduce")
+dir.create(test_dir)
+setwd(test_dir)
+file.create(".worcs")
+worcs:::add_recipe(recipe = 'writeLines("test", "test.txt")')
+# Cleaning example directory
+setwd(old_wd)
+unlink(test_dir, recursive = TRUE)
+</code></pre>
+
+
+</div>

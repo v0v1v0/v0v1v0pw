@@ -1,0 +1,64 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rowGrpNA</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Count number of NAs per row and group of columns</h2>
+
+<h3>Description</h3>
+
+<p>This functions allows easy counting the number of NAs per row in data organized in multiple sub-groups as columns.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rowGrpNA(mat, grp)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mat</code></td>
+<td>
+<p>(matrix of data.frame) data to count the number of <code>NA</code>s</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grp</code></td>
+<td>
+<p>(character or factor) defining which columns should be grouped (considered as replicates)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>matrix with number of <code>NA</code>s per group
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>rowGrpMeans</code>, <code>rowSds</code>, <code>colSums</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">mat2 &lt;- c(22.2, 22.5, 22.2, 22.2, 21.5, 22.0, 22.1, 21.7, 21.5, 22, 22.2, 22.7,
+   NA, NA, NA, NA, NA, NA, NA, 21.2,   NA, NA, NA, NA,
+   NA, 22.6, 23.2, 23.2,  22.4, 22.8, 22.8, NA,  23.3, 23.2, NA, 23.7,
+   NA, 23.0, 23.1, 23.0,  23.2, 23.2, NA, 23.3,  NA, NA, 23.3, 23.8)
+mat2 &lt;- matrix(mat2, ncol=12, byrow=TRUE)
+gr4 &lt;- gl(3, 4, labels=LETTERS[1:3])
+# overal number of NAs per row
+rowSums(is.na(mat2)) 
+# number of NAs per row and group
+rowGrpNA(mat2, gr4)
+</code></pre>
+
+
+</div>

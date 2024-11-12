@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>goodfit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Quantile regression goodness of fit</h2>
+
+<h3>Description</h3>
+
+<p>Calculate quantile regression goodness of fit using residuals and non-conditional residuals
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">goodfit(resid, resid_nl, tau)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>resid</code></td>
+<td>
+<p>numeric vector of residuals from the conditional quantile model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resid_nl</code></td>
+<td>
+<p>numeric vector of residuals from the non-conditional (null) quantile model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>numeric value from zero to one for the estimated quantile</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The goodness of fit measure for quantile regression is estimated as 1 minus the ratio between the sum of absolute deviations in the fully parameterized models and the sum of absolute deviations in the null (non-conditional) quantile model.  The values are useful for comparisons between quantile models, but they are not comparable to standard coefficients of determination. The latter is based on the variance of squared deviations, whereas goodness of fit values for quantile regression are based on absolute deviations.  Goodness of fit values will always be smaller than R2 values.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric value from 0 to 1 indicating goodness of fit
+</p>
+
+
+<h3>References</h3>
+
+<p>Koenker, R., Machado, J.A.F. 1999. Goodness of fit and related inference processes for quantile regression. Journal of the American Statistical Association. 94(448):1296-1310.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wrtdsrsd</code> for residuals
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(quantreg)
+
+## random variables
+x &lt;- runif(100, 0, 10)
+y &lt;- x + rnorm(100)
+
+## quantile model
+mod &lt;- rq(y ~ x, tau = 0.5)
+res &lt;- resid(mod)
+
+## non-conditional quantile model
+mod_nl &lt;- rq(y ~ 1, tau = 0.5)
+rsd_nl &lt;- resid(mod_nl)
+
+goodfit(res, rsd_nl, 0.5)
+
+## r2 of mean model for comparison
+mod_lm &lt;- lm(y ~ x)
+
+summary(mod_lm)$r.squared
+</code></pre>
+
+
+</div>

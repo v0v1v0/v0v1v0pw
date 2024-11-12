@@ -1,0 +1,67 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotFrequencyHistogram</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot histogram of response times for a transaction dataframe 
+</h2>
+
+<h3>Description</h3>
+
+<p>Generates a plot of response time frequencies.  
+</p>
+<p>Times are expressed in seconds.  
+</p>
+<p>The histogram bin width is a minimum of 0.1 seconds, or 1/200 of the maximum elapsed time.  The graph tries to show a minimum of 20 bins (2 seconds), 
+for data with very small elapsed times this can lead to graphs with significant empty space on the right.  
+</p>
+<p>If the maximum elapsed is greater than 99 seconds, the x axis labels are rotated so that they do not overlap.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotFrequencyHistogram(theDf) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>theDf</code></td>
+<td>
+
+<p>a transaction data frame  
+</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Returns a ggplot2 plot.  This function is intended to be wrapped in a call to <code>plotSaveGG</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Greg Hunt &lt;greg@firmansyah.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+logFileName = logFileNamesGetLast(dataDirectory=datd, 
+  directoryNames=c(".", "."), 
+  fileNamePattern="*[.]log")[[1]]
+
+cols = logFileFieldsGetIIS(logFileName)
+
+logdf = logFileRead(logFileName, columnList=cols, 
+            logTimeZone = "", timeFormat = "")
+
+plotFrequencyHistogram(logdf) 
+</code></pre>
+
+
+</div>

@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wdpa_dissolve</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Dissolve data</h2>
+
+<h3>Description</h3>
+
+<p>Create a dataset of spatial boundaries that contains no
+overlapping geometries.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wdpa_dissolve(x, geometry_precision = 1500)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>sf::sf()</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geometry_precision</code></td>
+<td>
+<p><code>numeric</code> level of precision for processing
+the spatial data (used with <code>sf::st_set_precision()</code>). The
+default argument is 1500 (higher values indicate higher precision).
+This level of precision is generally suitable for analyses at the
+national-scale. For analyses at finer-scale resolutions, please
+consider using a greater value (e.g. 10000).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is basically a wrapper for <code>sf::st_union()</code>.
+It also contains additional parameters to assist with processing
+large and complex geometry data.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>sf::sf()</code> object.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>sf::st_union()</code>, <code>st_erase_overlaps()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># create data
+pl1 &lt;- sf::st_polygon(list(matrix(c(0, 0, 2, 0, 1, 1, 0, 0), byrow = TRUE,
+                                  ncol = 2))) * 100
+pl2 &lt;- sf::st_polygon(list(matrix(c(0, 0.5, 2, 0.5, 1, 1.5, 0, 0.5),
+                                  byrow = TRUE, ncol = 2))) * 100
+pl3 &lt;- sf::st_polygon(list(matrix(c(0, 1.25, 2, 1.25, 1, 2.5, 0, 1.25),
+                                  byrow = TRUE, ncol = 2))) * 100
+x &lt;- sf::st_sf(order = c("A", "B", "C"),
+               geometry = sf::st_sfc(list(pl1, pl2, pl3), crs = 3395))
+
+# dissolve data
+y &lt;- wdpa_dissolve(x)
+
+# plot data for visual comparison
+par(mfrow = c(1, 2))
+plot(sf::st_geometry(x), xlim = c(0, 200), ylim = c(0, 250),
+     main = "original", col = "transparent")
+plot(sf::st_geometry(y), , xlim = c(0, 200), ylim = c(0, 250),
+     main = "dissolved", col = "transparent")
+</code></pre>
+
+
+</div>

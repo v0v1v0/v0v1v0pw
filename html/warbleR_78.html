@@ -1,0 +1,187 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>track_harmonic</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Track harmonic frequency contour</h2>
+
+<h3>Description</h3>
+
+<p><code>track_harmonic</code> tracks the frequency contour of the dominant harmonic.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">track_harmonic(
+  wave,
+  f,
+  wl = 512,
+  wn = "hanning",
+  ovlp = 0,
+  fftw = FALSE,
+  at = NULL,
+  tlim = NULL,
+  threshold = 10,
+  bandpass = NULL,
+  clip = NULL,
+  plot = TRUE,
+  xlab = "Times (s)",
+  ylab = "Frequency (kHz)",
+  ylim = c(0, f/2000),
+  adjust.wl = FALSE,
+  dfrq = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wave</code></td>
+<td>
+<p>A 'wave' object produced by <code>readWave</code> or similar functions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f</code></td>
+<td>
+<p>Sampling frequency of the wave object (in Hz). Does not need to be specified if embedded in wave.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wl</code></td>
+<td>
+<p>A numeric vector of length 1 specifying the window length for the FFT, default
+is 512.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wn</code></td>
+<td>
+<p>Character vector of length 1 specifying window name. Default is
+"hanning". See function <code>ftwindow</code> for more options. This is used for calculating the frequency spectrum (using <code>meanspec</code>) and producing the spectrogram (using <code>spectro</code>, if <code>plot = TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ovlp</code></td>
+<td>
+<p>Numeric vector of length 1 specifying % of overlap between two
+consecutive time windows, as in <code>spectro</code>. Default is 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fftw</code></td>
+<td>
+<p>if TRUE calls the function FFT of the library fftw. See Notes of the <code>spectro</code> function.
+Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>at</code></td>
+<td>
+<p>Time position where the harmonic frequency contour has to be computed (in seconds). Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tlim</code></td>
+<td>
+<p>time range in which to measure frequency contours. Default is <code>NULL</code> (which means it will measure
+across the entire wave object).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>Amplitude threshold (%) for dominant frequency and detection. Default is 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bandpass</code></td>
+<td>
+<p>A numeric vector of length 2 for the lower and upper limits of a frequency bandpass filter (in kHz).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clip</code></td>
+<td>
+<p>A numeric value to select dominant frequency values according to their amplitude in reference to a maximal value of 1 for the whole signal (has to be &gt;0 &amp; &lt; 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>Logical, if TRUE plots the dominant frequency against time. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>Label of the time axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>Label of the frequency axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylim</code></td>
+<td>
+<p>A numeric vector of length 2 for the frequency limit of
+the spectrogram (in kHz), as in <code>spectro</code>. Default is c(0, f/2000).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adjust.wl</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> 'wl' (window length) is reset to be lower than the
+number of samples in a selection if the number of samples is less than 'wl'. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dfrq</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> seewave's <code>dfreq</code> is used instead. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to be passed to the plotting function.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is a modified version of seewave's <code>dfreq</code> function that allows to track the frequency
+contour of a dominant harmonic even when the highest amplitude jumps between harmonics. The arguments and default values of the
+original <code>dfreq</code> function have been kept unchanged to facilitate switching between the 2 functions.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jerome Sueur, modified by Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>track_freq_contour</code> for tracking frequencies iteratively on selections tables.
+</p>
+
+
+</div>

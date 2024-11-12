@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>chooseTopHubInEachModule</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Chooses the top hub gene in each module </h2>
+
+<h3>Description</h3>
+
+<p>chooseTopHubInEachModule returns the gene in each module with the highest connectivity, looking at all genes in the expression file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">chooseTopHubInEachModule(
+   datExpr, 
+   colorh, 
+   omitColors = "grey", 
+   power = 2, 
+   type = "signed", 
+   ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datExpr</code></td>
+<td>
+
+<p>Gene expression data with rows as samples and columns as genes.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorh</code></td>
+<td>
+
+<p>The module assignments (color vectors) corresponding to the columns in datExpr.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>omitColors</code></td>
+<td>
+
+<p>All colors in this character vector (default is "grey") are ignored by this function.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+
+<p>Power to use for the adjacency network (default = 2).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+
+<p>What type of network is being entered.  Common choices are "signed" (default) and "unsigned".  With "signed" negative correlations count against, whereas with "unsigned" negative correlations are treated identically as positive correlations.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Any other parameters accepted by the *adjacency* function
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Both functions output a character vector of genes, where the genes are the hub gene picked for each module, and the names correspond to the module in which each gene is a hub.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jeremy Miller
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Example: first simulate some data.
+
+MEturquoise = sample(1:100,50)
+MEblue      = sample(1:100,50)
+MEbrown     = sample(1:100,50)
+MEyellow    = sample(1:100,50) 
+MEgreen     = c(MEyellow[1:30], sample(1:100,20))
+MEred	    = c(MEbrown [1:20], sample(1:100,30))
+MEblack	    = c(MEblue  [1:25], sample(1:100,25))
+ME     = data.frame(MEturquoise, MEblue, MEbrown, MEyellow, MEgreen, MEred, MEblack)
+dat1   = simulateDatExpr(ME,300,c(0.2,0.1,0.08,0.051,0.05,0.042,0.041,0.3), signed=TRUE)
+colorh = labels2colors(dat1$allLabels)
+hubs    = chooseTopHubInEachModule(dat1$datExpr, colorh)
+hubs
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,165 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>worm_visualize,WormTensor-method</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plots evaluation result
+A visualization result is generated from a WormTensor object.</h2>
+
+<h3>Description</h3>
+
+<p>Plots evaluation result
+A visualization result is generated from a WormTensor object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S4 method for signature 'WormTensor'
+worm_visualize(
+  object,
+  out.dir = tempdir(),
+  algorithm = c("tSNE", "UMAP"),
+  seed = 1234,
+  tsne.dims = 2,
+  tsne.perplexity = 15,
+  tsne.verbose = FALSE,
+  tsne.max_iter = 1000,
+  umap.n_neighbors = 15,
+  umap.n_components = 2,
+  silhouette.summary = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>WormTensor object with a result of worm_evaluate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>out.dir</code></td>
+<td>
+<p>Output directory (default: tempdir())</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>algorithm</code></td>
+<td>
+<p>Dimensional reduction methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>Arguments passed to set.seed (default: 1234)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tsne.dims</code></td>
+<td>
+<p>Output dimensionality (default: 2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tsne.perplexity</code></td>
+<td>
+<p>Perplexity parameter (default: 15)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tsne.verbose</code></td>
+<td>
+<p>logical; Whether progress updates should be printed
+(default: TRUE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tsne.max_iter</code></td>
+<td>
+<p>Number of iterations (default: 1000)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>umap.n_neighbors</code></td>
+<td>
+<p>The size of the local neighborhood (default: 15)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>umap.n_components</code></td>
+<td>
+<p>The dimension of the space to embed into
+(default: 2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silhouette.summary</code></td>
+<td>
+<p>logical; If true a summary of cluster silhouettes
+are printed.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Silhouette plots. ARI with a merge result and each animal(with MCMI).
+Dimensional reduction plots colored by cluster, no. of identified cells,
+consistency(with labels), Class_label(with labels).
+</p>
+
+
+<h3>References</h3>
+
+<p>The .dist_nn function is quoted from dist_nn
+(not exported function) in package uwot(<a href="https://github.com/jlmelville/uwot/tree/f467185c8cbcd158feb60dde608c9da153ed10d7">https://github.com/jlmelville/uwot/tree/f467185c8cbcd158feb60dde608c9da153ed10d7</a>).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+    # Temporary directory to save figures
+    out.dir &lt;- tempdir()
+
+    # Labels
+    worm_download("mSBD", qc = "PASS")$Ds |&gt;
+        as_worm_tensor() |&gt;
+            worm_membership(k = 6) |&gt;
+                worm_clustering() -&gt; object
+    Ds_mSBD &lt;- worm_download("mSBD", qc = "PASS")
+    labels &lt;- list(
+        label1 = replace(
+            Ds_mSBD$labels$Class,
+            which(is.na(Ds_mSBD$labels$Class)),
+            "NA"
+        ),
+        label2 = sample(4, length(object@clustering), replace = TRUE),
+        label3 = sample(5, length(object@clustering), replace = TRUE)
+    )
+
+    # Pipe Operation (without Labels)
+    worm_download("mSBD", qc = "PASS")$Ds |&gt;
+        as_worm_tensor() |&gt;
+            worm_membership(k = 6) |&gt;
+                worm_clustering() |&gt;
+                    worm_evaluate() |&gt;
+                        worm_visualize(out.dir) -&gt; object_no_labels
+
+    # Pipe Operation (with Labels)
+    worm_download("mSBD", qc = "PASS")$Ds |&gt;
+        as_worm_tensor() |&gt;
+            worm_membership(k = 6) |&gt;
+                worm_clustering() |&gt;
+                    worm_evaluate(labels) |&gt;
+                        worm_visualize(out.dir) -&gt; object_labels
+
+</code></pre>
+
+
+</div>

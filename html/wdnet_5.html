@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>assortcoef</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute the assortativity coefficient(s) for a network.</h2>
+
+<h3>Description</h3>
+
+<p>Compute the assortativity coefficient(s) for a network.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">assortcoef(netwk, edgelist, edgeweight, adj, directed, f1, f2)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>netwk</code></td>
+<td>
+<p>A <code>wdnet</code> object that represents the network. If
+<code>NULL</code>, the function will compute the coefficient using either
+<code>edgelist</code> and <code>edgeweight</code>, or <code>adj</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edgelist</code></td>
+<td>
+<p>A two-column matrix representing edges.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edgeweight</code></td>
+<td>
+<p>A numeric vector of edge weights with the same length as
+the number of rows in edgelist. If <code>NULL</code>, all edges will be assigned
+weight 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adj</code></td>
+<td>
+<p>The adjacency matrix of a network.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>directed</code></td>
+<td>
+<p>Logical. Indicates whether the edges in <code>edgelist</code> or
+<code>adj</code> are directed. It will be omitted if <code>netwk</code> is provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f1</code></td>
+<td>
+<p>A vector representing the first feature of existing nodes. The
+number of nodes should be equal to the length of both <code>f1</code> and
+<code>f2</code>. Defined for directed networks. If <code>NULL</code>, out-strength will
+be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f2</code></td>
+<td>
+<p>A vector representing the second feature of existing nodes. Defined
+for directed networks. If <code>NULL</code>, in-strength will be used.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Assortativity coefficient for undirected networks, or a list of four
+assortativity coefficients for directed networks.
+</p>
+
+
+<h3>Note</h3>
+
+<p>When the adjacency matrix is binary (i.e., directed but unweighted
+networks), <code>assortcoef</code> returns the assortativity coefficient proposed
+in Foster et al. (2010).
+</p>
+
+
+<h3>References</h3>
+
+ <ul>
+<li>
+<p> Foster, J.G., Foster, D.V., Grassberger, P. and
+Paczuski, M. (2010). Edge direction and the structure of networks.
+<em>Proceedings of the National Academy of Sciences of the United
+States</em>, 107(24), 10815–10820. </p>
+</li>
+<li>
+<p> Yuan, Y. Zhang, P. and Yan, J.
+(2021). Assortativity coefficients for weighted and directed networks.
+<em>Journal of Complex Networks</em>, 9(2), cnab017.</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123)
+control &lt;- rpa_control_edgeweight(
+  sampler = function(n) rgamma(n, shape = 5, scale = 0.2)
+)
+netwk &lt;- rpanet(nstep = 10^4, control = control)
+ret &lt;- assortcoef(netwk)
+ret &lt;- assortcoef(
+  edgelist = netwk$edgelist,
+  edgeweight = netwk$edge.attr$weight,
+  directed = TRUE
+)
+
+</code></pre>
+
+
+</div>

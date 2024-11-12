@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WordSim353</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Similarity Ratings for 351 Noun Pairs (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>A database of human similarity ratings for 351 English noun pairs,
+collected by Finkelstein et al. (2002) and annotated with semantic relations
+(similarity vs. relatedness) by Agirre et al. (2009).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+WordSim353
+
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 351 rows and the following 6 columns:
+</p>
+
+<dl>
+<dt><code>word1</code></dt>
+<dd>
+<p>first noun (character)</p>
+</dd>
+<dt><code>word2</code></dt>
+<dd>
+<p>second noun (character)</p>
+</dd>
+<dt><code>score</code></dt>
+<dd>
+<p>average similarity rating by human judges on scale from 0 to 10 (numeric)</p>
+</dd>
+<dt><code>relation</code></dt>
+<dd>
+<p>semantic relation between first and second word (factor, see Details below)</p>
+</dd>
+<dt><code>similarity</code></dt>
+<dd>
+<p>whether word pair belongs to the <em>similarity</em> subset (logical)</p>
+</dd>
+<dt><code>relatedness</code></dt>
+<dd>
+<p>whether word pair belongs to the <em>relatedness</em> subset (logical)</p>
+</dd>
+</dl>
+<p>The nouns are given as disambiguated lemmas in the form <code>&lt;headword&gt;_N</code>.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The data set is known as <code>WordSim353</code> because it originally consisted of 353 noun pairs.
+One duplicate entry (<em>money</em>–<em>cash</em>) as well as the trivial combination 
+<em>tiger</em>–<em>tiger</em> (which may have been included as a control item)
+have been omitted in the present version, however.
+</p>
+<p>The following semantic relations are distinguished in the <code>relation</code> variable:
+<code>synonym</code>, <code>antonym</code>, <code>hypernym</code>, <code>hyponym</code>, <code>co-hyponym</code>,
+<code>holonym</code>, <code>meronym</code> and <code>other</code> (topically related or completely unrelated).
+</p>
+<p>Note that the <em>similarity</em> and <em>relatedness</em> subsets are not disjoint, because they
+share 103 unrelated noun pairs (semantic relation <code>other</code> and score below 5.0).
+</p>
+
+
+<h3>Source</h3>
+
+<p>Similarity ratings (Finkelstein <em>et al.</em> 2002): <a href="https://gabrilovich.com/resources/data/wordsim353/wordsim353.html">https://gabrilovich.com/resources/data/wordsim353/wordsim353.html</a>
+</p>
+<p>Semantic relations (Agirre <em>et al.</em> 2009): <a href="http://alfonseca.org/eng/research/wordsim353.html">http://alfonseca.org/eng/research/wordsim353.html</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Agirre, Eneko, Alfonseca, Enrique, Hall, Keith, Kravalova, Jana, Pasca, Marius, and Soroa, Aitor (2009).
+A study on similarity and relatedness using distributional and WordNet-based approaches.
+In <em>Proceedings of Human Language Technologies: The 2009 Annual Conference of the North American Chapter of the Association for Computational Linguistics (NAACL-HLT 2009)</em>, pages 19–27, Boulder, Colorado.
+</p>
+<p>Finkelstein, Lev, Gabrilovich, Evgeniy, Matias, Yossi, Rivlin, Ehud, Solan, Zach, Wolfman, Gadi, and Ruppin, Eytan (2002).
+Placing search in context: The concept revisited.
+<em>ACM Transactions on Information Systems</em>, <b>20</b>(1), 116–131.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+head(WordSim353, 20)
+
+table(WordSim353$relation) # semantic relations
+
+# split into "similarity" and "relatedness" subsets
+xtabs(~ similarity + relatedness, data=WordSim353) 
+
+</code></pre>
+
+
+</div>

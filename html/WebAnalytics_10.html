@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>laTexFilePercentileComparisonsWrite</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Write percentile count comparison table  
+</h2>
+
+<h3>Description</h3>
+
+<p>Writes a LaTeX table listing URLs in decreasing order of request count for a baseline workload compared with a current workload on stdout for incorporation in a LaTeX report
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">laTexFilePercentileComparisonsWrite(latest, 
+          baseline, 
+          headingLaTeX="\\section{Transaction Count Percentile Ranking}")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>latest</code></td>
+<td>
+
+<p>data frame of log records for the latest (test) workload
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>baseline</code></td>
+<td>
+
+<p>data frame of log records for the baseline workload
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>headingLaTeX</code></td>
+<td>
+
+<p>LaTeX section heading for this table
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Does not return a value.  
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Greg Hunt &lt;greg@firmansyah.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+logFileName = logFileNamesGetLast(dataDirectory=datd, 
+  directoryNames=c(".", "."), 
+  fileNamePattern="*[.]log")[[1]]
+
+cols = logFileFieldsGetIIS(logFileName)
+
+logdf = logFileRead(logFileName, columnList=cols, 
+            logTimeZone = "", timeFormat = "")
+
+laTexFilePercentileComparisonsWrite(logdf, 
+                logdf)
+</code></pre>
+
+
+</div>

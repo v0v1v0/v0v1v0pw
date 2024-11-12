@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_rest_resource</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get resources from one of Wikipedia's <a href="https://www.mediawiki.org/wiki/API">two REST APIs</a>
+</h2>
+
+<h3>Description</h3>
+
+<p>This function is intended for developer use. It makes it easy to quickly
+generate vectorised calls to the different APIs.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_rest_resource(
+  ...,
+  language = "en",
+  api = c("core", "wikimedia", "wikimedia_org", "xtools"),
+  response_format = c("json", "html"),
+  response_type = NULL,
+  failure_mode = c("error", "quiet")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>&lt;<code>dynamic-dots</code>&gt; The URL components and query
+parameters of the desired resources. Names of the arguments are ignored.
+The function follows the <a href="https://vctrs.r-lib.org/reference/vector_recycling_rules">tidyverse vector recycling rules</a>, so all
+vectors must have the same length or be of length one. Unnamed arguments
+will be appended to the URL path; named arguments will be added as query
+parameters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>Character vector of two-letter language codes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api</code></td>
+<td>
+<p>The desired REST api:
+"<a href="https://www.mediawiki.org/wiki/API:REST_API">core</a>",
+"<a href="https://www.mediawiki.org/wiki/Wikimedia_REST_API">wikimedia</a>",
+"<a href="https://wikimedia.org/api/rest_v1/">wikimedia_org</a>", or
+"<a href="https://www.mediawiki.org/wiki/XTools/API">xtools</a>"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response_format</code></td>
+<td>
+<p>The expected Content-Type of the response. Currently "html" and
+"json" are supported.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response_type</code></td>
+<td>
+<p>The schema of the response. If supplied, the results will
+be parsed using the schema.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>failure_mode</code></td>
+<td>
+<p>How to respond if a request fails
+"error", the default: raise an error
+"quiet", silently return NA</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of responses. If <code>response_format</code> == "json", then the responses
+will be simple R lists. If <code>response_format</code> == "html", then the responses
+will <code>xml_document</code> objects. If <code>response_type</code> is supplied, the response
+will be coerced into a tibble::tbl_df or vector using the relevant schema.
+If the response is a 'scalar list' (i.e. a list of length == 1), then it is
+silently unlisted, returning a simple list or vector.
+</p>
+
+
+</div>

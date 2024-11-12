@@ -1,0 +1,280 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>VolcanoPlotW2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Deprecialed Volcano-plot</h2>
+
+<h3>Description</h3>
+
+<p>Please use VolcanoPlotW() from package wrGraph.
+This function does NOT produce a plot any more.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">VolcanoPlotW2(
+  Mvalue,
+  pValue = NULL,
+  useComp = 1,
+  filtFin = NULL,
+  ProjNa = NULL,
+  FCthrs = NULL,
+  FdrList = NULL,
+  FdrThrs = NULL,
+  FdrType = NULL,
+  subTxt = NULL,
+  grayIncrem = TRUE,
+  col = NULL,
+  pch = 16,
+  compNa = NULL,
+  batchFig = FALSE,
+  cexMa = 1.8,
+  cexLa = 1.1,
+  limM = NULL,
+  limp = NULL,
+  annotColumn = NULL,
+  annColor = NULL,
+  cexPt = NULL,
+  cexSub = NULL,
+  cexTxLab = 0.7,
+  namesNBest = NULL,
+  NbestCol = 1,
+  sortLeg = "descend",
+  NaSpecTypeAsContam = TRUE,
+  useMar = c(6.2, 4, 4, 2),
+  returnData = FALSE,
+  callFrom = NULL,
+  silent = FALSE,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Mvalue</code></td>
+<td>
+<p>(numeric or matrix) data to plot; M-values are typically calculated as difference of log2-abundance values and 'pValue' the mean of log2-abundance values;
+M-values and p-values may be given as 2 columsn of a matrix, in this case the argument <code>pValue</code> should remain NULL</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValue</code></td>
+<td>
+<p>(numeric, list or data.frame) if <code>NULL</code> it is assumed that 2nd column of 'Mvalue' contains the p-values to be used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useComp</code></td>
+<td>
+<p>(integer, length=1) choice of which of multiple comparisons to present in <code>Mvalue</code> (if generated using <code>moderTestXgrp()</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filtFin</code></td>
+<td>
+<p>(matrix or logical) The data may get filtered before plotting: If <code>FALSE</code> no filtering will get applied; if matrix of <code>TRUE</code>/<code>FALSE</code> it will be used as optional custom filter, otherwise (if <code>Mvalue</code> if an <code>MArrayLM</code>-object eg from limma) a default filtering based on the <code>filtFin</code> element will be applied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ProjNa</code></td>
+<td>
+<p>(character) custom title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>FCthrs</code></td>
+<td>
+<p>(numeric) Fold-Change threshold (display as line) give as Fold-change and NOT log2(FC), default at 1.5, set to <code>NA</code> for omitting</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>FdrList</code></td>
+<td>
+<p>(numeric) FDR data or name of list-element</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>FdrThrs</code></td>
+<td>
+<p>(numeric) FDR threshold (display as line), default at 0.05, set to <code>NA</code> for omitting</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>FdrType</code></td>
+<td>
+<p>(character) FDR-type to extract if <code>Mvalue</code> is 'MArrayLM'-object (eg produced by from <code>moderTest2grp</code> etc);
+if <code>NULL</code> it will search for suitable fields/values in this order : 'FDR','BH',"lfdr" and 'BY'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subTxt</code></td>
+<td>
+<p>(character) custom sub-title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grayIncrem</code></td>
+<td>
+<p>(logical) if <code>TRUE</code>, display overlay of points as increased shades of gray</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>(character) custom color(s) for points of plot (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pch</code></td>
+<td>
+<p>(integer) type of symbol(s) to plot (default=16) (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>compNa</code></td>
+<td>
+<p>(character) names of groups compared</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>batchFig</code></td>
+<td>
+<p>(logical) if <code>TRUE</code> figure title and axes legends will be kept shorter for display on fewer splace</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexMa</code></td>
+<td>
+<p>(numeric) font-size of title, as expansion factor (see also <code>cex</code> in <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexLa</code></td>
+<td>
+<p>(numeric) size of axis-labels, as expansion factor (see also <code>cex</code> in <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limM</code></td>
+<td>
+<p>(numeric, length=2) range of axis M-values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limp</code></td>
+<td>
+<p>(numeric, length=2) range of axis FDR / p-values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annotColumn</code></td>
+<td>
+<p>(character) column names of annotation to be extracted (only if <code>Mvalue</code> is <code>MArrayLM</code>-object containing matrix $annot).
+The first entry (typically 'SpecType') is used for different symbols in figure, the second (typically 'GeneName') is used as prefered text for annotating the best points (if <code>namesNBest</code> allows to do so.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annColor</code></td>
+<td>
+<p>(character or integer) colors for specific groups of annoatation (only if <code>Mvalue</code> is <code>MArrayLM</code>-object containing matrix $annot)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexPt</code></td>
+<td>
+<p>(numeric) size of points, as expansion factor (see also <code>cex</code> in <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexSub</code></td>
+<td>
+<p>(numeric) size of subtitle, as expansion factor (see also <code>cex</code> in <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexTxLab</code></td>
+<td>
+<p>(numeric) size of text-labels for points, as expansion factor (see also <code>cex</code> in <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>namesNBest</code></td>
+<td>
+<p>(integer or character) number of best points to add names in figure; if 'passThr' all points passing FDR and FC-filtes will be selected; 
+if the initial object <code>Mvalue</code> contains a list-element called 'annot' the second of the column specified in argument <code>annotColumn</code> will be used as text</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NbestCol</code></td>
+<td>
+<p>(character or integer) colors for text-labels of best points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sortLeg</code></td>
+<td>
+<p>(character) sorting of 'SpecType' annotation either ascending ('ascend') or descending ('descend'), no sorting if <code>NULL</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NaSpecTypeAsContam</code></td>
+<td>
+<p>(logical) consider lines/proteins with <code>NA</code> in Mvalue$annot[,"SpecType"] as contaminants (if a 'SpecType' for contaminants already exits)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useMar</code></td>
+<td>
+<p>(numeric,length=4) custom margings (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnData</code></td>
+<td>
+<p>(logical) optional returning data.frame with (ID, Mvalue, pValue, FDRvalue, passFilt)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>deprecated - returns nothing
+</p>
+
+
+<h3>See Also</h3>
+
+<p>this function was replaced by <code>plotPCAw</code>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2005); mat &lt;- matrix(round(runif(900),2), ncol=9)
+</code></pre>
+
+
+</div>

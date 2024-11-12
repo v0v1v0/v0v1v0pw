@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getRollCalls</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get roll call votes</h2>
+
+<h3>Description</h3>
+
+<p>Get an XML containing roll call information for all recorded votes
+on a bill
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getRollCalls.xml(biennium, billNumber, paired = TRUE)
+
+getRollCalls.summary(
+  biennium,
+  billNumber,
+  paired = TRUE,
+  type = c("df", "list")
+)
+
+getRollCalls.votes(biennium, billNumber, paired = TRUE, type = c("df", "list"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>biennium</code></td>
+<td>
+<p>Character vector representing the biennium(s) to be
+searched. Each argument should take the form "XXXX-YY"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>billNumber</code></td>
+<td>
+<p>Character or numeric vector containing the bill number(s)
+to be retrieved.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>paired</code></td>
+<td>
+<p>If TRUE, will assume that equal length vectors represent
+paired data. Set to FALSE to generate an NxN grid of input
+arguments. Applies to equal length vector inputs only.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>One of "df", "list", or "xml". Specifies the format for
+the output.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>getRollCalls.xml</code> returns a list of XML objects for each bill.
+<code>getRollCalls.summary</code> and <code>getRollCalls.votes</code>
+return objects of type equal to the
+<code>type</code> argument (defaults to dataframe)
+</p>
+
+
+<h3>Note</h3>
+
+<p>Due to the nested nature of the resulting document,
+we provide various functions to present simplified views of the data
+that are compatible with more parsimonious data structures. To see the
+full, original data, use <code>getRollCalls.xml</code> instead.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">votes &lt;- getRollCalls.summary("2007-08", "1001") # get roll call votes
+if(!is.null(votes)) {
+  length(votes) # total number of roll call votes recorded
+  votes$CountYeas[3] # number of yea votes on roll call vote #3
+}
+
+## example: get member id's for all representatives voting against the bill
+## on final passage
+votes &lt;- getRollCalls.votes("2007-08", "1001")
+if(!is.null(votes)) {
+  nay_votesFP &lt;- subset(votes, (Motion == "Final Passage" &amp; Vote == "Nay"))
+  print(nay_votesFP$MemberId)
+}
+
+</code></pre>
+
+
+</div>

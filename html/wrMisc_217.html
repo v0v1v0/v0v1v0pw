@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>regrBy1or2point</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Rescaling according to reference data using linear regression.</h2>
+
+<h3>Description</h3>
+
+<p><code>regrBy1or2point</code> does rescaling: linear transform simple vector 'inDat' that (mean of) elements of names cited in 'refLst' will end up as values 'regrTo'. 
+Regress single vector according to 'refLst' (describing names of inDat).
+If 'refLst' contains 2 groups, the 1st group will be set to the 1st value of 'regrTo' (and the 2nd group of 'refLst' to the 2nd 'regtTo')
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">regrBy1or2point(
+  inDat,
+  refLst,
+  regrTo = c(1, 0.5),
+  silent = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>inDat</code></td>
+<td>
+<p>matrix or data.frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refLst</code></td>
+<td>
+<p>list of names existing in inDat (one group of names for each value in 'regrTo'), to be transformed in values precised in 'regTo'; if no matches to names of 'inDat' found, the 2 lowest and/or highest highest values will be chosen</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>regrTo</code></td>
+<td>
+<p>(numeric,length=2) range (at scale 0-1) of target-values for mean of elements cited in 'refLst'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>normalized matrix
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>adjBy2ptReg</code>, <code>regrMultBy1or2point</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2016); dat1 &lt;- 1:50 +(1:50)*round(runif(50),1)
+names(dat1) &lt;- 1:length(dat1)
+reg1 &lt;- regrBy1or2point(dat1,refLst=c("2","49"))
+plot(reg1,dat1) 
+</code></pre>
+
+
+</div>

@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>split_locations</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Splits string of manually entered locations into one row for each location</h2>
+
+<h3>Description</h3>
+
+<p>Changes the unit of analysis from a disaster, to a disaster-location. This is useful as preprocessing before geocoding each disaster-location pair.
+</p>
+<p>Can be used in piped operations, making it tidy!
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">split_locations(
+  .,
+  column_name = "locations",
+  dummy_words = c("cities", "states", "provinces", "districts", "municipalities",
+    "regions", "villages", "city", "state", "province", "district", "municipality",
+    "region", "township", "village", "near", "department"),
+  joiner_regex = ",|\\(|\\)|;|\\+|( and )|( of )"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.</code></td>
+<td>
+<p>data frame of disaster data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>column_name</code></td>
+<td>
+<p>name of the column containing the locations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dummy_words</code></td>
+<td>
+<p>a vector of words that we don't want in our final output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>joiner_regex</code></td>
+<td>
+<p>a regex that tells us how to split the locations</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>same data frame with the location_word column added as well as a column called uncertain_location_specificity where the same location could be referred to in varying levels of specificity
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">locs &lt;- c("city of new york", "kerala, chennai municipality, and san francisco",
+"mumbai region, district of seattle, sichuan province")
+d &lt;- tibble::as_tibble(locs)
+split_locations(d, column_name = "value")
+
+</code></pre>
+
+
+</div>

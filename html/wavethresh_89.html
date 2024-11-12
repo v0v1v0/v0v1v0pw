@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>HaarMA</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate Haar MA processes.</h2>
+
+<h3>Description</h3>
+
+<p>This function generates an arbitrary number of observations from a Haar MA process of any order with a particular variance. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">HaarMA(n, sd=1, order=5)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The number of observations in the realization that you want to create. Note that n does NOT have to be a power of two.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd</code></td>
+<td>
+<p>The standard deviation of the innovations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>order</code></td>
+<td>
+<p>The order of the Haar MA process.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A Haar MA process is a special kind of time series moving-average (MA) process. A Haar MA process of order k is a MA process of order
+<code class="reqn">2^k</code>. The coefficients of the Haar MA process are given by the filter coefficients of the discrete Haar wavelet at different scales. 
+</p>
+<p>For examples: the Haar MA process of order 1 is an MA process of order 2.
+The coefficients are <code class="reqn">1/\sqrt{2}</code> and
+<code class="reqn">-1/\sqrt{2}</code>.
+The Haar MA process of order 2 is an MA process of order 4. The coefficients are 1/2, 1/2, -1/2, -1/2 and so on. It is possible to define other processes for other wavelets as well. 
+</p>
+<p>Any Haar MA process is a good examples of a (stationary) LSW process because it is sparsely representable by the locally-stationary wavelet machinery defined in Nason, von Sachs and Kroisandt.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector containing a realization of a Haar MA process of the specified order, standard deviation and number of observations. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.9 Copyright Guy Nason 1998 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>References</h3>
+
+<p>Nason, G.P., von Sachs, R. and Kroisandt, G. (1998). Wavelet processes and adaptive estimation of the evolutionary wavelet spectrum. <em>Technical Report</em>, Department of Mathematics University of Bristol/ Fachbereich Mathematik, Kaiserslautern.</p>
+
+
+<h3>See Also</h3>
+
+<p><code>HaarConcat</code>, <code>ewspec</code>, 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Generate a Haar MA process of order 1 (high frequency series)
+#
+MyHaarMA &lt;- HaarMA(n=151, sd=2, order=1)
+#
+# Plot it
+#
+## Not run: ts.plot(MyHaarMA)
+#
+# Generate another Haar MA process of order 3 (lower frequency), but of
+# smaller variance
+#
+MyHaarMA2 &lt;- HaarMA(n=151, sd=1, order=3)
+#
+# Plot it
+#
+## Not run: ts.plot(MyHaarMA2)
+#
+# Let's plot them next to each other so that you can really see the
+# differences.
+# 
+# Plot a vertical dotted line which indicates where the processes are
+# joined
+#
+## Not run: ts.plot(c(MyHaarMA, MyHaarMA2))
+## Not run: abline(v=152, lty=2)
+</code></pre>
+
+
+</div>

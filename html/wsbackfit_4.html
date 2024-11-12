@@ -1,0 +1,159 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.sback</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Predict method for sback fits
+</h2>
+
+<h3>Description</h3>
+
+<p>Predicted smooth functions and values based on an sback object
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'sback'
+predict(object, newdata, newoffset = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object of class <code>sback</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>a data frame containing the values of the covariates at which predictions are wanted. If not provided then the predictions correspond to the original data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newoffset</code></td>
+<td>
+<p>an optional numerical vector containing an a priori known component to be included in the linear predictor for the predictions (offset associated with the newdata).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>not yet implemented.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>pdata</code></td>
+<td>
+<p>the original supplied <code>newdata</code> argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>poffset</code></td>
+<td>
+<p>the original supplied <code>newoffset</code> argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coeff</code></td>
+<td>
+<p>a numeric vector with the estimated coefficients. This vector includes both the parametric effects as well as the coefficients associated with the linear component of the nonparametric functions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>peffects</code></td>
+<td>
+<p>matrix with the estimated nonparametric functions (only the nonlinear component) for each covariate value in the original supplied newdata.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pfitted.values</code></td>
+<td>
+<p>a numeric vector with the fitted values for the supplied newdata.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Javier Roca-Pardinas, Maria Xose Rodriguez-Alvarez and Stefan Sperlich</p>
+
+
+<h3>See Also</h3>
+
+<p><code>sback</code>, <code>summary.sback</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(wsbackfit)
+data(infect)
+
+# Generalized varying coefficient model with binary response
+m3 &lt;- sback(formula = inf ~ sb(gluc, h = 10) + sb(gluc, by = linf, h = 10), 
+  data = infect, family = "binomial", kbin = 15)
+
+summary(m3)
+
+# Plot both linear and non linear 
+# components of nonparametric functions: composed = FALSE
+op &lt;- par(no.readonly = TRUE)
+par(mfrow = c(1,3))
+plot(m3, composed = FALSE)
+
+# Personalized plots
+# First obtain predictions in new data
+# Create newdata for prediction
+ngrid &lt;- 30
+gluc0 &lt;- seq(50, 190, length = ngrid)
+linf0 &lt;- seq(0, 45, length = ngrid)
+df  &lt;- expand.grid(gluc = gluc0, linf = linf0)
+
+m3p &lt;- predict(m3, newdata = df)
+
+par(mfrow = c(1,2))
+ii &lt;- order(df[,"gluc"])
+
+## Parametric coefficients
+names(m3p$coeff)
+
+# Nonlinear components
+colnames(m3p$peffects) 
+
+# Include the linear component
+plot(df[ii,"gluc"], m3p$coeff[["gluc"]]*df[ii,"gluc"] + 
+  m3p$peffects[ii,"sb(gluc, h = 10)"], 
+  type = 'l', xlab = "Glucose (mg/dl)", ylab = "f_1(gluc)", 
+  main = "Nonparametric effect of Glucose")
+
+# Include the linear component
+plot(df[ii,"gluc"], m3p$coeff[["gluc:linf"]]*df[ii,"gluc"] + 
+  m3p$peffects[ii,"sb(gluc, h = 10, by = linf)"], 
+  type= 'l', xlab = "Glucose (mg/dl)", ylab = "f_2(gluc)",
+  main = "Varying coefficients as a function of Glucose")
+
+# Countour plot of the probability of post-opererational infection
+n &lt;- sqrt(nrow(df))
+Z &lt;- matrix(m3p$pfitted.values, n, n)
+filled.contour(z = Z, x = gluc0, y = linf0, 
+  xlab = "Glucose (mg/dl)", ylab = "Lymphocytes (%)",
+  main = "Probability of post-opererational infection")
+
+par(op)
+
+</code></pre>
+
+
+</div>

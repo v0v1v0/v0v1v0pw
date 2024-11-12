@@ -1,0 +1,175 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>linkMap.cross</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot a genetic linkage map</h2>
+
+<h3>Description</h3>
+
+<p>Neatly plots the genetic linkage map with marker locations and marker names.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'cross'
+linkMap(object, chr, chr.dist, marker.names = "markers",
+     tick = FALSE, squash = TRUE, m.cex = 0.6, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>object of class <code>"cross"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chr</code></td>
+<td>
+<p>character string naming the subset of chromosomes to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chr.dist</code></td>
+<td>
+<p>a list containing named elements <code>"start"</code> and
+<code>"end"</code> containing the start and end distances in cM the
+genetic map should be subsetted by. Each of these may also be
+a vector of distances equal to the length of the number of linkage
+groups to be plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>marker.names</code></td>
+<td>
+<p>a character string naming the type of marker
+information to plot. If <code>"dist"</code> then distances are
+plotted alongside each chromosome on the left. If <code>"markers"</code>
+then marker names are plotted instead. Defaults to <code>"markers"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tick</code></td>
+<td>
+<p>logical value. If <code>TRUE</code> then an axis with tick marks are
+generated for the chromosome names. Defaults to <code>FALSE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>squash</code></td>
+<td>
+<p>logical value. if <code>TRUE</code> then creates extra room on
+the left side of the chromosomes. This is useful for plotting trait
+names for QTL using <code>linkMap.wgaim()</code> and
+<code>linkMap.default()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m.cex</code></td>
+<td>
+<p>the expansion factor to use for the marker names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to <code>plot()</code> function to set up the plot
+region. Arguments may also be passed to <code>text()</code> function for the
+manipulation of the marker names</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This plotting procedure provides a visual display of the
+chromosomes without marker names overlapping vertically. The plotting
+region will adjust itself to ensure that all marker names are in the region. For
+this reason the value for <code>"m.cex"</code> is passed to the <code>text()</code>
+function and should be manipulated until an aesthetic genetic map is reached.
+</p>
+<p>For large maps with many chromosomes, marker names and adjacent
+chromosomes will overlap horizontally. For the interest of readability
+this has not been corrected. For this particular situation it is
+suggested that the user horizontally maximise the plotting window
+until no overlapping occurs or subset the genetic map to achieve the
+desired result.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This invisibly returns the following list for manipulation with
+<code>linkMap.wgaim()</code>
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>mt</code></td>
+<td>
+<p>A list named by the chromosomes with each element containing the locations of
+the marker names after correcting for overlapping</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>map</code></td>
+<td>
+<p>A list named by the chromosomes with each element
+containing the locations of markers on the chromosomes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chrpos</code></td>
+<td>
+<p>The numerical position of the chromosomes on the
+plotting region</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Julian Taylor</p>
+
+
+<h3>References</h3>
+
+<p>Verbyla, A. P &amp; Taylor, J. D, Verbyla, K. L (2012). RWGAIM: An efficient high
+dimensional random whole genome average (QTL) interval mapping approach.
+<em>Genetics Research</em>. <b>94</b>, 291-306.
+</p>
+<p>Julian Taylor, Arunas Vebyla (2011). R Package wgaim: QTL Analysis in
+Bi-Parental Populations Using Linear Mixed Models. <em>Journal of
+Statistical Software</em>, <b>40</b>(7), 1-18. URL <a href="https://www.jstatsoft.org/v40/i07/">https://www.jstatsoft.org/v40/i07/</a>.
+</p>
+<p>Verbyla, A. P., Cullis, B. R., Thompson, R (2007) The analysis of QTL
+by simultaneous use of the full linkage map. <em>Theoretical and
+Applied Genetics</em>, <b>116</b>, 95-111.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>linkMap.wgaim</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(genoSxT, package = "wgaim")
+
+## plot linkage map with marker names
+
+linkMap(genoSxT, cex = 0.5)
+
+## plot linkage map with distances
+
+linkMap(genoSxT, cex = 0.5, marker.names = "dist")
+
+</code></pre>
+
+
+</div>

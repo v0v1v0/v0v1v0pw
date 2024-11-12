@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>clean</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cleaning function</h2>
+
+<h3>Description</h3>
+
+<p>Cleans the dataset in order to create a suitable data.frame ready to be used in the <code>welofit</code> function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">clean(x, MNM = 10, MRANK = 500)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Data to be cleaned. It must be a data.frame coming from <a href="http://www.tennis-data.co.uk/">http://www.tennis-data.co.uk/</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MNM</code></td>
+<td>
+<p><strong>optional</strong> Minimum number of matches played by each player to include in the cleaned dataset. Default to 10. This means that
+each player has to play at least 10 matches</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MRANK</code></td>
+<td>
+<p><strong>optional</strong> Maximum rank of the players to consider. Default to 500. This means that all the matches with players
+with ranks greater than 500 are dropped</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The cleaning operations are:
+</p>
+
+<ol>
+<li>
+<p> Remove all the uncompleted matches;
+</p>
+</li>
+<li>
+<p> Remove all the NAs from B365 odds;
+</p>
+</li>
+<li>
+<p> Remove all the NAs from the variable "ranking";
+</p>
+</li>
+<li>
+<p> Remove all the NAs from the variable "games";
+</p>
+</li>
+<li>
+<p> Remove all the NAs from the variable "sets";
+</p>
+</li>
+<li>
+<p> Remove all the matches where the B365 odds are equal;
+</p>
+</li>
+<li>
+<p> Define players <code class="reqn">i</code> and <code class="reqn">j</code> and their outcomes (<code class="reqn">Y_i</code> and <code class="reqn">Y_j</code>);
+</p>
+</li>
+<li>
+<p> Remove all the matches of players who played less than MNM matches;
+</p>
+</li>
+<li>
+<p> Remove all the matches of players with rank greater than MRANK;
+</p>
+</li>
+<li>
+<p> Sort the matches by date.
+</p>
+</li>
+</ol>
+<h3>Value</h3>
+
+<p>Data.frame cleaned
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(atp_2019) 
+db_clean&lt;-clean(atp_2019)
+str(db_clean)
+
+</code></pre>
+
+
+</div>

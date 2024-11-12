@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>query_wos</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Query the Web of Science</h2>
+
+<h3>Description</h3>
+
+<p>Returns the number of records that match a given query. It's best to call
+this function before calling <code>pull_wos</code> so that you know how
+many records you're trying to download before attempting to do so.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">query_wos(query, editions = c("SCI", "SSCI", "AHCI", "ISTP", "ISSHP",
+  "BSCI", "BHCI", "IC", "CCR", "ESCI"),
+  sid = auth(Sys.getenv("WOS_USERNAME"), Sys.getenv("WOS_PASSWORD")),
+  ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>Query string. See the <a href="https://images.webofknowledge.com/images/help/WOK/hs_search_operators.html#dsy863-TRS_search_operator_precedence">WoS query documentation</a> page
+for details on how to write a query as well as this list of <a href="http://images.webofknowledge.com.ezproxy.lib.vt.edu/WOKRS527R13/help/WOS/hp_advanced_examples.html">example queries</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>editions</code></td>
+<td>
+<p>Web of Science editions to query. Possible values are listed
+<a href="http://ipscience-help.thomsonreuters.com/wosWebServicesLite/dbEditionsOptionsGroup/databaseEditionsWos.html">here</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sid</code></td>
+<td>
+<p>Session identifier (SID). The default setting is to get a fresh
+SID each time you query WoS via a call to <code>auth</code>. However,
+you should try to reuse SIDs across queries so that you don't run into the
+throttling limits placed on new sessions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments passed along to <code>POST</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class <code>query_result</code>. This object contains the number
+of publications that are returned by your query (<code>rec_cnt</code>), as well as
+some info that <code>pull_wos</code> uses when it calls <code>query_wos</code>
+internally.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+# Get session ID and reuse it across queries:
+sid &lt;- auth("some_username", password = "some_password")
+
+query_wos("TS = (\"dog welfare\") AND PY = (1990-2007)", sid = sid)
+
+# Finds records in which Max Planck appears in the address field.
+query_wos("AD = Max Planck", sid = sid)
+
+# Finds records in which Max Planck appears in the same address as Mainz
+query_wos("AD = (Max Planck SAME Mainz)", sid = sid)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

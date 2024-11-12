@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>glance.workflow</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Glance at a workflow model</h2>
+
+<h3>Description</h3>
+
+<p>This is a <code>generics::glance()</code> method for a workflow that calls <code>glance()</code> on
+the underlying parsnip model.
+</p>
+<p><code>x</code> must be a trained workflow, resulting in fitted parsnip model to
+<code>glance()</code> at.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'workflow'
+glance(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A workflow</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments passed on to methods</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (rlang::is_installed("broom")) {
+
+library(parsnip)
+library(magrittr)
+library(modeldata)
+
+data("attrition")
+
+model &lt;- logistic_reg() %&gt;%
+  set_engine("glm")
+
+wf &lt;- workflow() %&gt;%
+  add_model(model) %&gt;%
+  add_formula(
+    Attrition ~ BusinessTravel + YearsSinceLastPromotion + OverTime
+  )
+
+# Workflow must be trained to call `glance()`
+try(glance(wf))
+
+wf_fit &lt;- fit(wf, attrition)
+
+glance(wf_fit)
+
+}
+</code></pre>
+
+
+</div>

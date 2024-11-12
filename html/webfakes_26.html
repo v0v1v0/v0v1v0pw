@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>tmpl_glue</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>glue based template engine</h2>
+
+<h3>Description</h3>
+
+<p>Use this template engine to create pages with glue templates.
+See <code>glue::glue()</code> for the syntax.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">tmpl_glue(
+  sep = "",
+  open = "{",
+  close = "}",
+  na = "NA",
+  transformer = NULL,
+  trim = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>sep</code></td>
+<td>
+<p>Separator used to separate elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>open</code></td>
+<td>
+<p>The opening delimiter. Doubling the full delimiter escapes
+it.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>close</code></td>
+<td>
+<p>The closing delimiter. Doubling the full delimiter escapes
+it.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na</code></td>
+<td>
+<p>Value to replace NA values with. If <code>NULL</code> missing values are
+propagated, that is an <code>NA</code> result will cause <code>NA</code> output.
+Otherwise the value is replaced by the value of <code>na</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transformer</code></td>
+<td>
+<p>A function taking three parameters <code>code</code>, <code>envir</code>
+and <code>data</code> used to transform the output of each block before during or
+after evaluation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim</code></td>
+<td>
+<p>Whether to trim the input template with <code>glue::trim()</code> or not.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Template function.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># See th 'hello' app at
+hello_root &lt;- system.file(package = "webfakes", "examples", "hello")
+hello_root
+
+app &lt;- new_app()
+app$engine("txt", tmpl_glue())
+app$use(mw_log())
+
+
+app$get("/view", function(req, res) {
+  txt &lt;- res$render("test")
+  res$
+    set_type("text/plain")$
+    send(txt)
+})
+
+# Switch to the app's root: setwd(hello_root)
+# Now start the app with: app$listen(3000L)
+# Or start it in another process: new_process(app)
+</code></pre>
+
+
+</div>

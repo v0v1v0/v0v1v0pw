@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wrtdscv</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Use k-fold cross-validation to evaluate WRTDS model fit</h2>
+
+<h3>Description</h3>
+
+<p>Use k-fold cross-validation to evaluate WRTDS model fit based on supplied half-window widths.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wrtdscv(dat_in, ...)
+
+## Default S3 method:
+wrtdscv(dat_in, wins, k = 10, seed_val = 123, trace = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input tidal or tidalmean object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to <code>wrtds</code> or <code>getwts</code>, e.g., <code>tau = 0.2</code> if a <code>tidal</code> object is used for <code>dat_in</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wins</code></td>
+<td>
+<p>list of input half-window widths of the order months, years, and salinity/flow, passed to <code>getwts</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>number of folds to evaluate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed_val</code></td>
+<td>
+<p>seed to keep the same dataset divisions between window width comparisons</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trace</code></td>
+<td>
+<p>logical indicating if progress is printed in the console</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Default number of folds is ten.  Each fold can be evaluated with multiple cores if a parallel back end is created prior to running the function (see the examples).  This will greatly increase processing speed unless k is set to a small number.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Overall error is the average of all errors for each fold.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>getwts</code>, <code>wtsplot</code>, <code>winsrch_grid</code>, <code>winsrch_optim</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+library(doParallel)
+ncores &lt;- detectCores() - 1  
+registerDoParallel(cores = ncores)
+
+# half-window widths to evaluate
+# months, years, and salinity/flow
+wins &lt;- list(0.5, 10, 0.5) 
+
+# get ocv score for k = 10
+wrtdscv(tidobjmean, wins = wins)
+
+# get ocv score k = 2, tau = 0.2 
+wrtdscv(tidobj, wins = wins, tau = 0.2)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

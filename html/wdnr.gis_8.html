@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_hydro_layer</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve WDNR's HYDRO spatial layer</h2>
+
+<h3>Description</h3>
+
+<p>A function that can be used to retrieve WDNR's 24k Hydrography (HYDRO) layer.
+Either the"24K Hydrography Streams and Rivers" or the
+"24K Hydrography Lakes and Open Water" can be queried by setting 'layer_type'
+to 'lines' or 'polygons' respectively.
+A spatial query can be performed to limit the output of the function by
+supplying a county name, watershed code, watershed name, or custom sf polygon
+object. Use the 'watershed_lookup' to find valid watershed codes and names.
+WBIC's can also be provided in order to return features for
+specific waterbodies. The 'where' arguement can be used to run
+custom SQL queries.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_hydro_layer(
+  county = NULL,
+  watershed_code = NULL,
+  watershed_name = NULL,
+  sf_object = NULL,
+  wbic = NULL,
+  where = NULL,
+  layer_type = "polygons",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>county</code></td>
+<td>
+<p>A character object specifying a county name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>watershed_code</code></td>
+<td>
+<p>A character object specifying the HUC code for a
+watershed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>watershed_name</code></td>
+<td>
+<p>A character object specifying the HUC name for a
+watershed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sf_object</code></td>
+<td>
+<p>Any sf polygon object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wbic</code></td>
+<td>
+<p>A character object or string of WBIC's</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>where</code></td>
+<td>
+<p>SQL statement</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>layer_type</code></td>
+<td>
+<p>"lines", "polygons", or "flowlines"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters to pass to
+<code>get_spatial_layer</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function will retrieve WDNR's hydro layer.  A county, watershed code,
+watershed_name, or custom sf polygon can be specifie to filter the layer.
+The layer type can be specified to query either the polylines or polygons
+hydro spatial layers.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An sf object of class polylines of polygons
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+get_hydro_layer(county = "milwaukee", layer_type = "lines")
+get_hydro_layer(watershed_code = "07070006", layer_type = "polygons")
+get_hydro_layer(wbic = c("549400", "15000"), layer_type = "polygons")
+get_hydro_layer(county = "milwaukee", where = "HYDROTYPE = '508'")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

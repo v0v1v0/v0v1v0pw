@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>writeFasta2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Write sequences in fasta format to file
+This function writes sequences from character vector as fasta formatted file (from <a href="https://www.uniprot.org">UniProt</a>) 
+Line-headers are based on names of elements of input vector <code>prot</code>.
+This function also allows comparing the main vector of sequences with a reference vector <code>ref</code> to check if any of the sequences therein are truncated.</h2>
+
+<h3>Description</h3>
+
+<p>Write sequences in fasta format to file
+</p>
+<p>This function writes sequences from character vector as fasta formatted file (from <a href="https://www.uniprot.org">UniProt</a>) 
+Line-headers are based on names of elements of input vector <code>prot</code>.
+This function also allows comparing the main vector of sequences with a reference vector <code>ref</code> to check if any of the sequences therein are truncated.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">writeFasta2(
+  prot,
+  fileNa = NULL,
+  ref = NULL,
+  lineLength = 60,
+  eol = "\n",
+  truSuf = "_tru",
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>prot</code></td>
+<td>
+<p>(character) vector of sequenes, names will be used for fasta-header</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fileNa</code></td>
+<td>
+<p>(character) name (and path) for file to be written</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ref</code></td>
+<td>
+<p>(character) optional/additional set of (reference-) sequences (only for comparison to <code>prot</code>), length of proteins from <code>prot</code> will be checked to mark truncated proteins by '_tru'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lineLength</code></td>
+<td>
+<p>(integer, length=1) number of sequence characters per line (default 60, should be &gt;1 and &lt;10000)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eol</code></td>
+<td>
+<p>(character) the character(s) to print at the end of each line (row); for example, eol = "\r\n" will produce Windows' line endings on a Unix-alike OS</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truSuf</code></td>
+<td>
+<p>(character) suffix to be added for sequences found truncated when comparing with <code>ref</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) supplemental messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Sequences without any names will be given generic headers like protein01 ... etc.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function writes the sequences from <code>prot</code> as fasta formatted-file
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>readFasta2</code> for reading fasta, <code>write.fasta</code> from the package <a href="https://CRAN.R-project.org/package=seqinr">seqinr</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">prots &lt;- c(SEQU1="ABCDEFGHIJKL", SEQU2="CDEFGHIJKLMNOP")
+writeFasta2(prots, fileNa=file.path(tempdir(),"testWrite.fasta"), lineLength=6)
+</code></pre>
+
+
+</div>

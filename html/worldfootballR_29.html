@@ -1,0 +1,53 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fotmob_get_match_team_stats</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get fotmob match top team stats by match id</h2>
+
+<h3>Description</h3>
+
+<p>Returns match top team stats from fotmob.com
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fotmob_get_match_team_stats(match_ids)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>match_ids</code></td>
+<td>
+<p>a vector of strings or numbers representing matches</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>returns a dataframe of match top team stats
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+try({
+library(dplyr)
+library(tidyr)
+results &lt;- fotmob_get_matches_by_date(date = "20210926")
+match_ids &lt;- results %&gt;%
+  dplyr::select(primary_id, ccode, league_name = name, match_id) %&gt;%
+  dplyr::filter(league_name == "Premier League", ccode == "ENG") %&gt;%
+  dplyr::pull(match_id)
+match_ids # 3609987 3609979
+details &lt;- fotmob_get_match_team_stats(match_ids)
+})
+
+</code></pre>
+
+
+</div>

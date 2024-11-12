@@ -1,0 +1,204 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>welofit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculates the WElo and Elo rates</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the WElo and Elo rates according to Angelini et al. (2022). In particular, the Elo updating system
+defines the rates (for player <code class="reqn">i</code>) as:
+</p>
+<p style="text-align: center;"><code class="reqn">E_{i}(t+1) = E_{i}(t) + K_i(t) \left[W_{i}(t)- \hat{p}_{i,j}(t) \right],</code>
+</p>
+
+<p>where <code class="reqn">E_{i}(t)</code> is the Elo rate at time <code class="reqn">t</code>, <code class="reqn">W_{i}(t)</code> is the outcome (1 or 0) for player <code class="reqn">i</code> in the match at time <code class="reqn">t</code>,
+<code class="reqn">K_i(t)</code> is a scale factor, and <code class="reqn">\hat{p}_{i,j}(t)</code> is the probability of winning for match at time <code class="reqn">t</code>, calculated using <code>tennis_prob</code>.
+The scale factor <code class="reqn">K_i(t)</code> determines how much the rates change over time. By default, according to Kovalchik (2016), it is defined as
+</p>
+<p style="text-align: center;"><code class="reqn">K_i(t)=250/\left(N_i(t)+5\right)^{0.4},</code>
+</p>
+
+<p>where <code class="reqn">N_i(t)</code> is the number of matches disputed by player <code class="reqn">i</code> up to time <code class="reqn">t</code>. Alternately, <code class="reqn">K_i(t)</code> can be multiplied by 1.1 if
+the match at time <code class="reqn">t</code> is a Grand Slam match or is played on a given surface. Finally, it can be fixed to a constant value.
+The WElo rating system is defined as:
+</p>
+<p style="text-align: center;"><code class="reqn">E_{i}^\ast(t+1) = E_{i}^\ast(t) + K_i(t) \left[W_{i}(t)- \hat{p}_{i,j}^\ast(t) \right] f(W_{i,j}(t)),</code>
+</p>
+
+<p>where <code class="reqn">E_{i}^\ast(t+1)</code> denotes the WElo rate for player <code class="reqn">i</code>, <code class="reqn">\hat{p}_{i,j}^\ast(t)</code> the probability of winning using <code>tennis_prob</code> and
+the WElo rates, and <code class="reqn">f(W_{i,j}(t))</code> represents a function whose values depend on the games (by default) or sets won in the previous match.
+In particular, when parameter 'W' is set to "GAMES", <code class="reqn">f(W_{i,j}(t))</code> is defined as:
+</p>
+<p style="text-align: center;"><code class="reqn">   f(W_{i,j}(t)) \equiv f(G_{i,j}(t))=  
+\left\{
+               \begin{array}{ll}
+                \frac{NG_i(t)}{NG_i(t)+NG_j(t)} \quad if~player~i~has~won~match~t;\\
+                 \frac{NG_j(t)}{NG_i(t)+NG_j(t)} \quad if~player~i~has~lost~match~t,
+               \end{array}
+            \right. 
+</code>
+</p>
+
+<p>where <code class="reqn">NG_i(t)</code> and <code class="reqn">NG_j(t)</code> represent the number of games won by player <code class="reqn">i</code> and player <code class="reqn">j</code> in match <code class="reqn">t</code>, respectively.
+When parameter 'W' is set to "SET", <code class="reqn">f(W_{i,j}(t))</code> is:
+</p>
+<p style="text-align: center;"><code class="reqn">   f(W_{i,j}(t)) \equiv f(S_{i,j}(t))=  
+\left\{
+               \begin{array}{ll}
+                \frac{NS_i(t)}{NS_i(t)+NS_j(t)} \quad if~player~i~has~won~match~t;\\
+                 \frac{NS_j(t)}{NS_i(t)+NS_j(t)} \quad if~player~i~has~lost~match~t,
+               \end{array}
+            \right. 
+</code>
+</p>
+
+<p>where <code class="reqn">NS_i(t)</code> and <code class="reqn">NS_j(t)</code> represent the number of  sets won by player <code class="reqn">i</code> and player <code class="reqn">j</code> in match <code class="reqn">t</code>, respectively.
+The scale factor <code class="reqn">K_i(t)</code> is the same as the Elo model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">welofit(
+  x,
+  W = "GAMES",
+  SP = 1500,
+  K = "Kovalchik",
+  CI = FALSE,
+  alpha = 0.05,
+  B = 1000,
+  new_data = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Data cleaned through the function <code>clean</code> or, if the parameter 'new_data' is present,
+a former estimated list coming from the <code>welofit</code> function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p><strong>optional</strong> Weights to use for the WElo rating system. Valid choices are: "GAMES" (by default) and "SETS"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SP</code></td>
+<td>
+<p><strong>optional</strong> Starting points for calculating the rates. 1500 by default</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K</code></td>
+<td>
+<p><strong>optional</strong> Scale factor determining how much the WElo and Elo rates change over time. Valid choices are:
+"Kovalchik" (by default), "Grand_Slam", "Surface_Hard", "Surface_Grass", "Surface_Clay" and, finally, a constant value <code class="reqn">K</code>.
+The first option ("Kovalchik") is equal to what was suggested by Kovalchik (2016),
+Putting <code class="reqn">K</code> to "Grand_Slam" lets the Kovalchik scale factor multiplied by 1.1, if the match is a Grand Slam match.
+Similarly, the choices "Surface_Hard", "Surface_Grass" and "Surface_Clay" make the Kovalchik scale factor
+increased by 1.1 if, respectively, the match is played on hard, grass or clay. Finally, <code class="reqn">K</code> can be any scalar value, indipendently of the number of matches played before the match <code class="reqn">t</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CI</code></td>
+<td>
+<p><strong>optional</strong> Confidence intervals for the WElo and Elo rates. Default to FALSE. If 'CI' is set to "TRUE", then the
+confidence intervals are calculated, according to the procedure explained by Angelini et al. (2022)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p><strong>optional</strong> Significance level of the confidence interval. Default to 0.05</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+<p><strong>optional</strong> Number of bootstrap samples used to calculate the confidence intervals. Default to 1000</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>new_data</code></td>
+<td>
+<p><strong>optional</strong> New data, cleaned through the function <code>clean</code>, to append to an already estimated set of matches (included
+in the parameter 'x')</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>welofit</code> returns an object of class 'welo', which is a list containing the following components:
+</p>
+
+<ul>
+<li>
+<p> results: The data.frame including a variety of variables, among which there are the estimated WElo and Elo rates, before and
+after the match <code class="reqn">t</code>, for players <code class="reqn">i</code> and <code class="reqn">j</code>,
+the lower and upper confidence intervals (if CI=TRUE) for the WElo and Elo rates, labelled as '_lb' and '_ub', respectively, and the probability of winning the match for player <code class="reqn">i</code> (labelled as 'WElo_pi_hat' and
+'Elo_pi_hat', respectively, for the WElo and Elo models).
+</p>
+</li>
+<li>
+<p> matches: The number of matches analyzed.
+</p>
+</li>
+<li>
+<p> period: The sample period considered.
+</p>
+</li>
+<li>
+<p> loss: The Brier score (Brier 1950) and log-loss (used by  Kovalchik (2016), among others)
+averages, calculated considering the distance with respect to the outcome of the match.
+</p>
+</li>
+<li>
+<p> highest_welo: The player with the highest WElo rate and the relative date.
+</p>
+</li>
+<li>
+<p> highest_elo: The player with the highest Elo rate and the relative date.
+</p>
+</li>
+<li>
+<p> dataset: The dataset used for the estimation of the WElo and Elo rates.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Angelini G, Candila V, De Angelis L (2022).
+“Weighted Elo rating for tennis match predictions.”
+<em>European Journal of Operational Research</em>, <b>297</b>(1), 120–132.<br><br> Brier GW (1950).
+“Verification of forecasts expressed in terms of probability.”
+<em>Monthly weather review</em>, <b>78</b>(1), 1–3.<br><br> Kovalchik SA (2016).
+“Searching for the GOAT of tennis win prediction.”
+<em>Journal of Quantitative Analysis in Sports</em>, <b>12</b>(3), 127–138.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(atp_2019) 
+db_clean&lt;-clean(atp_2019)
+res&lt;-welofit(db_clean)
+# append new data
+db_clean_1&lt;-db_clean[1:500,]
+db_clean_2&lt;-db_clean[501:1200,]
+res_1&lt;-welofit(db_clean_1)
+res_2&lt;-welofit(res_1,new_data=db_clean_2)
+
+</code></pre>
+
+
+</div>

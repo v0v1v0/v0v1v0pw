@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.WH_2d</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot Method for a Whittaker-Henderson Fit</h2>
+
+<h3>Description</h3>
+
+<p>Plot Method for a Whittaker-Henderson Fit
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'WH_2d'
+plot(x, what = "y_hat", trans, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An object of class <code>"WH_2d"</code> returned by the <code>WH_2d()</code> function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>what</code></td>
+<td>
+<p>Should be one of <code>y_hat</code> (the default) for model fit, <code>std_y_hat</code>
+for the associated standard deviation, <code>res</code> for residuals and <code>edf</code> for
+the effective degrees of freedom.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trans</code></td>
+<td>
+<p>An (optional) transformation to be applied to the data. By
+default the identity function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A plot representing the desired element from the fit...
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">keep_age &lt;- which(rowSums(portfolio_LTC$ec) &gt; 5e2)
+keep_duration &lt;- which(colSums(portfolio_LTC$ec) &gt; 1e3)
+
+d  &lt;- portfolio_LTC$d[keep_age, keep_duration]
+ec &lt;- portfolio_LTC$ec[keep_age, keep_duration]
+
+fit &lt;- WH_2d(d, ec)
+plot(fit)
+plot(fit, "std_y_hat")
+
+</code></pre>
+
+
+</div>

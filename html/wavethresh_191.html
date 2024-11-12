@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>putpacket.wst</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Put a packet of coefficients into a packet ordered non-decimated wavelet object (wst).</h2>
+
+<h3>Description</h3>
+
+<p>This function inserts a packet of coefficients into a packet-ordered non-decimated wavelet object (<code>wst</code>) object. The <code>wst</code> objects are computed by the <code>wst</code> function amongst others. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wst'
+putpacket(wst, level, index, packet, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wst</code></td>
+<td>
+<p>Packet-ordered non-decimated wavelet object into which you wish to insert the packet.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>The resolution level of the coefficients that you wish to insert.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>index</code></td>
+<td>
+<p>The index number within the resolution level of the packet of coefficients that you wish to insert.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>packet</code></td>
+<td>
+<p>A vector of coefficients that you wish to insert into the <code>wst</code> object. The length that the packet has to may be determined by extracting the same packet of coefficients using the <code>getpacket.wst</code> function and using the S-Plus length function to determine the length!</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function actually calls the <code>putpacket.wp</code> to do the insertion.
+</p>
+<p>In the future this function will be extended to insert father wavelet coefficients as well. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>wst.object</code> containing the packet ordered non-decimated wavelet coefficients that have been modified: i.e. with packet inserted.
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.9 Copyright Guy Nason 1998 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>getpacket.wst</code>, <code>putpacket</code>, <code>putpacket.wp</code>, <code>wst</code>, <code>wst.object</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Take the packet-ordered non-decimated transform of some random data 
+#
+MyWST &lt;- wst(rnorm(1:512))
+#
+# The above data set was 2^9 in length. Therefore there are
+# coefficients at resolution levels 0, 1, 2, ..., and 8.
+#
+# The high resolution coefficients are at level 8.
+# There should be 256 coefficients at level 8 in index location 0 and 1.
+#
+length(getpacket(MyWST, level=8, index=0))
+# [1] 256
+length(getpacket(MyWST, level=8, index=1))
+# [1] 256
+#
+# There should be 4 coefficients at resolution level 2
+#
+getpacket(MyWST, level=2, index=0)
+# [1] -0.92103095  0.70125471  0.07361174 -0.43467375
+#
+# O.k. Let's insert the packet containing the numbers 19,42,21,32
+#
+NewMyWST &lt;- putpacket(MyWST, level=2, index=0, packet=c(19,42,31,32))
+#
+# Let's check that it put the numbers in correctly by reaccessing that
+# packet...
+#
+getpacket(NewMyWST, level=2, index=0)
+# [1] 19 42 31 32
+#
+# Yep. It inserted the packet correctly.
+</code></pre>
+
+
+</div>

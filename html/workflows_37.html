@@ -1,0 +1,61 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>is_trained_workflow</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Determine if a workflow has been trained</h2>
+
+<h3>Description</h3>
+
+<p>A trained workflow is one that has gone through <code>fit()</code>,
+which preprocesses the underlying data, and fits the parsnip model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">is_trained_workflow(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A workflow.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A single logical indicating if the workflow has been trained or not.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(parsnip)
+library(recipes)
+library(magrittr)
+
+rec &lt;- recipe(mpg ~ cyl, mtcars)
+
+mod &lt;- linear_reg()
+mod &lt;- set_engine(mod, "lm")
+
+wf &lt;- workflow() %&gt;%
+  add_recipe(rec) %&gt;%
+  add_model(mod)
+
+# Before any preprocessing or model fitting has been done
+is_trained_workflow(wf)
+
+wf &lt;- fit(wf, mtcars)
+
+# After all preprocessing and model fitting
+is_trained_workflow(wf)
+</code></pre>
+
+
+</div>

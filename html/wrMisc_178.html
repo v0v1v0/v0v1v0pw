@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mergeSelCol</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Merge selected columns out of 2 matrix or data.frames</h2>
+
+<h3>Description</h3>
+
+<p>This function merges selected columns out of 2 matrix or data.frames.
+'selCols' will be used to define columns to be used; optionally may be different for 'dat2' : define in 'supCols2'. 
+Output-cols will get additions specified in newSuff (default '.x' and '.y')
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mergeSelCol(
+  dat1,
+  dat2,
+  selCols,
+  supCols2 = NULL,
+  byC = NULL,
+  useAll = FALSE,
+  setRownames = TRUE,
+  newSuff = c(".x", ".y"),
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat1</code></td>
+<td>
+<p>matrix or data.frame for fusing</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dat2</code></td>
+<td>
+<p>matrix or data.frame for fusing</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>selCols</code></td>
+<td>
+<p>will be used to define columns to be used; optionally may be different for 'dat2' : define in 'supCols2'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>supCols2</code></td>
+<td>
+<p>if additional column-names should be extracted form dat2</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>byC</code></td>
+<td>
+<p>(character) 'by' value used in <code>merge</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useAll</code></td>
+<td>
+<p>(logical) use all lines (will produce NAs when given identifyer not found un 2nd group of data)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>setRownames</code></td>
+<td>
+<p>(logical) if <code>TRUE</code>, will use values of col used as 'by' as rownames instead of showing as add'l col in output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newSuff</code></td>
+<td>
+<p>(character) prefix (argument 'suffixes' in <code>merge</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a data.frame containing the merged columns
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>merge</code>, merge 3 data.frames using <code>mergeSelCol3</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">mat1 &lt;- matrix(c(1:7,letters[1:7],11:17), ncol=3, dimnames=list(LETTERS[1:7],c("x1","x2","x3")))
+mat2 &lt;- matrix(c(1:6,c("b","a","e","f","g","k"), 31:36),
+  ncol=3, dimnames=list(LETTERS[11:16],c("y1","x2","x3")))
+mergeSelCol(mat1, mat2, selC=c("x2","x3"))
+</code></pre>
+
+
+</div>

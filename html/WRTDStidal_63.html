@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>respred</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get WRTDS predictions from interpolation grids</h2>
+
+<h3>Description</h3>
+
+<p>Get model predictions from WRTDS using linear interpolation of values in grids
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">respred(dat_in, ...)
+
+## S3 method for class 'tidal'
+respred(dat_in, dat_pred = NULL, trace = TRUE, omit = TRUE, ...)
+
+## S3 method for class 'tidalmean'
+respred(dat_in, dat_pred = NULL, trace = TRUE, omit = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input tidal or tidalmean object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to or from other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dat_pred</code></td>
+<td>
+<p>optional data to predict using the interpolation grids in dat_in, defaults to observed data in <code>dat_in</code> if not supplied, see details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trace</code></td>
+<td>
+<p>logical indicating if progress is shown in the console</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>omit</code></td>
+<td>
+<p>logical indicating if observations in <code>dat_pred</code> that are outside of the range of data used to fit the model are removed, see details</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is used after <code>wrtds</code> to estimate predicted values of the response variable from the interpolation grids.  The estimated values are based on a bilinear interpolation of the four predicted response values at two salinity/flow and two date values nearest to the observed salinity/flow and date values to predict.  
+</p>
+<p>Data for <code>dat_pred</code> must be a data frame of two columns for date and flow variables (<code>date</code> and <code>numeric</code> objects).  The columns must be named 'date' and 'flo'.  Values that are outside of the range of data used to fit the model are removed with a warning.  It is assumed that the flow variable is not scaled (i.e., raw data) as in a <code>tidal</code> or <code>tidalmean</code> object. The dimensions of the output data are modified to match <code>dat_pred</code> if observations are removed.  The <code>omit</code> argument should not equal <code>FALSE</code> and is included only for use with <code>wrtdscv</code> to evaluate folds of the original dataset.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Appends columns to the input data.frame for the predicted values.  For tidal objects, columns are named starting with the prefix ‘fit’, e.g., ‘fit0.5’ are the predicted values for the fit through the median.  For tidalmean objects, predicted values are appended for the mean model in log-space and the observed values from the back-transformed grids.  Columns are named as ‘fits’ and ‘bt_fits’.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##
+
+# load a tidal object
+data(tidobj)
+
+# get fitted values for each quantile
+res &lt;- respred(tidobj)
+
+# load a tidalmean object
+data(tidobjmean)
+
+# get predicted values
+res &lt;- respred(tidobjmean)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>corColumnOrder</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Order Columns In List Of Matrixes And Vectors</h2>
+
+<h3>Description</h3>
+
+<p>This function orders columns in list of matrixes (or matrix) according to argument <code>sampNames</code>.
+It can be used to adjust/correct the order of samples after reading data using <code>readMaxQuantFile()</code>, <code>readProteomeDiscovererFile()</code> etc.
+The input may also be MArrayLM-type object from package <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a> or 
+from functions <code>moderTestXgrp</code> or <code>moderTest2grp</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">corColumnOrder(
+  dat,
+  replNames = NULL,
+  sampNames,
+  useListElem = c("quant", "raw", "counts"),
+  annotElem = "sampleSetup",
+  newNames = NULL,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(matrix, list or MArrayLM-object from limma) main input of which columns should get re-ordered, may be output from <code>moderTestXgrp</code> or <code>moderTest2grp</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>replNames</code></td>
+<td>
+<p>(character) new column-names (in order as input from <code>dat</code>), allows renaming colnames before defining new order</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sampNames</code></td>
+<td>
+<p>(character) column-names in desired order for output (must match colnames of <code>dat</code> or <code>replNames</code>, if used)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useListElem</code></td>
+<td>
+<p>(character) in case <code>dat</code> is list, all list-elements who's columns should get (re-)ordered</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annotElem</code></td>
+<td>
+<p>(character) name of list-element of <code>dat</code> with annotation data to get in new order</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newNames</code></td>
+<td>
+<p>depreciated, plese use <code>replNames</code> instead</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns an object of same class as input <code>dat</code>  (ie matrix, list or MArrayLM-object from limma)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>readMaxQuantFile</code>, <code>readProteomeDiscovererFile</code>; <code>moderTestXgrp</code> or <code>moderTest2grp</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">grp &lt;- factor(rep(LETTERS[c(3,1,4)], c(2,3,3)))
+dat1 &lt;- matrix(1:15, ncol=5, dimnames=list(NULL,c("D","A","C","E","B")))
+corColumnOrder(dat1, sampNames=LETTERS[1:5])
+
+dat2 &lt;- list(quant=dat1, raw=dat1)
+dat2
+corColumnOrder(dat2, sampNames=LETTERS[1:5])
+</code></pre>
+
+
+</div>

@@ -1,0 +1,77 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>extrColsDeX</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Flexible extraction of columns</h2>
+
+<h3>Description</h3>
+
+<p>This function provides flexible checking if a set of columns may be extracted from a matrix or data.frame 'x'.
+If argument <code>extrCol</code> is list of character vectors, this allows to search among given options, the first matching name for each vector will be identified.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">extrColsDeX(x, extrCol, doExtractCols = FALSE, callFrom = NULL, silent = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(matrix or data.frame) main input (where data should be extracted from)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>extrCol</code></td>
+<td>
+<p>(character, integer or list) columns to be extracted, may be column-names or column index; if is <code>list</code> each first-level element will be considered as options for one choice</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doExtractCols</code></td>
+<td>
+<p>(logical) if default <code>FALSE</code> only the column indexes will be returned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of message(s) produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>integer-vector (if<code>doExtractCols=FALSE</code> return depending on input <code>matrix</code> or <code>data.frame</code>)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read.table</code>, <code>filterList</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">dFr &lt;- data.frame(a=11:14, b=24:21, cc=LETTERS[1:4], dd=rep(c(TRUE,FALSE),2)) 
+extrColsDeX(dFr,c("b","cc","notThere")) 
+extrColsDeX(dFr,c("b","cc","notThere"), doExtractCols=TRUE) 
+extrColsDeX(dFr, list(c("nn","b","a"), c("cc","a"),"notThere")) 
+</code></pre>
+
+
+</div>

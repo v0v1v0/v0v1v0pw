@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>query_wikidata</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Send one or more SPARQL queries to WDQS</h2>
+
+<h3>Description</h3>
+
+<p>Makes a POST request to Wikidata Query Service SPARQL endpoint.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">query_wikidata(sparql_query, format = "tibble", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>sparql_query</code></td>
+<td>
+<p>SPARQL query (can be a vector of queries)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>'tibble' (default) returns a pure character data frame,
+'simple' returns a pure character vector, while
+'smart' fetches JSON-formatted data and returns a tibble with datetime
+columns converted to 'POSIXct'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>\dots</code></td>
+<td>
+<p>Additional parameters to supply to [httr::POST]</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A 'tibble' or 'vector'. Note: QID values will be returned as QIDs, rather than URLs.
+</p>
+
+
+<h3>Query limits</h3>
+
+<p>There is a hard query deadline configured which is set to 60 seconds. There
+are also following limits:
+- One client (user agent + IP) is allowed 60 seconds of processing time each
+60 seconds
+- One client is allowed 30 error queries per minute
+See [query limits section](https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual#Query_limits)
+in the WDQS user manual for more information.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># R's versions and release dates:
+sparql_query &lt;- 'SELECT DISTINCT
+  ?softwareVersion ?publicationDate
+  WHERE {
+    BIND(wd:Q206904 AS ?R)
+    ?R p:P348 [
+      ps:P348 ?softwareVersion;
+      pq:P577 ?publicationDate
+    ] .
+}'
+query_wikidata(sparql_query)
+
+## Not run: 
+# "smart" format converts all datetime columns to POSIXct
+query_wikidata(sparql_query, format = "smart")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

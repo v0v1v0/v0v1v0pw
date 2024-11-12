@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>annual_agg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create annual aggregations of WRTDS output</h2>
+
+<h3>Description</h3>
+
+<p>Create annual aggregations of WRTDS output
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">annual_agg(dat_in, ...)
+
+## Default S3 method:
+annual_agg(dat_in, mo_strt = 10, min_mo = 9, logspace = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input tidal or tidalmean object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to or from other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mo_strt</code></td>
+<td>
+<p>numeric indicating month to start aggregation years, defaults to October for USGS water year from October to September</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_mo</code></td>
+<td>
+<p>numeric value from one to twelve indicating the minimum number of months with observations for averaging by years</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logspace</code></td>
+<td>
+<p>logical indicating if aggregated data are to be shown in log-space or not</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>WRTDS output is averaged by year for both predictions and flow-normalized predictions. Years are averaged only if one observation is contained in each of the minimum number of months specified by <code>min_mo</code> averaging, otherwise results are not returned for the given year.  Note that setting <code>min_mo</code> to values smaller than the default can produce inaccurate trends for years with very few results. 
+</p>
+<p>The function is used internally within <code>prdnrmplot</code> and <code>fitplot</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An aggregated data object for plotting, returns only model output and response variable.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## tidal object
+annual_agg(tidfit)
+
+## tidalmean object
+annual_agg(tidfitmean)
+</code></pre>
+
+
+</div>

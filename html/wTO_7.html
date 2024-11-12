@@ -1,0 +1,161 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>NetVis</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>NetVis</h2>
+
+<h3>Description</h3>
+
+<p>Given a set of Nodes and the weight of the edges, a cutoff for the edges, it draws the networks. Returns a list with the nodes and edges  attributes. And plots the network.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">NetVis(
+  Node.1,
+  Node.2,
+  wTO,
+  pval = NULL,
+  MakeGroups = FALSE,
+  padj = NULL,
+  cutoff = list(kind = "Threshold", value = 0.5),
+  layout = NULL,
+  smooth.edges = T,
+  path = NULL,
+  Cluster = F,
+  legend = T,
+  shape = list(shape = "triangle", names = NULL),
+  manipulation = F
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Node.1</code></td>
+<td>
+<p>Names of the Nodes.1 that are connected to the Nodes.2. It's the output from wTO.Complete or Consensus.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Node.2</code></td>
+<td>
+<p>Names of the Nodes.2 that are connected to the Nodes.1. It's the output from wTO.Complete or Consensus.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wTO</code></td>
+<td>
+<p>weight of the links, the wTO output from wTO.Complete or wTO.Consensus.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pval</code></td>
+<td>
+<p>p-values for the wTO value. By default it is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MakeGroups</code></td>
+<td>
+<p>algorithm to find clusters. One of the followings: walktrap, optimal, spinglass, edge.betweenness, fast_greedy, infomap, louvain, label_prop, leading_eigen. Default to FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>padj</code></td>
+<td>
+<p>Adjusted p-values for the wTO value. By default it is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutoff</code></td>
+<td>
+<p>It's a list containing the kind of cutoff to be used (pval, Threshold or pval.adj)and it's value. Example: cutoff= list(kind = "Threshold", value = 0.5)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>layout</code></td>
+<td>
+<p>a layout from the igraph package.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>smooth.edges</code></td>
+<td>
+<p>If the edges should be smoothed or not.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>If the graph should be saved specify the name of the file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Cluster</code></td>
+<td>
+<p>TRUE or FALSE if the nodes should be clustered (double click to uncluster).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend</code></td>
+<td>
+<p>TRUE or FALSE if the legend should appear.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shape</code></td>
+<td>
+<p>a list shape=list(shape = "triangle", names = NULL), with the shape and the IDs that should have a different shape, shape can be: diamond, star, triangle, triangleDown or square.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>manipulation</code></td>
+<td>
+<p>TRUE or FALSE if the graph should be editable.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Deisy Morselli Gysi &lt;deisy at bioinf.uni-leipzig.de&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+ X =  wTO.Complete( k =1, n = 5, Data = Microarray_Expression1,
+ Overlap = ExampleGRF$x[1:10], method = "p",  plot = FALSE)
+# Plot with the default aguments.
+ NetVis(Node.1 = X$wTO$Node.1, Node.2 = X$wTO$Node.2,
+ wTO = X$wTO$wTO_sign, cutoff = list(kind =
+"Threshold", value = 0.50))
+
+# Plotting just the edges with p-value &lt; 0.05, with straight edges, nodes clustered,
+# no legend and mapipulation of the graph enabled.
+  NetVis(Node.1 = X$wTO$Node.1, Node.2 = X$wTO$Node.2,
+ wTO = X$wTO$wTO_sign, pval = X$wTO$pval_sign,
+ padj = X$wTO$pval_sign,
+  cutoff= list(kind = "pval", value = 0.05),
+  smooth.edges = FALSE,
+ Cluster = TRUE, legend = FALSE, manipulation = TRUE)
+# Plotting just the edges with wTO &gt; 0.50, no legend and the nodes:
+# "ZNF738", "ZNF677" with triagle shape,
+# no legend and mapipulation of the graph enabled.
+ NetVis(Node.1 = X$wTO$Node.1, Node.2 = X$wTO$Node.2,
+ wTO = X$wTO$wTO_sign, pval = X$wTO$pval_sign,
+ padj = X$wTO$pval_sign, cutoff= list(kind = "Threshold", value = 0.5),legend = FALSE,
+ shape = list(shape = "triangle", names = c("ZNF738", "ZNF677")))
+
+ 
+## End(Not run)
+</code></pre>
+
+
+</div>

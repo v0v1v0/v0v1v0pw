@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pull_incites</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Pull data from the InCites API</h2>
+
+<h3>Description</h3>
+
+<p><strong>Important note:</strong> The throttling limits on the InCites API are not
+documented anywhere and are difficult to determine from experience. As such,
+whenever <code>pull_incites</code> receives a throttling error from the server, it
+uses exponential backoff (with a maximum wait time of 45 minutes) to determine
+how long to wait before retrying.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pull_incites(uts, key = Sys.getenv("INCITES_KEY"), as_raw = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>uts</code></td>
+<td>
+<p>A vector of UTs whose InCites data you would like to download.
+Each UT is a 15-digit identifier for a given publication. You
+can specify the UT using only these 15 digits or you can append the 15 digits
+with "WOS:" (e.g., "000346263300011" or "WOS:000346263300011").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>The developer key that the server will use for authentication.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>as_raw</code></td>
+<td>
+<p>Do you want the data frame that is returned by the API to be
+returned to you in its raw form? This option can be useful if the API has
+changed the format of the data that it is serving, in which case specifying
+<code>as_raw = TRUE</code> may avoid an error that would otherwise occur during
+<code>pull_incites</code>'s data processing step.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments passed along to <code>GET</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data frame where each row corresponds to a different publication.
+The definitions for the columns in this data frame can be found online at
+the API's documentation <a href="http://about.incites.thomsonreuters.com/api/#/">page</a>
+(see the <code>DocumentLevelMetricsByUT</code> method details for definitions).
+Note that the column names are all converted to lowercase by
+<code>pull_incites</code> and the 0/1 flag variables are converted to booleans.
+Also note that not all publications indexed in WoS are also indexed in
+InCites, so you may not get data back for some UTs.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+uts &lt;- c(
+  "WOS:000346263300011", "WOS:000362312600021", "WOS:000279885800004",
+  "WOS:000294667500003", "WOS:000294946900020", "WOS:000412659200006"
+)
+pull_incites(uts, key = "some_key")
+
+pull_incites(c("000346263300011", "000362312600021"), key = "some_key")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

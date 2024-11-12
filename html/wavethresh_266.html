@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wst.object</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>(Packet ordered) Nondecimated wavelet transform decomposition objects.</h2>
+
+<h3>Description</h3>
+
+<p>These are objects of class <code>wst</code> They represent a decomposition of a function with respect to a set of (all possible) shifted wavelets. 
+</p>
+
+
+<h3>Details</h3>
+
+<p>To retain your sanity we recommend that the coefficients from a <code>wst</code> object be extracted in one of two ways: 
+</p>
+
+<ul>
+<li>
+<p>use <code>getpacket.wst</code> to obtain individual packets of either father or mother wavelet coefficients.
+</p>
+</li>
+<li>
+<p>use <code>accessD.wst</code> to obtain all mother coefficients at a particular resolution level.
+</p>
+</li>
+<li>
+<p>use <code>accessC.wst</code> to obtain all father coefficients at a particular resolution level.
+</p>
+</li>
+</ul>
+<p>You can obtain the coefficients directly from the <code>wst$wp</code> component (mother) or <code>wst$Carray</code> component (father) but you have to understand their organization described above. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>The following components must be included in a legitimate ‘wst’ object. 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>wp</code></td>
+<td>
+<p>a matrix containing the packet ordered non-decimated wavelet coefficients. Each row of the matrix contains coefficients with respect to a particular resolution level. There are <code>nlevelsWT(wst)+1</code> rows in the matrix. Row <code>nlevels(wst)+1</code> (the “bottom”) row contains the “original” data used to produce the wavelet packet coefficients. Rows <code>nlevels(wst)</code> to row 1 contain coefficients at resolution levels <code>nlevels(wst)-1</code> to 0 (so the first row contains coefficients at resolution level 0).
+</p>
+<p>The columns contain the coefficients with respect to packets. A different packet length exists at each resolution level. The packet length at resolution level <code>i</code> is given by <code>2^i</code>. However, the <code>getpacket.wst</code> function should be used to access individual packets from a <code>wst</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Carray</code></td>
+<td>
+<p>A matrix of the same dimensions and format as <code>wp</code> but containing the father wavelet coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlevelsWT</code></td>
+<td>
+<p>The number of levels in the decomposition. If you raise 2 to the power of <code>nlevels</code> you get the number of data points used in the decomposition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>a list containing the details of the filter that did the decomposition (equivalent to the return value from the <code>filter.select</code> function).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date</code></td>
+<td>
+<p>The date that the transform was performed or the wst was modified.</p>
+</td>
+</tr>
+</table>
+<h3>GENERATION</h3>
+
+<p>This class of objects is returned from the <code>wst</code> function which computes the <em>packets-ordered</em> non-decimated wavelet transform (effectively all possible shifts of the standard discrete wavelet transform). 
+</p>
+<p>Many other functions return an object of class <code>wst</code>. 
+</p>
+
+
+<h3>METHODS</h3>
+
+<p>The wst class of objects has methods for the following generic functions: <code>AvBasis</code>, <code>InvBasis</code>, <code>LocalSpec</code>, <code>MaNoVe</code>, <code>accessC</code>, <code>accessD</code>, <code>convert</code>, <code>draw</code>. <code>getpacket</code>. <code>image</code>. <code>nlevelsWT</code>, <code>nullevels</code>, <code>plot</code>, <code>print</code>, <code>putC</code>, <code>putD</code>, <code>putpacket</code>, <code>summary</code>, <code>threshold</code>. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.5.3 Copyright Guy Nason 1994 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wst</code>
+</p>
+
+
+</div>

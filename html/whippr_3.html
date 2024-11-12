@@ -1,0 +1,171 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>detect_outliers</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Detect outliers</h2>
+
+<h3>Description</h3>
+
+<p>It detects outliers based on prediction bands for the given level of confidence provided.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">detect_outliers(
+  .data,
+  test_type = c("incremental", "kinetics"),
+  vo2_column = "VO2",
+  cleaning_level = 0.95,
+  cleaning_baseline_fit,
+  protocol_n_transitions,
+  protocol_baseline_length,
+  protocol_transition_length,
+  method_incremental = c("linear", "anomaly"),
+  verbose = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.data</code></td>
+<td>
+<p>Data retrieved from <code>read_data()</code> for a <strong>kinetics</strong> test, or
+the data retrieved from <code>incremental_normalize()</code> for a <strong>incremental</strong> test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>test_type</code></td>
+<td>
+<p>The test to be analyzed. Either 'incremental' or 'kinetics'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vo2_column</code></td>
+<td>
+<p>The name (quoted) of the column containing the absolute oxygen uptake (VO2) data. Default to <code>VO2</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cleaning_level</code></td>
+<td>
+<p>A numeric scalar between 0 and 1 giving the confidence level for the intervals to be calculated. Default to <code>0.95</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cleaning_baseline_fit</code></td>
+<td>
+<p>For <strong>kinetics</strong> test only. A vector of the same length as the number in <code>protocol_n_transitions</code>, indicating what kind of fit to perform for each baseline. Vector accepts characters either 'linear' or 'exponential'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>protocol_n_transitions</code></td>
+<td>
+<p>For <strong>kinetics</strong> test only. Number of transitions performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>protocol_baseline_length</code></td>
+<td>
+<p>For <strong>kinetics</strong> test only. The length of the baseline (in seconds).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>protocol_transition_length</code></td>
+<td>
+<p>For <strong>kinetics</strong> test only. The length of the transition (in seconds).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method_incremental</code></td>
+<td>
+<p>The method to be used in detecting outliers from the
+incremental test. Either 'linear' or 'anomaly'. See <code>Details</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>A boolean indicating whether messages should be printed in the console. Default to <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments. Currently ignored.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>TODO
+</p>
+
+
+<h3>Value</h3>
+
+<p>a tibble
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## get file path from example data
+path_example &lt;- system.file("example_cosmed.xlsx", package = "whippr")
+
+## read data
+df &lt;- read_data(path = path_example, metabolic_cart = "cosmed")
+
+## detect outliers
+data_outliers &lt;- detect_outliers(
+  .data = df,
+  test_type = "kinetics",
+  vo2_column = "VO2",
+  cleaning_level = 0.95,
+  cleaning_baseline_fit = c("linear", "exponential", "exponential"),
+  protocol_n_transitions = 3,
+  protocol_baseline_length = 360,
+  protocol_transition_length = 360,
+  verbose = TRUE
+ )
+
+## get file path from example data
+path_example_ramp &lt;- system.file("ramp_cosmed.xlsx", package = "whippr")
+
+## read data from ramp test
+df_ramp &lt;- read_data(path = path_example_ramp, metabolic_cart = "cosmed")
+
+## normalize incremental test data
+ramp_normalized &lt;- df_ramp %&gt;%
+ incremental_normalize(
+   .data = .,
+   incremental_type = "ramp",
+   has_baseline = TRUE,
+   baseline_length = 240,
+   work_rate_magic = TRUE,
+   baseline_intensity = 20,
+   ramp_increase = 25
+ )
+
+## detect ramp outliers
+data_ramp_outliers &lt;- detect_outliers(
+  .data = ramp_normalized,
+  test_type = "incremental",
+  vo2_column = "VO2",
+  cleaning_level = 0.95,
+  method_incremental = "linear",
+  verbose = TRUE
+ )
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,217 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oauth2_resource_app</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fake OAuth 2.0 resource and authorization app</h2>
+
+<h3>Description</h3>
+
+<p>The webfakes package comes with two fake apps that allow to imitate the
+OAuth2.0 flow in your test cases. (See <a href="https://aaronparecki.com/oauth-2-simplified/">Aaron Parecki’s tutorial</a> for a good
+introduction to OAuth2.0.) One app (<code>oauth2_resource_app()</code>) is the API
+server that serves both as the resource and provides authorization.
+<code>oauth2_third_party_app()</code> plays the role of the third-party app. They
+are useful when testing or demonstrating code handling OAuth2.0
+authorization, token caching, etc. in a package. The apps can be used in
+your tests directly, or you could adapt one or both of them to better
+mimic a particular OAuth2.0 flow.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oauth2_resource_app(
+  access_duration = 3600L,
+  refresh_duration = 7200L,
+  refresh = TRUE,
+  seed = NULL,
+  authorize_endpoint = "/authorize",
+  token_endpoint = "/token"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>access_duration</code></td>
+<td>
+<p>After how many seconds should access tokens
+expire.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refresh_duration</code></td>
+<td>
+<p>After how many seconds should refresh
+tokens expire (ignored if <code>refresh</code> is <code>FALSE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refresh</code></td>
+<td>
+<p>Should a refresh token be returned (logical).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>Random seed used when creating tokens. If <code>NULL</code>,
+we rely on R to provide a seed. The app uses its own RNG stream,
+so it does not affect reproducibility of the tests.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>authorize_endpoint</code></td>
+<td>
+<p>The authorization endpoint of the resource
+server. Change this from the default if the real app that you
+are faking does not use <code style="white-space: pre;">⁠/authorize⁠</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>token_endpoint</code></td>
+<td>
+<p>The endpoint to request tokens. Change this if the
+real app that you are faking does not use <code style="white-space: pre;">⁠/token⁠</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The app has the following endpoints:
+</p>
+
+<ul>
+<li> <p><code>GET /register</code> is the endpoint that you can use to register
+your third party app. It needs to receive the <code>name</code> of the
+third party app, and its <code>redirect_uri</code> as query parameters,
+otherwise returns an HTTP 400 error. On success it returns a
+JSON dictionary with entries <code>name</code> (the name of the third party
+app), <code>client_id</code>, <code>client_secret</code> and <code>redirect_uri</code>.
+</p>
+</li>
+<li> <p><code>GET /authorize</code> is the endpoint where the user of the third
+party app is sent. You can change the URL of this endpoint with
+the <code>authorize_endpoint</code> argument. It needs to receive the <code>client_id</code>
+of the third party app, and its correct <code>redirect_uri</code> as query
+parameters. It may receive a <code>state</code> string as well, which can
+be used by a client to identify the request. Otherwise it
+generates a random <code>state</code> string. On error it fails with a HTTP
+400 error. On success it returns a simple HTML login page.
+</p>
+</li>
+<li> <p><code>POST /authorize/decision</code> is the endpoint where the HTML login
+page generated at <code style="white-space: pre;">⁠/authorize⁠</code> connects back to, either with a
+positive or negative result. The form on the login page will send
+the <code>state</code> string and the user's choice in the <code>action</code> variable.
+If the user authorized the third party app, then they are
+redirected to the <code>redirect_uri</code> of the app, with a temporary
+<code>code</code> and the <code>state</code> string supplied as query parameters.
+Otherwise a simple HTML page is returned.
+</p>
+</li>
+<li> <p><code>POST /token</code> is the endpoint where the third party app requests
+a temporary access token. It is also uses for refreshing an
+access token with a refresh token. You can change the URL of this
+endpoint with the <code>token_endpoint</code> argument.
+To request a new token or refresh an existing one, the following
+data must be included in either a JSON or an URL encoded request body:
+</p>
+
+<ul>
+<li> <p><code>grant_type</code>, this must be <code>authorization_code</code> for new tokens,
+and <code>refresh_token</code> for refreshing.
+</p>
+</li>
+<li> <p><code>code</code>, this must be the temporary code obtained from the
+<code style="white-space: pre;">⁠/authorize/decision⁠</code> redirection, for new tokens. It is not
+needed when refreshing.
+</p>
+</li>
+<li> <p><code>client_id</code> must be the client id of the third party app.
+</p>
+</li>
+<li> <p><code>client_secret</code> must be the client secret of the third party
+app.
+</p>
+</li>
+<li> <p><code>redirect_uri</code> must be the correct redirection URI of the
+third party app. It is not needed when refreshing tokens.
+</p>
+</li>
+<li> <p><code>refresh_token</code> must be the refresh token obtained previously,
+when refreshing a token. It is not needed for new tokens.
+On success a JSON dictionary is returned with entries:
+<code>access_token</code>, <code>expiry</code> and <code>refresh_token</code>. (The latter is
+omitted if the <code>refresh</code> argument is <code>FALSE</code>).
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>GET /locals</code> returns a list of current apps, access tokens and
+refresh tokens.
+</p>
+</li>
+<li> <p><code>GET /data</code> is an endpoint that returns a simple JSON response,
+and needs authorization.
+</p>
+</li>
+</ul>
+<h4>Notes</h4>
+
+
+<ul>
+<li>
+<p> Using this app in your tests requires the glue package, so you
+need to put it in <code>Suggests</code>.
+</p>
+</li>
+<li>
+<p> You can add custom endpoints to the app, as needed.
+</p>
+</li>
+<li>
+<p> If you need authorization in your custom endpoint, call
+<code>app$is_authorized()</code> in your handler:
+</p>
+<div class="sourceCode"><pre>if (!app$is_authorized(req, res)) return()
+</pre></div>
+<p><code>app$is_authorized()</code> returns an HTTP 401 response if the
+client is not authorized, so you can simply return from your
+handler.
+</p>
+</li>
+</ul>
+<p>For more details see <code>vignette("oauth", package = "webfakes")</code>.
+</p>
+
+
+
+<h3>Value</h3>
+
+<p>a <code>webfakes</code> app
+</p>
+<p>webfakes app
+</p>
+
+
+<h3><code>oauth2_resource_app()</code></h3>
+
+<p>App representing the API server (resource/authorization)
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other OAuth2.0 functions: 
+<code>oauth2_httr_login()</code>,
+<code>oauth2_login()</code>,
+<code>oauth2_third_party_app()</code>
+</p>
+
+
+</div>

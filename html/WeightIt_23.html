@@ -1,0 +1,328 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>method_gbm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Propensity Score Weighting Using Generalized Boosted Models</h2>
+
+<h3>Description</h3>
+
+<p>This page explains the details of estimating weights from generalized boosted model-based propensity scores by setting <code>method = "gbm"</code> in the call to <code>weightit()</code> or <code>weightitMSM()</code>. This method can be used with binary, multi-category, and continuous treatments.
+</p>
+<p>In general, this method relies on estimating propensity scores using generalized boosted modeling and then converting those propensity scores into weights using a formula that depends on the desired estimand. The algorithm involves using a balance-based or prediction-based criterion to optimize in choosing the value of tuning parameters (the number of trees and possibly others). The method relies on the <a href="https://CRAN.R-project.org/package=gbm"><span class="pkg">gbm</span></a> package.
+</p>
+<p>This method mimics the functionality of functions in the <span class="pkg">twang</span> package, but has improved performance and more flexible options. See Details section for more details.
+</p>
+
+
+<h4>Binary Treatments</h4>
+
+<p>For binary treatments, this method estimates the propensity scores using <code>gbm::gbm.fit()</code> and then selects the optimal tuning parameter values using the method specified in the <code>criterion</code> argument. The following estimands are allowed: ATE, ATT, ATC, ATO, and ATM. The weights are computed from the estimated propensity scores using <code>get_w_from_ps()</code>, which implements the standard formulas. Weights can also be computed using marginal mean weighting through stratification for the ATE, ATT, and ATC. See <code>get_w_from_ps()</code> for details.
+</p>
+
+
+
+<h4>Multi-Category Treatments</h4>
+
+<p>For binary treatments, this method estimates the propensity scores using <code>gbm::gbm.fit()</code> and then selects the optimal tuning parameter values using the method specified in the <code>criterion</code> argument. The following estimands are allowed: ATE, ATT, ATC, ATO, and ATM. The weights are computed from the estimated propensity scores using <code>get_w_from_ps()</code>, which implements the standard formulas. Weights can also be computed using marginal mean weighting through stratification for the ATE, ATT, and ATC. See <code>get_w_from_ps()</code> for details.
+</p>
+
+
+
+<h4>Continuous Treatments</h4>
+
+<p>For continuous treatments, this method estimates the generalized propensity score using <code>gbm::gbm.fit()</code> and then selects the optimal tuning parameter values using the method specified in the <code>criterion</code> argument.
+</p>
+
+
+
+<h4>Longitudinal Treatments</h4>
+
+<p>For longitudinal treatments, the weights are the product of the weights estimated at each time point.
+</p>
+
+
+
+<h4>Sampling Weights</h4>
+
+<p>Sampling weights are supported through <code>s.weights</code> in all scenarios.
+</p>
+
+
+
+<h4>Missing Data</h4>
+
+<p>In the presence of missing data, the following value(s) for <code>missing</code> are allowed:
+</p>
+
+<dl>
+<dt>
+<code>"ind"</code> (default)</dt>
+<dd>
+<p>First, for each variable with missingness, a new missingness indicator variable is created which takes the value 1 if the original covariate is <code>NA</code> and 0 otherwise. The missingness indicators are added to the model formula as main effects. The missing values in the covariates are then replaced with the covariate medians (this value is arbitrary and does not affect estimation). The weight estimation then proceeds with this new formula and set of covariates. The covariates output in the resulting <code>weightit</code> object will be the original covariates with the <code>NA</code>s.</p>
+</dd>
+<dt><code>"surr"</code></dt>
+<dd>
+<p>Surrogate splitting is used to process <code>NA</code>s. No missingness indicators are created. Nodes are split using only the non-missing values of each variable. To generate predicted values for each unit, a non-missing variable that operates similarly to the variable with missingness is used as a surrogate. Missing values are ignored when calculating balance statistics to choose the optimal tree.</p>
+</dd>
+</dl>
+<h4>M-estimation</h4>
+
+<p>M-estimation is not supported.
+</p>
+
+
+
+<h3>Details</h3>
+
+<p>Generalized boosted modeling (GBM, also known as gradient boosting machines) is a machine learning method that generates predicted values from a flexible regression of the treatment on the covariates, which are treated as propensity scores and used to compute weights. It does this by building a series of regression trees, each fit to the residuals of the last, minimizing a loss function that depends on the distribution chosen. The optimal number of trees is a tuning parameter that must be chosen; McCaffrey et al. (2004) were innovative in using covariate balance to select this value rather than traditional machine learning performance metrics such as cross-validation accuracy. GBM is particularly effective for fitting nonlinear treatment models characterized by curves and interactions, but performs worse for simpler treatment models. It is unclear which balance measure should be used to select the number of trees, though research has indicated that balance measures tend to perform better than cross-validation accuracy for estimating effective propensity score weights.
+</p>
+<p><span class="pkg">WeightIt</span> offers almost identical functionality to <span class="pkg">twang</span>, the first package to implement this method. Compared to the current version of <span class="pkg">twang</span>, <span class="pkg">WeightIt</span> offers more options for the measure of balance used to select the number of trees, improved performance, tuning of hyperparameters, more estimands, and support for continuous treatments. <span class="pkg">WeightIt</span> computes weights for multi-category treatments differently from how <span class="pkg">twang</span> does; rather than fitting a separate binary GBM for each pair of treatments, <span class="pkg">WeightIt</span> fits a single multi-class GBM model and uses balance measures appropriate for multi-category treatments.
+</p>
+<p><code>plot()</code> can be used on the output of <code>weightit()</code> with <code>method = "gbm"</code> to display the results of the tuning process; see Examples and <code>plot.weightit()</code> for more details.
+</p>
+
+
+<h3>Additional Arguments</h3>
+
+<p>The following additional arguments can be specified:
+</p>
+
+<dl>
+<dt><code>criterion</code></dt>
+<dd>
+<p>A string describing the balance criterion used to select the best weights. See <code>cobalt::bal.compute()</code> for allowable options for each treatment type. In addition, to optimize the cross-validation error instead of balance, <code>criterion</code> can be set as <code style="white-space: pre;">⁠"cv{#}⁠</code>", where <code style="white-space: pre;">⁠{#}⁠</code> is replaced by a number representing the number of cross-validation folds used (e.g., <code>"cv5"</code> for 5-fold cross-validation). For binary and multi-category treatments, the default is <code>"smd.mean"</code>, which minimizes the average absolute standard mean difference among the covariates between treatment groups. For continuous treatments, the default is <code>"p.mean"</code>, which minimizes the average absolute Pearson correlation between the treatment and covariates.
+</p>
+</dd>
+<dt><code>trim.at</code></dt>
+<dd>
+<p>A number supplied to <code>at</code> in <code>trim()</code> which trims the weights from all the trees before choosing the best tree. This can be valuable when some weights are extreme, which occurs especially with continuous treatments. The default is 0 (i.e., no trimming).
+</p>
+</dd>
+<dt><code>distribution</code></dt>
+<dd>
+<p>A string with the distribution used in the loss function of the boosted model. This is supplied to the <code>distribution</code> argument in <code>gbm::gbm.fit()</code>. For binary treatments, <code>"bernoulli"</code> and <code>"adaboost"</code> are available, with <code>"bernoulli"</code> the default. For multi-category treatments, only <code>"multinomial"</code> is allowed. For continuous treatments <code>"gaussian"</code>, <code>"laplace"</code>, and <code>"tdist"</code> are available, with <code>"gaussian"</code> the default. This argument is tunable.
+</p>
+</dd>
+<dt><code>n.trees</code></dt>
+<dd>
+<p>The maximum number of trees used. This is passed onto the <code>n.trees</code> argument in <code>gbm.fit()</code>. The default is 10000 for binary and multi-category treatments and 20000 for continuous treatments.
+</p>
+</dd>
+<dt><code>start.tree</code></dt>
+<dd>
+<p>The tree at which to start balance checking. If you know the best balance isn't in the first 100 trees, for example, you can set <code>start.tree = 101</code> so that balance statistics are not computed on the first 100 trees. This can save some time since balance checking takes up the bulk of the run time for some balance-based stopping methods, and is especially useful when running the same model adding more and more trees. The default is 1, i.e., to start from the very first tree in assessing balance.
+</p>
+</dd>
+<dt><code>interaction.depth</code></dt>
+<dd>
+<p>The depth of the trees. This is passed onto the <code>interaction.depth</code> argument in <code>gbm.fit()</code>. Higher values indicate better ability to capture nonlinear and nonadditive relationships. The default is 3 for binary and multi-category treatments and 4 for continuous treatments. This argument is tunable.
+</p>
+</dd>
+<dt><code>shrinkage</code></dt>
+<dd>
+<p>The shrinkage parameter applied to the trees. This is passed onto the <code>shrinkage</code> argument in <code>gbm.fit()</code>. The default is .01 for binary and multi-category treatments and .0005 for continuous treatments. The lower this value is, the more trees one may have to include to reach the optimum. This argument is tunable.
+</p>
+</dd>
+<dt><code>bag.fraction</code></dt>
+<dd>
+<p>The fraction of the units randomly selected to propose the next tree in the expansion. This is passed onto the <code>bag.fraction</code> argument in <code>gbm.fit()</code>. The default is 1, but smaller values should be tried. For values less then 1, subsequent runs with the same parameters will yield different results due to random sampling; be sure to seed the seed using <code>set.seed()</code> to ensure replicability of results.
+</p>
+</dd>
+<dt><code>use.offset</code></dt>
+<dd>
+<p><code>logical</code>; whether to use the linear predictor resulting from a generalized linear model as an offset to the GBM model. If <code>TRUE</code>, this fits a logistic regression model (for binary treatments) or a linear regression model (for continuous treatments) and supplies the linear predict to the <code>offset</code> argument of <code>gbm.fit()</code>. This often improves performance generally but especially when the true propensity score model is well approximated by a GLM, and this yields uniformly superior performance over <code>method = "glm"</code> with respect to <code>criterion</code>. Default is <code>FALSE</code> to omit the offset. Only allowed for binary and continuous treatments. This argument is tunable.
+</p>
+</dd>
+</dl>
+<p>All other arguments take on the defaults of those in <code>gbm::gbm.fit()</code>, and some are not used at all. For binary and multi-category treatments with a with cross-validation used as the criterion, <code>class.stratify.cv</code> is set to <code>TRUE</code> by default.
+</p>
+<p>The <code>w</code> argument in <code>gbm.fit()</code> is ignored because sampling weights are passed using <code>s.weights</code>.
+</p>
+<p>For continuous treatments only, the following arguments may be supplied:
+</p>
+
+<dl>
+<dt><code>density</code></dt>
+<dd>
+<p>A function corresponding to the conditional density of the treatment. The standardized residuals of the treatment model will be fed through this function to produce the numerator and denominator of the generalized propensity score weights. This can also be supplied as a string containing the name of the function to be called. If the string contains underscores, the call will be split by the underscores and the latter splits will be supplied as arguments to the second argument and beyond. For example, if <code>density = "dt_2"</code> is specified, the density used will be that of a t-distribution with 2 degrees of freedom. Using a t-distribution can be useful when extreme outcome values are observed (Naimi et al., 2014).
+</p>
+<p>Can also be <code>"kernel"</code> to use kernel density estimation, which calls <code>density()</code> to estimate the numerator and denominator densities for the weights. (This used to be requested by setting <code>use.kernel = TRUE</code>, which is now deprecated.)
+</p>
+<p>If unspecified, a density corresponding to the argument passed to <code>distribution</code>. If <code>"gaussian"</code> (the default), <code>dnorm()</code> is used. If <code>"tdist"</code>, a t-distribution with 4 degrees of freedom is used. If <code>"laplace"</code>, a laplace distribution is used.</p>
+</dd>
+<dt>
+<code>bw</code>, <code>adjust</code>, <code>kernel</code>, <code>n</code>
+</dt>
+<dd>
+<p>If <code>density = "kernel"</code>, the arguments to <code>density()</code>. The defaults are the same as those in <code>density()</code> except that <code>n</code> is 10 times the number of units in the sample.</p>
+</dd>
+<dt><code>plot</code></dt>
+<dd>
+<p>If <code>density = "kernel"</code>, whether to plot the estimated densities.</p>
+</dd>
+</dl>
+<p>For tunable arguments, multiple entries may be supplied, and <code>weightit()</code> will choose the best value by optimizing the criterion specified in <code>criterion</code>. See below for additional outputs that are included when arguments are supplied to be tuned. See Examples for an example of tuning. The same seed is used for every run to ensure any variation in performance across tuning parameters is due to the specification and not to using a random seed. This only matters when <code>bag.fraction</code> differs from 1 (its default) or cross-validation is used as the criterion; otherwise, there are no random components in the model.
+</p>
+
+
+<h3>Additional Outputs</h3>
+
+
+<dl>
+<dt><code>info</code></dt>
+<dd>
+<p>A list with the following entries:
+</p>
+
+<dl>
+<dt><code>best.tree</code></dt>
+<dd>
+<p>The number of trees at the optimum. If this is close to <code>n.trees</code>, <code>weightit()</code> should be rerun with a larger value for <code>n.trees</code>, and <code>start.tree</code> can be set to just below <code>best.tree</code>. When other parameters are tuned, this is the best tree value in the best combination of tuned parameters. See example.</p>
+</dd>
+<dt><code>tree.val</code></dt>
+<dd>
+<p>A data frame with two columns: the first is the number of trees and the second is the value of the criterion corresponding to that tree. Running <code>plot()</code> on this object will plot the criterion by the number of trees and is a good way to see patterns in the relationship between them and to determine if more trees are needed. When other parameters are tuned, these are the number of trees and the criterion values in the best combination of tuned parameters. See example.</p>
+</dd>
+</dl>
+<p>If any arguments are to be tuned (i.e., they have been supplied more than one value), the following two additional components are included in <code>info</code>:
+</p>
+
+<dl>
+<dt><code>tune</code></dt>
+<dd>
+<p>A data frame with a column for each argument being tuned, the best value of the balance criterion for the given combination of parameters, and the number of trees at which the best value was reached.</p>
+</dd>
+<dt><code>best.tune</code></dt>
+<dd>
+<p>A one-row data frame containing the values of the arguments being tuned that were ultimately selected to estimate the returned weights.</p>
+</dd>
+</dl>
+</dd>
+<dt><code>obj</code></dt>
+<dd>
+<p>When <code>include.obj = TRUE</code>, the <code>gbm</code> fit used to generate the predicted values.
+</p>
+</dd>
+</dl>
+<h3>Note</h3>
+
+<p>The <code>criterion</code> argument used to be called <code>stop.method</code>, which is its name in <span class="pkg">twang</span>. <code>stop.method</code> still works for backward compatibility. Additionally, the criteria formerly named as <code>"es.mean"</code>, <code>"es.max"</code>, and <code>"es.rms"</code> have been renamed to <code>"smd.mean"</code>, <code>"smd.max"</code>, and <code>"smd.rms"</code>. The former are used in <span class="pkg">twang</span> and will still work with <code>weightit()</code> for backward compatibility.
+</p>
+<p>Estimated propensity scores are trimmed to <code class="reqn">10^{-8}</code> and <code class="reqn">1 - 10^{-8}</code> to ensure balance statistics can be computed.
+</p>
+
+
+<h3>References</h3>
+
+
+
+<h4>Binary treatments</h4>
+
+<p>McCaffrey, D. F., Ridgeway, G., &amp; Morral, A. R. (2004). Propensity Score Estimation With Boosted Regression for Evaluating Causal Effects in Observational Studies. <em>Psychological Methods</em>, 9(4), 403–425. <a href="https://doi.org/10.1037/1082-989X.9.4.403">doi:10.1037/1082-989X.9.4.403</a>
+</p>
+
+
+
+<h4>Multi-Category Treatments</h4>
+
+<p>McCaffrey, D. F., Griffin, B. A., Almirall, D., Slaughter, M. E., Ramchand, R., &amp; Burgette, L. F. (2013). A Tutorial on Propensity Score Estimation for Multiple Treatments Using Generalized Boosted Models. <em>Statistics in Medicine</em>, 32(19), 3388–3414. <a href="https://doi.org/10.1002/sim.5753">doi:10.1002/sim.5753</a>
+</p>
+
+
+
+<h4>Continuous treatments</h4>
+
+<p>Zhu, Y., Coffman, D. L., &amp; Ghosh, D. (2015). A Boosting Algorithm for Estimating Generalized Propensity Scores with Continuous Treatments. <em>Journal of Causal Inference</em>, 3(1). <a href="https://doi.org/10.1515/jci-2014-0022">doi:10.1515/jci-2014-0022</a>
+</p>
+
+
+
+<h3>See Also</h3>
+
+<p><code>weightit()</code>, <code>weightitMSM()</code>
+</p>
+<p><code>gbm::gbm.fit()</code> for the fitting function.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library("cobalt")
+data("lalonde", package = "cobalt")
+
+#Balancing covariates between treatment groups (binary)
+(W1 &lt;- weightit(treat ~ age + educ + married +
+                  nodegree + re74, data = lalonde,
+                method = "gbm", estimand = "ATE",
+                criterion = "smd.max",
+                use.offset = TRUE))
+summary(W1)
+bal.tab(W1)
+
+# View information about the fitting process
+W1$info$best.tree #best tree
+plot(W1) #plot of criterion value against number of trees
+
+
+  #Balancing covariates with respect to race (multi-category)
+  (W2 &lt;- weightit(race ~ age + educ + married +
+                    nodegree + re74, data = lalonde,
+                  method = "gbm", estimand = "ATT",
+                  focal = "hispan", criterion = "ks.mean"))
+  summary(W2)
+  bal.tab(W2, stats = c("m", "ks"))
+
+  #Balancing covariates with respect to re75 (continuous)
+  (W3 &lt;- weightit(re75 ~ age + educ + married +
+                    nodegree + re74, data = lalonde,
+                  method = "gbm", density = "kernel",
+                  criterion = "p.rms", trim.at = .97))
+  summary(W3)
+  bal.tab(W3)
+
+  #Using a t(3) density and illustrating the search for
+  #more trees.
+  W4a &lt;- weightit(re75 ~ age + educ + married +
+                    nodegree + re74, data = lalonde,
+                  method = "gbm", density = "dt_3",
+                  criterion = "p.max",
+                  n.trees = 10000)
+
+  W4a$info$best.tree #10000; optimum hasn't been found
+  plot(W4a) #decreasing at right edge
+
+  W4b &lt;- weightit(re75 ~ age + educ + married +
+                    nodegree + re74, data = lalonde,
+                  method = "gbm", density = "dt_3",
+                  criterion = "p.max",
+                  start.tree = 10000,
+                  n.trees = 20000)
+
+  W4b$info$best.tree #13417; optimum has been found
+  plot(W4b) #increasing at right edge
+
+  bal.tab(W4b)
+
+  #Tuning hyperparameters
+  (W5 &lt;- weightit(treat ~ age + educ + married +
+                    nodegree + re74, data = lalonde,
+                  method = "gbm", estimand = "ATT",
+                  criterion = "ks.max",
+                  interaction.depth = 2:4,
+                  distribution = c("bernoulli", "adaboost")))
+
+  W5$info$tune
+
+  W5$info$best.tune #Best values of tuned parameters
+  plot(W5) #plot criterion values against number of trees
+
+  bal.tab(W5, stats = c("m", "ks"))
+
+
+</code></pre>
+
+
+</div>

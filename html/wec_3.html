@@ -1,0 +1,61 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>PUMS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Public Use Microdata Sample files (PUMS) 2013</h2>
+
+<h3>Description</h3>
+
+<p>The ACS Public Use Microdata Sample files (<code>PUMS</code>) are a sample of the actual responses to the American Community Survey and include most population and housing characteristics. </p>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 10000 observations on the following 4 variables.
+</p>
+
+<dl>
+<dt><code>wage</code></dt>
+<dd>
+<p>annual wages (binned to 1000s, top-coded, in US dollar)</p>
+</dd>
+<dt><code>race</code></dt>
+<dd>
+<p>a factor with levels <code>Hispanic</code>, <code>Black</code>, <code>Asian</code>, and <code>White</code></p>
+</dd>
+<dt><code>education.int</code></dt>
+<dd>
+<p>level of education</p>
+</dd>
+<dt><code>education.cat</code></dt>
+<dd>
+<p>a factor variable with levels <code>High School</code>, and <code>Degree</code></p>
+</dd>
+</dl>
+<h3>Source</h3>
+
+<p>These data are a random subset of 10000 observations from working individuals aged over 25 in the 2013 ACS Public Use Microdata Sample files (<code>PUMS</code>).</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(PUMS)
+
+PUMS$race.wec &lt;- factor(PUMS$race)
+contrasts(PUMS$race.wec) &lt;- contr.wec(PUMS$race.wec, "White")
+contrasts(PUMS$race.wec)
+
+m.wec &lt;- lm(wage ~ race.wec, data=PUMS)
+summary(m.wec)
+
+PUMS$race.educint &lt;- wec.interact(PUMS$race.wec, PUMS$education.int)
+m.wec.educ &lt;- lm(wage ~ race.wec + education.int + race.educint, data=PUMS)
+summary(m.wec.educ)
+
+</code></pre>
+
+
+</div>

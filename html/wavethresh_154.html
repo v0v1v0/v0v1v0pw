@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.wst2D</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot packet-ordered 2D non-decimated wavelet coefficients.</h2>
+
+<h3>Description</h3>
+
+<p>This function plots packet-ordered 2D non-decimated wavelet coefficients arising from a <code>wst2D</code> object. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wst2D'
+plot(x, plot.type="level", main="", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The <code>wst2D</code> object whose coefficients you wish to plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.type</code></td>
+<td>
+<p>So far the only valid argument is "level" which plots coefficients a level at a time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>The main title of the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Any other arguments.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The coefficients in a <code>wst2D</code> object are stored in a three-dimensional subarray called <code>wst2D</code>. The first index of the 3D array indexes the resolution level of coefficients: this function with <code>plot.type="level"</code> causes an image of coefficients to be plotted one for each resolution level. 
+</p>
+<p>The following corresponds to images produced on S+ graphics devices (e.g. image on <code>motif()</code>). Given a resolution level there are <code>4^(nlevelsWT-level)</code> packets within a level. Each packet can be addressed by a base-4 string of length <code>nlevels-level</code>. A zero corresponds to no shift, a 1 to a horizontal shift, a 2 to a vertical shift and a 3 to both a horizontal and vertical shift. 
+</p>
+<p>So, for examples, at resolution level <code>nlevelsWT-1</code> there are 4 sub-images each containing 4 sub-images. The main subimages correspond to (clockwise from bottom-left) no shift, horizontal shift, both shift and vertical shifts. The sub-images of the sub-images correspond to the usual smooth, horizontal detail, diagonal detail and vertical detail (clockwise, again from bottom left). Coarser resolution levels correspond to finer shifts! The following figure demonstrates the <code>nlevels-1</code> resolution level for the <code>ua</code> image (although the whole image has been rotated by 90 degrees clockwise for display here!):
+</p>
+
+
+<h3>Value</h3>
+
+<p>A plot of the coefficients contained within the <code>wst2D</code> object is produced. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.9 Copyright Guy Nason 1998 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>getpacket.wst2D</code>, <code>putpacket.wst2D</code>, <code>wst2D</code>, <code>wst2D.object</code>.  
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# The above picture is one of a series produced by 
+#
+#plot(uawst2D)
+#
+# Where the uawst2D object was produced in the EXAMPLES section
+# of the help for \code{\link{wst2D}}
+</code></pre>
+
+
+</div>

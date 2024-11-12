@@ -1,0 +1,208 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>MetricPairPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot the relationship between two metrics.</h2>
+
+<h3>Description</h3>
+
+<p>Plot the relationship between two metrics.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">MetricPairPlot(
+  frame,
+  xvar,
+  truthVar,
+  title,
+  ...,
+  x_metric = "false_positive_rate",
+  y_metric = "true_positive_rate",
+  truth_target = TRUE,
+  points_to_plot = NULL,
+  linecolor = "black"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frame</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar</code></td>
+<td>
+<p>name of the independent (input or model) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truthVar</code></td>
+<td>
+<p>name of the column to be predicted</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x_metric</code></td>
+<td>
+<p>metric to be plotted. See Details for the list of allowed metrics</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y_metric</code></td>
+<td>
+<p>metric to be plotted. See Details for the list of allowed metrics</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truth_target</code></td>
+<td>
+<p>truth value considered to be positive.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>points_to_plot</code></td>
+<td>
+<p>how many data points to use for plotting. Defaults to NULL (all data)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>linecolor</code></td>
+<td>
+<p>character: name of line color</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Plots two classifier metrics against each other, showing achievable combinations
+of performance metrics. For example, plotting true_positive_rate vs false_positive_rate
+recreates the ROC plot.
+</p>
+<p><code>MetricPairPlot</code> can plot a number of metrics. Some of the metrics are redundant,
+in keeping with the customary terminology of various analysis communities.
+</p>
+
+<ul>
+<li>
+<p>sensitivity: fraction of true positives that were predicted to be true (also known as the true positive rate)
+</p>
+</li>
+<li>
+<p>specificity: fraction of true negatives to all negatives (or 1 - false_positive_rate)
+</p>
+</li>
+<li>
+<p>precision: fraction of predicted positives that are true positives
+</p>
+</li>
+<li>
+<p>recall: same as sensitivity or true positive rate
+</p>
+</li>
+<li>
+<p>accuracy: fraction of items correctly decided
+</p>
+</li>
+<li>
+<p>false_positive_rate: fraction of negatives predicted to be true over all negatives
+</p>
+</li>
+<li>
+<p>true_positive_rate: fraction of positives predicted to be true over all positives
+</p>
+</li>
+<li>
+<p>false_negative_rate: fraction of positives predicted to be all false over all positives
+</p>
+</li>
+<li>
+<p>true_negative_rate: fraction negatives predicted to be false over all negatives
+</p>
+</li>
+</ul>
+<p><code>points_to_plot</code> specifies the approximate number of datums used to
+create the plots as an absolute count; for example setting <code>points_to_plot = 200</code> uses
+approximately 200 points, rather than the entire data set. This can be useful when
+visualizing very large data sets.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ThresholdPlot</code>, <code>PRTPlot</code>, <code>ROCPlot</code>, <code>PRPlot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+# data with two different regimes of behavior
+d &lt;- rbind(
+  data.frame(
+    x =  rnorm(1000),
+    y = sample(c(TRUE, FALSE), prob = c(0.02, 0.98), size = 1000, replace = TRUE)),
+  data.frame(
+    x =  rnorm(200) + 5,
+    y = sample(c(TRUE, FALSE), size = 200, replace = TRUE))
+)
+
+# Sensitivity/Specificity examples
+MetricPairPlot(d, 'x', 'y',
+   x_metric = 'false_positive_rate',
+   y_metric = 'true_positive_rate',
+   truth_target = TRUE,
+   title = 'ROC equivalent')
+if(FALSE) {
+ThresholdPlot(d, 'x', 'y',
+   title = 'Sensitivity/Specificity',
+   metrics = c('sensitivity', 'specificity'),
+   truth_target = TRUE)
+ROCPlot(d, 'x', 'y',
+   truthTarget = TRUE,
+   title = 'ROC example')
+
+# Precision/Recall examples
+ThresholdPlot(d, 'x', 'y',
+   title = 'precision/recall',
+   metrics = c('recall', 'precision'),
+   truth_target = TRUE)
+MetricPairPlot(d, 'x', 'y',
+   x_metric = 'recall',
+   y_metric = 'precision',
+   title = 'recall/precision',
+   truth_target = TRUE)
+PRPlot(d, 'x', 'y',
+   truthTarget = TRUE,
+   title = 'p/r plot')
+}
+
+</code></pre>
+
+
+</div>

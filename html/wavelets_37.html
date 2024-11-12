@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wt.filter.qmf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Quadrature Mirror Filter
+</h2>
+
+<h3>Description</h3>
+
+<p>Computes the quadrature mirror filter of a series of even length.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wt.filter.qmf(x, inverse=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector of even length</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inverse</code></td>
+<td>
+<p>A logical flag indicating whether to compute the
+inverse quadrature mirror filter.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The quadrature mirror filter is computed as outlined in
+Percival and Walden, page 75.  Specifically, the forward QMF makes use
+of a wavelet filter to obtain a scaling filter and the inverse QMF
+does the opposite.</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector which contains the values of <code>x</code> in reverse
+order, with the values of the resulting vector at even indices being
+negated in the case that <code>inverse=FALSE</code> and the values at odd
+indices being negated in the case that <code>inverse=TRUE</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Eric Aldrich. ealdrich@gmail.com.</p>
+
+
+<h3>References</h3>
+
+<p>Percival, D. B. and A. T. Walden (2000) <em>Wavelet Methods
+for Time Series Analysis</em>, Cambridge University Press.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wt.filter.qmf</code>,
+<code>dwt</code>,
+<code>modwt</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># obtain both the la8 wavelet and scaling filters
+la8 &lt;- wt.filter("la8")
+
+# now compare output of qmf with values in wt.filter object
+wt.filter.qmf(la8@h)
+la8@g
+</code></pre>
+
+
+</div>

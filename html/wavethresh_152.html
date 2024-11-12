@@ -1,0 +1,235 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.wp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot wavelet packet transform coefficients</h2>
+
+<h3>Description</h3>
+
+<p>This function plots wavelet packet transform coefficients arising from a
+<code>wp.object</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wp'
+plot(x, nvwp = NULL, main = "Wavelet Packet Decomposition", 
+    sub, first.level = 5, scaling = "compensated", dotted.turn.on = 5, 
+    color.force = FALSE, WaveletColor = 2, NodeVecColor = 3, 
+    fast = FALSE, SmoothedLines = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The wp object whose coefficients you wish to plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nvwp</code></td>
+<td>
+<p>An optional associated wavelet packet node vector class object of
+class <code>nvwp</code>.
+This object is a list of packets in the wavelet packet table.
+If this argument is specified then it is possible to highlight the
+packets in the nvwp objects in a different color using the
+<code>NodeVecColor</code> argument</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>The main title of the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sub</code></td>
+<td>
+<p>A subtitle for the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>first.level</code></td>
+<td>
+<p>The first resolution level to begin plotting at.
+This argument can be quite useful when you want to supress some
+of the coarser levels in the diagram.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scaling</code></td>
+<td>
+<p>How you want the coefficients to be scaled.
+The options are: <code>global</code> - one scale factor is chosen for
+the whole plot. The scale factor depends on the coefficient to be
+included on the plot that has the largest absolute value.
+The global option is useful when comparing coefficients that might
+appear anywhere in the plot; <code>by.level</code> - a scale factor is
+chosen for each resolution level in the plot.
+The scale factor for a level depends on the coefficient in that level
+that has the largest absolute value. The <code>by.level</code> option is
+useful when you wish to compare coefficients within a resolution level.
+The other option is <code>compensated</code> which is the same as global
+except for that finer scales' coefficients are scaled up by a factor
+of SQRT(2)
+</p>
+<p>I don't know why compensated is the default option? That is probably
+silly!</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dotted.turn.on</code></td>
+<td>
+<p>The plot usually includes some dotted vertical bars that
+separate wavelet packets to make it clearer which packets are which.
+This option controls the coarsest resolution level at which dotted
+lines appear. All levels equal to and finer than this level will
+receive the vertical dotted lines.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color.force</code></td>
+<td>
+<p>If FALSE then some "clever" code in CanUseMoreThanOneColor tries to figure out how many colours can be used (THIS HAS NOT BEEN MADE TO WORK
+IN R)  and hence whether colour can be used to pick out wavelet
+packets or elements of a node vector.
+This option was designed to work with S.
+It doesn't work with R and so it is probably best to set
+<code>color.force=T</code>. In this way no interrogation is done and the
+lines/packets are plotted in the appropriate colours with no
+questions asked.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>WaveletColor</code></td>
+<td>
+<p>A colour specification for the colour for wavelet
+coefficients. Wavelet coefficients are a component of wavelet packet
+coefficients and this option allows them to be drawn in a different
+color. In R you can use names like "red", "blue" to select the colors.
+In R you'll also need to set the color.force option to TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NodeVecColor</code></td>
+<td>
+<p>If a nvwp object is supplied this option can force
+coefficients that are part of that nvwp to be drawn in the specified
+color. See the explanation for the <code>WaveletColor</code> option above
+about specification in R.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fast</code></td>
+<td>
+<p>This option no longer does anything.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SmoothedLines</code></td>
+<td>
+<p>If TRUE then the scaling function coefficients are
+drawn using lines (and look like mini versions of the original).
+If FALSE then the scaling function coefficients are drawn using
+the <code>segments</code> function and look like a coarser shadowy
+version of the original.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments to the plot command</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A wavelet packet object contains wavelet packet coefficients of a signal
+(usually obtained by the <code>wp</code> wavelet packet transform function).
+Given a wavelet packet object wp it possesses <code>nlevelsWT(wp)</code>
+resolution levels.
+In WaveThresh the coarsest level is level 0 and the finest is level
+nlevelsWT-1.
+For wavelet packets the number of packets at level j is 2^(nlevelsWT-j).
+</p>
+<p>This function plots the wavelet packet coefficients. At the bottom of the plot
+the original input function (if present) is plotted.
+Then levels above the original plot successively coarser wavelet packet
+coefficients. From the Mallat transform point of view smoothing goes up off
+the the left of the picture and detail to the right.
+The packets are indexed from 0 to the number of packets going from left to
+right within each resolution level.
+</p>
+<p>The function has the ability to draw wavelet coefficients in a different color using the <code>WaveletColor</code> argument.
+</p>
+<p>Optionally, if a node vector wavelet packet object is also supplied, which
+contains the specification of a basis selected from the packet table,
+then packets in that node vector can be highlighted in a another colour determined by the
+<code>NodeVecColor</code>.
+</p>
+<p>Packets are drawn on the plot and can be separated by vertical dotted lines.
+The resolution levels at which this happens can be controlled by the
+<code>dotted.turn.on</code> option.
+The coarsest resolution level to be drawn is controlled by the
+<code>first.level</code> option.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Nothing 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>MaNoVe</code>, <code>wp</code>, <code>wp.object</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Generate some test data
+#
+v &lt;- DJ.EX()$blocks
+#
+# Let's plot these to see what they look like
+#
+## Not run: plot(v, type="l")
+#
+# Do a wavelet packet transform
+#
+vwp &lt;- wp(v)
+#
+# And create a node vector
+#
+vnv &lt;- MaNoVe(vwp)
+#
+# Now plot the wavelet packets with the associated node vector
+#
+## Not run: plot(vwp, vnv, color.force=T, WaveletColor="red", dotted.turn.on=7)
+#
+# The wavelet coefficients are plotted in red. Packets from the node vector
+# are depicted in green. The node vector gets plotted after the wavelet
+# coefficients so the green packets overlay the red (retry the plot command
+# but without the vnv object to see just the
+# wavelet coefficients). The vertical dotted lines start at resolution
+# level 7.
+#
+#
+</code></pre>
+
+
+</div>

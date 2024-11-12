@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>user_contributions</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve user contributions</h2>
+
+<h3>Description</h3>
+
+<p>Retrieves metadata associated with the most recent contributions by a
+specified user.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">user_contributions(
+  language = NULL,
+  project = NULL,
+  domain = NULL,
+  username,
+  properties = c("ids", "title", "timestamp", "comment", "parsedcomment", "size",
+    "sizediff", "flags", "tags"),
+  mainspace = FALSE,
+  limit = 50,
+  clean_response = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>The language code of the project you wish to query,
+if appropriate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>The project you wish to query ("wikiquote"), if appropriate.
+Should be provided in conjunction with <code>language</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>domain</code></td>
+<td>
+<p>as an alternative to a <code>language</code> and <code>project</code> combination,
+you can also provide a domain ("rationalwiki.org") to the URL constructor, allowing
+for the querying of non-Wikimedia MediaWiki instances.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>username</code></td>
+<td>
+<p>The username of the user whose contributions you want to retrieve.
+Due to limitations at the API end, you can only retrieve edits for one user at a time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>properties</code></td>
+<td>
+<p>The metadata you want associated with each edit. Potential metadata includes "ids"
+(the revision ID of the revision, which can be passed into <code>revision_content</code>),
+"title" (the name of the page that was edited), "timestamp", "comment" (the edit summary associated
+with the revision), "parsedcomment" (the same, but parsed, generating HTML from any wikitext
+in that comment), "size" (the size, in uncompressed bytes, of the edit), "sizediff" (the size
+delta between this edit, and the last edit to the page), "flags" (whether the revision was 
+'minor' or not), and "tags" (any tags associated with the revision).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mainspace</code></td>
+<td>
+<p>A boolean flag; FALSE retrieves all of the most recent contributions, while
+TRUE limits the retrieved contributions to those in the 'mainspace' - in other words, edits to
+actual articles. Set to FALSE by default</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit</code></td>
+<td>
+<p>The number of edits to be retrieved. 50 is the maximum for logged-out API users,
+and putting in more than 50 will generate a warning.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clean_response</code></td>
+<td>
+<p>whether to do some basic sanitising of the resulting data structure.
+Set to FALSE by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments to pass to httr's GET.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>user_information</code> for information about a specific user (or group of users),
+and <code>recent_changes</code> for non-user-specific recent actions.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+#Retrieve the timestamps of a user's recent contributions to the English-language Wikipedia
+contribs &lt;- user_contributions("en", "wikipedia", username = "Ironholds",
+                              properties = "timestamp")
+
+#Retrieve the timestamps of a user's recent contributions to a non-Wikimedia wiki.
+rw_contribs &lt;- user_contributions(domain = "rationalwiki.org", username = "David Gerard",
+                                 properties = "ids", limit = 1)
+
+## End(Not run)                        
+</code></pre>
+
+
+</div>

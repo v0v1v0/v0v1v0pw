@@ -1,0 +1,159 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>query_category_members</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Explore Wikipedia's category system</h2>
+
+<h3>Description</h3>
+
+<p>These functions provide access to the
+<a href="https://www.mediawiki.org/wiki/API:Categorymembers">CategoryMembers</a>
+endpoint of the Action API.
+</p>
+<p><code>query_category_members()</code> builds a generator query to return the members of a given category.
+</p>
+<p><code>build_category_tree()</code> finds all the pages and subcategories beneath the
+passed category, then recursively finds all the pages and subcategories
+beneath them, until it can find no more subcategories.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">query_category_members(
+  .req,
+  category,
+  namespace = NULL,
+  type = c("file", "page", "subcat"),
+  limit = 10,
+  sort = c("sortkey", "timestamp"),
+  dir = c("ascending", "descending", "newer", "older"),
+  start = NULL,
+  end = NULL,
+  language = "en"
+)
+
+build_category_tree(category, language = "en")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.req</code></td>
+<td>
+<p>A query request object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>category</code></td>
+<td>
+<p>The category to start from. <code>query_category_members()</code>
+accepts either a numeric pageid or the page title. <code>build_category_tree()</code>
+accepts a vector of page titles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>namespace</code></td>
+<td>
+<p>Only return category members from the provided namespace</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Alternative to <code>namespace</code>: the type of category member to
+return. Multiple types can be requested using a character vector. Defaults
+to all.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit</code></td>
+<td>
+<p>The number to return each batch. Max 500.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort</code></td>
+<td>
+<p>How to sort the returned category members. 'timestamp' sorts them
+by the date they were included in the category; 'sortkey' by the category
+member's unique hexadecimal code</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dir</code></td>
+<td>
+<p>The direction in which to sort them</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p>If <code>sort</code> == 'timestamp', only return category members from
+after this date. The argument is parsed by <code>lubridate::as_date()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end</code></td>
+<td>
+<p>If <code>sort</code> == 'timestamp', only return category members included in
+the category from before this date. The argument is parsed by
+<code>lubridate::as_date()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>The language edition of Wikipedia to query</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>query_category_members()</code>: A request object of type
+<code>generator/query/action_api/httr2_request</code>, which can be passed to
+<code>next_batch()</code> or <code>retrieve_all()</code>. You can specify which properties to
+retrieve for each page using <code>query_page_properties()</code>.
+</p>
+<p><code>build_category_tree()</code>: A list containing two dataframes. <code>nodes</code> lists
+all the subcategories and pages found underneath the passed categories.
+<code>edges</code> records the connections between them. The <code>source</code> column gives the
+pageid of the parent category, while the <code>target</code> column gives the pageid
+of any categories, pages or files contained within the <code>source</code> category.
+The <code>timestamp</code> records the moment when the <code>target</code> page or subcategory
+was included in the <code>source</code> category. The two dataframes in the list can
+be passed to igraph::graph_from_data_frame for network analysis.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>gracefully()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Get the first 10 pages in 'Category:Physics' on English Wikipedia
+physics_members &lt;- wiki_action_request() %&gt;%
+  query_category_members("Physics") %&gt;%
+  gracefully(next_batch)
+physics_members
+
+
+# Build the tree of all albums for the Melbourne band Custard
+tree &lt;- build_category_tree("Category:Custard_(band)_albums")
+tree
+
+# For network analysis and visualisation, you can pass the category tree
+# to igraph
+tree_graph &lt;- igraph::graph_from_data_frame(tree$edges, vertices = tree$nodes)
+tree_graph
+</code></pre>
+
+
+</div>

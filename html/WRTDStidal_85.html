@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>winsrch_grid</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Evaluate half-window width combinations</h2>
+
+<h3>Description</h3>
+
+<p>Evaluate a grid of half-window width combinations to use for weighted regression
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">winsrch_grid(dat_in, ...)
+
+## Default S3 method:
+winsrch_grid(dat_in, grid_in = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input data object to use with weighted regression</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to or from other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grid_in</code></td>
+<td>
+<p>optional input matrix of half-window widths created with <code>createsrch</code>, a default search grid is used if no input</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Processing time can be reduced by setting up a parallel backend, as in the examples.  Note that this is not effective for small k-values (e.g., &lt; 4) because each fold is sent to a processor, whereas the window width combinations in <code>grid_in</code> are evaluated in sequence.  
+</p>
+<p>This function should only be used to view the error surface associated with finite combinations of window-width combinations.  A faster function to identify the optimal window widths is provided by <code>winsrch_optim</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame of the search grid with associated errors for each cross-validation result.  Errors for each grid row are averages of all errors for each fold used in cross-validation.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>createsrch</code>, <code>wrtdscv</code>, <code>winsrch_optim</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+##
+# setup parallel backend
+library(doParallel)
+ncores &lt;- detectCores() - 2 
+registerDoParallel(cores = ncores)
+
+# run search function using default search grid - takes a while
+res &lt;- winsrch_grid(tidobjmean)
+
+# view the error surface 
+library(ggplot2)
+ggplot(res, aes(x = factor(mos), y = factor(yrs), fill = err)) +
+   geom_tile() + 
+   facet_wrap(~ flo) + 
+   scale_x_discrete(expand = c(0, 0)) +
+   scale_y_discrete(expand = c(0,0)) +
+   scale_fill_gradientn(colours = gradcols()) 
+
+# optimal combo
+res[which.min(res$err), ]
+
+##
+# create a custom search grid, e.g. years only
+grid_in &lt;- createsrch(mos = 1, yrs = seq(1, 10), flo = 1)
+
+res &lt;- winsrch_grid(tidobjmean, grid_in)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

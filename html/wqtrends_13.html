@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>anlz_sumstats</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve summary statistics for seasonal metrics and trend results</h2>
+
+<h3>Description</h3>
+
+<p>Retrieve summary statistics for seasonal metrics and trend results
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">anlz_sumstats(
+  mod,
+  metfun = mean,
+  doystr = 1,
+  doyend = 364,
+  yrstr = 2000,
+  yrend = 2019,
+  yromit = NULL,
+  nsim = 10000,
+  confint = 0.95,
+  useave = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mod</code></td>
+<td>
+<p>input model object as returned by <code>anlz_gam</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metfun</code></td>
+<td>
+<p>function input for metric to calculate, e.g., <code>mean</code>, <code>var</code>, <code>max</code>, etc</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doystr</code></td>
+<td>
+<p>numeric indicating start Julian day for extracting averages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doyend</code></td>
+<td>
+<p>numeric indicating ending Julian day for extracting averages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yrstr</code></td>
+<td>
+<p>numeric for starting year for trend model, see details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yrend</code></td>
+<td>
+<p>numeric for ending year for trend model, see details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yromit</code></td>
+<td>
+<p>optional numeric vector for years to omit from the plot, see details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsim</code></td>
+<td>
+<p>numeric indicating number of random draws for simulating uncertainty</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>confint</code></td>
+<td>
+<p>numeric from zero to one indicating confidence interval level for summarizing the mixed-effects meta-analysis model, see details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useave</code></td>
+<td>
+<p>logical indicating if <code>anlz_avgseason</code> is used for the seasonal metric calculation, see details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to <code>metfun</code>, e.g., <code>na.rm = TRUE</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is primarily for convenience to return summary statistics of a fitted GAM from <code>anlz_gam</code>. 
+</p>
+<p>Note that <code>confint</code> only applies to the <code>summary</code> and <code>coeffs</code> list outputs.  It does not apply to the <code>metseason</code> list element output that is default set to 95
+</p>
+<p>Set <code>useave = T</code> to speed up calculations if <code>metfun = mean</code>.  This will use <code>anlz_avgseason</code> to estimate the seasonal summary metrics using a non-stochastic equation.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list object with named elements:
+</p>
+
+<ul>
+<li> <p><code>mixmet</code>: <code>mixmeta</code> object of the fitted mixed-effects meta-analysis trend model
+</p>
+</li>
+<li> <p><code>metseason</code>: tibble object of the fitted seasonal metrics as returned by <code>anlz_metseason</code> or <code>anlz_avgseason</code>
+</p>
+</li>
+<li> <p><code>summary</code>: summary of the <code>mixmet</code> object
+</p>
+</li>
+<li> <p><code>coeffs</code>: tibble object of the slope estimate coefficients from the <code>mixmet</code> model. An approximately linear slope estimate will be included as <code>slope.approx</code> if <code>trans = 'log10'</code> for the GAM used in <code>mod</code>.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(dplyr)
+
+# data to model
+tomod &lt;- rawdat %&gt;%
+  filter(station %in% 34) %&gt;%
+  filter(param %in% 'chl') %&gt;% 
+  filter(yr &gt; 2015)
+
+mod &lt;- anlz_gam(tomod, trans = 'log10')
+
+anlz_sumstats(mod, metfun = mean, doystr = 90, doyend = 180, yrstr = 2016, 
+  yrend = 2019, nsim = 100)
+</code></pre>
+
+
+</div>

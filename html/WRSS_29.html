@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>GOF</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Goodness of fit
+</h2>
+
+<h3>Description</h3>
+
+<p>this function calculates the goodness of fit (gof) using chi-squared test.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">GOF(basin,object,observed)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>basin</code></td>
+<td>
+<p>An object from class of <code>sim</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>An object from either of classes of <code>createAquifer</code> , <code>createRiver</code>, <code>createReservoir</code>, <code>createJunction</code>, <code>createDiversion</code>, or <code>createDemandSite</code>; which is associated with <code>observed</code> time series and exists in the <code>basin</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>observed</code></td>
+<td>
+<p> A vector of observed time series.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with class <code>"htest"</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Rezgar Arabzadeh</p>
+
+
+<h3>See Also</h3>
+
+<p><code>sim</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  J1&lt;-createJunction(name="j1")
+  Res1&lt;-createReservoir(name="res1",type='storage',
+                        priority=1,netEvaporation=rnorm(120,0.5,0.1),
+                        geometry=list(deadStorage= 10 ,capacity= 90 ,
+                                      storageAreaTable= cbind(seq(0,90,10),seq(0,9,1))))
+  Res2&lt;-createReservoir(name="res2",type='storage',
+                        priority=2,netEvaporation=rnorm(120,0.5,0.1),
+                        geometry=list(deadStorage= 10 ,capacity= 90 ,
+                                      storageAreaTable= cbind(seq(0,90,10),seq(0,9,1))))
+  R1&lt;-createRiver(name="river1",discharge=rnorm(120,5,1.5))
+  R2&lt;-createRiver(name="river2",discharge=rnorm(120,5,1.5))
+  waterVariation&lt;-round(sin(seq(0,pi,length.out=12))*
+                          100/sum(sin(seq(0,pi,length.out=12))))
+  D1&lt;-createDemandSite(name ="Agri1",
+                       demandParams=list(waterUseRate=1,
+                                         waterVariation=waterVariation,
+                                         cropArea=1000),
+                       returnFlowFraction =0.2,priority=1)
+  D2&lt;-createDemandSite(name ="Agri2",
+                       demandParams=list(waterUseRate=1,
+                                         waterVariation=waterVariation,
+                                         cropArea=1000),
+                       returnFlowFraction =0.2,priority=2)
+  D3&lt;-createDemandSite(name ="Agri3",
+                       demandParams=list(waterUseRate=1,
+                                         waterVariation=waterVariation,
+                                         cropArea=1000),
+                       returnFlowFraction =0.2,priority=1)
+  area&lt;-createArea(name="unknown",location="unknown",
+                   simulation=list(start='2000-01-01',
+                                   end  ='2000-04-29',
+                                   interval='day'))
+  
+  R1&lt;-set.as(Res1,R1,'downstream')
+  R2&lt;-set.as(Res2,R2,'downstream')
+  Res1&lt;-set.as(J1,Res1,'downstream')
+  Res2&lt;-set.as(J1,Res2,'downstream')
+  D1&lt;-set.as(J1,D1,'downstream')
+  D2&lt;-set.as(J1,D2,'downstream')
+  D3&lt;-set.as(J1,D3,'downstream')
+  D1&lt;-set.as(Res1,D1,'supplier')
+  D2&lt;-set.as(Res1,D2,'supplier')
+  D2&lt;-set.as(Res2,D2,'supplier')
+  D3&lt;-set.as(Res2,D3,'supplier')
+  
+  area&lt;-addObjectToArea(area,R1)
+  area&lt;-addObjectToArea(area,R2)
+  area&lt;-addObjectToArea(area,Res1)
+  area&lt;-addObjectToArea(area,Res2)
+  area&lt;-addObjectToArea(area,D1)
+  area&lt;-addObjectToArea(area,D2)
+  area&lt;-addObjectToArea(area,D3)
+  area&lt;-addObjectToArea(area,J1)
+  ## Not run: 
+    plot(area)
+  
+## End(Not run)
+  simulated&lt;-sim(area)
+  observed&lt;-apply(simulated$operation$operation$junctions[[1]]$operation$outflow,1,sum)
+  observed&lt;-observed+rnorm(length(observed),mean(observed)*0.2,sd(observed)*0.1)
+  GOF(simulated,J1,observed)
+</code></pre>
+
+
+</div>

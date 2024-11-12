@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sb_vk</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Values <code class="reqn">v_k</code> to compute the Spatial balance</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the <code class="reqn">v_k</code> values of the spatial balance developped by Stevens and Olsen (2004) and suggested by Grafström et al. (2012).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sb_vk(pik, X, s)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>pik</code></td>
+<td>
+<p>vector of the inclusion probabilities. The length should be equal to <code class="reqn">N</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>matrix representing the spatial coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p>A vector of size <code class="reqn">N</code> with elements equal 0 or 1. The value 1 indicates that the unit is selected while the value 0 is for non-chosen unit.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The spatial balance measure based on the Voronoï polygons is defined by 
+</p>
+<p style="text-align: center;"><code class="reqn">B(S) = \frac{1}{n}\sum_{k\in S} (v_k -1)^2 .</code>
+</p>
+
+<p>The function return the <code class="reqn">v_k</code> values and is mainly based on the function <code>sb</code> of the package <code>BalancedSampling</code> Grafström and Lisic (2019).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of size <code class="reqn">N</code> with elements equal to the <code class="reqn">v_k</code> values. If the unit is not selected then the value is equal to 0.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Raphaël Jauslin <a href="mailto:raphael.jauslin@unine.ch">raphael.jauslin@unine.ch</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Grafström, A., Lundström, N.L.P. and Schelin, L. (2012). Spatially balanced sampling through the Pivotal method. 
+<em>Biometrics</em>, 68(2), 514-520
+</p>
+<p>Grafström, A., Lisic J. (2019). BalancedSampling: Balanced and Spatially Balanced Sampling. R package version 1.5.5.
+https://CRAN.R-project.org/package=BalancedSampling
+</p>
+<p>Stevens, D. L. Jr. and Olsen, A. R. (2004). Spatially balanced sampling of natural resources.
+<em>Journal of the American Statistical Association 99, 262-278</em>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>BalancedSampling::sb</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">N &lt;- 50
+n &lt;- 10
+X &lt;- as.matrix(cbind(runif(N),runif(N)))
+pik &lt;- rep(n/N,N)
+s &lt;- wave(X,pik)
+v &lt;- sb_vk(pik,X,s)
+
+</code></pre>
+
+
+</div>

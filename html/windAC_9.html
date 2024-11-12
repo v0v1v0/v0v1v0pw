@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>geometricRoadPadPropSearchTable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate the areas of intersection of a series of nested annuli with an idealized access road and turbine pad.</h2>
+
+<h3>Description</h3>
+
+<p>Calculate area of annulus bisected by 2 parallel lines (e.g. a
+road of a road/pad plot).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">geometricRoadPadPropSearchTable(
+  padRadius,
+  roadWidth,
+  maxSearchRadius,
+  mastRadius,
+  annulusWidth = 1,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>padRadius</code></td>
+<td>
+<p>Integer, radius of turbine pad from the center of the turbine.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>roadWidth</code></td>
+<td>
+<p>Integer, width of road leading to turbine pad.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxSearchRadius</code></td>
+<td>
+<p>Integer, maximum search distance from the center of turbine.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mastRadius</code></td>
+<td>
+<p>Integer, radius of the turbine mast.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annulusWidth</code></td>
+<td>
+<p>Integer, width of annulus, default is 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Currently ignored.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Searches are conducted on the road and turbine pad around wind
+turbines for bird and bat fatalities. This function creates a data frame of
+proportion of area searched within each annulus ring on an idealized road and pad.
+The turbine is assumed to be centered on a perfectly circular turbine pad with radius <code>padRadius</code>, and a perfectly straight access road of width <code>roadWidth</code> is oriented from the center of the circle away from the turbine.
+(The resulting road and pad looks like rather like a lollipop.)
+</p>
+<p>The <code>mastRadius</code> argument is to account for the area taken up by the turbine mast.
+</p>
+<p>The arguments <code>padRadius</code>, <code>roadWidth</code>, <code>mastRadius</code>, and
+<code>annulusWidth</code> are all rounded to the nearest integer. The <code>maxSearchDistance</code>
+is rounded up (ceiling function) to an integer. If half units are needed, then
+convert to a smaller unit. See examples.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Data frame of proportion of area searched for each annulus.  <code>distanceFromTurbine</code> column represents the outer radius of each annulus.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>geometricRectanglePropSearchTable circleBoxInt
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+pad &lt;- 10 #meters, turbine pad radius
+road &lt;- 4 #meters, width of the road to the turbine pad
+maxDistance &lt;- 100 #meters, max distance
+mast &lt;- 2 #meters, turbine mast radius
+
+## proportion are area searched at each annulus
+propSearch &lt;- geometricRoadPadPropSearchTable(padRadius = pad,
+                                              roadWidth = road,
+                                              maxSearchRadius = maxDistance,
+                                              mastRadius = mast)
+head(propSearch, 20)
+
+## if half meter annulus rings are desired:
+convert &lt;- 100 # meters * 100 = centimeters
+
+## units in centimeters
+propSearchHalfMeter &lt;- geometricRoadPadPropSearchTable(padRadius = pad * convert,
+                                              roadWidth = road*convert,
+                                              maxSearchRadius = maxDistance * convert,
+                                              mastRadius = mast * convert,
+                                              annulusWidth = 50) ##50cm = half a meter
+head(propSearchHalfMeter, 30)
+
+## convert back to meters
+propSearchHalfMeter$distanceFromTurbine &lt;- propSearchHalfMeter$distanceFromTurbine/convert
+head(propSearchHalfMeter, 30)
+
+</code></pre>
+
+
+</div>

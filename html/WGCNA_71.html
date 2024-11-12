@@ -1,0 +1,269 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>consensusRepresentatives</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Consensus selection of group representatives
+</h2>
+
+<h3>Description</h3>
+
+<p>Given multiple data sets corresponding to the same variables and a grouping of variables into groups, 
+the function selects a
+representative variable for each group using a variety of possible selection approaches. Typical uses include
+selecting a representative probe for each gene in microarray data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">consensusRepresentatives(
+   mdx, 
+   group, 
+   colID, 
+   consensusQuantile = 0, 
+   method = "MaxMean", 
+   useGroupHubs = TRUE, 
+   calibration = c("none", "full quantile"), 
+   selectionStatisticFnc = NULL, 
+   connectivityPower = 1, 
+   minProportionPresent = 1, 
+   getRepresentativeData = TRUE, 
+   statisticFncArguments = list(), 
+   adjacencyArguments = list(), 
+   verbose = 2, indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mdx</code></td>
+<td>
+<p> A <code>multiData</code> structure. All sets must have the same columns.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group</code></td>
+<td>
+
+<p>Character vector whose components contain the group label (e.g. a character string) for
+each entry of <code>colID</code>. This vector must be of the same length as the vector <code>colID</code>. In gene
+expression applications, this vector could contain the gene symbol (or a co-expression module label).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colID</code></td>
+<td>
+<p>Character vector of column identifiers.  This must include all the column names from
+<code>mdx</code>, but can include other values as well. Its entries must be unique (no duplicates) and no
+missing values are permitted.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>consensusQuantile</code></td>
+<td>
+
+<p>A number between 0 and 1 giving the quantile probability for consensus calculation.
+0 means the minimum value (true consensus) will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>character string for determining which method is used to choose the representative 
+(when <code>useGroupHubs</code> is <code>TRUE</code>, this method is only used for groups with 2
+variables).
+The following values can be used:
+"MaxMean" (default) or "MinMean" return the variable with the highest or lowest mean value, respectively;
+"maxRowVariance" return the variable with the highest variance;
+"absMaxMean" or "absMinMean" return the variable with the highest or lowest mean absolute value; and
+"function" will call a user-input function (see the description of the argument
+<code>selectionStatisticFnc</code>). The built-in functions can be instructed to use robust analogs (median and
+median absolute deviation) by also specifying <code>statisticFncArguments=list(robust = TRUE)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useGroupHubs</code></td>
+<td>
+<p>Logical: if <code>TRUE</code>, groups with 3 or more variables will be
+represented by the variable with the highest
+connectivity according to a signed weighted correlation network adjacency matrix among the corresponding
+rows. The connectivity is defined as the row sum of the adjacency matrix. The signed weighted
+adjacency matrix is defined as A=(0.5+0.5*COR)^power where power is determined by the argument
+<code>connectivityPower</code> and COR denotes the matrix of pairwise correlation coefficients among the
+corresponding rows. Additional arguments to the underlying function <code>adjacency</code> can be specified
+using the argument <code>adjacencyArguments</code> below.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>calibration</code></td>
+<td>
+<p>Character string describing the method of calibration of the selection statistic among
+the data sets. Recognized values are <code>"none"</code> (no calibration) and <code>"full quantile"</code> (quantile
+normalization). </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>selectionStatisticFnc</code></td>
+<td>
+<p>User-supplied function used to calculate the selection statistic when
+<code>method</code> above equals <code>"function"</code>.  The function must take argumens <code>x</code> (a matrix) and
+possibly other arguments that can be specified using <code>statisticFncArguments</code> below. The return value
+must be a vector with one component per column of <code>x</code> giving the selection statistic for each column. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>connectivityPower</code></td>
+<td>
+<p>Positive number (typically integer) for specifying the soft-thresholding power used
+to construct the signed weighted adjacency matrix, see the description of <code>useGroupHubs</code>.
+This option is only used if <code>useGroupHubs</code> is <code>TRUE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minProportionPresent</code></td>
+<td>
+
+<p>A number between 0 and 1 specifying a filter of candidate probes. Specifically, for each group, the variable 
+with the maximum consensus proportion of present data is found. Only variables whose consensus proportion of 
+present data is at least <code>minProportionPresent</code> times the  maximum consensus proportion are retained as 
+candidates for being a representative.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getRepresentativeData</code></td>
+<td>
+<p>Logical: should the representative data, i.e., <code>mdx</code> restricted to
+the representative variables, be returned? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>statisticFncArguments</code></td>
+<td>
+<p> A list giving further arguments to the selection statistic function. Can be
+used to supply additional arguments to the user-specified <code>selectionStatisticFnc</code>; the value 
+<code>list(robust = TRUE)</code> can be used with the built-in functions to use their robust variants.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adjacencyArguments</code></td>
+<td>
+<p>Further arguments to the function <code>adjacency</code>, e.g.
+<code>adjacencyArguments=list(corFnc = "bicor", corOptions = "use = 'p', maxPOutliers = 0.05")</code> will select
+the robust correlation <code>bicor</code> with a good set of options. Note that the <code>adjacency</code>
+arguments <code>type</code> and <code>power</code> cannot be changed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+
+<p>Level of verbosity; 0 means silent, larger values will cause progress messages to be printed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+
+<p>Indent for the diagnostic messages; each unit equals two spaces.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function was inspired by <code>collapseRows</code>, but there are also important differences. This function
+focuses on selecting representatives; when summarization is more important, <code>collapseRows</code> provides more
+flexibility since it does not require that a single representative be selected. 
+</p>
+<p>This function and <code>collapseRows</code> use different input and ouput conventions; user-specified functions need
+to be tailored differently for <code>collapseRows</code> than for <code>consensusRepresentatives</code>.
+</p>
+<p>Missing data are allowed and are treated as missing at random. If <code>rowID</code> is <code>NULL</code>, it is replaced
+by the variable names in <code>mdx</code>.
+</p>
+<p>All groups with a single variable are represented by that variable, unless the consensus proportion of present
+data in the variable is lower than <code>minProportionPresent</code>, in which case the variable and the group are
+excluded from the output. 
+</p>
+<p>For all variables belonging to groups with 2 variables (when <code>useGroupHubs=TRUE</code>) or with at least 2 variables
+(when <code>useGroupHubs=FALSE</code>), selection statistics are calculated in each set (e.g., the selection
+statistic may be the mean, variance, etc). This results in a matrix of selection statistics (one entry per
+variable per data set). The selection statistics are next optionally calibrated (normalized) between sets to
+make them comparable; currently the only implemented calibration method is quantile normalization. 
+</p>
+<p>For
+each variable, the consensus selection statistic is defined as the 
+consensus of the (calibrated) selection statistics across the data sets is calculated. The
+'consensus' of a vector (say 'x') is simply defined as the quantile with probability
+<code>consensusQuantile</code> of the vector x. Important exception: for the <code>"MinMean"</code> and
+<code>"absMinMean"</code> methods, the consensus is the quantile with probability <code>1-consensusQuantile</code>, since
+the idea of the consensus is to select the worst (or close to worst) value across the data sets.
+</p>
+<p>For each group, the representative is selected as the variable with the best (typically highest, but for
+<code>"MinMean"</code> and 
+<code>"absMinMean"</code> methods the lowest) consensus selection statistic.
+</p>
+<p>If <code>useGroupHubs=TRUE</code>, the intra-group connectivity is calculated for all variables in each set. The
+intra-group connectivities are optionally calibrated (normalized) between sets, and consensus intra-group
+connectivity is calculated similarly to the consensus selection statistic above. In each group, the variable
+with the highest consensus intra-group connectivity is chosen as the representative. 
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>representatives</code></td>
+<td>
+<p>A named vector giving, for each group, the selected representative (input <code>rowID</code>
+or the variable (column) name in <code>mdx</code>). Names correspond to groups.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varSelected</code></td>
+<td>
+<p>A logical vector with one entry per variable (column) in input <code>mdx</code> (possibly
+after restriction to variables occurring in <code>colID</code>), <code>TRUE</code> if the column was selected as a
+representative.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>representativeData</code></td>
+<td>
+<p>Only present if <code>getRepresentativeData</code> is <code>TRUE</code>;
+the input <code>mdx</code> restricted to the representative variables, with column
+names changed to the corresponding groups.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder, based on code by Jeremy Miller
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>multiData</code> for a description of the <code>multiData</code> structures;
+<code>collapseRows</code> that solves a related but different problem. Please note the differences in input
+and output!
+</p>
+
+
+</div>

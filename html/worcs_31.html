@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>load_entrypoint</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Load project entry points</h2>
+
+<h3>Description</h3>
+
+<p>Loads the designated project entry point into the default
+editor, using <code>file.edit</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">load_entrypoint(worcs_directory = ".", verbose = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>worcs_directory</code></td>
+<td>
+<p>Character, indicating the WORCS project directory to
+which to save data. The default value <code>"."</code> points to the current
+directory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical. Whether or not to print status messages to
+the console. Default: TRUE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to <code>file.edit</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>No return value. This function is called for its side effects.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Create directory to run the example
+old_wd &lt;- getwd()
+test_dir &lt;- file.path(tempdir(), "entrypoint")
+dir.create(test_dir)
+setwd(test_dir)
+# Prepare worcs file and dummy entry point
+worcs:::write_worcsfile(".worcs", entry_point = "test.txt")
+writeLines("Hello world", con = file("test.txt", "w"))
+# Demonstrate load_entrypoint()
+load_entrypoint()
+# Cleaning example directory
+setwd(old_wd)
+unlink(test_dir, recursive = TRUE)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fig_density</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot a density of a score</h2>
+
+<h3>Description</h3>
+
+<p>Plot a density of a score
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fig_density(
+  df,
+  score,
+  var_color = NULL,
+  var_facet = NULL,
+  cutoffs = NULL,
+  x_lab = "Score",
+  pal = "Paired",
+  adjust = 2,
+  size = 1.5
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>a data frame where each row is an individual, containing at least a score column (between 0 and 100)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>score</code></td>
+<td>
+<p>a string (length 1) of the column name for the score variable to print the distribution of</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var_color</code></td>
+<td>
+<p>a string (length 1) of the column name for the variable to set color of density lines by. Default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var_facet</code></td>
+<td>
+<p>a string (length 1) of the column name for the variable to create a <code>ggplot2::facet_grid()</code> with. Default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutoffs</code></td>
+<td>
+<p>a numeric vector of the cut-offs for the score categorization. Default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x_lab</code></td>
+<td>
+<p>a string (length 1) of x-axis label. Default is "Score".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pal</code></td>
+<td>
+<p>a string specifying either a manual color to use for the color aesthetic, a character vector explictly specifying the colors to use for the color scale, or as the name of a palette to pass to <code>RColorBrewer::brewer.pal()</code> with the name of the color palette to use for the color scale. Default is <code>"Paired"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adjust</code></td>
+<td>
+<p>a numeric value to pass to <code>adjust</code> argument of <code>ggplot2::geom_density()</code>. Default is 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>a numeric value to pass to <code>size</code> argument of <code>ggplot2::geom_density()</code>. Default is 1.5.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Plots a histogram of a score that ranges between 0 and 100, with the fill determined by some set categorization of the score. This is the function used to plot the distributions of disability scores resulting from the WHO Model Disability Survey.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A density figure
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other figure functions: 
+<code>fig_LID()</code>,
+<code>fig_dist()</code>,
+<code>fig_poppyramid()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">fig_density(df_adults, score = "disability_score", cutoffs = c(19.1, 34.4, 49.6), 
+x_lab = "Disability score")
+fig_density(df_adults, score = "disability_score", var_color = "sex", 
+cutoffs = c(19.1, 34.4, 49.6), x_lab = "Disability score")
+fig_density(df_adults, score = "disability_score", var_color = "sex", 
+var_facet = "age_cat",  cutoffs = c(19.1, 34.4, 49.6), x_lab = "Disability score")
+</code></pre>
+
+
+</div>

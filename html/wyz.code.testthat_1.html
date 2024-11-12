@@ -1,0 +1,143 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>generateAllUnitTestsFromObject</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Generate All Unit Tests From Object</h2>
+
+<h3>Description</h3>
+
+<p>Generate <b><code>testthat</code></b> code form an instrumented offensive programming object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">generateAllUnitTestsFromObject(object_o_1, sourceFile_s_1,
+                               sourcePackage_s_1, targetFolder_s_1,
+                               overwriteFile_b_1 = TRUE, verbose_b_1 = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object_o_1</code></td>
+<td>
+<p> the instrumented offensive programming object to consider </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sourceFile_s_1</code></td>
+<td>
+<p> the source package file related to the offensive
+programming object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sourcePackage_s_1</code></td>
+<td>
+<p> the package name that holds the offensive programming object </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>targetFolder_s_1</code></td>
+<td>
+<p> the folder where to write produced
+<b><code>testthat</code></b> code files </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overwriteFile_b_1</code></td>
+<td>
+<p> A boolean value, either <em><code>TRUE</code></em> or
+<em>FALSE</em> to switch on or off the overwritting of the output file.
+Beware, as it is on by default!
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose_b_1</code></td>
+<td>
+<p> A boolean value, either <em><code>TRUE</code></em> or
+<em><code>FALSE</code></em> to switch on or off the processing verbosity!
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Generates automatically, all the <b><code>testthat</code></b> files
+with compliant <b><code>testthat</code></b> code,
+from the offensive programming object.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with two fields named <code>class</code> and <code>filenames</code>. Former provides
+the class of the analyzed and mined offensive programming object, the latter gives
+back all produced <b><code>testthat</code></b> file names.
+</p>
+
+
+<h3>Note</h3>
+
+<p>This is rather easy to use function that implements a quite complex algorithm
+based on meta-programmation to generate <b><code>testthat</code></b> code.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+<p>Maintainer: Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+
+
+<h3>References</h3>
+
+<p>See <b><em><code>EvaluationMode</code></em></b>
+for more information.
+</p>
+<p>Refer to <b><em><code>test_file</code></em></b> from package
+<b><code>testthat</code></b>.
+</p>
+<p>Refer to <b><em><code>runTestCase</code></em></b> from package
+<b><code>wyz.code.offensiveProgramming</code></b>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(data.table)
+library(wyz.code.offensiveProgramming)
+library(wyz.code.testthat)
+
+source_file &lt;- 'code-samples/both-defs/good/full/AdditionTCFIG1.R'
+source_package &lt;- 'wyz.code.offensiveProgramming'
+source(system.file(source_file, package = source_package))
+
+object &lt;- AdditionTCFIG1()
+g &lt;- gautfo(object, source_file, source_package, tempdir())
+print(g)
+# $class
+# [1] "AdditionTCFIG1"
+#
+# $filenames
+#                                                 filename overwritten
+# 1:       /tmp/RtmpKLCrXA/test_AdditionTCFIG1-addDouble.R        TRUE
+# 2:      /tmp/RtmpKLCrXA/test_AdditionTCFIG1-addInteger.R        TRUE
+# 3:    /tmp/RtmpKLCrXA/test_AdditionTCFIG1-divideByZero.R        TRUE
+# 4: /tmp/RtmpKLCrXA/test_AdditionTCFIG1-generateWarning.R        TRUE
+# 5:   /tmp/RtmpKLCrXA/test_AdditionTCFIG1-generateError.R        TRUE
+# 6:  /tmp/RtmpKLCrXA/test_AdditionTCFIG1-addMultiDouble.R        TRUE
+# 7: /tmp/RtmpKLCrXA/test_AdditionTCFIG1-addMultiInteger.R        TRUE
+</code></pre>
+
+
+</div>

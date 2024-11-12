@@ -1,0 +1,244 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotmag</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>For plotting the magnitude of values in <code>tts</code>, <code>coh</code> and <code>wlmtest</code> objects</h2>
+
+<h3>Description</h3>
+
+<p>For plotting the magnitude of values in <code>tts</code> objects (and derived classes) 
+against time and timescale, and <code>coh</code> and <code>wlmtest</code> objects against timescale
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotmag(object, ...)
+
+## S3 method for class 'tts'
+plotmag(
+  object,
+  zlims = NULL,
+  neat = TRUE,
+  colorfill = NULL,
+  colorbar = TRUE,
+  title = NULL,
+  filename = NA,
+  ...
+)
+
+## S3 method for class 'wt'
+plotmag(
+  object,
+  zlims = NULL,
+  neat = TRUE,
+  colorfill = NULL,
+  colorbar = TRUE,
+  title = NULL,
+  filename = NA,
+  ...
+)
+
+## S3 method for class 'wmf'
+plotmag(
+  object,
+  zlims = NULL,
+  neat = TRUE,
+  colorfill = NULL,
+  colorbar = TRUE,
+  title = NULL,
+  filename = NA,
+  ...
+)
+
+## S3 method for class 'wpmf'
+plotmag(
+  object,
+  zlims = NULL,
+  neat = TRUE,
+  colorfill = NULL,
+  sigthresh = 0.95,
+  colorbar = TRUE,
+  title = NULL,
+  filename = NA,
+  ...
+)
+
+## S3 method for class 'coh'
+plotmag(
+  object,
+  sigthresh = c(0.95, 0.99),
+  bandprows = "all",
+  filename = NA,
+  ...
+)
+
+## S3 method for class 'wlmtest'
+plotmag(
+  object,
+  sigthresh = c(0.95, 0.99),
+  bandprows = "all",
+  filename = NA,
+  ...
+)
+
+## Default S3 method:
+plotmag(object, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>An object of class <code>tts</code> or some class that inherits from <code>tts</code> or 
+of class <code>coh</code> or <code>wlmtest</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional graphics parameters passed to <code>image</code> (<code>graphics</code> package) 
+if <code>colorbar==FALSE</code>, or to <code>image.plot</code> (<code>fields</code> package) if 
+<code>colorbar==TRUE</code> (for <code>tts</code> objects)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zlims</code></td>
+<td>
+<p>z axis limits. If specified, must encompass the range of 
+<code>Mod(get_values(object))</code>. Default NULL uses this range.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>neat</code></td>
+<td>
+<p>Logical. Should timescales with no values be trimmed?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorfill</code></td>
+<td>
+<p>Color spectrum to use, set through colorRampPalette. Default value NULL 
+produces jet colors from Matlab.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorbar</code></td>
+<td>
+<p>Logical. Should a colorbar legend be plotted?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>Title for the top of the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+<p>Filename (without extension), for saving as pdf. Default value NA saves no 
+file and uses the default graphics device.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigthresh</code></td>
+<td>
+<p>Significance threshold(s). Numeric vector with values between 0 and 1. 
+Typically 0.95, 0.99, 0.999, etc. For <code>wpmf</code> objects, contours are plotted at these 
+values; for <code>coh</code> and <code>wlmtest</code> objects the threshholds are plotted on coherence 
+plots.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bandprows</code></td>
+<td>
+<p>The rows of <code>object$bandp</code> for which to display results in <code>coh</code> plots</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For <code>coh</code> (respectively, <code>wlmtest</code>) objects, the modulus of 
+object$coher (respectively, object$wlmobj$coher) is plotted using a solid red line, and 
+the modulus of object$signif$coher is plotted using a dashed red line. The two coherences 
+agree except for <code>sigmethod="fast"</code>, for which they are close. The dashed line is what 
+should be compared to the distribution of surrogate coherences (black lines, which only appear 
+for <code>coh</code> objects if <code>signif</code> is not <code>NA</code>). Horizontal axis ticks are labeled 
+as timescales, but are spaced on the axis as log(1/timescale), i.e., log frequencies.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Thomas Anderson, <a href="mailto:anderstl@gmail.com">anderstl@gmail.com</a>, Jon Walter, <a href="mailto:jaw3es@virginia.edu">jaw3es@virginia.edu</a>; Lawrence 
+Sheppard, <a href="mailto:lwsheppard@ku.edu">lwsheppard@ku.edu</a>; Daniel Reuman, <a href="mailto:reuman@ku.edu">reuman@ku.edu</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid 
+pests. Nature Climate Change. DOI: 10.1038/nclimate2881
+</p>
+<p>Sheppard, LW et al. (2019) Synchrony is more than its top-down and climatic parts: interacting 
+Moran effects on phytoplankton in British seas. Plos Computational Biology 15, e1006744. doi: 10.1371/journal.pcbi.1006744
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>tts</code>, <code>wt</code>, <code>wmf</code>, <code>wpmf</code>, <code>coh</code>,
+<code>wlmtest</code>, <code>plotphase</code>, <code>bandtest</code>, <code>plotrank</code>,
+<code>browseVignettes("wsyn")</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#For a wt object
+time1&lt;-1:100
+time2&lt;-101:200
+ts1p1&lt;-sin(2*pi*time1/15)
+ts1p2&lt;-0*time1
+ts2p1&lt;-0*time2
+ts2p2&lt;-sin(2*pi*time2/8)
+ts1&lt;-ts1p1+ts1p2
+ts2&lt;-ts2p1+ts2p2
+ts&lt;-c(ts1,ts2)
+ra&lt;-rnorm(200,mean=0,sd=0.5)
+t.series&lt;-ts+ra
+t.series&lt;-t.series-mean(t.series)
+times&lt;-c(time1,time2)
+res&lt;-wt(t.series, times)
+plotmag(res)
+
+#For a wmf object
+x1&lt;-0:50
+x2&lt;-51:100
+x&lt;-c(x1,x2)
+ts1&lt;-c(sin(2*pi*x1/10),sin(2*pi*x2/5))+1.1
+dat&lt;-matrix(NA,11,length(x))
+for (counter in 1:dim(dat)[1])
+{
+  ts2&lt;-3*sin(2*pi*x/3+2*pi*runif(1))+3.1
+  ts3&lt;-rnorm(length(x),0,1.5)
+  dat[counter,]&lt;-ts1+ts2+ts3    
+  dat[counter,]&lt;-dat[counter,]-mean(dat[counter,])
+}
+times&lt;-x
+res&lt;-wmf(dat,times)
+plotmag(res)
+
+#similar calls for wpmf, coh, wlm, wlmtest objects
+#see documentation 
+
+</code></pre>
+
+
+</div>

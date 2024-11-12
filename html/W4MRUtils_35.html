@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>reproduce_id</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Reproduce ID</h2>
+
+<h3>Description</h3>
+
+<p>reproduce_id
+reproduce_id() reinjects original identifiers and original order into
+final tables
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">reproduce_id(data_matrix, metadata, metadata_type, id_match)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data_matrix</code></td>
+<td>
+<p>data.frame containing data_matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metadata</code></td>
+<td>
+<p>data.frame containing samplemetadata or variablemetadata</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metadata_type</code></td>
+<td>
+<p>"sample" or "variable" depending on metadata content</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id_match</code></td>
+<td>
+<p>'id_match' element produced by stock_id</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a named <code>list</code> with two elements:
+data_matrix: the processed data matrix with its original names and order
+metadata: the processed metadata, with its original names and order.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>M.Petera
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+myDM &lt;- data.frame(data = 1:6, a = 2:7, b = 3:8, c = 2:7, d = 3:8, e = 2:7)
+myvM &lt;- data.frame(variable = 1:6, x = 4:9, y = 2:7, z = 3:8)
+
+A &lt;- W4MRUtils::stock_id(myDM, myvM, "variable")
+myDM &lt;- A$dataMatrix
+myvM &lt;- A$Metadata
+A &lt;- A$id.match
+
+## processing that may change order or requires specific identifiers format
+## ...
+datamatrix &lt;- as.data.frame(myDM)
+sample_metadata &lt;- as.data.frame(myvM)
+
+B &lt;- W4MRUtils::reproduce_id(datamatrix, sample_metadata, "variable", A)
+datamatrix &lt;- B$dataMatrix
+sample_metadata &lt;- B$Metadata
+
+
+</code></pre>
+
+
+</div>

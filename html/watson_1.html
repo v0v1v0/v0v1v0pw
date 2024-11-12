@@ -1,0 +1,67 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>diam_clus</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Diametrical clustering</h2>
+
+<h3>Description</h3>
+
+<p><code>diam_clus</code> clusters axial data on sphere using  the algorithm proposed in Dhillon et al. (2003).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">diam_clus(x, k, niter = 100)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a numeric data matrix, with rows corresponding to observations. Can be a dense matrix,
+or any of the supported sparse matrices from <code>Matrix</code> package by <code>Rcpp</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>an integer giving the number of mixture components.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>niter</code></td>
+<td>
+<p>integer indicating the number of iterations of the diametrical clustering algorithm, default: 100.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a matrix with the concentration directions with an attribute "id" defining the classified categories.
+</p>
+
+
+<h3>References</h3>
+
+<p>Inderjit S Dhillon, Edward M Marcotte, and Usman Roshan. Diametrical clustering 
+for identifying anti-correlated gene clusters. Bioinformatics, 19(13):1612-1619, 2003.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate a sample 
+a &lt;- rmwat(n = 200, weights = c(0.5,0.5), kappa = c(20, 20),
+                        mu = matrix(c(1,1,-1,1),nrow = 2))
+## Fit basic model
+q &lt;- diam_clus(a, 2)
+</code></pre>
+
+
+</div>

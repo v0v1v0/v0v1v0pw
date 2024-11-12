@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Metabolomics_Stems</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Metabolomics Stems</h2>
+
+<h3>Description</h3>
+
+<p>A dataset containing metabolomics variables measured on floral stems of
+five <em>A. thaliana</em> genotypes at two growth temperatures.
+See Ecotype and Temperature for more information.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data("Metabolomics_Stems")
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 30 rows and 6 variables:
+</p>
+
+<ul>
+<li> <p><strong>Pectin_RGI</strong>: Rhamnogalacturonan I (µg/100mg)
+</p>
+</li>
+<li> <p><strong>Pectin_HG</strong>: Homogalacturonan (µg/100mg)
+</p>
+</li>
+<li> <p><strong>XG</strong>: Xyloglucan (µg/100mg)
+</p>
+</li>
+<li> <p><strong>Pectin_linearity</strong>: Linearity of pectin (Ratio)
+</p>
+</li>
+<li> <p><strong>Contribution_RG</strong>: Contribution of rhamnogalacturonan to pectin population (Ratio)
+</p>
+</li>
+<li> <p><strong>RGI_branching</strong>: Branching of Rhamnogalacturonan I (Ratio)
+</p>
+</li>
+</ul>
+<h3>Source</h3>
+
+<p>doi: <a href="https://doi.org/10.3390/cells9102249">10.3390/cells9102249</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Load the dataset
+data("Metabolomics_Stems")
+
+# Look at simple statistics
+summary(Metabolomics_Stems)
+
+# Create a colors' vector
+colors &lt;- c(rep("#A6CEE3",3), rep("#1F78B4",3), rep("#B2DF8A",3), rep("#33A02C",3),
+            rep("#FB9A99",3), rep("#E31A1C",3), rep("#FDBF6F",3), rep("#FF7F00",3),
+            rep("#CAB2D6",3), rep("#6A3D9A",3))
+
+# A graphical representation
+plot(x = as.factor(substr(row.names(Metabolomics_Stems), 1, 7)),
+     y = Metabolomics_Stems$Pectin_linearity, col = "white", lty = 0,
+     xlab = "Genotype x Temperature groups",
+     ylab = "Pectin linearity (Ratio)",
+     main = "Pectin linearity distribution by genotype and growth temperature")
+grid()
+abline(h = 1, lty = 2)
+points(x = as.factor(substr(row.names(Metabolomics_Stems), 1, 7)),
+       y = Metabolomics_Stems$Pectin_linearity, type = "p", pch = 19, lwd = 5,
+       col = colors)
+
+</code></pre>
+
+
+</div>

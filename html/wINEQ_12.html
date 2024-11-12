@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Jenkins</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Jenkins, Cowell and Flachaire</h2>
+
+<h3>Description</h3>
+
+<p>Computes Jenkins as well as Cowell and Flachaire inequality measure of a given variable taking into account weights.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Jenkins(X, W = rep(1, length(X)), alfa = 0.8)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>is a data vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p>is a vector of weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alfa</code></td>
+<td>
+<p>is the Jenkins coefficient parameter</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Jenkins coefficient is given by:
+</p>
+<p style="text-align: center;"><code class="reqn">J=1-\sum_{j=0}^{K-1} (p_{j+1}-p_{j})(GL_{j}+GL_{j+1})</code>
+</p>
+
+<p>where GL is Generalized Lorenz curve.
+</p>
+<p>Cowell and Flachaire coefficient with alpha parameter is given by:
+</p>
+<p style="text-align: center;"><code class="reqn">I(\alpha)=\frac{1}{\alpha(\alpha-1)}(\frac{1}{N}\sum_{i=1}^{N}s_{i}^{\alpha}-1)</code>
+</p>
+
+<p>for <code class="reqn">\alpha \in (0,1)</code>, and
+</p>
+<p style="text-align: center;"><code class="reqn">I(0)=-\frac{1}{N}\sum_{i=1}^{N} log(s_{i})</code>
+</p>
+
+<p>for <code class="reqn">\alpha = 0</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The value of Jenkins, Cowell and Flachaire coefficient.
+</p>
+
+
+<h3>References</h3>
+
+<p>Jenkins S. P. and P. J. Lambert: (1997) Three ‘I’s of Poverty Curves, with an Analysis of U.K. Poverty Trends
+</p>
+<p>Cowell F. A.: (2000) Measurement of Inequality, Handbook of Income Distribution
+</p>
+<p>Cowell F. A., Flachaire E.: (2017) Inequality with Ordinal Data
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Compare weighted and unweighted result
+X=1:10
+W=1:10
+Jenkins(X)
+Jenkins(X,W)
+
+data(Tourism)
+#Jenkins, Cowell and Flachaire coefficients for Total expenditure with sample weights
+X=Tourism$Total_expenditure
+W=Tourism$Sample_weight
+Jenkins(X,W)
+
+
+</code></pre>
+
+
+</div>

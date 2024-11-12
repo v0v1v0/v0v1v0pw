@@ -1,0 +1,237 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ROCPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot receiver operating characteristic plot.</h2>
+
+<h3>Description</h3>
+
+<p>Plot receiver operating characteristic plot.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ROCPlot(
+  frame,
+  xvar,
+  truthVar,
+  truthTarget,
+  title,
+  ...,
+  estimate_sig = FALSE,
+  returnScores = FALSE,
+  nrep = 100,
+  parallelCluster = NULL,
+  curve_color = "darkblue",
+  fill_color = "black",
+  diag_color = "black",
+  add_beta_ideal_curve = FALSE,
+  beta_ideal_curve_color = "#fd8d3c",
+  add_beta1_ideal_curve = FALSE,
+  beta1_ideal_curve_color = "#f03b20",
+  add_symmetric_ideal_curve = FALSE,
+  symmetric_ideal_curve_color = "#bd0026",
+  add_convex_hull = FALSE,
+  convex_hull_color = "#404040",
+  ideal_plot_step_size = 0.001
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frame</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar</code></td>
+<td>
+<p>name of the independent (input or model) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truthVar</code></td>
+<td>
+<p>name of the dependent (output or result to be modeled) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truthTarget</code></td>
+<td>
+<p>value we consider to be positive</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimate_sig</code></td>
+<td>
+<p>logical, if TRUE estimate and display significance of difference from AUC 0.5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnScores</code></td>
+<td>
+<p>logical if TRUE return detailed permutedScores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nrep</code></td>
+<td>
+<p>number of permutation repetitions to estimate p values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallelCluster</code></td>
+<td>
+<p>(optional) a cluster object created by package parallel or package snow.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>curve_color</code></td>
+<td>
+<p>color of the ROC curve</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fill_color</code></td>
+<td>
+<p>shading color for the area under the curve</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>diag_color</code></td>
+<td>
+<p>color for the AUC=0.5 line (x=y)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add_beta_ideal_curve</code></td>
+<td>
+<p>logical, if TRUE add the beta(a, b), beta(c, d) ideal curve found by moment matching.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta_ideal_curve_color</code></td>
+<td>
+<p>color for ideal curve.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add_beta1_ideal_curve</code></td>
+<td>
+<p>logical, if TRUE add the beta(1, a), beta(b, 2) ideal curve defined in <a href="https://doi.org/10.1177/0272989X15582210">doi:10.1177/0272989X15582210</a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta1_ideal_curve_color</code></td>
+<td>
+<p>color for ideal curve.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add_symmetric_ideal_curve</code></td>
+<td>
+<p>logical, if TRUE add the ideal curve as discussed in <a href="https://win-vector.com/2020/09/13/why-working-with-auc-is-more-powerful-than-one-might-think/">https://win-vector.com/2020/09/13/why-working-with-auc-is-more-powerful-than-one-might-think/</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>symmetric_ideal_curve_color</code></td>
+<td>
+<p>color for ideal curve.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add_convex_hull</code></td>
+<td>
+<p>logical, if TRUE add convex hull to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>convex_hull_color</code></td>
+<td>
+<p>color for convex hull curve</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ideal_plot_step_size</code></td>
+<td>
+<p>step size used in ideal plots</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See https://www.nature.com/articles/nmeth.3945 for a discussion of
+true positive and false positive rates,
+and how the ROC plot relates to the precision/recall plot.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>PRTPlot</code>, <code>ThresholdPlot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+beta_example &lt;- function(
+  n,
+  shape1_pos, shape2_pos,
+  shape1_neg, shape2_neg) {
+  d &lt;- data.frame(
+    y = sample(
+      c(TRUE, FALSE),
+      size = n,
+      replace = TRUE),
+    score = 0.0
+  )
+  d$score[d$y] &lt;- rbeta(sum(d$y), shape1 = shape1_pos, shape2 = shape2_pos)
+  d$score[!d$y] &lt;- rbeta(sum(!d$y), shape1 = shape1_neg, shape2 = shape2_neg)
+  d
+}
+
+d1 &lt;- beta_example(
+  100,
+  shape1_pos = 6,
+  shape2_pos = 5,
+  shape1_neg = 1,
+  shape2_neg = 2)
+
+ROCPlot(
+   d1,
+   xvar = "score",
+   truthVar = "y", truthTarget = TRUE,
+   title="Example ROC plot",
+   estimate_sig = TRUE,
+   add_beta_ideal_curve = TRUE,
+   add_convex_hull = TRUE)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rmSharedWords</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Trim/Remove Redundant Words</h2>
+
+<h3>Description</h3>
+
+<p>This function allows removing shared words, ie triming to non-redundant words.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rmSharedWords(
+  x,
+  sep = c("_", " ", "."),
+  anySep = TRUE,
+  newSep = NULL,
+  minLe = 2,
+  na.omit = FALSE,
+  fixed = TRUE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(character) main input for making non-redundant</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep</code></td>
+<td>
+<p>(character) separator(s) to be used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>anySep</code></td>
+<td>
+<p>(logical) if <code>TRUE</code>, will consider all separators at one time (), thus combinations with different separators won't be distinguished</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newSep</code></td>
+<td>
+<p>(character) new (uniform) separator between words, if <code>NULL</code> the first value/separator of if <code>sep</code> will be used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minLe</code></td>
+<td>
+<p>(integer) minimum length for allowing being recognised as 'word'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.omit</code></td>
+<td>
+<p>(logical) if <code>TRUE NA</code>s will be removed from output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixed</code></td>
+<td>
+<p>(logical) will be transmitted to argument <code>fixed</code> of <code>strsplit()</code>;  if <code>TRUE</code> regular expressions are allowed/used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Heading separators will be removed in any case (even if not followed by a 'word').
+</p>
+<p>Special characters will be automatically protected.
+When looking for repeated words, the order of such words does NOT matter, multiple repeats will be removed, too.
+</p>
+<p>#'
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns character vector of same length (unless <code>na.omit=TRUE</code>), simply with modified text-content
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>trimRedundText</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x1 &lt;- c("aa_A1 yy_zz.txt", NA, "B2 yy_aa_aa_zz.txt")
+rmSharedWords(x1)
+ 
+</code></pre>
+
+
+</div>

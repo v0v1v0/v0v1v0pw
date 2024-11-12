@@ -1,0 +1,164 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>query_xc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Access 'Xeno-Canto' recordings and metadata</h2>
+
+<h3>Description</h3>
+
+<p><code>query_xc</code> downloads recordings and metadata from <a href="https://www.xeno-canto.org/">Xeno-Canto</a>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">query_xc(
+  qword,
+  download = FALSE,
+  X = NULL,
+  file.name = c("Genus", "Specific_epithet"),
+  parallel = 1,
+  path = NULL,
+  pb = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>qword</code></td>
+<td>
+<p>Character vector of length one indicating the genus, or genus and
+species, to query 'Xeno-Canto' database. For example, <em>Phaethornis</em> or <em>Phaethornis longirostris</em>.
+More complex queries can be done by using search terms that follow the
+xeno-canto advance query syntax. This syntax uses tags to search within a particular aspect of the recordings
+(e.g. country, location, sound type). Tags are of the form tag:searchterm'. For instance, 'type:song'
+will search for all recordings in which the sound type description contains the word 'song'.
+Several tags can be included in the same query. The query "phaethornis cnt:belize' will only return
+results for birds in the genus <em>Phaethornis</em> that were recorded in Belize. Queries are case insensitive. Make sure taxonomy related tags (Genus or scientific name) are found first in multi-tag queries. See <a href="https://www.xeno-canto.org/help/search">Xeno-Canto's search help</a> for a full description and see examples below
+for queries using terms with more than one word.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>download</code></td>
+<td>
+<p>Logical argument. If <code>FALSE</code> only the recording file names and
+associated metadata are downloaded. If <code>TRUE</code>, recordings are also downloaded to the working
+directory as .mp3 files. Default is <code>FALSE</code>. Note that if the recording is already in the
+working directory (as when the downloading process has been interrupted) it will be skipped.
+Hence, resuming downloading processes will not start from scratch.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Data frame with a 'Recording_ID' column and any other column listed in the file.name argument. Only the recordings listed in the data frame
+will be download (<code>download</code> argument is automatically set to <code>TRUE</code>). This can be used to select
+the recordings to be downloaded based on their attributes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file.name</code></td>
+<td>
+<p>Character vector indicating the tags (or column names) to be included in the sound file names (if download = <code>TRUE</code>). Several tags can be included. If <code>NULL</code> only the 'Xeno-Canto' recording identification number ("Recording_ID") is used. Default is c("Genus", "Specific_epithet").
+Note that recording id is always used (whether or not is listed by users) to avoid duplicated names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Numeric. Controls whether parallel computing is applied when downloading mp3 files.
+It specifies the number of cores to be used. Default is 1 (i.e. no parallel computing). Applied both when getting metadata and downloading files.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Character string containing the directory path where the sound files will be saved.
+If <code>NULL</code> (default) then the current working directory is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Logical argument to control progress bar. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is slated for deprecation in future versions. We recommend exploring the advanced functionalities in the <a href="https://github.com/maRce10/suwo">suwo package</a> as an alternative solution for obtaining nature media from online repositories. This function queries for avian vocalization recordings in the open-access
+online repository <a href="https://www.xeno-canto.org/">Xeno-Canto</a>. It can return recordings metadata
+or download the associated sound files. Complex queries can be done by using search terms that follow the
+xeno-canto advance query syntax (check "qword" argument description).
+Files are double-checked after downloading and "empty" files are re-downloaded.
+File downloading process can be interrupted and resume later as long as the working directory is the same.
+Maps of recording coordinates can be produced using
+<code>map_xc</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If X is not provided the function returns a data frame with the following recording information: recording ID, Genus, Specific epithet, Subspecies, English name, Recordist, Country, Locality, Latitude, Longitude, Vocalization type, Audio file, License, URL, Quality, Time, Date. Sound files in .mp3 format are downloaded into the working directory if download = <code>TRUE</code> or if X is provided; a column indicating the  names of the downloaded files is included in the output data frame.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>map_xc</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# search without downloading
+df1 &lt;- query_xc(qword = "Phaethornis anthophilus", download = FALSE)
+View(df1)
+
+# downloading files
+query_xc(qword = "Phaethornis anthophilus", download = TRUE, path = tempdir())
+
+# check this folder
+tempdir()
+
+## search using xeno-canto advance query ###
+orth.pap &lt;- query_xc(qword = "gen:orthonyx cnt:papua loc:tari", download = FALSE)
+
+# download file using the output data frame as input
+query_xc(X = orth.pap, path = tempdir())
+
+# use quotes for queries with more than 1 word (e.g. Costa Rica),note that the
+# single quotes are used for the whole 'qword' and double quotes for the 2-word term inside
+# Phaeochroa genus in Costa Rica
+phae.cr &lt;- query_xc(qword = 'gen:phaeochroa cnt:"costa rica"', download = FALSE)
+
+# several terms can be searched for in the same field
+# search for all female songs in sound type
+femsong &lt;- query_xc(qword = "type:song type:female", download = FALSE)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

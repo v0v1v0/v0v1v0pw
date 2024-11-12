@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pc_sect</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve data from PubChem content pages</h2>
+
+<h3>Description</h3>
+
+<p>When you search for an entity at <a href="https://pubchem.ncbi.nlm.nih.gov/">https://pubchem.ncbi.nlm.nih.gov/</a>,
+e.g. a compound or a substance, and select the record you are interested in,
+you will be forwarded to a PubChem content page. When you look at a PubChem
+content page, you can see that chemical information is organised into
+sections, subsections, etc. The chemical data live at the lowest levels of
+these sections. Use this function to retrieve the lowest level information
+from PubChem content pages.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pc_sect(
+  id,
+  section,
+  domain = c("compound", "substance", "assay", "gene", "protein", "patent"),
+  verbose = getOption("verbose")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>numeric or character; a vector of PubChem identifiers to search
+for.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>section</code></td>
+<td>
+<p>character; the section of the content page to be imported.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>domain</code></td>
+<td>
+<p>character; the query domain. Can be one of <code>"compound"</code>,
+<code>"substance"</code>, <code>"assay"</code>, <code>"gene"</code>, <code>"protein"</code> or
+<code>"patent"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical; should a verbose output be printed on the console?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>section</code> is not case sensitive but it is sensitive to typing
+errors and it requires the full name of the section as it is printed on the
+content page. The PubChem Table of Contents Tree can also be found at
+<a href="https://pubchem.ncbi.nlm.nih.gov/classification/#hid=72">https://pubchem.ncbi.nlm.nih.gov/classification/#hid=72</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a tibble of query results. In the returned tibble,
+<code>SourceName</code> is the name of the depositor, and <code>SourceID</code> is the
+ID of the search term within the depositor's database. You can browse
+<a href="https://pubchem.ncbi.nlm.nih.gov/sources/">https://pubchem.ncbi.nlm.nih.gov/sources/</a> for more information about
+the depositors.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Please respect the Terms and Conditions of the National Library of
+Medicine, <a href="https://www.nlm.nih.gov/databases/download.html">https://www.nlm.nih.gov/databases/download.html</a> the data
+usage policies of National Center for Biotechnology Information,
+<a href="https://www.ncbi.nlm.nih.gov/home/about/policies/">https://www.ncbi.nlm.nih.gov/home/about/policies/</a>,
+<a href="https://pubchem.ncbi.nlm.nih.gov/docs/programmatic-access">https://pubchem.ncbi.nlm.nih.gov/docs/programmatic-access</a>, and the data
+usage policies of the individual data sources
+<a href="https://pubchem.ncbi.nlm.nih.gov/sources/">https://pubchem.ncbi.nlm.nih.gov/sources/</a>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Kim, S., Thiessen, P.A., Cheng, T. et al. PUG-View: programmatic
+access to chemical annotations integrated in PubChem. J Cheminform 11, 56
+(2019). <a href="https://doi.org/10.1186/s13321-019-0375-2">doi:10.1186/s13321-019-0375-2</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>get_cid</code>, <code>pc_prop</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># might fail if API is not available
+## Not run: 
+pc_sect(176, "Dissociation Constants")
+pc_sect(c(176, 311), "density")
+pc_sect(2231, "depositor-supplied synonyms", "substance")
+pc_sect(780286, "modify date", "assay")
+pc_sect(9023, "Ensembl ID", "gene")
+pc_sect("1ZHY_A", "Sequence", "protein")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

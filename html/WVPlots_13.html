@@ -1,0 +1,146 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>HexBinPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Build a hex bin plot</h2>
+
+<h3>Description</h3>
+
+<p>Build a hex bin plot with rational color coding.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">HexBinPlot(
+  d,
+  xvar,
+  yvar,
+  title,
+  ...,
+  lightcolor = "#deebf7",
+  darkcolor = "#000000",
+  bins = 30,
+  binwidth = NULL,
+  na.rm = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>d</code></td>
+<td>
+<p>data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar</code></td>
+<td>
+<p>name of x variable column</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yvar</code></td>
+<td>
+<p>name of y variable column</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>plot title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>not used, forces later arguments to bind by name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lightcolor</code></td>
+<td>
+<p>light color for least dense areas</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>darkcolor</code></td>
+<td>
+<p>dark color for most dense areas</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bins</code></td>
+<td>
+<p>passed to geom_hex</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binwidth</code></td>
+<td>
+<p>passed to geom_hex</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>passed to geom_hex</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Builds a standard ggplot2 hexbin plot,
+with a color scale such that dense areas are colored darker (the default
+ggplot2 fill scales will color dense areas lighter).
+</p>
+<p>The user can choose an alternate color scale with endpoints <code>lightcolor</code>
+and <code>darkcolor</code>; it is up to the user to make sure that <code>lightcolor</code>
+is lighter than <code>darkcolor</code>.
+</p>
+<p>Requires the <code>hexbin</code> package.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a ggplot2 hexbin plot
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>geom_hex</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if(requireNamespace("hexbin", quietly = TRUE)) {
+   if (requireNamespace('data.table', quietly = TRUE)) {
+	   # don't multi-thread during CRAN checks
+		   data.table::setDTthreads(1)
+   }
+   set.seed(634267)
+   dframe = data.frame(x = rnorm(1000), y = rnorm(1000))
+   print(HexBinPlot(dframe, "x", "y", "Example hexbin"))
+
+   diamonds = ggplot2::diamonds
+   print(HexBinPlot(diamonds, "carat", "price", "Diamonds example"))
+
+   # change the colorscale
+    print(HexBinPlot(diamonds, "carat", "price", "Diamonds example",
+                     lightcolor="#fed98e",
+                     darkcolor="#993404"))
+}
+
+</code></pre>
+
+
+</div>

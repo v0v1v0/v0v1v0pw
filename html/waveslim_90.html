@@ -1,0 +1,173 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mra.2d</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Multiresolution Analysis of an Image</h2>
+
+<h3>Description</h3>
+
+<p>This function performs a level <code class="reqn">J</code> additive decomposition of the input
+matrix or image using the pyramid algorithm (Mallat 1989).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mra.2d(x, wf = "la8", J = 4, method = "modwt", boundary = "periodic")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A matrix or image containing the data be to decomposed.  This must
+be have dyadic length in both dimensions (but not necessarily the same) for
+<code>method="dwt"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wf</code></td>
+<td>
+<p>Name of the wavelet filter to use in the decomposition.  By
+default this is set to <code>"la8"</code>, the Daubechies orthonormal compactly
+supported wavelet of length L=8 least asymmetric family.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>Specifies the depth of the decomposition.  This must be a number
+less than or equal to log(length(x),2).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Either <code>"dwt"</code> or <code>"modwt"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>Character string specifying the boundary condition.  If
+<code>boundary=="periodic"</code> the default, then the matrix you decompose is
+assumed to be periodic on its defined interval,<br> if
+<code>boundary=="reflection"</code>, the matrix beyond its boundaries is assumed
+to be a symmetric reflection of itself.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This code implements a two-dimensional multiresolution analysis by
+performing the one-dimensional pyramid algorithm (Mallat 1989) on the rows
+and columns of the input matrix.  Either the DWT or MODWT may be used to
+compute the multiresolution analysis, which is an additive decomposition of
+the original matrix (image).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Basically, a list with the following components </p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>LH?</code></td>
+<td>
+<p>Wavelet
+detail image in the horizontal direction.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>HL?</code></td>
+<td>
+<p>Wavelet detail image
+in the vertical direction.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>HH?</code></td>
+<td>
+<p>Wavelet detail image in the diagonal
+direction.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>LLJ</code></td>
+<td>
+<p>Wavelet smooth image at the coarsest resolution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>Depth of the wavelet transform.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wavelet</code></td>
+<td>
+<p>Name of the wavelet
+filter used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>How the boundaries were handled.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>B. Whitcher
+</p>
+
+
+<h3>References</h3>
+
+<p>Mallat, S. G. (1989) A theory for multiresolution signal
+decomposition: the wavelet representation, <em>IEEE Transactions on
+Pattern Analysis and Machine Intelligence</em>, <b>11</b>, No. 7, 674-693.
+</p>
+<p>Mallat, S. G. (1998) <em>A Wavelet Tour of Signal Processing</em>, Academic
+Press.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dwt.2d</code>, <code>modwt.2d</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Easy check to see if it works...
+## --------------------------------
+
+x &lt;- matrix(rnorm(32*32), 32, 32)
+# MODWT
+x.mra &lt;- mra.2d(x, method="modwt")
+x.mra.sum &lt;- x.mra[[1]]
+for(j in 2:length(x.mra))
+  x.mra.sum &lt;- x.mra.sum + x.mra[[j]]
+sum((x - x.mra.sum)^2)
+
+# DWT
+x.mra &lt;- mra.2d(x, method="dwt")
+x.mra.sum &lt;- x.mra[[1]]
+for(j in 2:length(x.mra))
+  x.mra.sum &lt;- x.mra.sum + x.mra[[j]]
+sum((x - x.mra.sum)^2)
+
+</code></pre>
+
+
+</div>

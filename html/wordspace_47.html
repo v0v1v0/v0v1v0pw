@@ -1,0 +1,190 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.dist.matrix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Plotting Distance Matrices (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>Visualization of a DSM distance matrix as a neighbourhood graph based on multidimensional scaling (MDS).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  ## S3 method for class 'dist.matrix'
+plot(x, y, labels=rownames(x), show.labels=TRUE, label.pos=3,
+     selected=attr(x, "selected"), show.selected=TRUE,
+     col="black", cex=1, pch=20, pt.cex=1.2, selected.cex=1.2, selected.col="red",
+     show.edges=TRUE, edges.lwd=6, edges.col="#AABBFF", edges.threshold=quantile(x, 2/3),
+     method=c("isomds", "sammon"), aspect=1, expand=.05, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a symmetric distance matrix of class <code>dist.matrix</code>.  NB: similarity values and asymmetric distance measures are not supported.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>unused, must not be specified</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>a character vector of labels for the DSM vectors (defaults to rownames of <code>x</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show.labels</code></td>
+<td>
+<p>if <code>TRUE</code> (default), labels are displayed if available</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>label.pos</code></td>
+<td>
+<p>position of labels (default: above points).  Possible values are <code>1</code> (below), <code>2</code> (left), <code>3</code> (above) and <code>4</code> (right).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>selected</code></td>
+<td>
+<p>logical vector of selected points that will be highlighted (defaults to optional <code>selected</code> attribute of distance matrix)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show.selected</code></td>
+<td>
+<p>if <code>TRUE</code> (default), points marked by <code>selected</code> are highlighted in the plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>colour of points and labels</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex</code></td>
+<td>
+<p>numeric character expansion factor for points and labels</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pch</code></td>
+<td>
+<p>plot symbol for points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pt.cex</code></td>
+<td>
+<p>character expansion factor for points relative to labels</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>selected.cex</code></td>
+<td>
+<p>additional character expansion factor for selected points and labels</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>selected.col</code></td>
+<td>
+<p>colour of selected points and labels (if <code>show.selected=TRUE</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show.edges</code></td>
+<td>
+<p>if <code>TRUE</code> (default), edges are drawn between points.  The line width of each edge is proportional to the distance between the corresponding points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edges.lwd</code></td>
+<td>
+<p>maximal line width of edges (for <code class="reqn">d = 0</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edges.col</code></td>
+<td>
+<p>colour of edges, usually a light or translucent shade</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edges.threshold</code></td>
+<td>
+<p>maximal distance up to which edges are drawn.  The default is to display two thirds of all edges.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>whether to perform non-metric (<code>isomds</code>) or metric (<code>sammon</code>) multidimensional scaling</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aspect</code></td>
+<td>
+<p>aspect ratio of plot window (e.g. <code>aspect=16/10</code> for a window that is 8 inches wide and 5 inches high). Setting a correct aspect ratio ensures that the distances between points in the MDS map are correctly represented in the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expand</code></td>
+<td>
+<p>fraction by which plotting region is extended on each side. Adjust this parameter so that points and labels are completely visible.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>all other arguments are passed to the initial plot function, which sets up the display but does not draw any graphical elements</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For multidimensional scaling (MDS), the functions <code>isoMDS</code> and <code>sammon</code> from the <b>MASS</b> package are used.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Invisibly returns a two-column matrix with MDS coordinates of all displayed points and <code>labels</code> as rownames (if available).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+<h3>See Also</h3>
+
+<p><code>nearest.neighbours</code>, which produces distance matrices suitable for plotting if the option <code>dist.matrix=TRUE</code> is specified
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+plot(nearest.neighbours(DSM_Vectors, "walk_V", n=20, dist.matrix=TRUE))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

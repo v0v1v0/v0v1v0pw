@@ -1,0 +1,211 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read_ddf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Import work loop or isometric data from .ddf files</h2>
+
+<h3>Description</h3>
+
+<p><code>read_ddf</code> reads in workloop, twitch, or tetanus experiment data from
+.ddf files.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read_ddf(
+  file_name,
+  file_id = NA,
+  rename_cols = list(c(2, 3), c("Position", "Force")),
+  skip_cols = 4:11,
+  phase_from_peak = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file_name</code></td>
+<td>
+<p>A .ddf file that contains data from a single workloop,
+twitch, or tetanus experiment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_id</code></td>
+<td>
+<p>A string identifying the experiment. The file name is used by
+default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rename_cols</code></td>
+<td>
+<p>List consisting of a vector of indices of columns to
+rename and a vector of new column names. See Details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skip_cols</code></td>
+<td>
+<p>Numeric vector of column indices to skip. See Details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phase_from_peak</code></td>
+<td>
+<p>Logical, indicating whether percent phase of
+stimulation should be recorded relative to peak length or relative to L0
+(default)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to/from other functions that work
+with <code>read_ddf()</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Read in a .ddf file that contains data from an experiment. If
+position and force do not correspond to columns 2 and 3 (respectively),
+replace "2" and "3" within <code>rename_cols</code> accordingly. Similarly,
+<code>skip_cols = 4:11</code> should be adjusted if more than 11 columns are
+present and/or columns 4:11 contain important data.
+</p>
+<p>Please note that there is no correction for gear ratio or further
+manipulation of data. See <code>fix_GR</code> to adjust gear ratio. Gear ratio can
+also be adjusted prior to analyses within the <code>analyze_workloop()</code>
+function, the data import all-in-one function <code>read_analyze_wl()</code>, or
+the batch analysis all-in-one <code>read_analyze_wl_dir()</code>.
+</p>
+<p>Please also note that organization of data within the .ddf file is assumed to
+conform to that used by Aurora Scientific's Dynamic Muscle Control and
+Analysis Software. YMMV if using a .ddf file from another source. The
+<code>as_muscle_stim()</code> function can be used to generate <code>muscle_stim</code>
+objects if data are imported via another function. Please feel free to
+contact us with any issues or requests.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>workloop</code>, <code>twitch</code>, or <code>tetanus</code>,
+all of which inherit class <code>muscle_stim</code>. These objects behave like
+<code>data.frames</code> in most situations but also store metadata from the ddf
+as attributes.
+</p>
+<p>The <code>muscle_stim</code> object's columns contain:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Time</code></td>
+<td>
+<p>Time</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Position</code></td>
+<td>
+<p>Length change of the muscle, uncorrected for gear ratio</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Force</code></td>
+<td>
+<p>Force, uncorrected for gear ratio</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Stim</code></td>
+<td>
+<p>When stimulation occurs, on a binary scale</p>
+</td>
+</tr>
+</table>
+<p>In addition, the following information is stored in the <code>data.frame</code>'s
+attributes:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>sample_frequency</code></td>
+<td>
+<p>Frequency at which samples were collected</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pulses</code></td>
+<td>
+<p>Number of sequential pulses within a stimulation train</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>total_cycles_lo</code></td>
+<td>
+<p>Total number of oscillatory cycles (assuming sine
+wave trajectory) that the muscle experienced. Cycles are defined with respect
+to initial muscle length (L0-to-L0 as opposed to peak-to-peak).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>amplitude</code></td>
+<td>
+<p>amplitude of length change (again, assuming sine wave
+trajectory)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cycle_frequency</code></td>
+<td>
+<p>Frequency of oscillations (again, assuming sine wave
+trajectory)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>units</code></td>
+<td>
+<p>The units of measurement for each column in the
+<code>data.frame</code>. This might be the most important attribute so please check
+that it makes sense!</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Vikram B. Baliga and Shreeram Senthivasan
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other data import functions: 
+<code>as_muscle_stim()</code>,
+<code>get_wl_metadata()</code>,
+<code>read_analyze_wl_dir()</code>,
+<code>read_analyze_wl()</code>,
+<code>read_ddf_dir()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(workloopR)
+
+# import the workloop.ddf file included in workloopR
+wl_dat &lt;-read_ddf(system.file("extdata", "workloop.ddf",
+                              package = 'workloopR'),
+                  phase_from_peak = TRUE)
+
+
+</code></pre>
+
+
+</div>

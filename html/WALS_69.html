@@ -1,0 +1,206 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>walsGLMfit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fitter function for Weighted Average Least Squares estimation of GLMs</h2>
+
+<h3>Description</h3>
+
+<p>Workhorse function behind <code>walsGLM</code> and used internally in
+<code>walsGLMfitIterate</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">walsGLMfit(
+  X1,
+  X2,
+  y,
+  betaStart1,
+  betaStart2,
+  family,
+  prior = weibull(),
+  postmult = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X1</code></td>
+<td>
+<p>Design matrix for focus regressors. Usually includes a constant
+(column full of 1s) and can be generated using <code>model.matrix</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X2</code></td>
+<td>
+<p>Design matrix for auxiliary regressors. Usually does not include
+a constant column and can also be generated using <code>model.matrix</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Response as vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>betaStart1</code></td>
+<td>
+<p>Starting values for coefficients of focus regressors X1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>betaStart2</code></td>
+<td>
+<p>Starting values for coefficients of auxiliary regressors X2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>Object of class <code>"familyWALS"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior</code></td>
+<td>
+<p>Object of class <code>"familyPrior"</code>. For example
+<code>weibull</code> or <code>laplace</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>postmult</code></td>
+<td>
+<p>If <code>TRUE</code> (default), then it computes
+</p>
+<p style="text-align: center;"><code class="reqn">\bar{Z}_{2} = \bar{X}_{2} \bar{\Delta}_{2} \bar{T} \bar{\Lambda}^{-1/2} \bar{T}^{\top},</code>
+</p>
+
+<p>where <code class="reqn">\bar{T}</code> contains the eigenvectors and <code class="reqn">\bar{\Lambda}</code> the
+eigenvalues from the eigenvalue decomposition
+</p>
+<p style="text-align: center;"><code class="reqn">\bar{\Xi} = \bar{T} \bar{\Lambda} \bar{T}^{\top},</code>
+</p>
+
+<p>instead of
+</p>
+<p style="text-align: center;"><code class="reqn">\bar{Z}_{2} = \bar{X}_{2} \bar{\Delta}_{2} \bar{T} \bar{\Lambda}^{-1/2}.</code>
+</p>
+
+<p>See Huynh (2024b) for more details. The latter is used
+in the original MATLAB code for WALS in the linear regression model,
+see eq. (12) of Magnus and De Luca (2016).
+The first form is required in eq. (9) of De Luca et al. (2018).
+<strong>Thus, it is not recommended to set <code>postmult = FALSE</code>.</strong></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to <code>walsFit</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Uses <code>walsFit</code> under the hood after transforming the regressors
+<code>X1</code> and <code>X2</code> and the response <code>y</code>. For more details, see
+(Huynh 2024b) and De Luca et al. (2018).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing all elements returned by <code>walsFit</code>,
+except for <code>residuals</code>, and additionally (some fields are replaced)
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>condition</code></td>
+<td>
+<p>Condition number of the matrix
+<code class="reqn">\bar{\Xi} = \bar{\Delta}_{2} \bar{X}_{2}^{\top} \bar{M}_{1} \bar{X}_{2} \bar{\Delta}_{2}</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>Object of class <code>"familyWALS"</code>. The family used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>betaStart</code></td>
+<td>
+<p>Starting values of the regression coefficients for the
+one-step ML estimators.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitted.link</code></td>
+<td>
+<p>Linear link fitted to the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitted.values</code></td>
+<td>
+<p>Estimated conditional mean for the data. Lives on the
+scale of the response.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>De Luca G, Magnus JR, Peracchi F (2018).
+“Weighted-average least squares estimation of generalized linear models.”
+<em>Journal of Econometrics</em>, <b>204</b>(1), 1–17.
+<a href="https://doi.org/10.1016/j.jeconom.2017.12.007">doi:10.1016/j.jeconom.2017.12.007</a>.<br><br> Huynh K (2024b).
+“WALS: Weighted-Average Least Squares Model Averaging in R.”
+University of Basel.
+Mimeo.<br><br> Magnus JR, De Luca G (2016).
+“Weighted-average least squares (WALS): A survey.”
+<em>Journal of Economic Surveys</em>, <b>30</b>(1), 117-148.
+<a href="https://doi.org/10.1111/joes.12094">doi:10.1111/joes.12094</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>walsGLM, walsGLMfitIterate, walsFit.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("HMDA", package = "AER")
+X &lt;- model.matrix(deny ~ pirat + hirat + lvrat + chist + mhist + phist + selfemp + afam,
+                  data = HMDA)
+X1 &lt;- X[,c("(Intercept)", "pirat", "hirat", "lvrat", "chist2", "chist3",
+        "chist4", "chist5", "chist6", "mhist2", "mhist3", "mhist4", "phistyes")]
+X2 &lt;- X[,c("selfempyes", "afamyes")]
+y &lt;- HMDA$deny
+
+# starting values from glm.fit()
+betaStart &lt;- glm.fit(X, y, family = binomialWALS())$coefficients
+k1 &lt;- ncol(X1)
+k2 &lt;- ncol(X2)
+
+str(walsGLMfit(X1, X2, y,
+               betaStart1 = betaStart[1:k1],
+               betaStart2 = betaStart[(k1 + 1):(k1 + k2)],
+               family = binomialWALS(), prior = weibull()))
+
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,185 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WordListsAnalytics</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>PLT App function</h2>
+
+<h3>Description</h3>
+
+<p>The WordListsAnalytics package provides a comprehensive Shiny app designed for analyzing and managing Property Listing Task (PLT) and/or Semantic Fluency Task (SFT) data. The app includes multiple tabs: Upload Data, Estimated Parameters, Sample Size Estimation, Data Simulator, Inputs to Calculate p(a), P(a) Calculation, and Clusters and Shifts.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WordListsAnalytics()
+</code></pre>
+
+
+<h3>Details</h3>
+
+<p>To launch the Shiny app, call the WordListsAnalytics() function without using parameters.
+</p>
+
+
+<h3>Value</h3>
+
+<p>None (it executes a shiny application).
+</p>
+
+
+<h3>Tabs Details</h3>
+
+
+
+<h4>Upload Data:</h4>
+
+<p>The "Upload Data" tab is the initial interface for users to upload their Property Listing Task (PLT) data. This data must consist of three columns: subject, concept, and property. Users also have the option to load example data (CPN-27, Canessa &amp; Chaigneau, 2020) to familiarize themselves with the app's functionalities.
+In this tab, users can apply several data cleaning options:
+</p>
+
+<ul>
+<li> <p><strong>Convert to Lower Case:</strong> Change all data entries to lower case.
+</p>
+</li>
+<li> <p><strong>Delete Repeated Rows:</strong> Remove duplicate rows to ensure unique data entries.
+</p>
+</li>
+<li> <p><strong>Delete Punctuation Marks:</strong> Eliminate punctuation marks from the data.
+</p>
+</li>
+<li> <p><strong>Delete Spaces from Words:</strong> Remove spaces within words for uniformity.
+</p>
+</li>
+</ul>
+<p>Users can preview the data to see the applied changes in real-time before proceeding with further analysis.
+</p>
+
+
+
+<h4>Estimated Parameters:</h4>
+
+<p>The "Estimated Parameters" tab allows researchers to view metrics for each listed concept. The metrics available in the table are:
+</p>
+
+<ul>
+<li> <p><strong>Q1:</strong> Number of properties reported by exactly one participant (singletons).
+</p>
+</li>
+<li> <p><strong>Q2:</strong> Number of properties reported by exactly two participants (doubletons).
+</p>
+</li>
+<li> <p><strong>T:</strong> Total number of participants who listed properties for a concept.
+</p>
+</li>
+<li> <p><strong>S_obs:</strong> Observed semantic richness (unique properties listed for a concept).
+</p>
+</li>
+<li> <p><strong>U:</strong> Total number of properties listed by all participants for a concept.
+</p>
+</li>
+<li> <p><strong>S_hat:</strong> Estimated semantic richness (total unique properties if sampled infinitely).
+</p>
+</li>
+<li> <p><strong>sd_S_hat:</strong> Standard deviation of the estimated semantic richness.
+</p>
+</li>
+<li> <p><strong>CI_L and CI_U:</strong> Lower and upper bounds of the 95% confidence interval for the estimated semantic richness.
+</p>
+</li>
+<li> <p><strong>C_T:</strong> Estimated coverage (proportion of total properties captured in the sample).
+</p>
+</li>
+</ul>
+<p>If there is insufficient data to calculate the metrics, the concept is added to the list of “Omitted NA’s”.
+</p>
+
+
+
+<h4>Sample Size Estimation:</h4>
+
+<p>This tab allows researchers to calculate coverage for a list of concepts in the data. Coverage is defined as the fraction of the total number of properties in the population captured in the sample for each concept (Canessa et al., 2023). By adjusting the expected coverage, researchers can determine if their data meets the required level of comprehensiveness. The tab displays a table with the following columns: Concept, T_star, S_hat_star, and Warning.
+</p>
+
+<ul>
+<li> <p><strong>T_star:</strong> Number of additional subjects needed to achieve the desired coverage.
+</p>
+</li>
+<li> <p><strong>S_hat_star:</strong> Estimate of the semantic richness after including additional subjects.
+</p>
+</li>
+<li> <p><strong>Warning:</strong> Indicates if Q2=0, meaning T_star cannot be calculated and further actions are required.
+</p>
+</li>
+</ul>
+<h4>Data Simulator:</h4>
+
+<p>The property_simulator function generates synthetic data by modeling a probability distribution from which properties are sampled in a Property Listing Task (PLT). It is used to illustrate the incremental sampling procedure and does not need to accurately model any real probability distribution (Canessa et al., 2023).
+The function takes three parameters: "concept," "additional unique properties," and "number of subjects to generate." The "concept" parameter specifies the concept for which synthetic data will be generated. "Additional unique properties" is the number of new properties with a frequency of 1 to be added to the empirical distribution. "Number of subjects to generate" specifies the number of artificial subjects.
+The function returns a table with synthetic properties listed by each artificial subject.
+</p>
+
+
+
+<h4>Inputs to Calculate p(a):</h4>
+
+<p>This tab provides the necessary information to calculate the agreement probability. Researchers must select a concept. The tab displays a table listing each property mentioned for that specific concept and its frequency. An additional value, 's', is calculated for each concept, representing the average number of properties listed by subjects for a given concept in a PLT. The 's' value is repeated for each property row that belongs to the same concept to improve readability.
+</p>
+
+
+
+<h4>P(a) Calculation:</h4>
+
+<p>This tab calculates the agreement probability (P(a)) between pairs of concepts. Users can choose to calculate agreement probability for all concepts against themselves or for specific pairs. Users can adjust several parameters to improve the calculation:
+</p>
+
+<ul>
+<li> <p><strong>Number of Repetitions:</strong> Sets how many times the entire simulation process is repeated.
+</p>
+</li>
+<li> <p><strong>Number of Iterations:</strong> Specifies the number of iterations within each repetition.
+</p>
+</li>
+<li> <p><strong>Moving Average Window Size:</strong> Defines how many of the last iterations are averaged together to calculate the agreement probability (P(a)).
+</p>
+</li>
+</ul>
+<h4>Clusters and Shifts:</h4>
+
+<p>This tab displays graphs for the "average number of clusters per subject," "average number of shifts per subject," and the "similarity matrix and clusters for a concept." Researchers must select a concept and set the "threshold for clustering" to generate these graphs. The threshold defines the minimum similarity required for two words to be included in the same cluster.
+The graphs obtained are:
+</p>
+
+<ul>
+<li> <p><strong>Similarity Matrix and Clusters:</strong> Shows how closely related pairs of words are based on their positions in lists generated by subjects.
+</p>
+</li>
+<li> <p><strong>Average Number of Clusters per Subject:</strong> Indicates how many distinct groups of related words each subject creates on average.
+</p>
+</li>
+<li> <p><strong>Average Number of Shifts per Subject:</strong> Reflects the fluidity of a subject's thought process and how often they switch contexts while listing words.
+</p>
+</li>
+</ul>
+<p>Users can adjust the resolution of the graphs and download them.
+</p>
+
+
+
+<h3>References</h3>
+
+<p>Canessa, E., &amp; Chaigneau, S. E. (2020). Mathematical regularities of data from the property listing task. Journal of Mathematical Psychology, 97 doi:10.1016/j.jmp.2020.102376
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (interactive()) {
+  WordListsAnalytics()
+}
+</code></pre>
+
+
+</div>

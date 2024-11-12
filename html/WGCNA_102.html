@@ -1,0 +1,132 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>goodSamples</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Filter samples with too many missing entries </h2>
+
+<h3>Description</h3>
+
+<p>This function checks data for missing entries and returns a list of samples that pass two criteria on
+maximum
+number of missing values: the fraction of missing values must be below a given threshold and the total
+number
+of missing genes must be below a given threshold.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">goodSamples(
+  datExpr, 
+  weights = NULL,
+  useSamples = NULL, 
+  useGenes = NULL, 
+  minFraction = 1/2, 
+  minNSamples = ..minNSamples, 
+  minNGenes = ..minNGenes, 
+  minRelativeWeight = 0.1,
+  verbose = 1, indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datExpr</code></td>
+<td>
+<p>  expression data. A data frame in which columns are genes and rows ar samples. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>optional observation weights in the same format (and dimensions) as <code>datExpr</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useSamples</code></td>
+<td>
+<p> optional specifications of which samples to use for the check. Should be a logical
+vector; samples whose entries are <code>FALSE</code> will be ignored for the missing value counts. Defaults to
+using all samples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useGenes</code></td>
+<td>
+<p> optional specifications of genes for which to perform the check. Should be a logical
+vector; genes whose entries are <code>FALSE</code> will be ignored. Defaults to
+using all genes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minFraction</code></td>
+<td>
+<p> minimum fraction of non-missing samples for a gene to be considered good. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minNSamples</code></td>
+<td>
+<p> minimum number of good samples for the data set to be considered fit for analysis.
+If the actual number of good samples falls below this threshold, an error will be issued. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minNGenes</code></td>
+<td>
+<p> minimum number of non-missing samples for a sample to be considered good.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minRelativeWeight</code></td>
+<td>
+<p> observations whose weight divided by the maximum weight is below this threshold
+will be considered missing. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The constants <code>..minNSamples</code> and <code>..minNGenes</code> are both set to the value 4.
+For most data sets, the fraction of missing samples criterion will be much more stringent than the
+absolute number of missing samples criterion.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A logical vector with one entry per sample that is <code>TRUE</code> if the sample is considered good and
+<code>FALSE</code> otherwise. Note that all samples excluded by <code>useSamples</code> are automatically assigned
+<code>FALSE</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder and Steve Horvath </p>
+
+
+<h3>See Also</h3>
+
+ <p><code>goodSamples</code>, <code>goodSamplesGenes</code> </p>
+
+
+</div>

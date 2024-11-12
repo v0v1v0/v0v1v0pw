@@ -1,0 +1,367 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wals</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Weighted-Average Least Squares for linear regression models</h2>
+
+<h3>Description</h3>
+
+<p>Performs model averaging for linear regression models using the
+Weighted-Average Least Squares method by
+Magnus et al. (2010). See also
+De Luca and Magnus (2011),
+Kumar and Magnus (2013) and
+Magnus and De Luca (2016).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wals(x, ...)
+
+## S3 method for class 'formula'
+wals(
+  formula,
+  data,
+  subset = NULL,
+  na.action = NULL,
+  weights = NULL,
+  offset = NULL,
+  prior = weibull(),
+  model = TRUE,
+  keepY = TRUE,
+  keepX = FALSE,
+  sigma = NULL,
+  ...
+)
+
+## S3 method for class 'matrix'
+wals(
+  x,
+  x2,
+  y,
+  subset = NULL,
+  na.action = NULL,
+  weights = NULL,
+  offset = NULL,
+  prior = weibull(),
+  keepY = TRUE,
+  keepX = FALSE,
+  sigma = NULL,
+  ...
+)
+
+## Default S3 method:
+wals(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Design matrix of focus regressors. Usually includes a constant
+(column full of 1s) and can be generated using <code>model.matrix</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments for workhorse <code>walsFit</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>an object of class <code>"Formula"</code>
+(or one that can be coerced to that class, e.g. <code>"formula"</code>):
+a symbolic description of the model to be fitted.
+The details of model specification are given under ‘Details’.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>an optional data frame, list or environment
+(or object coercible by <code>as.data.frame</code> to a data frame)
+containing the variables in the model. If not found in <code>data</code>, the variables
+are taken from <code>environment(formula)</code>, typically the environment which
+the function is called from.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subset</code></td>
+<td>
+<p>an optional vector specifying a subset of observations to be
+used in the fitting process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.action</code></td>
+<td>
+<p><strong>not implemented yet.</strong></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p><strong>not implemented yet.</strong></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+<p><strong>not implemented yet.</strong></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior</code></td>
+<td>
+<p>Object of class <code>"familyPrior"</code>. For example
+<code>weibull</code> or <code>laplace</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>if <code>TRUE</code> (default), then the model.frame is stored in
+the return.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepY</code></td>
+<td>
+<p>if <code>TRUE</code> (default), then the response is stored in
+the return.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepX</code></td>
+<td>
+<p>if <code>TRUE</code>, then the model matrices are stored in the return.
+the return.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>if NULL (default), then the variance of the error term is
+estimated. See <code>walsFit</code> for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x2</code></td>
+<td>
+<p>Design matrix of auxiliary regressors. Usually does not include
+a constant column and can also be generated using <code>model.matrix</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Response as vector.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>R port of MATLAB code wals.m (version 2.0, revision 18 December 2013)
+by J.R. Magnus and G. De Luca, available from
+<a href="https://www.janmagnus.nl/items/WALS.pdf">https://www.janmagnus.nl/items/WALS.pdf</a>.
+Calculates WALS estimates when focus regressors (X1) are present in all
+submodels and model averaging takes place over the auxiliary regressors (X2).
+</p>
+<p>Formulas typically contain two parts, i.e. they are of the form
+"<code>y ~ X11 + X12 | X21 + X22</code>", where the variables before "<code>|</code>" are
+the focus regressors (includes a constant by default) and the ones after
+"<code>|</code>" are the auxiliary regressors. If only a one-part formula is
+specified, then all regressors are considered as auxiliary regressors and only
+a constant is employed as focus regressor, i.e.
+"<code>y ~ X1 + X2</code>" is equivalent to "<code>y ~ 1 | X1 + X2</code>".
+</p>
+<p><strong>WARNING:</strong> Interactions in formula do not work properly yet.
+It is recommended to manually create the interactions beforehand and then
+to insert them as 'linear terms' in the formula.
+</p>
+<p><code>wals.default()</code> raises an error if <code>x</code> is not an object of class
+<code>"matrix"</code> or a class that extends <code>"matrix"</code>. Otherwise it calls
+<code>wals.matrix()</code>. It is a modified version of <code>glmboost.default</code>
+from the <code>mboost</code> package version 2.9-8 (2023-09-06) (Hofner et al. 2014).
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>wals.formula()</code> returns an object of class
+<code>"wals"</code>. This is a list that contains all elements returned from
+<code>walsFit</code> and additionally
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>If <code>keepY = TRUE</code>, contains the response vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>list. If <code>keepX = TRUE</code>, then it is a list with elements
+<code>x1</code> and <code>x2</code> containing the design matrices of the focus and
+auxiliary regressors, respectively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>returns the argument <code>weights</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+<p>returns the argument <code>offset</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cl</code></td>
+<td>
+<p>Call of the function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p><code>formula</code> used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>terms</code></td>
+<td>
+<p>List containing the model terms of the focus and auxiliary
+regressors separately, as well as for the full model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>levels</code></td>
+<td>
+<p>List containing the levels of the focus and auxiliary
+regressors separately, as well as for the full model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>contrasts</code></td>
+<td>
+<p>List containing the contrasts of the design matrices of
+focus and auxiliary regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>If <code>model = TRUE</code>, contains the model frame.</p>
+</td>
+</tr>
+</table>
+<p>See returns of <code>walsFit</code> for more details.
+</p>
+<p><code>wals.matrix()</code> returns an object of class <code>"walsMatrix"</code>,
+which inherits from <code>"wals"</code>. This is a list that contains all elements
+returned from <code>walsFit</code> and additionally the response <code>y</code>,
+the list <code>x</code> with model matrices <code>x1</code> and <code>x2</code>, the call
+<code>cl</code>, <code>offset</code> and <code>weights</code>.
+</p>
+<p><code>wals.default()</code> raises an error if <code>x</code> is not an object
+of class <code>"matrix"</code> or a class that extends <code>"matrix"</code>. Otherwise
+returns an object of class <code>"walsMatrix"</code>. See above for more details.
+</p>
+
+
+<h3>References</h3>
+
+<p>De Luca G, Magnus JR (2011).
+“Bayesian model averaging and weighted-average least squares: Equivariance, stability, and numerical issues.”
+<em>The Stata Journal</em>, <b>11</b>(4), 518–544.
+<a href="https://doi.org/10.1177/1536867X1201100402">doi:10.1177/1536867X1201100402</a>.<br><br> Hofner B, Mayr A, Robinzonov N, Schmid M (2014).
+“Model-based Boosting in R: A Hands-on Tutorial Using the R Package mboost.”
+<em>Computational Statistics</em>, <b>29</b>, 3–35.<br><br> Kumar K, Magnus JR (2013).
+“A characterization of Bayesian robustness for a normal location parameter.”
+<em>Sankhya B</em>, <b>75</b>(2), 216–237.
+<a href="https://doi.org/10.1007/s13571-013-0060-9">doi:10.1007/s13571-013-0060-9</a>.<br><br> Magnus JR, De Luca G (2016).
+“Weighted-average least squares (WALS): A survey.”
+<em>Journal of Economic Surveys</em>, <b>30</b>(1), 117-148.
+<a href="https://doi.org/10.1111/joes.12094">doi:10.1111/joes.12094</a>.<br><br> Magnus JR, Powell O, Prüfer P (2010).
+“A comparison of two model averaging techniques with an application to growth empirics.”
+<em>Journal of Econometrics</em>, <b>154</b>(2), 139-153.
+<a href="https://doi.org/10.1016/j.jeconom.2009.07.004">doi:10.1016/j.jeconom.2009.07.004</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Replicate table on p. 534 of De Luca &amp; Magnus (2011)
+fitDM &lt;- wals(gdpgrowth ~ lgdp60 + equipinv + school60 + life60 + popgrowth |
+                  law + tropics + avelf + confucian, data = GrowthMPP,
+                prior = laplace())
+tableDM &lt;- cbind("coef" = coef(fitDM), "se" = sqrt(diag(vcov(fitDM))))
+print(round(tableDM, 7))
+
+
+## Replicate first panel of Table I in Amini &amp; Parmeter (2012)
+data("datafls", package = "BMS")
+
+# NOTE: Authors manually scale data, then rescale the resulting coefs and se.
+X &lt;- model.matrix(y ~ ., data = datafls)
+Xscaled &lt;- apply(X, MARGIN = 2, function(x) x/max(x))
+Xscaled &lt;- Xscaled[,-1]
+scaleVector &lt;- apply(X, MARGIN = 2, function(x) max(x))
+flsScaled &lt;- as.data.frame(cbind(y = datafls$y, Xscaled))
+
+# NOTE: prescale = FALSE, still used old version of WALS in Magnus et al. (2010).
+# Not recommended anymore!
+fitFLS &lt;- wals(y ~ 1 | ., data = flsScaled, prescale = FALSE, eigenSVD = FALSE,
+               prior = laplace())
+tableFLS &lt;- cbind('coef' = coef(fitFLS)/scaleVector,
+                  'se' = sqrt(diag(vcov(fitFLS)))/scaleVector)
+printVars &lt;- c("(Intercept)", "GDP60", "Confucian", "LifeExp", "EquipInv",
+               "SubSahara", "Muslim", "RuleofLaw")
+print(round(tableFLS[printVars,], 4))
+
+
+## Replicate third panel of Table I in Amini &amp; Parmeter (2012)
+data("SDM", package = "BayesVarSel")
+
+# rescale response
+SDM$y &lt;- SDM$y / 100
+
+# NOTE: Authors manually scale data, then rescale the resulting coefs and se.
+X &lt;- model.matrix(y ~ ., data = SDM)
+Xscaled &lt;- apply(X, MARGIN = 2, function(x) x/max(x))
+Xscaled &lt;- Xscaled[,-1]
+scaleVector &lt;- apply(X, MARGIN = 2, function(x) max(x))
+SDMscaled &lt;- as.data.frame(cbind(y = SDM$y, Xscaled))
+
+# NOTE: prescale = FALSE, still used old version of WALS in Magnus et al. (2010).
+# Not recommended anymore!
+fitDW &lt;- wals(y ~ 1 | ., data = SDMscaled, prescale = FALSE, eigenSVD = FALSE,
+              prior = laplace())
+tableDW &lt;- cbind(coef(fitDW)/scaleVector, sqrt(diag(vcov(fitDW)))/scaleVector)
+printVars &lt;- c("(Intercept)", "EAST", "P60", "IPRICE1", "GDPCH60L", "TROPICAR")
+print(round(tableDW[printVars,], 5))
+
+## Example for wals.matrix()
+X &lt;- model.matrix(mpg ~ disp + hp + wt + vs + am + carb, data = mtcars)
+X1 &lt;- X[,c("(Intercept)", "disp", "hp", "wt")] # focus
+X2 &lt;- X[,c("vs", "am", "carb")] # auxiliary
+y &lt;- mtcars$mpg
+
+wals(X1, X2, y, prior = weibull())
+
+</code></pre>
+
+
+</div>

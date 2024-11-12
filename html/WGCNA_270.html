@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>TOMsimilarity</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Topological overlap matrix similarity and dissimilarity</h2>
+
+<h3>Description</h3>
+
+<p>Calculation of the topological overlap matrix, and the corresponding dissimilarity, 
+from a given adjacency matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">TOMsimilarity(
+    adjMat,
+    TOMType = "unsigned",
+    TOMDenom = "min",
+    suppressTOMForZeroAdjacencies = FALSE,
+    suppressNegativeTOM = FALSE,
+    useInternalMatrixAlgebra = FALSE,
+    verbose = 1,
+    indent = 0)
+TOMdist(
+    adjMat,
+    TOMType = "unsigned",
+    TOMDenom = "min",
+    suppressTOMForZeroAdjacencies = FALSE,
+    suppressNegativeTOM = FALSE,
+    useInternalMatrixAlgebra = FALSE,
+    verbose = 1,
+    indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>adjMat</code></td>
+<td>
+<p> adjacency matrix, that is a square, symmetric matrix with entries between 0 and 1 
+(negative values are allowed if <code>TOMType=="signed"</code>).  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>TOMType</code></td>
+<td>
+<p> one of <code>"none"</code>, <code>"unsigned"</code>, <code>"signed"</code>, <code>"signed Nowick"</code>,
+<code>"unsigned 2"</code>, <code>"signed 2"</code> and <code>"signed Nowick 2"</code>. If <code>"none"</code>, adjacency
+will be used for clustering. See <code>TOMsimilarityFromExpr</code> for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>TOMDenom</code></td>
+<td>
+<p> a character string specifying the TOM variant to be used. Recognized values are
+<code>"min"</code> giving the standard TOM described in Zhang and Horvath (2005), and <code>"mean"</code> in which
+the <code>min</code> function in the denominator is replaced by <code>mean</code>. The <code>"mean"</code> may produce 
+better results but at this time should be considered experimental.</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>suppressTOMForZeroAdjacencies</code></td>
+<td>
+<p>Logical: should the results be set to zero for zero adjacencies?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suppressNegativeTOM</code></td>
+<td>
+<p>Logical: should the result be set to zero when negative? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useInternalMatrixAlgebra</code></td>
+<td>
+<p>Logical: should WGCNA's own, slow, matrix multiplication be used instead of
+R-wide BLAS? Only useful for debugging.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The functions perform basically the same calculations of topological overlap. <code>TOMdist</code> turns the
+overlap (which is a measure of similarity) into a measure of dissimilarity by subtracting it from 1. 
+</p>
+<p>Basic checks on the adjacency matrix are performed and missing entries are replaced by zeros.
+</p>
+<p>See <code>TOMsimilarityFromExpr</code> for details on the various TOM types.
+</p>
+<p>The underlying C code assumes that the diagonal of the adjacency matrix equals 1. If this is not the case,
+the diagonal of the input is set to 1 before the calculation begins.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix holding the topological overlap.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder </p>
+
+
+<h3>References</h3>
+
+ 
+<p>Bin Zhang and Steve Horvath (2005) "A General Framework for Weighted Gene Co-Expression
+Network Analysis", Statistical Applications in Genetics and Molecular Biology: Vol. 4: No. 1, Article 17
+</p>
+<p>For the Nowick-type signed TOM (referred to as weighted TO, wTO, by Nowick et al.), see 
+</p>
+<p>Nowick K, Gernat T, Almaas E, Stubbs L. Differences in human and chimpanzee gene expression patterns define an evolving network of transcription factors in brain. Proc Natl Acad Sci U S A. 2009 Dec 29;106(52):22358-63. doi: 10.1073/pnas.0911376106. Epub 2009 Dec 10.
+</p>
+<p>or
+Gysi DM, Voigt A, Fragoso TM, Almaas E, Nowick K.
+wTO: an R package for computing weighted topological overlap and a consensus network with integrated visualization tool.
+BMC Bioinformatics. 2018 Oct 24;19(1):392. doi: 10.1186/s12859-018-2351-7.
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>TOMsimilarityFromExpr</code> </p>
+
+
+</div>

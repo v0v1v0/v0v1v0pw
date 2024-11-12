@@ -1,0 +1,186 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dprewire</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Degree preserving rewiring.</h2>
+
+<h3>Description</h3>
+
+<p>Rewire a given network to have predetermined assortativity coefficient(s)
+while preserving node degree.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dprewire(
+  netwk,
+  edgelist,
+  directed,
+  adj,
+  target.assortcoef = list(outout = NULL, outin = NULL, inout = NULL, inin = NULL),
+  control = list(iteration = 200, nattempts = NULL, history = FALSE, cvxr_control =
+    cvxr_control(), eta.obj = function(x) 0),
+  eta
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>netwk</code></td>
+<td>
+<p>A <code>wdnet</code> object representing an unweighted network. If
+<code>NULL</code>, the function will construct a network using either
+<code>edgelist</code>, or <code>adj</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edgelist</code></td>
+<td>
+<p>A two column matrix, each row represents an edge of the
+network.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>directed</code></td>
+<td>
+<p>Logical, whether the network is directed or not. It will be
+ignored if <code>netwk</code> is provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adj</code></td>
+<td>
+<p>An adjacency matrix of an unweighted network.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target.assortcoef</code></td>
+<td>
+<p>For directed networks, it is a list represents the
+predetermined value or range of assortativity coefficients. For undirected
+networks, it is a constant between -1 to 1. It will be ignored if
+<code>eta</code> is provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>A list of parameters for controlling the rewiring process and
+the process for solving <code>eta</code>. </p>
+ <ul>
+<li>
+<p> 'iteration' An
+integer, represents the number of rewiring iterations. Each iteration
+consists of <code>nattempts</code> rewiring attempts. The assortativity
+coefficient(s) of the network will be recorded after each iteration.
+</p>
+</li>
+<li>
+<p> 'nattempts' An integer representing the number of rewiring
+attempts for each
+iteration. Default value equals the number of rows of <code>edgelist</code>.
+</p>
+</li>
+<li>
+<p> 'history' Logical, whether the rewiring attempts should be
+recorded and returned. </p>
+</li>
+<li>
+<p> 'eta.obj' A convex function of
+<code>eta</code> to be minimized when solving for <code>eta</code> with given
+<code>target.assortcoef</code>. Defaults to 0. It will be ignored if <code>eta</code>
+is provided. </p>
+</li>
+<li>
+<p> 'cvxr_control' A list of parameters passed to
+<code>CVXR::solve()</code> for solving <code>eta</code> with given
+<code>target.assortcoef</code>. It will be ignored if <code>eta</code> is provided.</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eta</code></td>
+<td>
+<p>A matrix represents the target network structure. If specified,
+<code>target.assortcoef</code> will be ignored. For directed networks, the
+element at row "i-j" and column "k-l" represents the proportion of directed
+edges linking a source node with out-degree i and in-degree j to a target
+node with out-degree k and in-degree l. For undirected networks, <code>eta</code>
+is symmetric, the summation of the elements at row "i", column "j" and row
+"j", column "i" represents the proportion of edges linking to a node with
+degree i and a node with degree j.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The algorithm first solves for an appropriate <code>eta</code> using
+<code>target.assortcoef</code>, <code>eta.obj</code>, and <code>cvxr_control</code>, then
+proceeds to the rewiring process and rewire the network towards the solved
+<code>eta</code>. If <code>eta</code> is given, the algorithm will skip the first step.
+This function only works for unweighted networks.
+</p>
+<p>Each rewiring attempt samples two rows from <code>edgelist</code>, for instance
+Edge 1:(v_1, v_2) and Edge 2:(v_3, v_4). For directed networks, if the
+rewiring attempt is accepted, the sampled edges are rewired as (v_1, v_4),
+(v_3, v_2); for undirected networks, the algorithm try to rewire the sampled
+edges as {v_1, v_4}, {v_3, v_2} (type 1) or {v_1, v_3}, {v_2, v_4}
+(type 2), each with probability 1/2.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Rewired network; assortativity coefficient(s) after each iteration;
+rewiring history (including the index of sampled edges and rewiring result)
+and solver results.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+set.seed(123)
+netwk1 &lt;- rpanet(1e4, control = rpa_control_scenario(
+  alpha = 0.4, beta = 0.3, gamma = 0.3
+))
+## rewire a directed network
+target.assortcoef &lt;- list("outout" = -0.2, "outin" = 0.2)
+ret1 &lt;- dprewire(
+  netwk = netwk1,
+  target.assortcoef = target.assortcoef,
+  control = list(iteration = 200)
+)
+plot(ret1$assortcoef$Iteration, ret1$assortcoef$"outout")
+plot(ret1$assortcoef$Iteration, ret1$assortcoef$"outin")
+
+## rewire an undirected network
+netwk2 &lt;- rpanet(1e4,
+  control = rpa_control_scenario(
+    alpha = 0.3, beta = 0.1, gamma = 0.3, xi = 0.3
+  ),
+  initial.network = list(
+    directed = FALSE)
+)
+ret2 &lt;- dprewire(
+  netwk = netwk2,
+  target.assortcoef = 0.3,
+  control = list(
+    iteration = 300, eta.obj = CVXR::norm2,
+    history = TRUE
+  )
+)
+plot(ret2$assortcoef$Iteration, ret2$assortcoef$Value)
+
+
+</code></pre>
+
+
+</div>

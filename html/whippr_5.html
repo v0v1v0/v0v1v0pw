@@ -1,0 +1,161 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>incremental_normalize</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Normalize incremental test data</h2>
+
+<h3>Description</h3>
+
+<p>Detect protocol phases (baseline, ramp, steps), normalize work rate, and
+time-align baseline phase (baseline time becomes negative).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">incremental_normalize(
+  .data,
+  incremental_type = c("ramp", "step"),
+  has_baseline = TRUE,
+  baseline_length = NULL,
+  work_rate_magic = FALSE,
+  baseline_intensity = NULL,
+  ramp_increase = NULL,
+  step_start = NULL,
+  step_increase = NULL,
+  step_length = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.data</code></td>
+<td>
+<p>Data retrieved from <code>read_data()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>incremental_type</code></td>
+<td>
+<p>The type of the incremental test performed. Either "ramp" or "step".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>has_baseline</code></td>
+<td>
+<p>A boolean to indicate whether the data contains a baseline phase. This is used for an incremental test only. Default to <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>baseline_length</code></td>
+<td>
+<p>The baseline length (in seconds) performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>work_rate_magic</code></td>
+<td>
+<p>A boolean indicating whether to perform the work rate calculations. When set to <code>TRUE</code>,
+it will calculate the work rate throughout a ramp or step test. In the case of a step test, it will also
+perform a linear transformation of the work rate.
+If set to <code>TRUE</code>, the arguments below should be given. Default to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>baseline_intensity</code></td>
+<td>
+<p>A numeric atomic vector indicating the work rate of the baseline. If the baseline was performed at rest, indicate <code>0</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ramp_increase</code></td>
+<td>
+<p>A numeric atomic vector indicating the ramp increase in watts per minute (W/min). For example, if the ramp
+was <code style="white-space: pre;">⁠30 W/min⁠</code>, then pass the number <code>30</code> to this argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>step_start</code></td>
+<td>
+<p>In case your baseline was performed at rest, you can set in this parameter at which intensity
+the step test started.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>step_increase</code></td>
+<td>
+<p>A numeric atomic vector indicating the step increase, in watts. For example, if the step increase was
+<code style="white-space: pre;">⁠25 W⁠</code> at each step, then pass the number <code>25</code> to this argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>step_length</code></td>
+<td>
+<p>A numeric atomic vector indicating the length (in seconds) of each step in the step incremental test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments. Currently ignored.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a tibble
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## get file path from example data
+path_example &lt;- system.file("ramp_cosmed.xlsx", package = "whippr")
+
+## read data from ramp test
+df &lt;- read_data(path = path_example, metabolic_cart = "cosmed")
+
+## normalize incremental test data
+ramp_normalized &lt;- df %&gt;%
+ incremental_normalize(
+   .data = .,
+   incremental_type = "ramp",
+   has_baseline = TRUE,
+   baseline_length = 240,
+   work_rate_magic = TRUE,
+   baseline_intensity = 20,
+   ramp_increase = 25
+ )
+
+## get file path from example data
+path_example_step &lt;- system.file("step_cortex.xlsx", package = "whippr")
+
+## read data from step test
+df_step &lt;- read_data(path = path_example_step, metabolic_cart = "cortex")
+
+## normalize incremental test data
+step_normalized &lt;- df_step %&gt;%
+ incremental_normalize(
+   .data = .,
+   incremental_type = "step",
+   has_baseline = TRUE,
+   baseline_length = 120,
+   work_rate_magic = TRUE,
+   baseline_intensity = 0,
+   step_start = 50,
+   step_increase = 25,
+   step_length = 180
+ )
+
+## End(Not run)
+</code></pre>
+
+
+</div>

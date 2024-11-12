@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>[&lt;-.Unpacker</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Unpack or bind values into the calling environment.</h2>
+
+<h3>Description</h3>
+
+<p>Unpacks or binds values into the calling environment. Uses <code>bquote</code> escaping.
+NULL is a special case that is unpacked to all targets. NA targets are skipped.
+All non-NA target names must be unique.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 replacement method for class 'Unpacker'
+wrapr_private_self[...] &lt;- value
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wrapr_private_self</code></td>
+<td>
+<p>object implementing the feature, wrapr::unpack</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>names of to unpack to (can be escaped with bquote <code>.()</code> notation).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>list to unpack into values, must have a number of entries equal to number of <code>...</code> arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note: when using <code>[]&lt;-</code> notation, a reference to the unpacker object is written into the unpacking environment as a side-effect
+of the implied array assignment. <code>:=</code> assigment does not have this side-effect.
+Array-assign form can not use the names: <code>.</code>, <code>wrapr_private_self</code>, <code>value</code>, or the name of the unpacker itself.
+For more details please see here <a href="https://win-vector.com/2020/01/20/unpack-your-values-in-r/">https://win-vector.com/2020/01/20/unpack-your-values-in-r/</a>.
+</p>
+<p>Related work includes <code>Python</code> tuple unpacking, <code>zeallot</code>'s arrow, and <code>vadr::bind</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>wrapr_private_self
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# named unpacking
+# looks like assignment: DESTINATION = NAME_VALUE_USING
+d &lt;- data.frame(x = 1:2,
+                g=c('test', 'train'),
+                stringsAsFactors = FALSE)
+to[train_set = train, test_set = test] := split(d, d$g)
+# train_set and test_set now correctly split
+print(train_set)
+print(test_set)
+rm(list = c('train_set', 'test_set'))
+
+# named unpacking NEWNAME = OLDNAME implicit form
+# values are matched by name, not index
+to[train, test] := split(d, d$g)
+print(train)
+print(test)
+rm(list = c('train', 'test'))
+
+# bquote example
+train_col_name &lt;- 'train'
+test_col_name &lt;- 'test'
+to[train = .(train_col_name), test = .(test_col_name)] := split(d, d$g)
+print(train)
+print(test)
+rm(list = c('train', 'test'))
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>AICc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Akaike's Information Criterion with small-sample correction - AICc
+</h2>
+
+<h3>Description</h3>
+
+<p>Akaike's Information Criterion with small-sample correction - AICc
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">AICc(object, ..., nobs, df)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+
+<p>a fitted model object for which there exists a logLik method to extract the corresponding log-likelihood, number of parameters, and number of observations.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>optionally more fitted model objects.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nobs</code></td>
+<td>
+
+<p>scalar; the value to use for the effective sample size; overrides the value contained in the model object(s).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+
+<p>the value to use for the number of parameters; usually a vector of length = number of models; non-NA elements override the value contained in the corresponding model object.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>AICc is Akaike's information Criterion (AIC) with a small sample correction. It is </p>
+<p style="text-align: center;"><code class="reqn">AICc = AIC + 2K(K + 1) / (n - K - 1)</code>
+</p>
+<p> where <em>K</em> is the number of parameters and <em>n</em> is the number of observations.
+</p>
+<p>This is an S3 generic, with a default method which calls <code>logLik</code>, and should work with any class that has a <code>logLik</code> method.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If just one object is provided, the corresponding AICc.
+</p>
+<p>If multiple objects are provided, a data frame with rows corresponding to the objects and columns representing the number of parameters in the model (df) and the AICc.
+</p>
+<p>The result will be <code>Inf</code> for over-parameterised models, ie. when <code>df &gt;= nobs - 1</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>For some data types, including occupancy data, there is debate on the appropriate effective sample size to use.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Essentially the same as <code>AIC</code> in package <code>stats</code>. Modified to return AICc by Mike Meredith.
+</p>
+
+
+<h3>References</h3>
+
+<p>Burnham, K P; D R Anderson 2002. <em>Model selection and multimodel inference: a practical information-theoretic approach</em>. Springer-Verlag.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>AIC</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Occupancy models
+data(salamanders)
+mt &lt;- occSStime(salamanders, p ~ .time, plot=FALSE)
+mT &lt;- occSStime(salamanders, p ~ .Time, plot=FALSE)
+AIC(mt, mT)
+AICc(mt, mT)
+# The default sample size = the number of sites
+nobs(mt) == nrow(salamanders)
+# It is sometimes taken to be the total number of surveys...
+AICc(mt, mT, nobs=length(salamanders))
+# ... or the minimum of ...
+n &lt;- min(sum(rowSums(salamanders) &gt; 0), # sites where species was detected
+         sum(rowSums(salamanders) == 0)) # sites where species was not detected
+AICc(mt, mT, nobs=n)
+
+# Survival models
+data(dippers)
+DH &lt;- dippers[1:7]  # Extract the detection histories
+null &lt;- survCJS(DH)  # the phi(.) p(.) model
+phit &lt;- survCJS(DH, phi ~ .time)  # the phi(t) p(.) model
+full &lt;- survCJS(DH, list(phi ~ .time, p ~ .time))  # the phi(t) p(t) model
+AICc(null, phit, full)
+# for the full model, all 12 parameters cannot be estimated;
+#   we can manually set df=11 for this model:
+AICc(null, phit, full, df=c(NA, NA, 11))
+</code></pre>
+
+
+</div>

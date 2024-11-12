@@ -1,0 +1,190 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>retrieve_data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieves Data from GENESIS Databases</h2>
+
+<h3>Description</h3>
+
+<p><code>retrieve_data</code> retrieves a single data table.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">retrieve_data(
+  tablename,
+  startyear = "",
+  endyear = "",
+  regionalmerkmal = "",
+  regionalschluessel = "",
+  sachmerkmal = "",
+  sachschluessel = "",
+  sachmerkmal2 = "",
+  sachschluessel2 = "",
+  sachmerkmal3 = "",
+  sachschluessel3 = "",
+  inhalte = "",
+  genesis = NULL,
+  language = "de",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tablename</code></td>
+<td>
+<p>name of the table to retrieve.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>startyear</code></td>
+<td>
+<p>only retrieve values for years equal or larger to <code>startyear</code>. Default: "".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>endyear</code></td>
+<td>
+<p>only retrieve values for years smaller or equal to <code>endyear</code>. Default: "".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>regionalmerkmal</code></td>
+<td>
+<p>key for Regionalklassifikation. See details for more information. Default: "".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>regionalschluessel</code></td>
+<td>
+<p>only retrieve values for particular regional units. See details for more information. Default: "".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sachmerkmal, sachmerkmal2, sachmerkmal3</code></td>
+<td>
+<p>key for Sachklassifikation. Default: "".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sachschluessel, sachschluessel2, sachschluessel3</code></td>
+<td>
+<p>value for Sachklassifikation. Default: "".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inhalte</code></td>
+<td>
+<p>retrieve only selected variables. Default is to retrieve all.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>genesis</code></td>
+<td>
+<p>to authenticate a user and set the database (see below).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>retrieve information in German "de" (default) or in English "en" if available.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments send to the httr::GET request.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Use <code>retrieve_datalist</code> to find the <code>tablename</code> based on the table series you are interested in. See the 
+package description (<code>wiesbaden</code>) for details about setting the login and database. 
+</p>
+<p>The parameter <code>regionalschluessel</code> can either be a single value (a single Amtlicher Gemeindeschlüssel) or a 
+comma-separated list of values supplied as string (no whitespaces). Wildcard character "*" is allowed. 
+If <code>regionalschluessel</code> is set, the parameter <code>regionalmerkmal</code> must also be set to GEMEIN, KREISE, 
+REGBEZ, or DLAND. The same logic applies to the parameter combination <code>sachmerkmal</code> and <code>sachschluessel*</code>. 
+The parameter <code>inhalte</code> takes a 1-6 character long name of a variable in the table. If choosing multiple variables, 
+delimit by ",", e.g. "STNW01,STNW02" (no whitespaces).
+</p>
+<p>Limiting the data request to particular years (via the <code>*year</code> parameters), geographical units (via the <code>regional*</code> parameters) 
+attributes (via the <code>sach*</code> parameters) or selected variables (via the <code>inhalte</code> parameter) is necessary if the API request 
+fails to return any data. If you are not able to download the table because of size, inspect the metadata first 
+(using retrieve_metadata or retrieve_valuelabel) and then limit the data request accordingly. See also examples below.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a <code>data.frame</code>. Value variables (_val) come with three additional variables (_qual, _lock, _err). The exact nature 
+of these variables is unknown, but _qual appears to indicate if _val is a valid value. If _qual=="e" the value in _val is 
+valid while if _qual!="e" (then _qual = ("-","/", ".", "x", ... ) ) it is typically zero should/might be set to NA.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>retrieve_datalist</code> <code>wiesbaden</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+ ## Not run: 
+ # Retrieve values for the table 14111KJ002 which contains the 
+ # federal election results on the county level. 
+ # Assumes that user/password are stored via save_credentials()
+
+ data &lt;- retrieve_data(tablename="14111KJ002", genesis=c(db="regio") )
+
+ # ... only the values for the AfD. 
+
+ data &lt;- retrieve_data(tablename="14111KJ002", sachmerkmal="PART04", 
+   sachschluessel="AFD", genesis=c(db="regio") )
+
+# ... or only values from Saxony
+
+ data &lt;- retrieve_data(tablename="14111KJ002", regionalmerkmal="KREISE", 
+   regionalschluessel="14*", genesis=c(db="regio") )
+
+# Limiting the number of data points is in particular important for 
+# large tables. For example, this data request fails: 
+
+data &lt;- retrieve_data(tablename="33111GJ005", genesis=c(db='regio'))
+
+# But after limiting the request to one year, the data is returned:
+
+data &lt;- retrieve_data(tablename="33111GJ005", genesis=c(db='regio'), startyear=2019, endyear=2019)
+
+# An alternative strategy is to only request a subset of the variables. 
+# For example, this data request fails: 
+
+data &lt;- retrieve_data("12711GJ002", genesis=c(db="regio"))
+
+# But when requesting only one instead of all variables, the data is returned: 
+
+data &lt;- retrieve_data("12711GJ002", inhalte="BEV081", genesis=c(db="regio"))
+
+# Example using the sachschluessel: Number of refugees from Afghanistan (ST423) 
+# and Egypt (ST287) by district (Kreis) in 2022. 
+
+data &lt;- retrieve_data("12531KJ003", startyear = 2022, endyear = 2022, 
+		sachmerkmal="STAAG5", sachschluessel = "ST423, ST287", genesis=c(db='de'))
+
+
+## End(Not run) 
+
+</code></pre>
+
+
+</div>

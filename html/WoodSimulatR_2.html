@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_subsample_definitions</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve descriptive data for samples from literature</h2>
+
+<h3>Description</h3>
+
+<p>In the <code>WoodSimulatR</code> package, means and standard deviations of grade
+determining properties (GDPs) for a number of Norway spruce
+(<em>Picea abies</em>) samples from literature are stored for use in
+<code>simulate_dataset</code>. They are indexed by a two-letter country code
+(and a suffixed number if disambiguation is required).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_subsample_definitions(country = NULL, loadtype = "t", species = "PCAB")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>country</code></td>
+<td>
+<p>Can be either the number of desired samples, or a
+named vector of relative subsample sizes where the names can be
+abbreviations of country names. Alternatively, <code>country</code> can also
+be a character vector of country abbreviations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loadtype</code></td>
+<td>
+<p>Can be either <code>"be"</code> for "bending edgewise" or
+<code>"t"</code> for "tension".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>species</code></td>
+<td>
+<p>A species code according to EN 13556:2003. Currently, only
+'PCAB' (<em>Picea abies</em> = Norway spruce) is supported.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The direct descriptive data can also be directly accessed
+(<code>gdp_data</code>).
+The present function is meant to prepare the data
+as input to the <code>subsets</code> argument of <code>simulate_dataset</code>.
+It allows picking multiple samples from the same country (disambiguating by
+creating appropriately named entries in the column <code>subsample</code>) and
+creating random sample data (uniformly distributed within the
+range of values given in the full dataset <code>gdp_data</code>
+for the respective <code>loadtype</code> and <code>species</code>) for sample names not
+found in this dataset.
+</p>
+<p>The dataset <code>gdp_data</code> contains a column <code>share</code> which gives
+the number of pieces in the original sample. Unless relative subsample sizes
+are explicitly asked for by providing a named numeric vector for the
+argument <code>country</code>, the present function always resets <code>share</code> to
+1, prompting <code>simulate_dataset</code> to create
+(approximately) equal-sized subsamples.
+</p>
+<p>The GDPs depend on the type of destructive testing done
+(<code>loadtype</code>) – therefore, giving the proper <code>loadtype</code> is
+required for realistic values.
+</p>
+<p>If <code>country</code> is <code>NULL</code> (or omitted), the full dataset
+<code>gdp_data</code> for the
+respective <code>loadtype</code> (and <code>species</code>) is returned.
+</p>
+<p>For sample names not contained in the internal list, a warning is issued
+and random sample data is returned (uniformly distributed within the
+range of values given in the full table for the respective <code>loadtype</code>
+and <code>species</code>).
+</p>
+<p>If <code>country</code> is just a number (and <em>not</em> a named vector), also random
+sample data is returned; the different "countries" are then named "C1", "C2"
+and so on.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with country and subsample names,
+relative subsample sizes and some meta-information like project and
+literature references, as well as mean
+strength and standard deviation of strength, static modulus of elasticity and
+density.
+</p>
+
+
+<h3>Notes</h3>
+
+<p>The GDP values collected in <code>gdp_data</code> were selected from
+publications which aimed at representative sampling within the respective
+countries.
+All the same, care must be taken when using these values,
+due to the natural high variability of timber properties.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# get all subsample data for loadtype bending, or tension
+get_subsample_definitions()
+get_subsample_definitions(loadtype='be')
+
+# get six random samples, explicitly state loadtype tension
+get_subsample_definitions(country=6, loadtype='t')
+
+# get subsample data for the German tension sample in different ways
+get_subsample_definitions(country='de', loadtype='t')
+get_subsample_definitions(country=c(de=1), loadtype='t')
+get_subsample_definitions(country=c(de=6), loadtype='t')
+
+# bending samples from Sweden (both samples), Poland, and France, equally
+# weighted
+get_subsample_definitions(c('se', 'se_1', 'pl', 'fr'))
+get_subsample_definitions(c(se=1, se_1=1, pl=1, fr=1))
+get_subsample_definitions(c(se=5, se_1=5, pl=5, fr=5))
+
+# four tension samples from Romania, two from Ukraine and one from Slovakia,
+# weighted so that each country contributes equally
+get_subsample_definitions(c(ro=1, ro=1, ro=1, ro=1, ua=2, ua=2, sk=4), loadtype='t')
+
+# non-existant subsample names get replaced by random values (which are based
+# on the range of stored values for the respective loadtype)
+get_subsample_definitions(c('xx', 'yy', 'zz'))
+get_subsample_definitions(c('xx', 'yy', 'zz'), loadtype='t')
+
+# subsample names are case-sensitive!
+get_subsample_definitions(c('at', 'aT', 'At', 'AT'), loadtype='t')
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ww_statsUSGS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>USGS stats</h2>
+
+<h3>Description</h3>
+
+<p>This function uses the readNWISstat to gather daily, monthly or yearly
+percentiles.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ww_statsUSGS(
+  procDV,
+  sites = NULL,
+  temporalFilter = "daily",
+  parameter_cd = NULL,
+  days = 10,
+  parallel = FALSE,
+  verbose = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>procDV</code></td>
+<td>
+<p>A previously created ww_dvUSGS object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sites</code></td>
+<td>
+<p>A <code>character</code> USGS NWIS site.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>temporalFilter</code></td>
+<td>
+<p>A <code>character</code> for the stat summary window, e.g. 'daily' (default), 'monthly', 'yearly'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameter_cd</code></td>
+<td>
+<p>A USGS code parameter code, only if using <code>sites</code> argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>days</code></td>
+<td>
+<p>A <code>numeric</code> input of days to go back from today (only needed if using .temporalFilter = 'daily').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p><code>logical</code> indicating whether to use future_map().</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p><code>logical</code> for printing information. TRUE (default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments to pass on to future_map.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a tibble with associated site statistics.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Be aware, the parameter values ('Flow', 'Wtemp', etc) are calculated from the ww_floorIVUSGS
+function by taking the daily mean of the hourly data. Thus, the instantaneous values will look different than the daily mean values, as it should.
+The <code>.temporalFilter</code> argument is used to generate the window of percentiles.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# get by date range
+
+yaak_river_dv &lt;- ww_dvUSGS('12304500')
+
+#daily
+yaak_river_stats &lt;- ww_statsUSGS(yaak_river_dv,
+                                 temporalFilter = 'daily',
+                                 days = 10)
+#monthly
+yaak_river_stats &lt;- ww_statsUSGS(yaak_river_dv,
+                                 temporalFilter = 'monthly',
+                                 days = 10)
+#yearly
+yaak_river_stats &lt;- ww_statsUSGS(yaak_river_dv,
+                                 temporalFilter = 'yearly',
+                                 days = 10)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>write.dsm.matrix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Export DSM Matrix to File (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>This function exports a DSM matrix to a disk file in the specified format (see section ‘Formats’ for details).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+write.dsm.matrix(x, file, format = c("word2vec"), round=FALSE,
+                 encoding = "UTF-8", batchsize = 1e6, verbose=FALSE)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>a dense or sparse matrix representing a DSM, or an object of class <code>dsm</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+
+<p>either a character string naming a file or a <code>connection</code> open for writing (in text mode)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+
+<p>desired output file format. See section ‘Formats’ for a list of available formats and their limitations.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>round</code></td>
+<td>
+
+<p>for some output formats, numbers can be rounded to the specified number of decimal digits in order to reduce file size
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>encoding</code></td>
+<td>
+
+<p>character encoding of the output file (ignored if <code>file</code> is a connection)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>batchsize</code></td>
+<td>
+
+<p>for certain output formats, the matrix is written in batches of <code>batchsize</code> cells each in order to limit memory overhead
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+
+<p>if <code>TRUE</code>, show progress bar when writing in batches
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In order to save text formats to a compressed file, pass a <code>gzfile</code>, <code>bzfile</code> or <code>xzfile</code> connection with appropriate <code>encoding</code> in the argument <code>file</code>.  Make sure not to open the connection before passing it to <code>write.dsm.matrix</code>.  See section ‘Examples’ below.
+</p>
+
+
+<h3>Formats</h3>
+
+<p>Currently, the only supported file format is <code>word2vec</code>.
+</p>
+
+<dl>
+<dt><code>word2vec</code></dt>
+<dd>
+<p>This widely used text format for word embeddings is only suitable for a dense matrix. Row labels must be unique and may not contain whitespace.
+Values are usually rounded to a few decimal digits in order to keep file size manageable.
+</p>
+<p>The first line of the file lists the matrix dimensions (rows, columns) separated by a single blank.
+It is followed by one text line for each matrix row, starting with the row label. The label and are cells are separated by single blanks, so row labels cannot contain whitespace.
+</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read.dsm.matrix</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">model &lt;- dsm.score(DSM_TermTerm, score="MI", normalize=TRUE) # a typical DSM
+
+# save in word2vec text format (rounded to 3 digits)
+fn &lt;- tempfile(fileext=".txt")
+write.dsm.matrix(model, fn, format="word2vec", round=3)
+cat(readLines(fn), sep="\n")
+
+# save as compressed file in word2vec format
+fn &lt;- tempfile(fileext=".txt.gz")
+fh &lt;- gzfile(fn, encoding="UTF-8") # need to set file encoding here
+write.dsm.matrix(model, fh, format="word2vec", round=3)
+# write.dsm.matrix() automatically opens and closes the connection
+cat(readLines(gzfile(fn)), sep="\n")
+</code></pre>
+
+
+</div>

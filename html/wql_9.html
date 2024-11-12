@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>eofPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot EOF analysis results</h2>
+
+<h3>Description</h3>
+
+<p>Plots the rotated empirical orthogonal functions or amplitude time series
+resulting from <code>eof</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">eofPlot(x, type = c("coef", "amp"), rev = FALSE, ord = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>result of the function <code>eof</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>whether the EOF coefficients or amplitudes should be plotted</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rev</code></td>
+<td>
+<p>logical indicating whether coefficients and amplitudes should be
+multiplied by <code>-1</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ord</code></td>
+<td>
+<p>logical indicating whether coefficients should be ordered by size</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When the columns of the original data have a natural order, such as stations
+along a transect or months of the year, there may be no need to reorder the
+EOF coefficients. But if there is no natural order, such as when columns
+represents disparate sites around the world, the plot can be more
+informative if coefficients are ordered by size (<code>ord = TRUE</code>).
+</p>
+<p>Coefficients and amplitudes for a given EOF may be more easily interpreted
+if <code>rev = TRUE</code>, because the sign of the first coefficient is
+arbitrarily determined and all the other signs follow from that choice.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A plot of the EOF coefficients or amplitudes.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alan Jassby, James Cloern
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>eof</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Create an annual matrix time series
+chla1 &lt;- aggregate(sfbayChla, 1, mean, na.rm = TRUE)
+chla1 &lt;- chla1[, 1:12]  # remove stations with missing years
+
+# eofNum (see examples) suggests n = 1
+e1 &lt;- eof(chla1, n = 1)
+eofPlot(e1, type = 'coef')
+eofPlot(e1, type = 'amp')
+
+</code></pre>
+
+
+</div>

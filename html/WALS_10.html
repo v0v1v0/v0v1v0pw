@@ -1,0 +1,133 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>computeX2M1X2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Internal function: Computes X2M1X2 for walsNB when SVD is applied to Z1</h2>
+
+<h3>Description</h3>
+
+<p>Exploits the SVD of <code class="reqn">\bar{Z}_1</code> to compute
+<code class="reqn">\bar{X}_{2}^{\top} \bar{M}_{1} \bar{X}_{2}</code> to avoid directly inverting
+<code class="reqn">\bar{Z}_{1}^{\top} \bar{Z}_{1}</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">computeX2M1X2(
+  X2,
+  X2start,
+  qStart,
+  U,
+  UellStart,
+  ellStart,
+  psiStart,
+  gStart,
+  epsilonStart,
+  geB
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X2</code></td>
+<td>
+<p>Design matrix for auxiliary regressors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X2start</code></td>
+<td>
+<p>Transformed design matrix for auxiliary regressors. Refers to
+<code class="reqn">\bar{X}_{2} = \bar{\Psi}^{1/2} X_{2}</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qStart</code></td>
+<td>
+<p>Vector <code class="reqn">\bar{q}</code>, see section "One-step ML estimator" of
+Huynh (2024a) for definition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>U</code></td>
+<td>
+<p><code class="reqn">U</code> of SVD of <code class="reqn">Z_1</code>. See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>UellStart</code></td>
+<td>
+<p>Vector <code class="reqn">U \bar{\ell}</code>, see details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ellStart</code></td>
+<td>
+<p>Vector <code class="reqn">\bar{\ell}</code> see details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>psiStart</code></td>
+<td>
+<p>Diagonal matrix <code class="reqn">\bar{\Psi}</code>, see section
+"One-step ML estimator" of Huynh (2024a) for definition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gStart</code></td>
+<td>
+<p>Derivative of dispersion parameter <code class="reqn">\rho</code> of NB2 with
+respect to <code class="reqn">\alpha = \log(\rho)</code> evaluated at starting values of
+one-step ML. <code>gStart</code> is a scalar.
+See section "ML estimation" of  Huynh (2024a).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsilonStart</code></td>
+<td>
+<p>Scalar <code class="reqn">\bar{\epsilon}</code>, see section
+"One-step ML estimator" of Huynh (2024a) for definition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geB</code></td>
+<td>
+<p><code class="reqn">\bar{g} \bar{\epsilon} / (1 + B)</code>. In code
+<code>gStart*epsilonStart / (1+B)</code>. See details for definition of <code class="reqn">B</code>.
+<code>gStart</code> is <code class="reqn">\bar{g}</code> and <code>epsilonStart</code> is <code class="reqn">\bar{\epsilon}</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See section
+"Simplification for computing <code class="reqn">\bar{X}_{2}^{\top} \bar{M}_{1} \bar{X}_{2}</code>"
+in the appendix of Huynh (2024b) for details of the
+implementation and for the definitions of arguments <code>Uellstart</code>,
+<code>ellStart</code>, and <code>geB</code>.
+</p>
+<p>All parameters that contain "start" feature the starting values for the
+one-step ML estimation of submodels. See section "One-step ML estimator" of
+Huynh (2024a) for details.
+</p>
+
+
+<h3>References</h3>
+
+<p>Huynh K (2024a).
+“Weighted-Average Least Squares for Negative Binomial Regression.”
+arXiv 2404.11324, arXiv.org E-Print Archive.
+<a href="https://doi.org/10.48550/arXiv.2404.11324">doi:10.48550/arXiv.2404.11324</a>.<br><br> Huynh K (2024b).
+“WALS: Weighted-Average Least Squares Model Averaging in R.”
+University of Basel.
+Mimeo.
+</p>
+
+
+</div>

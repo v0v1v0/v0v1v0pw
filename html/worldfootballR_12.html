@@ -1,0 +1,73 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fb_player_scouting_report</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get fbref Full Player Scouting Report</h2>
+
+<h3>Description</h3>
+
+<p>Returns the scouting report for a selected player
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fb_player_scouting_report(player_url, pos_versus, time_pause = 3)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>player_url</code></td>
+<td>
+<p>the URL of the player (can come from fb_player_urls())</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pos_versus</code></td>
+<td>
+<p>either "primary" or "secondary" as fbref offer comparisons against multiple positions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time_pause</code></td>
+<td>
+<p>the wait time (in seconds) between page loads</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>returns a dataframe of a player's full scouting information for all seasons available on FBref
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+try({
+fb_player_scouting_report(player_url = "https://fbref.com/en/players/d70ce98e/Lionel-Messi",
+pos_versus = "primary")
+
+# to filter for the last 365 days:
+fb_player_scouting_report(player_url = "https://fbref.com/en/players/d70ce98e/Lionel-Messi",
+pos_versus = "primary") %&gt;% dplyr::filter(scouting_period == "Last 365 Days")
+
+# to get secondary positions
+fb_player_scouting_report(player_url = "https://fbref.com/en/players/d70ce98e/Lionel-Messi",
+pos_versus = "secondary")
+
+# for the 2020-2021 La Liga season
+fb_player_scouting_report(player_url = "https://fbref.com/en/players/d70ce98e/Lionel-Messi",
+pos_versus = "secondary") %&gt;% dplyr::filter(scouting_period == "2020-2021 La Liga")
+})
+
+## End(Not run)
+</code></pre>
+
+
+</div>

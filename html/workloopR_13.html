@@ -1,0 +1,153 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summarize_wl_trials</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summarize work loop files</h2>
+
+<h3>Description</h3>
+
+<p>Summarize important info from work loop files stored in the same folder
+(e.g. a sequence of trials in an experiment) including experimental
+parameters, run order, and <code>mtime</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">summarize_wl_trials(wl_list)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>wl_list</code></td>
+<td>
+<p>List of <code>analyzed_workloop</code> objects, preferably one
+created by <code>read_analyze_wl_dir()</code>.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>If several files (e.g. successive trials from one experiment) are
+stored in one folder, use this function to obtain summary stats and
+metadata and other parameters. This function requires a list of
+<code>analyze_workloop</code> objects, which can be readily obtained by first
+running <code>read_analyze_wl_dir()</code> on a specified directory.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>data.frame</code> of information about the collection of workloop files.
+Columns include:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>File_ID </code></td>
+<td>
+<p>Name of the file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Cycle_Frequency </code></td>
+<td>
+<p>Frequency of Position change</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Amplitude </code></td>
+<td>
+<p>amplitude of Position change</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Phase </code></td>
+<td>
+<p>Phase of the oscillatory cycle (in percent) at which
+stimulation occurred. Somewhat experimental, please use with caution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Stimulus_Pulses </code></td>
+<td>
+<p>Number of stimulation pulses</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mtime </code></td>
+<td>
+<p>Time at which file's contents were last changed (<code>mtime</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Mean_Work </code></td>
+<td>
+<p>Mean work output from the selected cycles</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Mean_Power </code></td>
+<td>
+<p>Net power output from the selected cycles</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Vikram B. Baliga and Shreeram Senthivasan
+</p>
+
+
+<h3>References</h3>
+
+<p>Josephson RK. 1985. Mechanical Power output from Striated Muscle
+during Cyclic Contraction. Journal of Experimental Biology 114: 493-512.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read_analyze_wl_dir</code>,
+<code>get_wl_metadata</code>,
+<code>time_correct</code>
+</p>
+<p>Other workloop functions: 
+<code>analyze_workloop()</code>,
+<code>fix_GR()</code>,
+<code>get_wl_metadata()</code>,
+<code>invert_position()</code>,
+<code>read_analyze_wl_dir()</code>,
+<code>read_analyze_wl()</code>,
+<code>select_cycles()</code>,
+<code>time_correct()</code>
+</p>
+<p>Other batch analyses: 
+<code>get_wl_metadata()</code>,
+<code>read_analyze_wl_dir()</code>,
+<code>time_correct()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(workloopR)
+
+# batch read and analyze files included with workloopR
+analyzed_wls &lt;- read_analyze_wl_dir(system.file("extdata/wl_duration_trials",
+                                               package = 'workloopR'),
+                                    phase_from_peak = TRUE,
+                                    cycle_def = "p2p",
+                                    keep_cycles = 2:4
+                                    )
+
+# now summarize
+summarized_wls &lt;- summarize_wl_trials(analyzed_wls)
+
+</code></pre>
+
+
+</div>

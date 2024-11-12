@@ -1,0 +1,216 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mouseOverHtmlFile</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create mouse-over interactive html-pages (with links)</h2>
+
+<h3>Description</h3>
+
+<p>This function allows generating html pages with interactive mouse-over to display information for the points of the plot and www-links when clicking based on embedded png file.  
+Basically, an html page will be generated which contains a call to display to an image file specified in <code>pngFileNa</code> and in the body below pixel-coordinated will be 
+given for disply of information at mouse-over and embedded links.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mouseOverHtmlFile(
+  myCoor,
+  pngFileNa,
+  HtmFileNa = NULL,
+  mouseOverTxt = NULL,
+  displSi = c(800, 600),
+  colNa = NULL,
+  tit = "",
+  myHtmTit = "",
+  myComment = NULL,
+  textAtStart = NULL,
+  textAtEnd = NULL,
+  pxDiam = 5,
+  addLinks = NULL,
+  linkExt = NULL,
+  htmlExt = "htm",
+  callFrom = NULL,
+  silent = FALSE,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>myCoor</code></td>
+<td>
+<p>(matrix or data.frame) with initial x&amp;y coordinates of points for plot; with IDs (1st column !!) &amp; coordinates (2nd &amp; 3rd col), data for mouse-over &amp; link (4th &amp; 5th); 
+NOTE : if 'colNa' NOT given, colnames of 'myCoor' will be inspected &amp; filtered (columns of non-conform names may get lost) !!!  
+Associated with (already existing) figure file 'pngFileNa' and make html page where points may be indicated by mouse-over</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pngFileNa</code></td>
+<td>
+<p>(character, length=1) filename for complementary png figure (must already exist)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>HtmFileNa</code></td>
+<td>
+<p>(character, length=1) filename for html file produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mouseOverTxt</code></td>
+<td>
+<p>(character, length=1) text for interactive mouse-over in html, if <code>NULL</code>, will use col specified by 1st 'colNa' or (if NULL) rownames of 'myCoor'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>displSi</code></td>
+<td>
+<p>(integer, length=2)  size of image ('pngFileNa') at display in html (width,height), see also <code>par</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colNa</code></td>
+<td>
+<p>(character) if not <code>NULL</code> min length of 3 to custom specify the column-names to be used : 1st for mouse-over and 2nd+3rd for coordinates associated (and optional 4th for links)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tit</code></td>
+<td>
+<p>(character) title to be displayed on top of figure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>myHtmTit</code></td>
+<td>
+<p>(character) title of Html page; 'htmlExt' .. checking and correcting filename-extension (only main Html page)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>myComment</code></td>
+<td>
+<p>(character) modify comment embedded in html-document</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>textAtStart</code></td>
+<td>
+<p>(character) text in html before figure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>textAtEnd</code></td>
+<td>
+<p>(character) text in html after figure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pxDiam</code></td>
+<td>
+<p>(integer, length=1) diameter for mouse-over tip to appear (single val or vector), simpler version/solution than with 'Tooltip' package</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addLinks</code></td>
+<td>
+<p>(character) for clickable links, either 1) vector of links or 2) single character-chain to be used for pasting to rownames (eg https://www.uniprot.org/uniprot/)
+or 3) <code>TRUE</code> to check presence of 4th name specified in 'colNa' to be useed as columname from 'myCoor'   dominates over eventual presence of 4th name in 'colNa'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>linkExt</code></td>
+<td>
+<p>(character) if specified : links will get specified ending, define as <code>NULL</code> or "" for taking 'addLinks' asIs</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>htmlExt</code></td>
+<td>
+<p>(character, length=1) extension used when making html files</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Basically theer are two options for defining the path to the image embedded : 
+1) Absolute path : I turn you can moove the html to different locations, as long as it still can see the png-file the image can be displayed. However, this may 
+not be any more the case when the html file is sent to another person. If the png-file is accessible as url, it should be easily visible. 
+2) Relative path : The simplest case would be to give only the file-name with no path at all, thus the png-file is supposed to be in the same directory as the html-file. 
+This option is very 'transportable'. 
+Basically the same applies to the clickable links which may be provided. In high-throughput biology one typically points here to data-bases accessible
+over the internet where urls to specific pages. With UniProt such links can easily be constructed when using protein identifiers as rownames.
+</p>
+
+
+<h3>Value</h3>
+
+<p>plot
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>convertPlotCoordPix</code>; use <code>htmlSpecCharConv</code> to convert special characters for proper html display
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Note, this example writes files to R's tempdir,
+## Otherwise, if you simply work in the current directory without spcifying paths you'll 
+##  get an html with relatove paths, which simply needs the png file in the same path 
+df1 &lt;- data.frame(id=letters[1:10], x=1:10, y=rep(5,10), mou=paste("point",letters[1:10]),
+  link=file.path(tempdir(),paste0(LETTERS[1:10],".html")), stringsAsFactors=FALSE)  
+## here we'll use R's tempdir, later you may want to choose other locations
+pngFile &lt;- file.path(tempdir(),"test01.png")
+png(pngFile,width=800, height=600,res=72)
+## here we'll just plot a set of horiontal points ...
+plot(df1[,2:3],las=1,main="test01")
+dev.off()
+## Note : Special characters should be converted for display in html pages during mouse-over
+library(wrMisc)
+df1$mou &lt;- htmlSpecCharConv(df1$mou)
+## Let's add the x- and y-coordiates of the points in pixels to the data.frame
+df1 &lt;- cbind(df1,convertPlotCoordPix(x=df1[,2],y=df1[,3],plotD=c(800,600),plotRes=72))
+head(df1)
+## Now make the html-page allowing to display mouse-over to the png made before
+htmFile &lt;- file.path(tempdir(),"test01.html")
+mouseOverHtmlFile(df1,pngFile,HtmFileNa=htmFile,pxDiam=15,
+  textAtStart="Points in the figure are interactive to mouse-over ...",
+  textAtEnd="and/or may contain links")
+## We still need to make some toy links
+for(i in 1:nrow(df1)) cat(paste0("point no ",i," : ",df1[i,1]," x=",df1[i,2]," y=",
+  df1[i,3]), file=df1$link[i]) 
+## Now we are ready to open the html file using any browser
+## Not run:  
+browseURL(htmFile)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

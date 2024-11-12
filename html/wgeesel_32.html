@@ -1,0 +1,75 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WRsquare.gee</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Weighted R Square for WGEE
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the weighted <code class="reqn">R^2</code> (missing longitudinal information criterion) for selection of mean model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WRsquare.gee(object, weight_mean)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>a fitted model object of class <code>"wgee"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight_mean</code></td>
+<td>
+
+<p>logical; whether weighted mean of the response should be used for weighted R square.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Return a list of weighted R square.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Zheng Li, Cong Xu and Ming Wang
+</p>
+
+
+<h3>References</h3>
+
+<p>Nelder, J.A. and Baker, R.J., 1972. <em>Generalized linear models</em>. Encyclopedia of statistical sciences.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wgee</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(imps)
+
+fit &lt;- wgee(Y ~ Drug+Sex+Time, data=imps, id=imps$ID, family="binomial",
+            corstr="exchangeable",scale=NULL,mismodel= R ~ Drug+Time)
+WRsquare.gee(fit, weight_mean=TRUE)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get1stOfRepeatedByCol</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get first of repeated by column</h2>
+
+<h3>Description</h3>
+
+<p><code>get1stOfRepeatedByCol</code> sorts matrix 'mat' and extracts only 1st occurance of values in column 'sortBy'.
+Returns then non-redundant matrix (ie for column 'sortBy', if 'markIfAmbig' specifies existing col, mark ambig there).
+Note : problem when sortSupl or sortBy not present (or not intended for use)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get1stOfRepeatedByCol(
+  mat,
+  sortBy = "seq",
+  sortSupl = "ty",
+  asFirstLast = c("full", "inter"),
+  markIfAmbig = c("ambig", "seqNa"),
+  asList = FALSE,
+  abmiPref = "_"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mat</code></td>
+<td>
+<p>(matrix or data.frame) numeric vector to be tested</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sortBy</code></td>
+<td>
+<p>column name for which elements should be made unique, numeric or character column; 'sortSupl' .. add'l colname to always select specific 1st)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sortSupl</code></td>
+<td>
+<p>default="ty"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>asFirstLast</code></td>
+<td>
+<p>(character,length=2) to force specific strings from coluln 'sortSupl' as first and last when selecting 1st of repeated terms, default=c("full","inter")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>markIfAmbig</code></td>
+<td>
+<p>(character,length=2) 1st will be set to 'TRUE' if ambiguous/repeated, 2nd will get (heading) prefix, default=c("ambig","seqNa")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>asList</code></td>
+<td>
+<p>(logical) to return list with non-redundant ('unique') and removed lines ('repeats')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abmiPref</code></td>
+<td>
+<p>(character) prefix to note ambiguous entries/terms, default="_"</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>depending on 'asList' either list with non-redundant ('unique') and removed lines ('repeats')
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>firstOfRepeated</code> for (more basic) treatment of simple vector, <code>nonAmbiguousNum</code> for numeric use (much faster !!!)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">aa &lt;- cbind(no=as.character(1:20),seq=sample(LETTERS[1:15],20,repl=TRUE),
+  ty=sample(c("full","Nter","inter"),20,repl=TRUE),ambig=rep(NA,20),seqNa=1:20)
+get1stOfRepeatedByCol(aa)
+</code></pre>
+
+
+</div>

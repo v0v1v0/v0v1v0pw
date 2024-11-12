@@ -1,0 +1,252 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ScatterHist</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot a scatter plot with marginals.</h2>
+
+<h3>Description</h3>
+
+<p>Plot a scatter plot with optional smoothing curves or contour lines, and marginal histogram/density plots.
+Based on <a href="https://win-vector.com/2015/06/11/wanted-a-perfect-scatterplot-with-marginals/">https://win-vector.com/2015/06/11/wanted-a-perfect-scatterplot-with-marginals/</a>.
+See also <code>ggExtra::ggMarginal</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ScatterHist(
+  frame,
+  xvar,
+  yvar,
+  title,
+  ...,
+  smoothmethod = "lm",
+  estimate_sig = FALSE,
+  minimal_labels = TRUE,
+  binwidth_x = NULL,
+  binwidth_y = NULL,
+  adjust_x = 1,
+  adjust_y = 1,
+  point_alpha = 0.5,
+  contour = FALSE,
+  point_color = "black",
+  hist_color = "gray",
+  smoothing_color = "blue",
+  density_color = "blue",
+  contour_color = "blue"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frame</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar</code></td>
+<td>
+<p>name of the independent (input or model) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yvar</code></td>
+<td>
+<p>name of the dependent (output or result to be modeled) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>smoothmethod</code></td>
+<td>
+<p>(optional) one of 'auto', 'loess', 'gam', 'lm', 'identity', or 'none'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimate_sig</code></td>
+<td>
+<p>logical if TRUE and smoothmethod is 'identity' or 'lm', report goodness of fit and significance of relation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minimal_labels</code></td>
+<td>
+<p>logical drop some annotations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binwidth_x</code></td>
+<td>
+<p>numeric binwidth for x histogram</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binwidth_y</code></td>
+<td>
+<p>numeric binwidth for y histogram</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adjust_x</code></td>
+<td>
+<p>numeric adjust x density plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adjust_y</code></td>
+<td>
+<p>numeric adjust y density plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>point_alpha</code></td>
+<td>
+<p>numeric opaqueness of the plot points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>contour</code></td>
+<td>
+<p>logical if TRUE add a 2d contour plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>point_color</code></td>
+<td>
+<p>color for scatter plots</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hist_color</code></td>
+<td>
+<p>fill color for marginal histograms</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>smoothing_color</code></td>
+<td>
+<p>color for smoothing line</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>density_color</code></td>
+<td>
+<p>color for marginal density plots</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>contour_color</code></td>
+<td>
+<p>color for contour plots</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If <code>smoothmethod</code> is:
+</p>
+
+<ul>
+<li>
+<p> 'auto', 'loess' or 'gam':  the appropriate smoothing curve is added to the scatterplot.
+</p>
+</li>
+<li>
+<p> 'lm' (the default): the best fit line is added to the scatterplot.
+</p>
+</li>
+<li>
+<p> 'identity':  the line x = y is added to the scatterplot. This is useful for comparing model predictions to true outcome.
+</p>
+</li>
+<li>
+<p> 'none': no smoothing line is added to the scatterplot.
+</p>
+</li>
+</ul>
+<p>If <code>estimate_sig</code> is TRUE and <code>smoothmethod</code> is:
+</p>
+
+<ul>
+<li>
+<p> 'lm': the R-squared of the linear fit is reported.
+</p>
+</li>
+<li>
+<p>  'identity': the R-squared of the exact relation between <code>xvar</code> and <code>yvar</code> is reported.
+</p>
+</li>
+</ul>
+<p>Note that the identity R-squared is NOT the square of the correlation between <code>xvar</code> and <code>yvar</code>
+(which includes an implicit shift and scale). It is the coefficient of determination between <code>xvar</code> and
+<code>yvar</code>, and can be negative. See <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination">https://en.wikipedia.org/wiki/Coefficient_of_determination</a> for more details.
+If <code>xvar</code> is the output of a model to predict <code>yvar</code>, then the identity R-squared, not the lm R-squared,
+is the correct measure.
+</p>
+<p>If <code>smoothmethod</code> is neither 'lm' or 'identity' then <code>estimate_sig</code> is ignored.
+</p>
+
+
+<h3>Value</h3>
+
+<p>plot grid
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ScatterHistC</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+set.seed(34903490)
+x = rnorm(50)
+y = 0.5*x^2 + 2*x + rnorm(length(x))
+frm = data.frame(x=x,y=y)
+WVPlots::ScatterHist(frm, "x", "y",
+  title= "Example Fit",
+  smoothmethod = "gam",
+  contour = TRUE)
+
+if (FALSE) {
+# Same plot with custom colors
+WVPlots::ScatterHist(frm, "x", "y",
+  title= "Example Fit",
+  smoothmethod = "gam",
+  contour = TRUE,
+  point_color = "#006d2c", # dark green
+  hist_color = "#6baed6", # medium blue
+  smoothing_color = "#54278f", # dark purple
+  density_color = "#08519c", # darker blue
+  contour_color = "#9e9ac8") # lighter purple
+}
+
+</code></pre>
+
+
+</div>

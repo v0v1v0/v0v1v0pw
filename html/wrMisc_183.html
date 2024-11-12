@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>moderTest2grp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Moderated Pair-Wise t-test From Limma</h2>
+
+<h3>Description</h3>
+
+<p>This function runs moderated t-test from package <code>limma</code> on each line of data.
+Note: This function requires the package <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a> from bioconductor being installed. 
+The <code>limma</code> contrast-matrix has to be read by column, the lines in the contrast-matrix containing '+1' will be compared to the '-1' lines, eg grpA-grpB .
+Local false discovery rates (lfdr) estimations will be made using the CRAN-package <a href="https://CRAN.R-project.org/package=fdrtool">fdrtool</a> (if available).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">moderTest2grp(
+  dat,
+  grp,
+  limmaOutput = TRUE,
+  addResults = c("lfdr", "FDR", "Mval", "means"),
+  testOrientation = "=",
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>matrix or data.frame with rows for multiple (independent) tests, use ONLY with 2 groups; assumed as log2-data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grp</code></td>
+<td>
+<p>(factor) describes column-relationship of 'dat'   (1st factor is considered as reference -&gt; orientation of M-values !!)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limmaOutput</code></td>
+<td>
+<p>(logical) return full (or extended) MArrayLM-object from limma or 'FALSE' for only the (uncorrected) p.values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addResults</code></td>
+<td>
+<p>(character) types of results to add besides basic limma-output, data are assumed to be log2 ! (eg "lfdr" using fdrtool-package, "FDR" or "BH" for BH-FDR, "BY" for BY-FDR, 
+"bonferroni" for Bonferroni-correction, "qValue" for lfdr by qvalue, "Mval", "means" or "nonMod" for non-moderated test and he equivaent all (other) multiple testing corrections chosen here)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>testOrientation</code></td>
+<td>
+<p>(character) for one-sided test ("&gt;","greater" or "&lt;","less"), NOTE : 2nd grp is considered control/reference, '&lt;' will identify grp1 &lt; grp2</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a limma-type object of class <code>MArrayLM</code>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>lmFit</code> and the <code>eBayes</code>-family of functions in package <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a>, <code>p.adjust</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2017); t8 &lt;- matrix(round(rnorm(1600,10,0.4),2), ncol=8,
+  dimnames=list(paste("l",1:200),c("AA1","BB1","CC1","DD1","AA2","BB2","CC2","DD2")))
+t8[3:6,1:2] &lt;- t8[3:6,1:2]+3     # augment lines 3:6 for AA1&amp;BB1
+t8[5:8,5:6] &lt;- t8[5:8,5:6]+3     # augment lines 5:8 for AA2&amp;BB2 (c,d,g,h should be found)
+t4 &lt;- log2(t8[,1:4]/t8[,5:8])
+## Two-sided testing 
+fit4 &lt;- moderTest2grp(t4,gl(2,2))
+# If you have limma installed we can now see further
+if("list" %in% mode(fit4) &amp; requireNamespace("limma")) {
+  limma::topTable(fit4, coef=1, n=5)}    # effect for 3,4,7,8
+
+## One-sided testing
+fit4in &lt;- moderTest2grp(t4,gl(2,2),testO="&lt;")
+# If you have limma installed we can now see further
+if("list" %in% mode(fit4) &amp; requireNamespace("limma")) {
+  limma::topTable(fit4in, coef=1, n=5) }
+</code></pre>
+
+
+</div>

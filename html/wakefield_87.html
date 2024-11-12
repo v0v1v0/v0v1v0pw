@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>r_sample_ordered</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate Random Ordered Factor Vector</h2>
+
+<h3>Description</h3>
+
+<p>Generate a random vector and coerces to an ordered factor.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">r_sample_ordered(n, x = LETTERS[1:5], prob = NULL, name = "Ordered")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The number elements to generate.  This can be globally set within
+the environment of <code>r_data_frame</code> or <code>r_list</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A vector of elements to chose from.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prob</code></td>
+<td>
+<p>A vector of probabilities to chose from.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>The name to assign to the output vector's <code>varname</code>
+attribute.  This is used to auto assign names to the column/vector name when
+used inside of <code>r_data_frame</code> or <code>r_list</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a random factor vector of elements.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>sample</code>,
+<code>ordered</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">r_sample_ordered(100, name = "Var")
+
+lvls &lt;- c("Strongly Agree", "Agree", "Neutral", "Disagree", "Strongly Disagree")
+table(r_sample_ordered(x = lvls, n=1000))
+
+(out &lt;- r_sample_ordered(x = c("Black", "Grey", "White"),
+    prob = c(.5, .2, .3), n = 100))
+slices &lt;- c(table(out))
+pie(slices, main="Pie Chart of Colors", col = tolower(names(slices)))
+</code></pre>
+
+
+</div>

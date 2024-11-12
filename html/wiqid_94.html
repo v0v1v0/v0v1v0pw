@@ -1,0 +1,132 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>railSims</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Simulated detection/non-detection data for two species of rails
+</h2>
+
+<h3>Description</h3>
+
+<p>A data set for single-season two-species occupancy modelling. See <code>occ2sps</code> for details of these kinds of models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data("railSims")</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with detection (1) vs non-detection data for 2 species at 160 sites on three occasions.
+</p>
+
+<dl>
+<dt>A1, A2, A3</dt>
+<dd>
+<p>detection histories for the dominant species on 3 occasions</p>
+</dd>
+<dt>B1, B2, B3</dt>
+<dd>
+<p>detection histories for the subordinate species on 3 occasions</p>
+</dd>
+<dt>logArea</dt>
+<dd>
+<p>a continuous site covariate, standardised to mean 0, sd 1</p>
+</dd>
+<dt>reeds</dt>
+<dd>
+<p>a logical site covariate.</p>
+</dd>
+</dl>
+<h3>Details</h3>
+
+<p>The data come from a simulated scenario with the following parameters:
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+  psiA  </td>
+<td style="text-align: left;"> = plogis(0 + 2*logArea) </td>
+<td style="text-align: left;"> = probability of occupancy of species A </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  psiBa </td>
+<td style="text-align: left;"> = 0.77 </td>
+<td style="text-align: left;"> = probability of occupancy of B if A is absent </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  psiBA </td>
+<td style="text-align: left;"> = plogis(-1 + 2*reeds) </td>
+<td style="text-align: left;"> = probability of occupancy of B if A is present </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  pA </td>
+<td style="text-align: left;"> = 0.75 </td>
+<td style="text-align: left;"> = probability of detection of species A if B is absent </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  rA </td>
+<td style="text-align: left;"> = pA </td>
+<td style="text-align: left;"> = probability of detection of species A if both are present </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  pB </td>
+<td style="text-align: left;"> = 0.80 </td>
+<td style="text-align: left;"> = probability of detection of species B if A is absent </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  rBa </td>
+<td style="text-align: left;"> = pB </td>
+<td style="text-align: left;"> = probability of detection of species B if both are present but A was not detected </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  rBA </td>
+<td style="text-align: left;"> = 0.40 </td>
+<td style="text-align: left;"> = probability of detection of species B if both are present and A was detected</td>
+</tr>
+</table>
+<h3>Source</h3>
+
+<p>Simulated data
+</p>
+
+
+<h3>References</h3>
+
+<p>Richmond, O.M.W., Hines, J.E., &amp; Beissinger, S.R. (2010) Two-species occupancy models: a new parameterization applied to co-occurrence of secretive rails. Ecological Applications, 20, 2036-2046.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(railSims)
+# Separate the two detection histories
+DHA &lt;- railSims[, 1:3]
+DHB &lt;- railSims[, 4:6]
+
+# Default model (no interaction)
+occ2sps(DHA, DHB)
+
+
+# Model with full interaction
+occ2sps(DHA, DHB, list(psiBA ~ 1, rA ~ 1, rBa ~ 1, rBA ~ 1))
+
+# Model corresponding to the data generation model
+occ2sps(DHA, DHB, list(psiA ~ logArea, psiBA ~ reeds, rBA ~ 1), data=railSims)
+
+</code></pre>
+
+
+</div>

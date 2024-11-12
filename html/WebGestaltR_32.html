@@ -1,0 +1,193 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>swGsea</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Site Weighted Gene Set Enrichment Analysis</h2>
+
+<h3>Description</h3>
+
+<p>Performs site weighted gene set enrichment analysis or standard GSEA when
+likelihood/weight columns in <code>input_df</code> are 1 or 0, <code>p=1</code>,
+<code>q=1</code> and <code>thresh_type="val"</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">swGsea(
+  input_df,
+  thresh_type = "percentile",
+  thresh = 0.9,
+  thresh_action = "exclude",
+  min_set_size = 10,
+  max_set_size = 500,
+  max_score = "max",
+  min_score = "min",
+  psuedocount = 0.001,
+  perms = 1000,
+  p = 1,
+  q = 1,
+  nThreads = 1,
+  rng_seed = 1,
+  fork = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>input_df</code></td>
+<td>
+<p>A data frame in which first column is name of item of interest
+(gene, protein, phosphosite, etc.), the second is the correlation of that item
+of interest with the phenotype (typically log ratio of expression for phenotype
+vs. normal), and the remaining columns are the scores for the likelihood that
+the item belongs in each set (one column per set).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thresh_type</code></td>
+<td>
+<p>The type of <code>thresh</code>. Use 'percentile' to include all
+scores over that percentile given in <code>thresh</code> (i.e., 0.9 would be all items
+in 90th percentile, or top 10 percent); 'list' to include a list of set lists
+where the set lists are in the same order as the corresponding set columns in
+the <code>input_df</code>; 'val' to apply a single threshold value to all sets; or
+'values' to use a vector of unique cutoffs for each set (needs to be in the
+same order as the sets are specified in the columns of <code>input_df</code>")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thresh</code></td>
+<td>
+<p>Depends on <code>thresh_type</code>. A list of lists of the items in
+each set (with same names as colnames of the scores); a numeric vector of
+threshold scores for each set (in the same order as the colnames of the scores
+in the input_df), or a single percentile value between 0 and 1 (i.e., if
+<code>thresh</code>=0.9, the 90th percentile of the score or the highest scoring 10
+of of the items are included in the set for each scoring regimen) (<code>thresh</code>
+="all" is not supported at this time, as it doesn't result in a Kolgorov-Smirnoff
+statistic; this may be worked in as an alternate scoring method later on).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thresh_action</code></td>
+<td>
+<p>Either "include", "exclude (default)", or "adjust";
+this specifies how to treat each set if it doesn't contain a minimum number of
+items or contains all of the items; this option cannot be used with predefined
+lists of items in sets (if the number of items in a given set doesn't meet
+requirements, that set will be skipped).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_set_size, max_set_size</code></td>
+<td>
+<p>The minimum/maximum number of items each
+set needs for the analysis to proceed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_score, min_score</code></td>
+<td>
+<p>A optional numeric vector of minimum/maximum boundaries
+to clip scores for each set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>psuedocount</code></td>
+<td>
+<p>Psuedocount (pc) is used for rescaling set scores:
+<code>(score - min_score + pc)/(max_score - min_score +pc)</code>; this is needed to
+prevent division by 0 if <code>max_score==min_score</code> (in this case, all scores
+for items in set will be 1, which is equivalent to standard GSEA); it also allows
+users to adjust weights for scores that are close to the minimum for the scores in
+the set (unless min_score==max_score): as psuedocount value approaches 0, scaled
+minimum scores also approach 0; as psuedocount approaches infinity, scaled minimum
+scores approach the scaled maximum scores (which equal 1); this value must be
+larger than 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>perms</code></td>
+<td>
+<p>The number of permutations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>The exponential scaling factor of the phenotype score (second column in
+<code>input_df</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>The exponential scaling factor of the likelihood score (weights).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nThreads</code></td>
+<td>
+<p>The number of threads to use in calculating permutaions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rng_seed</code></td>
+<td>
+<p>Random seed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fork</code></td>
+<td>
+<p>A boolean. Whether pass "fork" to <code>type</code> parameter of
+<code>makeCluster</code> on Unix-like machines.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The formula for weighting is as follows
+</p>
+<p style="text-align: center;"><code class="reqn">\frac{s_{j}^{q}|r_{j}|^{p}}{\sum s^{q}|r|^{p}}</code>
+</p>
+
+<p>Where r is log ratio score, s is likelihood score, j is the index of the gene.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of <code>Enrichment_Results</code>, <code>Items_in_Set</code> and <code>Running_Sums</code>.
+</p>
+
+<dl>
+<dt>Enrichment_Results</dt>
+<dd>
+<p>A data frame with row names of gene set and columns of
+"ES", "NES", "p_val", "fdr".</p>
+</dd>
+<dt>Items_in_Set</dt>
+<dd>
+<p>A list of one-column data frames. Describes genes and their
+ranks in each set.</p>
+</dd>
+<dt>Running_Sums</dt>
+<dd>
+<p>Running sum scores along genes sorted by ranked scores,
+with gene sets as columns.</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Eric Jaehnig
+</p>
+
+
+</div>

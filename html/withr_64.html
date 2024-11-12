@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>with_locale</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Locale settings</h2>
+
+<h3>Description</h3>
+
+<p>Temporarily change locale settings.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">with_locale(new, code)
+
+local_locale(.new = list(), ..., .local_envir = parent.frame())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>new, .new</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[named character]⁠</code><br> New locale settings</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>code</code></td>
+<td>
+<p><code>[any]</code><br> Code to execute in the temporary environment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments with locale settings.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.local_envir</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[environment]⁠</code><br> The environment to use for scoping.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Setting the <code>LC_ALL</code> category is currently not implemented.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>[any]</code><br> The results of the evaluation of the <code>code</code>
+argument.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>withr</code> for examples
+</p>
+<p><code>Sys.setlocale()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Change locale for time:
+df &lt;- data.frame(
+  stringsAsFactors = FALSE,
+  date = as.Date(c("2019-01-01", "2019-02-01")),
+  value = c(1, 2)
+)
+with_locale(new = c("LC_TIME" = "es_ES"), code = plot(df$date, df$value))
+## Compare with:
+#  plot(df$date, df$value)
+
+## Month names:
+with_locale(new = c("LC_TIME" = "en_GB"), format(ISOdate(2000, 1:12, 1), "%B"))
+with_locale(new = c("LC_TIME" = "es_ES"), format(ISOdate(2000, 1:12, 1), "%B"))
+
+## Change locale for currencies:
+with_locale(new = c("LC_MONETARY" = "it_IT"), Sys.localeconv())
+with_locale(new = c("LC_MONETARY" = "en_US"), Sys.localeconv())
+
+## Ordering:
+x &lt;- c("bernard", "bérénice", "béatrice", "boris")
+with_locale(c(LC_COLLATE = "fr_FR"), sort(x))
+with_locale(c(LC_COLLATE = "C"), sort(x))
+
+</code></pre>
+
+
+</div>

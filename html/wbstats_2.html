@@ -1,0 +1,259 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download Data from the World Bank API</h2>
+
+<h3>Description</h3>
+
+<p>This function downloads the requested information using the World Bank API
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb(
+  country = "all",
+  indicator,
+  startdate,
+  enddate,
+  mrv,
+  return_wide = FALSE,
+  gapfill,
+  freq,
+  cache,
+  lang = c("en", "es", "fr", "ar", "zh"),
+  removeNA = TRUE,
+  POSIXct = FALSE,
+  include_dec = FALSE,
+  include_unit = FALSE,
+  include_obsStatus = FALSE,
+  include_lastUpdated = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>country</code></td>
+<td>
+<p>Character vector of country or region codes. Default value is special code of <code>all</code>.
+Other permissible values are codes in the following fields from the <code>wb_cachelist</code> <code>country</code>
+data frame. <code>iso3c</code>, <code>iso2c</code>, <code>regionID</code>, <code>adminID</code>, and <code>incomeID</code>.
+Additional special values include <code>aggregates</code>, which returns only aggregates, and <code>countries_only</code>,
+which returns all countries without aggregates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indicator</code></td>
+<td>
+<p>Character vector of indicator codes. These codes correspond to the <code>indicatorID</code> column
+from the <code>indicator</code> data frame of <code>wbcache</code> or <code>wb_cachelist</code>, or
+the result of <code>wbindicators</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>startdate</code></td>
+<td>
+<p>Numeric or character. If numeric it must be in %Y form (i.e. four digit year).
+For data at the subannual granularity the API supports a format as follows: for monthly data, "2016M01"
+and for quarterly data, "2016Q1". This also accepts a special value of "YTD", useful for more frequently
+updated subannual indicators.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>enddate</code></td>
+<td>
+<p>Numeric or character. If numeric it must be in %Y form (i.e. four digit year).
+For data at the subannual granularity the API supports a format as follows: for monthly data, "2016M01"
+and for quarterly data, "2016Q1".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mrv</code></td>
+<td>
+<p>Numeric. The number of Most Recent Values to return. A replacement of <code>startdate</code> and <code>enddate</code>,
+this number represents the number of observations you which to return starting from the most recent date of collection.
+Useful in conjuction with <code>freq</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_wide</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> data is returned in a wide format instead of long, with a column named for each
+<code>indicatorID</code>. To necessitate this transformation, the <code>indicator</code> column, that provides the human readable description
+is dropped. This field is available through from the <code>indicator</code> data frame of <code>wbcache</code> or <code>wb_cachelist</code>,
+or the result of <code>wbindicators</code>. Default is <code>FALSE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gapfill</code></td>
+<td>
+<p>Logical. Works with <code>mrv</code>. If <code>TRUE</code> fills values, if not available, by back tracking to the
+next available period (max number of periods back tracked will be limited by <code>mrv</code> number)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>freq</code></td>
+<td>
+<p>Character String. For fetching quarterly ("Q"), monthly("M") or yearly ("Y") values.
+Currently works along with <code>mrv</code>. Useful for querying high frequency data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cache</code></td>
+<td>
+<p>List of data frames returned from <code>wbcache</code>. If omitted,
+<code>wb_cachelist</code> is used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lang</code></td>
+<td>
+<p>Language in which to return the results. If <code>lang</code> is unspecified,
+english is the default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>removeNA</code></td>
+<td>
+<p>if <code>TRUE</code>, remove any blank or <code>NA</code> observations that are returned.
+if <code>FALSE</code>, no blank or <code>NA</code> values are removed from the return.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>POSIXct</code></td>
+<td>
+<p>if <code>TRUE</code>, additonal columns <code>date_ct</code> and <code>granularity</code> are added.
+<code>date_ct</code> converts the default date into a <code>POSIXct</code>. <code>granularity</code>
+denotes the time resolution that the date represents.  Useful for subannual data and mixing subannual
+with annual data. If <code>FALSE</code>, these fields are not added.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_dec</code></td>
+<td>
+<p>if <code>TRUE</code>, the column <code>decimal</code> is not removed from the return. if <code>FALSE</code>,
+this column is removed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_unit</code></td>
+<td>
+<p>if <code>TRUE</code>, the column <code>unit</code> is not removed from the return. if <code>FALSE</code>,
+this column is removed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_obsStatus</code></td>
+<td>
+<p>if <code>TRUE</code>, the column <code>obsStatus</code> is not removed from the return. if <code>FALSE</code>,
+this column is removed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_lastUpdated</code></td>
+<td>
+<p>if <code>TRUE</code>, the column <code>lastUpdated</code> is not removed from the return. if <code>FALSE</code>,
+this column is removed. If <code>TRUE</code> and <code>POSIXct = TRUE</code> then column will be of class <code>Date</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Data frame with all available requested data.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Not all data returns have support for langauges other than english. If the specific return
+does not support your requested language by default it will return <code>NA</code>. For an enumeration of
+supported languages by data source please see <code>wbdatacatalog</code>.
+The options for <code>lang</code> are:
+</p>
+
+<ul>
+<li> <p><code>en</code>: English
+</p>
+</li>
+<li> <p><code>es</code>: Spanish
+</p>
+</li>
+<li> <p><code>fr</code>: French
+</p>
+</li>
+<li> <p><code>ar</code>: Arabic
+</p>
+</li>
+<li> <p><code>zh</code>: Mandarin
+</p>
+</li>
+</ul>
+<p>The <code>POSIXct</code> parameter requries the use of <code>lubridate</code> (&gt;= 1.5.0). All dates
+are rounded down to the floor. For example a value for the year 2016 would have a <code>POSIXct</code> date of
+<code>2016-01-01</code>. If this package is not available and the <code>POSIXct</code> parameter is set to <code>TRUE</code>,
+the parameter is ignored and a <code>warning</code> is produced.
+</p>
+<p>The <code>include_dec</code>, <code>include_unit</code>, and <code>include_obsStatus</code> are defaulted to <code>FALSE</code>
+because as of writing, all returns have a value of <code>0</code>, <code>NA</code>, and <code>NA</code>, respectively.
+These columns might be used in the future by the API, therefore the option to include the column is available.
+</p>
+<p>The <code>include_lastUpdated</code> is defaulted to <code>FALSE</code> as well to limit the
+</p>
+<p>If there is no data available that matches the request parameters, an empty data frame is returned along with a
+<code>warning</code>. This design is for easy aggregation of multiple calls.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"> # GDP at market prices (current US$) for all available countries and regions
+ wb(indicator = "NY.GDP.MKTP.CD", startdate = 2000, enddate = 2016)
+
+ # GDP and Population in long format for the most recent 20 observations
+ wb(indicator = c("SP.POP.TOTL","NY.GDP.MKTP.CD"), mrv = 20)
+
+ # GDP and Population in wide format for the most recent 20 observations
+ wb(indicator = c("SP.POP.TOTL","NY.GDP.MKTP.CD"), mrv = 20, return_wide = TRUE)
+
+ # query using regionID or incomeID
+ # High Income Countries and Sub-Saharan Africa (all income levels)
+ wb(country = c("HIC", "SSF"), indicator = "NY.GDP.MKTP.CD", startdate = 1985, enddate = 1985)
+
+ # if you do not know when the latest time an indicator is avaiable mrv can help
+ wb(country = c("IN"), indicator = 'EG.ELC.ACCS.ZS', mrv = 1)
+
+ # increase the mrv value to increase the number of maximum number of returns
+ wb(country = c("IN"), indicator = 'EG.ELC.ACCS.ZS', mrv = 35)
+
+ # GDP at market prices (current US$) for only available countries
+ wb(country = "countries_only", indicator = "NY.GDP.MKTP.CD", startdate = 2000, enddate = 2016)
+
+ # GDP at market prices (current US$) for only available aggregate regions
+ wb(country = "aggregates", indicator = "NY.GDP.MKTP.CD", startdate = 2000, enddate = 2016)
+
+ # if you want to "fill-in" the values in between actual observations use gapfill = TRUE
+ # this highlights a very important difference.
+ # all other parameters are the same as above, except gapfill = TRUE
+ # and the results are very different
+ wb(country = c("IN"), indicator = 'EG.ELC.ACCS.ZS', mrv = 35, gapfill = TRUE)
+
+ # if you want the most recent values within a certain time frame
+ wb(country = c("US"), indicator = 'SI.DST.04TH.20', startdate = 1970, enddate = 2000, mrv = 2)
+
+ # without the freq parameter the deafult temporal granularity search is yearly
+ # should return the 12 most recent years of data
+ wb(country = c("CHN", "IND"), indicator = "DPANUSSPF", mrv = 12)
+
+ # if another frequency is available for that indicator it can be accessed using the freq parameter
+ # should return the 12 most recent months of data
+ wb(country = c("CHN", "IND"), indicator = "DPANUSSPF", mrv = 12, freq = "M")
+</code></pre>
+
+
+</div>

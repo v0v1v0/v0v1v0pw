@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>convert.wst</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert a non-decimated wst object into a wd object. </h2>
+
+<h3>Description</h3>
+
+<p>Convert a packed-ordered non-decimated wavelet transform object into a time-ordered non-decimated wavelet transform object.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wst'
+convert(wst, ...) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wst</code></td>
+<td>
+<p>The <code>wst</code> class object that you wish to convert.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In WaveThresh3 a non-decimated wavelet transform can be ordered in two different ways: as a time-ordered or packet-ordered representation. The coefficients in the two objects are <em>exactly the same</em> it is just their internal representation and ordering which is different. The two different representations are useful in different situations. The packet-ordering is useful for curve estimation applications and the time-ordering is useful for time series applications. 
+</p>
+<p>See Nason, Sapatinas and Sawczenko, 1998 for further details on ordering and weaving. 
+</p>
+<p>Note that the input object must be of the non-decimated type. In other words the type component of the input object must be "<code>station</code>". 
+Once the input object has been converted the output can be used with any of the functions suitable for the <code>wd.object</code>.
+</p>
+<p>The actual weaving permutation for shuffling coefficients from one representation to another is achieved by the <code>getarrvec</code> function.  
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>wd</code> containing exactly the same information as the input object but ordered differently as a packet-ordered object. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.6 Copyright Guy Nason 1997 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>convert</code>, <code>getarrvec</code>, <code>levarr</code>, <code>wd</code>, <code>wd.object</code>, <code>wst</code>, <code>wst.object</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Generate a sequence of 32 random normals (say) and take their
+# \code{packed-ordered non-decimated wavelet transform}
+#
+myrand &lt;- wst(rnorm(32))
+#
+# Print out the result (to verify the class and type of the object)
+#
+#myrand
+#Class 'wst' : Stationary Wavelet Transform Object:
+#       ~~~  : List with 8 components with names
+#              wp Carray nlevelsWT filter date 
+#
+#$WP and $Carray are the coefficient matrices
+
+#
+#Created on : Tue Sep 29 12:29:45 1998 
+#
+#summary(.):
+#----------
+#Levels:  5 
+#Length of original:  32 
+#Filter was:  Daub cmpct on least asymm N=10 
+#Boundary handling:  periodic 
+
+#Date:  Tue Sep 29 12:29:45 1998 
+#
+# Yep, the myrand object is of class: \code{\link{wst.object}}.
+#
+# Now let's convert it to class \code{\link{wd}}. The object
+# gets returned and, as usual in S, is printed.
+#
+convert(myrand)
+#Class 'wd' : Discrete Wavelet Transform Object:
+#       ~~  : List with 8 components with names
+#              C D nlevelsWT fl.dbase filter type bc date 
+#
+#$ C and $ D are LONG coefficient vectors !
+#
+#Created on : Tue Sep 29 12:29:45 1998 
+#Type of decomposition:  station 
+#
+#summary(.):
+#----------
+#Levels:  5 
+#Length of original:  32 
+#Filter was:  Daub cmpct on least asymm N=10 
+#Boundary handling:  periodic 
+#Transform type:  station 
+#Date:  Tue Sep 29 12:29:45 1998 
+#
+# The returned object is of class \code{\link{wd}} with a
+# type of "station".
+# I.e. it has been converted successfully.
+</code></pre>
+
+
+</div>

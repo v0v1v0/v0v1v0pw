@@ -1,0 +1,48 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>geno_freq_calc_single</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>from on 012 file compute expected (assuming HW equilbrium) and observed genotype counts</h2>
+
+<h3>Description</h3>
+
+<p>This is an internal function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">geno_freq_calc_single(g012)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>g012</code></td>
+<td>
+<p>an 012 matrix, with indivs in rows and loci in columns.
+Missing data can be -1 or NA. The matrix must
+have colnames which are the locus names.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>See information for return value of <code>exp_and_obs_geno_freqs</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># get an 012 matrix from the lobster data
+tmp &lt;- t(vcfR::extract.gt(lobster_buz_2000, element = "GT"))
+locnames &lt;- colnames(tmp)
+g &lt;- make_it_012(tmp)
+colnames(g) &lt;- locnames # put these back on since make_it_012 removes them
+gf &lt;- geno_freq_calc_single(g)
+</code></pre>
+
+
+</div>

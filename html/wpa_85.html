@@ -1,0 +1,296 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>flex_index</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute a Flexibility Index based on the Hourly Collaboration Query</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+</p>
+<p>Pass an Hourly Collaboration query and compute a Flexibility Index for the
+entire population. The Flexibility Index is a quantitative measure of the
+freedom for employees to work at a time of their choice.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">flex_index(
+  data,
+  hrvar = NULL,
+  signals = c("email", "IM"),
+  active_threshold = 0,
+  start_hour = "0900",
+  end_hour = "1700",
+  return = "plot",
+  plot_method = "common",
+  mode = "binary"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Hourly Collaboration query to be passed through as data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hrvar</code></td>
+<td>
+<p>A string specifying the HR attribute to cut the data by.
+Defaults to NULL. This only affects the function when "table" is returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signals</code></td>
+<td>
+<p>Character vector to specify which collaboration metrics to
+use:
+</p>
+
+<ul>
+<li>
+<p> a combination of signals, such as <code>c("email", "IM")</code> (default)
+</p>
+</li>
+<li> <p><code>"email"</code> for emails only
+</p>
+</li>
+<li> <p><code>"IM"</code> for Teams messages only
+</p>
+</li>
+<li> <p><code>"unscheduled_calls"</code> for Unscheduled Calls only
+</p>
+</li>
+<li> <p><code>"meetings"</code> for Meetings only
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>active_threshold</code></td>
+<td>
+<p>A numeric value specifying the minimum number of
+signals to be greater than in order to qualify as <em>active</em>. Defaults to 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_hour</code></td>
+<td>
+<p>A character vector specifying starting hours, e.g. <code>"0900"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end_hour</code></td>
+<td>
+<p>A character vector specifying end hours, e.g. <code>"1700"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String specifying what to return. This must be one of the
+following strings:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>
+</p>
+</li>
+<li> <p><code>"data"</code>
+</p>
+</li>
+<li> <p><code>"table"</code>
+</p>
+</li>
+</ul>
+<p>See <code>Value</code> for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_method</code></td>
+<td>
+<p>Character string for determining which plot to return.
+</p>
+
+<ul>
+<li> <p><code>"sample"</code> plots a sample of ten working pattern
+</p>
+</li>
+<li> <p><code>"common"</code> plots the ten most common working patterns
+</p>
+</li>
+<li> <p><code>"time"</code> plots the Flexibility Index for the group over time
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>String specifying aggregation method for plot. Only applicable
+when <code>return = "plot"</code>. Valid options include:
+</p>
+
+<ul>
+<li> <p><code>"binary"</code>: convert hourly activity into binary blocks. In the plot, each
+block would display as solid.
+</p>
+</li>
+<li> <p><code>"prop"</code>: calculate proportion of signals in each hour over total signals
+across 24 hours, then average across all work weeks. In the plot, each
+block would display as a heatmap.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <strong>Flexibility Index</strong> is a metric that has been developed to quantify and
+measure flexibility using behavioural data from Viva Insights. Flexibility
+here refers to the freedom of employees to adopt a working arrangement of
+their own choice, and more specifically refers to <strong>time</strong> flexibility
+(<em>whenever</em> I want) as opposed to <strong>geographical</strong> flexibility (<em>wherever</em> I
+want).
+</p>
+<p>The <strong>Flexibility Index</strong> is a score between 0 and 1, and is calculated based
+on three component measures:
+</p>
+
+<ul>
+<li> <p><code>ChangeHours</code>: this represents the freedom to define work start and end
+time. Teams that embrace flexibility allow members to start and end their
+workday at different times.
+</p>
+</li>
+<li> <p><code>TakeBreaks</code>: this represents the freedom define one's own schedule. In
+teams that embrace flexibility, some members will choose to organize / split
+their day in different ways (e.g. take a long lunch-break, disconnect in the
+afternoon and reconnect in the evening, etc.).
+</p>
+</li>
+<li> <p><code>ControlHours</code>: this represents the freedom to switch off. Members who
+choose alternative arrangements should be able to maintain a workload that is
+broadly equivalent to those that follow standard arrangements.
+</p>
+</li>
+</ul>
+<p>The <strong>Flexibility Index</strong> returns with one single score for each person-week,
+plus the <strong>three</strong> sub-component binary variables (<code>TakeBreaks</code>,
+<code>ChangeHours</code>, <code>ControlHours</code>). At the person-week level, each score can only
+have the values 0, 0.33, 0.66, and 1. The Flexibility Index should only be
+interpreted as a <strong>group</strong> of person-weeks, e.g. the average Flexibility
+Index of a team of 6 over time, where the possible values would range from 0
+to 1.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A different output is returned depending on the value passed to the <code>return</code>
+argument:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>: 'ggplot' object. A random of ten working patterns are displayed,
+with diagnostic data and the Flexibility Index shown on the plot.
+</p>
+</li>
+<li> <p><code>"data"</code>: data frame. The original input data appended with the
+Flexibility Index and the component scores. Can be used with
+<code>plot_flex_index()</code> to recreate visuals found in <code>flex_index()</code>.
+</p>
+</li>
+<li> <p><code>"table"</code>: data frame. A summary table for the metric.
+</p>
+</li>
+</ul>
+<h3>Context</h3>
+
+<p>The central feature of flexible working arrangements is
+that it is the employee rather the employer who chooses the working
+arrangement. <em>Observed flexibility</em> serves as a proxy to assess whether a
+flexible working arrangement are in place. The Flexibility Index is an
+attempt to create such a proxy for quantifying and measuring flexibility,
+using behavioural data from Viva Insights.
+</p>
+
+
+<h3>Recurring disconnection time</h3>
+
+<p>The key component of <code>TakeBreaks</code> in the Flexibility Index is best
+interpreted as 'recurring disconnection time'. This denotes an hourly block
+where there is consistently no activity occurring throughout the week. Note
+that this applies a stricter criterion compared to the common definition of
+a break, which is simply a time interval where no active work is being
+done, and thus the more specific terminology 'recurring disconnection time'
+is preferred.
+</p>
+
+
+<h3>Returning the raw data</h3>
+
+<p>The raw data containing the computed Flexibility Index can be returned with
+the following:
+</p>
+<div class="sourceCode"><pre>em_data %&gt;%
+  flex_index(return = "data")
+</pre></div>
+
+
+<h3>See Also</h3>
+
+<p>Other Working Patterns: 
+<code>identify_shifts()</code>,
+<code>identify_shifts_wp()</code>,
+<code>plot_flex_index()</code>,
+<code>workpatterns_area()</code>,
+<code>workpatterns_classify()</code>,
+<code>workpatterns_classify_bw()</code>,
+<code>workpatterns_classify_pav()</code>,
+<code>workpatterns_hclust()</code>,
+<code>workpatterns_rank()</code>,
+<code>workpatterns_report()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Create a sample small dataset
+orgs &lt;- c("Customer Service", "Financial Planning", "Biz Dev")
+em_data &lt;- em_data[em_data$Organization %in% orgs, ]
+
+# Examples of how to test the plotting options individually
+# Sample of 10 work patterns
+em_data %&gt;%
+  flex_index(return = "plot", plot_method = "sample")
+
+# 10 most common work patterns
+em_data %&gt;%
+  flex_index(return = "plot", plot_method = "common")
+
+# Plot Flexibility Index over time
+em_data %&gt;%
+  flex_index(return = "plot", plot_method = "time")
+
+# Return a summary table with the computed Flexibility Index
+em_data %&gt;%
+  flex_index(hrvar = "Organization", return = "table")
+
+
+</code></pre>
+
+
+</div>

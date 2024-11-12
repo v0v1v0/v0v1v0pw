@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>applystnd.Hst.ls</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Standardize Space-Time Covariates with Existing Object 
+</h2>
+
+<h3>Description</h3>
+
+<p>Standardize spacio-temporal covariates with respect to both the space and time dimensions
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">applystnd.Hst.ls(Hst0.ls, x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Hst0.ls</code></td>
+<td>
+
+<p>Space-time covariates (of interpolation sites).  A list of length <code class="reqn">\tau</code>, each element should be a <code class="reqn">n</code>* x <code class="reqn">p_st</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>Space-time standardization object, as created by <code>stnd.Hst.ls</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An unnamed list of length <code class="reqn">\tau</code>, each element a <code class="reqn">n</code>* x <code class="reqn">p_st</code> numeric matrix. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">	
+tau &lt;- 20
+n.all &lt;- 10
+	
+Hst.ls.all &lt;- list()
+for(tt in 1:tau) {
+	Hst.ls.all[[tt]] &lt;- cbind(rnorm(n.all, 1, 0.1), rnorm(n.all, -200, 21))
+}
+
+ndx.interp &lt;- c(1,3,5)
+ndx.support &lt;- I(1:n.all)[ -ndx.interp ]
+
+Hst.ls &lt;- subsetsites.Hst.ls(Hst.ls.all, ndx.support)
+
+xsnst.obj &lt;- stnd.Hst.ls(Hst.ls)
+
+Hst0.ls &lt;- subsetsites.Hst.ls(Hst.ls.all, ndx.interp)
+
+sHst0.ls &lt;- applystnd.Hst.ls(Hst0.ls, xsnst.obj)
+
+
+
+Hst.sumup(xsnst.obj$sHst.ls)
+
+Hst.sumup(sHst0.ls)
+
+
+
+## The function is currently defined as
+function (Hst0.ls, x) 
+{
+    tau &lt;- length(Hst0.ls)
+    sHst0.ls &lt;- list()
+    for (i in 1:tau) {
+        sHst0.ls[[i]] &lt;- t((t(Hst0.ls[[i]]) - x$h.mean)/x$h.sd)
+    }
+    return(sHst0.ls)
+  }
+</code></pre>
+
+
+</div>

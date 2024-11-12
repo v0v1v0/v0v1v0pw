@@ -1,0 +1,157 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>create_density</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a density plot for any metric</h2>
+
+<h3>Description</h3>
+
+<p>Provides an analysis of the distribution of a selected metric.
+Returns a faceted density plot by default.
+Additional options available to return the underlying frequency table.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">create_density(
+  data,
+  metric,
+  hrvar = "Organization",
+  mingroup = 5,
+  ncol = NULL,
+  return = "plot"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A Standard Person Query dataset in the form of a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metric</code></td>
+<td>
+<p>String containing the name of the metric,
+e.g. "Collaboration_hours"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hrvar</code></td>
+<td>
+<p>String containing the name of the HR Variable by which to split
+metrics. Defaults to <code>"Organization"</code>. To run the analysis on the total
+instead of splitting by an HR attribute, supply <code>NULL</code> (without quotes).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mingroup</code></td>
+<td>
+<p>Numeric value setting the privacy threshold / minimum group
+size. Defaults to 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncol</code></td>
+<td>
+<p>Numeric value setting the number of columns on the plot. Defaults
+to <code>NULL</code> (automatic).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String specifying what to return. This must be one of the
+following strings:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>
+</p>
+</li>
+<li> <p><code>"table"</code>
+</p>
+</li>
+<li> <p><code>"data"</code>
+</p>
+</li>
+<li> <p><code>"frequency"</code>
+</p>
+</li>
+</ul>
+<p>See <code>Value</code> for more information.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A different output is returned depending on the value passed to the <code>return</code>
+argument:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>: 'ggplot' object. A faceted density plot for the metric.
+</p>
+</li>
+<li> <p><code>"table"</code>: data frame. A summary table for the metric.
+</p>
+</li>
+<li> <p><code>"data"</code>: data frame. Data with calculated person averages.
+</p>
+</li>
+<li> <p><code style="white-space: pre;">⁠"frequency⁠</code>: list of data frames. Each data frame contains the
+frequencies used in each panel of the plotted histogram.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>Other Flexible: 
+<code>create_bar()</code>,
+<code>create_bar_asis()</code>,
+<code>create_boxplot()</code>,
+<code>create_bubble()</code>,
+<code>create_dist()</code>,
+<code>create_fizz()</code>,
+<code>create_hist()</code>,
+<code>create_inc()</code>,
+<code>create_line()</code>,
+<code>create_line_asis()</code>,
+<code>create_period_scatter()</code>,
+<code>create_rank()</code>,
+<code>create_sankey()</code>,
+<code>create_scatter()</code>,
+<code>create_stacked()</code>,
+<code>create_tracking()</code>,
+<code>create_trend()</code>,
+<code>period_change()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Return plot for whole organization
+create_density(sq_data, metric = "Collaboration_hours", hrvar = NULL)
+
+# Return plot
+create_density(sq_data, metric = "Collaboration_hours", hrvar = "Organization")
+
+# Return plot but coerce plot to two columns
+create_density(sq_data, metric = "Collaboration_hours", hrvar = "Organization", ncol = 2)
+
+# Return summary table
+create_density(sq_data,
+            metric = "Collaboration_hours",
+            hrvar = "Organization",
+            return = "table")
+</code></pre>
+
+
+</div>

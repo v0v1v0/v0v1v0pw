@@ -1,0 +1,347 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wsd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Windowed Scalogram Difference</h2>
+
+<h3>Description</h3>
+
+<p>This function computes the Windowed Scalogram Difference of two signals.
+The definition and details can be found in (Bolós et al. 2017).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wsd(signal1,
+           signal2,
+           dt = 1,
+           scaleparam = NULL,
+           windowrad = NULL,
+           rdist = NULL,
+           delta_t = NULL,
+           normalize = c("NO", "ENERGY", "MAX", "SCALE"),
+           refscale = NULL,
+           wname = c("MORLET", "DOG", "PAUL", "HAAR", "HAAR2"),
+           wparam = NULL,
+           waverad = NULL,
+           border_effects = c("BE", "INNER", "PER", "SYM"),
+           mc_nrand = 0,
+           commutative = TRUE,
+           wscnoise = 0.02,
+           compensation = 0,
+           energy_density = TRUE,
+           parallel = FALSE,
+           makefigure = TRUE,
+           time_values = NULL,
+           figureperiod = TRUE,
+           xlab = "Time",
+           ylab = NULL,
+           main = "-log2(WSD)",
+           zlim = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>signal1</code></td>
+<td>
+<p>A vector containing the first signal.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signal2</code></td>
+<td>
+<p>A vector containing the second signal (its length should be equal to
+that of <code>signal1</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dt</code></td>
+<td>
+<p>Numeric. The time step of the signals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scaleparam</code></td>
+<td>
+<p>A vector of three elements with the minimum scale, the maximum scale
+and the number of suboctaves per octave for constructing power 2 scales (following
+Torrence and Compo 1998). If NULL, they are automatically constructed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>windowrad</code></td>
+<td>
+<p>Integer. Time radius for the windows, measured in <code>dt</code>. By
+default, it is set to <code class="reqn">ceiling(length(signal1) / 20)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rdist</code></td>
+<td>
+<p>Integer. Log-scale radius for the windows measured in suboctaves. By
+default, it is set to <code class="reqn">ceiling(length(scales) / 20)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta_t</code></td>
+<td>
+<p>Integer. Increment of time for the construction of windows central
+times, measured in <code>dt</code>. By default, it is set to
+<code class="reqn">ceiling(length(signal1) / 256)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalize</code></td>
+<td>
+<p>String, equal to "NO", "ENERGY", "MAX" or "SCALE". If "ENERGY", signals are
+divided by their respective energies. If "MAX", each signal is divided by the maximum
+value attained by its scalogram. In these two cases, <code>energy_density</code> must be TRUE.
+Finally, if "SCALE", each signal is divided by their scalogram value at scale
+<code>refscale</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refscale</code></td>
+<td>
+<p>Numeric. The reference scale for <code>normalize</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wname</code></td>
+<td>
+<p>A string, equal to "MORLET", "DOG", "PAUL", "HAAR" or "HAAR2". The
+difference between "HAAR" and "HAAR2" is that "HAAR2" is more accurate but slower.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wparam</code></td>
+<td>
+<p>The corresponding nondimensional parameter for the wavelet function
+(Morlet, DoG or Paul).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>waverad</code></td>
+<td>
+<p>Numeric. The radius of the wavelet used in the computations for the cone
+of influence. If it is not specified, it is asumed to be <code class="reqn">\sqrt{2}</code> for Morlet and DoG,
+<code class="reqn">1/\sqrt{2}</code> for Paul and 0.5 for Haar.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>border_effects</code></td>
+<td>
+<p>String, equal to "BE", "INNER", "PER" or "SYM",
+which indicates how to manage the border effects which arise usually when a convolution
+is performed on finite-lenght signals.
+</p>
+
+<ul>
+<li>
+<p> "BE": With border effects, padding time series with zeroes.
+</p>
+</li>
+<li>
+<p> "INNER": Normalized inner scalogram with security margin adapted for each
+different scale.
+</p>
+</li>
+<li>
+<p> "PER": With border effects, using boundary wavelets (periodization of the
+original time series).
+</p>
+</li>
+<li>
+<p> "SYM": With border effects, using a symmetric catenation of the original time
+series.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mc_nrand</code></td>
+<td>
+<p>Integer. Number of Montecarlo simulations to be performed in order to
+determine the 95% and 5% significance contours.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>commutative</code></td>
+<td>
+<p>Logical. If TRUE (default) the commutative windowed scalogram
+difference. Otherwise a non-commutative (but simpler) version is computed (see Bolós et
+al. 2017).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wscnoise</code></td>
+<td>
+<p>Numeric in <code class="reqn">[0,1]</code>. If a (windowed) scalogram takes values close to
+zero, some problems may appear because we are considering relative differences.
+Specifically, we can get high relative differences that in fact are not relevant, or
+even divisions by zero.
+</p>
+<p>If we consider absolute differences this would not happen but, on the other hand,
+using absolute differences is not appropriate for scalogram values not close to zero.
+</p>
+<p>So, the parameter <code>wscnoise</code> stablishes a threshold for the scalogram values
+above which a relative difference is computed, and below which a difference
+proportional to the absolute difference is computed (the proportionality factor is
+determined by requiring continuity).
+</p>
+<p>Finally, <code>wscnoise</code> can be interpreted as the relative amplitude of the noise in
+the scalograms and is chosen in order to make a relative (<code class="reqn">= 0</code>), absolute
+(<code class="reqn">= 1</code>) or mix (in <code class="reqn">(0,1)</code>) difference between scalograms. Default value is
+set to <code class="reqn">0.02</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>compensation</code></td>
+<td>
+<p>Numeric. It is an alternative to <code>wscnoise</code> for
+preventing numerical errors or non-relevant high relative differences when scalogram
+values are close to zero (see Bolós et al. 2017). It should be a non-negative
+relatively small value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>energy_density</code></td>
+<td>
+<p>Logical. If TRUE (default), divide the scalograms by the square
+root of the scales for convert them into energy density. Note that it does not affect
+the results if <code>wscnoise</code> <code class="reqn">= 0</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Logical. If TRUE, it uses function <code>parApply</code> from package
+<code>parallel</code> for the Montecarlo simulations. When FALSE (default) it uses the normal
+<code>apply</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>makefigure</code></td>
+<td>
+<p>Logical. If TRUE (default), a figure with the WSD is plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time_values</code></td>
+<td>
+<p>A numerical vector of length <code>length(signal)</code> containing custom
+time values for the figure. If NULL (default), it will be computed starting at 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>figureperiod</code></td>
+<td>
+<p>Logical. If TRUE (default), periods are used in the figure instead
+of scales.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>A string giving a custom X axis label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>A string giving a custom Y axis label. If NULL (default) the Y label is
+either "Scale" or "Period" depending on the value of <code>figureperiod</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>A string giving a custom main title for the figure.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zlim</code></td>
+<td>
+<p>A vector of length 2 with the limits for the z-axis (the color bar).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with the following fields:
+</p>
+
+<ul>
+<li> <p><code>wsd</code>: A matrix of size <code>length(tcentral)</code> x <code>length(scales)</code>
+containing the values of the windowed scalogram differences at each scale and at each
+time window.
+</p>
+</li>
+<li> <p><code>tcentral</code>: The vector of central times used in the computations of the
+windowed scalograms.
+</p>
+</li>
+<li> <p><code>scales</code>: The vector of scales.
+</p>
+</li>
+<li> <p><code>windowrad</code>: Radius for the time windows of the windowed scalograms,
+measured in <code>dt</code>.
+</p>
+</li>
+<li> <p><code>rdist</code>: The log-scale radius for the windows measured in suboctaves.
+</p>
+</li>
+<li> <p><code>signif95</code>: A logical matrix of size <code>length(tcentral)</code> x
+<code>length(scales)</code>. If TRUE, the corresponding point of the <code>wsd</code> matrix is in
+the 95% significance.
+</p>
+</li>
+<li> <p><code>signif05</code>: A logical matrix of size <code>length(tcentral)</code> x
+<code>length(scales)</code>. If TRUE, the corresponding point of the <code>wsd</code> matrix is in
+the 5% significance.
+</p>
+</li>
+<li> <p><code>fourierfactor</code>: A factor for converting scales into periods.
+</p>
+</li>
+<li> <p><code>coi_maxscale</code>: A vector of length <code>length(tcentral)</code> containing the
+values of the maximum scale from which there are border effects for the respective
+central time.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>C. Torrence, G. P. Compo. A practical guide to wavelet analysis. B. Am. Meteorol. Soc.
+79 (1998), 61–78.
+</p>
+<p>V. J. Bolós, R. Benítez, R. Ferrer, R. Jammazi. The windowed scalogram difference: a
+novel wavelet tool for comparing time series. Appl. Math. Comput., 312 (2017), 49-65.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+nt &lt;- 1500
+time &lt;- 1:nt
+sd_noise &lt;-  0.2 #% In Bolós et al. 2017 Figure 1, sd_noise = 1.
+signal1 &lt;- rnorm(n = nt, mean = 0, sd = sd_noise) + sin(time / 10)
+signal2 &lt;- rnorm(n = nt, mean = 0, sd = sd_noise) + sin(time / 10)
+signal2[500:1000] = signal2[500:1000] + sin((500:1000) / 2)
+## Not run: 
+wsd &lt;- wsd(signal1 = signal1, signal2 = signal2)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

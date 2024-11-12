@@ -1,0 +1,81 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Secondary</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get Secondary Parameter Estimates</h2>
+
+<h3>Description</h3>
+
+<p>Get standard error and relative standard error (cv) of the secondary parameter estimate
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Secondary(Formula, PE, COV)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Formula</code></td>
+<td>
+<p>Formula to calculate the secondary parameter estimate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PE</code></td>
+<td>
+<p>Point estimates of primary parameters with names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>COV</code></td>
+<td>
+<p>Variance-covariance matrix of primary estimates</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Variables within <code>Formula</code> should exist in the names of <code>PE</code> vector.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This returns point estimate, standard error, relative standard error of the secondary parameter estimate.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Kyun-Seop Bae &lt;k@acr.kr&gt;</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">tData = Theoph
+colnames(tData) = c("ID", "BWT", "DOSE", "TIME", "DV") # Table requires DV column
+
+fPK = function(THETA) # Prediction function
+{
+  AMT  = 320000 # in microgram
+  TIME = e$DATA[,"TIME"]
+  V  = THETA[1]
+  K  = THETA[2]
+  Ka = THETA[3]
+  Cp = AMT/V*Ka/(Ka - K)*(exp(-K*TIME) - exp(-Ka*TIME))
+  return(Cp)
+}
+Data = tData[tData$ID == 1,]
+Res = nlr(fPK, Data, pNames=c("V", "K", "Ka"), IE=c(30000, 0.1, 2))
+Secondary(~V*K, Res$Est["PE",1:e$nPara], Res$Cov)
+</code></pre>
+
+
+</div>

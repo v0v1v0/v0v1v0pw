@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.ww_area_of_applicability</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Predict from a <code>ww_area_of_applicability</code>
+</h2>
+
+<h3>Description</h3>
+
+<p>Predict from a <code>ww_area_of_applicability</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'ww_area_of_applicability'
+predict(object, new_data, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A <code>ww_area_of_applicability</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>new_data</code></td>
+<td>
+<p>A data frame or matrix of new samples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function computes the distance indices of the new data and
+whether or not they are "inside" the area of applicability.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A tibble of predictions, with two columns: <code>di</code>, numeric, contains the
+"dissimilarity index" of each point in <code>new_data</code>, while <code>aoa</code>, logical,
+contains whether a row is inside (<code>TRUE</code>) or outside (<code>FALSE</code>) the area of
+applicability.
+</p>
+<p>Note that this function is often called using
+<code>terra::predict()</code>, in which case <code>aoa</code> will be converted to numeric
+implicitly; <code>1</code> values correspond to cells "inside" the area of applicability
+and <code>0</code> corresponds to cells "outside" the AOA.
+</p>
+<p>The number of rows in the tibble is guaranteed
+to be the same as the number of rows in <code>new_data</code>. Rows with <code>NA</code> predictor
+values will have <code>NA</code> <code>di</code> and <code>aoa</code> values.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other area of applicability functions: 
+<code>ww_area_of_applicability()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(vip)
+train &lt;- gen_friedman(1000, seed = 101) # ?vip::gen_friedman
+test &lt;- train[701:1000, ]
+train &lt;- train[1:700, ]
+pp &lt;- stats::ppr(y ~ ., data = train, nterms = 11)
+metric_name &lt;- ifelse(
+  packageVersion("vip") &gt; package_version("0.3.2"),
+  "rsq",
+  "rsquared"
+)
+
+importance &lt;- vip::vi_permute(
+  pp,
+  target = "y",
+  metric = metric_name,
+  pred_wrapper = predict,
+  train = train
+)
+
+aoa &lt;- ww_area_of_applicability(y ~ ., train, test, importance = importance)
+predict(aoa, test)
+
+</code></pre>
+
+
+</div>

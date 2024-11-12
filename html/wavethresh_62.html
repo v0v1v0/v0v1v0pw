@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>draw.imwd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Draw mother wavelet associated with an imwd object. </h2>
+
+<h3>Description</h3>
+
+<p>This function draws the mother wavelet associated with an <code>imwd.object</code> — a two-dimensional wavelet decomposition. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'imwd'
+draw(wd, resolution=128, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wd</code></td>
+<td>
+<p>The <code>imwd</code> class object whose associated wavelet you wish to draw. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resolution</code></td>
+<td>
+<p>The resolution at which the computation is done to compute the wavelet picture. Generally the resolution should be lower for two-dimensional wavelets since the number of computations is proportional to the square of the resolution (the DWT is still O(n) though).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to pass to the <code>draw.default</code> function which does the drawing.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function extracts the <code>filter</code> component from the <code>imwd</code> object (which is constructed using the <code>filter.select</code> function) to decide which wavelet to draw. Once decided the <code>draw.default</code> function is used to actually do the drawing. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>If the plot.it argument is set to <code>TRUE</code> then nothing is returned. Otherwise, as with <code>draw.default</code>, the coordinates of what would have been plotted are returned. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 2 Copyright Guy Nason 1993 </p>
+
+
+<h3>Note</h3>
+
+<p>If the <code>plot.it</code> argument is<code>TRUE</code> (which it is by default) a plot of the mother wavelet or scaling function is plotted on the active graphics device.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>filter.select</code>, <code>imwd.object</code>, <code>draw.default</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Let's use the lennon test image
+#
+data(lennon)
+## Not run: image(lennon)
+#
+# Now let's do the 2D discrete wavelet transform using Daubechies'
+# least-asymmetric wavelet N=6
+#
+lwd &lt;- imwd(lennon, filter.number=6)
+#
+# And now draw the wavelet that did this transform
+#
+## Not run: draw(lwd)
+#
+# A nice little two-dimensional wavelet!
+#
+
+</code></pre>
+
+
+</div>

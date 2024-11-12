@@ -1,0 +1,155 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>new.backbone</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Develop a User-created Taxonomic Backbone data set</h2>
+
+<h3>Description</h3>
+
+<p>Instead of using the taxonomic backbone data set from World Flora Online, it is possible to use matching functions of WorldFlora with alternative taxonomic backbone. The function creates new variables that correspond to key variables in the World Flora Online backbone so that matching functions WFO.match and WFO.one can be applied.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+new.backbone(x,
+    taxonID = "taxonID", scientificName = "scientificName",
+    scientificNameAuthorship = "scientificNameAuthorship",
+    acceptedNameUsageID = NULL, taxonomicStatus = NULL
+)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> data.frame with the variables. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>taxonID</code></td>
+<td>
+<p> name of the variable with the identification </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scientificName</code></td>
+<td>
+<p> name of the variable with the full taxon name </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scientificNameAuthorship</code></td>
+<td>
+<p> name of the variable with the naming authors </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>acceptedNameUsageID</code></td>
+<td>
+<p> ID of the record with the current (accepted) name. Should respond to an ID in the 'taxonID' column. In case the taxonomic name is current, then this field should be left blank. This field is used by function WFO.match to find the accepted name of a species.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>taxonomicStatus</code></td>
+<td>
+<p> Variable that indicates whether the record is for a current name or a synonym. This variable is used by function WFO.one to discriminate situations where best matches include matches with current names and synonyms. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function allows a user to create a new taxonomic backbone data set that is understood by WFO.match and WFO.one.
+</p>
+<p>Alternative examples with the Mammal Diversity Database (<a href="https://www.mammaldiversity.org/">https://www.mammaldiversity.org/</a>) and the World Checlist of Vascular Plants (<a href="https://powo.science.kew.org/about-wcvp">https://powo.science.kew.org/about-wcvp</a>) are provided in the Kindt 2021a,b RPubs.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The function returns a data.table that can be understood by WFO.match and WFO.one for standardizing taxonomic names.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Roeland Kindt (World Agroforestry)</p>
+
+
+<h3>References</h3>
+
+<p>Kindt, R. 2021a. Standardizing mammal species names with the Mammal Species Database
+via exact and fuzzy matching functions from the WorldFlora package.
+<a href="https://rpubs.com/Roeland-KINDT">https://rpubs.com/Roeland-KINDT</a>
+</p>
+<p>Kindt, R. 2021b. Standardizing GlobalTreeSearch tree species names with
+World Flora Online and the World Checklist of Vascular Plants
+<a href="https://rpubs.com/Roeland-KINDT">https://rpubs.com/Roeland-KINDT</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>WFO.match</code>, <code>WFO.one</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+
+# load the World Flora Online taxonomic backbone
+WFO.remember()
+
+# get a list of Sapotaceae species
+Sapotaceae &lt;- WFO.data[WFO.data$family == "Sapotaceae",]
+Sapotaceae &lt;- Sapotaceae[Sapotaceae$taxonRank == "SPECIES", ]
+Sapotaceae &lt;- Sapotaceae[Sapotaceae$taxonomicStatus == "Accepted", ]
+Sapotaceae &lt;- Sapotaceae[, c("scientificName", "scientificNameAuthorship")]
+Sapotaceae &lt;- data.frame(ID = c(1:nrow(Sapotaceae)), Sapotaceae)
+names(Sapotaceae)[2:3] &lt;- c("species.name", "author")
+head(Sapotaceae)
+
+# create a new backbone from the GlobalTreeSearch database,
+# after copying locally from https://tools.bgci.org/global_tree_search.php
+GTS.dir &lt;- "E://Roeland//R///World Flora Online//2021"
+GTS &lt;- read.csv(paste0(GTS.dir, "//global_tree_search.csv"))
+GTS &lt;- GTS[, 1:2]
+GTS &lt;- data.frame(GTS.ID = paste0("GTS-", c(1:nrow(GTS))), GTS)
+nrow(GTS)
+
+# create the new backbone
+GTS.data &lt;- new.backbone(GTS,
+                         taxonID="GTS.ID",
+                         scientificName="TaxonName",
+                         scientificNameAuthorship="Author")
+head(GTS.data)
+
+# Check and standardize Sapotaceae
+Sapotaceae.match &lt;- WFO.one(WFO.match(Sapotaceae,
+                                      WFO.data = GTS.data,
+                                      spec.name = "species.name",
+                                      Authorship = "author"))
+
+nrow(Sapotaceae.match[Sapotaceae.match$Fuzzy == FALSE, ] )
+nrow(Sapotaceae.match[Sapotaceae.match$Fuzzy == TRUE &amp;
+        Sapotaceae.match$Fuzzy.dist &lt; 4, ] )
+Sapotaceae.match[Sapotaceae.match$Fuzzy == TRUE &amp;
+        Sapotaceae.match$Fuzzy.dist &lt; 4,
+        c("ID", "species.name", "Fuzzy.dist", "scientificName")]
+
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

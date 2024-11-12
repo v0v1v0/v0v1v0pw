@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_recipe</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a recipe to a workflow</h2>
+
+<h3>Description</h3>
+
+
+<ul>
+<li> <p><code>add_recipe()</code> specifies the terms of the model and any preprocessing that
+is required through the usage of a recipe.
+</p>
+</li>
+<li> <p><code>remove_recipe()</code> removes the recipe as well as any downstream objects
+that might get created after the recipe is used for preprocessing, such as
+the prepped recipe. Additionally, if the model has already been fit, then
+the fit is removed.
+</p>
+</li>
+<li> <p><code>update_recipe()</code> first removes the recipe, then replaces the previous
+recipe with the new one. Any model that has already been fit based on this
+recipe will need to be refit.
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_recipe(x, recipe, ..., blueprint = NULL)
+
+remove_recipe(x)
+
+update_recipe(x, recipe, ..., blueprint = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A workflow</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>recipe</code></td>
+<td>
+<p>A recipe created using <code>recipes::recipe()</code>. The recipe
+should not have been trained already with <code>recipes::prep()</code>; workflows
+will handle training internally.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blueprint</code></td>
+<td>
+<p>A hardhat blueprint used for fine tuning the preprocessing.
+</p>
+<p>If <code>NULL</code>, <code>hardhat::default_recipe_blueprint()</code> is used.
+</p>
+<p>Note that preprocessing done here is separate from preprocessing that
+might be done automatically by the underlying model.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>To fit a workflow, exactly one of <code>add_formula()</code>, <code>add_recipe()</code>, or
+<code>add_variables()</code> <em>must</em> be specified.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>x</code>, updated with either a new or removed recipe preprocessor.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(recipes)
+library(magrittr)
+
+recipe &lt;- recipe(mpg ~ cyl, mtcars) %&gt;%
+  step_log(cyl)
+
+workflow &lt;- workflow() %&gt;%
+  add_recipe(recipe)
+
+workflow
+
+remove_recipe(workflow)
+
+update_recipe(workflow, recipe(mpg ~ cyl, mtcars))
+</code></pre>
+
+
+</div>

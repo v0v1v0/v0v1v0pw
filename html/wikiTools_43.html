@@ -1,0 +1,164 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>w_SearchByLabel</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Search Wikidata entities by string (usually labels)</h2>
+
+<h3>Description</h3>
+
+<p>Search Wikidata entities in label and altLabel ("Also known as") or in any
+part of the entity using different approaches.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">w_SearchByLabel(
+  string,
+  mode = "inlabel",
+  langs = "",
+  langsorder = "",
+  instanceof = "",
+  Pproperty = "",
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>string</code></td>
+<td>
+<p>String (label or altLabel) to search. Note that single
+quotation mark must be escaped (string="O\'Donell"), otherwise an error will
+be raised.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>The mode to perform search. Default 'inlabel' mode.
+</p>
+
+<ul>
+<li>
+<p> 'exact' for an exact search in label or altLabel using case sensitive
+search and differentiate diacritics. Languages in the parameter <code>lang</code> are
+used, so this parameter is mandatory using this mode.
+</p>
+</li>
+<li>
+<p> 'startswith' for entities which label or altLabel starts with the string,
+similar to a wildcard search "string*". The string is searched in label in
+the languages of <code>lang</code> parameter, but in any language in altLabel, so
+parameter <code>lang</code> is also mandatory in this mode. Diacritics and case are
+ignored in this mode.
+</p>
+</li>
+<li>
+<p> 'cirrus' search words in any order in any part of the entity (which must
+be a string), not only in label or altLabel. Diacritics and case are
+ignored. It is a full text search using the ElasticSearch engine.
+Phrase search can be used if launched with double quotation marks, for
+example, string='"Antonio Saura"'. Also fuzzy search is possible, for
+example, string="algermon~1" or string="algernon~2". Also REGEX search can
+be used (but it is a very limited functionality) using this format:
+string="insource:/regex/i" (i: is for ignore case, optional).
+In this mode, parameter <code>langs</code> is ignored.
+</p>
+</li>
+<li>
+<p> 'inlabel' is an special case of 'cirrus' search for matching whole words
+(in any order) in any position in label or altLabel. With this mode no
+fuzzy search can be used, but some languages can be set in the <code>lang</code>
+parameter.
+Modes 'inlabel' and 'cirrus' use the CirrusSearch of the Wikidata API.
+Please, for more examples, see https://www.mediawiki.org/wiki/Help:CirrusSearch
+and https://www.mediawiki.org/wiki/Help:Extension:WikibaseCirrusSearch
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>langs</code></td>
+<td>
+<p>Languages in which the information will be searched, using "|"
+as separator. In 'exact' or 'startswith' modes this parameter is mandatory,
+at least one language is required. In 'inlabel'mode, if the parameter <code>langs</code>
+is set, then the search is restricted to languages in this parameter,
+otherwise any language. In 'cirrus' mode this parameter is ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>langsorder</code></td>
+<td>
+<p>Order of languages in which the information will be
+returned, using "|" as separator. If <code>langsorder</code>=”, no labels or
+descriptions will be returned, otherwise, they are returned in the order of
+languages in this parameter, if any.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>instanceof</code></td>
+<td>
+<p>Wikidata entity of which the entities searched for are an
+example or member of it (class). For example, if instanceof='Q5' the
+search are filtered to Wikidata entities of class Q5 (human). Some
+entity classes are allowed, separated with '|'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Pproperty</code></td>
+<td>
+<p>Wikidata properties to search, separated with '|', mandatory.
+For example, is Pproperty="P21", the results contain information of the sex
+of entities. If Pproperty="P21|P569" also searches for birthdate. If
+Pproperty='P21|P569|P214' also searches for VIAF identifier.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>For debugging purposes (default FALSE). If debug='query' the
+query launched is shown. If debug='count' the function only returns the
+number of entities with that occupation.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data-frame with 'entity', 'entityLabel', 'entityDescription',
+(including 'instance', 'instanceLabel', 'altLabel' if mode="startswith")
+and additionally the properties of Pproperty.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Angel Zazo, Department of Computer Science and Automatics, University of Salamanca
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+df &lt;- w_SearchByLabel(string='Iranzo', mode="exact", langs='es|en')
+df &lt;- w_SearchByLabel(string='Iranzo', mode="exact", langs='es|en',
+                      langsorder='es|en', instanceof = 'Q5|Q101352')
+## Search entities which label or altLabel starts with "string"
+df &lt;- w_SearchByLabel(string='Iranzo', mode='startswith', lang='en', langsorder='es|en')
+## Search in any position in Label or AltLabel (diacritics and case are ignored)
+df &lt;- w_SearchByLabel(string='Iranzo', mode='inlabel', langsorder='es|en')
+## Search in Chinese (Simplified) (language code: zh) in any part of entity:
+df &lt;- w_SearchByLabel(string='\u4F0A\u5170\u4f50', mode='cirrus', langsorder='es|zh|en')
+
+## End(Not run)
+</code></pre>
+
+
+</div>

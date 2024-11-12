@@ -1,0 +1,212 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wp.modmed.m14</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>model14</h2>
+
+<h3>Description</h3>
+
+<p>power analysis of model 14 in Introduction to Mediation, Moderation, and Conditional Process Analysis
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wp.modmed.m14(
+  a1,
+  cp,
+  b1,
+  d1,
+  b2,
+  sige12,
+  sige22,
+  n,
+  sigx_w,
+  sigx2 = 1,
+  sigw2 = 1,
+  nrep = 1000,
+  alpha = 0.05,
+  b = 1000,
+  nb = n,
+  MCrep = 1000,
+  w_value = 0,
+  power_method = "product",
+  simulation_method = "percentile",
+  ncore = 1,
+  pop.cov = NULL,
+  mu = NULL,
+  varnames = c("y", "x", "w", "m", "mw")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>a1</code></td>
+<td>
+<p>regression coefficient of mediator (m) on predictor (x)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cp</code></td>
+<td>
+<p>regression coefficient of outcome (y) on predictor (x)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b1</code></td>
+<td>
+<p>regression coefficient of outcome (y) on mediator (m)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d1</code></td>
+<td>
+<p>regression coefficient of outcome (y) on moderator (w)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b2</code></td>
+<td>
+<p>regression coefficient of outcome (y) on the product (mw)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sige12</code></td>
+<td>
+<p>variance of error in the first regression equation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sige22</code></td>
+<td>
+<p>variance of error in the second regression equation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>sample size</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigx_w</code></td>
+<td>
+<p>covariance between predictor (x) and moderator (w)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigx2</code></td>
+<td>
+<p>variance of predictor (x)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigw2</code></td>
+<td>
+<p>variance of moderator (w)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nrep</code></td>
+<td>
+<p>number of replications for finding power</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>type 1 error rate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+<p>number of bootstrap iterations used when simulation method is "percentile"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nb</code></td>
+<td>
+<p>bootstrap sample size, default to n, used when simulation method is "percentile"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MCrep</code></td>
+<td>
+<p>number of repetitions used for finding distribution when simulation method is "MC"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w_value</code></td>
+<td>
+<p>moderator level</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power_method</code></td>
+<td>
+<p>"product" for using the indirect effect value in power calculation, or "joint" for using joint significance in power calculation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simulation_method</code></td>
+<td>
+<p>"percentile" for using percentile bootstrap CI in finding significance of mediation, or "MC" for using Monte Carlo CI in finding significance of mediation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncore</code></td>
+<td>
+<p>number of cores to use, default is 1, when ncore &gt; 1, parallel is used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pop.cov</code></td>
+<td>
+<p>covariance matrix, default to NULL if using the regression coefficient approach</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mu</code></td>
+<td>
+<p>mean vector, default to NULL if using the regression coefficient approach</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varnames</code></td>
+<td>
+<p>name of variables for the covariance matrix</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>power of indirect effect, direct effect, and moderation
+</p>
+
+
+<h3>References</h3>
+
+<p>Xu, Z., Gao, F., Fa, A., Qu, W., &amp; Zhang, Z. (2023). Statistical Power Analysis and Sample Size Planning for Moderated Mediation Models.
+Zhang, Z., &amp; Yuan, K.-H. (2018). Practical Statistical Power Analysis Using Webpower and R (Eds). Granger, IN: ISDSA Press.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+test = wp.modmed.m14(a1 = 0.2, cp = 0.2, b1 = 0.5, d1 = 0.5, b2 = 0.2, sigx2 = 1,
+                    sigw2 = 1, sige12 = 1, sige22 = 1, sigx_w = 0.5, n = 50,
+                    w_value = 0.5, simulation_method = "MC",
+                    nrep = 1000, alpha = 0.05, b = 1000, ncore = 1)
+print(test)
+
+</code></pre>
+
+
+</div>

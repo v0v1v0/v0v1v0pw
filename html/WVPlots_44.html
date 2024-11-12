@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ShadowPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot a Shadow Bar Plot</h2>
+
+<h3>Description</h3>
+
+<p>Plot a bar chart of row counts conditioned on the categorical variable <code>condvar</code>,
+faceted on a second categorical variable, <code>refinevar</code>. Each faceted plot
+also shows a "shadow plot" of the totals conditioned on <code>condvar</code> alone.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ShadowPlot(
+  frm,
+  condvar,
+  refinevar,
+  title,
+  ...,
+  monochrome = TRUE,
+  palette = "Dark2",
+  fillcolor = "darkblue",
+  ncol = 1
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frm</code></td>
+<td>
+<p>data frame to get values from.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>condvar</code></td>
+<td>
+<p>name of the primary conditioning variable (a categorical variable, controls x-axis).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refinevar</code></td>
+<td>
+<p>name of the second or refining conditioning variable (also a categorical variable, controls faceting).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>monochrome</code></td>
+<td>
+<p>logical: if TRUE, all facets filled with same color</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>palette</code></td>
+<td>
+<p>character: if monochrome==FALSE, name of brewer color palette (can be NULL)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fillcolor</code></td>
+<td>
+<p>character: if monochrome==TRUE, name of fill color for bars</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncol</code></td>
+<td>
+<p>numeric: number of columns in facet_wrap.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This plot enables comparisons of subpopulation totals across both
+<code>condvar</code> and <code>refinevar</code> simultaneously.
+</p>
+<p>By default, the facet plots are arranged in a single column. This can be changed
+with the optional <code>ncol</code> argument.
+</p>
+<p>If <code>palette</code> is NULL, and <code>monochrome</code> is FALSE, plot colors will be chosen from the default ggplot2 palette. Setting <code>palette</code> to NULL
+allows the user to choose a non-Brewer palette, for example with <code>scale_fill_manual</code>.
+For consistency with previous releases, <code>ShadowPlot</code> defaults to <code>monochrome = TRUE</code>, while
+<code>ShadowHist</code> defaults to <code>monochrome = FALSE</code>.
+</p>
+<p>Please see here for some interesting discussion <a href="https://drsimonj.svbtle.com/plotting-background-data-for-groups-with-ggplot2">https://drsimonj.svbtle.com/plotting-background-data-for-groups-with-ggplot2</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a ggplot2 bar chart counting examples grouped by condvar, faceted by refinevar.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+ShadowPlot(mtcars, "carb", "cyl",
+           title = "Number of example cars by carb and cyl counts")
+
+if (FALSE) {
+# colorcode the facets
+ShadowPlot(mtcars, "carb", "cyl",
+           monochrome = FALSE,
+           title = "Number of example cars by carb and cyl counts")
+}
+
+</code></pre>
+
+
+</div>

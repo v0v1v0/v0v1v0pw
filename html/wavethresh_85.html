@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>GetRSSWST</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Computes estimate of error for function estimate. </h2>
+
+<h3>Description</h3>
+
+<p>Computes estimate of error for function estimate. Given noisy data and a threshold value this function uses Nason's 1996 two-fold cross-validation algorithm, but using packet ordered non-decimated wavelet transforms to compute two estimates of an underlying “true” function and uses them to compute an estimate of the error in estimating the truth. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">GetRSSWST(ndata, threshold, levels, family = "DaubLeAsymm", 
+	filter.number = 10, type = "soft", norm = l2norm, verbose = 0, 
+	InverseType = "average")
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ndata</code></td>
+<td>
+<p>the noisy data. This is a vector containing the signal plus noise. The length of this vector should be a power of two.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>the value of the threshold that you wish to compute the error of the estimate at</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>levels</code></td>
+<td>
+<p>the levels over which you wish the threshold value to be computed (the threshold that is used in computing the estimate and error in the estimate). See the explanation for this argument in the <code>threshold.wst</code> function. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>specifies the family of wavelets that you want to use. The options are "DaubExPhase" and "DaubLeAsymm".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.number</code></td>
+<td>
+<p>This selects the smoothness of wavelet that you want to use in the decomposition. By default this is 10, the Daubechies least-asymmetric orthonormal compactly supported wavelet with 10 vanishing moments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>whether to use hard or soft thresholding. See the explanation for this argument in the <code>threshold.wst</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>norm</code></td>
+<td>
+<p>which measure of distance to judge the dissimilarity between the estimates. The functions <code>l2norm</code> and <code>linfnorm</code> are suitable examples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>If <code>TRUE</code> then informative messages are printed during the progression of the function, otherwise they are not.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>InverseType</code></td>
+<td>
+<p>The possible options are "average" or "minent". The former uses basis averaging to form estimates of the unknown function. The "minent" function selects a basis using the Coifman and Wickerhauser, 1992 algorithm to select a basis to invert.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function implements the component of the cross-validation method detailed by Nason, 1996 for computing an estimate of the error between an estimate and the “truth”. The difference here is that it uses the packet ordered non-decimated wavelet transform rather than the standard Mallat <code>wd</code> discrete wavelet transform. As such it is an examples of the translation-invariant denoising of Coifman and Donoho, 1995 but uses cross-validation to choose the threshold rather than SUREshrink. 
+</p>
+<p>Note that the procedure outlined above can use <code>AvBasis</code> basis averaging or basis selection and inversion using the Coifman and Wickerhauser, 1992 best-basis algorithm 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A real number which is estimate of the error between estimate and truth at the given threshold. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.6 Copyright Guy Nason 1995 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>linfnorm</code>, <code>linfnorm</code>, <code>wstCV</code>, <code>wstCVl</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# This function performs the error estimation step for the
+# \code{\link{wstCV}} function and so is not intended for
+# user use. 
+#
+
+
+</code></pre>
+
+
+</div>

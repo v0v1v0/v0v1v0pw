@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wrtdstrnd_sk</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get WRTDS trends using seasonal Kendall tests</h2>
+
+<h3>Description</h3>
+
+<p>Get WRTDS trends using seasonal Kendall tests
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wrtdstrnd_sk(dat_in, ...)
+
+## Default S3 method:
+wrtdstrnd_sk(dat_in, mobrks, yrbrks, molabs, yrlabs, ...)
+
+## S3 method for class 'tidal'
+wrtdstrnd_sk(
+  dat_in,
+  mobrks,
+  yrbrks,
+  molabs,
+  yrlabs,
+  tau = NULL,
+  trndvar = "norm",
+  ...
+)
+
+## S3 method for class 'tidalmean'
+wrtdstrnd_sk(dat_in, mobrks, yrbrks, molabs, yrlabs, trndvar = "bt_norm", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input tidal or tidalmean object which must already have fitted model data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>methods passed to or from other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mobrks</code></td>
+<td>
+<p>list of month groupings where each month is an integer from 1 to 12, see examples</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yrbrks</code></td>
+<td>
+<p>numeric vector of breaks for years, see examples</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>molabs</code></td>
+<td>
+<p>character vector of names for month breaks, see examples</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yrlabs</code></td>
+<td>
+<p>character vector of names for year breaks, see examples</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>numeric vector of quantile for estimating trends</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trndvar</code></td>
+<td>
+<p>chr string of variable for trend evaluation, usually back-transformed, flow-normalized results, see details</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Trends are based on <code>kendallSeasonalTrendTest</code> for user-specified time periods.  In general, the seasonal Kendall test evaluates monotonic trends using a non-parametric approach that accounts for seasonal variation in the time series.  
+</p>
+<p>All trends are based on back-transformed, flow-normalized results by default. The variable for evaluating trends can be changed with <code>'trndvar'</code> as <code>'res'</code>, <code>'norm'</code>, or <code>'fit'</code> for <code>tidal</code> objects and as <code>'res'</code>, <code>'bt_norm'</code>, or <code>'bt_fits'</code> for <code>tidalmean</code> objects.  In all cases, back-transformed variables are evaluated.
+</p>
+<p>The user must supply the annual and monthly aggregation periods to the appropriate arguments. These are passed to <code>cut</code> and are left-open, right-closed along the interval.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>data.frame</code> with summary trends for each grouping, including <code>med</code> as the median value for the period of observation, <code>tau</code> as the magnitude and direction of the trend, <code>slope</code> as the Thiel-Sen slope for change per year, <code>chitest</code> as the significance test evaluating heterogeneity between seasons, <code>ztest</code> indicating significance of the overall trend, and <code>perchg</code> as 100 multiplied by the ratio of the annual slope to the median estimate of the time period (percent change per year).  
+</p>
+<p>As noted in <code>kendallSeasonalTrendTest</code>, the overall test is not appropriate if <code>chitest</code> indicates a small p-value.
+</p>
+
+
+<h3>References</h3>
+
+<p>Hirsch, R.M., Slack, J.R., Smith, R.A. 1982. Techniques of trend analysis for monthly water quality data. Water Resources Research, 18:107-121.
+</p>
+<p>Millard, S. P. 2013. EnvStats: An R Package for Environmental Statistics. Springer, New York.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## load a fitted model object
+data(tidfit)
+data(tidfitmean)
+
+## get trends
+
+# setup month, year categories
+mobrks &lt;- list(c(1, 2, 3), c(4, 5, 6), c(7, 8, 9), c(10, 11, 12))
+yrbrks &lt;- c(1973, 1985, 1994, 2003, 2012)
+molabs &lt;- c('JFM', 'AMJ', 'JAS', 'OND')
+yrlabs &lt;- c('1974-1985', '1986-1994', '1995-2003', '2004-2012')
+
+wrtdstrnd_sk(tidfit, mobrks, yrbrks, molabs, yrlabs)
+wrtdstrnd_sk(tidfitmean, mobrks, yrbrks, molabs, yrlabs)
+
+</code></pre>
+
+
+</div>

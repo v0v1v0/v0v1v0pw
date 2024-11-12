@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>query_wikidata</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Send one or more SPARQL queries to WDQS</h2>
+
+<h3>Description</h3>
+
+<p>Makes a POST request to Wikidata Query Service SPARQL endpoint.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">query_wikidata(sparql_query, format = c("simple", "smart"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>sparql_query</code></td>
+<td>
+<p>SPARQL query (can be a vector of queries)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>"simple" uses CSV and returns pure character data frame, while
+"smart" fetches JSON-formatted data and returns a data frame with datetime
+columns converted to <code>POSIXct</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tibble data frame
+</p>
+
+
+<h3>Query limits</h3>
+
+<p>There is a hard query deadline configured which is set to 60 seconds. There
+are also following limits:
+</p>
+
+<ul>
+<li>
+<p> One client (user agent + IP) is allowed 60 seconds of processing time each
+60 seconds
+</p>
+</li>
+<li>
+<p> One client is allowed 30 error queries per minute
+See <a href="https://www.mediawiki.org/wiki/Wikidata_Query_Service/User_Manual#Query_limits">query limits section</a>
+in the WDQS user manual for more information.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>get_example
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">sparql_query &lt;- "SELECT
+  ?softwareVersion ?publicationDate
+WHERE {
+  BIND(wd:Q206904 AS ?R)
+  ?R p:P348 [
+    ps:P348 ?softwareVersion;
+    pq:P577 ?publicationDate
+  ] .
+}"
+query_wikidata(sparql_query)
+
+## Not run: 
+query_wikidata(sparql_query, format = "smart")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,162 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wflow_git_commit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Commit files</h2>
+
+<h3>Description</h3>
+
+<p><code>wflow_git_commit</code> adds and commits files with Git. This is a convenience
+function to run Git commands from the R console instead of the shell. For
+most use cases, you should use <code>wflow_publish</code> instead, which
+calls <code>wflow_git_commit</code> and then subsequently also builds and commits the
+website files.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wflow_git_commit(
+  files = NULL,
+  message = NULL,
+  all = FALSE,
+  force = FALSE,
+  dry_run = FALSE,
+  project = "."
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>character (default: NULL). Files to be added and committed with
+Git. Supports file
+<a href="https://en.wikipedia.org/wiki/Glob_(programming)">globbing</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>message</code></td>
+<td>
+<p>character (default: NULL). A commit message.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>all</code></td>
+<td>
+<p>logical (default: FALSE). Automatically stage files that have been
+modified and deleted. Equivalent to: <code>git commit -a</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>force</code></td>
+<td>
+<p>logical (default: FALSE). Allow adding otherwise ignored files.
+Equivalent to: <code>git add -f</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dry_run</code></td>
+<td>
+<p>logical (default: FALSE). Preview the proposed action but do
+not actually add or commit any files.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>character (default: ".") By default the function assumes the
+current working directory is within the project. If this is not true,
+you'll need to provide the path to the project directory.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Some potential use cases for <code>wflow_git_commit</code>:
+</p>
+
+<ul>
+<li>
+<p> Commit drafts which you do not yet want to be included in the website
+</p>
+</li>
+<li>
+<p> Commit files which do not directly affect the website (e.g. when you
+are writing scripts for a data processing pipeline)
+</p>
+</li>
+<li>
+<p> Manually commit files in <code>docs/</code> (proceed with caution!). This
+should only be done for content that is not automatically generated from the
+source files in the analysis directory, e.g. an image file you want to
+include in one of your pages.
+</p>
+</li>
+</ul>
+<p>Under the hood, <code>wflow_git_commit</code> is a wrapper for <code>add</code>
+and <code>commit</code> from the package git2r.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>wflow_git_commit</code>, which is a list with the
+following elements:
+</p>
+
+<ul>
+<li> <p><b>files</b>: The input argument <code>files</code>.
+</p>
+</li>
+<li> <p><b>message</b>: The message describing the commit.
+</p>
+</li>
+<li> <p><b>all</b>: The input argument <code>all</code>.
+</p>
+</li>
+<li> <p><b>force</b>: The input argument <code>force</code>.
+</p>
+</li>
+<li> <p><b>dry_run</b>: The input argument <code>dry_run</code>.
+</p>
+</li>
+<li> <p><b>commit</b>: The object returned by
+git2r::<code>commit</code> (only included if <code>dry_run ==
+FALSE</code>).
+</p>
+</li>
+<li> <p><b>commit_files</b>: The relative path(s) to the file(s) included in
+the commit (only included if <code>dry_run == FALSE</code>).
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>wflow_publish</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+# Commit a single file
+wflow_git_commit("analysis/file.Rmd", "Add new analysis")
+# Commit multiple files
+wflow_git_commit(c("code/process-data.sh", "output/small-data.txt"),
+             "Process data set")
+# Add and commit all tracked files, similar to `git commit -a`
+wflow_git_commit(message = "Lots of changes", all = TRUE)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

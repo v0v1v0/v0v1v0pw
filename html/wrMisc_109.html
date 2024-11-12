@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>combineByEitherFactor</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create factor-like column regrouping data regrouping simultaneaously by two factors</h2>
+
+<h3>Description</h3>
+
+<p>This function aims to address the situation when two somehow different groupins (of the same data) exist and need to be joined.
+It is not necessary that both alternative groupings use the same labels, neither.
+<code>combineByEitherFactor</code> adds new (last) column named 'grp' to input matrix representing the combined factor 
+relative to 2 specified columns from input matrix  <code>mat</code> (via 'refC1','refC2'). Optionally, the output may be 
+sorted and a column giving n per factor-level may be added. 
+The function treats selected columns of  <code>mat</code> 
+as pairwise combination of 2 elements (that may occur multiple times over all lines of  <code>mat</code>)
+and sorts/organizes all instances of such combined elements (ie from both selected columns) as repeats of a given group,
+who's class number is given in output column 'grp', the (total) number of repeats may be displayed in column 'nGrp' ( <code>nByGrp=TRUE</code>).
+If groups are overlapping (after re-ordering), an iterative process of max 3x2 passes will be launched after initial matching.
+Works on numeric as well as character input.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">combineByEitherFactor(
+  mat,
+  refC1,
+  refC2,
+  nByGrp = FALSE,
+  convergeMax = TRUE,
+  callFrom = NULL,
+  debug = FALSE,
+  silent = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mat</code></td>
+<td>
+<p>main input matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refC1</code></td>
+<td>
+<p>(integer) column-number of 'mat' to use as 1st set</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refC2</code></td>
+<td>
+<p>(integer) column-number of 'mat' to use as 2nd set</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nByGrp</code></td>
+<td>
+<p>(logical) add last col with n by group</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>convergeMax</code></td>
+<td>
+<p>(logical) if <code>TRUE</code>, run 2 add'l iteartive steps to search convergence to stable result</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a matrix containing both selected columns plus additional column(s) indicating group-number of the pair-wise combination 
+(and optional the total n by group)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">nn &lt;- rep(c("a","e","b","c","d","g","f"),c(3,1,2,2,1,2,1))
+qq &lt;- rep(c("m","n","p","o","q"),c(2,1,1,4,4))
+nq &lt;- cbind(nn,qq)[c(4,2,9,11,6,10,7,3,5,1,12,8),]
+combineByEitherFactor(nq,1,2,nBy=TRUE); combineByEitherFactor(nq,1,2,nBy=FALSE)
+combineByEitherFactor(nq,1,2,conv=FALSE); combineByEitherFactor(nq,1,2,conv=TRUE)
+##
+mm &lt;- rep(c("a","b","c","d","e"),c(3,4,2,3,1)); pp &lt;- rep(c("m","n","o","p","q"),c(2,2,2,2,5))
+combineByEitherFactor(cbind(mm,pp), 1, 2, con=FALSE, nBy=TRUE)
+combineByEitherFactor(cbind(mm,pp), 1, 2, con=TRUE, nBy=TRUE) 
+</code></pre>
+
+
+</div>

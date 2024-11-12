@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wk_set_z</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set coordinate values</h2>
+
+<h3>Description</h3>
+
+<p>Set coordinate values
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wk_set_z(handleable, z, ...)
+
+wk_set_m(handleable, m, ...)
+
+wk_drop_z(handleable, ...)
+
+wk_drop_m(handleable, ...)
+
+wk_trans_set(value, use_z = NA, use_m = NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>handleable</code></td>
+<td>
+<p>A geometry vector (e.g., <code>wkb()</code>, <code>wkt()</code>, <code>xy()</code>,
+<code>rct()</code>, or <code>sf::st_sfc()</code>) for which <code>wk_handle()</code> is defined.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z, m</code></td>
+<td>
+<p>A vector of Z or M values applied feature-wise and recycled
+along <code>handleable</code>. Use <code>NA</code> to keep the existing value of a given
+feature.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Passed to the <code>wk_handle()</code> method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>An <code>xy()</code>, <code>xyz()</code>, <code>xym()</code>, or <code>xyzm()</code> of coordinates
+used to replace values in the input. Use <code>NA</code> to keep the existing
+value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use_z, use_m</code></td>
+<td>
+<p>Used to declare the output type. Use <code>TRUE</code> to
+ensure the output has that dimension, <code>FALSE</code> to ensure it does not,
+and <code>NA</code> to leave the dimension unchanged.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">wk_set_z(wkt("POINT (0 1)"), 2)
+wk_set_m(wkt("POINT (0 1)"), 2)
+wk_drop_z(wkt("POINT ZM (0 1 2 3)"))
+wk_drop_m(wkt("POINT ZM (0 1 2 3)"))
+
+</code></pre>
+
+
+</div>

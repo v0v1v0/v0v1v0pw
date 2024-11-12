@@ -1,0 +1,181 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rpa_control_preference</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set preference function(s). Defined for <code>rpanet</code>.</h2>
+
+<h3>Description</h3>
+
+<p>Set preference function(s). Defined for <code>rpanet</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rpa_control_preference(
+  ftype = c("default", "customized"),
+  sparams = c(1, 1, 0, 0, 1),
+  tparams = c(0, 0, 1, 1, 1),
+  params = c(1, 1),
+  spref = "outs + 1",
+  tpref = "ins + 1",
+  pref = "s + 1"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ftype</code></td>
+<td>
+<p>Preference function type. Either "default" or "customized".
+"customized" preference functions require "binary" or "linear" generation
+methods. If using default preference functions, <code>sparams</code>,
+<code>tparams</code> and <code>params</code> must be specified. If using customized
+preference functions, <code>spref</code>, <code>tpref</code> and <code>pref</code> must be
+specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sparams</code></td>
+<td>
+<p>A numerical vector of length 5 giving the parameters of the
+default source preference function. Defined for directed networks.
+Probability of choosing an existing node as the source node is proportional
+to <code>sparams[1] * out-strength^sparams[2] + sparams[3] *
+in-strength^sparams[4] + sparams[5]</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tparams</code></td>
+<td>
+<p>A numerical vector of length 5 giving the parameters of the
+default target preference function. Defined for directed networks.
+Probability of choosing an existing node as the target node is proportional
+to <code>tparams[1] * out-strength^tparams[2] + tparams[3] *
+in-strength^tparams[4] + tparams[5]</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>params</code></td>
+<td>
+<p>A numerical vector of length 2 giving the parameters of the
+default preference function. Defined for undirected networks. Probability
+of choosing an existing node is proportional to <code>strength^params[1] +
+params[2].</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spref</code></td>
+<td>
+<p>Character expression or an object of class <code>XPtr</code> giving
+the customized source preference function. Defined for directed networks.
+Default value is <code>"outs + 1"</code>, i.e., node out-strength + 1. See
+Details and Examples for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tpref</code></td>
+<td>
+<p>Character expression or an object of class <code>XPtr</code> giving
+the customized target preference function. Defined for directed networks.
+Default value is <code>"ins + 1"</code>, i.e., node in-strength + 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pref</code></td>
+<td>
+<p>Character expression or an object of class <code>XPtr</code> giving the
+customized preference function. Defined for undirected networks. Default
+value is <code>"s + 1"</code>, i.e, node strength + 1.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If choosing customized preference functions, <code>spref</code>,
+<code>tpref</code> and <code>pref</code> will be used and the network generation method
+must be "binary" or "linear". <code>spref</code> (<code>tpref</code>) defines the
+source (target) preference function, it can be a character expression or an
+object of class <code>XPtr</code>. </p>
+ <ul>
+<li>
+<p> Character expression; it
+must be a one-line <code>C++</code> style expression of <code>outs</code>
+(node out-strength) and
+<code>ins</code> (node in-strength). For example, <code>"pow(outs, 2) + 1"</code>,
+<code>"pow(outs, 2) + pow(ins, 2) + 1"</code>, etc. The expression will be used
+to define an <code>XPtr</code> via <code>RcppXPtrUtils::cppXPtr</code>. The <code>XPtr</code>
+will be passed to the network generation function. The expression must not
+have variables other than <code>outs</code> and <code>ins</code>. </p>
+</li>
+<li>
+<p> 'XPtr' an 
+external pointer wrapped in an object of class <code>XPtr</code> defined via
+<code>RcppXPtrUtils::cppXPtr</code>. An example for defining an <code>XPtr</code> with
+<code>C++</code> source code is included in Examples. For more information
+about passing function pointers, see
+<a href="https://gallery.rcpp.org/articles/passing-cpp-function-pointers-rcppxptrutils/">https://gallery.rcpp.org/articles/passing-cpp-function-pointers-rcppxptrutils/</a>.
+Please note the supplied <code>C++</code> function accepts two <code>double</code>
+arguments and returns a <code>double</code>. The first and second arguments
+represent node out- and in-strength, respectively. Note that the <code>XPtr</code> will
+be invalid and cannot be used to control network generation
+in another separate R session. Therefore, we recommend preserving the source code of your
+preference function for future use.</p>
+</li>
+</ul>
+<p><code>pref</code> is defined analogously. If using character expression, it must
+be a one-line <code>C++</code> style expression of <code>s</code> (node strength). If
+using <code>XPtr</code>, the supplied <code>C++</code> function accepts only one
+<code>double</code> argument and returns a <code>double</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of class <code>rpacontrol</code> with components <code>ftype</code>,
+<code>sparams</code>, <code>tparams</code>, <code>params</code> or <code>ftype</code>,
+<code>spref</code>, <code>tpref</code>, <code>pref</code> with function pointers
+<code>spref.pointer</code>, <code>tpref.pointer</code>, <code>pref.pointer</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Set source preference as out-strength^2 + in-strength + 1,
+# target preference as out-strength + in-strength^2 + 1.
+# 1. use default preference functions
+ctr1 &lt;- rpa_control_preference(
+  ftype = "default",
+  sparams = c(1, 2, 1, 1, 1), tparams = c(1, 1, 1, 2, 1)
+)
+# 2. use character expressions
+ctr2 &lt;- rpa_control_preference(
+  ftype = "customized",
+  spref = "pow(outs, 2) + ins + 1", tpref = "outs + pow(ins, 2) + 1"
+)
+# 3. define XPtr's with C++ source code
+spref.pointer &lt;- RcppXPtrUtils::cppXPtr(
+  code =
+    "double spref(double outs, double ins) {return pow(outs, 2) + ins + 1;}"
+)
+tpref.pointer &lt;- RcppXPtrUtils::cppXPtr(
+  code =
+    "double tpref(double outs, double ins) {return outs + pow(ins, 2) + 1;}"
+)
+ctr3 &lt;- rpa_control_preference(
+  ftype = "customized",
+  spref = spref.pointer,
+  tpref = tpref.pointer
+)
+ret &lt;- rpanet(1e5, control = ctr3)
+
+</code></pre>
+
+
+</div>

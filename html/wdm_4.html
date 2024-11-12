@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wdm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Weighted Dependence Measures</h2>
+
+<h3>Description</h3>
+
+<p>Computes a (possibly weighted) dependence measure between <code>x</code> and <code>y</code> if
+these are vectors. If <code>x</code> and <code>y</code> are matrices then the measure between the
+columns of <code>x</code> and the columns of <code>y</code> are computed.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wdm(x, y = NULL, method = "pearson", weights = NULL, remove_missing = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a numeric vector, matrix or data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p><code>NULL</code> (default) or a vector, matrix or data frame with compatible
+dimensions to x. The default is equivalent to 'y = x“ (but more
+efficient).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>the dependence measure; see <em>Details</em> for possible values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>an optional vector of weights for the observations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remove_missing</code></td>
+<td>
+<p>if <code>TRUE</code>, all (pairswise) incomplete observations are
+removed; if <code>FALSE</code>, the function throws an error if there are incomplete
+observations.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Available methods:
+</p>
+
+<ul>
+<li> <p><code>"pearson"</code>: Pearson correlation
+</p>
+</li>
+<li> <p><code>"spearman"</code>: Spearman's <code class="reqn">\rho</code>
+</p>
+</li>
+<li> <p><code>"kendall"</code>: Kendall's <code class="reqn">\tau</code>
+</p>
+</li>
+<li> <p><code>"blomqvist"</code>: Blomqvist's <code class="reqn">\beta</code>
+</p>
+</li>
+<li> <p><code>"hoeffding"</code>: Hoeffding's <code class="reqn">D</code>
+Partial matching of method names is enabled.
+</p>
+</li>
+</ul>
+<p>Spearman's <code class="reqn">\rho</code> and Kendall's <code class="reqn">\tau</code> are corrected for ties if
+there are any.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##  dependence between two vectors
+x &lt;- rnorm(100)
+y &lt;- rpois(100, 1)  # all but Hoeffding's D can handle ties
+w &lt;- runif(100)
+wdm(x, y, method = "kendall")               # unweighted
+wdm(x, y, method = "kendall", weights = w)  # weighted
+
+##  dependence in a matrix
+x &lt;- matrix(rnorm(100 * 3), 100, 3)
+wdm(x, method = "spearman")               # unweighted
+wdm(x, method = "spearman", weights = w)  # weighted
+
+##  dependence between columns of two matrices
+y &lt;- matrix(rnorm(100 * 2), 100, 2)
+wdm(x, y, method = "hoeffding")               # unweighted
+wdm(x, y, method = "hoeffding", weights = w)  # weighted
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,46 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>theme_wsj</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Make timeseries graphs look like the the Wall Street Journal</h2>
+
+<h3>Description</h3>
+
+<p>Make timeseries graphs look like the the Wall Street Journal
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">theme_wsj()
+</code></pre>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(ggplot2)
+`%&gt;%` &lt;- magrittr::`%&gt;%`
+
+plt &lt;- economics_long %&gt;%
+  dplyr::filter(variable %in% c("psavert", "uempmed")) %&gt;%
+  ggplot(aes(date, value, color = variable)) +
+  geom_line() +
+  scale_y_continuous(
+      labels = label_wsj(suffix = " M")
+  ) +
+  scale_color_discrete(
+      labels = c("Series 1", "Series 2")
+  ) +
+  theme_wsj() +
+  labs(
+    title = "Some Economics Plot",
+    caption = "Source: Top secret.",
+    y = ""
+  )
+
+</code></pre>
+
+
+</div>

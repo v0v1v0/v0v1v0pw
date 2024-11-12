@@ -1,0 +1,194 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ml_estimation.default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>ML Estimation for Parametric Lifetime Distributions</h2>
+
+<h3>Description</h3>
+
+<p>This function estimates the parameters of a parametric lifetime distribution
+for complete and (multiple) right-censored data. The parameters
+are determined in the frequently used (log-)location-scale parameterization.
+</p>
+<p>For the Weibull, estimates are additionally transformed such that they are in
+line with the parameterization provided by the <em>stats</em> package
+(see Weibull).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+ml_estimation(
+  x,
+  status,
+  distribution = c("weibull", "lognormal", "loglogistic", "sev", "normal", "logistic",
+    "weibull3", "lognormal3", "loglogistic3", "exponential", "exponential2"),
+  wts = rep(1, length(x)),
+  conf_level = 0.95,
+  start_dist_params = NULL,
+  control = list(),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector which consists of lifetime data. Lifetime data
+could be every characteristic influencing the reliability of a product,
+e.g. operating time (days/months in service), mileage (km, miles), load
+cycles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>A vector of binary data (0 or 1) indicating whether a unit is
+a right censored observation (= 0) or a failure (= 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the random variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wts</code></td>
+<td>
+<p>Optional vector of case weights. The length of <code>wts</code> must be equal
+to the number of observations in <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conf_level</code></td>
+<td>
+<p>Confidence level of the interval.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_dist_params</code></td>
+<td>
+<p>Optional vector with initial values of the
+(log-)location-scale parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>A list of control parameters (see 'Details' and
+optim).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Within <code>ml_estimation</code>, optim is called with <code>method = "BFGS"</code>
+and <code>control$fnscale = -1</code> to estimate the parameters that maximize the
+log-likelihood (see loglik_function). For threshold models, the profile
+log-likelihood is maximized in advance (see loglik_profiling). Once the
+threshold parameter is determined, the threshold model is treated like a
+distribution without threshold (lifetime is reduced by threshold estimate)
+and the general optimization routine is applied.
+</p>
+<p>Normal approximation confidence intervals for the parameters are computed as well.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with classes <code>wt_model</code>, <code>wt_ml_estimation</code> and <code>wt_model_estimation</code>
+which contains:
+</p>
+
+<ul>
+<li> <p><code>coefficients</code> : A named vector of estimated coefficients (parameters of the
+assumed distribution). <strong>Note</strong>: The parameters are given in the
+(log-)location-scale-parameterization.
+</p>
+</li>
+<li> <p><code>confint</code> : Confidence intervals for the (log-)location-scale parameters.
+</p>
+</li>
+<li> <p><code>shape_scale_coefficients</code> : Only included if <code>distribution</code> is <code>"weibull"</code>
+or <code>"weibull3"</code> (parameterization used in Weibull).
+</p>
+</li>
+<li> <p><code>shape_scale_confint</code> : Only included if <code>distribution</code> is <code>"weibull"</code>
+or <code>"weibull3"</code>. Confidence intervals for scale <code class="reqn">\eta</code> and shape <code class="reqn">\beta</code>
+(and threshold <code class="reqn">\gamma</code> if <code>distribution = "weibull3"</code>).
+</p>
+</li>
+<li> <p><code>varcov</code> : Estimated variance-covariance matrix of (log-)location-scale parameters.
+</p>
+</li>
+<li> <p><code>logL</code> : The log-likelihood value.
+</p>
+</li>
+<li> <p><code>aic</code> : Akaike Information Criterion.
+</p>
+</li>
+<li> <p><code>bic</code> : Bayesian Information Criterion.
+</p>
+</li>
+<li> <p><code>data</code> : A <code>tibble</code> with columns <code>x</code> and <code>status</code>.
+</p>
+</li>
+<li> <p><code>distribution</code> : Specified distribution.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Meeker, William Q; Escobar, Luis A., Statistical methods for
+reliability data, New York: Wiley series in probability and statistics, 1998
+</p>
+
+
+<h3>See Also</h3>
+
+<p>ml_estimation
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Vectors:
+obs &lt;- seq(10000, 100000, 10000)
+status_1 &lt;- c(0, 1, 1, 0, 0, 0, 1, 0, 1, 0)
+
+cycles &lt;- alloy$cycles
+status_2 &lt;- alloy$status
+
+# Example 1 - Fitting a two-parametric weibull distribution:
+ml &lt;- ml_estimation(
+  x = obs,
+  status = status_1,
+  distribution = "weibull",
+  conf_level = 0.90
+)
+
+# Example 2 - Fitting a three-parametric lognormal distribution:
+ml_2 &lt;- ml_estimation(
+  x = cycles,
+  status = status_2,
+  distribution = "lognormal3"
+)
+
+</code></pre>
+
+
+</div>

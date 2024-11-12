@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>kaplan_method</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimation of Failure Probabilities using the Kaplan-Meier Estimator</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#soft-deprecated"><img src="../help/figures/lifecycle-soft-deprecated.svg" alt="[Soft-deprecated]"></a>
+</p>
+<p><code>kaplan_method()</code> is no longer under active development, switching to
+estimate_cdf is recommended.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">kaplan_method(x, status, id = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector which consists of lifetime data. Lifetime
+data could be every characteristic influencing the reliability of a product,
+e.g. operating time (days/months in service), mileage (km, miles), load
+cycles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>A vector of binary data (0 or 1) indicating whether a unit is
+a right censored observation (= 0) or a failure (= 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>A vector for the identification of every unit. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Whereas the non-parametric Kaplan-Meier estimator is used to estimate the
+survival function <em>S(t)</em> in terms of (multiple) right censored data, the
+complement is an estimate of the cumulative distribution function <em>F(t)</em>.
+One modification is made in contrast to the original Kaplan-Meier estimator
+(see 'References').
+</p>
+
+
+<h3>Value</h3>
+
+<p>A tibble containing the following columns:
+</p>
+
+<ul>
+<li> <p><code>id</code> : Identification for every unit.
+</p>
+</li>
+<li> <p><code>x</code> : Lifetime characteristic.
+</p>
+</li>
+<li> <p><code>status</code> : Binary data (0 or 1) indicating whether a unit is a right
+censored observation (= 0) or a failure (= 1).
+</p>
+</li>
+<li> <p><code>rank</code> : Filled with <code>NA</code>.
+</p>
+</li>
+<li> <p><code>prob</code> : Estimated failure probabilities, <code>NA</code> if <code>status = 0</code>.
+</p>
+</li>
+<li> <p><code>cdf_estimation_method</code> : Specified method for the estimation of failure
+probabilities (always 'kaplan').
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p><em>NIST/SEMATECH e-Handbook of Statistical Methods</em>,
+<em>8.2.1.5. Empirical model fitting - distribution free (Kaplan-Meier) approach</em>,
+<a href="https://www.itl.nist.gov/div898/handbook/apr/section2/apr215.htm">NIST SEMATECH</a>,
+December 3, 2020
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Vectors:
+obs   &lt;- seq(10000, 100000, 10000)
+state &lt;- c(0, 1, 1, 0, 0, 0, 1, 0, 1, 0)
+state_2 &lt;- c(0, 1, 1, 0, 0, 0, 1, 0, 0, 1)
+uic   &lt;- c("3435", "1203", "958X", "XX71", "abcd", "tz46",
+           "fl29", "AX23","Uy12", "kl1a")
+
+# Example 1 - Observation with highest characteristic is an intact unit:
+tbl_kap &lt;- kaplan_method(
+  x = obs,
+  status = state,
+  id = uic
+)
+
+# Example 2 - Observation with highest characteristic is a defective unit:
+tbl_kap_2 &lt;- kaplan_method(
+  x = obs,
+  status = state_2
+)
+
+</code></pre>
+
+
+</div>

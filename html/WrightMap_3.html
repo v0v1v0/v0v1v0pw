@@ -1,0 +1,363 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>CQmodel</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>ConQuest Output Processing</h2>
+
+<h3>Description</h3>
+
+<p>The CQmodel function reads ConQuest item parameter and person parameter output files and converts them into a list of data frames for more convenient data processing.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">CQmodel(p.est = NULL, show = NULL, p.type = NULL, equation = NULL)
+## S3 method for class 'CQmodel'
+print(x,...)
+## S3 method for class 'SOE'
+print(x,...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>p.est</code></td>
+<td>
+<p> Conquest person parameters file (EAPs, MLEs, etc.). </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show</code></td>
+<td>
+<p> ConQuest show file. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.type</code></td>
+<td>
+<p> Type of person parameter estimate (EAP, MLE or WLE). If not specified, will try to determine from the extension of the p.est file. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>equation</code></td>
+<td>
+<p> String giving the model equation, if the Summary of Estimation table was not included in the show file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> Object that determines which function to call. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>CQmodel returns an object of type CQmodel. Usually contains:
+Tables:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>RMP</code></td>
+<td>
+<p> A list of data frames containing the response model parameter estimates. One data frame is created for each table in the output. Each data frame contains parameter estimates, errors, and fit information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>GIN</code></td>
+<td>
+<p> A matrix containing the item thresholds (if included in the ConQuest output). The rows are items and the columns are steps.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.est</code></td>
+<td>
+<p> A data frame containing the person parameter estimates </p>
+</td>
+</tr>
+</table>
+<p>Summary of estimation:
+</p>
+<table><tr style="vertical-align: top;">
+<td><code>SOE</code></td>
+<td>
+<p>A list of various parameters related to the estimation</p>
+</td>
+</tr></table>
+<p>Items that may be in the SOE list include:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p> Estimation method </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p> Assumed population distribution </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>constraint</code></td>
+<td>
+<p> Constraint</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p> Specified format of the datafile </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>equation</code></td>
+<td>
+<p> A character string containing the item model (e.g. "item+item*step") </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>participants</code></td>
+<td>
+<p> Sample size </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>deviance</code></td>
+<td>
+<p> Final deviance of the model </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameters</code></td>
+<td>
+<p> Total number of estimated parameters </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iterations</code></td>
+<td>
+<p> Number of iterations </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p> Random number generation seed </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>PV.nodes</code></td>
+<td>
+<p> Number of nodes used when drawing PVs </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fit.nodes</code></td>
+<td>
+<p> Number of nodes used when computing fit </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.plausible.values</code></td>
+<td>
+<p> Number of plausible values drawn </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.iterations.no.improvement</code></td>
+<td>
+<p> Maximum number of iterations without a deviance improvement </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.steps</code></td>
+<td>
+<p> Maximum number of Newton steps in M-step </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zero.perfect.value</code></td>
+<td>
+<p> Value for obtaining finite MLEs for zero/perfects </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>termination.reason</code></td>
+<td>
+<p> Reason for iteration termination </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.iterations</code></td>
+<td>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameter.change</code></td>
+<td>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>deviance.change</code></td>
+<td>
+</td>
+</tr>
+</table>
+<p>Run details:
+</p>
+<table><tr style="vertical-align: top;">
+<td><code>run.details</code></td>
+<td>
+<p> A list of details of the run </p>
+</td>
+</tr></table>
+<p>Items that may be included in the run.details list include:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>date</code></td>
+<td>
+<p> The date of the ConQuest run </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data.file</code></td>
+<td>
+<p> The name of the datafile used </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p> The specified format of the datafile </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>names</code></td>
+<td>
+<p> Names of items and/or dimensions </p>
+</td>
+</tr>
+</table>
+<p>Additional items:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>deviance</code></td>
+<td>
+<p> The deviance of the model </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>equation</code></td>
+<td>
+<p> A character string containing the model specification (e.g. "item+item*step") </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>participants</code></td>
+<td>
+<p> The number of participants </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameters</code></td>
+<td>
+<p> The number of parameters </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p> The run title </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reg.coef</code></td>
+<td>
+<p> Regression coefficients </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rel.coef</code></td>
+<td>
+<p> Reliability coefficients </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variances</code></td>
+<td>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nDim</code></td>
+<td>
+<p> Number of dimensions </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dimensions</code></td>
+<td>
+<p> Dimension names </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.est.type</code></td>
+<td>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Rebecca Freund and David Torres Irribarra</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">	
+fpath &lt;- system.file("extdata", package="WrightMap")
+
+# Partial credit model
+model1 &lt;- CQmodel(p.est = file.path(fpath,"ex2.eap"), 
+show = file.path(fpath,"ex2.shw")) 
+model1 #Shows what tables are available
+
+model1$SOE #Summary of estimation
+model1$equation # Model specification
+model1$reg.coef # Regression coefficients
+model1$rel.coef # Reliability coefficients
+model1$variances # Variances
+
+names(model1$RMP) # Names of parameter tables
+head(model1$RMP$item) #Item parameters
+head(model1$RMP$"item*step") #Item by step parameters
+
+# Complex model
+model2 &lt;- CQmodel(file.path(fpath,"ex4a.mle"), 
+file.path(fpath,"ex4a.shw")) 
+model2$equation # Model specification
+names(model2$RMP) # Names of parameter tables
+head(model2$RMP$"rater*topic*criteria*step") #An interaction table
+
+model1$GIN #Item thresholds
+model2$GIN #Item thresholds
+
+head(model1$p.est)  ##EAPs
+head(model2$p.est)  ##MLEs
+
+</code></pre>
+
+
+</div>

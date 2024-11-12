@@ -1,0 +1,181 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>windex.sim.test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Tests for presence of convergent evolution (over and above that expected from Brownian motion)
+</h2>
+
+<h3>Description</h3>
+
+<p>The P-value returned is for the null hypothesis that the calculated Wheatsheaf index is no higher than expected for traits evolving under Brownian motion (parameterised with rates of evolution and trait covariances estimated from the original traits).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">windex.sim.test(dat, tree, traits, focal = dat[, 2], SE = TRUE, Nsims,
+plot = TRUE, fossil = FALSE, main = "", line = 2.5, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+
+<p>A dataframe containing a column of 0s and 1s to denote non-focal and focal taxa respectively, and columns of trait data which you which to plot. The first column must be named 'species' and contain species names that correspond to those in the phylogenetic tree.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tree</code></td>
+<td>
+
+<p>Phylogenetic tree of class 'phylo' containing branch lengths. The tree should also be ultrametric.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>traits</code></td>
+<td>
+
+<p>Column numbers (or names) for the traits for which you want to calculate a Wheatsheaf index.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>focal</code></td>
+<td>
+
+<p>Column in the dataframe containing the focal designations.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SE</code></td>
+<td>
+
+<p>A logical specifying whether to standardise the traits by their standard error across species, default is <code>SE=TRUE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Nsims</code></td>
+<td>
+
+<p>Number of simulations on which to base the P-value.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+
+<p>A logical indicating whether to plot the simulated distribution. If TRUE, a histogram is plotted with the calculated Wheatsheaf index and its 95% confidence interval overlayed on the histogram as a solid and dashed lines (respectively).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fossil</code></td>
+<td>
+
+<p>A logical specifying whether the tree contains fossil tips (i.e. is not ultrametric), in which case a different phylogenetic distance penalty based on shared branch length rather than shared time before divergence will be used instead. Note that this alternative penalty for trees containing fossils hasn't yet been rigorously tested so use cautiously, but it seems to behave as expected.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+
+<p>Main title for plot (defaults to no title).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>line</code></td>
+<td>
+
+<p>Adjusts position of main title (if one is given), with lower values moving it down and higher values moving it up.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Additional arguments passed to hist() to customise the histogram (when plot=TRUE).
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+<p>Calculated Wheatsheaf index</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>low95</code></td>
+<td>
+<p>Lower bound of 95% confidence interval for the Wheatsheaf index obtained by jackkniving</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>up95</code></td>
+<td>
+<p>Upper bound of 95% confidence interval for the Wheatsheaf index obtained by jackkniving</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>P</code></td>
+<td>
+<p>P-value obtained from comparing observed Wheatsheaf index to simulations under Brownian motion on the phylogenetic tree</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sim.dist</code></td>
+<td>
+<p>Wheatsheaf indices of simulated datasets used to calculate P-value</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Kevin Arbuckle
+</p>
+
+
+<h3>References</h3>
+
+<p>Arbuckle, K., Bennett, C.M. and Speed, M.P. 2014. A simple measure of the strength of convergent evolution. Methods in Ecology and Evolution 5:685 - 693.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>windex</code>
+<code>test.windex</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data(sample.data)
+data(sample.tree)
+windex.sim.test(sample.data,sample.tree,traits=c("bm1","bm2"),focal=sample.data[,2],Nsims=1000,
+plot=TRUE,col="light grey")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

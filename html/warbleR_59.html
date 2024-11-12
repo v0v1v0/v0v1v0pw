@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rename_est_waves</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Rename wave objects and associated metadata in extended selection tables</h2>
+
+<h3>Description</h3>
+
+<p><code>rename_est_waves</code> rename wave objects and associated metadata in extended selection tables
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rename_est_waves(X, new.sound.files, new.selec = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>object of class 'extended_selection_table'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>new.sound.files</code></td>
+<td>
+<p>Character vector of length equals to the number of wave objects in the extended selection table (<code>length(attr(X, "wave.objects"))</code>).Specifies the new names to be used for wave objects and sound file column. Note that this will rename wave objects and associated attributes and data in 'X'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>new.selec</code></td>
+<td>
+<p>Numeric or character vector of length equals to the number of rows in 'X' to specify the 'selec' column labels. Default is <code>NULL</code>. If not provided the 'selec' column is kept unchanged. Note that the combination of 'sound.files' and 'selec' columns must produce unique IDs for each selection (row).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function allow users to change the names of 'sound.files' and 'selec' columns in extended selection tables. These names can become very long after manipulations used to produce extended tables.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An extended selection table with rename sound files names in data frame and attributes. The function adds columns with the previous sound file names (and 'selec' if provided).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other extended selection table manipulation: 
+<code>by_element_est()</code>,
+<code>resample_est()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">{
+data("lbh.est")
+
+# order by sound file name
+lbh.est &lt;- lbh.est[order(lbh.est$sound.files),]
+
+# create new sound file name
+nsf &lt;- sapply(strsplit(lbh.est$sound.files, ".wav",fixed = TRUE), "[",1)
+
+slc &lt;- vector(length = nrow(lbh.est))
+slc[1] &lt;- 1
+
+for(i in 2:length(slc))
+if (nsf[i - 1] == nsf[i]) slc[i] &lt;- slc[i - 1] + 1 else
+slc[i] &lt;- 1
+
+nsf &lt;- paste(nsf, slc, sep = "_")
+
+# rename sound files
+Y &lt;- rename_est_waves(X = lbh.est, new.sound.files = nsf)
+}
+
+</code></pre>
+
+
+</div>

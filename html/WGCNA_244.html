@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>shortenStrings</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Shorten given character strings by truncating at a suitable separator.
+</h2>
+
+<h3>Description</h3>
+
+<p>This function shortens given character strings so they are not longer than a given maximum length.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">shortenStrings(strings, maxLength = 25, minLength = 10, 
+              split = " ", fixed = TRUE,
+              ellipsis = "...", countEllipsisInLength = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>strings</code></td>
+<td>
+
+<p>Character strings to be shortened.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxLength</code></td>
+<td>
+
+<p>Maximum length (number of characters) in the strings to be retained. See details for when the returned
+strings can exceed this length.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minLength</code></td>
+<td>
+
+<p>Minimum length of the returned strings. See details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>split</code></td>
+<td>
+
+<p>Character string giving the split at which the strings can be truncated. This can be a literal string or a 
+regular expression (if the latter, <code>fixed</code> below must be set to <code>FALSE</code>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixed</code></td>
+<td>
+
+<p>Logical: should <code>split</code> be interpreted as a literal specification (<code>TRUE</code>) or as a regular
+expression (<code>FALSE</code>)? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ellipsis</code></td>
+<td>
+
+<p>Character string that will be appended to every shorten string, to indicate that the string has been
+shortened. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>countEllipsisInLength</code></td>
+<td>
+
+<p>Logical: should the length of the ellipsis count toward the minimum and maximum length?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Strings whose length (number of characters) is at most <code>maxLength</code> are returned unchanged. For those
+that are longer, the function uses <code>gregexpr</code> to search for the occurrences of <code>split</code> in
+each given 
+character string. If such occurrences are found at positions between <code>minLength</code> and <code>maxLength</code>,
+the string will be truncated at the last such <code>split</code>; otherwise, the string will be truncated at
+<code>maxLength</code>. The <code>ellipsis</code> is appended to each truncated string.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A character vector of strings, shortened as necessary. If the input <code>strings</code> had non-NULL dimensions
+and dimnames, these are copied to the output.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>gregexpr</code>, the workhorse pattern matching function
+<code>formatLabels</code> for splitting strings into multiple lines
+</p>
+
+
+</div>

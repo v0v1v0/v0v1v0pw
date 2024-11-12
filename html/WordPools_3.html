@@ -1,0 +1,163 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>CatProp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Joelson-Hermann Category Properties
+</h2>
+
+<h3>Description</h3>
+
+<p>Properties of the 56 taxonomic categories from the Battig-Montague
+category norms published by Joelson and Hermann (1978).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(CatProp)</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 56 observations on the following 24 variables.
+</p>
+
+<dl>
+<dt><code>catnum</code></dt>
+<dd>
+<p>Category number, a numeric variable</p>
+</dd>
+<dt><code>catname</code></dt>
+<dd>
+<p>Category name, a character variable</p>
+</dd>
+<dt><code>rnatrl</code></dt>
+<dd>
+<p>Rated naturalness 1..7, a numeric variable</p>
+</dd>
+<dt><code>rfamil</code></dt>
+<dd>
+<p>Rated familiarity 1..7, a numeric variable</p>
+</dd>
+<dt><code>rmeang</code></dt>
+<dd>
+<p>Rated meaningfulness 1..7 (Hunt &amp; Hodge, 1971), a numeric variable</p>
+</dd>
+<dt><code>rfreq</code></dt>
+<dd>
+<p>Rated frequency 1..7 B&amp;M, a numeric variable</p>
+</dd>
+<dt><code>genfreq</code></dt>
+<dd>
+<p>Generated category label frequency, a numeric variable</p>
+</dd>
+<dt><code>rageoaq</code></dt>
+<dd>
+<p>Rated age of acquisition 1..10, a numeric variable</p>
+</dd>
+<dt><code>rsize</code></dt>
+<dd>
+<p>Estimated category size, a numeric variable</p>
+</dd>
+<dt><code>ts_30</code></dt>
+<dd>
+<p>Mean # types produced in 30 seconds, a numeric variable</p>
+</dd>
+<dt><code>rclasm</code></dt>
+<dd>
+<p>Recall asymptote, a numeric variable</p>
+</dd>
+<dt><code>rclrate</code></dt>
+<dd>
+<p>Recall rate parameter, a numeric variable</p>
+</dd>
+<dt><code>tas</code></dt>
+<dd>
+<p>Types across subjects, a numeric variable</p>
+</dd>
+<dt><code>cortas</code></dt>
+<dd>
+<p>Corrected types across subjects, a numeric variable</p>
+</dd>
+<dt><code>ntf</code></dt>
+<dd>
+<p># of types produced first, a numeric variable</p>
+</dd>
+<dt><code>nmngox</code></dt>
+<dd>
+<p># of dictionary meanings (Oxford), a numeric variable</p>
+</dd>
+<dt><code>nmngam</code></dt>
+<dd>
+<p># of dictionary meanings (Am. Heritage), a numeric variable</p>
+</dd>
+<dt><code>catfreqp</code></dt>
+<dd>
+<p>category label K-F frequency, a numeric variable</p>
+</dd>
+<dt><code>rabcon</code></dt>
+<dd>
+<p>Rated abstract-concreteness 1..7, a numeric variable</p>
+</dd>
+<dt><code>rvagprc</code></dt>
+<dd>
+<p>Rated vague-precise 1..7, a numeric variable</p>
+</dd>
+<dt><code>exfreqp</code></dt>
+<dd>
+<p>Avg exemplar log K-F frequency, a numeric variable</p>
+</dd>
+<dt><code>intsam</code></dt>
+<dd>
+<p>Intersample correlation, a numeric variable</p>
+</dd>
+<dt><code>maxfreq</code></dt>
+<dd>
+<p>Maximum response frequency, a numeric variable</p>
+</dd>
+<dt><code>pagmt</code></dt>
+<dd>
+<p>Percent agreement on category membership, a numeric variable</p>
+</dd>
+</dl>
+<h3>Details</h3>
+
+<p>Includes data for all 56 of the Battig-Montague categories  from a preprint of 
+the Joelson-Hermann paper
+Values for <code>catfreqp</code> were added for categories 3, 4, 8, 15, 24, 27,
+32, 46, 47 &amp; 56 from the Kucera-Francis norms, ignoring "part of", "unit of", and
+taking max of labels connected by "or".
+</p>
+
+
+<h3>Source</h3>
+
+<p>Joelson, J. M. &amp; Hermann, D. J. , Properties of categories in semantic
+memory, <em>American Journal of Psychology</em>, 1978, 91, 101-114.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(CatProp)
+summary(CatProp)
+plot(CatProp[,3:10])
+
+# try a biplot
+CP &lt;- CatProp
+rownames(CP) &lt;- CP$catname
+biplot(prcomp(na.omit(CP[,3:12]), scale=TRUE))
+
+# select some categories where the rated age of acquisition is between 2-4
+cats &lt;- pickList(CatProp, list(rageoaq=c(2,4)))
+cats[,2:9]
+
+# pick some fruit
+pickList(subset(Battig, catname=="fruit"))
+</code></pre>
+
+
+</div>

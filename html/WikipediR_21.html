@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>user_information</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve user information</h2>
+
+<h3>Description</h3>
+
+<p>Retrieves information about a user, or set of users, from the MediaWiki API,
+including registration date, gender and editcount.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">user_information(
+  language = NULL,
+  project = NULL,
+  domain = NULL,
+  user_names,
+  properties = c("blockinfo", "groups", "implicitgroups", "rights", "editcount",
+    "registration", "emailable", "gender"),
+  clean_response = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>The language code of the project you wish to query,
+if appropriate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>The project you wish to query ("wikiquote"), if appropriate.
+Should be provided in conjunction with <code>language</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>domain</code></td>
+<td>
+<p>as an alternative to a <code>language</code> and <code>project</code> combination,
+you can also provide a domain ("rationalwiki.org") to the URL constructor, allowing
+for the querying of non-Wikimedia MediaWiki instances.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>user_names</code></td>
+<td>
+<p>The username(s) of the users you want information on - this should be provided
+as a vector. There is a hard limit of 50 distinct users per query, set by MediaWiki's API;
+in the event that you go over this, a warning will be issued and the query will only be
+performed for the first 50 names in the vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>properties</code></td>
+<td>
+<p>The user properties you're interested in. Applicable properties are
+"blockinfo" (details about the user's block, if they are currently blocked), "groups"
+(the user groups the user is a member of), "implicitgroups" (groups they are a member of
+through inheritance, as a result of membership in other groups), "rights" (what permissions
+their group membership grants them), "editcount" (how many non-deleted edits they have),
+"registration" (the date when they registered), "emailable" (whether they are contactable
+through Special:EmailUser) and "gender" (their provided gender).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clean_response</code></td>
+<td>
+<p>whether to do some basic sanitising of the resulting data structure.
+Set to FALSE by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments to pass to httr's GET.</p>
+</td>
+</tr>
+</table>
+<h3>Warnings</h3>
+
+<p>There are a few caveats with the data provided by <code>user_information</code>, mostly stemming from
+historical inconsistencies and peculiarities in MediaWiki.
+</p>
+<p><code>groups</code> and <code>implicitgroups</code> gives you the user's permissions and group membership
+on the project you are querying, not their membership on all projects - while you can find out
+if "Ironholds" is not a sysop on, say, enwiki, that doesn't mean they aren't a sysop elsewhere
+- there is no universal, API-accessible user groups listing.
+</p>
+<p>As an extension of the lack of centrality in Wikimedia's infrastructure, <code>registration</code>
+tells you the date their account was created on the wiki you are querying. If they initially
+registered on that wiki, this is accurate - if they registered on a different wiki,
+this instead reflects the date and time that they first visited the wiki you're querying
+while logged-in. For users registered before 2006, when registration logging was introduced,
+the <code>registration</code> value represents not when they first registered, but when their first
+edit was, since that was used as an estimator for existing accounts when the field was first
+populated.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>user_contributions</code> for retrieving recent contributions made by
+a particular user.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+#Retrieving information from a Wikimedia project
+user_info &lt;- user_information("en", "wikipedia", user_names = "David Gerard",
+                             properties = "registration")
+
+#Non-Wikimedia projects
+user_info &lt;- user_information(domain = "rationalwiki.org", user_names = "David Gerard",
+                             properties = "registration")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

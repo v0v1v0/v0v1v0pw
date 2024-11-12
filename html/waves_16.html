@@ -1,0 +1,361 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>save_model</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Save spectral prediction model and model performance statistics</h2>
+
+<h3>Description</h3>
+
+<p>Given a set of pretreatment methods, saves the best spectral
+prediction model and model statistics to <code>model.save.folder</code> as
+<code>model.name.Rds</code> and <code>model.name_stats.csv</code> respectively. If only
+one pretreatment method is supplied, results from that method are stored.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">save_model(
+  df,
+  write.model = TRUE,
+  pretreatment = 1,
+  model.save.folder = NULL,
+  model.name = "PredictionModel",
+  best.model.metric = "RMSE",
+  k.folds = 5,
+  proportion.train = 0.7,
+  tune.length = 50,
+  model.method = "pls",
+  num.iterations = 10,
+  stratified.sampling = TRUE,
+  cv.scheme = NULL,
+  trial1 = NULL,
+  trial2 = NULL,
+  trial3 = NULL,
+  seed = 1,
+  verbose = TRUE,
+  save.model = deprecated(),
+  wavelengths = deprecated(),
+  autoselect.preprocessing = deprecated(),
+  preprocessing.method = deprecated()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p><code>data.frame</code> object. First column contains unique identifiers,
+second contains reference values, followed by spectral columns. Include no
+other columns to right of spectra! Column names of spectra must start with
+"X" and reference column must be named "reference"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>write.model</code></td>
+<td>
+<p>If <code>TRUE</code>, the trained model will be saved in .Rds
+format to the location specified by <code>model.save.folder</code>. If
+<code>FALSE</code>, the best model will be output by the function but will not
+save to a file. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pretreatment</code></td>
+<td>
+<p>Number or list of numbers 1:13 corresponding to
+desired pretreatment method(s):
+</p>
+
+<ol>
+<li>
+<p> Raw data (default)
+</p>
+</li>
+<li>
+<p> Standard normal variate (SNV)
+</p>
+</li>
+<li>
+<p> SNV and first derivative
+</p>
+</li>
+<li>
+<p> SNV and second derivative
+</p>
+</li>
+<li>
+<p> First derivative
+</p>
+</li>
+<li>
+<p> Second derivative
+</p>
+</li>
+<li>
+<p> Savitzky–Golay filter (SG)
+</p>
+</li>
+<li>
+<p> SNV and SG
+</p>
+</li>
+<li>
+<p> Gap-segment derivative (window size = 11)
+</p>
+</li>
+<li>
+<p> SG and first derivative (window size = 5)
+</p>
+</li>
+<li>
+<p> SG and first derivative (window size = 11)
+</p>
+</li>
+<li>
+<p> SG and second derivative (window size = 5)
+</p>
+</li>
+<li>
+<p> SG and second derivative (window size = 11)
+</p>
+</li>
+</ol>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model.save.folder</code></td>
+<td>
+<p>Path to folder where model will be saved. If not
+provided, will save to working directory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model.name</code></td>
+<td>
+<p>Name that model will be saved as in
+<code>model.save.folder</code>. Default is "PredictionModel".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>best.model.metric</code></td>
+<td>
+<p>Metric used to decide which model is best. Must be
+either "RMSE" or "Rsquared"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k.folds</code></td>
+<td>
+<p>Number indicating the number of folds for k-fold
+cross-validation during model training. Default is 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>proportion.train</code></td>
+<td>
+<p>Fraction of samples to include in the training set.
+Default is 0.7.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tune.length</code></td>
+<td>
+<p>Number delineating search space for tuning of the PLSR
+hyperparameter <code>ncomp</code>. Must be set to 5 when using the random forest
+algorithm (<code>model.method == rf</code>). Default is 50.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model.method</code></td>
+<td>
+<p>Model type to use for training. Valid options include:
+</p>
+ <ul>
+<li>
+<p> "pls": Partial least squares regression (Default) </p>
+</li>
+<li>
+<p>"rf": Random forest </p>
+</li>
+<li>
+<p> "svmLinear": Support vector machine with linear
+kernel </p>
+</li>
+<li>
+<p> "svmRadial": Support vector machine with radial kernel </p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num.iterations</code></td>
+<td>
+<p>Number of training iterations to perform</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stratified.sampling</code></td>
+<td>
+<p>If <code>TRUE</code>, training and test sets will be
+selected using stratified random sampling. This term is only used if
+<code>test.data == NULL</code>. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cv.scheme</code></td>
+<td>
+<p>A cross validation (CV) scheme from Jarquín et al., 2017.
+Options for <code>cv.scheme</code> include:
+</p>
+
+<ul>
+<li>
+<p> "CV1": untested lines in tested environments
+</p>
+</li>
+<li>
+<p> "CV2": tested lines in tested environments
+</p>
+</li>
+<li>
+<p> "CV0": tested lines in untested environments
+</p>
+</li>
+<li>
+<p> "CV00": untested lines in untested environments
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trial1</code></td>
+<td>
+<p><code>data.frame</code> object that is for use only when
+<code>cv.scheme</code> is provided. Contains the trial to be tested in subsequent
+model training functions. The first column contains unique identifiers,
+second contains genotypes, third contains reference values, followed by
+spectral columns. Include no other columns to right of spectra! Column
+names of spectra must start with "X", reference column must be named
+"reference", and genotype column must be named "genotype".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trial2</code></td>
+<td>
+<p><code>data.frame</code> object that is for use only when
+<code>cv.scheme</code> is provided. This data.frame contains a trial that has
+overlapping genotypes with <code>trial1</code> but that were grown in a different
+site/year (different environment). Formatting must be consistent with
+<code>trial1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trial3</code></td>
+<td>
+<p><code>data.frame</code> object that is for use only when
+<code>cv.scheme</code> is provided. This data.frame contains a trial that may or
+may not contain genotypes that overlap with <code>trial1</code>. Formatting must
+be consistent with <code>trial1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>Integer to be used internally as input for <code>set.seed()</code>.
+Only used if <code>stratified.sampling = TRUE</code>. In all other cases, seed
+is set to the current iteration number. Default is 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>If <code>TRUE</code>, the number of rows removed through filtering
+will be printed to the console. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>save.model</code></td>
+<td>
+<p>DEPRECATED <code>save.model = FALSE</code> is no
+longer supported; this function will always return a saved model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wavelengths</code></td>
+<td>
+<p>DEPRECATED <code>wavelengths</code> is no
+longer supported; this information is now inferred from <code>df</code>
+column names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>autoselect.preprocessing</code></td>
+<td>
+<p>DEPRECATED
+<code>autoselect.preprocessing = FALSE</code> is no longer supported. If
+multiple pretreatment methods are supplied, the best will be automatically
+selected as the model to be saved.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>preprocessing.method</code></td>
+<td>
+<p>DEPRECATED <code>preprocessing.method</code>
+has been renamed "pretreatment"</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Wrapper that uses <code>pretreat_spectra</code>,
+<code>format_cv</code>, and <code>train_spectra</code> functions.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List of model stats (in <code>data.frame</code>) and trained model object.
+If the parameter <code>write.model</code> is TRUE, both objects are saved to
+<code>model.save.folder</code>. To use the optimally trained model for
+predictions, use tuned parameters from <code>$bestTune</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jenna Hershberger <a href="mailto:jmh579@cornell.edu">jmh579@cornell.edu</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(magrittr)
+test.model &lt;- ikeogu.2017 %&gt;%
+  dplyr::filter(study.name == "C16Mcal") %&gt;%
+  dplyr::rename(reference = DMC.oven,
+                unique.id = sample.id) %&gt;%
+  dplyr::select(unique.id, reference, dplyr::starts_with("X")) %&gt;%
+  na.omit() %&gt;%
+  save_model(
+    df = .,
+    write.model = FALSE,
+    pretreatment = 1:13,
+    model.name = "my_prediction_model",
+    tune.length = 3,
+    num.iterations = 3
+  )
+summary(test.model$best.model)
+test.model$best.model.stats
+
+</code></pre>
+
+
+</div>

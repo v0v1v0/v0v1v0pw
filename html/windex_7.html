@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>modSel.phylolm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Model selection table for phylogenetic (logistic) regressions fit in the phylolm and phyloglm functions in the package phylolm, based on information theoretical measures.
+</h2>
+
+<h3>Description</h3>
+
+<p>Creates a model selection table based on either AIC or AICc for phylogenetic (logistic) regressions fit using the phylolm() or phyloglm() functions in the phylolm package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">modSel.phylolm(...,tree=NULL,type="AICc",method=c("phylolm","logistic"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>A set of phylogenetic (logistic) regressions fit in the phylolm and phyloglm functions in the package phylolm, which you want to compare.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tree</code></td>
+<td>
+
+<p>Either an object of class phylo used to fit the models being compared, or a numerical value giving the number of species in the tree used to fit the models being compared. Only necessary when type="AICc".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+
+<p>Type of information theoretical measure you want to use (AICc or AIC are allowed), defaults to AICc.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+
+<p>Whether the models being compared are standard phylogenetic regression (fit with phylolm function) or phylogenetic logistic regression (fit with phyloglm function). Defaults to phylolm but issues a warning if you haven't specified the method.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Model selection table with rownames corresponding to input model names and columns for K (number of parameters), logLik (log-likelihood), AICc (or AIC), deltaAICc (or deltaAIC, the difference between each model and the best model), Weight (Akaike weights, aka model probabilities), and Evidence ratio (the amount of evidence for the best model relative to each model such that, for instance, 4 would mean that model has 4x less evidence supporting it than the best model).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Kevin Arbuckle
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Three models initially run in phylolm using phylolm or phyloglm
+# (see help file for that package to fit these models) and saved
+# as objects named 'mod1', 'mod2', and 'mod3'.
+
+# Model selection table for phylogenetic regressions using AICc
+modSel.phylolm(mod1,mod2,mod3,tree=phy,method="phylolm")
+
+# Model selection table for phylogenetic regressions using AIC
+modSel.phylolm(mod1,mod2,mod3,type="AIC",tree=phy,method="phylolm")
+
+# Model selection table for phylogenetic logistic regressions using AICc
+modSel.phylolm(mod1,mod2,mod3,tree=phy,method="logistic")
+## End(Not run)
+</code></pre>
+
+
+</div>

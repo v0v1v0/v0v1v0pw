@@ -1,0 +1,52 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>httpbin_app</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generic web app for testing HTTP clients</h2>
+
+<h3>Description</h3>
+
+<p>A web app similar to <code style="white-space: pre;">⁠https://httpbin.org⁠</code>.
+See <a href="https://webfakes.r-lib.org/httpbin.html">its specific docs</a>.
+You can also see these docs locally, by starting the app:
+</p>
+<div class="sourceCode r"><pre>httpbin &lt;- new_app_process(httpbin_app())
+browseURL(httpbin$url())
+</pre></div>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">httpbin_app(log = interactive())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>log</code></td>
+<td>
+<p>Whether to log requests to the standard output.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A <code>webfakes_app</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">app &lt;- httpbin_app()
+proc &lt;- new_app_process(app)
+url &lt;- proc$url("/get")
+resp &lt;- curl::curl_fetch_memory(url)
+curl::parse_headers_list(resp$headers)
+cat(rawToChar(resp$content))
+proc$stop()
+</code></pre>
+
+
+</div>

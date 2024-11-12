@@ -1,0 +1,225 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ineq.weighted.boot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Weighted inequality measures with bootstrap</h2>
+
+<h3>Description</h3>
+
+<p>For weighted mean and weighted total of X (or median of X) as well as for each relevant inequality measure, returns outputs from ineq.weighted and bootstrap outcomes: expected value, bias (in %), standard deviation, coefficient of variation, lower and upper bound of confidence interval.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ineq.weighted.boot(
+  X,
+  W = rep(1, length(X)),
+  B = 100,
+  AF.norm = TRUE,
+  Atkinson.e = 1,
+  Jenkins.alfa = 0.8,
+  Entropy.power = 0.5,
+  zeroes = "include",
+  Kolm.p = 1,
+  Kolm.scale = "Standardization",
+  Leti.norm = T,
+  AN_Y.a = 1,
+  AN_Y.b = 1,
+  Apouey.a = 2/(1 - length(W[!is.na(W) &amp; !is.na(X)])),
+  Apouey.b = length(W[!is.na(W) &amp; !is.na(X)])/(length(W[!is.na(W) &amp; !is.na(X)]) - 1),
+  BL.withsqrt = FALSE,
+  keepSamples = FALSE,
+  keepMeasures = FALSE,
+  conf.alpha = 0.05,
+  calib.boot = FALSE,
+  Xs = rep(1, length(X)),
+  total = sum(W),
+  calib.method = "truncated",
+  bounds = c(low = 0, upp = 10)
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>is a data vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p>is a vector of weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+<p>is a number of bootstrap samples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>AF.norm</code></td>
+<td>
+<p>(logical). If TRUE (default) then index is divided by its maximum possible value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Atkinson.e</code></td>
+<td>
+<p>is a parameter for Atkinson coefficient</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Jenkins.alfa</code></td>
+<td>
+<p>is a parameter for Jenkins coefficient</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Entropy.power</code></td>
+<td>
+<p>is a generalized entropy index parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zeroes</code></td>
+<td>
+<p>defines what to do with zeroes in the data vector. Possible options are "remove" and "include". See Entropy function for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Kolm.p</code></td>
+<td>
+<p>is a parameter for Kolm index</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Kolm.scale</code></td>
+<td>
+<p>method of data standardization before computing</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Leti.norm</code></td>
+<td>
+<p>(logical). If TRUE (default) then Leti index is divided by a maximum possible value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>AN_Y.a</code></td>
+<td>
+<p>is a positive parameter for Abul Naga and Yalcin inequality measure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>AN_Y.b</code></td>
+<td>
+<p>is a parameter for Abul Naga and Yalcin inequality measure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Apouey.a</code></td>
+<td>
+<p>is a parameter for Apouey inequality measure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Apouey.b</code></td>
+<td>
+<p>is a parameter for Apouey inequality measure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>BL.withsqrt</code></td>
+<td>
+<p>if TRUE function returns index given by BL2, elsewhere by BL (default). See more in details of BL function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepSamples</code></td>
+<td>
+<p>if TRUE, it returns bootstrap samples of data (Xb) and weights (Wb)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepMeasures</code></td>
+<td>
+<p>if TRUE, it returns values of all inequality measures for each bootstrap sample</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conf.alpha</code></td>
+<td>
+<p>significance level for confidence interval</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>calib.boot</code></td>
+<td>
+<p>if FALSE, then naive bootstrap is performed, calibrated bootstrap elsewhere</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Xs</code></td>
+<td>
+<p>matrix of calibration variables. By default it is a vector of 1's, applied if calib.boot is TRUE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>total</code></td>
+<td>
+<p>vector of population totals. By default it is a sum of weights, applied if calib.boot is TRUE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>calib.method</code></td>
+<td>
+<p>weights' calibration method for function calib (sampling)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bounds</code></td>
+<td>
+<p>vector of bounds for the g-weights used in the truncated and logit methods; 'low' is the smallest value and 'upp' is the largest value</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>By default, naive bootstrap is performed, that is no weights calibration is conducted.
+You can choose calibrated bootstrap to calibrate weights with respect to provided variables (Xs) and totals (total).
+Confidence interval is simply derived with quantile of order <code class="reqn">\alpha</code> and <code class="reqn">1-\alpha</code> where <code class="reqn">\alpha</code> is a significance level for confidence interval.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This functions returns a data frame from ineq.weighted extended with bootstrap results: expected value, bias (in %), standard deviation, coefficient of variation, lower and upper bound of confidence interval.
+If keepSamples=TRUE or keepMeasures==TRUE then the output becomes a list. If keepSamples=TRUE, the functions returns  Xb and Wb, which are the samples of vector data and the samples of weights, respectively.
+If keepMeasures==TRUE, the functions returns Mb, which is a set of inequality measures from bootstrapping.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Inequality measures with additional statistics for numeric variable
+X=1:10
+W=1:10
+ineq.weighted.boot(X,W,B=10)
+
+# Inequality measures with additional statistics for ordered factor variable
+X=factor(c('H','H','M','M','L','L'),levels = c('L','M','H'),ordered = TRUE)
+W=c(2,2,3,3,8,8)
+ineq.weighted.boot(X,W,B=10)
+
+</code></pre>
+
+
+</div>

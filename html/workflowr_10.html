@@ -1,0 +1,144 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wflow_git_remote</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Manage remote Git repositories</h2>
+
+<h3>Description</h3>
+
+<p><code>wflow_git_remote</code> is a convenience function for managing remote
+repositories from R. By default it displays the current remote repositories
+(analogous to <code>git remote -v</code>). It can add a remote, remove a remote, or
+update the URL for an existing remote.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wflow_git_remote(
+  remote = NULL,
+  user = NULL,
+  repo = NULL,
+  protocol = "https",
+  action = "add",
+  domain = "github.com",
+  verbose = TRUE,
+  project = "."
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>remote</code></td>
+<td>
+<p>character (default: NULL). The name of the remote.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>user</code></td>
+<td>
+<p>character (default: NULL). The username for the remote
+repository.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>repo</code></td>
+<td>
+<p>character (default: NULL). The name of the remote repository on
+the Git hosting service (e.g. GitHub or GitLab).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>protocol</code></td>
+<td>
+<p>character (default: "https"). The protocol for communicating
+with the Git hosting service (e.g. GitHub or GitLab). Must be either
+"https" or "ssh".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>action</code></td>
+<td>
+<p>character (default: "add"). The action to perform on the
+remotes. Must be one of "add", "remove", or "set_url". This argument is
+ignored if <code>remote = NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>domain</code></td>
+<td>
+<p>character (default: "github.com"). The domain of the remote
+host. For example, if you want to host your Git repository at GitLab, you
+would specify "gitlab.com".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical (default: TRUE). Display the current remotes.
+Analogous to <code>git remote -v</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>character (default: ".") By default the function assumes the
+current working directory is within the project. If this is not true,
+you'll need to provide the path to the project directory.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>wflow_git_remote</code> constructs a URL to a remote repository based on the
+input username, repository name, protocol (https or ssh), and domain (e.g.
+"github.com" or "gitlab.com"). It can add a remote (<code>action = "add"</code>),
+remove a remote (<code>action = "remove"</code>), or update the URL for an existing
+remote (<code>action = "set_url"</code>).
+</p>
+<p>This function cannot change the name of an existing remote. To accomplish
+this, you could run Git from the Terminal (<code>git remote rename &lt;old&gt;
+&lt;new&gt;</code>) or use <code>git2r::remote_rename</code> from R.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Invisibly returns a named character vector of the remote URLs.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+# Display the current remotes
+wflow_git_remote()
+
+# Add a remote called origin that points to the
+# GitHub repository example_repo owned by
+# the GitHub user example_user
+wflow_git_remote("origin", "example_user", "example_repo")
+
+# Remove the remote named upstream
+wflow_git_remote("upstream", action = "remove")
+
+# Change the protocol of the remote origin from https to ssh
+wflow_git_remote("origin", "example_user", "example_repo", protocol = "ssh",
+              action = "set_url")
+
+# Add a remote called origin that points to the
+# GitLab repository example_repo owned by
+# the GitLab user example_user
+wflow_git_remote("origin", "example_user", "example_repo", domain = "gitlab.com")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

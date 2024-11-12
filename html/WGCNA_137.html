@@ -1,0 +1,570 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>metaAnalysis</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Meta-analysis of binary and continuous variables
+</h2>
+
+<h3>Description</h3>
+
+<p>This is a meta-analysis complement to functions <code>standardScreeningBinaryTrait</code> and
+<code>standardScreeningNumericTrait</code>. Given expression (or other) data from multiple independent
+data sets, and the corresponding clinical traits or outcomes, the function calculates multiple screening
+statistics in each data set, then calculates meta-analysis Z scores, p-values, and optionally q-values
+(False Discovery Rates). Three different ways of calculating the meta-analysis Z scores are provided: the
+Stouffer method, weighted Stouffer method, and using user-specified weights.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">metaAnalysis(multiExpr, multiTrait, 
+             binary = NULL, 
+             metaAnalysisWeights = NULL, 
+             corFnc = cor, corOptions = list(use = "p"), 
+             getQvalues = FALSE, 
+             getAreaUnderROC = FALSE,
+             useRankPvalue = TRUE,
+             rankPvalueOptions = list(),
+             setNames = NULL, 
+             kruskalTest = FALSE, var.equal = FALSE, 
+             metaKruskal = kruskalTest, na.action = "na.exclude")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>multiExpr</code></td>
+<td>
+
+<p>Expression data (or other data) in multi-set format (see <code>checkSets</code>). A vector of lists; in
+each list there must be a component named <code>data</code> whose content
+is a matrix or dataframe or array of dimension 2.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multiTrait</code></td>
+<td>
+
+<p>Trait or ourcome data in multi-set format. Only one trait is allowed; consequesntly, the <code>data</code>
+component of each component list can be either a vector or a data frame (matrix, array of dimension 2).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binary</code></td>
+<td>
+
+<p>Logical: is the trait binary (<code>TRUE</code>) or continuous (<code>FALSE</code>)? If not given, the decision will
+be made based on the content of <code>multiTrait</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metaAnalysisWeights</code></td>
+<td>
+
+<p>Optional specification of set weights for meta-analysis. If given, must be a vector of non-negative
+weights, one entry for each set contained in <code>multiExpr</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corFnc</code></td>
+<td>
+
+<p>Correlation function to be used for screening. Should be either the default <code>cor</code> or its
+robust alternative, <code>bicor</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corOptions</code></td>
+<td>
+
+<p>A named list giving extra arguments to be passed to the correlation function.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getQvalues</code></td>
+<td>
+
+<p>Logical: should q-values (FDRs) be calculated?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getAreaUnderROC</code></td>
+<td>
+
+<p>Logical: should area under the ROC be calculated? 
+Caution, enabling the calculation will slow the function down considerably for large data sets.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useRankPvalue</code></td>
+<td>
+<p> Logical: should the <code>rankPvalue</code> function be used to obtain alternative
+meta-analysis statistics?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rankPvalueOptions</code></td>
+<td>
+<p> Additional options for function <code>rankPvalue</code>. These include
+<code>na.last</code> (default <code>"keep"</code>), <code>ties.method</code> (default <code>"average"</code>), 
+<code>calculateQvalue</code> (default copied from input <code>getQvalues</code>), 
+and <code>pValueMethod</code> (default <code>"all"</code>). 
+See the help file for <code>rankPvalue</code> for full details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>setNames</code></td>
+<td>
+
+<p>Optional specification of set names (labels). These are used to label the corresponding components of the
+output. If not given, will be taken from the <code>names</code> attribute of <code>multiExpr</code>. If
+<code>names(multiExpr)</code> is <code>NULL</code>, generic names of the form <code>Set_1, Set2, ...</code> will be used.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kruskalTest</code></td>
+<td>
+
+<p>Logical: should the Kruskal test be performed in addition to t-test? Only applies to binary traits.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var.equal</code></td>
+<td>
+
+<p>Logical: should the t-test assume equal variance in both groups? If <code>TRUE</code>, the function will warn
+the user that the returned test statistics will be different from the results of the standard
+<code>t.test</code> function.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metaKruskal</code></td>
+<td>
+
+<p>Logical: should the meta-analysis be based on the results of Kruskal test (<code>TRUE</code>) or Student t-test
+(<code>FALSE</code>)?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.action</code></td>
+<td>
+
+<p>Specification of what should happen to missing values in <code>t.test</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The Stouffer method of combines Z statistics by simply taking a mean of input Z statistics and multiplying
+it by <code>sqrt(n)</code>, where <code>n</code> is the number of input data sets. We refer to this method as
+<code>Stouffer.equalWeights</code>. In general, a better (i.e., more powerful) method of combining Z statistics is
+to weigh them by the number of degrees of freedom (which approximately equals <code>n</code>). We refer to this
+method as <code>weightedStouffer</code>. Finally, the user can also specify custom weights, for example if a data
+set needs to be downweighted due to technical concerns; however, specifying own weights by hand should be
+done carefully to avoid possible selection biases.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Data frame with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>ID</code></td>
+<td>
+<p> Identifier of the input genes (or other variables) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z.equalWeights</code></td>
+<td>
+<p> Meta-analysis Z statistics obtained using Stouffer's method with equal
+weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.equalWeights</code></td>
+<td>
+<p> p-values corresponding to <code>Z.Stouffer.equalWeights</code> </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q.equalWeights</code></td>
+<td>
+<p> q-values corresponding to <code>p.Stouffer.equalWeights</code>, only present if
+<code>getQvalues</code> is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z.RootDoFWeights</code></td>
+<td>
+<p> Meta-analysis Z statistics obtained using Stouffer's method with weights given by
+the square root of the number of (non-missing) samples in each data set</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.RootDoFWeights</code></td>
+<td>
+<p> p-values corresponding to <code>Z.DoFWeights</code> </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q.RootDoFWeights</code></td>
+<td>
+<p> q-values corresponding to <code>p.DoFWeights</code>, only present if
+<code>getQvalues</code> is <code>TRUE</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z.DoFWeights</code></td>
+<td>
+<p> Meta-analysis Z statistics obtained using Stouffer's method with weights given by
+the number of (non-missing) samples in each data set</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.DoFWeights</code></td>
+<td>
+<p> p-values corresponding to <code>Z.DoFWeights</code> </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q.DoFWeights</code></td>
+<td>
+<p> q-values corresponding to <code>p.DoFWeights</code>, only present if
+<code>getQvalues</code> is <code>TRUE</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z.userWeights</code></td>
+<td>
+<p> Meta-analysis Z statistics
+obtained using Stouffer's method with user-defined weights. Only present if input <code>metaAnalysisWeights</code>
+are present.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.userWeights</code></td>
+<td>
+<p> p-values corresponding to <code>Z.userWeights</code> </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q.userWeights</code></td>
+<td>
+<p> q-values corresponding to <code>p.userWeights</code>, only present if
+<code>getQvalues</code> is <code>TRUE</code>. </p>
+</td>
+</tr>
+</table>
+<p>The next set of columns is present only if input <code>useRankPvalue</code> is <code>TRUE</code> and contain the output
+of the function <code>rankPvalue</code> with the same column weights as the above meta-analysis. Depending
+on the input options <code>calculateQvalue</code> and <code>pValueMethod</code> in <code>rankPvalueOptions</code>, some
+columns may be missing. The following columns are calculated using equal weights for each data set.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>pValueExtremeRank.equalWeights</code></td>
+<td>
+<p>This is the minimum between pValueLowRank and
+pValueHighRank, i.e. min(pValueLow, pValueHigh)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValueLowRank.equalWeights</code></td>
+<td>
+<p>Asymptotic p-value for observing a consistently low value across
+the columns of datS based on the rank method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValueHighRank.equalWeights</code></td>
+<td>
+<p>Asymptotic p-value for observing a consistently low value across
+the columns of datS based on the rank method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValueExtremeScale.equalWeights</code></td>
+<td>
+<p>This is the minimum between pValueLowScale and
+pValueHighScale, i.e. min(pValueLow, pValueHigh)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValueLowScale.equalWeights</code></td>
+<td>
+<p>Asymptotic p-value for observing a consistently low value across
+the columns of datS based on the Scale method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValueHighScale.equalWeights</code></td>
+<td>
+<p>Asymptotic p-value for observing a consistently low value across
+the columns of datS based on the Scale method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueExtremeRank.equalWeights</code></td>
+<td>
+<p>local false discovery rate (q-value) corresponding to the p-value
+pValueExtremeRank</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueLowRank.equalWeights</code></td>
+<td>
+<p>local false discovery rate (q-value) corresponding to the p-value
+pValueLowRank</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueHighRank.equalWeights</code></td>
+<td>
+<p>local false discovery rate (q-value) corresponding to the p-value
+pValueHighRank</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueExtremeScale.equalWeights</code></td>
+<td>
+<p>local false discovery rate (q-value) corresponding to the p-value
+pValueExtremeScale</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueLowScale.equalWeights</code></td>
+<td>
+<p>local false discovery rate (q-value) corresponding to the p-value
+pValueLowScale</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueHighScale.equalWeights</code></td>
+<td>
+<p>local false discovery rate (q-value) corresponding to the p-value
+pValueHighScale</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Analogous columns calculated by weighting each input set using the square root of the number of
+samples, number of samples, and user weights (if given). The corresponding column names carry the suffixes
+<code>RootDofWeights</code>, <code>DoFWeights</code>, <code>userWeights</code>.</p>
+</td>
+</tr>
+</table>
+<p>The following columns contain results returned by <code>standardScreeningBinaryTrait</code> or
+<code>standardScreeningNumericTrait</code> (depending on whether the input trait is binary or continuous).
+</p>
+<p>For binary traits, the following information is returned for each set:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>corPearson.Set_1, corPearson.Set_2,...</code></td>
+<td>
+<p>Pearson correlation with a binary numeric version of the
+input variable. The numeric variable equals 1 for level 1 and 2 for level 2. The levels are given by
+levels(factor(y)).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t.Student.Set_1, t.Student.Set_2, ...</code></td>
+<td>
+<p>Student t-test statistic</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pvalueStudent.Set_1, pvalueStudent.Set_2, ...</code></td>
+<td>
+<p>two-sided Student t-test p-value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qvalueStudent.Set_1, qvalueStudent.Set_2, ...</code></td>
+<td>
+<p>(if input <code>qValues==TRUE</code>)
+q-value (local false discovery rate) based on the Student T-test p-value (Storey et al 2004).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>foldChange.Set_1, foldChange.Set_2, ...</code></td>
+<td>
+<p>a (signed) ratio of mean values. If the mean in the first
+group (corresponding to level 1) is larger than that of the second group, it equals
+meanFirstGroup/meanSecondGroup. 
+But if the mean of the second group is larger than that of the first group it equals
+-meanSecondGroup/meanFirstGroup (notice the minus sign).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meanFirstGroup.Set_1, meanSecondGroup.Set_2, ...</code></td>
+<td>
+<p>means of columns in input <code>datExpr</code> across
+samples in the second group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SE.FirstGroup.Set_1, SE.FirstGroup.Set_2, ...</code></td>
+<td>
+<p>standard errors of columns in input <code>datExpr</code>
+across samples in the 
+first group.  Recall that SE(x)=sqrt(var(x)/n) where n is the number of non-missing values of x. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SE.SecondGroup.Set_1, SE.SecondGroup.Set_2, ...</code></td>
+<td>
+<p>standard errors of columns in input <code>datExpr</code>
+across samples in the second group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>areaUnderROC.Set_1, areaUnderROC.Set_2, ...</code></td>
+<td>
+<p>the area under the ROC, also known as the concordance
+index or C.index.  This is a measure of discriminatory power. The measure lies between 0 and 1 where 0.5
+indicates no discriminatory power. 0 indicates that the "opposite" predictor has perfect discriminatory
+power. To compute it we use the function rcorr.cens with <code>outx=TRUE</code> (from Frank Harrel's
+package Hmisc).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nPresentSamples.Set_1, nPresentSamples.Set_2, ...</code></td>
+<td>
+<p>number of samples with finite measurements for
+each gene.</p>
+</td>
+</tr>
+</table>
+<p>If input <code>kruskalTest</code> is <code>TRUE</code>, the following columns further summarize results of 
+Kruskal-Wallis test:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>stat.Kruskal.Set_1, stat.Kruskal.Set_2, ...</code></td>
+<td>
+<p>Kruskal-Wallis test statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stat.Kruskal.signed.Set_1, stat.Kruskal.signed.Set_2,...</code></td>
+<td>
+<p>(Warning: experimental) Kruskal-Wallis
+test statistic including a sign that indicates whether the average rank is higher in second group (positive)
+or first group (negative). 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pvaluekruskal.Set_1, pvaluekruskal.Set_2, ...</code></td>
+<td>
+<p>Kruskal-Wallis test p-value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qkruskal.Set_1, qkruskal.Set_2, ...</code></td>
+<td>
+<p>q-values corresponding to the Kruskal-Wallis test p-value (if
+input <code>qValues==TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z.Set1, Z.Set2, ...</code></td>
+<td>
+<p>Z statistics obtained from <code>pvalueStudent.Set1, pvalueStudent.Set2, ...</code>
+or from <code>pvaluekruskal.Set1, pvaluekruskal.Set2, ...</code>, depending on input <code>metaKruskal</code>.</p>
+</td>
+</tr>
+</table>
+<p>For numeric traits, the following columns are returned:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>cor.Set_1, cor.Set_2, ...</code></td>
+<td>
+<p>correlations of all genes with the trait</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z.Set1, Z.Set2, ...</code></td>
+<td>
+<p>Fisher Z statistics corresponding to the correlations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pvalueStudent.Set_1, pvalueStudent.Set_2, ...</code></td>
+<td>
+<p>Student p-values of the correlations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qvalueStudent.Set_1, qvalueStudent.Set_1, ...</code></td>
+<td>
+<p>(if input <code>qValues==TRUE</code>) q-values of the
+correlations calculated from the p-values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>AreaUnderROC.Set_1, AreaUnderROC.Set_2, ...</code></td>
+<td>
+<p>area under the ROC</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nPresentSamples.Set_1, nPresentSamples.Set_2, ...</code></td>
+<td>
+<p>number of samples present for the calculation of each association. </p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>References</h3>
+
+<p>For Stouffer's method, see
+</p>
+<p>Stouffer, S.A., Suchman, E.A., DeVinney, L.C., Star, S.A. &amp; Williams, R.M. Jr. 1949. The American
+Soldier, Vol. 1: Adjustment during Army Life. Princeton University Press, Princeton. 
+</p>
+<p>A discussion of weighted Stouffer's method can be found in 
+</p>
+<p>Whitlock, M. C., Combining probability from independent tests: the weighted Z-method is superior to Fisher's
+approach, Journal of Evolutionary Biology 18:5 1368 (2005)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>standardScreeningBinaryTrait</code>, <code>standardScreeningNumericTrait</code> for screening
+functions for individual data sets
+</p>
+
+
+</div>

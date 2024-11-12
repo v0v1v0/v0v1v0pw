@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fig_dist</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot a distribution of a score</h2>
+
+<h3>Description</h3>
+
+<p>Plot a distribution of a score
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fig_dist(
+  df,
+  score,
+  score_cat,
+  cutoffs,
+  x_lab = "Score",
+  y_max = NULL,
+  pcent = FALSE,
+  pal = "Blues",
+  binwidth = 5
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>a data frame where each row is an individual, containing at least a score column (between 0 and 100) and a categorization of that score</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>score</code></td>
+<td>
+<p>a string (length 1) of the column name for the score variable to print the distribution of</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>score_cat</code></td>
+<td>
+<p>a string (length 1) of the column name for the categorization of the score variable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutoffs</code></td>
+<td>
+<p>a numeric vector of the cut-offs for the score categorization</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x_lab</code></td>
+<td>
+<p>a string (length 1) of x-axis label. Default is "Score".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y_max</code></td>
+<td>
+<p>a numeric value of the maximum limit on the y-axis. Default is NULL to use default value from <code>geom_histogram()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pcent</code></td>
+<td>
+<p>a logical value determining whether or not to display the distribution as percentages or frequency. Default is FALSE, to display as frequency.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pal</code></td>
+<td>
+<p>a string to pass to <code>RColorBrewer::brewer.pal()</code> with the name of the color palette to use</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binwidth</code></td>
+<td>
+<p>a numeric value giving the width of the bins in the histograph. Default is 5.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Plots a histogram of a score that ranges between 0 and 100, with the fill determined by some set categorization of the score. This is the function used to plot the distributions of disability scores resulting from the WHO Model Disability Survey.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A score distribution figure with fill based on categorization of the score
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other figure functions: 
+<code>fig_LID()</code>,
+<code>fig_density()</code>,
+<code>fig_poppyramid()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">fig_dist(df_adults, score = "disability_score", score_cat = "disability_cat", 
+cutoffs = c(19.1, 34.4, 49.6), x_lab = "Disability score")
+fig_dist(df_adults, score = "disability_score", score_cat = "disability_cat", 
+cutoffs = c(19.1, 34.4, 49.6), x_lab = "Disability score", y_max = 2000)
+fig_dist(df_adults, score = "disability_score", score_cat = "disability_cat", 
+cutoffs = c(19.1, 34.4, 49.6), x_lab = "Disability score", y_max = 0.2, pcent=TRUE)
+</code></pre>
+
+
+</div>

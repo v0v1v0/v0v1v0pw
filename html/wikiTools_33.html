@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>w_EntityInfo</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get information about a Wikimedia entity (human or film)</h2>
+
+<h3>Description</h3>
+
+<p>Get labels, descriptions and some properties of the Wikidata entities in
+entity_list, for person or films. If person, the information returned is
+about labels, descriptions, birth and death dates and places, occupations,
+works, education sites, awards, identifiers in some databases, Wikipedia page
+titles (which can be limited to the languages in the <code>wikilangs</code> parameter,
+etc. If films, information is about title, directors, screenwriter,
+castmember, producers, etc.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">w_EntityInfo(
+  entity_list,
+  mode = "default",
+  langsorder = "",
+  wikilangs = "",
+  nlimit = MW_LIMIT,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>entity_list</code></td>
+<td>
+<p>The Wikidata entities to search for properties (person or
+films.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>In "default" mode, the list of entities is expected to correspond
+to person, obtaining information related to person. If the mode is "film",
+information related to films will be requested. If the mode is "tiny" less
+properties are requested.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>langsorder</code></td>
+<td>
+<p>Order of languages in which the information will be
+returned, separated with '|'. If no information is given in the first
+language, next is used. For label and description, English is used for
+language failback, if they are not in English, then information is returned
+in any else language. The language for label and description are also
+returned. If langsorder==”, then no other information than labels or
+descriptions are returned in any language, only Wikidata entities, else,
+use the order in this parameter to retrieve information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wikilangs</code></td>
+<td>
+<p>List of languages to limit the search of Wikipedia pages,
+using "|" as separator. Wikipedias pages are returned in same order as
+languages in this parameter. If wikilangs=” the function returns Wikipedia
+pages in any language, not sorted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlimit</code></td>
+<td>
+<p>If the number of entities exceeds this number, chunked queries
+are done. This is the number of entities requested in each chunk. Please,
+reduce the default value if error is raised.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>For debugging (info or query)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data-frame with the properties of the entity. Also index is set to
+entity_list.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Angel Zazo, Department of Computer Science and Automatics, University of Salamanca
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+df &lt;- w_EntityInfo(entity_list='Q134644', langsorder='es|en')
+df &lt;- w_EntityInfo(entity_list='Q134644', langsorder='es|en', wikilangs='es|en|fr')
+df &lt;- w_EntityInfo(c('Q270510', 'Q1675466', 'Q24871'), mode='film',
+                   langsorder='es|en', wikilangs='es|en|fr')
+# Search string 'abba' inlabel
+w &lt;- w_SearchByLabel('abba', mode='inlabel', langsorder = '', instanceof = 'Q5')
+df &lt;- w_EntityInfo(w$entity, langsorder='en', wikilangs='en|es|fr', debug='info')
+# Search 3D films
+w &lt;- w_SearchByInstanceof(instanceof='Q229390', langsorder = 'en|es', debug = 'info')
+df &lt;- w_EntityInfo(w$entity, mode="film", langsorder='en', wikilangs='en', debug='info')
+
+## End(Not run)
+</code></pre>
+
+
+</div>

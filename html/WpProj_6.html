@@ -1,0 +1,192 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>HC</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Run the Hahn-Carvalho Method</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+Runs the Hahn-Carvalho method but adapted to return full distributions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">HC(
+  X,
+  Y = NULL,
+  theta,
+  family = "gaussian",
+  penalty = c("elastic.net", "selection.lasso", "lasso", "ols", "mcp", "scad", "mcp.net",
+    "scad.net", "grp.lasso", "grp.lasso.net", "grp.mcp", "grp.scad", "grp.mcp.net",
+    "grp.scad.net", "sparse.grp.lasso"),
+  method = c("selection.variable", "projection"),
+  lambda = numeric(0),
+  nlambda = 100L,
+  lambda.min.ratio = NULL,
+  alpha = 1,
+  gamma = 1,
+  tau = 0.5,
+  groups = numeric(0),
+  penalty.factor = NULL,
+  group.weights = NULL,
+  maxit = 500L,
+  tol = 1e-07,
+  irls.maxit = 100L,
+  irls.tol = 0.001
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Covariates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>Predictions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>Parameters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>Family for method. See oem.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>penalty</code></td>
+<td>
+<p>Penalty function. See oem.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Should we run a selection variable methodology or projection?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>lambda for lasso. See oem for this and all options below</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlambda</code></td>
+<td>
+<p>Number of lambda values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda.min.ratio</code></td>
+<td>
+<p>Minimum lambda ratio for self selected lambda</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>elastic net mixing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma</code></td>
+<td>
+<p>tuning parameters for SCAD and MCP</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>mixing parameter for sparse group lasso</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groups</code></td>
+<td>
+<p>A vector of grouping values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>penalty.factor</code></td>
+<td>
+<p>Penalty factor for OEM.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group.weights</code></td>
+<td>
+<p>Weights for groupped lasso</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxit</code></td>
+<td>
+<p>Max iteration for OEM</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>Tolerance for OEM</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>irls.maxit</code></td>
+<td>
+<p>IRLS max iterations for OEM</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>irls.tol</code></td>
+<td>
+<p>IRLS tolerance for OEM</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a <code>WpProj</code> object with selected covariates and their values
+</p>
+
+
+<h3>References</h3>
+
+<p>Hahn, P. Richard and Carlos M. Carvalho. (2014) "Decoupling Shrinkage and Selection in Bayesian Linear Models: A Posterior Summary Perspective." <a href="https://arxiv.org/pdf/1408.0464.pdf">https://arxiv.org/pdf/1408.0464.pdf</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">n &lt;- 32
+p &lt;- 10
+s &lt;- 99
+x &lt;- matrix( 1, nrow = n, ncol = p )
+beta &lt;- (1:10)/10
+y &lt;- x %*% beta
+post_beta &lt;- matrix(beta, nrow=p, ncol=s) 
+post_mu &lt;- x %*% post_beta
+
+fit &lt;-  HC(X=x, Y=post_mu, theta = post_beta,
+               penalty = "lasso", 
+               method = "projection"
+)
+</code></pre>
+
+
+</div>

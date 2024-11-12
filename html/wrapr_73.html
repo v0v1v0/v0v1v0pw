@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>qchar_frame</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Build a quoted data.frame.</h2>
+
+<h3>Description</h3>
+
+<p>A convenient way to build a character data.frame in legible transposed form.  Position of
+first "|" (or other infix operator) determines number of columns
+(all other infix operators are aliases for ",").
+Names are treated as character types.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">qchar_frame(...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>cell names, first infix operator denotes end of header row of column names.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>qchar_frame() uses bquote() .() quasiquotation escaping notation.  Because of this using dot
+as a name in some places may fail if the dot looks like a function call.
+</p>
+
+
+<h3>Value</h3>
+
+<p>character data.frame
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>draw_frame</code>, <code>build_frame</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+loss_name &lt;- "loss"
+x &lt;- qchar_frame(
+   measure,                      training,     validation |
+   "minus binary cross entropy", .(loss_name), val_loss   |
+   accuracy,                     acc,          val_acc    )
+print(x)
+str(x)
+cat(draw_frame(x))
+
+qchar_frame(
+  x |
+  1 |
+  2 ) %.&gt;% str(.)
+
+</code></pre>
+
+
+</div>

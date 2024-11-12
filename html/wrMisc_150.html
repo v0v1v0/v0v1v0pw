@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>findSimilFrom2sets</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find similar numeric values from two vectors/matrixes</h2>
+
+<h3>Description</h3>
+
+<p><code>findSimilFrom2sets</code> compares to vectors or matrixes and returns combined view including only all close (by <code>findCloseMatch</code>).
+Return matrix (predMatr) with add'l columns for index to and 'grp' (group of similar values (1-to-many)), 'nGrp' (n of grp), 'isBest' or 'nBest', 'disToMeas' 
+(distance/difference between pair) &amp;  'ppmToPred' (distance in ppm).
+Note: too wide 'limitComp' will result in large window and many 'good' hits will compete (and be mutually exlcuded) if selection 'bestOnly' is selected
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">findSimilFrom2sets(
+  predMatr,
+  measMatr,
+  colMeas = 1,
+  colPre = 1,
+  compareTy = "diff",
+  limitComp = 0.5,
+  bestOnly = FALSE,
+  silent = FALSE,
+  callFrom = NULL,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>predMatr</code></td>
+<td>
+<p>(matrix or numeric vector) dataset number 1, referred to as 'predicted', the colum speified in argument <code>colPre</code> points to the data to be used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>measMatr</code></td>
+<td>
+<p>(matrix or numeric vector) dataset number 2, referred to as 'measured', the colum speified in argument <code>colMeas</code> points to the data to be used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colMeas</code></td>
+<td>
+<p>(integer) which column number of 'measMatr' to consider</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colPre</code></td>
+<td>
+<p>(integer) which column number of 'predMatr' to consider</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>compareTy</code></td>
+<td>
+<p>(character) 'diff' (difference) 'ppm' (relative difference)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limitComp</code></td>
+<td>
+<p>(numeric) limit used by 'compareTy'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bestOnly</code></td>
+<td>
+<p>(logical) allows to filter only hits with min distance (defined by 'compareTy'), 3rd last col will be 'nBest' - otherwise 3rd last col 'isBest'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) for bug-tracking: more/enhanced messages</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a matrix (predMatr) with add'l columns for index to and 'grp' (group of similar values (1-to-many)), 'nGrp' (n of grp), 'isBest' or 'nBest', 'disToMeas' (distance/difference between pair) &amp;  'ppmToPred' (distance in ppm)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>checkSimValueInSer</code> <code>findCloseMatch</code> <code>closeMatchMatrix</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">aA &lt;- c(11:17); bB &lt;- c(12.001,13.999); cC &lt;- c(16.2,8,9,12.5,12.6,15.9,14.1)
+aZ &lt;-  matrix(c(aA,aA+20),ncol=2,dimnames=list(letters[1:length(aA)],c("aaA","aZ")))
+cZ &lt;-  matrix(c(cC,cC+20),ncol=2,dimnames=list(letters[1:length(cC)],c("ccC","cZ")))
+findCloseMatch(cC,aA,com="diff",lim=0.5,sor=FALSE)
+findSimilFrom2sets(aA,cC)
+findSimilFrom2sets(cC,aA)
+findSimilFrom2sets(aA,cC,best=FALSE)
+findSimilFrom2sets(aA,cC,comp="ppm",lim=5e4,deb=TRUE)
+findSimilFrom2sets(aA,cC,comp="ppm",lim=9e4,bestO=FALSE)
+# below: find fewer 'best matches' since search window larger (ie more good hits compete !)
+findSimilFrom2sets(aA,cC,comp="ppm",lim=9e4,bestO=TRUE)      
+</code></pre>
+
+
+</div>

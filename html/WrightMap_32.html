@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>make.thresholds</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Calculate Thurstonian thresholds.
+</h2>
+
+<h3>Description</h3>
+
+<p>This function accepts a matrix of delta parameters and converts them to thresholds (using a threshold of .5). It can also take as input a CQmodel object or a filename of a ConQuest show file.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">make.thresholds(item.params, ...)
+## S3 method for class 'character'
+make.thresholds(item.params, design.matrix = "normal",...)
+## S3 method for class 'CQmodel'
+make.thresholds(item.params,item.table = NULL, interactions = NULL
+,step.table = NULL, design.matrix = "normal", throld = 0.5, alpha = 1,...)
+## Default S3 method:
+make.thresholds(item.params, design.matrix = "normal"
+, make.from = "deltas", theta.interval = c(-10, 10), throld = 0.5, alpha = 1
+, c.params = 0,...)
+## S3 method for class 'matrix'
+make.thresholds(item.params, design.matrix = "normal"
+, make.from = "deltas", theta.interval = c(-10, 10), throld = 0.5
+, alpha = 1, c.params = 0,...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>item.params</code></td>
+<td>
+<p>The item parameters. Can either be a matrix, a CQmodel object, or a path to a ConQuest show file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>design.matrix</code></td>
+<td>
+<p>Can be "normal" or "ConQuest". Note that for a CQmodel object or ConQuest file, should be normal, NOT ConQuest.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>make.from</code></td>
+<td>
+<p>Specifies whether the item.params matrix contains threshold or delta parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item.table</code></td>
+<td>
+<p>If item.params is a CQmodel object or a path to a ConQuest show file, item.table is the name of the items table. Commonly "item" but can be any string representing the name of a table in the ConQuest show file. This identifies what variable will form the rows of the thresholds matrix. If not specified, will be the first variable mentioned in the model equation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interactions</code></td>
+<td>
+<p>If item.params is a CQmodel object or a path to a ConQuest show file, item.table is the name of the table with the interactions (if present). Commonly "item*step" but can be any string containing "*" that is the name of a table in the ConQuest show file. Should be the product of the item.table variable and the step.table variable (if present). If not specified, will be the product term of the model equation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>step.table</code></td>
+<td>
+<p>If item.params is a CQmodel object or a path to a ConQuest show file, step.table is the name of the steps table (if present). Commonly "step" but can be any string representing the name of a table in the ConQuest show file. This identifies what variable will form the columns of the thresholds matrix. If not specified, will be the second variable mentioned in the model equation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta.interval</code></td>
+<td>
+<p>If item.params is a matrix, theta.interval specifies over what interval to search for the parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>throld</code></td>
+<td>
+<p>The probability level to use for calculating the thresholds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>A vector or single value for the slope parameter or parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.params</code></td>
+<td>
+<p>A vector or single value for the guessing parameter or parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Additional parameters.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A matrix of threshold parameters.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Daniel Coulter Furr, Rebecca Freund, &amp; David Torres Irribarra
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>make.deltas</code>
+<code>itemData</code>
+<code>CQmodel</code>
+<code>wrightMap</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">fpath &lt;- system.file("extdata", package="WrightMap")
+
+# Partial credit model
+model1 &lt;- CQmodel(file.path(fpath,"ex2a.eap"), file.path(fpath,"ex2a.shw")) 
+deltas &lt;- make.deltas(model1)
+make.thresholds(deltas)
+make.thresholds(model1)
+</code></pre>
+
+
+</div>

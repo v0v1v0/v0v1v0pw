@@ -1,0 +1,73 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>nest_locations</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Nest Location Data into a column of Tibbles</h2>
+
+<h3>Description</h3>
+
+<p>Nest Location Data into a column of Tibbles
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">nest_locations(
+  .,
+  key_column = "Dis No",
+  columns_to_nest = c("location_word", "lat", "lng"),
+  keep_nested_cols = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.</code></td>
+<td>
+<p>Locationized data frame (see <code>weed::split_locations</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key_column</code></td>
+<td>
+<p>Column name for Column that uniquely IDs each observation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>columns_to_nest</code></td>
+<td>
+<p>Column names for Columns to nest inside the mini-dataframes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep_nested_cols</code></td>
+<td>
+<p>Boolean to Keep the nested columns externally or not.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Data Frame with A column of data frames
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">d &lt;- tibble::tribble(
+~value,  ~location_word,                    ~Country,    ~lat,   ~lng,
+"city of new york","new york","USA",  c(40.71427, 40.6501),   c(-74.00597, -73.94958),
+"kerala", "kerala", "India",c(10.41667, 8.4855), c(76.5, 76.94924),
+"chennai municipality","chennai","India", c(13.08784, 12.98833),c(80.27847, 80.16578),
+"san francisco", "san francisco","USA", c(37.77493, 37.33939), c(-122.41942, -121.89496))
+nest_locations(d, key_column = "value")
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>anova.glm_weightit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Methods for <code>glm_weightit()</code> objects</h2>
+
+<h3>Description</h3>
+
+<p><code>anova()</code> is used to compare nested models fit with <code>glm_weightit()</code>, <code>mutinom_weightit()</code>, <code>ordinal_weightit()</code>, or <code>coxph_weightit()</code> using a Wald test that incorporates uncertainty in estimating the weights (if any).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'glm_weightit'
+anova(
+  object,
+  object2,
+  test = "Chisq",
+  method = "Wald",
+  tolerance = 1e-07,
+  vcov = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object, object2</code></td>
+<td>
+<p>an output from one of the above modeling functions. <code>object2</code> is required.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>test</code></td>
+<td>
+<p>the type of test statistic used to compare models. Currently only <code>"Chisq"</code> (the chi-square statistic) is allowed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>the kind of test used to compare models. Currently only <code>"Wald"</code> is allowed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tolerance</code></td>
+<td>
+<p>for the Wald test, the tolerance used to determine if models are symbolically nested.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vcov</code></td>
+<td>
+<p>either a string indicating the method used to compute the variance of the estimated parameters for <code>object</code>, a function used to extract the variance, or the variance matrix itself. Default is to use the variance matrix already present in <code>object</code>. If a string or function, arguments passed to <code>...</code> are supplied to the method or function. (Note: for <code>vcov()</code>, can also be supplied as <code>type</code>.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments passed to the function used for computing the parameter variance matrix, if supplied as a string or function, e.g., <code>cluster</code>, <code>R</code>, or <code>fwb.args</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>anova()</code> performs a Wald test to compare two fitted models. The models must be nested, but they don't have to be nested symbolically (i.e., the names of the coefficients of the smaller model do not have to be a subset of the names of the coefficients of the larger model). The larger model must be supplied to <code>object</code> and the smaller to <code>object2</code>. Both models must contain the same units, weights (if any), and outcomes. The variance-covariance matrix of the coefficients of the smaller model is not used.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>"anova"</code> inheriting from class <code>"data.frame"</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>glm_weightit()</code> for the page documenting <code>glm_weightit()</code>, <code>lm_weightit()</code>, <code>ordinal_weightit()</code>, <code>multinom_weightit()</code>, and <code>coxph_weightit()</code>. <code>anova.glm()</code> for model comparison of <code>glm</code> objects.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("lalonde", package = "cobalt")
+
+# Model comparison for any relationship between `treat`
+# and `re78` (not the same as testing for the ATE)
+fit1 &lt;- glm_weightit(
+  re78 ~ treat * (age + educ + race + married + nodegree +
+                    re74 + re75), data = lalonde
+)
+
+fit2 &lt;- glm_weightit(
+  re78 ~ age + educ + race + married + nodegree +
+    re74 + re75, data = lalonde
+)
+
+anova(fit1, fit2)
+
+# Using the usual maximum likelihood variance matrix
+anova(fit1, fit2, vcov = "const")
+
+# Using a bootstrapped variance matrix
+anova(fit1, fit2, vcov = "BS", R = 100)
+
+
+# Model comparison between spline model and linear
+# model; note they are nested but not symbolically
+# nested
+fit_s &lt;- glm_weightit(
+  re78 ~ splines::ns(age, df = 4), data = lalonde
+)
+
+fit_l &lt;- glm_weightit(
+  re78 ~ age, data = lalonde
+)
+
+anova(fit_s, fit_l)
+
+</code></pre>
+
+
+</div>

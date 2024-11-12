@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>data_sim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Simulate longitudinal data
+</h2>
+
+<h3>Description</h3>
+
+<p>The function generate correlated normal, Bernoulli or Poisson longitudinal data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data_sim(id, rho, phi, x, beta, x_mis, para, corstr, family, lag_level)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+
+<p>subject id
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho</code></td>
+<td>
+
+<p>with-in cluster correlation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phi</code></td>
+<td>
+
+<p>scale parameter in the variance covariance matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>covariate associated with the response.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+
+<p>coefficients associated with x.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x_mis</code></td>
+<td>
+
+<p>covariates associated with missing model.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>para</code></td>
+<td>
+
+<p>coefficients associated with x_mis.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corstr</code></td>
+<td>
+
+<p>a character string specifies the working correlation structure. The following are permitted: "independence", "exchangeable","ar1".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+
+<p>a description of the error distribution and link function to be used in the model. This is a character string naming a family function. The following are permitted: "gaussian", "binary", "poisson".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lag_level</code></td>
+<td>
+
+<p>specify how many lags of response y will affect missing probability.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Generate normal, poisson and binary longitudinal data based on the specified variance-covariance matrix.
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>simulated dataset</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prob_miss</code></td>
+<td>
+<p>missing percentage of the response y</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Cong Xu, Zheng Li and Ming Wang
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">n=500
+id=rep(1:n,each=3)
+rho=1
+phi=1
+x=cbind(1,rnorm(length(id)))
+beta=c(1,1)
+x_mis=cbind(1,rnorm(length(id)))
+para=c(1,1,1)
+data_sim(id,rho,phi,x,beta,x_mis,para,"independent","gaussian",lag_level = 1)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fillMiss</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fill-in missing hydrological values</h2>
+
+<h3>Description</h3>
+
+<p>Function to fill in missing time series data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fillMiss(dataset, block = 30, pmiss = 40, model = "trend",
+  smooth = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dataset</code></td>
+<td>
+<p>is a data frame in the format of the data frame returned by
+importDVs, with missing values indicated by NA.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>block</code></td>
+<td>
+<p>is the size of the largest block of missing data that the 
+function will fill-in.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pmiss</code></td>
+<td>
+<p>is the maximum amount of the missing data that can be missing
+in the dataset for fill-in procedure to be performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>is the type of structural time series model, see 
+StructTS.  The default value is trend.  If level is used, the results 
+of fillMiss, which by default applies a fixed-interval smoothing to 
+the time series, tsSmooth, will be very close to linear interpolation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>smooth</code></td>
+<td>
+<p>a logical that indicates whether or not to apply 
+tsSmooth to the structured time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments to be passed to plotting method (see par).</p>
+</td>
+</tr>
+</table>
+<h3>Format</h3>
+
+<p>The returned data frame has the following columns: <br></p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+Name </td>
+<td style="text-align: left;"> Type </td>
+<td style="text-align: left;"> Description </td>
+</tr>
+<tr>
+<td style="text-align: left;"> 
+staid </td>
+<td style="text-align: left;"> factor </td>
+<td style="text-align: left;"> USGS station identification number </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+val </td>
+<td style="text-align: left;"> numeric </td>
+<td style="text-align: left;"> The value of the hydrologic variable </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+dates </td>
+<td style="text-align: left;"> Date </td>
+<td style="text-align: left;"> Date of daily value </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+qualcode </td>
+<td style="text-align: left;"> factor </td>
+<td style="text-align: left;"> Qualification code
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function will check the percent of missing values and the size
+of the largest missing block of data.  By default, if less than 40 percent 
+of the data are missing and the largest block is less than 30 days, the 
+data will be filled-in by using a structural time series, StructTS 
+from the base stats  package in R (R Development Core Team, 2012).  The 
+fitted structural time series is then smoothed via a state-space model, 
+tsSmooth from the base stats package in R.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a data frame with NAs in the "val" column replaced by 
+estimated values and a plot showing observed and estimated data.  If there 
+are too many missing values, based on default or user defined limits, the
+unaltered dataset is returned as well as a message, such as "Error 
+in fillMiss(misQ05054000) : Too much missing data.  Cannot fill in missing 
+values."
+</p>
+
+
+<h3>Note</h3>
+
+<p>Many methods have been suggested for estimating missing hydrological 
+data.  However, experiments showed that the functions in the base stats 
+package  worked very well if the blocks of missing data were not long.  
+Users with larger blocks of missing data may want to explore other methods 
+including using nearby gages to estimate missing values at a streamgage.  
+Additional methods for filling in missing hydrological data are summarized 
+in Beauchamp and others (1989) and Elshorbagy and others (2000).
+</p>
+<p>To indicate which values have been replaced, the qualcode field is
+populated with 'fM' for those values that were estimated using the
+fillMiss function.
+</p>
+
+
+<h3>References</h3>
+
+<p>Beauchamp, J.J., 1989, Comparison of regression and time-series methods for
+synthesizing missing streamflow records: Water Resources Bulletin, v. 25, 
+no. 5, p. 961–975.
+</p>
+<p>Elshorbagy, A.A., Panu, U.S., Simonovic, S.P., 2000, Group-based
+estimation of missing hydrological data—I. Approach and general
+methodology: Hydrological Sciences Journal, v. 45, no. 6, p. 849–866.
+</p>
+<p>R Development Core Team, 2012, R—A language and environment for statistical
+computing: Vienna, Austria, R Foundation for Statistical Computing, [ISBN
+3-900051-07-0].  (Also available at <a href="https://www.r-project.org">https://www.r-project.org</a>.)
+</p>
+
+
+<h3>See Also</h3>
+
+<p>StructTS, tsSmooth, cleanUp
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(exampleWaterData)
+my.newdata &lt;- fillMiss(misQ05054000, block=30, pmiss=50, log="y")
+summary(misQ05054000)
+summary(my.newdata)
+# ph example
+ ## Not run: 
+pH05082500&lt;-importDVs("05082500", code="00400", stat="00008", 
+sdate="2000-01-01", edate="2011-12-31")
+plotParam(pH05082500)
+pHfilled&lt;-fillMiss(pH05082500, block=45, ylim=c(7.5,9), yaxs="i")
+ 
+## End(Not run)
+</code></pre>
+
+
+</div>

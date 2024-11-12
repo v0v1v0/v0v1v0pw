@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>white_test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>This function performs a White's Test for heteroskedasticity (White, H. (1980))</h2>
+
+<h3>Description</h3>
+
+<p>White's test is a statistical test that determines whether the variance of the residuals in a regression model is constant.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">white_test(model)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>An object of class <code>lm</code></p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The approach followed is the one detailed at Wooldridge, 2012, p. 275. The fitted values from the original model are:
+</p>
+<p style="text-align: center;"><code class="reqn">\widehat{y_i} = \widehat{\beta_0} + \widehat{\beta_1}x_{i1} + ... + \widehat{\beta_k}x_{ik}</code>
+</p>
+
+<p>Heteroscedasticity could be tested as a linear regression of the squared residuals against the fitted values:
+</p>
+<p style="text-align: center;"><code class="reqn">\widehat{u^2} = \delta_0 + \delta_1\widehat{y} + \delta_2\widehat{y^2} + error</code>
+</p>
+
+<p>The null hypothesis states that <code class="reqn">\delta_1 = \delta_2 = 0</code> (homoskedasticity). The test statistic
+is defined as:
+</p>
+<p style="text-align: center;"><code class="reqn">LM = nR^2</code>
+</p>
+
+<p>where <code class="reqn">R^2</code> is the R-squared value from the regression of <code class="reqn">u^2</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>AA list with class <code>white_test</code> containing:</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   <code>w_stat</code> </td>
+<td style="text-align: left;"> The value of the test statistic </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   </td>
+<td style="text-align: left;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>p_value</code> </td>
+<td style="text-align: left;"> The p-value of the test </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   </td>
+<td style="text-align: left;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>White, H. (1980). A Heteroskedasticity-Consistent Covariance Matrix Estimator
+and a Direct Test for Heteroskedasticity. Econometrica, 48(4), 817-838.
+</p>
+<p>Wooldridge, Jeffrey M., 1960-. (2012). Introductory econometrics : a modern approach. Mason, Ohio :
+South-Western Cengage Learning,
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>lm</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Define a dataframe with heteroscedasticity
+n &lt;- 100
+y &lt;- 1:n
+sd &lt;- runif(n, min = 0, max = 4)
+error &lt;- rnorm(n, 0, sd*y)
+X &lt;- y + error
+df &lt;- data.frame(y, X)
+# OLS model
+fit &lt;- lm(y ~ X, data = df)
+# White's test
+white_test(fit)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>revision_content</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieves MediaWiki revisions</h2>
+
+<h3>Description</h3>
+
+<p>Retrieves the content of a provided list of revisions from whichever MediaWiki instance you're
+querying. Returns as wikimarkup.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">revision_content(
+  language = NULL,
+  project = NULL,
+  domain = NULL,
+  revisions,
+  properties = c("content", "ids", "flags", "timestamp", "user", "userid", "size",
+    "sha1", "contentmodel", "comment", "parsedcomment", "tags"),
+  clean_response = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>The language code of the project you wish to query,
+if appropriate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>The project you wish to query ("wikiquote"), if appropriate.
+Should be provided in conjunction with <code>language</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>domain</code></td>
+<td>
+<p>as an alternative to a <code>language</code> and <code>project</code> combination,
+you can also provide a domain ("rationalwiki.org") to the URL constructor, allowing
+for the querying of non-Wikimedia MediaWiki instances.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>revisions</code></td>
+<td>
+<p>The revision IDs of each desired revision.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>properties</code></td>
+<td>
+<p>Properties you're trying to retrieve about that revision, should you want to;
+options include "ids" (the revision ID of the revision...which is pointless),
+"flags" (whether the revision was 'minor' or not), "timestamp" (the timestamp of the revision),
+"user" (the username of the person who made that revision), "userid"
+(the userID of the person who made the revision),
+"size" (the size, in uncompressed bytes, of the revision), "sha1" (the SHA-1 hash of
+the revision text), "contentmodel" (the content model of the page, usually "wikitext"),
+"comment" (the revision summary associated with the revision), "parsedcomment" (the same,
+but parsed, generating HTML from any wikitext in that comment), "tags" (any tags associated
+with the revision) and "flagged" (the revision's status under Flagged Revisions).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clean_response</code></td>
+<td>
+<p>whether to do some basic sanitising of the resulting data structure.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments to pass to httr's GET.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>revision_diff</code> for diffs between revisions,
+and <code>page_content</code> for the content a specific page currently has.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+#Revision content from a Wikimedia project
+wp_content &lt;- revision_content("en","wikipedia", revisions = 552373187)
+
+#Revision content from a non-Wikimedia project
+rw_content &lt;- revision_content(domain = "rationalwiki.org", revisions = 88616)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

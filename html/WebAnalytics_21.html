@@ -1,0 +1,185 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotByRate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generates a plot that compares how percentile values in a metric of interest vary as an underlying rate metric changes.  </h2>
+
+<h3>Description</h3>
+
+<p>Data is supplied as separate columns for time, data, base rate, 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotByRate(timecol, 
+      datacol, 
+      baseratecol, 
+      percentile, 
+      breaksString, 
+      baseratetimes = timecol, 
+      xlab = "Rate", 
+      ylab="Variation from overall 95th percentile", 
+      title="", 
+      baseTimeCol = NULL, 
+      baseDataCol=NULL, 
+      baseBaseRateCol = NULL, 
+      outlierPercentile=NULL) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>timecol</code></td>
+<td>
+
+<p>the timestamps for the data column 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>datacol</code></td>
+<td>
+
+<p>the data to be compared with the rate column (y axis)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>baseratecol</code></td>
+<td>
+
+<p>the underlying rate (x axis on the plot), as a list of counts (setting a dataframe column to 1 works for a web server log dataframe).  The rate is calculated over the <code>breaksString</code> interval, meaning that if you want to aggregate over a ten minute interval and report an indicative per-second rate the counts in this column must be scaled by dividing them by 600, the number of seconds in ten minutes.  
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percentile</code></td>
+<td>
+
+<p>the percentile value that the values are calculated at, the percentiles are calculated for each <code>breaksString</code> interval and converted to differences from the value of the percentile calculated over the whole period.   
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>breaksString</code></td>
+<td>
+
+<p>the time interval used for calculation of percentile values, it is supplied to the <code>cut</code> function to group the data values.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>baseratetimes</code></td>
+<td>
+
+<p>the timestamps for the base data if they are not the same as the timestamps for the data column (defaults to the data column timestamps).  The two sets of timestamps must correspond in some way and the extent to which they do not align must be accounted for in the breaks interval, for example a few seconds or minutes difference would not be an issue for an aggregation interval of an hour, but would be a problem if aggregation is being done by minute or second
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+
+<p>label for the rate metric
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+
+<p>label for the data metric
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+
+<p>the plot title	
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>baseTimeCol</code></td>
+<td>
+
+<p>Use this parameteter and the associated <code>baseDataCol</code> as an alternative time base and data to summarise the data.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>baseDataCol</code></td>
+<td>
+
+<p>Data values associated with the rate column above.  
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>baseBaseRateCol</code></td>
+<td>
+
+<p>Rate column for the prevoious two columns.   
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outlierPercentile</code></td>
+<td>
+
+<p>discard data above this percentile
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns an R base graphics plot.  This function is intended to be wrapped in a call to <code>plotSave</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Greg Hunt &lt;greg@firmansyah.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>cut</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+logFileName = logFileNamesGetLast(dataDirectory=datd, 
+  directoryNames=c(".", "."), 
+  fileNamePattern="*[.]log")[[1]]
+
+cols = logFileFieldsGetIIS(logFileName)
+
+logdf = logFileRead(logFileName, columnList=cols, 
+            logTimeZone = "", timeFormat = "")
+           
+logdf$numrequestsinthisrecord = 1
+
+plotByRate(logdf$ts, 
+      logdf$elapsed, 
+      logdf$numrequestsinthisrecord, 
+      0.95, 
+      "10 mins", 
+      xlab="request rate (10 minutes)",
+      ylab="variance from overall 95th percentile response time (milliseconds)")
+
+</code></pre>
+
+
+</div>

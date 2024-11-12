@@ -1,0 +1,75 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>logFileListRead</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Given a list of file names, read them as log files
+</h2>
+
+<h3>Description</h3>
+
+<p>This function calls logFileRead to read the individual log files.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">logFileListRead(fileNameList, readFunction=logFileRead, columnList=NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fileNameList</code></td>
+<td>
+
+<p>A list of character file names 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>readFunction</code></td>
+<td>
+
+<p>This function is called to read the file name.  
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>columnList</code></td>
+<td>
+
+<p>The columnList is a list of predefined column names.  See <code>logFileRead</code> for the list of valid values. 
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The function returns a dataframe that is the concatenation (rbind) of the read log files.  
+If the default read function is used the data frame will contain the standard column set required by the other functions in this package.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Greg Hunt &lt;greg@firmansyah.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+fileNameList = logFileNamesGetAll(dataDirectory=datd)
+
+logdf = logFileListRead(fileNameList, 
+          readFunction=logFileRead, 
+          columnList=logFileFieldsGetIIS(fileNameList[[1]]))
+</code></pre>
+
+
+</div>

@@ -1,0 +1,145 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>foldChangeArrow2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add arrow for expected Fold-Change to VolcanoPlot or MA-plot</h2>
+
+<h3>Description</h3>
+
+<p>NOTE : This function is deprecated, please use <code>foldChangeArrow</code> instead !!
+This function was made for adding an arrow indicating a fold-change to MA- or Volcano-plots. 
+When comparing mutiple concentratios of standards in benchmark-tests it may be useful to indicate the expected ratio in a pair-wise comparison.
+In case of main input as list or MArrayLM-object (as generated from limma), the colum-names of multiple pairwise comparisons can be used 
+for extracting a numeric content (supposed as concentrations in sample-names) which will be used to determine the expected ratio used for plotting. 
+Optionally the ratio used for plotting can be returned as numeric value.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">foldChangeArrow2(
+  FC,
+  useComp = 1,
+  isLin = TRUE,
+  asX = TRUE,
+  col = 1,
+  arr = c(0.005, 0.15),
+  lwd = NULL,
+  addText = c(line = -0.9, cex = 0.7, txt = "expected", loc = "toright"),
+  returnRatio = FALSE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>FC</code></td>
+<td>
+<p>(numeric, list or MArrayLM-object) main information for drawing arrow : either numeric value for fold-change/log2-ratio of object to search for colnames of statistical testing for extracting numeric part</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useComp</code></td>
+<td>
+<p>(integer) only used in case FC is list or MArrayLM-object an has multiple pairwise-comparisons</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>isLin</code></td>
+<td>
+<p>(logical) inidicate if <code>FC</code> is log2 or not</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>asX</code></td>
+<td>
+<p>(logical) indicate if arrow should be on x-axis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>(integer or character) custom color</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arr</code></td>
+<td>
+<p>(numeric, length=2) start- and end-points of arrow (as relative to entire plot)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd</code></td>
+<td>
+<p>(numeric) line-width of arrow</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addText</code></td>
+<td>
+<p>(logical or named vector) indicate if text explaining arrow should be displayed, use <code>TRUE</code> for default (on top right of plot), 
+or any combination of 'loc','line','cex','side','adj','col','text' (or 'txt') for customizing specific elements</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnRatio</code></td>
+<td>
+<p>(logical) return ratio</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The argument <code>addText</code> also allows specifying a fixed position when using <code>addText=c(loc="bottomleft")</code>, also bottomright, topleft, topright, toleft and toright may be used.
+In this case the elemts <code>side</code> and <code>adjust</code> will be redefined to accomodate the text in the corner specified. 
+</p>
+<p>Ultimately this function will be integated to the package wrGraph.
+</p>
+
+
+<h3>Value</h3>
+
+<p>plots arrow only (and explicative text), if <code>returnRatio=TRUE</code> also returns numeric value for extracted ratio
+</p>
+
+
+<h3>See Also</h3>
+
+<p>new version : <code>foldChangeArrow</code>; used with <code>MAplotW</code>, <code>VolcanoPlotW</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">plot(rnorm(20,1.5,0.1),1:20)
+#deprecated# foldChangeArrow2(FC=1.5) 
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,154 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summary.wgaim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summary and print methods for the class <code>"wgaim"</code>
+</h2>
+
+<h3>Description</h3>
+
+<p>Prints a QTL summary form the <code>"wgaim"</code> object in a presentable format
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wgaim'
+summary(object, intervalObj, LOD = TRUE, ...)
+## S3 method for class 'wgaim'
+print(x, intervalObj, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object of class <code>"wgaim"</code> (see Details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>an object of class <code>"wgaim"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intervalObj</code></td>
+<td>
+<p>a data structure of class <code>"cross"</code> or
+<code>"interval"</code> containing the genotypic data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>LOD</code></td>
+<td>
+<p>logical value. If TRUE LOD scores for QTL are calculated, defaults to <code>TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>It is important that the <code>intervalObj</code> is not missing in
+<code>summary.wgaim()</code> or <code>print.wgaim()</code> as it
+contains vital summary information about each of the QTL
+detected.
+</p>
+<p>The summary of the QTL differs depending on the method chosen
+in the <code>wgaim.asreml</code> call. If <code>method = "random"</code>
+then the significance of the QTL are summarized using a probablistic
+argument based on the conditional distribution of the QTL sizes given
+the data (see Verbyla et. al, 2012 in References) Thus, for each
+QTL, a value is calculated that represents the probability that the
+QTL size is greater than zero (or less than zero if the effect is
+negative). If <code>method = "fixed"</code> then the significance of the QTL is
+summarized using a one degree of freedom Wald statistic.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A summary of the QTL component of the <code>"wgaim"</code> object is
+printed to the screen. For each QTL detected, if an <code>"interval"</code>
+analysis was performed then <code>summary.wgaim()</code> prints which
+chromosome, name and distance of each flanking marker, size,
+probability/p-value, contribution of genetic variance and LOD
+score if desired. If a <code>"marker"</code> analysis was performed then the
+chromosome, name and distance of the associated marker, size,
+probability/p-value, contribution of genetic variance
+and LOD score are printed. <code>print.wgaim()</code> provides a narrative
+brief of the QTL detected.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Julian Taylor and Ari Verbyla</p>
+
+
+<h3>References</h3>
+
+<p>Verbyla, A. P &amp; Taylor, J. D, Verbyla, K. L (2012). RWGAIM: An efficient high
+dimensional random whole genome average (QTL) interval mapping approach.
+<em>Genetics Research</em>. <b>94</b>, 291-306.
+</p>
+<p>Julian Taylor, Arunas Vebyla (2011). R Package wgaim: QTL Analysis in
+Bi-Parental Populations Using Linear Mixed Models. <em>Journal of
+Statistical Software</em>, <b>40</b>(7), 1-18. URL <a href="https://www.jstatsoft.org/v40/i07/">https://www.jstatsoft.org/v40/i07/</a>.
+</p>
+<p>Verbyla, A. P., Cullis, B. R., Thompson, R (2007) The analysis of QTL
+by simultaneous use of the full linkage map. <em>Theoretical and
+Applied Genetics</em>, <b>116</b>, 195-211.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wgaim.asreml</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+# read in data
+
+data(phenoRxK, package = "wgaim")
+data(genoRxK, package = "wgaim")
+
+# subset linkage map and convert to "interval" object
+
+genoRxK &lt;- subset(genoRxK, chr = c("1A", "2D1", "2D2", "3B"))
+genoRxK &lt;- cross2int(genoRxK, impute = "Martinez", id = "Genotype")
+
+# base model
+
+rkyld.asf &lt;- asreml(yld ~ lrow, random = ~ Genotype + Range,
+                   residual = ~ ar1(Range):ar1(Row), data = phenoRxK)
+
+# find QTL
+
+rkyld.qtl &lt;- wgaim(rkyld.asf, intervalObj = genoRxK, merge.by = "Genotype",
+                   trace = "trace.txt", na.action = na.method(x = "include"))
+
+# summarise
+
+print(rkyld.qtl, genoRxK)
+summary(rkyld.qtl, genoRxK)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

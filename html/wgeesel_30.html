@@ -1,0 +1,277 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wgee</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Fit Weighted Generalized Estimating Equations (WGEE)
+</h2>
+
+<h3>Description</h3>
+
+<p><code>wgee</code> fits weighted generalized estimating equations (WGEE) with Newton Raphson algorithm. <code>wgee</code> has a syntax similar to <code>glm</code> and returns an object similar to a <code>glm</code> object. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wgee(model, data, id, family, corstr, scale = NULL, mismodel = NULL, maxit=200, tol=0.001)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+
+<p>an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a data frame containing the variables in the model.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+
+<p>a vector which identifies the clusters. The length of "id" should be the same as
+the number of observations. Data are assumed to be sorted so that observations
+on a cluster are contiguous rows for all entities in the formula. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+
+<p>a description of the error distribution and link function to be used in the model. This is a character string naming a family function. The following are permitted: "gaussian", "binomial", "poisson".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corstr</code></td>
+<td>
+
+<p>a character string specifies the working correlation structure. The following are permitted:
+"independence", "exchangeable", "ar1","unstructured".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+
+<p>a numeric variable giving the value to which the scale parameter should be fixed; if NA, the scale parameter is not fixed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mismodel</code></td>
+<td>
+
+<p>an object of class "formula" (or one that can be coerced to that class): a symbolic description of the missingness model to be fitted. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxit</code></td>
+<td>
+
+<p>maximum iteration number for Newton-Raphson algorithm.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+
+<p>the tolorance for the Newton-Raphson algorithm to converge.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>wgee</code> analyzes longitudinal data with missing values by weighted genralized estimating equations (WGEE), proposed by Robins, Totnizky and Zhao (1995). WGEE can handle missing at random problem. The standard error of the estimates are calculated as described in (Fitzmaurice, Laird, and Ware, 2011) and Preisser, Lohman, and Rathouz (2002).
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p> covariate effect estimates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var</code></td>
+<td>
+<p> variance covariances estimates for beta</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w_r_square</code></td>
+<td>
+<p> weighted R square for continuous data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mu_fit</code></td>
+<td>
+<p> fitted values of response</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>scale estimates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho</code></td>
+<td>
+<p>rho estimates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight</code></td>
+<td>
+<p>The weight of response y</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>WGEE model structure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>covariates in WGEE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>response in WGEE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mis_fit</code></td>
+<td>
+<p>esimates of the missingness model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>the function to be called</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>as input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>as input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>as input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corstr</code></td>
+<td>
+<p>as input</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Zheng Li, Cong Xu and Ming Wang
+</p>
+
+
+<h3>References</h3>
+
+<p>Fitzmaurice, G.M., Laird, N.M. and Ware, J.H., 2012. <em>Applied longitudinal analysis (Vol. 998)</em>. John Wiley &amp; Sons.
+</p>
+<p>Liang, K.Y. and Zeger, S.L., 1986. Longitudinal data analysis using generalized linear models. <em>Biometrika</em>, pp.13-22.
+</p>
+<p>Preisser, J.S., Lohman, K.K. and Rathouz, P.J., 2002. Performance of weighted estimating equations for longitudinal binary data with drop-outs missing at random. <em>Statistics in medicine</em>, 21(20), pp.3035-3054.
+</p>
+<p>Robins, J.M., Rotnitzky, A. and Zhao, L.P., 1995. Analysis of semiparametric regression models for repeated outcomes in the presence of missing data. <em>Journal of the American Statistical Association</em>, 90(429), pp.106-121.
+</p>
+<p>Rubin, D.B., 1976. Inference and missing data. <em>Biometrika</em>, pp.581-592.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>geeglm</code> (<span class="pkg">geepack</span>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">####Example1
+data(imps)
+
+fit &lt;- wgee(IMPS79 ~ Drug+Sex+Time, data=imps, id=imps$ID, family="gaussian",
+            corstr="exchangeable", scale=NULL, mismodel= R ~ Drug+Time)
+
+#####Example2
+data(seizure)
+
+###reshapre the seizure data to "long" format
+seiz.long &lt;- reshape(seizure,
+                     varying=list(c("base","y1", "y2", "y3", "y4")),
+                     v.names="y", times=0:4, direction="long")
+seiz.long &lt;- seiz.long[order(seiz.long$id, seiz.long$time),]
+
+###create missing value for seiz.long dataset
+set.seed(12345)
+obs &lt;- exp(9+seiz.long$age*(-0.2))/(1+exp(9+seiz.long$age*(-0.2)))
+R &lt;- lapply(unique(seiz.long$id),function(x){
+  idx=which(seiz.long$id==x)
+  r=c()
+  r[1]=1
+  for(j in 2:length(idx)){
+    if(r[j-1]==1){
+      r[j]=rbinom(1,1,obs[idx[j]])
+    }
+    else r[j]=0
+  }
+  return(r)
+})
+remove_id &lt;- which(sapply(R,sum)==1)
+remove_idx &lt;- which(seiz.long$id %in% remove_id==1)
+seiz.long &lt;- cbind(seiz.long,R=unlist(R))[-remove_idx,]
+seiz.long$y_mis &lt;- ifelse(seiz.long$R,seiz.long$y,NA)
+
+###fit WGEE, not run ###
+fit &lt;- wgee(y_mis ~ age + trt + time, data=seiz.long, id=seiz.long$id,family="poisson",
+            corstr="exchangeable",scale=NULL, mismodel= R ~ age)
+
+</code></pre>
+
+
+</div>

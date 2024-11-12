@@ -1,0 +1,141 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>optparse_parameters</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>optparse_parameters - parse easily the command line parameters</h2>
+
+<h3>Description</h3>
+
+<p>This function is made to be used with the functions optparse_flag,
+optparse_numeric, optparse_integer, optparse_character and/or
+optparse_list
+</p>
+<p><code>optparse_parameters</code> parses arguments based on its parameters.
+</p>
+<p>You just have to call <code>optparse_parameters</code> with named arguments.
+Each parameter is the result of either optparse_flag, optparse_numeric,
+optparse_integer, optparse_character or optparse_list
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">optparse_parameters(
+  fix_hyphens = TRUE,
+  fix_dots = TRUE,
+  add_trailing_hyphens = TRUE,
+  args = NULL,
+  no_optparse = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fix_hyphens</code></td>
+<td>
+<p>logical - whether to turn underscores into hyphens or not</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fix_dots</code></td>
+<td>
+<p>logical - whether to turn points into hyphens or not</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add_trailing_hyphens</code></td>
+<td>
+<p>logical - whether to add trailing hyphens
+if missing</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>args</code></td>
+<td>
+<p><code>list</code> - The parameters from the <code>commandArgs</code> function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>no_optparse</code></td>
+<td>
+<p>logical - INTERNAL Tells whether to use optparse library or not</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>parameters definition. Must be the result of either those functions:
+</p>
+
+<ul>
+<li>
+<p> optparse_flag
+</p>
+</li>
+<li>
+<p> optparse_numeric
+</p>
+</li>
+<li>
+<p> optparse_integer
+</p>
+</li>
+<li>
+<p> optparse_character
+</p>
+</li>
+<li>
+<p> optparse_list
+</p>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>L.Pavot
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+args &lt;- optparse_parameters(
+  a_integer = optparse_integer(),
+  a_float = optparse_numeric(),
+  a_boolean = optparse_flag(),
+  a_character = optparse_character(),
+  a_list = optparse_list(of = "numeric"),
+  a_char_list = optparse_list(of = "character"),
+  a_int_list = optparse_list(of = "integer"),
+  args = list(
+    "--a-integer",
+    "42",
+    "--a-float",
+    "3.14",
+    "--a-boolean",
+    "FALSE",
+    "--a-character",
+    "FALSE",
+    "--a-list",
+    "1.5,2,3",
+    "--a-char-list",
+    "1.5,2,3",
+    "--a-int-list",
+    "1.5,2,3"
+  )
+)
+
+str(args)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,152 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WRrec</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generalized win ratio tests</h2>
+
+<h3>Description</h3>
+
+<p>Perform stratified two-sample test of possibly recurrent nonfatal
+event and death using the recommended last-event assisted win ratio (LWR), and/or
+naive win ratio (NWR) and first-event assisted win ratio (FWR) (Mao et al., 2022).
+The LWR and FWR reduce to the standard win ratio of Pocock et al. (2012).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WRrec(ID, time, status, trt, strata = NULL, naive = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ID</code></td>
+<td>
+<p>A vector of unique patient identifiers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>A numeric vector of event times.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>A vector of event type variable; 2 = recurrent event, 1 = death,
+and 0 = censoring.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trt</code></td>
+<td>
+<p>A vector of binary treatment indicators.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strata</code></td>
+<td>
+<p>A vector of categorical variable for strata; Default is NULL,
+which leads to unstratified analysis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>naive</code></td>
+<td>
+<p>If TRUE, results for NWR and FWR will be provided in addition
+to LWR; Default is FALSE, which gives LWR only.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class <code>WRrec</code>, which contains the following
+elements.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>A bivariate vector of win/loss fractions by LWR.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log.WR, se</code></td>
+<td>
+<p>Log-win ratio estimate and its standard error by LWR.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pval</code></td>
+<td>
+<p><code class="reqn">p</code>-value by the LWR test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta.naive</code></td>
+<td>
+<p>A bivariate vector of win/loss fractions by NWR.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log.WR.naive, se.naive</code></td>
+<td>
+<p>Log-win ratio estimate and its standard error by NWR.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta.FI</code></td>
+<td>
+<p>A bivariate vector of win/loss fractions by FWR.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log.WR.FI, se.FI</code></td>
+<td>
+<p>Log-win ratio estimate and its standard error by FWR.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Mao, L., Kim, K. and Li, Y. (2022). On recurrent-event win ratio.
+Statistical Methods in Medical Research, under review.
+</p>
+<p>Pocock, S., Ariti, C., Collier, T., and Wang, D. (2012). The win ratio: a new approach
+to the analysis of composite endpoints in clinical trials based on clinical priorities.
+European Heart Journal, 33, 176–182.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>print.WRrec</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## load the HF-ACTION trial data
+library(WR)
+head(hfaction_cpx9)
+dat&lt;-hfaction_cpx9
+## Comparing exercise training to usual care by LWR, FWR, and NWR
+obj&lt;-WRrec(ID=dat$patid,time=dat$time,status=dat$status,
+          trt=dat$trt_ab,strata=dat$age60,naive=TRUE)
+## print the results
+obj
+</code></pre>
+
+
+</div>

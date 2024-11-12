@@ -1,0 +1,249 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>SwitchProfile</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Helper function for ex-post wind direction dependence analysis</h2>
+
+<h3>Description</h3>
+
+<p>This function helps with analzing an already computed turbine setup. As <code>Profit</code> (together with an optimizer) finds an optimal setup given actual wind speeds in that area, the question arises whether that setup is 'robust' against changing wind directions. If for a given setup, there is no or only little wake dependence (analyze e.g. with <code>ShowWakePenalizers</code>), this may change if wind direction changes. Given a different wind direction, a situation may come up at which there is an upwind turbine and a local set of, say, two, three, or even more downwind turbines. As these downwind turbines are in the wake of the upwind turbines ('receiving' only reduced wind speeds), it may be beneficial to shut down the upwind turbine in order to have the downwind turbine receive full wind, thus possibly generating greater profit.<br><br><code>SwitchProfile</code> expects a 'bit' pattern of turbines (so-called 'profiles') at which '1' means that a turbine is to be used, while '0' means, the turbine is to be shut down. For a total of four tubines in a setup, profile <code>c(1, 1, 1, 1)</code> means that all turbines are used, while profile <code>c(1, 0, 0, 1)</code> means that turbines 1 and 4 are used, turbines 2 and 3 are to be shut down. If a wind farm is 'robust' against wind direction changes, it should return profiles of all ones for all wind directions.<br><br>
+In the examples we show a short code sample that uses <code>SwitchProfile</code> to loop through 360 integer wind direction degrees and optimizes actual profiles. It is up to the researcher to use alternative optimizers in order to find (possibly) better profiles.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">SwitchProfile(On, Result)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>On</code></td>
+<td>
+
+<p>must be a numeric vector of length <code>n</code>, where <code>n</code> is the number of turbines in a setup.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Result</code></td>
+<td>
+
+<p>the actual setup as an optimizer result. Must be a list that contains the turbine locations is a slot "$par". For example, use <code>Result = list(par = e$FarmVars$BenchmarkSolution)</code>, see <code>FarmVars</code> for details.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For compatibility with non-integer solution optimizers, <code>SwitchProfile</code> expects not only values equal to 0 or 1, but will assume that values below 0.5 are meant to be 0, and values &gt;= 0.5 are coerced to 1.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>SwitchProfile</code> returns a single number. The result is the negative profit for the profile given. The result can be optimized in order to find the maximum profit profile, which should be identical to a profile of all ones if the setup is robust against wind direction changes.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Carsten Croonenbroeck
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Use <code>Profit</code> for the target function used internally.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">Result &lt;- list(par = e$FarmVars$BenchmarkSolution)
+
+Profile1 &lt;- rep(1, times = 20)
+
+#Will be identical to Profit(Result$par):
+SwitchProfile(Profile1, Result)
+
+Profile2 &lt;- Profile1
+Profile2[8] &lt;- 0 #Disable turbine 8.
+
+#Returns farm profit if turbine 8 is off:
+SwitchProfile(Profile2, Result)
+
+##########################################
+
+#Warning, this will overwrite e$FarmData. If not dispensable,
+#backup before use.
+#Computation may be slow.
+
+## Not run: 
+Result &lt;- list(par = e$FarmVars$BenchmarkSolution)
+e$FarmData &lt;- FarmData
+
+n &lt;- length(e$FarmVars$BenchmarkSolution) / 2
+
+Profiles &lt;- matrix(ncol = n, nrow = 360)
+Dom &lt;- cbind(rep(0, n), rep(1, n))
+
+for (j in 1:360)
+{
+	e$FarmData$WindDirection &lt;- matrix(data = j, ncol = e$FarmVars$Width,
+	  nrow = e$FarmVars$Width)
+	message(paste("Processing wind direction: ", j, " degrees.", sep = ""))
+	flush.console()
+
+	Result &lt;- rgenoud::genoud(fn = SwitchProfile, nvars = n, starting.values = runif(n),
+	  Domains = Dom, boundary.enforcement = 2, MemoryMatrix = FALSE, print.level = 0,
+	  Result = Result)
+	On &lt;- Result$par
+	On[On &lt; 0.5] &lt;- 0
+	On[On &gt;= 0.5] &lt;- 1
+	Profiles[j, ] &lt;- On
+}
+
+#Now 'Profiles' is a matrix of 360 rows (degrees) and n columns.
+#If the setup is robust against wind direction changes, all values
+#in the columns should be ones. If there are zeros left, double
+#check these profiles (compare to full turbines setup) manually,
+#e.g. using
+
+for (i in 1:nrow(Profiles))
+{
+	if (any(Profiles[i, ] == 0))
+	{
+		e$FarmData$WindDirection &lt;- matrix(data = i,
+    ncol = e$FarmVars$Width, nrow = e$FarmVars$Width)
+
+		print(paste("Is unrestricted profit (",
+    abs(Profit(e$FarmVars$BenchmarkSolution)), ") still
+    greater than 'profile profit' (",
+    abs(SwitchProfile(Profiles[i, ], Result)), ")? ",
+    abs(Profit(e$FarmVars$BenchmarkSolution)) &gt;=
+    abs(SwitchProfile(Profiles[i, ], Result)), ".", sep = ""))
+	}
+}
+
+#Is absolute profile profit actually greater than the absolute value
+#function Profit() returns? If yes, then it is beneficial to turn off
+#turbines (use profiles) if wind comes from the given angle.
+
+## End(Not run)
+
+##########################################
+
+#As an alternative to using an optimizer to find the optimal profile,
+#all possible profiles can be 'looped through' deterministically using
+#the following few lines of code.
+
+#Warning, this will overwrite e$FarmData. If not dispensable,
+#backup before use.
+
+#Be advised, computation may be very slow, even if run on modern
+#machines and even though using parallelization.
+
+## Not run: 
+Result &lt;- list(par = e$FarmVars$BenchmarkSolution)
+e$FarmData &lt;- FarmData
+
+ComputeProfile &lt;- function(i)
+{
+	e$FarmData$WindDirection &lt;- matrix(data = i, ncol = e$FarmVars$Width,
+	  nrow = e$FarmVars$Width)
+
+	BestProfit &lt;- n * e$FarmVars$UnitCost
+	BestProfile &lt;- rep(0, n)
+	for (j in 0:MaxNum)
+	{
+		ThisProfile &lt;- as.numeric(rev(intToBits(j)))[(32 - (n - 1)):32]
+		if (length(which(ThisProfile == 1)) &gt; 1)
+		{
+			ThisProfit &lt;- SwitchProfile(ThisProfile, Result)
+		} else
+		{
+			ThisProfit &lt;- n * e$FarmVars$UnitCost
+		}
+
+		if (ThisProfit &lt; BestProfit)
+		{
+			BestProfit &lt;- ThisProfit
+			BestProfile &lt;- ThisProfile
+		}
+	}
+	return(BestProfile)
+}
+
+n &lt;- length(e$FarmVars$BenchmarkSolution) / 2
+MaxNum &lt;- (2 ^ n) - 1
+
+NumCores &lt;- parallel::detectCores() - 1
+cl &lt;- snow::makeCluster(NumCores)
+
+ParallelProfile &lt;- new.env()
+ParallelProfile$FarmVars &lt;- e$FarmVars
+ParallelProfile$FarmData &lt;- e$FarmData
+
+snow::clusterExport(cl, list = ls())
+snow::clusterExport(cl, list = ls(envir = as.environment("package:wflo")))
+
+doSNOW::registerDoSNOW(cl)
+
+iterations &lt;- 360
+pb &lt;- txtProgressBar(max = iterations, style = 3)
+progress &lt;- function(n) setTxtProgressBar(pb, n)
+opts &lt;- list(progress = progress)
+`%dopar%` &lt;- foreach::`%dopar%`
+AllProfiles &lt;- foreach::foreach(i = 1:iterations,
+  .options.snow = opts) %dopar% ComputeProfile(i)
+
+close(pb)
+snow::stopCluster(cl)
+
+## End(Not run)
+
+#Afterward, check the resulting list of profiles for remaining zeros as above.
+
+##########################################
+
+#Thinking the thought of wind direction dependent layouts further,
+#Profit() can be used to optimize a farm setup that takes all wind
+#direction wake patterns into account during the optimization
+#stage already.
+
+#Warning, this will overwrite \code{e$FarmData}. If not dispensable,
+#backup before use.
+#Computation may be slow.
+
+## Not run: 
+e$FarmData &lt;- FarmData
+
+SumProfit &lt;- function(X)
+{
+	MySum &lt;- as.numeric()
+	for (i in 1:360)
+	{
+		e$FarmData$WindDirection &lt;- matrix(data = i, ncol = e$FarmVars$Width,
+		  nrow = e$FarmVars$Width)
+		MySum[i] &lt;- Profit(X)
+	}
+	MySum &lt;- sum(MySum)
+	return(MySum)
+}
+
+n &lt;- 20
+Dom &lt;- cbind(rep(0, 2 * n), rep(1, 2 * n))
+Result &lt;- rgenoud::genoud(fn = SumProfit, nvars = 2 * n, starting.values = runif(2 * n),
+  Domains = Dom, boundary.enforcement = 2, MemoryMatrix = FALSE, print.level = 1)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

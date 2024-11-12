@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>estimation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Parameters estimation of a time series.</h2>
+
+<h3>Description</h3>
+
+<p>Estimates the parameters of a time series for given orders <code>p</code> and <code>q</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">estimation(p = NULL, q = NULL, y, meanparam = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>Order of AR, if <code>NULL</code>, MA is computed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>Order of MA, if <code>NULL</code>, AR is computed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Univariate time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meanparam</code></td>
+<td>
+<p>Logical argument if the mean parameter has to be computed or not. If FALSE <code class="reqn">\mu</code> is not computed.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function uses the algorithm BFGS in the function optim to minimize our objective function <code>meansq</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List of estimate coefficients:
+</p>
+
+<dl>
+<dt><code>mu</code></dt>
+<dd>
+<p>Mean parameter</p>
+</dd>
+</dl>
+<p>.
+</p>
+<dl>
+<dt><code>ar</code></dt>
+<dd>
+<p>Vector of AR coefficients with length is equal to <code>p</code>.</p>
+</dd>
+<dt><code>ma</code></dt>
+<dd>
+<p>Vector of MA coefficients with length is equal to <code>q</code>.</p>
+</dd>
+<dt><code>sigma.carre</code></dt>
+<dd>
+<p>Mean square residuals.</p>
+</dd>
+</dl>
+<h3>References</h3>
+
+<p>Francq, C. and Zakoïan, J. 1998, Estimating linear representations of nonlinear processes
+<em>Journal of Statistical Planning and Inference</em>, vol. 68, no. 1, pp. 145-165.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">y&lt;-sim.ARMA(1000,ar = c(0.9,-0.3), ma = 0.2, method = "product")
+estimation(p = 2, q = 1, y = y)
+
+estimation(p = 1, q = 1, y = CAC40return.sq, meanparam = TRUE)
+
+</code></pre>
+
+
+</div>

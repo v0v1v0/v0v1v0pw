@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>FindVars</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find numeric index and names of columns based on patterns</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#superseded"><img src="../help/figures/lifecycle-superseded.svg" alt="[Superseded]"></a>
+</p>
+<p>Function ColSeeker extends this by adding class-checks.
+</p>
+<p><code>FindVars</code> looks up colnames (by default for data-frame rawdata)
+based on parts of names, using regular expressions. Be warned that
+special characters as e.g. <code>[</code> <code>(</code> need to be escaped or replaced by <code>.</code>
+Exclusion rules may be specified as well.
+New function <code>ColSeeker()</code> extends this by adding class-checks.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">FindVars(
+  varnames,
+  allnames = colnames(rawdata),
+  exact = FALSE,
+  exclude = NA,
+  casesensitive = TRUE,
+  fixed = FALSE,
+  return_symbols = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>varnames</code></td>
+<td>
+<p>Vector of pattern to look for.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allnames</code></td>
+<td>
+<p>Vector of values to detect pattern in; by default: colnames(rawdata).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exact</code></td>
+<td>
+<p>Partial matching or exact only (adding ^ and $)?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclude</code></td>
+<td>
+<p>Vector of pattern to exclude from found names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>casesensitive</code></td>
+<td>
+<p>Logical if case is respected in matching (default FALSE: a&lt;&gt;A)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixed</code></td>
+<td>
+<p>Logical, match as is, argument is passed to <code>grep()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_symbols</code></td>
+<td>
+<p>Should names be reported as symbols additionally? (Default FALSE)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with index, names, backticked names, and symbols
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">FindVars(varnames = c("^c", "g"), allnames = colnames(mtcars))
+FindVars(varnames = c("^c", "g"), allnames = colnames(mtcars), exclude = "r")
+</code></pre>
+
+
+</div>

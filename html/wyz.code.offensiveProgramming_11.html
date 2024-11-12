@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getObjectClassKind</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Get <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> object class kind
+</h2>
+
+<h3>Description</h3>
+
+<p>Get the class kind of an <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> object as a string.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getObjectClassKind(object_o_1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>object_o_1</code></td>
+<td>
+<p> the <em><code>object</code></em> to analyze. See
+<b><em><code>is.object</code></em></b>.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A single <em><code>character</code></em> value, taken in set <em><code>"S3"</code></em>,
+<em><code>"S4"</code></em>,
+<em><code>"RC"</code></em>, <em><code>"R6"</code></em>, <em><code>"environment"</code></em>,
+<em><code>"unknown"</code></em>.
+</p>
+<p>When provided <em><code>object_</code></em> is not an <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> object, then value
+<em><code>NA_character_</code></em> is returned.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+<p>Maintainer: Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##---- typical case ----
+getObjectClassKind(new.env())
+# [1] NA
+
+myrc &lt;- setRefClass("RC",
+  fields = list(x = "numeric"),
+  methods = list(
+    initialize = function(x = 1) .self$x &lt;- x,
+    getx = function() x,
+    inc = function(n = 1) x &lt;&lt;- x + n
+  )
+)
+
+getObjectClassKind(myrc$new())
+# [1] RC
+
+myr6 &lt;- R6::R6Class("R6",
+  public = list(
+    x = NULL,
+    initialize = function(x = 1) self$x &lt;- x,
+    getx = function() self$x,
+    inc = function(n = 1) self$x &lt;- x + n
+  )
+)
+
+getObjectClassKind(myr6$new())
+# [1] R6
+
+</code></pre>
+
+
+</div>

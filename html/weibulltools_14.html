@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dist_delay_register</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Parameter Estimation of the Delay in Registration Distribution</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#soft-deprecated"><img src="../help/figures/lifecycle-soft-deprecated.svg" alt="[Soft-deprecated]"></a>
+</p>
+<p><code>dist_delay_register()</code> is no longer under active development, switching to
+dist_delay is recommended.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dist_delay_register(date_prod, date_register, distribution = "lognormal")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>date_prod</code></td>
+<td>
+<p>A vector of class <code>character</code> or <code>Date</code>, in the
+format "yyyy-mm-dd", indicating the date of production of a unit.
+Use <code>NA</code> for missing elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date_register</code></td>
+<td>
+<p>A vector of class <code>character</code> or <code>Date</code>, in
+the format "yyyy-mm-dd", indicating the date of registration of a unit.
+Use <code>NA</code> for missing elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the random variable. Only
+<code>"lognormal"</code>is implemented.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function introduces a delay random variable by calculating the time
+difference between the registration and production date for the sample units
+and afterwards estimates the parameter(s) of a supposed distribution,
+using maximum likelihood.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A named vector of estimated parameters for the specified
+distribution.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">date_of_production   &lt;- c("2014-07-28", "2014-02-17", "2014-07-14",
+                          "2014-06-26", "2014-03-10", "2014-05-14",
+                          "2014-05-06", "2014-03-07", "2014-03-09",
+                          "2014-04-13", "2014-05-20", "2014-07-07",
+                          "2014-01-27", "2014-01-30", "2014-03-17",
+                          "2014-02-09", "2014-04-14", "2014-04-20",
+                          "2014-03-13", "2014-02-23", "2014-04-03",
+                          "2014-01-08", "2014-01-08")
+date_of_registration &lt;- c(NA, "2014-03-29", "2014-12-06", "2014-09-09",
+                          NA, NA, "2014-06-16", NA, "2014-05-23",
+                          "2014-05-09", "2014-05-31", NA, "2014-04-13",
+                          NA, NA, "2014-03-12", NA, "2014-06-02",
+                          NA, "2014-03-21", "2014-06-19", NA, NA)
+
+params_delay_regist  &lt;- dist_delay_register(
+  date_prod = date_of_production,
+  date_register = date_of_registration,
+  distribution = "lognormal"
+)
+
+</code></pre>
+
+
+</div>

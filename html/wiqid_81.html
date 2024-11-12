@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotComb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Display a posterior probability distribution from the comb method
+</h2>
+
+<h3>Description</h3>
+
+<p>Plot the posterior probability distribution for a single parameter calculated using the comb method described by Kruschke (2015).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotComb(x, y, credMass = 0.95, plot = TRUE, showMode = FALSE, shadeHDI = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>A vector of equally-spaced possible values for the parameter. The range should cover all values of the parameter with non-negligible probability. (To restrict the range displayed in the plot, use <code>xlim</code>.)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>A vector of probabilities corresponding to the values in <code>x</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>credMass</code></td>
+<td>
+
+<p>the probability mass to include in credible intervals; set to NULL to suppress plotting of credible intervals.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+
+<p>logical: if TRUE, the posterior is plotted.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>showMode</code></td>
+<td>
+
+<p>logical: if TRUE, the mode is displayed instead of the mean.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shadeHDI</code></td>
+<td>
+
+<p>specifies a colour to shade the area under the curve corresponding to the HDI; NULL for no shading. Use<code>colours()</code> to see a list of possible colours.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>additional graphical parameters.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function calculates the Highest Density Interval (HDI). A multi-modal distribution may have a disjoint HDI, in which case the ends of each segment are calculated. No interpolation is done, and the end points correspond to values of the parameter in <code>x</code>; precision will be determined by the resolution of <code>x</code>.
+</p>
+<p>If <code>plot = TRUE</code>, the probability density is plotted together with either the mean or the mode and the HDI.
+</p>
+<p><img src="../help/figures/plotPost2.jpg" alt="plotPost2.jpg"></p>
+
+
+<h3>Value</h3>
+
+<p>Returns a matrix with the upper and lower limits of the HDI. If the HDI is disjoint, this matrix will have more than 1 row. It has attributes <code>credMass</code> and <code>height</code>, giving the height of the probability curve corresponding to the ends of the HDI.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith
+</p>
+
+
+<h3>See Also</h3>
+
+<p>For details of the HDI calculation, see <code>hdi</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Generate some data:
+N &lt;- 0:100
+post &lt;- dpois(N, 25)
+# Do the plots:
+plotComb(N, post)
+plotComb(N, post, showMode=TRUE, shadeHDI='pink', xlim=c(10, 50))
+
+# A bimodal distribution:
+post2 &lt;- (dnorm(N, 28, 8) + dnorm(N, 70, 11)) / 2
+plotComb(N, post2, credMass=0.99, shade='pink')
+plotComb(N, post2, credMass=0.80, shade='grey')
+
+</code></pre>
+
+
+</div>

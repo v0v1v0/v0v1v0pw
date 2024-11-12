@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WFO.acceptable.match</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check for fuzzy matches that can be acceptable based on gender notations</h2>
+
+<h3>Description</h3>
+
+<p>The function checks whether submitted and match names only differ by ending by -um, -us or -a. An extra check is done to accept differences that result from having 'ii' instead of 'i' in the submitted and matched name. An optional check ignores differences in vowels.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+    WFO.acceptable.match(x, spec.name="spec.name",
+      no.vowels=FALSE)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> Output for <code>WFO.match</code>, <code>WFO.match.fuzzyjoin</code> or <code>WFO.match.one</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spec.name</code></td>
+<td>
+<p> Name of taxon submitted for matching.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>no.vowels</code></td>
+<td>
+<p> Accept results if only vowels differ between submitted and matched name. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function was initially developed to check for changes in gender notations.
+</p>
+<p>In new versions, also the following differences in species names are judged to be acceptable:
+</p>
+<p>- hybrid and non-hybrid names (eg, Sorbus avonensis - Sorbus xavonensis)
+</p>
+<p>- i vs. j (eg, Syzygium naiadum - Syzygium najadum)
+</p>
+<p>- tt vs. t (eg, Ficus scott-elliottii - Ficus scott-elliotii)
+</p>
+<p>- ll vs. l (eg, Garcinia moseleyana - Garcinia moselleyana)
+</p>
+<p>- rr vs. r (eg, Hymenodictyon perrieri - Hymenodictyon perieri)
+</p>
+<p>- mm vs. m (eg, Monteverdia schummaniana - Monteverdia schumanniana)
+</p>
+<p>- nn vs. n (eg, Pyrus tamamschiannae - Pyrus tamamschianae)
+</p>
+<p>- ff vs. f (eg, Dendropanax langsdorfii - Dendropanax langsdorffii)
+</p>
+<p>- hh vs. h (eg, Gmelina leichardtii - Gmelina leichhardtii)
+</p>
+<p>- dd vs. d (eg, Miconia buddlejoides - Miconia budlejoides)
+</p>
+<p>- is vs. e (eg, Decarydendron ranomafanensis - Decarydendron ranomafanense)
+</p>
+<p>- dt vs. d (eg, Stadtmannia acuminata - Stadmania acuminata)
+</p>
+
+
+<h3>Value</h3>
+
+<p>The function returns a logical vector that indicates whether names could be acceptable.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Roeland Kindt (World Agroforestry)</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+
+data(WFO.example)
+
+spec.test &lt;- data.frame(spec.name=c("Faidherbia albida", "Acacia albida",
+  "Faidherbia albidum", "Faidherbia albidus",
+  "Faidherbia albiida",
+  "Prunus africanus", "Prunos africanea",
+  "Prunus afrocaneus", "Prunus afrocaneos"))
+
+match1 &lt;- WFO.match.fuzzyjoin(spec.data=spec.test, WFO.data=WFO.example,
+  fuzzydist.max = 6)
+match1[, c("spec.name", "scientificName")]
+
+# check for gender differences (and ii - i)
+WFO.acceptable.match(match1)
+
+# ignore differences in vowels
+WFO.acceptable.match(match1, no.vowels=TRUE)
+
+accepted.cases &lt;- WFO.acceptable.match(match1, no.vowels=TRUE)
+match1.accepted &lt;- match1[accepted.cases == TRUE, ]
+match1.notaccepted &lt;- match1[accepted.cases == FALSE, ]
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

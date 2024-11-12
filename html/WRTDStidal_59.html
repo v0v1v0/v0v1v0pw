@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>resnorm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get salinity/flow normalized WRTDS predictions from interpolation grids</h2>
+
+<h3>Description</h3>
+
+<p>Get normalized model predictions from WRTDS to remove the effect of salinity/flow on the response variable.  Predicted values in the interpolation grids are averaged across dates.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">resnorm(dat_in, ...)
+
+## S3 method for class 'tidal'
+resnorm(dat_in, trace = TRUE, ...)
+
+## S3 method for class 'tidalmean'
+resnorm(dat_in, trace = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input tidal or tidalmean object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to or from other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trace</code></td>
+<td>
+<p>logical indicating if progress is shown in the console</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is used after <code>wrtds</code> to normalize predicted values of the response variable from the interpolation grid for each model.  The normalized values are based on the average of all predicted estimates across the range of salinity/flow values that have occurred on the same date throughout each year.  For example, normalized values for July 2000 are the mean predicted response at that date using the observed salinity/flow values that occur in July of all years.  The normalized values allow an interpretation of trends in the response variable that are independent of changes in salinity or freshwater inputs.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Appends columns to the data.frame for normalized values.  For, tidal objects, columns are named starting with the prefix ‘norm’, e.g., ‘norm0.5’ are the normalized values for the fit through the median.  For tidalmean objects, columns are appended for the log-transformed and back-transformed normalized values, named ‘norm’ and ‘bt_norm’.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+##
+
+# load a tidal object
+data(tidobj)
+
+# get flow-normalized values for each quantile
+res &lt;- resnorm(tidobj)
+
+# load a tidalmean object
+data(tidobjmean)
+
+# get flow-normalized values
+res &lt;- resnorm(tidobjmean)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

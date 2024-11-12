@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cs_convert</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert identifiers using ChemSpider</h2>
+
+<h3>Description</h3>
+
+<p>Submit one or more identifiers (CSID, SMILES, InChI, InChIKey or Mol) and
+return one or more identifiers in another format (CSID, SMILES, InChI,
+InChIKey or Mol).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cs_convert(query, from, to, verbose = getOption("verbose"), apikey = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>character; query ID.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>character; type of query ID.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to</code></td>
+<td>
+<p>character; type to convert to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical; should a verbose output be printed on the console?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>apikey</code></td>
+<td>
+<p>character; your API key. If NULL (default),
+<code>cs_check_key()</code> will look for it in .Renviron or .Rprofile.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Not all conversions are supported. Allowed conversions:
+</p>
+
+<ul>
+<li>
+<p> CSID &lt;-&gt; InChI
+</p>
+</li>
+<li>
+<p> CSID &lt;-&gt; InChIKey
+</p>
+</li>
+<li>
+<p> CSID &lt;-&gt; SMILES
+</p>
+</li>
+<li>
+<p> CSID -&gt; Mol file
+</p>
+</li>
+<li>
+<p> InChI &lt;-&gt; InChIKey
+</p>
+</li>
+<li>
+<p> InChI &lt;-&gt; SMILES
+</p>
+</li>
+<li>
+<p> InChI -&gt; Mol file
+</p>
+</li>
+<li>
+<p> InChIKey &lt;-&gt; Mol file
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>Returns a vector containing the converted identifier(s).
+</p>
+
+
+<h3>Note</h3>
+
+<p>An API key is needed. Register at <a href="https://developer.rsc.org/">https://developer.rsc.org/</a>
+for an API key. Please respect the Terms &amp; Conditions. The Terms &amp; Conditions
+can be found at <a href="https://developer.rsc.org/terms">https://developer.rsc.org/terms</a>.
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://developer.rsc.org/docs/compounds-v1-trial/1/overview">https://developer.rsc.org/docs/compounds-v1-trial/1/overview</a>
+</p>
+<p>Eduard Szöcs, Tamás Stirling, Eric R. Scott, Andreas Scharmüller,
+Ralf B. Schäfer (2020). webchem: An R Package to Retrieve Chemical
+Information from the Web. Journal of Statistical Software, 93(13).
+<a href="https://doi.org/10.18637/jss.v093.i13">doi:10.18637/jss.v093.i13</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+cs_convert("BQJCRHHNABKAKU-KBQPJGBKSA-N",
+  from = "inchikey", to = "csid"
+)
+cs_convert("BQJCRHHNABKAKU-KBQPJGBKSA-N",
+  from = "inchikey", to = "inchi"
+)
+cs_convert("BQJCRHHNABKAKU-KBQPJGBKSA-N",
+  from = "inchikey", to = "mol"
+)
+cs_convert(160, from = "csid", to = "smiles")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

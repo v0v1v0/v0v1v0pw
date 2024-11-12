@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rmdshot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Take a snapshot of an R Markdown document</h2>
+
+<h3>Description</h3>
+
+<p>This function can handle both static Rmd documents and Rmd documents with
+<code>runtime: shiny</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rmdshot(
+  doc,
+  file = "webshot.png",
+  ...,
+  delay = NULL,
+  rmd_args = list(),
+  port = getOption("shiny.port"),
+  envvars = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>doc</code></td>
+<td>
+<p>The path to a Rmd document.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>A vector of names of output files. Should end with an image file
+type (<code>.png</code>, <code>.jpg</code>, <code>.jpeg</code>, or <code>.webp</code>) or
+<code>.pdf</code>. If several screenshots have to be taken and only one filename
+is provided, then the function appends the index number of the screenshot
+to the file name. For PDF output, it is just like printing the page to PDF
+in a browser; <code>selector</code>, <code>cliprect</code>, <code>expand</code>, and
+<code>zoom</code> will not be used for PDFs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments to pass on to <code>webshot</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delay</code></td>
+<td>
+<p>Time to wait before taking screenshot, in seconds. Sometimes a
+longer delay is needed for all assets to display properly. If NULL (the
+default), then it will use 0.2 seconds for static Rmd documents, and 3
+seconds for Rmd documents with runtime:shiny.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rmd_args</code></td>
+<td>
+<p>A list of additional arguments to pass to either
+<code>render</code> (for static Rmd documents) or
+<code>run</code> (for Rmd documents with runtime:shiny).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>port</code></td>
+<td>
+<p>Port that Shiny will listen on.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>envvars</code></td>
+<td>
+<p>A named character vector or named list of environment
+variables and values to set for the Shiny app's R process. These will be
+unset after the process exits. This can be used to pass configuration
+information to a Shiny app.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Invisibly returns the normalized path to all screenshots taken. The
+character vector will have a class of '"webshot"'.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (interactive()) {
+  # R Markdown file
+  input_file &lt;- system.file("examples/knitr-minimal.Rmd", package = "knitr")
+  rmdshot(input_file, "minimal_rmd.png")
+
+  # Shiny R Markdown file
+  input_file &lt;- system.file("examples/shiny.Rmd", package = "webshot")
+  rmdshot(input_file, "shiny_rmd.png", delay = 5)
+}
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,211 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WH_1d</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>1D Whittaker-Henderson Smoothing</h2>
+
+<h3>Description</h3>
+
+<p>Main package function to apply Whittaker-Henderson smoothing in a
+one-dimensional survival analysis framework. It takes as input a vector of
+observed events and a vector of associated central exposure, both depending
+on a single covariate, and build a smooth version of the log-hazard rate.
+Smoothing parameters may be supplied or automatically chosen according to an
+adequate criterion such as <code>"REML"</code> (the default), <code>"AIC"</code>, <code>"BIC"</code> or
+<code>"GCV"</code>. Whittaker-Henderson may be applied in a full maximum likelihood
+framework (the default) or an approximate gaussian framework (the original).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WH_1d(
+  d,
+  ec,
+  lambda,
+  criterion,
+  method,
+  q = 2,
+  framework,
+  y,
+  wt,
+  quiet = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>d</code></td>
+<td>
+<p>Vector of observed events, should have named elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ec</code></td>
+<td>
+<p>Vector of central exposure. The central exposure corresponds to the
+sum of the exposure duration over the insured population. An individual
+experiencing an event of interest during the year will no longer be exposed
+afterward and the exposure should be computed accordingly.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>Smoothing parameter. If missing, an optimization procedure will
+be used to find the optimal smoothing parameter. If supplied, no optimal
+smoothing parameter search will take place unless the <code>method</code> argument is
+also supplied, in which case <code>lambda</code> will be used as the starting
+parameter for the optimization procedure.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>criterion</code></td>
+<td>
+<p>Criterion to be used for the selection of the optimal
+smoothing parameter. Default is <code>"REML"</code> which stands for restricted
+maximum likelihood. Other options include <code>"AIC"</code>, <code>"BIC"</code> and <code>"GCV"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Method to be used to find the optimal smoothing parameter.
+Default to <code>"fixed_lambda"</code> if <code>lambda</code> is supplied, meaning no
+optimization is performed. Otherwise, default to the most reliable
+<code>"outer"</code> method based on the <code>optimize</code> function from package <code>stats</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>Order of penalization. Polynoms of degrees <code>q - 1</code> are considered
+completely smooth and are therefore unpenalized. Should be left to the
+default of <code>2</code> for most practical applications.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>framework</code></td>
+<td>
+<p>Default framework is <code>"ml"</code> which stands for maximum
+likelihood unless the <code>y</code> argument is also provided, in which case an
+<code>"reg"</code> or (approximate) regression framework is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Optional vector of observations whose elements should be named. Used
+only in the regression framework and if the <code>d</code> and <code>ec</code> arguments are
+missing (otherwise <code>y</code> is automatically computed from <code>d</code> and <code>ec</code>). May be
+useful when using Whittaker-Henderson smoothing outside of the survival
+analysis framework.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wt</code></td>
+<td>
+<p>Optional vector of weights. As for the observation vector <code>y</code>, used
+only in the regression framework and if the <code>d</code> and <code>ec</code> arguments are
+missing (otherwise <code>wt</code> is automatically set to <code>d</code>). May be useful when
+using Whittaker-Henderson smoothing outside of the survival analysis
+framework.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiet</code></td>
+<td>
+<p>Should messages and warnings be silenced ? Default to <code>FALSE</code>,
+may be set to <code>TRUE</code> is the function is called repeatedly.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters passed to the smoothing function called.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class <code>WH_1d</code> i.e. a list containing :
+</p>
+
+<ul>
+<li> <p><code>d</code> The inputed vector of observed events (if supplied as input)
+</p>
+</li>
+<li> <p><code>ec</code> The inputed vector of central exposure (if supplied as input)
+</p>
+</li>
+<li> <p><code>y</code> The observation vector, either supplied or computed as y = log(d) - log(ec)
+</p>
+</li>
+<li> <p><code>wt</code> The inputed vector of weights, either supplied or computed as <code>d</code>
+</p>
+</li>
+<li> <p><code>y_hat</code> The vector of values fitted using Whittaker-Henderson smoothing
+</p>
+</li>
+<li> <p><code>std_y_hat</code> The vector of standard deviation associated with the fit
+</p>
+</li>
+<li> <p><code>res</code> The vector of deviance residuals associated with the fit
+</p>
+</li>
+<li> <p><code>edf_obs</code> The vector of effective degrees of freedom associated with each observation
+</p>
+</li>
+<li> <p><code>edf_par</code> The vector of effective degrees of freedom associated with each eigenvector
+</p>
+</li>
+<li> <p><code>diagnosis</code> A data.frame with one line containing the sum of effective degrees of freedom
+for the model, the deviance of the fit as well as the AIC, BIC, GCV and
+REML criteria
+</p>
+</li>
+<li> <p><code>Psi</code> The variance-covariance matrix associated with the fit, which is required
+for the extrapolation step.
+</p>
+</li>
+<li> <p><code>lambda</code> The smoothing parameter used.
+</p>
+</li>
+<li> <p><code>p</code> The number of eigenvectors kept on each dimension if the rank reduction method
+is used (it should not in the one-dimensional case).
+</p>
+</li>
+<li> <p><code>q</code> The supplied order for the penalization matrix.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">d &lt;- portfolio_mort$d
+ec &lt;- portfolio_mort$ec
+
+y &lt;- log(d / ec)
+y[d == 0] &lt;- - 20
+wt &lt;- d
+
+# Maximum likelihood
+WH_1d(d, ec, lambda = 1e2)
+WH_1d(d, ec) # default outer iteration method based on the optimize function
+WH_1d(d, ec, criterion = "GCV")
+# alternative optimization criterion for smoothing parameter selection
+
+# Regression
+WH_1d(y = y, wt = wt, lambda = 1e2) # regression framework is default when y is supplied
+WH_1d(d, ec, framework = "reg", lambda = 1e2)
+# setting framework = "reg" forces computation of y from d and ec
+
+</code></pre>
+
+
+</div>

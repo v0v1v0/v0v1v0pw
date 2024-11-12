@@ -1,0 +1,178 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>weibull.mle</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Maximum likelihood estimates of three-parameter Weibull distribution</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the maximum likelihood estimates of 
+three-parameter Weibull distribution.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">weibull.mle(x, threshold, interval, interval.threshold, extendInt="downX", 
+            a, tol = .Machine$double.eps^0.25, maxiter = 1000, trace = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a numeric vector of observations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>the threshold parameter value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interval</code></td>
+<td>
+<p>a vector containing the end-points of the interval to be estimated
+for the shape parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interval.threshold</code></td>
+<td>
+<p>a vector containing the end-points of the interval 
+to be estimated for the threshold parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>extendInt</code></td>
+<td>
+<p>character string specifying if the interval c(left,right) should be extended or directly produce an error when f() has no differing signs at the endpoints. The default, "downX", keep lowering the the left end of the interval so that f() has different signs. See <code>uniroot</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+<p>the offset fraction to be used; typically in (0,1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>the desired accuracy (convergence tolerance).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxiter</code></td>
+<td>
+<p>the maximum number of iterations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trace</code></td>
+<td>
+<p>integer number; if positive, tracing information is produced. Higher values giving more details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The three-parameter Weibull distribution has the cumulative distribution function
+</p>
+<p style="text-align: center;"><code class="reqn">F(x) = 1 - \exp\Big[ - \Big( \frac{x-\theta}{\beta} \Big)^{\alpha} \Big],</code>
+</p>
+
+<p>where  <code class="reqn">x&gt;\theta</code>.
+The shape (<code class="reqn">\alpha</code>) and scale (<code class="reqn">\beta</code>) parameters are estimated 
+using the maximum likelihood.
+The maximum likelihood estimation is performed using the method by 
+Farnum and Booth (1997). 
+If the <code>threshold</code> (<code class="reqn">\theta</code>) is missing, it is estimated by 
+<code>weibull.threshold</code>. 
+If <code>threshold=0</code>, then <code>weibull.mle</code> calculates the maximum likelihood 
+estimates of the two-parameter Weibull distribution. 
+</p>
+<p>If <code>interval</code> is missing, the interval is given by the method in 
+Farnum and Booth (1997).
+</p>
+<p>If <code>interval.threshold</code> is missing, the interval is initally given
+by <code>(min(x)-sd(x), min(x))</code>. If this interval does not include 
+the estimate, its lower bound is extended (see also <code>uniroot</code>). 
+</p>
+<p>The choice of <code>a</code> follows <code>ppoints</code> function.
+</p>
+<p>Convergence is declared either if <code>f(x) == 0</code> 
+or the change in <code>x</code> for one step of the algorithm is less than 
+<code>tol</code>  (see also <code>uniroot</code>).
+</p>
+<p>If the algorithm does not converge in <code>maxiter</code> steps, 
+a warning is printed and the current approximation is returned
+(see also <code>uniroot</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>"weibull.estimate"</code>, a list with 
+two parameter estimates (if <code>threshold</code> is given) or three-parameter estimates.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Chanseok Park</p>
+
+
+<h3>References</h3>
+
+<p>Park, C. (2018). 
+A Note on the Existence of the Location Parameter Estimate of the Three-Parameter Weibull Model Using the Weibull Plot.
+<em>Mathematical Problems in Engineering</em>, <b>2018</b>, 6056975. <br>
+doi: <a href="https://doi.org/10.1155/2018/6056975">10.1155/2018/6056975</a>
+</p>
+<p>Park, C. (2017).
+Weibullness test and parameter estimation of the three-parameter
+Weibull model using the sample correlation coefficient. 
+<em>International Journal of Industrial Engineering - Theory,
+Applications and Practice</em>,  
+<b>24</b>(4), 376-391. <br> 
+doi: <a href="https://doi.org/10.23055/ijietap.2017.24.4.2848">10.23055/ijietap.2017.24.4.2848</a>
+</p>
+<p>Farnum, N. R. and P. Booth (1997). 
+Uniqueness of Maximum Likelihood Estimators of the 2-Parameter Weibull Distribution.
+<em>IEEE Transactions on Reliability</em>,
+<b>46</b>, 523-525.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>weibull.wp</code> for the parameter estimation using the Weibull plot.
+</p>
+<p><code>weibull.rm</code> for robust parameter estimation using the repeated median method.
+</p>
+<p><code>weibull.threshold</code> for the estimate of the threshold parameter.
+</p>
+<p><code>fitdistr</code> for maximum-likelihood fitting of univariate distributions in package <a href="https://CRAN.R-project.org/package=MASS"><span class="pkg">MASS</span></a>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Three-parameter Weibull
+data = c(355,725,884,462,1092,190,166,172,188,224,267,298,355,471,
+        154,101,76,811,80,249,752,305,301,386,667,212,186,127,
+        121,214,242,237,355,210,253,400,401,514,211,285)
+weibull.mle(data)
+
+# Two-parameter Weibull
+weibull.mle(data, threshold=0)
+</code></pre>
+
+
+</div>

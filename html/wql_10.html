@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>interpTs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Interpolate or substitute missing time series values</h2>
+
+<h3>Description</h3>
+
+<p>Imterpolates or substitutes missing data in a time series for gaps up to a
+specified size.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">interpTs(
+  x,
+  type = c("linear", "series.median", "series.mean", "cycle.median", "cycle.mean"),
+  gap = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>object of class <code>"ts"</code> or <code>"mts"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>method of interpolation or substitution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gap</code></td>
+<td>
+<p>maximum gap to be replaced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When <code>type = "linear"</code>, the function performs linear interpolation of
+any <code>NA</code> runs of length smaller than or equal to <code>gap</code>. When
+<code>gap = NULL</code>, gaps of any size will be replaced. Does not change
+leading or trailing <code>NA</code> runs. This interpolation approach is best for
+periods of low biological activity when sampling is routinely suspended.
+</p>
+<p>When <code>type = "series.median"</code> or <code>"series.mean"</code>, missing values
+are replaced by the overall median or mean, respectively. This may be
+desirable when missing values are not allowed but one wants, for example, to
+avoid spurious enhancement of trends.
+</p>
+<p>When <code>type = "cycle.median"</code> or <code>type = "cycle.mean"</code>, missing
+values are replaced by the median or mean, respectively, for the same cycle
+position (i.e., same month, quarter, etc., depending on the frequency). This
+may give more realistic series than using the overall mean or median.
+</p>
+<p>Intended for time series but first three types will work with any vector or
+matrix. Matrices will be interpolated by column.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The time series with some or all missing values replaced.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alan Jassby, James Cloern
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>decompTs</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+### Interpolate a vector time series and highlight the imputed data
+chl27 &lt;- sfbayChla[, 's27']
+x1 &lt;- interpTs(chl27, gap = 3)
+plot(x1, col = 'red')
+lines(chl27, col = 'blue')
+x2 &lt;- interpTs(chl27, type = "series.median", gap = 3)
+plot(x2, col = 'red')
+lines(chl27, col = 'blue')
+
+### Interpolate a matrix time series and plot results
+x3 &lt;- interpTs(sfbayChla, type = "cycle.mean", gap = 1)
+plot(x3[, 1:10], main = "SF Bay Chl-a\n(gaps of 1 month replaced)")
+
+</code></pre>
+
+
+</div>

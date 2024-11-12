@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>filterList</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Filter for unique elements</h2>
+
+<h3>Description</h3>
+
+<p>This function aims to apply a given filter-citerium, a matrix or vector of <code>FALSE/TRUE</code> which is typically combined with a second layer   
+which filters for a min content of filer-passing values per line for the first/main criterium.
+Then all lines concerned will be removed. This will be done for all list-elements (of appropriate size) of the input-list  
+(while maintaining the list-structure in the output) not matching the filtering criteria.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">filterList(lst, filt, minLineRatio = 0.5, silent = FALSE, callFrom = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lst</code></td>
+<td>
+<p>(list) main input, each vector, matrix or data.frame in this list will be filtered if its length or number of lines fits to <code>filt</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filt</code></td>
+<td>
+<p>(logical) vector of <code>FALSE/TRUE</code> to use for filtering. If this a matrix is given, the value of <code>minLineRatio</code> will be applied as threshod of min content of <code>TRUE</code> for each line of <code>filt</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minLineRatio</code></td>
+<td>
+<p>(numeric) in case <code>filt</code> is a matrix of <code>FALSE/TRUE</code>, this value will be used as threshold of min content of <code>TRUE</code> for each line of <code>filt</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>filtered list
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>correctToUnique</code>, <code>unique</code>, <code>duplicated</code>, <code>extrColsDeX</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2020); dat1 &lt;- round(runif(80),2)
+list1 &lt;- list(m1=matrix(dat1[1:40],ncol=8), m2=matrix(dat1[41:80],ncol=8), other=letters[1:8])
+rownames(list1$m1) &lt;- rownames(list1$m2) &lt;- paste0("line",1:5)
+filterList(list1, list1$m1[,1] &gt;0.4) 
+filterList(list1, list1$m1 &gt;0.4) 
+</code></pre>
+
+
+</div>

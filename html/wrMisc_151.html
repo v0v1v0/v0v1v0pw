@@ -1,0 +1,66 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>findUsableGroupRange</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Select groups within given range</h2>
+
+<h3>Description</h3>
+
+<p>This function aims to help finding streches/segments of data with a given maximum number of NA-instances.
+This function is used to inspect/filter each lines of 'dat' for a subset with sufficient presence/absence of NA values (ie limit number of NAs per level of 'grp').
+Note :  optimal perfomance with n.lines &gt;&gt; n.groups
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">findUsableGroupRange(dat, grp, maxNA = 1, callFrom = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(matrix or data.frame) main input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grp</code></td>
+<td>
+<p>(factor) information which column of 'dat' is replicate of whom</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxNA</code></td>
+<td>
+<p>(interger) max number of tolerated NAs</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>matrix with boundaries of 1st and last usable column (NA if there were no suitable groups found)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">dat1 &lt;- matrix(1:56,nc=7)
+dat1[c(2,3,4,5,6,10,12,18,19,20,22,23,26,27,28,30,31,34,38,39,50,54)] &lt;- NA
+rownames(dat1) &lt;- letters[1:nrow(dat1)]
+findUsableGroupRange(dat1,gl(3,3)[-(3:4)])
+</code></pre>
+
+
+</div>

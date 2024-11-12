@@ -1,0 +1,195 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.wd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot wavelet transform coefficients.</h2>
+
+<h3>Description</h3>
+
+<p>This function plots discrete wavelet transform coefficients arising from a <code>wd</code> object. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wd'
+plot(x,xlabvals, xlabchars, ylabchars, first.level = 0,
+	main = "Wavelet Decomposition Coefficients", scaling = "global",
+	rhlab = FALSE, sub, NotPlotVal = 0.005, xlab = "Translate",
+	ylab = "Resolution Level", 
+	aspect = "Identity", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The wd class object you wish to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlabvals</code></td>
+<td>
+<p>A vector containing the "true" x-axis numbers that went with the vector that was transformed to produce the <code>wd</code> object supplied as the first argument to this function. If this argument is missing then the function tries to make up a sensible set of x-axis labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlabchars</code></td>
+<td>
+<p>Tickmark labels for the x axis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylabchars</code></td>
+<td>
+<p>Tickmark labels for the y axis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>first.level</code></td>
+<td>
+<p>The first resolution level to begin plotting at. This argument can be quite useful when you want to supress some of the coarser levels in the diagram.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>The main title of the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scaling</code></td>
+<td>
+<p>How you want the coefficients to be scaled. The options are: <code>global</code> - one scale factor is chosen for the whole plot. The scale factor depends on the coefficient to be included on the plot that has the largest absolute value. The <code>global</code> option is useful when comparing coefficients that might appear anywhere in the plot; <code>by.level</code> - a scale factor is chosen for each resolution level in the plot. The scale factor for a level depends on the coefficient in that level that has the largest absolute value. The <code>by.level</code> option is useful when you wish to compare coefficients within a resolution level.
+</p>
+<p>The two other options are compensated and super which are the same as <code>global</code> except for that finer scales' coefficients are scaled up by a factor of SQRT(2) for compensated and 2 for super. These latter two options are sometimes useful (more useful for non-decimated <code>wd</code> objects, where they act as a sort of <code>ipndacw</code> matrix operator). </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rhlab</code></td>
+<td>
+<p>If <code>TRUE</code> then a set of labels is produced on the right hand axis. The axis labels in this case refer to the scale factors used to scale each level and correspond to value of the largest coefficient (in absolute value) in each scale (when <code>scaling=="by.level"</code>) or absolutely (when <code>scaling="global"</code>). If the <code>rhlab</code> argument is <code>FALSE</code> then no right hand axis labels are produced.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sub</code></td>
+<td>
+<p>A subtitle for the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NotPlotVal</code></td>
+<td>
+<p>This argument ensures that if all (scaled) coefficients in a resolution level are below <code>NotPlotVal</code> in absolute value then the whole resolution level is not plotted. This can be useful when plotting a <code>wd</code> object that is sparse (or has been thresholded and necessarily many coefficients might well be zero) as it speeds up the plot because whole levels do not have to be plotted (the function that does the plotting [<code>segments()</code>] is quite a slow function). Note that the value of <code>NotPlotVal</code> refers to <code>scaled</code> coefficients, those that have been scaled by this function (on any resolution level all coefficients are scaled to lie between -0.5 and 0.5).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>A title for the x-axis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>A title for the y-axis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aspect</code></td>
+<td>
+<p>This argument describes the name (as a character string) of a function to be applied to the coefficients before plotting. By default the argument is "<code>Identity</code>", i.e. the coefficients are plotted <em>as is</em>. This argument is most useful when a complex-valued wavelets are plotted you could use "<code>Mod</code>" to plot the modulus of the coefficients, or "<code>Re</code>" to plot the real parts of the coefficients or "<code>Arg</code>" to plot the argument of the coefficients. Also, the <code>aspect</code> argument can be useful for the ordinary wavelet transforms as well if you are interested in a particular transform of the coefficients. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>fine tuning</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Produces a plot similar to the ones in Donoho and Johnstone, 1994. 
+</p>
+<p>A wavelet decomposition of a signal consists of discrete wavelet coefficients at different scales (resolution levels) and locations. This function plots the coefficients as a pyramid (derived from Mallat's pyramid algorithm). See the examples below. 
+</p>
+<p>The resolution levels are stacked one above the other: coarse scale coefficients are always towards the top of the plot, fine scale coefficients are always located toward the bottom of the plot. The location of coefficients increases from left to right across the plot in synchrony with the input signal to the <code>wd</code> object. In other words the position of a coefficient along a line is indicative of the associated wavelet basis function's translate number. The actual coefficients are plotted using S-Plus's <code>segments()</code> function. This plots each coefficient as a vertical line with positive coefficients being plotted above an imaginary centre line and negative coefficients being plotted below. 
+</p>
+<p>The resolution levels are labelled on the left-hand side axis, and if <code>rhlab==T</code> the maximum values of the absolute values of the coefficients, for the particular level, are plotted on the right-hand axis. 
+</p>
+<p>The coefficients in the plot may be scaled in 4 ways. If you are interested in comparing coefficients in different levels then the default scaling option <code>scaling=="global"</code> is what you need. This works by finding the coefficient with the largest absolute value amongst all coeffients to be plotted and then scales all the other coefficients by the largest so that all coefficients lie in the range -1/2 to 1/2. The scaled coefficients are then plotted. If you are not interested in comparing relative resolution levels and want to see all that goes on within a particular scale then you should use the scaling option <code>scaling=="by.level"</code> which picks out the largest coefficient (in absolute value) from each level and scales each level separately. The "<code>compensated</code>" and super options are like the "<code>global</code>" option except that finer levels are scaled up (as discussed in the arguments list above): this can be useful when plotting non-decimated wavelet transform coefficients as it emphasizes the higher frequencies. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>rhlab==T</code> then the scaling factors applied to each scale level are returned. Otherwise NULL is returned. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.5.3 Copyright Guy Nason 1994 
+</p>
+
+
+<h3>Note</h3>
+
+<p>A plot of the coefficients contained within the <code>wd</code> object is produced. </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wd</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Generate some test data
+#
+test.data &lt;- example.1()$y
+## Not run: ts.plot(test.data)
+#
+# Decompose test.data and plot the wavelet coefficients
+#
+wds &lt;- wd(test.data)
+## Not run: plot(wds)
+#
+# Now do the time-ordered non-decimated wavelet transform of the same thing
+#
+## Not run: wdS &lt;- wd(test.data, type="station")
+## Not run: plot(wdS)
+#
+# Next examples
+# ------------
+# The chirp signal is also another good examples to use.
+#
+# Generate some test data
+#
+test.chirp &lt;- simchirp()$y
+## Not run: ts.plot(test.chirp, main="Simulated chirp signal")
+#
+# Now let's do the time-ordered non-decimated wavelet transform.
+# For a change let's use Daubechies least-asymmetric phase wavelet with 8
+# vanishing moments (a totally arbitrary choice, please don't read
+# anything into it).
+#
+chirpwdS &lt;- wd(test.chirp, filter.number=8, family="DaubLeAsymm", type="station")
+## Not run: plot(chirpwdS, main="TOND WT of Chirp signal")
+</code></pre>
+
+
+</div>

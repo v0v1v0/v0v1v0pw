@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>exportSdrfDraft</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Export Sample Meta-data from Quantification-Software as Sdrf-draft</h2>
+
+<h3>Description</h3>
+
+<p>Sample/experimental annotation meta-data form <a href="https://www.maxquant.org/">MaxQuant</a> that was previously import can now be formatted in sdrf-style and exported
+using this function to write a draft-sdrf-file. Please note that this information will not _complete_ in respect to all information used in data-bases like  Pride.
+Sdrf-files provide additional meta-information about samles and MS-runs in a standardized format, they may also be part of submissions to <a href="https://www.ebi.ac.uk/pride/">Pride</a>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">exportSdrfDraft(
+  lst,
+  fileName = "sdrfDraft.tsv",
+  correctFileExtension = TRUE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lst</code></td>
+<td>
+<p>(list) object created by import-function (MaxQuant)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fileName</code></td>
+<td>
+<p>(character) file-name (and path) to be used when exprting</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>correctFileExtension</code></td>
+<td>
+<p>(logical) if <code>TRUE</code> the fileName will get a <code>.tsv</code>-extension if not already present</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Gathering as much as possible information about samples and MS-runs requires that the additional files created from software, like MaxQuant using <code>readMaxQuantFile</code>, 
+is present and was imported when calling the import-function (eg using the argument _suplAnnotFile=TRUE_).
+Please note that this functionality was designed for the case where no (external) sdrf-file is available. 
+Thus, when data was imported including exteranl sdrf (uinsg the _sdrf=_ argument), exporting incomplete annotation-data from MaxQuant-produced files does not make any sense and therefore won't be possible.
+</p>
+<p>After exporting the draft sdrf the user is advised to check and complete the information in the resulting file.
+Unfortunately, not all information present in a standard sdrf-file (like on <a href="https://www.ebi.ac.uk/pride/">Pride</a>) cannot be gathered automatically,
+but key columns are already present and thus may facilitate completing.
+Please note, that the file-format has been defined as <code>.tsv</code>, thus columns/fields should be separated by tabs.
+At manual editing and completion, some editing- or tabulator-software may change the file-extesion to <code>.tsv.txt</code>,
+in this case the final files should be renamed as <code>.tsv</code> to remain compatible with Pride.
+</p>
+<p>At this point only the import of data from MaxQuant via <code>readMaxQuantFile</code> has been developed to extract information for creating a draft-sdrf.
+Other data/file-import functions may be further developed to gather as much as possible equivalent information in the future.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function writes an Sdrf draft to file
+</p>
+
+
+<h3>See Also</h3>
+
+<p>This function may be used after reading/importig data by <code>readMaxQuantFile</code> in absence of sdrf
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">path1 &lt;- system.file("extdata", package="wrProteo")
+fiNaMQ &lt;- "proteinGroups.txt.gz"
+dataMQ &lt;- readMaxQuantFile(path1, file=fiNaMQ, refLi="mainSpe", sdrf=FALSE, suplAnnotFile=TRUE)
+## Here we'll write simply in the current temporary directory of this R-session
+exportSdrfDraft(dataMQ, file.path(tempdir(),"testSdrf.tsv"))
+
+</code></pre>
+
+
+</div>

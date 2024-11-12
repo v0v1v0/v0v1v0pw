@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>shiehpow</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Power Calculation Using the Shieh et. al. Approach</h2>
+
+<h3>Description</h3>
+
+<p>The purpose of <em>shiehpow</em> is to perform a power analysis for a one
+or two-sided Wilcoxon-Mann-Whitney test using the method developed by Shieh and
+colleagues.
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Sample size of first sample (numeric)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>Sample size of second sample (numeric)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>Effect size, P(X&lt;Y) (numeric)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Type I error rate (numeric)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist</code></td>
+<td>
+<p>The distribution type for the two groups (“exp”, “dexp”, or “norm”) (string)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sides</code></td>
+<td>
+<p>Options are “two.sided” and “one.sided” (string)</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>When calculating power for dist=”norm”, <em>shiehpow</em> uses 100,000 draws from a Z ~ N(0,1)
+distribution for the internal calculation of p2 and p3 from Shieh et al. (2006); thus 
+<em>shiehpow</em> normal distribution power results may vary in the thousandths place from one run 
+to the next.
+</p>
+
+
+<h3>References</h3>
+
+<p>Shieh, G., Jan, S. L., Randles, R. H. (2006). On power and sample size
+determinations for the Wilcoxon–Mann–Whitney test. Journal of Nonparametric
+Statistics, 18(1), 33-43.
+</p>
+<p>Mollan K.R., Trumble I.M., Reifeis S.A., Ferrer O., Bay C.P., Baldoni P.L.,
+Hudgens M.G. Exact Power of the Rank-Sum Test for a Continuous Variable, 
+arXiv:1901.04597 [stat.ME], Jan. 2019.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># We want to calculate the statistical power to compare the distance between mutations on a DNA 
+# strand in two groups of people. Each group (X and Y) has 10 individuals. We assume that the 
+# distance between mutations in the first group is exponentially distributed with rate 3. We assume 
+# that the probability that the distance in the first group is less than the distance in the second 
+# group (i.e., P(X&lt;Y)) is 0.8. The desired type I error is 0.05.
+
+shiehpow(n = 10, m = 10, p = 0.80, alpha = 0.05, dist = "exp", sides = "two.sided")
+
+</code></pre>
+
+
+</div>

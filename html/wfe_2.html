@@ -1,0 +1,572 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wfe</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fitting the Weighted Fixed Effects Model for Causal Inference</h2>
+
+<h3>Description</h3>
+
+<p><code>wfe</code> is used to fit weighted fixed effects model for causal
+inference. <code>wfe</code> also derives the regression weights for
+different causal quantity of interest.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wfe(formula, data, treat = "treat.name",
+    unit.index, time.index = NULL, method = "unit",
+    dyad1.index = NULL, dyad2.index = NULL,
+    qoi = "ate", estimator = NULL, C.it = NULL,
+    hetero.se = TRUE, auto.se = TRUE, 
+    dyad.se = FALSE,
+    White = TRUE, White.alpha = 0.05,
+    verbose = TRUE, unbiased.se = FALSE, unweighted = FALSE,
+    store.wdm = FALSE, maxdev.did = NULL,
+    tol = sqrt(.Machine$double.eps))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>a symbolic description of the model to be fitted. The
+formula should not include dummmies for fixed effects. The details
+of model specifications are given under ‘Details’.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>data frame containing the variables in the model.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>treat</code></td>
+<td>
+<p>a character string indicating the name of treatment
+variable used in the models. The treatment should be binary
+indicator (integer with 0 for the control group and 1 for the
+treatment group).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unit.index</code></td>
+<td>
+<p>a character string indicating the name of unit
+variable used in the models. The index of unit should be factor.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time.index</code></td>
+<td>
+<p>a character string indicating the name of time
+variable used in the models. The index of time should be factor.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>method for weighted fixed effects regression, either
+<code>unit</code> for unit fixed effects; <code>time</code> for time fixed
+effects. The default is <code>unit</code>. For two-way weighted fixed
+effects regression models, set method to the default value
+<code>unit</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dyad1.index</code></td>
+<td>
+<p>a character string indicating the variable name of first unit
+of a given dyad. The default is <code>NULL</code>.
+This is required to calculate robust standard errors with dyadic data.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dyad2.index</code></td>
+<td>
+<p>a character string indicating the variable name of second unit
+of a given dyad. The default is <code>NULL</code>.
+This is required to calculate robust standard errors with dyadic data.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qoi</code></td>
+<td>
+<p>one of <code>"ate"</code> or <code>"att"</code>. The default is
+<code>"ate"</code>. If set to <code>"att"</code> in implementing <code>"fd"</code>
+and <code>"did"</code> estimators, the comparison of the treated
+observation is restricted to the control observation from the
+previous time period but not with the control observation from the
+next time period.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimator</code></td>
+<td>
+<p>an optional character string indicating the
+estimating method. One of <code>"fd"</code>, <code>"did"</code>, or
+<code>"Mdid"</code>. <code>"fd"</code> is for First-Difference
+Design. <code>"did"</code> is for multi-period Difference-in-Differences
+design. The default is <code>NULL</code>. Setting estimator to be
+<code>"Mdid"</code> implements the Difference-in-Differences design with
+Matching on the pretreatment outcome variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>C.it</code></td>
+<td>
+<p>an optional non-negative numeric vector specifying
+relative weights for each unit of analysis. If not specified, the
+weights will be calculated based on the estimator and quantity of
+interest. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hetero.se</code></td>
+<td>
+<p>a logical value indicating whether heteroskedasticity
+across units is allowed in calculating standard errors. The default
+is <code>TRUE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>auto.se</code></td>
+<td>
+<p>a logical value indicating whether arbitrary
+autocorrelation is allowed in calculating standard errors. The
+default is <code>TRUE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dyad.se</code></td>
+<td>
+<p>a logical value indicating whether correlations across dyads exist. The
+default is <code>FALSE</code>. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>White</code></td>
+<td>
+<p>a logical value indicating whether White misspecification
+statistics should be calculated. The default is <code>TRUE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>White.alpha</code></td>
+<td>
+<p>level of functional specification test. See White
+(1980) and Imai and Kim (2018). The default is <code>0.05</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, helpful messages along with
+a progress report of the weight calculation are printed
+on the screen. The default is <code>TRUE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unbiased.se</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, bias-asjusted
+heteroskedasticity-robust standard errors are used. See Stock and
+Watson (2008). Should be used only for balanced panel. The default
+is <code>FALSE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unweighted</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, standard unweighted fixed
+effects model is estimated. The default is <code>FALSE</code>. Note:
+users do not need to specify <code>qoi</code> when
+unweighted=<code>TRUE</code>. For standard two-way fixed effects model
+(unit and time), set estimator=<code>"did"</code> and
+unweighted=<code>"TRUE"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>store.wdm</code></td>
+<td>
+<p>logical. If <code>TRUE</code>, weighted demeaned
+dataframe will be stored. The default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxdev.did</code></td>
+<td>
+<p>an optional positive numeric value specifying the
+maximum deviation in pre-treatment outcome when <code>"Mdid"</code> is
+implemented. The default is <code>NULL</code>, which implements
+nearest-neighbor matching.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>a relative tolerance to detect zero singular values for
+generalized inverse. The default is sqrt(.Machine$double.eps)
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>To fit the weighted unit (time) fixed effects model, use the syntax
+for the formula, <code>y ~ x1 + x2</code>, where <code>y</code> is a dependent
+variable and <code>x1</code> and <code>x2</code> are unit (time) varying
+covariates.
+</p>
+<p><code>wfe</code> calculates weights based on different underlying causal
+quantity of interest: Average Treatment Effect (<code>qoi = "ate"</code>) or
+Average Treatment Effect for the Treated (<code>qoi = "att"</code>).
+</p>
+<p>One can further set estimating methods: First-Difference
+(<code>estimator ="fd"</code>) or Difference-in-differences (<code>estimator
+    = "did"</code>). For the two-way fixed effects model, set <code>estimator
+    = "did"</code>
+</p>
+<p>To specify different ex-ante weights for each unit of analysis, use
+non-negative weights <code>C.it</code>. For instance, using the survey
+weights for <code>C.it</code> enables the estimation fo the average
+treatement effect for the target population.
+</p>
+<p>An object of class "wfe" contains vectors of unique unit(time) names and
+unique unit(time) indices. 
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>wfe</code> returns an object of class "wfe", a list that contains the
+components listed below.
+</p>
+<p>The function <code>summary</code> (i.e., <code>summary.wfe</code>) can be used to
+obtain a table of the results.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>coefficients</code></td>
+<td>
+<p>a named vector of coefficients</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>residuals</code></td>
+<td>
+<p>the residuals, that is respons minus fitted values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>the degree of freedom</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p>a dataframe containing unit and time indices along with the
+weights used for the observation. If method=<code>unit</code>, integer numbers
+corresponding to the order of input data will be used for generating time index.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Num.nonzero</code></td>
+<td>
+<p>Number of observations with non-zero weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>the matched call</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>causal</code></td>
+<td>
+<p>causal quantity of interest</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimator</code></td>
+<td>
+<p>the estimating method</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>units</code></td>
+<td>
+<p>a dataframe containing unit names used for <code>W</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>times</code></td>
+<td>
+<p>a dataframe containing time names used for <code>W</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>call of the method used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vcov</code></td>
+<td>
+<p>the variance covariance matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>White.alpha</code></td>
+<td>
+<p>the alpha level for White specification test</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>White.pvalue</code></td>
+<td>
+<p>the p-value for White specification test</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>White.stat</code></td>
+<td>
+<p>the White statistics</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>the design matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>the response vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X.wdm</code></td>
+<td>
+<p>the demeaned design matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y.wdm</code></td>
+<td>
+<p>the demeaned response vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mf</code></td>
+<td>
+<p>the model frame where the last column is the weights used for the analysis</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>In Song Kim, Massachusetts Institute of Technology, <a href="mailto:insong@mit.edu">insong@mit.edu</a>		
+and Kosuke Imai, Princeton University, <a href="mailto:imai@harvard.edu">imai@harvard.edu</a>	</p>
+
+
+<h3>References</h3>
+
+<p>Imai, Kosuke and In Song Kim. (2018) “When Should We Use
+Unit Fixed Effects Regression Models for Causal Inference with
+Longitudinal Data?" American Journal of Political Science,
+Forthcoming.
+</p>
+<p>Aronow, Peter M., Cyrus Samii, and Valentina A. Assenova (2015) “Cluster–robust
+Variance Estimation for Dyadic Data." Political Analysis 23, no. 4, 564–577.
+</p>
+<p>Stock, James and Mark Watson. (2008) “Heteroskedasticity-Robust
+Standard Errors for Fixed Effect Panel Data Regression” Econometrica,
+76, 1.
+</p>
+<p>White, Halbert. (1980) “Using Least Squares to Approximate Unknown
+Regression Functions.”  International Economic Review, 21, 1,
+149–170.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>pwfe</code> for fitting weighted fixed effects models with propensity
+score weighting
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">### NOTE: this example illustrates the use of wfe function with randomly
+### generated panel data with arbitrary number of units and time.
+
+## generate panel data with number of units = N, number of time = Time
+N &lt;- 10 # number of distinct units
+Time &lt;- 15 # number of distinct time
+
+## treatment effect
+beta &lt;- 1
+
+## generate treatment variable
+treat &lt;- matrix(rbinom(N*Time, size = 1, 0.25), ncol = N)
+## make sure at least one observation is treated for each unit
+while ((sum(apply(treat, 2, mean) == 0) &gt; 0) | (sum(apply(treat, 2, mean) == 1) &gt; 0) |
+       (sum(apply(treat, 1, mean) == 0) &gt; 0) | (sum(apply(treat, 1, mean) == 1) &gt; 0)) {
+  treat &lt;- matrix(rbinom(N*Time, size = 1, 0.25), ncol = N)
+}
+treat.vec &lt;- c(treat)
+
+## unit fixed effects
+alphai &lt;- rnorm(N, mean = apply(treat, 2, mean))
+
+## geneate two random covariates
+x1 &lt;- matrix(rnorm(N*Time, 0.5,1), ncol=N)
+x2 &lt;- matrix(rbeta(N*Time, 5,1), ncol=N)
+x1.vec &lt;- c(x1)
+x2.vec &lt;- c(x2)
+## generate outcome variable
+y &lt;- matrix(NA, ncol = N, nrow = Time)
+for (i in 1:N) {
+    y[, i] &lt;- alphai[i] + treat[, i] + x1[,i] + x2[,i] + rnorm(Time)
+}
+y.vec &lt;- c(y)
+
+## generate unit and time index
+unit.index &lt;- rep(1:N, each = Time)
+time.index &lt;- rep(1:Time, N)
+
+Data.str &lt;- as.data.frame(cbind(y.vec, treat.vec, unit.index, x1.vec, x2.vec))
+colnames(Data.str) &lt;- c("y", "tr", "strata.id", "x1", "x2")
+
+Data.obs &lt;- as.data.frame(cbind(y.vec, treat.vec, unit.index, time.index, x1.vec, x2.vec))
+colnames(Data.obs) &lt;- c("y", "tr", "unit", "time", "x1", "x2")
+
+############################################################
+# Example 1: Stratified Randomized Experiments
+############################################################
+
+## run the weighted fixed effect regression with strata fixed effect.
+## Note: the quantity of interest is Average Treatment Effect ("ate")
+## and the standard errors allow heteroskedasticity and arbitrary
+## autocorrelation.
+
+
+### Average Treatment Effect
+mod.ate &lt;- wfe(y~ tr+x1+x2, data = Data.str, treat = "tr",
+               unit.index = "strata.id", method = "unit",
+               qoi = "ate", hetero.se=TRUE, auto.se=TRUE)
+## summarize the results
+summary(mod.ate)
+
+### Average Treatment Effect for the Treated
+mod.att &lt;- wfe(y~ tr+x1+x2, data = Data.str, treat = "tr",
+               unit.index = "strata.id", method = "unit",
+               qoi = "att", hetero.se=TRUE, auto.se=TRUE)
+## summarize the results
+summary(mod.att)
+
+
+############################################################
+# Example 2: Observational Studies with Unit Fixed-effects
+############################################################
+
+## run the weighted fixed effect regression with unit fixed effect.
+## Note: the quantity of interest is Average Treatment Effect ("ate")
+## and the standard errors allow heteroskedasticity and arbitrary
+## autocorrelation.
+
+mod.obs &lt;- wfe(y~ tr+x1+x2, data = Data.obs, treat = "tr",
+               unit.index = "unit", time.index = "time", method = "unit",
+               qoi = "ate", hetero.se=TRUE, auto.se=TRUE,
+               White = TRUE, White.alpha = 0.05)
+
+## summarize the results
+summary(mod.obs)
+
+## extracting weigths
+summary(mod.obs)$W
+
+
+## Not run: 
+###################################################################
+# Example 3: Observational Studies with differences-in-differences
+###################################################################
+
+## run difference-in-differences estimator.
+## Note: the quantity of interest is Average Treatment Effect ("ate")
+## and the standard errors allow heteroskedasticity and arbitrary
+## autocorrelation.
+
+mod.did &lt;- wfe(y~ tr+x1+x2, data = Data.obs, treat = "tr",
+               unit.index = "unit", time.index = "time", method = "unit",
+               qoi = "ate", estimator ="did", hetero.se=TRUE, auto.se=TRUE,
+               White = TRUE, White.alpha = 0.05, verbose = TRUE)
+
+## summarize the results
+summary(mod.did)
+
+## extracting weigths
+summary(mod.did)$W
+
+#########################################################################
+# Example 4: DID with Matching on Pre-treatment Outcomes
+#########################################################################
+
+## implements matching on pre-treatment outcomes where the maximum
+## deviation is specified as 0.5 
+
+mod.Mdid &lt;- wfe(y~ tr+x1+x2, data = Data.obs, treat = "tr",
+               unit.index = "unit", time.index = "time", method = "unit",
+               qoi = "ate", estimator ="Mdid", hetero.se=TRUE, auto.se=TRUE,
+               White = TRUE, White.alpha = 0.05, maxdev.did = 0.5, verbose = TRUE)
+
+## summarize the results
+summary(mod.Mdid)
+
+## Note: setting the maximum deviation to infinity (or any value
+## bigger than the maximum pair-wise difference in the outcome) will
+## return the same result as Example 3.
+
+dev &lt;- 1000+max(Data.obs$y)-min(Data.obs$y)
+mod.did2 &lt;- wfe(y~ tr+x1+x2, data = Data.obs, treat = "tr",
+               unit.index = "unit", time.index = "time", method = "unit",
+               qoi = "ate", estimator ="Mdid", hetero.se=TRUE, auto.se=TRUE,
+               White = TRUE, White.alpha = 0.05, maxdev.did = dev, verbose = TRUE)
+
+## summarize the results
+summary(mod.did2)
+mod.did2$coef[1] ==  mod.did$coef[1]
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

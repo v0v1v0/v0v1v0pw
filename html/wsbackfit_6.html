@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>residuals.sback</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+sback residuals
+</h2>
+
+<h3>Description</h3>
+
+<p>Returns residuals for a fitted <code>sback</code> object. Deviance, pearson, working and response residuals are available.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'sback'
+residuals(object, type = c("deviance", "pearson", "working", "response"), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object of class <code>sback</code> as produced by <code>sback</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>the type of residuals which should be returned: "deviance" (default), "pearson", "working" and "response".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods. Not yet implemented.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For details see <code>residuals.glm</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Numeric vector with the residuals.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Javier Roca-Pardinas, Maria Xose Rodriguez-Alvarez and Stefan Sperlich</p>
+
+
+<h3>See Also</h3>
+
+<p><code>sback</code>, <code>summary.sback</code>, <code>plot.sback</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(wsbackfit)
+data(infect)
+
+# Generalized varying coefficient model with binary response
+m3 &lt;- sback(formula = inf ~ sb(gluc, h = 10) + sb(gluc, by = linf, h = 10), 
+  data = infect, family = "binomial", kbin = 15)
+
+summary(m3)
+
+# Deviance
+summary(residuals(m3))
+
+# Pearson
+summary(residuals(m3, type = "pearson"))
+</code></pre>
+
+
+</div>

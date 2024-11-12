@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WPVI</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>p-Wasserstein Variable Importance</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+This function will measure how much removing each covariate harms prediction accuracy.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WPVI(
+  X,
+  eta,
+  theta,
+  pred.fun = NULL,
+  p = 2,
+  ground_p = 2,
+  transport.method = transport_options(),
+  epsilon = 0.05,
+  OTmaxit = 100,
+  display.progress = FALSE,
+  parallel = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Covariates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eta</code></td>
+<td>
+<p>Predictions from the estimated model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>Parameters from the estimated model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pred.fun</code></td>
+<td>
+<p>A prediction function. must take variables x, theta as arguments: <code>pred.fun(x,theta)</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>Power of Wasserstein distance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ground_p</code></td>
+<td>
+<p>Power of distance metric</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transport.method</code></td>
+<td>
+<p>Transport methods. See <code>transport_options()</code> for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsilon</code></td>
+<td>
+<p>Hyperparameter for Sinkhorn iterations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>OTmaxit</code></td>
+<td>
+<p>Maximum number of iterations for the Wasserstein method</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>display.progress</code></td>
+<td>
+<p>Display intermediate progress</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>a foreach backend if already created</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns an integer vector ranking covariate importance from most to least important.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">n &lt;- 128
+p &lt;- 10
+s &lt;- 99
+x &lt;- matrix(1, nrow = n, ncol = p )
+beta &lt;- (1:10)/10
+y &lt;- x %*% beta 
+post_beta &lt;- matrix(beta, nrow=p, ncol=s) 
+post_mu &lt;- x %*% post_beta
+
+fit &lt;-  WpProj(X=x, eta=post_mu, power = 2.0)
+WPVI(X = x, eta = post_mu, theta = post_beta, transport.method = "hilbert")
+</code></pre>
+
+
+</div>

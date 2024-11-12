@@ -1,0 +1,151 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>goodSamplesGenesMS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>  Iterative filtering of samples and genes with too many missing entries across multiple data sets
+</h2>
+
+<h3>Description</h3>
+
+<p>This function checks data for missing entries and zero variance across multiple data sets 
+and returns a list of samples and genes
+that pass criteria maximum number of missing values. If weights are given, entries whose relative
+weight is below a threshold will be considered missing.
+The filtering is iterated until convergence.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">goodSamplesGenesMS(
+  multiExpr,
+  multiWeights = NULL,
+  minFraction = 1/2,
+  minNSamples = ..minNSamples,
+  minNGenes = ..minNGenes,
+  tol = NULL,
+  minRelativeWeight = 0.1,
+  verbose = 2, indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>multiExpr</code></td>
+<td>
+<p>  expression data in the multi-set format (see <code>checkSets</code>). A vector of
+lists, one per set. Each set must contain a component <code>data</code> that contains the expression data, with
+rows corresponding to samples and columns to genes or probes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multiWeights</code></td>
+<td>
+<p> optional observation weights in the same format (and dimensions) as <code>multiExpr</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minFraction</code></td>
+<td>
+<p> minimum fraction of non-missing samples for a gene to be considered good. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minNSamples</code></td>
+<td>
+<p> minimum number of non-missing samples for a gene to be considered good.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minNGenes</code></td>
+<td>
+<p> minimum number of good genes for the data set to be considered fit for analysis. If
+the actual number of good genes falls below this threshold, an error will be issued. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p> an optional 'small' number to compare the variance against. For each set in <code>multiExpr</code>, 
+the default value is <code>1e-10 * max(abs(multiExpr[[set]]$data), na.rm = TRUE)</code>. 
+The reason of comparing the variance to this number, rather than
+zero, is that the fast way of computing variance used by this function sometimes causes small numerical
+overflow errors which make variance of constant vectors slightly non-zero; comparing the variance to
+<code>tol</code> rather than zero prevents the retaining of such genes as 'good genes'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minRelativeWeight</code></td>
+<td>
+<p> observations whose relative weight is below
+this threshold will be considered missing. Here relative weight is weight divided by the maximum weight in
+the column (gene).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function iteratively identifies samples and genes with too many missing entries, and genes with
+zero variance; iterations are necessary
+since excluding samples effectively changes criteria on genes and vice versa. The process is
+repeated until the lists of good samples and genes are stable. If weights are given, entries whose relative
+weight (i.e., weight divided by maximum weight in the column or gene) 
+is below a threshold will be considered missing.
+The constants <code>..minNSamples</code> and <code>..minNGenes</code> are both set to the value 4.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the foolowing components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>goodSamples</code></td>
+<td>
+<p> A list with one component per given set. Each component is a logical vector with
+one entry per sample in the corresponding set that is <code>TRUE</code> if the sample is
+considered good and <code>FALSE</code> otherwise.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>goodGenes</code></td>
+<td>
+<p>  A logical vector with one entry per gene that is <code>TRUE</code> if the gene is
+considered good and <code>FALSE</code> otherwise.  </p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder </p>
+
+
+<h3>See Also</h3>
+
+<p><code>goodGenes</code>, <code>goodSamples</code>, <code>goodSamplesGenes</code> for cleaning
+individual sets separately;
+</p>
+<p><code>goodSamplesMS</code>,  <code>goodGenesMS</code> for additional cleaning of multiple data
+sets together. </p>
+
+
+</div>

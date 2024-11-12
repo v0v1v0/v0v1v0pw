@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simulateEigengeneNetwork</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Simulate eigengene network from a causal model </h2>
+
+<h3>Description</h3>
+
+<p>Simulates a set of eigengenes (vectors) from a given set of causal anchors and a causal matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">simulateEigengeneNetwork(
+  causeMat, 
+  anchorIndex, anchorVectors, 
+  noise = 1, 
+  verbose = 0, indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>causeMat</code></td>
+<td>
+<p> causal matrix. The entry <code>[i,j]</code> is the influence (path coefficient) of
+vector <code>j</code> on vector <code>i</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>anchorIndex</code></td>
+<td>
+<p> specifies the indices of the anchor vectors. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>anchorVectors</code></td>
+<td>
+<p> a matrix giving the actual anchor vectors as columns. Their number must
+equal the length of <code>anchorIndex</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>noise</code></td>
+<td>
+<p> standard deviation of the noise added to each simulated vector. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> level of verbosity. 0 means silent. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation; each unit adds two
+spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The algorithm starts with the anchor vectors and iteratively generates the rest from the path
+coefficients given in the matrix <code>causeMat</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>eigengenes </code></td>
+<td>
+<p> generated eigengenes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>causeMat </code></td>
+<td>
+<p> a copy of the input causal matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>levels</code></td>
+<td>
+<p> useful for debugging. A vector with one entry for each eigengene giving the number
+of generations of parents of the eigengene. Anchors have level 0, their direct causal children have
+level 1 etc.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>anchorIndex</code></td>
+<td>
+<p>a copy of the input <code>anchorIndex</code>. </p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder </p>
+
+
+</div>

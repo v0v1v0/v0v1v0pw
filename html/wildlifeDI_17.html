@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>HAI</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Half-weight Association Index</h2>
+
+<h3>Description</h3>
+
+<p>This function computes the Half-weight Association Index for examining the presence of dynamic interaction in wildlife telemetry studies. This implementation follows that outlined in the paper Atwood and Weeks (2003).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">HAI(traj, traj2, hr = NULL, tc = 0, dc = 50)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>traj</code></td>
+<td>
+<p>an object of the class <code>move2</code> which contains the time-stamped movement fixes of at least two individuals. For more information on objects of this type see <code>help(mt_as_move2)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>traj2</code></td>
+<td>
+<p>(optional) same as traj, but for the second group of individuals. See <code>checkTO</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hr</code></td>
+<td>
+<p>(optional)spatial polygon <code>sf</code> object associated with the home range (or some other form of) spatial range estimate for each individual in <code>traj</code>. The hr polygon should have a corresponding ID column with the same column name as in <code>traj</code>. If NULL (the default) the MCP home range estimate will be used for each individual.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tc</code></td>
+<td>
+<p>time threshold for determining simultaneous fixes – see function: <code>GetSimultaneous</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dc</code></td>
+<td>
+<p>distance tolerance limit (in appropriate units) for defining when two fixes are spatially together.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function can be used to test for the presence of dynamic interaction within the shared area (often termed the overlap zone) of the two animals home ranges. Specifically, HAI is calculated in identical fashion to that for <code>Ca</code>, but considers only those fixes in the shared area. Typically, the overlap zone (OZ) is easily obtained by taking the spatial intersection of two polygon home ranges.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns the numeric value of the HAI statistic. Values near 1 indicate attraction within the shared home range area, while values near 0 indicate avoidance within this shared area.
+</p>
+
+
+<h3>References</h3>
+
+<p>Atwood, T.C. and Weeks Jr., H.P. (2003) Spatial home-range overlap and temporal
+interaction in eastern coyotes: The influence of pair types and fragmentation.
+<em>Canadian Journal of Zoology</em>, <b>81</b>: 1589-1597.<br><br></p>
+
+
+<h3>See Also</h3>
+
+<p>GetSimultaneous, Ca
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data(deer)
+
+#uses as a default minimum convex polygon for home range...
+#tc = 7.5 minutes, dc = 50 meters
+HAI(deer, tc=7.5*60, dc=50)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

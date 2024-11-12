@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>warnCI</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Calculate credible intervals for posterior probability of the weaning parameters
+</h2>
+
+<h3>Description</h3>
+
+<p><code>warnCI</code> calculate credible intervals (CIs) of posterior probabilities under a given class <code>"warn"</code> object and a given threshold of CIs.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+warnCI(object, threshold = 0.95)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object of class <code>"warn"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>numeric scalar or vector giving the threshold of CI for posterior probabilities of weaning ages, nitrogen isotope ratios (d15Ns) of enrichment factor, and d15Ns of collagen derived entirely from weaning foods. Minimum range with over (<code>threshold * 100</code>)% of summed posterior probability is calculated. If scalar is given, value is repeated. Values between 0 and 1 must be given.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>warnCI</code> calculates minimum ranges with over (<code>threshold * 100</code>)% of summed posterior probability of the weaning parameters. Posterior probabilities are represented as the product of kernel density estimation performed in <code>warn</code>. CIs of weaning ages are obtained from two-dimensional probability distribution, and those of d15Ns of enrichment factor and collagen derived entirely from weaning foods are from one-dimensional. Posterior probability distributions with multiple notable peaks are not supported by <code>warnCI</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>warnCI</code> returns an object of <code>class</code> <code>"warnCI"</code> which is a subclass of <code>"warn"</code>.<br>
+The function <code>plot</code> is used to indicate figures of the results.<br>
+An object of class <code>"warnCI"</code> has following list components in addition to those succeeded from <code>"warn"</code>:<br></p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>ci.age</code></td>
+<td>
+<p>a list containing the CIs for the combination of t1 and t2, and its summed posterior probability.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci.enrich</code></td>
+<td>
+<p>a list containing the CI for the d15N-enrichment from mother to infant, and its summed posterior probability.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci.wnfood</code></td>
+<td>
+<p>a list containing the CI for the d15N value of collagen derived entirelly from weaning foods, and its summed posterior probability.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci.threshold</code></td>
+<td>
+<p>a vector showing the thresholds used to calculate the CIs.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Takumi Tsutaya developed this model.
+</p>
+
+
+<h3>References</h3>
+
+<p>Tsutaya, T., and Yoneda, M. (2013). Quantitative reconstruction of weaning ages in archaeological human populations using bone collagen nitrogen isotope ratios and approximate Bayesian computation. <em>PLoS ONE</em> <b>8</b>, e72327.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>WARN</code>, <code>warn</code>, <code>warnProb</code>, <code>plot.warnCI</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Data from the Lerna population.
+nonadult &lt;- subset(lerna, lerna$age &lt;= 10)
+adult &lt;- subset(lerna, lerna$age &gt; 17)
+female &lt;- subset(adult, adult$sex == "f")
+
+## Calculate maximum density estimators using ABC.
+warn.lerna &lt;- warn(
+  age = nonadult$age,
+  d15N = nonadult$d15N,
+  female.mean = mean(female$d15N),
+  num.particle = 500,
+  female.sd = sd(female$d15N),
+  prior = c(0.2, 0.2, 1.6, 0.2, 2.5, 0.2, 8.1, 0.2, 0, 0.7),
+  tolerances = c(1.5, 0.7))
+
+## Calculate over (&gt;=) 50% CIs.
+warn.lerna.50ci &lt;- warnCI(warn.lerna, 0.50)
+
+## Indicate result.
+warn.lerna.50ci
+
+## Plot.
+plot(warn.lerna.50ci, "age")
+plot(warn.lerna.50ci, "enrich")
+
+</code></pre>
+
+
+</div>

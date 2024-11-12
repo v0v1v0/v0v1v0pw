@@ -1,0 +1,183 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Wkmeans</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+K-means Clustering with observational weights
+</h2>
+
+<h3>Description</h3>
+
+<p>This function clusters data with observational weights using K-means.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Wkmeans(dataset,
+        k,
+        cl.centers = NULL,
+        obs.weights = rep(1, nrow(dataset)),
+        num.init = 1,
+        max.iterations = 10,
+        seed = 291102)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dataset</code></td>
+<td>
+
+<p>A data matrix (data frame, data table, matrix, etc) containing only entries of class numeric.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+
+<p>Number of desired clusters. Must be of class numeric or integer.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cl.centers</code></td>
+<td>
+
+<p>Chosen cluster centers. If NULL (default), random partition initialization with observational weights would be used. If not NULL, must be a k by ncol(dataset) matrix containing only entries of class numeric.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>obs.weights</code></td>
+<td>
+
+<p>Vector of length nrow(dataset) of weights for each observation in the dataset. Must be of class numeric or integer or table. If NULL, the default value is a vector of 1 with length nrow(dataset), i.e., weights equal 1 for all observations.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num.init</code></td>
+<td>
+
+<p>Number of initial clusters to attempt. Ignored if cl.centers is not NULL. Must be of class numeric or integer.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.iterations</code></td>
+<td>
+
+<p>Maximum number of iterations attempted for convergence before quitting. Must be of class numeric or integer.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+
+<p>Random seed for replication. Must be of class numeric or integer.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>K-means clustering with observational weights can be used as an unsupervised learning technique to cluster observations contained in datasets that also have a measure of importance (e.g. weight) associated with them. The objective of the algorithm which performs this method of clustering is to minimize the total weighted within cluster sum of squares (WWCSS) considering observational weights.
+</p>
+<p>In this function, if no chosen initial cluster centers, random partition initialization with observational weights is used. Each point in the data is first randomly assigned to a random cluster ID, and then the weighted cluster centers are calculated considering observational weights. The initial cluster assignments are obtained by choosing the clusters with minimal weighted sum of squares of residuals with respect to the weighted centers.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Cluster Assignments</code></td>
+<td>
+<p>Vector of length nrow(dataset) containing the cluster assignment for each observation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Cluster Centers</code></td>
+<td>
+<p>k by ncol(dataset) matrix containing the weighted cluster centers for each cluster.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Weighted WCSS</code></td>
+<td>
+<p>List containing the individual WWCSS for each cluster and the combined sum of all individual WWCSS's.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Javier Cabrera, Yajie Duan, Ge Cheng
+</p>
+
+
+<h3>References</h3>
+
+<p>Cherasia, K. E., Cabrera, J., Fernholz, L. T., &amp; Fernholz, R. (2022). Data Nuggets in Supervised Learning. <em>In Robust and Multivariate Statistical Methods: Festschrift in Honor of David E. Tyler</em> (pp. 429-449). Cham: Springer International Publishing.
+</p>
+<p>Beavers, T., Cheng, G., Duan, Y., Cabrera, J., Lubomirski, M., Amaratunga, D., Teigler, J. (2023). Data Nuggets: A Method for Reducing Big Data While Preserving Data Structure (Submitted for Publication)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wss</code>, <code>wwcss</code>, <code>wmean</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+    require(graphics)
+
+    x &lt;- rbind(matrix(rnorm(100, sd = 0.3), ncol = 2),
+           matrix(rnorm(100, mean = 1, sd = 0.3), ncol = 2))
+    colnames(x) &lt;- c("x", "y")
+
+    # assign random weights to observations
+    w = sample(1:20,nrow(x),replace = TRUE)
+
+    #k-means with observational weights
+    cl = Wkmeans(dataset = x, k = 2, obs.weights = w, num.init = 2)
+
+    plot(x,cex = log(w),pch = 16,col = cl$`Cluster Assignments`)
+    points(cl$`Cluster Centers`, col = 1:2, pch = 8, cex = 5)
+
+    #individual WWCSS for each cluster and the combined sum of all individual WWCSS's
+    cl$`Weighted WCSS`
+
+
+    require(cluster)
+
+    # The Ruspini data set from the package "cluster""
+    x = as.matrix(ruspini)
+
+    # assign random weights to observations
+    w = sample(1:20,nrow(x),replace = TRUE)
+
+    #k-means with observational weights
+    cl = Wkmeans(dataset = x, k = 4, obs.weights = w, num.init = 3)
+
+    plot(x,cex = log(w),pch = 16,col = cl$`Cluster Assignments`)
+    points(cl$`Cluster Centers`, col = 1:4, pch = 8, cex = 5)
+
+    #individual WWCSS for each cluster and the combined sum of all individual WWCSS's
+    cl$`Weighted WCSS`
+
+</code></pre>
+
+
+</div>

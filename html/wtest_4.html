@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Patameter Estimation for W-test Probability Distribution</h2>
+
+<h3>Description</h3>
+
+<p>Estimate parameters (<em>h</em> and <em>f</em>) for <code>W-test</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">hf(data, w.order, B = 400, n.sample = nrow(data),
+  n.marker = "default.nmarker")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a data frame or matrix containing genotypes in the columns and subjects in the rows. Genotypes should be coded as (0, 1, 2) or (0, 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.order</code></td>
+<td>
+<p>a numeric number. <code>w.order</code> = 1 gives main effect calculation. <code>w.order</code> = 2 gives pairwise interaction calculation. <code>w.order</code> &gt; 2 gives high order interaction calculation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+<p>a numeric number specifying the number of replicates. Default is 400.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.sample</code></td>
+<td>
+<p>a numeric number specifying the number of samples to be used for estimating parameters. Default is the total number of samples in the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.marker</code></td>
+<td>
+<p>a numeric value, the number of biomarkers to include in bootstrapping. For <code>order</code> = 1, the default = min(P, 1000), and for order = 2, default = min(P, 50). P is the total number of markers in the data.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a set of <em>h</em> and <em>f</em> values indexed by <em>k</em>, estimated automatically. For main effect, <em>k</em> is the number of levels of a predictor variable. For interactions, <em>k</em> is the number of categorical combinations of a variable pair.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Rui Sun, Maggie Haitian Wang
+</p>
+
+
+<h3>References</h3>
+
+<p>Maggie Haitian Wang, Rui Sun, Junfeng Guo, Haoyi Weng, Jack Lee, Inchi Hu, Pak Sham and Benny C.Y. Zee (2016). A fast and powerful W-test for pairwise epistasis testing. Nucleic Acids Research. doi:10.1093/nar/gkw347.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wtest</code>, <code>w.diagnosis</code>, <code>w.qqplot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(diabetes.geno)
+
+# Please note that parameter B is recommended to be greater than 400.
+# For high order interaction analysis (w.order &gt; 2), it is recommended to use default n.sample.
+hf1 &lt;- hf(data = diabetes.geno, w.order = 1, B = 100)
+hf2 &lt;- hf(data = diabetes.geno, w.order = 2, B = 80)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,60 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cite_essential</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Essential citations Knit function for 'RStudio'</h2>
+
+<h3>Description</h3>
+
+<p>This is a wrapper for <code>render</code>. First, this function
+parses the citations in the document, removing citations
+marked with double at sign, e.g.: <code>@@reference2020</code>. Then, it renders
+the file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cite_essential(...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>All arguments are passed to <code>render</code>.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Returns <code>NULL</code> invisibly. This
+function is called for its side effect of rendering an
+'R Markdown' file.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># NOTE: Do not use this function interactively, as in the example below.
+# Only specify it as custom knit function in an R Markdown file, like so:
+# knit: worcs::cite_all
+
+if (rmarkdown::pandoc_available("2.0")){
+  file_name &lt;- tempfile("citeessential", fileext = ".Rmd")
+  rmarkdown::draft(file_name,
+                   template = "github_document",
+                   package = "rmarkdown",
+                   create_dir = FALSE,
+                   edit = FALSE)
+  write(c("", "Optional reference: @reference2020"),
+        file = file_name, append = TRUE)
+  cite_essential(file_name)
+}
+</code></pre>
+
+
+</div>

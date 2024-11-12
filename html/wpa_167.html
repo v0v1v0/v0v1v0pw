@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>subject_scan</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Count top words in subject lines grouped by a custom attribute</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+</p>
+<p>This function generates a matrix of the top occurring words in meetings,
+grouped by a specified attribute such as organisational attribute, day of the
+week, or hours of the day.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">subject_scan(
+  data,
+  hrvar,
+  mode = NULL,
+  top_n = 10,
+  token = "words",
+  return = "plot",
+  weight = NULL,
+  stopwords = NULL,
+  ...
+)
+
+tm_scan(
+  data,
+  hrvar,
+  mode = NULL,
+  top_n = 10,
+  token = "words",
+  return = "plot",
+  weight = NULL,
+  stopwords = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A Meeting Query dataset in the form of a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hrvar</code></td>
+<td>
+<p>String containing the name of the HR Variable by which to split
+metrics. Note that the prefix <code>'Organizer_'</code> or equivalent will be
+required.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>String specifying what variable to use for grouping subject
+words. Valid values include:
+</p>
+
+<ul>
+<li> <p><code>"hours"</code>
+</p>
+</li>
+<li> <p><code>"days"</code>
+</p>
+</li>
+<li> <p><code>NULL</code> (defaults to <code>hrvar</code>)
+When the value passed to <code>mode</code> is not <code>NULL</code>, the value passed to <code>hrvar</code>
+will be discarded and instead be over-written by setting specified in <code>mode</code>.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>top_n</code></td>
+<td>
+<p>Numeric value specifying the top number of words to show.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>token</code></td>
+<td>
+<p>A character vector accepting either <code>"words"</code> or <code>"ngrams"</code>,
+determining type of tokenisation to return.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String specifying what to return. This must be one of the
+following strings:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>
+</p>
+</li>
+<li> <p><code>"table"</code>
+</p>
+</li>
+<li> <p><code>"data"</code>
+</p>
+</li>
+</ul>
+<p>See <code>Value</code> for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight</code></td>
+<td>
+<p>String specifying the column name of a numeric variable for
+weighting data, such as <code>"Invitees"</code>. The column must contain positive
+integers. Defaults to <code>NULL</code>, where no weighting is applied.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stopwords</code></td>
+<td>
+<p>A character vector OR a single-column data frame labelled
+<code>'word'</code> containing custom stopwords to remove.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters to pass to <code>tm_clean()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A different output is returned depending on the value passed to the <code>return</code>
+argument:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>: 'ggplot' object. A heatmapped grid.
+</p>
+</li>
+<li> <p><code>"table"</code>: data frame. A summary table for the metric.
+</p>
+</li>
+<li> <p><code>"data"</code>: data frame.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# return a heatmap table for words
+mt_data %&gt;% subject_scan(hrvar = "Organizer_Organization")
+
+# return a heatmap table for ngrams
+mt_data %&gt;%
+  subject_scan(
+    hrvar = "Organizer_Organization",
+    token = "ngrams",
+    n = 2)
+
+# return raw table format
+mt_data %&gt;% subject_scan(hrvar = "Organizer_Organization", return = "table")
+
+# grouped by hours
+mt_data %&gt;% subject_scan(mode = "hours")
+
+# grouped by days
+mt_data %&gt;% subject_scan(mode = "days")
+
+</code></pre>
+
+
+</div>

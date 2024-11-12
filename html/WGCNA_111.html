@@ -1,0 +1,761 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hierarchicalConsensusKME</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Calculation of measures of fuzzy module membership (KME) in hierarchical consensus modules
+</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates several measures of fuzzy module membership in hiearchical consensus modules.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">hierarchicalConsensusKME(
+   multiExpr,
+   moduleLabels,
+   multiWeights = NULL,
+   multiEigengenes = NULL,
+   consensusTree,
+   signed = TRUE,
+   useModules = NULL,
+   metaAnalysisWeights = NULL,
+   corAndPvalueFnc = corAndPvalue, corOptions = list(),
+   corComponent = "cor", getFDR = FALSE,
+   useRankPvalue = TRUE,
+   rankPvalueOptions = list(calculateQvalue = getFDR, pValueMethod = "scale"),
+   setNames = names(multiExpr), excludeGrey = TRUE,
+   greyLabel = if (is.numeric(moduleLabels)) 0 else "grey",
+   reportWeightType = NULL,
+   getOwnModuleZ = TRUE,
+   getBestModuleZ = TRUE,
+   getOwnConsensusKME = TRUE,
+   getBestConsensusKME = TRUE,
+   getAverageKME = FALSE,
+   getConsensusKME = TRUE,
+
+   getMetaColsFor1Set = FALSE,
+   getMetaP = FALSE,
+   getMetaFDR = getMetaP &amp;&amp; getFDR,
+
+   getSetKME = TRUE,
+   getSetZ = FALSE,
+   getSetP = FALSE,
+   getSetFDR = getSetP &amp;&amp; getFDR,
+
+   includeID = TRUE,
+   additionalGeneInfo = NULL,
+   includeWeightTypeInColnames = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>multiExpr</code></td>
+<td>
+<p> Expression data in the multi-set format (see <code>checkSets</code>). A vector of
+lists, one per set. Each set must contain a component <code>data</code> that contains the expression data, with
+rows corresponding to samples and columns to genes or probes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>moduleLabels</code></td>
+<td>
+
+<p>A vector with one entry per column (gene or probe) in <code>multiExpr</code>, giving the module labels. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multiWeights</code></td>
+<td>
+<p> optional observation weights for data in <code>multiExpr</code>, 
+in the same format (and dimensions) as <code>multiExpr</code>.
+These weights are used in calculation of KME, i.e., the correlation of module eigengenes with data in
+<code>multiExpr</code>. The module eigengenes are not weighted in this calculation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multiEigengenes</code></td>
+<td>
+
+<p>Optional specification of module eigengenes of the modules (<code>moduleLabels</code>) in data sets within
+<code>multiExpr</code>. If not given, will be calculated.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>consensusTree</code></td>
+<td>
+
+<p>A list specifying the consensus calculation. See details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signed</code></td>
+<td>
+
+<p>Logical: should module membership be considered singed? Signed membership should be used for signed (including
+signed hybrid) networks and means that negative module membership means the
+gene is not a member of the module.
+In other words, in signed networks 
+negative kME values are not considered significant and the corresponding p-values will be one-sided. In
+unsigned networks, negative kME values are considered significant and the corresponding
+p-values will be two-sided.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useModules</code></td>
+<td>
+
+<p>Optional vector specifying which modules should be used. Defaults to all modules except the unassigned module.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metaAnalysisWeights</code></td>
+<td>
+
+<p>Optional specification of meta-analysis weights for each input set. If given, must be a numeric vector
+of length equal the number of input data sets (i.e., <code>length(multiExpr)</code>). These weights will be used
+in addition to constant weights and weights proportional to number of samples (observations) in each set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corAndPvalueFnc</code></td>
+<td>
+
+<p>Function that calculates associations between expression profiles and eigengenes. See details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corOptions</code></td>
+<td>
+
+<p>List giving additional arguments to function <code>corAndPvalueFnc</code>. See details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corComponent</code></td>
+<td>
+
+<p>Name of the component of output of <code>corAndPvalueFnc</code> that contains the actual correlation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getFDR</code></td>
+<td>
+
+<p>Logical: should FDR be calculated?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useRankPvalue</code></td>
+<td>
+<p> Logical: should the <code>rankPvalue</code> function be used to obtain alternative
+meta-analysis statistics?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rankPvalueOptions</code></td>
+<td>
+<p> Additional options for function <code>rankPvalue</code>. These include
+<code>na.last</code> (default <code>"keep"</code>), <code>ties.method</code> (default <code>"average"</code>),
+<code>calculateQvalue</code> (default copied from input <code>getQvalues</code>),
+and <code>pValueMethod</code> (default <code>"scale"</code>).
+See the help file for <code>rankPvalue</code> for full details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>setNames</code></td>
+<td>
+
+<p>Names for the input sets. If not given, will be taken from <code>names(multiExpr)</code>. If those are
+<code>NULL</code> as well, the names will be <code>"Set_1", "Set_2", ...</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>excludeGrey</code></td>
+<td>
+
+<p>logical: should the grey module be excluded from the kME tables? Since the grey module is typically not a
+real module, it makes little sense to report kME values for it.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>greyLabel</code></td>
+<td>
+
+<p>label that labels the grey module.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reportWeightType</code></td>
+<td>
+
+<p>One of <code>"equal", "rootDoF", "DoF", "user"</code>. Indicates which of the weights should be reported in the
+output. If not given, all available weight types will be reported; this always includes <code>"equal",
+"rootDoF", "DoF"</code>, while <code>"user"</code> weights are reported if <code>metaAnalysisWeights</code> above is given.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getOwnModuleZ</code></td>
+<td>
+
+<p>Logical: should meta-analysis Z statistic in own module be returned as a column of the output?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getBestModuleZ</code></td>
+<td>
+
+<p>Logical: should highest meta-analysis Z statistic across all modules and the corresponding module be returned
+as columns of the output?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getOwnConsensusKME</code></td>
+<td>
+
+<p>Logical: should consensus KME (eigengene-based connectivity) statistic in own module be returned as a 
+column of the output?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getBestConsensusKME</code></td>
+<td>
+
+<p>Logical: should highest consensus KME across all modules and the corresponding module be returned 
+as columns of the output?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getAverageKME</code></td>
+<td>
+
+<p>Logical: Should average KME be calculated? 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getConsensusKME</code></td>
+<td>
+
+<p>Logical: should consensus KME be calculated?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getMetaColsFor1Set</code></td>
+<td>
+
+<p>Logical: should the meta-statistics be returned if the input data only have 1 set? For 1 set, meta- and individual kME
+values are the same, so meta-columns essentially duplicate individual columns.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getMetaP</code></td>
+<td>
+
+<p>Logical: should meta-analysis p-values corresponding to the KME meta-analysis Z statistics be calculated?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getMetaFDR</code></td>
+<td>
+
+<p>Logical: should FDR estimates for the meta-analysis p-values corresponding to the KME meta-analysis Z
+statistics be calculated? 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getSetKME</code></td>
+<td>
+
+<p>Logical: should KME values for individual sets be returned?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getSetZ</code></td>
+<td>
+
+<p>Logical: should Z statistics corresponding to KME for individual sets be returned?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getSetP</code></td>
+<td>
+
+<p>Logical: should p values corresponding to KME for individual sets be returned?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getSetFDR</code></td>
+<td>
+
+<p>Logical: should FDR estimates corresponding to KME for individual sets be returned?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>includeID</code></td>
+<td>
+
+<p>Logical: should gene ID (taken from column names of <code>multiExpr</code>) be included as the first column in
+the output?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>additionalGeneInfo</code></td>
+<td>
+
+<p>Optional data frame with rows corresponding to genes in <code>multiExpr</code> that should be included as part of
+the output.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>includeWeightTypeInColnames</code></td>
+<td>
+
+<p>Logical: should weight type (<code>"equal", "rootDoF", "DoF", "user"</code>) be included in appropriate
+meta-analysis column names?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function calculates several measures of (hierarchical) consensus KME (eigengene-based intramodular
+connectivity or fuzzy module membership) for all genes in all modules.
+</p>
+<p>First, it calculates the meta-analysis Z statistics for correlations
+between genes and module eigengenes; this is known as the consensus module membership Z statistic. The
+meta-analysis weights can be specified by the user either explicitly or implicitly ("equal", "RootDoF" or
+"DoF"). 
+</p>
+<p>Second, it can calculate the consensus KME, i.e., the hierarchical consensus of the KMEs (correlations with
+eigengenes) across the individual sets. The consensus calculation is specified in the argument
+<code>consensusTree</code>; 
+typically, the <code>consensusTree</code> used here will be the same as the one used for the actual consensus
+network construction and module identification.  
+See <code>newConsensusTree</code> for details on how to specify consensus trees.
+</p>
+<p>Third, the function can also calculate the (weighted) average KME using the meta-analysis weights; the average
+KME can be interpreted as the meta-analysis of the KMEs in the individual sets. This is related to but
+somewhat distinct from the meta-analysis Z statistics.
+</p>
+<p>In addition to these, optional output also includes, for each gene, KME values in the module to which the gene
+is assigned as well as the maximum KME values and modules for
+which the maxima are attained. For most genes, the assigned module will be the one with highest KME values,
+but for some genes the assigned module and module of maximum KME may be different.
+</p>
+<p>The function <code>corAndPvalueFnc</code> is currently
+is expected to accept arguments <code>x</code> (gene expression profiles), <code>y</code> (eigengene expression
+profiles), and <code>alternative</code> with possibilities at least <code>"greater", "two.sided"</code>. If weights are
+given, these are passed to <code>corAndPvalueFnc</code> as argument <code>weights.x</code>.
+Any additional arguments can be passed via <code>corOptions</code>.
+</p>
+<p>The function <code>corAndPvalueFnc</code> should return a list which at the least contains (1) a matrix
+of associations of genes and eigengenes (this component should have the name given by <code>corComponent</code>),
+and (2) a matrix of the corresponding p-values, named "p" or "p.value". Other components are optional but
+for full functionality should include
+(3) <code>nObs</code> giving the number of observations for each association (which is the number of samples less
+number of missing data - this can in principle vary from association to association), and (4) <code>Z</code>
+giving a Z static for each observation. If these are missing, <code>nObs</code> is calculated in the main
+function, and calculations using the Z statistic are skipped.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Data frame with the following components, some of which may be missing depending on input options (for easier
+readability the order here is not the same as in the actual output): 
+</p>
+<table><tr style="vertical-align: top;">
+<td><code>ID</code></td>
+<td>
+<p>Gene ID, taken from the column names of the first input data set</p>
+</td>
+</tr></table>
+<p>If given, a copy of <code>additionalGeneInfo</code>.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Z.kME.inOwnModule</code></td>
+<td>
+<p>Meta-analysis Z statistic for membership in assigned module.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxZ.kME</code></td>
+<td>
+<p>Maximum meta-analysis Z statistic for membership across all modules.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>moduleOfMaxZ.kME</code></td>
+<td>
+<p>Module in which the maximum meta-analysis Z statistic is attained. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>consKME.inOwnModule</code></td>
+<td>
+<p>Consensus KME in assigned module.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxConsKME</code></td>
+<td>
+<p>Maximum consensus KME across all modules.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>moduleOfMaxConsKME</code></td>
+<td>
+<p>Module in which the maximum consensus KME is attained.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>consensus.kME.1, consensus.kME.2, ...</code></td>
+<td>
+<p>Consensus kME (that is, the requested quantile of the kMEs in the
+individual data sets)in each module for each gene across the input data
+sets. The module labels (here 1, 2, etc.) correspond to those in <code>moduleLabels</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weightedAverage.equalWeights.kME1, weightedAverage.equalWeights.kME2, ...</code></td>
+<td>
+
+<p>Average kME in each module for each gene across the
+input data sets. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weightedAverage.RootDoFWeights.kME1, weightedAverage.RootDoFWeights.kME2, ...</code></td>
+<td>
+
+<p>Weighted average kME in each module for each gene across the
+input data sets. The weight of each data set is proportional to the square root of the 
+number of samples in the set. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weightedAverage.DoFWeights.kME1, weightedAverage.DoFWeights.kME2, ...</code></td>
+<td>
+
+<p>Weighted average kME in each module for each gene across the
+input data sets. The weight of each data set is proportional to number of samples in the set. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weightedAverage.userWeights.kME1, weightedAverage.userWeights.kME2, ...</code></td>
+<td>
+
+<p>(Only present if input <code>metaAnalysisWeights</code> is non-NULL.)
+Weighted average kME in each module for each gene across the
+input data sets. The weight of each data set is given in <code>metaAnalysisWeights</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meta.Z.equalWeights.kME1, meta.Z.equalWeights.kME2, ...</code></td>
+<td>
+<p>Meta-analysis Z statistic for kME in each module, 
+obtained by weighing the Z scores in each set equally. Only returned if the function <code>corAndPvalueFnc</code>
+returns the Z statistics corresponding to the correlations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meta.Z.RootDoFWeights.kME1, meta.Z.RootDoFWeights.kME2, ...</code></td>
+<td>
+
+<p>Meta-analysis Z statistic for kME in each module, 
+obtained by weighing the Z scores in each set by the square root of the number of
+samples. Only returned if the function <code>corAndPvalueFnc</code>
+returns the Z statistics corresponding to the correlations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meta.Z.DoFWeights.kME1, meta.Z.DoFWeights.kME2, ...</code></td>
+<td>
+<p>Meta-analysis Z statistic for kME in each module, 
+obtained by weighing the Z scores in each set by the number of
+samples. Only returned if the function <code>corAndPvalueFnc</code>
+returns the Z statistics corresponding to the correlations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meta.Z.userWeights.kME1, meta.Z.userWeights.kME2, ...</code></td>
+<td>
+<p>Meta-analysis Z statistic for kME in each module, 
+obtained by weighing the Z scores in each set by <code>metaAnalysisWeights</code>. 
+Only returned if <code>metaAnalysisWeights</code> is non-NULL and the function <code>corAndPvalueFnc</code>
+returns the Z statistics corresponding to the correlations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meta.p.equalWeights.kME1, meta.p.equalWeights.kME2, ...</code></td>
+<td>
+ 
+<p>p-values obtained from the equal-weight meta-analysis Z statistics. Only returned if the function
+<code>corAndPvalueFnc</code> returns the Z statistics corresponding to the correlations. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meta.p.RootDoFWeights.kME1, meta.p.RootDoFWeights.kME2, ...</code></td>
+<td>
+ 
+<p>p-values obtained from the meta-analysis Z statistics with weights proportional to the square root of the
+number of samples. Only returned if the function
+<code>corAndPvalueFnc</code> returns the Z statistics corresponding to the correlations. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meta.p.DoFWeights.kME1, meta.p.DoFWeights.kME2, ...</code></td>
+<td>
+ 
+<p>p-values obtained from the degree-of-freedom weight meta-analysis Z statistics. Only returned if the function
+<code>corAndPvalueFnc</code> returns the Z statistics corresponding to the correlations. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meta.p.userWeights.kME1, meta.p.userWeights.kME2, ...</code></td>
+<td>
+ 
+<p>p-values obtained from the user-supplied weight meta-analysis Z statistics. Only returned if
+<code>metaAnalysisWeights</code> is non-NULL and the function
+<code>corAndPvalueFnc</code> returns the Z statistics corresponding to the correlations. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meta.q.equalWeights.kME1, meta.q.equalWeights.kME2, ...</code></td>
+<td>
+ 
+<p>q-values obtained from the equal-weight meta-analysis p-values. Only present if
+<code>getQvalues</code> is <code>TRUE</code> and the function <code>corAndPvalueFnc</code> 
+returns the Z statistics corresponding to the kME values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meta.q.RootDoFWeights.kME1, meta.q.RootDoFWeights.kME2, ...</code></td>
+<td>
+ 
+<p>q-values obtained from the meta-analysis p-values with weights proportional to the square root of the 
+number of samples. Only present if
+<code>getQvalues</code> is <code>TRUE</code> and the function <code>corAndPvalueFnc</code> 
+returns the Z statistics corresponding to the kME values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meta.q.DoFWeights.kME1, meta.q.DoFWeights.kME2, ...</code></td>
+<td>
+ 
+<p>q-values obtained from the degree-of-freedom weight meta-analysis p-values. Only present if
+<code>getQvalues</code> is <code>TRUE</code> and the function <code>corAndPvalueFnc</code> 
+returns the Z statistics corresponding to the kME values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meta.q.userWeights.kME1, meta.q.userWeights.kME2, ...</code></td>
+<td>
+ 
+<p>q-values obtained from the user-specified weight meta-analysis p-values. Only present if
+<code>metaAnalysisWeights</code> is non-NULL, 
+<code>getQvalues</code> is <code>TRUE</code> and the function <code>corAndPvalueFnc</code> 
+returns the Z statistics corresponding to the kME values.</p>
+</td>
+</tr>
+</table>
+<p>The next set of columns contain the results of function <code>rankPvalue</code> and are only present if
+input <code>useRankPvalue</code> is <code>TRUE</code>. Some columns may be missing depending on the options specified in
+<code>rankPvalueOptions</code>. We explicitly list columns that are based on weighing each set equally; names of
+these columns carry the suffix <code>.equalWeights</code>
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>pValueExtremeRank.ME1.equalWeights, pValueExtremeRank.ME2.equalWeights, ...</code></td>
+<td>
+
+<p>This is the minimum between pValueLowRank and
+pValueHighRank, i.e. min(pValueLow, pValueHigh)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValueLowRank.ME1.equalWeights, pValueLowRank.ME2.equalWeights, ...</code></td>
+<td>
+
+<p>Asymptotic p-value for observing a consistently low value
+based on the rank method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValueHighRank.ME1.equalWeights, pValueHighRank.ME2.equalWeights, ...</code></td>
+<td>
+
+<p>Asymptotic p-value for observing a consistently low value
+across the columns of datS based on the rank method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValueExtremeScale.ME1.equalWeights, pValueExtremeScale.ME2.equalWeights, ...</code></td>
+<td>
+
+<p>This is the minimum between pValueLowScale and
+pValueHighScale, i.e. min(pValueLow, pValueHigh)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValueLowScale.ME1.equalWeights, pValueLowScale.ME2.equalWeights, ...</code></td>
+<td>
+
+<p>Asymptotic p-value for observing a consistently low value
+across the columns of datS based on the Scale method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValueHighScale.ME1.equalWeights, pValueHighScale.ME2.equalWeights, ...</code></td>
+<td>
+
+<p>Asymptotic p-value for observing a consistently low
+value across the columns of datS based on the Scale method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueExtremeRank.ME1.equalWeights, qValueExtremeRank.ME2.equalWeights, ...</code></td>
+<td>
+
+<p>local false discovery rate (q-value) corresponding
+to the p-value pValueExtremeRank</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueLowRank.ME1.equalWeights, qValueLowRank.ME2.equalWeights, ...</code></td>
+<td>
+
+<p>local false discovery rate (q-value) corresponding to the
+p-value pValueLowRank</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueHighRank.ME1.equalWeights, lueHighRank.ME2.equalWeights, ...</code></td>
+<td>
+
+<p>local false discovery rate (q-value) corresponding to the
+p-value pValueHighRank</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueExtremeScale.ME1.equalWeights, qValueExtremeScale.ME2.equalWeights, ...</code></td>
+<td>
+
+<p>local false discovery rate (q-value)
+corresponding to the p-value pValueExtremeScale</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueLowScale.ME1.equalWeights, qValueLowScale.ME2.equalWeights, ...</code></td>
+<td>
+
+<p>local false discovery rate (q-value) corresponding to the
+p-value pValueLowScale</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueHighScale.ME1.equalWeights,qValueHighScale.ME2.equalWeights, ...</code></td>
+<td>
+
+<p>local false discovery rate (q-value) corresponding to
+the p-value pValueHighScale</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Analogous columns corresponding to weighing individual sets by the square root of the number of
+samples, by number of samples, and by user weights (if given). The corresponding column name suffixes are 
+<code>.RootDoFWeights</code>, <code>.DoFWeights</code>, and <code>.userWeights</code>.</p>
+</td>
+</tr>
+</table>
+<p>The following set of columns summarize kME in individual input data sets.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>kME1.Set_1, kME1.Set_2, ..., kME2.Set_1, kME2.Set_2, ...</code></td>
+<td>
+<p> kME values for each gene in each module in
+each given data set. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.kME1.Set_1, p.kME1.Set_2, ..., p.kME2.Set_1, p.kME2.Set_2, ...</code></td>
+<td>
+<p> p-values corresponding to 
+kME values for each gene in each module in each given data set. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q.kME1.Set_1, q.kME1.Set_2, ..., q.kME2.Set_1, q.kME2.Set_2, ...</code></td>
+<td>
+<p> q-values corresponding to 
+kME values for each gene in each module in each given data set. Only returned if <code>getQvalues</code> is
+<code>TRUE</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z.kME1.Set_1, Z.kME1.Set_2, ..., Z.kME2.Set_1, Z.kME2.Set_2, ...</code></td>
+<td>
+<p> Z statistics corresponding to
+kME values for each gene in each module in each given data set. Only present if the function
+<code>corAndPvalueFnc</code>                 
+returns the Z statistics corresponding to the kME values. </p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>signedKME</code> for eigengene based connectivity in a single data set.
+<code>corAndPvalue</code>, <code>bicorAndPvalue</code> for two alternatives for calculating correlations and the 
+corresponding p-values and Z scores. Both can be used with this function.
+<code>newConsensusTree</code> for more details on hierarchical consensus trees and calculations.
+</p>
+
+
+</div>

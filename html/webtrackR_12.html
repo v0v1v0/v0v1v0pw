@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>classify_visits</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Classify visits by matching to a list of classes</h2>
+
+<h3>Description</h3>
+
+<p><code>classify_visits()</code> categorizes visits by either extracting the visit URL's
+domain or host and matching them to a list of domains or hosts;
+or by matching a list of regular expressions against the visit URL.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">classify_visits(
+  wt,
+  classes,
+  match_by = "domain",
+  regex_on = NULL,
+  return_rows_by = NULL,
+  return_rows_val = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wt</code></td>
+<td>
+<p>webtrack data object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>classes</code></td>
+<td>
+<p>a data frame containing classes that can be matched to visits.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>match_by</code></td>
+<td>
+<p>character. Whether to match list entries from <code>classes</code> to
+the domain of a visit (<code>"domain"</code>) or the host (<code>"host"</code>) with an exact match;
+or with a regular expression against the whole URL of a visit (<code>"regex"</code>).
+If set to <code>"domain"</code> or <code>"host"</code>, both <code>wt</code> and <code>classes</code> need to have
+a column called accordingly. If set to <code>"regex"</code>, the <code>url</code> column of <code>wt</code>
+will be used, and you need to set <code>regex_on</code> to the column in <code>classes</code>
+for which to do the pattern matching. Defaults to <code>"domain"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>regex_on</code></td>
+<td>
+<p>character. Column in <code>classes</code> which to use for
+pattern matching. Defaults to <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_rows_by</code></td>
+<td>
+<p>character. A column in <code>classes</code> on which to
+subset the returning data. Defaults to <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_rows_val</code></td>
+<td>
+<p>character. The value of the columns specified in
+<code>return_rows_by</code>, for which data should be returned. For example, if your
+<code>classes</code> data contains a column <code>type</code>, which has a value called <code>"shopping"</code>,
+setting <code>return_rows_by</code> to <code>"type"</code> and <code>return_rows_val</code> to <code>"shopping"</code>
+will only return visits classified as <code>"shopping"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>webtrack data.frame with the same columns as <code>wt</code> and any column
+in <code>classes</code> except the column specified by <code>match_by</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data("testdt_tracking")
+data("domain_list")
+wt &lt;- as.wt_dt(testdt_tracking)
+# classify visits via domain
+wt_domains &lt;- extract_domain(wt)
+wt_classes &lt;- classify_visits(wt_domains, classes = domain_list, match_by = "domain")
+# classify visits via domain
+# for the example, just renaming "domain" column
+domain_list$host &lt;- domain_list$domain
+wt_hosts &lt;- extract_host(wt)
+wt_classes &lt;- classify_visits(wt_hosts, classes = domain_list, match_by = "host")
+# classify visits with pattern matching
+# for the example, any value in "domain" treated as pattern
+data("domain_list")
+regex_list &lt;- domain_list[type == "facebook"]
+wt_classes &lt;- classify_visits(wt[1:5000],
+    classes = regex_list,
+    match_by = "regex", regex_on = "domain"
+)
+# classify visits via domain and only return class "search"
+data("domain_list")
+wt_classes &lt;- classify_visits(wt_domains,
+    classes = domain_list,
+    match_by = "domain", return_rows_by = "type",
+    return_rows_val = "search"
+)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

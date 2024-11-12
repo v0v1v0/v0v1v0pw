@@ -1,0 +1,130 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ICCfit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Empirical item characteristic curve plot for the Rasch Model~
+</h2>
+
+<h3>Description</h3>
+
+<p>The <code>ICCfit</code> function is intended for contrasting a Rasch model's expected item characteristic curve against the empirical data from dichotomous responses. The <code>ICCfit</code> function displays a confidence interval for the model based curve and plots the confidence interval for the empirical proportions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ICCfit(itemNumber, observedResponses, personEstimates, 
+    itemParameters, xlim = c(-4, 4), method = "Quantile", NQtiles = 10)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>itemNumber</code></td>
+<td>
+
+<p>The position of the item in the test. This position is used to select the column of observed responses and the item difficulty among the item parameters.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>observedResponses</code></td>
+<td>
+
+<p>Data frame or matrix with observed responses. The data frame or matrix should be of size  N * I, where N is the number of respondents and I is the number of items in the model.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>personEstimates</code></td>
+<td>
+
+<p>A vector of length N containing the model based person estimates or predictions.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>itemParameters</code></td>
+<td>
+
+<p>A data frame or matrix of dimensions I * 2 containing the model based item difficulty estimates in the firs column and the parameter standard error in the second column.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim</code></td>
+<td>
+
+<p>Vector with two values indicating the minimum and maximum values to be used when plotting the item characteristic curve.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+
+<p>Selects the method used to group the respondents: <code>Quantile</code> (default), <code>ByPersonEstimate</code>, and <code>Histogram</code> (see ‘Details’).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NQtiles</code></td>
+<td>
+
+<p>When using the <code>Quantile</code> method this value controls how many grouping will be used: 4 groups cases groups respondents by quartiles, 5 by quintiles, 10 by deciles, etc.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function uses the item difficulty parameter to generate the model based curve and the item difficulty parameter standard error to plot a confidence interval around the curve. The observed responses are then grouped using the selected method in order to contrast the model predicted response probability with the observed proportion. By default the function uses deciles to generate the respondent groups. The function allows the method <code>ByPersonEstimate</code> in order to make a different group for each observed person estimate (potentially useful when analyzing test data with large numbers with no missing data), and the <code>Histogram</code> method, which uses the Freedman-Diaconis algorithm to select the width of the bands used for grouping.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Torres Irribarra
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>CCCfit</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Simulate 1000 persons and 5 items with 2 levels (Rasch model)
+set.seed(123)
+simulated_data &lt;- sim.PCM(pN = 1000, iN = 5, lN = 2)
+
+# Extract simulated item responses and abilities
+observed_responses &lt;- simulated_data$resp - 1
+person_abilities &lt;- simulated_data$theta
+item_params &lt;- cbind(simulated_data$delta[,2],rep(0.08),5) 
+# Defining a 0.08 of error for the item parameters, 
+# this usually would be estimated.
+
+# Plot the ICC for the first item using the Quantile method
+ICCfit(itemNumber = 1, 
+       observedResponses = observed_responses, 
+       personEstimates = person_abilities, 
+       itemParameters = item_params, 
+       method = "Quantile", 
+       NQtiles = 10)
+
+
+
+
+</code></pre>
+
+
+</div>

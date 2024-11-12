@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fetch_len</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate the fetch length around a point</h2>
+
+<h3>Description</h3>
+
+<p>Given a point, a shoreline layer and a vector of wind directions (bearings),
+<code>fetch_len</code> calculates the distance from point to shore for each bearing.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fetch_len(
+  p,
+  bearings,
+  shoreline,
+  dmax,
+  spread = 0,
+  projected = FALSE,
+  check_inputs = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>Simple feature (sf or sfc) object representing a single point.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bearings</code></td>
+<td>
+<p>Vector of bearings, in degrees.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shoreline</code></td>
+<td>
+<p>Simple feature (sf or sfc) object representing the
+shoreline, in either line or polygon format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dmax</code></td>
+<td>
+<p>Maximum value of fetch length, returned if there is no land
+within a distance of <code>dmax</code> from a given bearing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spread</code></td>
+<td>
+<p>Vector of relative bearings (in degrees) for which
+to calculate fetch around each main bearing (see details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>projected</code></td>
+<td>
+<p>Deprecated argument, kept for backwards compatibility.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>check_inputs</code></td>
+<td>
+<p>Should the validity of inputs be checked? It is
+recommended to keep this TRUE, unless this function is called repeatedly from
+another function that already checks inputs.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The fetch length (or fetch) is the distance of open water over which the wind
+can blow in a specific direction. Note that bearings represent the direction
+from where the wind originates.
+</p>
+<p>The optional <code>spread</code> argument defines relative directions that are
+added to each main bearing to produce a set of sub-bearings. The fetch lengths
+calculated for each sub-bearing are averaged with weights proportional to
+<code>cos(spread)</code>. By default, <code>spread = 0</code> and fetch length is
+calculated for the main bearings only.
+</p>
+<p>The input data can be in either geographic (long, lat) or projected coordinates,
+but <code>p</code> and <code>shoreline</code> must share the same coordinate system. Distances
+are calculated using the <code>st_distance</code> function from the sf package
+and expressed in the units of the coordinate system used, or in meters if using
+geographic coordinates. For geographic coordinates, we recommend setting
+<code>sf_use_s2(FALSE)</code>, which results in <code>st_distance</code> using the ellipsoid
+distance calculation (requires the lwgeom package), instead of the less precise
+spherical distance calculation. For projected coordinates, the Euclidean distance
+is calculated.
+</p>
+<p>If the shoreline layer is composed of polygons rather than lines, the function
+verifies that the input point is outside all polygons (i.e. in water). If this is
+not the case, it issues a warning and returns a vector of <code>NA</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A named vector representing the fetch length for each direction
+given in <code>bearings</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fetch_len_multi</code> for an efficient alternative when
+computing fetch length for multiple points.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"> pt &lt;- st_sfc(st_point(c(0, 0)), crs = st_crs(4326))
+ # Shoreline is a rectangle from (-0.2, 0.25) to (0.3, 0.5)
+ rect &lt;- st_polygon(list(cbind(c(rep(-0.2, 2), rep(0.3, 2), -0.2),
+                               c(0.25, rep(0.3, 2), rep(0.25, 2)))))
+ land &lt;- st_sfc(rect, crs = st_crs(4326))
+ fetch_len(pt, bearings = c(0, 45, 225, 315), land,
+           dmax = 50000, spread = c(-10, 0, 10))
+</code></pre>
+
+
+</div>

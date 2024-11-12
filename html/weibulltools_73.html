@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>reliability_data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Reliability Data</h2>
+
+<h3>Description</h3>
+
+<p>Create consistent reliability data based on an existing <code>data.frame</code>
+(preferred) or on multiple equal length vectors.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">reliability_data(data = NULL, x, status, id = NULL, .keep_all = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Either <code>NULL</code> or a <code>data.frame</code>. If data is <code>NULL</code>,
+<code>x</code>, <code>status</code> and <code>id</code> must be vectors containing
+the data. Otherwise <code>x</code>, <code>status</code> and <code>id</code> can be either column
+names or column positions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Lifetime data, that means any characteristic influencing the reliability
+of a product, e.g. operating time (days/months in service), mileage (km, miles),
+load cycles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>Binary data (0 or 1) indicating whether a unit is a right
+censored observation (= 0) or a failure (= 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>Identification of every unit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.keep_all</code></td>
+<td>
+<p>If <code>TRUE</code> keep remaining variables in <code>data</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tibble with class <code>wt_reliability_data</code> containing the following
+columns (if <code>.keep_all = FALSE</code>):
+</p>
+
+<ul>
+<li> <p><code>x</code> : Lifetime characteristic.
+</p>
+</li>
+<li> <p><code>status</code> : Binary data (0 or 1) indicating whether a unit is a right
+censored observation (= 0) or a failure (= 1).
+</p>
+</li>
+<li> <p><code>id</code> : Identification for every unit.
+</p>
+</li>
+</ul>
+<p>If <code>.keep_all = TRUE</code>, the remaining columns of <code>data</code> are also preserved.
+</p>
+<p>If <code>!is.null(data)</code> the attribute <code>characteristic</code> holds the name of the
+characteristic described by <code>x</code>. Otherwise it is set to <code>"x"</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Example 1 -  Based on an existing data.frame/tibble and column names:
+data &lt;- reliability_data(
+  data = shock,
+  x = distance,
+  status = status
+)
+
+# Example 2 - Based on an existing data.frame/tibble and column positions:
+data_2 &lt;- reliability_data(
+  data = shock,
+  x = 1,
+  status = 3
+)
+
+# Example 3 - Keep all variables of the tibble/data.frame entered to argument data:
+data_3 &lt;- reliability_data(
+  data = shock,
+  x = distance,
+  status = status,
+  .keep_all = TRUE
+)
+
+# Example 4 - Based on vectors:
+cycles &lt;- alloy$cycles
+state &lt;- alloy$status
+id &lt;- "XXXXXX"
+
+data_4 &lt;- reliability_data(
+  x = cycles,
+  status = state,
+  id = id
+)
+
+</code></pre>
+
+
+</div>

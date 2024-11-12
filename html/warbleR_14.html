@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>duration_sound_files</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Measure the duration of sound files</h2>
+
+<h3>Description</h3>
+
+<p><code>duration_sound_files</code> measures the duration of sound files
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">duration_sound_files(
+  files = NULL,
+  path = NULL,
+  skip.error = FALSE,
+  file.format = "\\.wav$|\\.wac$|\\.mp3$|\\.flac$"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>Character vector with the names of the sound files to be measured. The sound files should be in the working directory or in the directory provided in 'path'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Character string containing the directory path where the sound files are located.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skip.error</code></td>
+<td>
+<p>Logical to control if errors are omitted. If so, files that could not be read will return <code>NA</code> in the 'duration' column. Default is <code>FALSE</code>, which will return an error if some files are problematic.
+If <code>NULL</code> (default) then the current working directory is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file.format</code></td>
+<td>
+<p>Character string with the format of sound files. By default all sound file formats supported by warbleR are included ("\.wav$|\.wac$|\.mp3$|\.flac$"). Note that several formats can be included using regular expression syntax as in <code>grep</code>. For instance <code>"\.wav$|\.mp3$"</code> will only include .wav and .mp3 files.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function returns the duration (in seconds) of sound files.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with the duration (in seconds) of the sound files.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">{
+  data(list = c("Phae.long1", "Phae.long2", "Phae.long3"))
+  writeWave(Phae.long1, file.path(tempdir(), "Phae.long1.wav"))
+  writeWave(Phae.long2, file.path(tempdir(), "Phae.long2.wav"))
+  writeWave(Phae.long3, file.path(tempdir(), "Phae.long3.wav"))
+
+  duration_sound_files(path = tempdir())
+}
+
+</code></pre>
+
+
+</div>

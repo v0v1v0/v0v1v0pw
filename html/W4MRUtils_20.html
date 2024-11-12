@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>import3</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Import the three W4M tables</h2>
+
+<h3>Description</h3>
+
+<p>import3
+Function to import the three W4M tables from files
+(dataMatrix, sampleMetadata, variableMetadata)
+import3 performs checks to ensure the identifiers match between
+the three tables and stops with an explicit error message in case
+identifiers do not match.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">import3(pathDM, pathSM, pathVM, disable_comm = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>pathDM</code></td>
+<td>
+<p>a path to a file corresponding to the dataMatrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pathSM</code></td>
+<td>
+<p>a path to a file corresponding to the sampleMetadata</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pathVM</code></td>
+<td>
+<p>a path to a file corresponding to the variableMetadata</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>disable_comm</code></td>
+<td>
+<p>a <code>boolean</code> with default to <code>TRUE</code> to indicate
+whether the comment character <code>#</code> should be disabled as a comment tag
+for the import of the metadata files; when <code>TRUE</code>, <code>#</code> in the
+metadata table's columns will be considered as any other character.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a <code>list</code> containing three elements:
+</p>
+
+<ul>
+<li>
+<p> dataMatrix a <code>data.frame</code> corresponding to the imported dataMatrix table;
+</p>
+</li>
+<li>
+<p> sampleMetadata a <code>data.frame</code> corresponding to the imported sampleMetadata table;
+</p>
+</li>
+<li>
+<p> variableMetadata a <code>data.frame</code> corresponding to the imported variableMetadata table
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>M.Petera
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+dm_path &lt;- system.file(
+  "extdata",
+  "mini_datamatrix.txt",
+  package="W4MRUtils"
+)
+vm_path &lt;- system.file(
+  "extdata",
+  "mini_variablemetadata.txt",
+  package="W4MRUtils"
+)
+sm_path &lt;- system.file(
+  "extdata",
+  "mini_samplemetadata.txt",
+  package="W4MRUtils"
+)
+
+## import considering # is not a comment character
+A &lt;- W4MRUtils::import3(dm_path, sm_path, vm_path)
+print(A$dataMatrix[1:5, 1:5])
+print(A$sampleMetadata[1:5, ])
+print(A$variableMetadata[1:5, ])
+
+## import considering # is a comment character
+B &lt;- W4MRUtils::import3(dm_path, sm_path, vm_path, disable_comm = FALSE)
+print(B$dataMatrix[1:5, 1:5])
+print(B$sampleMetadata[1:5, ])
+print(B$variableMetadata[1:5, ])
+
+
+</code></pre>
+
+
+</div>

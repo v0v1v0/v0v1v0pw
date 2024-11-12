@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>richYuleInputs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Generates the inputs necessary to run richness.yule.test() in ape
+</h2>
+
+<h3>Description</h3>
+
+<p>The function richness.yule.test() in the package ape requires two inputs - a dataframe with species richness of pairs of sister lineages which differ in the presence of a binary trait of interest, and a vector of divergence times of each of those sister group pairs. The richYuleInputs function generates these in a format which can be entered as the two required arguments.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">richYuleInputs(tree, x, rich=NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tree</code></td>
+<td>
+
+<p>Phylogenetic tree of class 'phylo' with branch lengths in units of time.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>Named vector representing the binary trait (labelled as 0 and 1 for absence and presence respectively).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rich</code></td>
+<td>
+
+<p>Optional named vector of species richness for each tip (for instance to account for incomplete sampling or when tips represent more than one species).
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>sisRich</code></td>
+<td>
+<p>Dataframe containing two columns (species richness in sister lineages with and without the trait of interest) and rows representing different sister pairs</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>divTimes</code></td>
+<td>
+<p>Vector of divergence times of sister pairs (corresponding to rows of sisRich) differing in possession of a trait.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Kevin Arbuckle
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>richness.yule.test</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(sample.data)
+data(sample.tree)
+trait&lt;-sample.data$focals
+names(trait)&lt;-sample.data$species
+
+ryi&lt;-richYuleInputs(sample.tree,trait)
+richness.yule.test(ryi$sisRich,ryi$divTimes)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,286 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wnominate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> W-NOMINATE Roll Call Scaling </h2>
+
+<h3>Description</h3>
+
+ 
+<p><code>wnominate</code> is the function that takes a <code>rollcall</code> object and estimates Poole
+and Rosenthal W-NOMINATE scores with them.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wnominate(rcObject, ubeta=15, uweights=0.5, dims=2, minvotes=20,
+        lop=0.025,trials=3, polarity, verbose=FALSE)                        
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>rcObject</code></td>
+<td>
+<p> An object of class <code>rollcall</code>, from Simon Jackman's <code>pscl</code> package. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ubeta</code></td>
+<td>
+<p> integer, beta parameter for NOMINATE. It is strongly recommended that
+you do not change the default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uweights</code></td>
+<td>
+<p> integer, weight parameter for NOMINATE. It is strongly recommended
+that you do not change the default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dims</code></td>
+<td>
+<p> integer, number of dimensions to estimate. Must be nonnegative and cannot
+exceed 10 dimensions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minvotes</code></td>
+<td>
+<p> minimum number of votes a legislator must vote in for them to be analyzed. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lop</code></td>
+<td>
+<p> A proportion between 0 and 1, the cut-off used for excluding lopsided
+votes, expressed as the proportion of non-missing votes on the minority side.
+The default, <code>lop=0.025</code>, eliminates votes where the minority is smaller
+than 2.5
+overwrites the <code>lopsided</code> attribute in the RC object inputted. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trials</code></td>
+<td>
+<p> integer, number of bootstrap trials for standard errors. Any number set
+below 4 here will not return any standard errors.  Setting this number
+to be large will slow execution of W-NOMINATE considerably.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>polarity</code></td>
+<td>
+<p> a vector specifying the legislator in the data set who is conservative on
+each dimension. For example, <code>c(3,5)</code> indicates legislator 3 is conservative
+on dimension 1, and legislator 5 is conservative on dimension 2.
+Alternatively, polarity can be specified as a string for legislator names
+found in <code>legis.names</code> (ie. <code>c("Bush", "Gore")</code>) if every legislative name in
+the data set is unique.  Finally, polarity can be specified as a list (ie.
+<code>list("cd",c(4,5))</code>) where the first list item is a variable from the roll
+call object's <code>legis.data</code>, and the second list item is a conservative
+legislator on each dimension as specified by the first list item.
+<code>list("cd",c(4,5))</code> thus specifies the legislators with congressional
+district numbers of 4 and 5. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> logical, indicates whether bills and legislators to be deleted should be
+printed while data is being checked before ideal points are estimated.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class <code>nomObject</code>, which in this documentation is also referred to
+as a W-NOMINATE object.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>legislators</code></td>
+<td>
+<p> data frame, containing all data from the old <code>nom31.dat</code> file about
+legislators. For a typical W-NOMINATE object run with an ORD file read using
+<code>readKH</code>, it will contain the following:
+</p>
+
+<ul>
+<li> <p><code>state</code> State name of legislator.
+</p>
+</li>
+<li> <p><code>icpsrState</code> ICPSR state code of legislator.
+</p>
+</li>
+<li> <p><code>cd</code> Congressional District number.
+</p>
+</li>
+<li> <p><code>icpsrLegis</code> ICPSR code of legislator.
+</p>
+</li>
+<li> <p><code>party</code> Party of legislator.
+</p>
+</li>
+<li> <p><code>partyCode</code> ICPSR party code of legislator.
+</p>
+</li>
+<li> <p><code>correctYea</code> Predicted Yeas and Actual Yeas.
+</p>
+</li>
+<li> <p><code>wrongYea</code> Predicted Yeas and Actual Nays.
+</p>
+</li>
+<li> <p><code>wrongNay</code> Predicted Nays and Actual Yeas.
+</p>
+</li>
+<li> <p><code>correctNay</code> Predicted Nays and Actual Nays.
+</p>
+</li>
+<li> <p><code>GMP</code> Geometric Mean Probability.
+</p>
+</li>
+<li> <p><code>CC</code> Correct Classification.
+</p>
+</li>
+<li> <p><code>coord1D</code> First dimension W-NOMINATE score, with all subsequent dimensions
+numbered similarly.
+</p>
+</li>
+<li> <p><code>se1D</code> Bootstrapped standard error of first dimension W-NOMINATE score,
+with all subsequent dimensions numbered similarly.  This will be 
+empty if trials is set below 4.
+</p>
+</li>
+<li> <p><code>corr.1</code> Covariance between first and second dimension W-NOMINATE score,
+with all subsequent dimensions numbered similarly.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rollcalls</code></td>
+<td>
+<p> data frame, containing all data from the old <code>nom33.dat</code> file about
+bills. For a typical W-NOMINATE object run with an ORD file read
+using <code>readKH</code>, it will contain the following:
+</p>
+
+<ul>
+<li> <p><code>correctYea</code> Predicted Yeas and Actual Yeas.
+</p>
+</li>
+<li> <p><code>wrongYea</code> Predicted Yeas and Actual Nays.
+</p>
+</li>
+<li> <p><code>wrongNay</code> Predicted Nays and Actual Yeas.
+</p>
+</li>
+<li> <p><code>correctNay</code> Predicted Nays and Actual Nays.
+</p>
+</li>
+<li> <p><code>GMP</code> Geometric Mean Probability.
+</p>
+</li>
+<li> <p><code>PRE</code> Proportional Reduction In Error.
+</p>
+</li>
+<li> <p><code>spread1D</code> First dimension W-NOMINATE spread, with all subsequent dimensions
+numbered similarly.
+</p>
+</li>
+<li> <p><code>midpoint1D</code> First dimension W-NOMINATE midpoint, with all subsequent dimensions
+numbered similarly.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dimensions</code></td>
+<td>
+<p>integer, number of dimensions estimated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eigenvalues</code></td>
+<td>
+<p> A vector of roll call eigenvalues.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p>The beta value used in the final iteration.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>A vector of weights used in each iteration.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fits</code></td>
+<td>
+<p>A vector of length 3*dimensions with the classic measures of fit.
+In order, it contains the correct classifications for each dimension,
+the APREs for each dimension, and the overall GMPs for each dimension.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+ 
+<p>Keith Poole <a href="mailto:ktpoole@uga.edu">ktpoole@uga.edu</a>
+</p>
+<p>Jeffrey Lewis <a href="mailto:jblewis@ucla.edu">jblewis@ucla.edu</a>
+</p>
+<p>James Lo <a href="mailto:lojames@usc.edu">lojames@usc.edu</a>
+</p>
+<p>Royce Carroll <a href="mailto:rcarroll@rice.edu">rcarroll@rice.edu</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Keith Poole and Howard Rosenthal. 1997. 'Congress: A Political-Economic History of
+Roll Call Voting.' New York: Oxford University Press.
+</p>
+<p>Jeffrey Lewis. <a href="https://voteview.com/">https://voteview.com/</a>
+</p>
+<p>Keith Poole, Jeffrey Lewis, James Lo, and Royce Carroll. 2011. ‘Scaling Roll Call Votes with WNOMINATE in R.’ Journal of Statistical Software, 42(14), 1-21. <a href="https://www.jstatsoft.org/v42/i14/">https://www.jstatsoft.org/v42/i14/</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>'generateTestData','plot.nomObject','summary.nomObject'.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">    #This data file is the same as reading file using:
+    #sen90 &lt;- readKH("ftp://voteview.com/sen90kh.ord")
+    #All ORD files can be found on www.voteview.com
+    data(sen90)
+    
+    summary(sen90)
+    #sen90wnom &lt;- wnominate(sen90,polarity=c(2,5))
+    #'sen90wnom' is the same nomObject as found in 
+    data(sen90wnom)
+    summary(sen90wnom)
+    plot(sen90wnom)
+</code></pre>
+
+
+</div>

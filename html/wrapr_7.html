@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dot_arrow</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Pipe operator ("dot arrow", "dot pipe" or "dot arrow pipe").</h2>
+
+<h3>Description</h3>
+
+<p>Defined as roughly : <code>a %&gt;.% b</code> ~ <code>{ . &lt;- a; b };</code>
+(with visible .-side effects).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pipe_left_arg %.&gt;% pipe_right_arg
+
+pipe_left_arg %&gt;.% pipe_right_arg
+
+pipe_left_arg %.% pipe_right_arg
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>pipe_left_arg</code></td>
+<td>
+<p>left argument expression (substituted into .)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pipe_right_arg</code></td>
+<td>
+<p>right argument expression (presumably including .)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The pipe operator has a couple of special cases. First: if the right hand side is a name,
+then we try to de-reference it and apply it as a function or surrogate function.
+</p>
+<p>The pipe operator checks for and throws an exception for a number of "piped into
+nothing cases" such as <code>5 %.&gt;% sin()</code>, many of these checks can be turned
+off by adding braces.
+</p>
+<p>For some discussion, please see <a href="https://win-vector.com/2017/07/07/in-praise-of-syntactic-sugar/">https://win-vector.com/2017/07/07/in-praise-of-syntactic-sugar/</a>.
+For some more examples, please see the package README <a href="https://github.com/WinVector/wrapr">https://github.com/WinVector/wrapr</a>.
+For formal documentation please see <a href="https://github.com/WinVector/wrapr/blob/master/extras/wrapr_pipe.pdf">https://github.com/WinVector/wrapr/blob/master/extras/wrapr_pipe.pdf</a>.
+For a base-R step-debuggable pipe please try the Bizarro Pipe <a href="https://win-vector.com/2017/01/29/using-the-bizarro-pipe-to-debug-magrittr-pipelines-in-r/">https://win-vector.com/2017/01/29/using-the-bizarro-pipe-to-debug-magrittr-pipelines-in-r/</a>.
+<code>%&gt;.%</code> and <code>%.&gt;%</code> are synonyms.
+</p>
+<p>The dot arrow pipe has S3/S4 dispatch (please see <a href="https://journal.r-project.org/archive/2018/RJ-2018-042/index.html">https://journal.r-project.org/archive/2018/RJ-2018-042/index.html</a>).
+However as the right-hand side of the pipe is normally held unevaluated, we don't know the type except in special
+cases (such as the rigth-hand side being referred to by a name or variable).  To force the evaluation of a pipe term,
+simply wrap it in .().
+</p>
+
+
+<h3>Value</h3>
+
+<p>eval({ . &lt;- pipe_left_arg; pipe_right_arg };)
+</p>
+
+
+<h3>Functions</h3>
+
+
+<ul>
+<li> <p><code>pipe_left_arg %.&gt;% pipe_right_arg</code>: dot arrow
+</p>
+</li>
+<li> <p><code>pipe_left_arg %&gt;.% pipe_right_arg</code>: alias for dot arrow
+</p>
+</li>
+<li> <p><code>pipe_left_arg %.% pipe_right_arg</code>: alias for dot arrow
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# both should be equal:
+cos(exp(sin(4)))
+4 %.&gt;% sin(.) %.&gt;% exp(.) %.&gt;% cos(.)
+
+f &lt;- function() { sin }
+# returns f() ignoring dot, not what we want
+5 %.&gt;% f()
+# evaluates f() early then evaluates result with .-substitution rules
+5 %.&gt;% .(f())
+
+</code></pre>
+
+
+</div>

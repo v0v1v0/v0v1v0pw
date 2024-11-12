@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>convertPlotCoordPix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert points of plot to coordinates in pixels</h2>
+
+<h3>Description</h3>
+
+<p>This function allows conversion the plotting positions ('x' and 'y' coordinates) of points in a given plot into coordinates in pixels (of the entire plotting region).
+It was designed to be used as coordinates in an html file for mouse-over interactivity (display of names of points and links).
+Of course, the size of the plotting region is crucial and may not be changed afterwards (if the plot is not written to file using <code>png</code> etc).
+In turn the function <code>mouseOverHtmlFile</code> will use the pixel-coordinates, allowing to annotate given points of a plot for mouse-over interactive html.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">convertPlotCoordPix(
+  x,
+  y,
+  useMar = c(6.2, 4, 4, 2),
+  plotDim = c(1400, 800),
+  plotRes = 100,
+  fromTop = TRUE,
+  callFrom = NULL,
+  silent = FALSE,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(numeric) initial plotting coordinates on x-axis, names of vector - if available- will be used as IDs</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>(numeric) initial plotting coordinates on y-axis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useMar</code></td>
+<td>
+<p>(numeric,length=4) margins defined with plot, see also <code>par</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotDim</code></td>
+<td>
+<p>(integer, length=2) dimension of the plotting device in pixels, see also <code>par</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotRes</code></td>
+<td>
+<p>(integer) resoltion of plotting device, see also <code>par</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fromTop</code></td>
+<td>
+<p>(logical) toggle if poordinates should start from top</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additonal messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>matrix with x- and y-coordinates in pixels
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>mouseOverHtmlFile</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">df1 &lt;- data.frame(id=letters[1:10], x=1:10, y=rep(5,10),mou=paste("point",letters[1:10]),
+  link=file.path(tempdir(),paste0(LETTERS[1:10],".html")), stringsAsFactors=FALSE)
+## Typically one wants to get pixel-coordinates for plots written to file.
+## Here we'll use R's tempdir, later you may want to choose other locations
+pngFile &lt;- file.path(tempdir(),"test01.png")
+png(pngFile, width=800, height=600, res=72)
+## here we'll just plot a set of horiontal points at default parameters ...
+plot(df1[,2:3], las=1, main="test01")
+dev.off()
+## Note: Special characters should be converted for proper display in html during mouse-over
+library(wrMisc)
+df1$mou &lt;- htmlSpecCharConv(df1$mou)
+## Let's add the x- and y-coordiates of the points in pixels to the data.frame
+df1 &lt;- cbind(df1,convertPlotCoordPix(x=df1[,2], y=df1[,3], plotD=c(800,600),plotRes=72))
+head(df1)
+## using mouseOverHtmlFile() one could now make an html document with interactive
+## display of names and clockable links to the coordinates we determined here ...
+</code></pre>
+
+
+</div>

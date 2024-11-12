@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_cache_or_create</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Checks if variable exists in environment and returns back or creates a new variable</h2>
+
+<h3>Description</h3>
+
+<p>Checks if variable exists in environment and returns back or creates a new variable
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_cache_or_create(
+  var,
+  func,
+  ...,
+  exists_func_args = NA,
+  get_func_args = NA,
+  warning_msg = NA_character_
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>var</code></td>
+<td>
+<p>character.  The name of the variable to check in the global environment.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>func</code></td>
+<td>
+<p>function.  A function that returns a value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to be passed to the param func.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exists_func_args</code></td>
+<td>
+<p>list.  A list of arguments to use in base::exists.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>get_func_args</code></td>
+<td>
+<p>list.  A list of arguments to use in bass::get.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>warning_msg</code></td>
+<td>
+<p>character.  Message sent to stop function if an error occurs.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Unknown.  The return type from the param func or the existing variable in global environment.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+df &lt;- data.frame(col_1 = c("a","b","c"), col_2 = c(1,2,3))
+
+create_blank_df &lt;- function() {
+
+    data.frame(col_1 = NA_character_, col_2 = NA_integer_)
+
+    }
+
+df_1 &lt;- get_cache_or_create(
+                          "df",
+                          create_blank_df
+                          )
+
+df_2 &lt;- get_cache_or_create(
+                          "df_2",
+                          create_blank_df
+                          )
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>commonality.cloud</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Plot a commonality cloud 
+</h2>
+
+<h3>Description</h3>
+
+<p>Plot a cloud of words shared across documents
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">commonality.cloud(term.matrix,comonality.measure=min,max.words=300,...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>term.matrix</code></td>
+<td>
+<p>A term frequency matrix whose rows represent words and whose columns represent documents.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>comonality.measure</code></td>
+<td>
+<p>A function taking a vector of frequencies for a single term, and returning a common frequency</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.words</code></td>
+<td>
+<p>Maximum number of words to be plotted. least frequent terms dropped</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters to be passed to wordcloud.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>nothing
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if(require(tm)){
+	data(SOTU)
+	corp &lt;- SOTU
+	corp &lt;- tm_map(corp, removePunctuation)
+	corp &lt;- tm_map(corp, content_transformer(tolower))
+	corp &lt;- tm_map(corp, removeNumbers)
+	corp &lt;- tm_map(corp, function(x)removeWords(x,stopwords()))
+
+	term.matrix &lt;- TermDocumentMatrix(corp)
+	term.matrix &lt;- as.matrix(term.matrix)
+	colnames(term.matrix) &lt;- c("SOTU 2010","SOTU 2011")
+	comparison.cloud(term.matrix,max.words=40,random.order=FALSE)
+	commonality.cloud(term.matrix,max.words=40,random.order=FALSE)
+}
+
+</code></pre>
+
+
+</div>

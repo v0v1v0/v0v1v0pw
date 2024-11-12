@@ -1,0 +1,261 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dist.matrix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Distances/Similarities between Row or Column Vectors (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>Compute a symmetric matrix of distances (or similarities) between the rows or columns of a matrix;
+or compute cross-distances between the rows or columns of two different matrices.
+This implementation is faster than <code>dist</code> and can operate on sparse matrices (in canonical DSM format).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+dist.matrix(M, M2 = NULL, method = "cosine", p = 2, 
+            normalized = FALSE, byrow = TRUE, convert = TRUE, as.dist = FALSE, 
+            terms = NULL, terms2 = terms, skip.missing = FALSE)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>a dense or sparse matrix representing a scored DSM, or an object of class <code>dsm</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M2</code></td>
+<td>
+<p>an optional dense or sparse matrix representing a second scored DSM, or an object of class <code>dsm</code>.
+If present, cross-distances between the rows (or columns) of <code>M</code> and those of <code>M2</code> will be computed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>distance or similarity measure to be used (see “Distance Measures” below for details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>exponent of the <code>minkowski</code> <code class="reqn">L_p</code>-metric, a numeric value in the range <code class="reqn">0 \le p &lt; \infty</code>.
+The range <code class="reqn">0 \le p &lt; 1</code> represents a generalization of the standard Minkowski distance, which cannot be derived from a proper mathematical norm (see details below).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalized</code></td>
+<td>
+<p>if <code>TRUE</code>, assume that the row (or column) vectors of <code>M</code> and <code>M2</code> have been appropriately normalised (depending on the selected distance measure) in order to speed up calculations.
+This option is often used with the <code>cosine</code> metric, for which vectors must be normalized wrt. the Euclidean norm.  It is currently ignored for other distance measures.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>byrow</code></td>
+<td>
+<p>whether to calculate distances between row vectors (default) or between column vectors (<code>byrow=FALSE</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>convert</code></td>
+<td>
+<p>if <code>TRUE</code>, similarity measures are automatically converted to distances in an appropriate way (see “Distance Measures” below for details).
+Note that this is the default setting and <code>convert=FALSE</code> has to be specified explicitly in order to obtain a similarity matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>as.dist</code></td>
+<td>
+<p>convert the full symmetric distance matrix to a compact object of class <code>dist</code>.
+This option cannot be used if cross-distances are calculated (with argument <code>M2</code>) or if a similarity measure has been selected (with option <code>convert=FALSE</code>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>terms</code></td>
+<td>
+<p>a character vector specifying rows of <code>M</code> for which distance matrix is to be computed (or columns if <code>byrow=FALSE</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>terms2</code></td>
+<td>
+<p>a character vector specifying rows of <code>M2</code> for which the cross-distance matrix is to be computed (or columns if <code>byrow=FALSE</code>).
+If only the argument <code>terms</code> is specified, the same set of rows (or columns) will be selected from both <code>M</code> and <code>M2</code>; you can explicitly specify <code>terms2=NULL</code> in order to compute cross-distances for all rows (or columns) of <code>M2</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skip.missing</code></td>
+<td>
+<p>if <code>TRUE</code>, silently ignores terms not found in <code>M</code> (or in <code>M2</code>). By default (<code>skip.missing=FALSE</code>) an error is raised in this case.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>By default, a numeric matrix of class <code>dist.matrix</code>, specifying distances or similarities between term vectors.
+A similarity matrix is marked by an additional attribute <code>similarity</code> with value <code>TRUE</code>.
+If the distance or similarity matrix is symmetric (i.e. neither a cross-distance matrix nor based on an asymmetric distance measure), it is marked by an attribute <code>symmetric</code> with value <code>TRUE</code>.
+</p>
+<p>If <code>as.dist=TRUE</code>, the matrix is compacted to an object of class <code>dist</code>.
+</p>
+
+
+<h3>Distance Measures</h3>
+
+<p>Given two DSM vectors <code class="reqn">x</code> and <code class="reqn">y</code>, the following distance metrics can be computed:
+</p>
+
+<dl>
+<dt><code>euclidean</code></dt>
+<dd>
+<p>The Euclidean distance given by </p>
+<p style="text-align: center;"><code class="reqn">
+        d_2(x, y) = \sqrt{ \sum_i (x_i - y_i)^2 }</code>
+</p>
+
+</dd>
+<dt><code>manhattan</code></dt>
+<dd>
+<p>The Manhattan (or “city block”) distance given by </p>
+<p style="text-align: center;"><code class="reqn">
+        d_1(x, y) = \sum_i |x_i - y_i|</code>
+</p>
+
+</dd>
+<dt><code>maximum</code></dt>
+<dd>
+<p>The maximum distance given by </p>
+<p style="text-align: center;"><code class="reqn">
+        d_{\infty}(x, y) = \max_i |x_i - y_i|</code>
+</p>
+
+</dd>
+<dt><code>minkowski</code></dt>
+<dd>
+<p>The Minkowski distance is a family of metrics determined by a parameter <code class="reqn">0 \le p &lt; \infty</code>, which encompasses the Euclidean, Manhattan and maximum distance as special cases.  Also known as <code class="reqn">L_p</code>-metric, it is defined by </p>
+<p style="text-align: center;"><code class="reqn">
+        d_p(x, y) = \left( \sum_i |x_i - y_i|^p \right)^{1/p}</code>
+</p>
+
+<p>for <code class="reqn">p \ge 1</code> and by </p>
+<p style="text-align: center;"><code class="reqn">
+        d_p(x, y) = \sum_i | x_i - y_i |^p</code>
+</p>
+
+<p>for <code class="reqn">0 \le p &lt; 1</code>.  In the latter case, it is not homogeneous and cannot be derived from a corresponding mathematical norm (cf. <code>rowNorms</code>).
+</p>
+<p>Special cases include the Euclidean metric <code class="reqn">d_2(x, y)</code> for <code class="reqn">p = 2</code> and the Manhattan metric <code class="reqn">d_1(x, y)</code> for <code class="reqn">p = 1</code>, but the dedicated methods above provide more efficient implementations.  For <code class="reqn">p \to \infty</code>, <code class="reqn">d_p(x, y)</code> converges to the maximum distance <code class="reqn">d_{\infty}(x, y)</code>, which is also selected by setting <code>p=Inf</code>.  For <code class="reqn">p = 0</code>, <code class="reqn">d_p(x, y)</code> corresponds to the Hamming distance, i.e. the number of differences </p>
+<p style="text-align: center;"><code class="reqn">
+      d_0(x, y) = \#\{ i | x_i \ne y_i \}</code>
+</p>
+
+</dd>
+<dt><code>canberra</code></dt>
+<dd>
+<p>The Canberra metric has been implemented for compatibility with the <code>dist</code> function, even though it is probably not very useful for DSM vectors.  It is given by </p>
+<p style="text-align: center;"><code class="reqn">
+        \sum_i \frac{|x_i - y_i|}{|x_i| + |y_i|}</code>
+</p>
+
+<p>(see <a href="https://en.wikipedia.org/wiki/Canberra_distance">https://en.wikipedia.org/wiki/Canberra_distance</a>).  Terms with <code class="reqn">x_i = y_i = 0</code> are silently dropped from the summation.
+</p>
+<p>Note that <code>dist</code> uses a different formula </p>
+<p style="text-align: center;"><code class="reqn">
+        \sum_i \frac{|x_i - y_i|}{|x_i + y_i|}</code>
+</p>
+
+<p>which is highly problematic unless <code class="reqn">x</code> and <code class="reqn">y</code> are guaranteed to be non-negative.  Terms with <code class="reqn">x_i = y_i = 0</code> are imputed, i.e. set to the average value of all nonzero terms.
+</p>
+</dd>
+</dl>
+<p>In addition, the following similarity measures can be computed and optionally converted to a distance metric (or dissimilarity):
+</p>
+
+<dl>
+<dt>
+<code>cosine</code> (default)</dt>
+<dd>
+<p>The cosine similarity given by </p>
+<p style="text-align: center;"><code class="reqn">
+        \cos \phi = \frac{x^T y}{||x||_2 \cdot ||y||_2} 
+      </code>
+</p>
+
+<p>If <code>normalized=TRUE</code>, the denominator is omitted. If <code>convert=TRUE</code> (the default), the cosine similarity is converted to angular distance <code class="reqn">\phi</code>, given in degrees ranging from 0 to 180.
+</p>
+</dd>
+<dt><code>jaccard</code></dt>
+<dd>
+<p>The generalized Jaccard coefficient given by </p>
+<p style="text-align: center;"><code class="reqn">
+        J(x, y) = \frac{ \sum_i \min(x_i, y_i) }{ \sum_i \max(x_i, y_i) }
+      </code>
+</p>
+
+<p>which is only defined for non-negative vectors <code class="reqn">x</code> and <code class="reqn">y</code>.  If <code>convert=TRUE</code> (the default), the Jaccard metric <code class="reqn">1 - J(x,y)</code> is returned (see Kosub 2016 for details).  Note that <code class="reqn">J(0, 0) = 1</code>.
+</p>
+</dd>
+<dt><code>overlap</code></dt>
+<dd>
+<p>An asymmetric measure of overlap given by </p>
+<p style="text-align: center;"><code class="reqn">
+        o(x, y) = \frac{ \sum_i \min(x_i, y_i) }{ \sum_i x_i }
+      </code>
+</p>
+
+<p>for non-negative vectors <code class="reqn">x</code> and <code class="reqn">y</code>. If <code>convert=TRUE</code> (the default), the result is converted into a dissimilarity measure <code class="reqn">1 - o(x,y)</code>, which is not a metric, of course.  Note that <code class="reqn">o(0, y) = 1</code> and in particular <code class="reqn">o(0, 0) = 1</code>.
+</p>
+<p>Overlap computes the proportion of the “mass” of <code class="reqn">x</code> that is shared with <code class="reqn">y</code>; as a consequence, <code class="reqn">o(x, y) = 1</code> whenever <code class="reqn">x \le y</code>.  If both vectors are normalized as probability distributions (<code class="reqn">||x||_1 = ||y||_1 = 1</code>) then overlap is symmetric (<code class="reqn">o(x, y) = o(y, x)</code>) and can be thought of as the shared probability mass of the two distributions.  In this case, <code>normalized=TRUE</code> can be passed in order to simplify the computation to <code class="reqn">o(x, y) = \sum_i \min(x_i, y_i)</code>.
+</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+<h3>See Also</h3>
+
+<p><code>plot</code> and <code>head</code> methods for distance matrices; <code>nearest.neighbours</code> and <code>pair.distances</code> also accept a precomputed <code>dist.matrix</code> object instead of a DSM matrix <code>M</code>
+</p>
+<p><code>rowNorms</code> for length normalization of DSM vectors, which is highly recommended for most distance metrics (and implicit in <code>cosine</code>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+M &lt;- DSM_TermTermMatrix
+dist.matrix(M, as.dist=TRUE)                     # angular distance
+dist.matrix(M, method="euclidean", as.dist=TRUE) # Euclidean distance
+dist.matrix(M, method="manhattan", as.dist=TRUE) # Manhattan distance
+dist.matrix(M, method="minkowski", p=1, as.dist=TRUE)  # L_1 distance
+dist.matrix(M, method="minkowski", p=99, as.dist=TRUE) # almost L_Inf
+dist.matrix(M, method="maximum", as.dist=TRUE)         # L_Inf (maximum)
+dist.matrix(M, method="minkowski", p=.5, as.dist=TRUE) # L_0.5 distance
+dist.matrix(M, method="minkowski", p=0, as.dist=TRUE)  # Hamming distance
+
+round(dist.matrix(M, method="cosine", convert=FALSE), 3) # cosine similarity
+
+</code></pre>
+
+
+</div>

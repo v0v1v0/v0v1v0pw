@@ -1,0 +1,251 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dsm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Create DSM Object Representing a Distributional Semantic Model (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>This is the constructor function for <code>dsm</code> objects representing distributional semantic models,
+i.e. a co-occurrence matrix together with additional information on target terms (rows) and features (columns).
+A new DSM can be initialised with a dense or sparse co-occurrence matrix, or with a triplet representation of a sparse matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+dsm(M = NULL, target = NULL, feature = NULL, score = NULL,
+    rowinfo = NULL, colinfo = NULL, N = NA,
+    globals = list(), raw.freq = FALSE, sort = FALSE, verbose = FALSE)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+
+<p>a dense or sparse co-occurrence matrix. A sparse matrix must be a subclass of <code>sparseMatrix</code> from the <code>Matrix</code> package. See "Details" below.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target</code></td>
+<td>
+
+<p>a character vector of target terms (see "Details" below)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>feature</code></td>
+<td>
+
+<p>a character vector of feature terms (see "Details" below)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>score</code></td>
+<td>
+
+<p>a numeric vector of co-occurrence frequencies or weighted/transformed scores (see "Details" below)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rowinfo</code></td>
+<td>
+
+<p>a data frame containing information about the rows of the co-occurrence matrix, corresponding to target terms.  The data frame must include a column <code>term</code> with the target term labels.  If unspecified, a minimal <code>rowinfo</code> table is compiled automatically (see "Details" below).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colinfo</code></td>
+<td>
+
+<p>a data frame containing information about the columns of the co-occurrence matrix, corresponding to feature terms.  The data frame must include a column <code>term</code> with the feature term labels.  If unspecified, a minimal <code>colinfo</code> table is compiled automatically (see "Details" below).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+
+<p>a single numeric value specifying the effective sample size of the co-occurrence matrix.  This value may be determined automatically if <code>raw.freq=TRUE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>globals</code></td>
+<td>
+
+<p>a list of global variables, which are included in the <code>globals</code> field of the DSM object.  May contain an entry for the sample size <code class="reqn">N</code>, which can be overridden by an explicitly specified value in the argument <code>N</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>raw.freq</code></td>
+<td>
+
+<p>if <code>TRUE</code>, entries of the co-occurrence matrix are interpreted as raw frequency counts. By default, it is assumed that some weighting/transformation has already been applied.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort</code></td>
+<td>
+
+<p>if <code>TRUE</code>, sort rows and columns of a co-occurrence matrix specified in triplet form alphabetically. If the matrix is given directly (in argument <code>M</code>), rows and columns are never reordered.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+
+<p>if <code>TRUE</code>, a few progress and information messages are shown
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The co-occurrence matrix forming the core of the distributional semantic model (DSM) can be specified in two different ways:
+</p>
+
+<ol>
+<li>
+<p>As a dense or sparse matrix in argument <code>M</code>.  A sparse matrix must be a subclass of <code>dMatrix</code> (from the <code>Matrix</code> package) and is automatically converted to the canonical storage mode used by the <code>wordspace</code> package.  Row and column labels may be specified with arguments <code>target</code> and <code>feature</code>, which must be character vectors of suitable length; otherwise <code>dimnames(M)</code> are used.
+
+</p>
+</li>
+<li>
+<p>As a triplet representation in arguments <code>target</code> (row label), <code>feature</code> (column label) and <code>score</code> (co-occurrence frequency or pre-computed score).  The three arguments must be vectors of the same length; each set of corresponding elements specifies a non-zero cell of the co-occurrence matrix.  If multiple entries for the same cell are given, their frequency or score values are added up.
+
+</p>
+</li>
+</ol>
+<p>The optional arguments <code>rowinfo</code> and <code>colinfo</code> are data frames with additional information about target and feature terms.  If they are specified, they must contain a column <code>$term</code> matching the row or column labels of the co-occurrence matrix.  Marginal frequencies and nonzero or document counts can be given in columns <code>$f</code> and <code>$nnzero</code>; any further columns are interpreted as meta-information on the target or feature terms.  The rows of each data frame are automatically reordered to match the rows or columns of the co-occurrence matrix.  Target or feature terms that do not appear in the co-occurrence matrix are silently discarded.
+</p>
+<p>Counts of nonzero cells for each row and column are computed automatically, unless they are already present in the <code>rowinfo</code> and <code>colinfo</code> data frames.  If the co-occurrence matrix contains raw frequency values, marginal frequencies for the target and feature terms are also computed automatically unless given in <code>rowinfo</code> and <code>colinfo</code>; the same holds for the effective sample size <code>N</code>.
+</p>
+<p>If <code>raw.freq=TRUE</code>, all matrix entries must be non-negative; fractional frequency counts are allowed, however.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>dsm</code>, a list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+
+<p>A co-occurrence matrix of raw frequency counts in canonical format (see <code>dsm.canonical.matrix</code>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>S</code></td>
+<td>
+
+<p>A weighted and transformed co-occurrence matrix ("score" matrix) in canonical format (see <code>dsm.canonical.matrix</code>).
+Either <code>M</code> or <code>S</code> or both may be present.  The object returned by <code>dsm()</code> will include <code>M</code> if <code>raw.freq=TRUE</code> and <code>S</code> otherwise.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rows</code></td>
+<td>
+
+<p>A data frame with information about the target terms, corresponding to the rows of the co-occurrence matrix.  The data frame usually has at least three columns:
+</p>
+
+<dl>
+<dt><code>rows$term</code></dt>
+<dd>
+<p>the target term = row label</p>
+</dd>
+<dt><code>rows$f</code></dt>
+<dd>
+<p>marginal frequency of the target term; must be present if the DSM object contains a raw co-occurrence matrix <code>M</code></p>
+</dd>
+<dt><code>rows$nnzero</code></dt>
+<dd>
+<p>number of nonzero entries in the corresponding row of the co-occurrence matrix</p>
+</dd>
+</dl>
+<p>Further columns may provide additional information.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+
+<p>A data frame with information about the feature terms, corresponding to the columns of the co-occurrence matrix, in the same format as <code>rows</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>globals</code></td>
+<td>
+
+<p>A list of global variables.  The following variables have a special meaning:
+</p>
+
+<dl>
+<dt><code>globals$N</code></dt>
+<dd>
+<p>effective sample size of the underlying corpus; may be <code>NA</code> if raw co-occurrence counts are not available</p>
+</dd>
+<dt><code>globals$locked</code></dt>
+<dd>
+<p>if <code>TRUE</code>, the marginal frequencies are no longer valid due to a <code>merge</code>, <code>rbind</code> or <code>cbind</code> operation; in this case, association scores cannot be computed from the co-occurrence frequencies <code>M</code></p>
+</dd>
+</dl>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+<h3>See Also</h3>
+
+<p>See <code>dsm.canonical.matrix</code> for a description of the canonical matrix formats.  DSM objects are usually loaded directly from a disk file in UCS (<code>read.dsm.ucs</code>) or triplet (<code>read.dsm.triplet</code>) format.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+MyDSM &lt;- dsm(
+  target =  c("boat", "boat", "cat",  "dog", "dog"),
+  feature = c("buy",  "use",  "feed", "buy", "feed"),
+  score =   c(1,      3,      2,      1,     1),
+  raw.freq = TRUE
+)
+
+print(MyDSM)   # 3 x 3 matrix with 5 out of 9 nonzero cells
+print(MyDSM$M) # the actual co-occurrence matrix
+
+print(MyDSM$rows) # row information
+print(MyDSM$cols) # column information
+
+</code></pre>
+
+
+</div>

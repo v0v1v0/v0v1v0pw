@@ -1,0 +1,146 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_chebiid</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve Lite Entity (identifiers) from ChEBI</h2>
+
+<h3>Description</h3>
+
+<p>Returns a data.frame with a ChEBI entity ID (chebiid),
+a ChEBI entity name (chebiasciiname), a search score (searchscore) and
+stars (stars) using the SOAP protocol:
+<a href="https://www.ebi.ac.uk/chebi/webServices.do">https://www.ebi.ac.uk/chebi/webServices.do</a>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_chebiid(
+  query,
+  from = c("all", "chebi id", "chebi name", "definition", "name", "iupac name",
+    "citations", "registry numbers", "manual xrefs", "automatic xrefs", "formula",
+    "mass", "monoisotopic mass", "charge", "inchi", "inchikey", "smiles", "species"),
+  match = c("all", "best", "first", "ask", "na"),
+  max_res = 200,
+  stars = c("all", "two only", "three only"),
+  verbose = getOption("verbose"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>character; search term.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>character; type of input.  <code>"all"</code> searches all types and
+<code>"name"</code> searches all names. Other options include <code>'chebi id'</code>,
+<code>'chebi name'</code>, <code>'definition'</code>, <code>'iupac name'</code>,
+<code>'citations'</code>, <code>'registry numbers'</code>, <code>'manual xrefs'</code>,
+<code>'automatic xrefs'</code>, <code>'formula'</code>, <code>'mass'</code>,
+<code>'monoisotopic mass'</code>,<code>'charge'</code>, <code>'inchi'</code>,
+<code>'inchikey'</code>, <code>'smiles'</code>, and <code>'species'</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>match</code></td>
+<td>
+<p>character; How should multiple hits be handled?, <code>"all"</code>
+all matches are returned, <code>"best"</code> the best matching (by the ChEBI
+searchscore) is returned, <code>"ask"</code> enters an interactive mode and the
+user is asked for input, <code>"na"</code> returns NA if multiple hits are found.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max_res</code></td>
+<td>
+<p>integer; maximum number of results to be retrieved from the
+web service</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stars</code></td>
+<td>
+<p>character; "three only" restricts results to those manualy
+annotated by the ChEBI team.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical; should a verbose output be printed on the console?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>currently unused</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>returns a list of data.frames containing a chebiid, a chebiasciiname,
+a searchscore and stars if matches were found. If not, data.frame(NA) is
+returned
+</p>
+
+
+<h3>References</h3>
+
+<p>Hastings J, Owen G, Dekker A, Ennis M, Kale N, Muthukrishnan V,
+Turner S, Swainston N, Mendes P, Steinbeck C. (2016). ChEBI in 2016:
+Improved services and an expanding collection of metabfolites. Nucleic
+Acids Res.
+</p>
+<p>Hastings, J., de Matos, P., Dekker, A., Ennis, M., Harsha, B., Kale, N.,
+Muthukrishnan, V., Owen, G., Turner, S., Williams, M., and Steinbeck, C.
+(2013) The ChEBI reference database and ontology for biologically relevant
+chemistry: enhancements for 2013. Nucleic Acids Res.
+</p>
+<p>de Matos, P., Alcantara, R., Dekker, A., Ennis, M., Hastings, J., Haug, K.,
+Spiteri, I., Turner, S., and Steinbeck, C. (2010) Chemical entities of
+biological interest: an update. Nucleic Acids Res. Degtyarenko, K.,
+Hastings, J., de Matos, P., and Ennis, M. (2009). ChEBI: an open
+bioinformatics and cheminformatics resource. Current protocols in
+bioinformatics / editoral board, Andreas D. Baxevanis et al., Chapter 14.
+</p>
+<p>Degtyarenko, K., de Matos, P., Ennis, M., Hastings, J., Zbinden, M.,
+McNaught, A., Alcántara, R., Darsow, M., Guedj, M. and Ashburner, M. (2008)
+ChEBI: a database and ontology for chemical entities of biological
+interest. Nucleic Acids Res. 36, D344–D350.
+</p>
+<p>Eduard Szöcs, Tamás Stirling, Eric R. Scott, Andreas Scharmüller,
+Ralf B. Schäfer (2020). webchem: An R Package to Retrieve Chemical
+Information from the Web. Journal of Statistical Software, 93(13).
+<a href="https://doi.org/10.18637/jss.v093.i13">doi:10.18637/jss.v093.i13</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# might fail if API is not available
+get_chebiid('Glyphosate')
+get_chebiid('BPGDAMSIGCZZLK-UHFFFAOYSA-N')
+
+# multiple inputs
+comp &lt;- c('Iron', 'Aspirin', 'BPGDAMSIGCZZLK-UHFFFAOYSA-N')
+get_chebiid(comp)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,136 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>nl.acf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Autocorrelogram</h2>
+
+<h3>Description</h3>
+
+<p>Plots autocorrelogram for non linear process.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">nl.acf(
+  ar = NULL,
+  ma = NULL,
+  y,
+  main = NULL,
+  nlag = NULL,
+  conflevel = 0.05,
+  z = 1.2,
+  aff = "both"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ar</code></td>
+<td>
+<p>Vector of AR coefficients. If <code>NULL</code>, we consider a MA process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ma</code></td>
+<td>
+<p>Vector of MA coefficients. If <code>NULL</code>, we consider an AR process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Univariate time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>Character string representing the title for the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlag</code></td>
+<td>
+<p>Maximum lag at which to calculate the acf. If <code>NULL</code>, it is
+determinate by <code class="reqn">nlag = min(10log(n))</code> where n is the number of
+observation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conflevel</code></td>
+<td>
+<p>Value of the confidence level, 5% by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>Zoom on the graph.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aff</code></td>
+<td>
+<p>Specify the method between SN, M and both (see in Details).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For the argument <code>aff</code> you have the choice between: 
+<code>SN</code>, <code>M</code> and <code>both</code>.
+<code>SN</code> prints the self-normalized method (see Boubacar Maïnassara and Saussereau) in green, 
+<code>M</code> prints the modified method introduced by Francq, Roy and Zakoïan (see also Boubacar Maïnassara) in red 
+and <code>both</code> prints both of the methods.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An autocorrelogram with every autocorrelations from 1 to a lag max, and 
+with methods you choose to print.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The only value available for the argument <code>conflevel</code> are 
+0.1, 0.05, 0.025, 0.01 or 0.005.
+</p>
+
+
+<h3>References</h3>
+
+<p>Boubacar Maïnassara, Y. 2011, Multivariate portmanteau test for structural VARMA models
+with uncorrelated but non-independent error terms <em>Journal of Statistical Planning and Inference</em>,
+vol. 141, no. 8, pp. 2961-2975.
+</p>
+<p>Boubacar Maïnassara, Y.and Saussereau, B. 2018, Diagnostic checking in multivariate ARMA models with 
+dependent errors using normalized residual autocorrelations ,
+<em>Journal of the American Statistical Association</em>, vol. 113, no. 524, pp. 1813-1827.
+</p>
+<p>Francq, C., Roy, R. and Zakoïan, J.M. 2005, Diagnostic Checking in ARMA
+Models with Uncorrelated Errors, <em>Journal of the American Statistical
+Association</em>, vol. 100, no. 470, pp. 532-544.
+</p>
+<p>Lobato, I.N. 2001, Testing that a dependant process is
+uncorrelated. J. Amer. Statist. Assos. 96, vol. 455, pp. 1066-1076.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">est&lt;-estimation(p = 1, q = 1, y = CAC40return.sq)
+nl.acf(ar = est$ar, ma = est$ma, y = CAC40return.sq, main = "Autocorrelation of an ARMA(1,1) 
+residuals of the CAC40 return square", nlag = 20)
+
+</code></pre>
+
+
+</div>

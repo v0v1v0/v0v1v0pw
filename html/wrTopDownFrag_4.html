@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>combinateAllAndSum</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Full combinatorial and cumulative values</h2>
+
+<h3>Description</h3>
+
+<p>Use for all preparing all combinations of non-compulsatory, ie variable, mass modifications
+Variable modifications may or may not be present. Thus, for a given amino-acid with a variable modification two versions of the molecular weight need to be considered.
+Most (variable) modifications are linked to a type of amino acid, like serine-residues for phosphorlylation.
+Thus in this case, each instance of the amino acid in question may or may not be modified. 
+So, for example if there are 2 serines, 0, 1 or 2 phosphorylation modifications may be present. 
+For this reason the is the argument <code>nMax</code> to stay within biologically relevant ranges (external knowledge) and reduce complexity significantly.    
+Some modifications are exclusive to others, argument <code>notSingle</code> : An (artificially occuring) de-phosphorylation event during fragmentation can only happen if the amino acid was already phosphorylated in the first place.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">combinateAllAndSum(
+  nMax,
+  modVal,
+  notSingle = NULL,
+  silent = TRUE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>nMax</code></td>
+<td>
+<p>(integer or data.frame with 1 line) maximum number of modifications</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>modVal</code></td>
+<td>
+<p>(numeric, has to have names !) the change of molecular mass introduced by given modifications (as specified by the name of the value)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>notSingle</code></td>
+<td>
+<p>(character) names of 'modVal' where 1st element of 'notSingle'  cannot happen/appear if 2nd element not present (eg de-phospho/phosphorylation)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>named (concatenated names of modVal) numeric vector
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>convToNum</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## to follow easily the results, hypothetical mass-modification values were chosen
+mo1 &lt;- c(a=10, b=1, c=0.1, d=0.01); nMa1 &lt;- c(1,2,0,3)
+combinateAllAndSum(nMa1, mo1)
+## # like 'b' for phospho &amp; 'd' for de-phospho (which can't happen without phospho event)
+combinateAllAndSum(nMa1, mo1, notSingle=c("d","b"))    
+</code></pre>
+
+
+</div>

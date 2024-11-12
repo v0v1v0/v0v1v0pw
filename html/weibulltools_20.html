@@ -1,0 +1,245 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>estimate_cdf.default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimation of Failure Probabilities</h2>
+
+<h3>Description</h3>
+
+<p>This function applies a non-parametric method to estimate the failure
+probabilities of complete data taking (multiple) right-censored observations
+into account.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+estimate_cdf(
+  x,
+  status,
+  id = NULL,
+  method = c("mr", "johnson", "kaplan", "nelson"),
+  options = list(),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector which consists of lifetime data. Lifetime
+data could be every characteristic influencing the reliability of a product,
+e.g. operating time (days/months in service), mileage (km, miles), load
+cycles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>A vector of binary data (0 or 1) indicating whether unit <em>i</em>
+is a right censored observation (= 0) or a failure (= 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>A vector for the identification of every unit. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Method used for the estimation of failure probabilities. See
+'Details'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>options</code></td>
+<td>
+<p>A list of named options. See 'Options'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The following techniques can be used for the <code>method</code> argument:
+</p>
+
+<ul>
+<li> <p><code>"mr"</code> : Method <em>Median Ranks</em> is used to estimate the failure probabilities
+of failed units without considering censored items. Tied observations can be
+handled in three ways (See 'Options'):
+</p>
+
+<ul>
+<li> <p><code>"max"</code> : Highest observed rank is assigned to tied observations.
+</p>
+</li>
+<li> <p><code>"min"</code> : Lowest observed rank is assigned to tied observations.
+</p>
+</li>
+<li> <p><code>"average"</code> : Mean rank is assigned to tied observations.
+</p>
+</li>
+</ul>
+<p>Two formulas can be used to determine cumulative failure probabilities
+<em>F(t)</em> (See 'Options'):
+</p>
+
+<ul>
+<li> <p><code>"benard"</code> : Benard's approximation for Median Ranks.
+</p>
+</li>
+<li> <p><code>"invbeta"</code> : Exact Median Ranks using the inverse beta distribution.
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>"johnson"</code> : The <em>Johnson</em> method is used to estimate the failure
+probabilities of failed units, taking censored units into account. Compared
+to complete data, correction of probabilities is done by the computation of
+adjusted ranks. Two formulas can be used to determine cumulative failure
+probabilities <em>F(t)</em> (See 'Options'):
+</p>
+
+<ul>
+<li> <p><code>"benard"</code> : Benard's approximation for Median Ranks.
+</p>
+</li>
+<li> <p><code>"invbeta"</code> : Exact Median Ranks using the inverse beta distribution.
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>"kaplan"</code> : The method of <em>Kaplan</em> and <em>Meier</em> is used to estimate the
+survival function <em>S(t)</em> with respect to (multiple) right censored data.
+The complement of <em>S(t)</em>, i.e. <em>F(t)</em>, is returned. In contrast to the
+original <em>Kaplan-Meier</em> estimator, one modification is made (see 'References').
+</p>
+</li>
+<li> <p><code>"nelson"</code> : The <em>Nelson-Aalen</em> estimator models the cumulative hazard rate
+function in case of (multiple) right censored data. Equating the formal
+definition of the hazard rate with that according to <em>Nelson-Aalen</em> results
+in a formula for the calculation of failure probabilities.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A tibble with class <code>wt_cdf_estimation</code> containing the following columns:
+</p>
+
+<ul>
+<li> <p><code>id</code> : Identification for every unit.
+</p>
+</li>
+<li> <p><code>x</code> : Lifetime characteristic.
+</p>
+</li>
+<li> <p><code>status</code> : Binary data (0 or 1) indicating whether a unit is a right
+censored observation (= 0) or a failure (= 1).
+</p>
+</li>
+<li> <p><code>rank</code> : The (computed) ranks. Determined for methods <code>"mr"</code> and <code>"johnson"</code>,
+filled with <code>NA</code> for other methods or if <code>status = 0</code>.
+</p>
+</li>
+<li> <p><code>prob</code> : Estimated failure probabilities, <code>NA</code> if <code>status = 0</code>.
+</p>
+</li>
+<li> <p><code>cdf_estimation_method</code> : Specified method for the estimation of failure
+probabilities.
+</p>
+</li>
+</ul>
+<h3>Options</h3>
+
+<p>Argument <code>options</code> is a named list of options:</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   Method </td>
+<td style="text-align: left;"> Name </td>
+<td style="text-align: left;"> Value </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>mr</code> </td>
+<td style="text-align: left;"> <code>mr_method</code> </td>
+<td style="text-align: left;"> <code>"benard"</code> (default) or <code>"invbeta"</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>mr</code> </td>
+<td style="text-align: left;"> <code>mr_ties.method</code> </td>
+<td style="text-align: left;"> <code>"max"</code> (default), <code>"min"</code> or <code>"average"</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>johnson</code> </td>
+<td style="text-align: left;"> <code>johnson_method</code> </td>
+<td style="text-align: left;"> <code>"benard"</code> (default) or <code>"invbeta"</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p><em>NIST/SEMATECH e-Handbook of Statistical Methods</em>,
+<em>8.2.1.5. Empirical model fitting - distribution free (Kaplan-Meier) approach</em>,
+<a href="https://www.itl.nist.gov/div898/handbook/apr/section2/apr215.htm">NIST SEMATECH</a>,
+December 3, 2020
+</p>
+
+
+<h3>See Also</h3>
+
+<p>estimate_cdf
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Vectors:
+cycles &lt;- alloy$cycles
+status &lt;- alloy$status
+
+# Example 1 - Johnson method:
+prob_tbl &lt;- estimate_cdf(
+  x = cycles,
+  status = status,
+  method = "johnson"
+)
+
+
+# Example 2 - Method 'mr' with options:
+prob_tbl_2 &lt;- estimate_cdf(
+  x = cycles,
+  status = status,
+  method = "mr",
+  options = list(
+    mr_method = "invbeta",
+    mr_ties.method = "average"
+  )
+)
+
+</code></pre>
+
+
+</div>

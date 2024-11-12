@@ -1,0 +1,163 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ineq.weighted</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Weighted inequality measures</h2>
+
+<h3>Description</h3>
+
+<p>Calculates weighted mean and sum of X (or median of X), and a set of relevant inequality measures.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ineq.weighted(
+  X,
+  W = rep(1, length(X)),
+  AF.norm = TRUE,
+  Atkinson.e = 1,
+  Jenkins.alfa = 0.8,
+  Entropy.power = 0.5,
+  zeroes = "include",
+  Kolm.p = 1,
+  Kolm.scale = "Standardization",
+  Leti.norm = T,
+  AN_Y.a = 1,
+  AN_Y.b = 1,
+  Apouey.a = 2/(1 - length(W[!is.na(W) &amp; !is.na(X)])),
+  Apouey.b = length(W[!is.na(W) &amp; !is.na(X)])/(length(W[!is.na(W) &amp; !is.na(X)]) - 1),
+  BL.withsqrt = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>is a data vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p>is a vector of weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>AF.norm</code></td>
+<td>
+<p>(logical). If TRUE (default) then index is divided by its maximum possible value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Atkinson.e</code></td>
+<td>
+<p>is a parameter for Atkinson coefficient</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Jenkins.alfa</code></td>
+<td>
+<p>is a parameter for Jenkins coefficient</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Entropy.power</code></td>
+<td>
+<p>is a generalized entropy index parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zeroes</code></td>
+<td>
+<p>defines what to do with zeroes in the data vector. Possible options are "remove" and "include". See Entropy function for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Kolm.p</code></td>
+<td>
+<p>is a parameter for Kolm index</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Kolm.scale</code></td>
+<td>
+<p>method of data standardization before computing</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Leti.norm</code></td>
+<td>
+<p>(logical). If TRUE (default) then Leti index is divided by a maximum possible value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>AN_Y.a</code></td>
+<td>
+<p>is a positive parameter for Abul Naga and Yalcin inequality measure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>AN_Y.b</code></td>
+<td>
+<p>is a parameter for Abul Naga and Yalcin inequality measure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Apouey.a</code></td>
+<td>
+<p>is a parameter for Apouey inequality measure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Apouey.b</code></td>
+<td>
+<p>is a parameter for Apouey inequality measure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>BL.withsqrt</code></td>
+<td>
+<p>if TRUE function returns index given by BL2, elsewhere by BL (default). See more in details of BL function.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Function checks if X is a numeric or an ordered factor. Then it calculates all appropriate inequality measures.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The data frame with weighted mean and sum of X, and all inequality measures relevant for a numeric data.
+In a case of an ordered factor, the data frame with median of X, and all relevant inequality measures.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Compare weighted and unweighted result.
+X=1:10
+W=1:10
+ineq.weighted(X)
+ineq.weighted(X,W)
+
+
+data(Tourism)
+# Results for Total expenditure with sample weights:
+X=Tourism$`Total expenditure`
+W=Tourism$`Sample weight`
+ineq.weighted(X)
+ineq.weighted(X,W)
+
+</code></pre>
+
+
+</div>

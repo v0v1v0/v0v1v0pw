@@ -1,0 +1,75 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fb_advanced_match_stats</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get FBref advanced match stats</h2>
+
+<h3>Description</h3>
+
+<p>Returns data frame of selected statistics for each match, for either whole team or individual players.
+Multiple URLs can be passed to the function, but only one 'stat_type' can be selected.
+Replaces the deprecated function get_advanced_match_stats()
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fb_advanced_match_stats(match_url, stat_type, team_or_player, time_pause = 3)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>match_url</code></td>
+<td>
+<p>the three character country code for all countries</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stat_type</code></td>
+<td>
+<p>the type of team statistics the user requires</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>team_or_player</code></td>
+<td>
+<p>result either summarised for each team, or individual players</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time_pause</code></td>
+<td>
+<p>the wait time (in seconds) between page loads
+</p>
+<p>The statistic type options (stat_type) include:
+</p>
+<p><em>"summary"</em>, <em>"passing"</em>, <em>"passing"_types</em>,
+<em>"defense" </em>, <em>"possession"</em>, <em>"misc"</em>, <em>"keeper"</em></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>returns a dataframe of a selected team statistic type for a selected match(es)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+try({
+urls &lt;- fb_match_urls(country = "AUS", gender = "F", season_end_year = 2021, tier = "1st")
+
+df &lt;- fb_advanced_match_stats(match_url=urls,stat_type="possession",team_or_player="player")
+})
+
+## End(Not run)
+</code></pre>
+
+
+</div>

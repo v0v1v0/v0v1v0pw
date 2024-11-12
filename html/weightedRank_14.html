@@ -1,0 +1,197 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wgtRanktt</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Adaptive Inference Using Two Test Statistics in a Block Design
+</h2>
+
+<h3>Description</h3>
+
+<p>Tests twice, using the better of two test statistics; see Rosenbaum (2012, 2024).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wgtRanktt(y, phi1 = "u868", phi2 = "u878", phifunc1 = NULL, phifunc2 = NULL, gamma = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>A matrix or data frame with I rows and J columns.  Column 1 contains the response of the treated individuals and columns 2 throught J contain the responses of controls in the same block.  An error will result if y contains NAs.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phi1</code></td>
+<td>
+
+<p>The weight function to be applied to the ranks of the within block ranges.  The options are: (i) "wilc" for the stratified Wilcoxon test, which gives every block the same weight, (ii) "quade" which ranks the within block ranges from 1 to I, and is closely related to Quade's (1979) statistic; see also Tardif (1987), (iii) "u868" based on Rosenbaum (2011), (iv) u878 based on Rosenbaum (2011).  Note that phi is ignored if phifunc is not NULL.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phi2</code></td>
+<td>
+
+<p>See phi1.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phifunc1</code></td>
+<td>
+
+<p>If not NULL, a user specified weight function for the ranks of the within block ranges.  The function should map [0,1] into [0,1].  The function is applied to the ranks divided by the sample size.  See the example.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phifunc2</code></td>
+<td>
+
+<p>See phifunc1.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma</code></td>
+<td>
+
+<p>A single number greater than or equal to 1.  gamma is the sensitivity parameter.  Two individuals with the same observed covariates may differ in their odds of treatment by at most a factor of gamma; see Rosenbaum (1987; 2017, Chapter 9).
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>jointP </code></td>
+<td>
+<p>Upper bound on the one-sided joint P-value obtained
+from two test statistics in the presence of a bias of at most gamma.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cor12 </code></td>
+<td>
+<p>Correlation of the two test statistics at the treatment assignment distribution that provides the joint upper bound.  Often, this correlation is high, so the joint distribution that is used here is much less conservative than use of the Bonferroni inequality when testing twice.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detail </code></td>
+<td>
+<p>Details about the two statistics separately.  Equivalent to the result from wgtRank() run twice with different test statistics.</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>For discussion of testing twice in matched pairs, see Rosenbaum (2012).
+</p>
+<p>Testing twice is also possible in block designs using weighted rank statistics because the same value of the unobserved covariate provides the upper bound for both statistics when using the separable approximation in Gastwirth et al. (2000) and Rosenbaum (2018, Remarks 4 and 5).  See also Rosenbaum (2022) where the Bahadur efficiency of such tests is computed.
+</p>
+<p>Other packages that use testing twice in a different way are "sensitivity2x2xk"" and "testtwice".  The "testtwice" package is restricted to matched pairs, and "sensitivity2x2xk"" is for binary outcomes.  With some attention to detail (e.g., the handling of zero pair differences), in the case of matched pairs, the "testtwice" package and the wgtRanktt() function will yield identical results.  In that sense, wgtRanktt() extends the method to blocks designs.
+</p>
+<p>Testing twice achieves the larger Bahadur efficiency of the two component statistics; see Berk and Jones (1978).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Paul R. Rosenbaum
+</p>
+
+
+<h3>References</h3>
+
+<p>Berk, R. H. and Jones, D. H. (1978)
+&lt;https://www.jstor.org/stable/4615706&gt; Relatively optimal combinations of test statistics. Scandinavian Journal of Statistics, 5, 158-162.
+</p>
+<p>Brown, B. M. (1981) &lt;doi:10.1093/biomet/68.1.235&gt; Symmetric quantile averages and related estimators. Biometrika, 68(1), 235-242.
+</p>
+<p>Gastwirth, J. L., Krieger, A. M., and Rosenbaum, P. R. (2000)
+&lt;doi:10.1111/1467-9868.00249&gt; Asymptotic separability in sensitivity analysis.  Journal of the Royal Statistical Society B 2000, 62, 545-556.
+</p>
+<p>Lehmann, E. L. (1975)  Nonparametrics: Statistical Methods Based on Ranks. San Francisco: Holden-Day.
+</p>
+<p>Quade, D. (1979) &lt;doi:10.2307/2286991&gt; Using weighted rankings in the analysis of complete blocks with additive block effects. Journal of the American Statistical Association, 74, 680-683.
+</p>
+<p>Rosenbaum, P. R. (1987) &lt;doi:10.2307/2336017&gt; Sensitivity analysis for certain permutation inferences in matched observational studies. Biometrika, 74(1), 13-26.
+</p>
+<p>Rosenbaum, P. R. (2011) &lt;doi:10.1111/j.1541-0420.2010.01535.x&gt; A new U‐Statistic with superior design sensitivity in matched observational studies. Biometrics, 67(3), 1017-1027.
+</p>
+<p>Rosenbaum, P. R. (2012) &lt;doi:10.1093/biomet/ass032&gt; Testing one hypothesis twice in observational studies. Biometrika, 99(4), 763-774.
+</p>
+<p>Rosenbaum, P. R. (2014) &lt;doi:10.1080/01621459.2013.879261&gt; Weighted M-statistics with superior design sensitivity in matched observational studies with multiple controls.  Journal of the American Statistical Association, 109(507), 1145-1158.
+</p>
+<p>Rosenbaum, P. R. (2015) &lt;doi:10.1080/01621459.2014.960968&gt; Bahadur efficiency of sensitivity analyses in observational studies. Journal of the American Statistical Association, 110(509), 205-217.
+</p>
+<p>Rosenbaum, P. (2017) &lt;doi:10.4159/9780674982697&gt; Observation and Experiment: An Introduction to Causal Inference.  Cambridge, MA: Harvard University Press.
+</p>
+<p>Rosenbaum, P. R. (2018) &lt;doi:10.1214/18-AOAS1153&gt; Sensitivity analysis for stratified comparisons in an observational study of the effect of smoking on homocysteine
+levels. The Annals of Applied Statistics, 12(4), 2312-2334.
+</p>
+<p>Rosenbaum, P. R. (2024) &lt;doi:10.1080/01621459.2023.2221402&gt; Bahadur efficiency of observational block designs. Journal of the American Statistical Association.
+</p>
+<p>Tardif, S. (1987) &lt;doi:10.2307/2289476&gt; Efficiency and optimality results for tests based on weighted rankings. Journal of the American Statistical Association, 82(398), 637-644.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(aHDL)
+y&lt;-t(matrix(aHDL$hdl,4,406))
+
+# This is the simplest example of a general property.  The
+# example simply illustrates, but does not fully exploit
+# the property.  In this case, use of the stratified
+# Wilcoxon statistic is a mistake, because Quade's
+# statistic correctly reports insensitivity to a bias
+# of gamma=4.5, but the stratified Wilcoxon statistic
+# is sensitive at gamma=3.5.  The adaptive procedure
+# that does both tests and corrects for multiple testing
+# is insensitive to gamma=4.4; so, it is almost as good
+# as knowing what you cannot know, namely that Quade's
+# statistic is the better choice in this one example.
+# The price paid for testing twice is very small;
+# see Berk and Jones (1978) and Rosenbaum (2012, 2022).
+wgtRank(y,phi="wilc",gamma=3.5)
+wgtRank(y,phi="quade",gamma=3.5)
+wgtRank(y,phi="wilc",gamma=4.5)
+wgtRank(y,phi="quade",gamma=4.5)
+wgtRanktt(y,phi1="wilc",phi2="quade",gamma=4.4)
+
+# Sensitivity to gamma=3.5 is very different from
+# sensitivity to gamma=4.4; see documentation for amplify.
+amplify(3.5,8)
+amplify(4.4,8)
+
+
+# In this example, u878 exhibits greater insensitivity to bias
+# than u868.  However, adaptive inference using both is almost
+# as good as the better statistic, yet it strongly controls the
+# family-wise error rate despite testing twice;
+# see Rosenbaum (2012,2022).
+wgtRank(y,phi="u868",gamma=6) # New U-statistic weights (8,6,8)
+wgtRank(y,phi="u878",gamma=6) # New U-statistic weights (8,7,8)
+wgtRanktt(y,phi1="u868",phi2="u878",gamma=5.9)
+
+# A user defined weight function, brown, analogous to Brown (1981).
+brown&lt;-function(v){((v&gt;=.333)+(v&gt;=.667))/2}
+# In this example, the joint test rejects based on u878
+wgtRanktt(y,phi1="u878",phifunc2=brown,gamma=5.8)
+</code></pre>
+
+
+</div>

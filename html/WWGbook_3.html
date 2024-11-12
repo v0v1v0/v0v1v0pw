@@ -1,0 +1,73 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rat.brain</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>rat.brain data in Chapter 5</h2>
+
+<h3>Description</h3>
+
+<p>The data used in this example were originally reported by Douglas, et al. (2004). The aim of their experiment was to examine nucleotide activation (guanine nucleotide bonding) in seven different brain nuclei (i.e., brain regions) among five adult male rats. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(rat.brain)</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 30 observations on the following 4 variables.
+</p>
+
+<dl>
+<dt>animal</dt>
+<dd>
+<p>: Unique identifier for each rat</p>
+</dd>
+<dt>treatment</dt>
+<dd>
+<p>: Level of drug treatment (1 = Basal, 2 = Carbachol)</p>
+</dd>
+<dt>region</dt>
+<dd>
+<p>: Brain nucleus (1 = BST, 2 = LS, 3 = VDB)</p>
+</dd>
+<dt>activate</dt>
+<dd>
+<p>: Nucleotide activation (the dependent variable)</p>
+</dd>
+</dl>
+<h3>References</h3>
+
+<p>Douglas, C.L., Demarco, G.J., Baghdoyan, H.A., and Lydic, R, Pontine and basal
+forebrain cholinergic interaction: implications for sleep and breathing,
+Respiratory Physiology and Neurobiology, 143, 251, 2004.
+</p>
+<p>West, B., Welch, K. &amp; Galecki, A, Linear Mixed Models: A Practical Guide Using Statistical Software,
+Chapman Hall / CRC Press, first edition, 2006.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">attach(rat.brain)
+
+region.f &lt;- region
+region.f[region == 1] &lt;- 1
+region.f[region == 2] &lt;- 2
+region.f[region == 3] &lt;- 0
+region.f &lt;- factor(region.f)
+treat &lt;- treatment
+treat[treatment == 1] &lt;- 0
+treat[treatment == 2] &lt;- 1
+treat &lt;- factor(treat)
+detach(rat.brain)
+rat.brain &lt;- data.frame(rat.brain, region.f, treat)
+str(rat.brain)
+</code></pre>
+
+
+</div>

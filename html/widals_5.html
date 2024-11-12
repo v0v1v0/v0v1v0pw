@@ -1,0 +1,215 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>crispify</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Observation-Space Stochastic Correction
+</h2>
+
+<h3>Description</h3>
+
+<p>Improve observation-space predictions using 'left over' spacial correlation between model residuals
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">crispify(locs1, locs2, Z.delta, z.lags.vec, geodesic, alpha, flatten, self.refs, 
+lags, stnd.d = FALSE, log10cutoff = -16)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>locs1</code></td>
+<td>
+
+<p>Locations of supporting sites.  An <em>n</em> x 3 matrix, first column is spacial <code class="reqn">x</code>, second column is spacial <code class="reqn">y</code>, third column contains relative temporal 'distance'.  If the <code>geodesic</code> is <code>TRUE</code>, make sure latitude is in the first column.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locs2</code></td>
+<td>
+
+<p>Locations of interpolation sites.  An <code class="reqn">n</code>* x 3 matrix, where <code class="reqn">n</code>* is the number of interpolation sites.  See <code>locs1</code> above.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z.delta</code></td>
+<td>
+
+<p>Observed residuals.  A <code class="reqn">\tau</code> x <code class="reqn">x</code> matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z.lags.vec</code></td>
+<td>
+
+<p>Temporal lags.  An integer vector or scalar.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geodesic</code></td>
+<td>
+
+<p>Use geodesic distance?  Boolean.  If true, distance (used internally) is in units kilometers.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+
+<p>The WIDALS distance rate hyperparameter.  A scalar non-negative number.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flatten</code></td>
+<td>
+
+<p>The WIDALS 'flattening' hyperparameter.  A scalar non-negative number.  Typically between 0 and some number slightly greater than 1.  When 0, no crispification.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>self.refs</code></td>
+<td>
+
+<p>Which sites are self-referencing?  An integer vector of (zero-based) lag indices, OR a scalar set to <code>-1</code>.  This argument only has meaning when <code>locs1</code> is identical to <code>locs2</code>.  If the <code>lags</code> argument is, say, 0, then it would be pointless to smooth predictions with existing values.  In this case, we can set <code>self.refs = 0</code>.  If <code>locs1</code> is NOT the same as <code>locs2</code>, then set this argument to <code>-1</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lags</code></td>
+<td>
+
+<p>Temporal lags.  An integer vector or scalar.  E.g., if the data's time increment is daily, then <code>lags = c(-1,0,1)</code> would have <code>crispify</code> smooth today's predictions using yesterdays, today's, and tomorrow's observed residuals.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stnd.d</code></td>
+<td>
+
+<p>Spacial compression.  Boolean.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log10cutoff</code></td>
+<td>
+
+<p>Weight threshold.  A scalar number.  A value of, e.g., -10, will instruct <code>crispify</code> to ignore weights less than 10^(-10) when smoothing.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is called inside <code>widals.predict</code> and <code>widals.snow</code>.  It may be useful for the user in building their own WIDALS model extensions.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code class="reqn">\tau</code> x <code class="reqn">x</code> matrix.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>widals.predict</code>, <code>widals.snow</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+######### here's an itty-bitty example
+
+######### simulate itty-bitty data
+
+tau &lt;- 21 #### number of time points
+
+d.alpha &lt;- 2
+R.scale &lt;- 1
+sigma2 &lt;- 0.01
+F &lt;- 1
+Q &lt;- 0
+
+n.all &lt;- 14 ##### number of spacial locations
+
+set.seed(9999)
+
+
+library(SSsimple)
+
+locs.all &lt;- cbind(runif(n.all, -1, 1), runif(n.all, -1, 1)) #### random location of sensors
+D.mx &lt;- distance(locs.all, locs.all, FALSE) #### distance matrix
+
+#### create measurement variance using distance and covariogram
+R.all &lt;- exp(-d.alpha*D.mx) + diag(sigma2, n.all)
+
+Hs.all &lt;- matrix(1, n.all, 1) #### constant mean function
+
+##### use SSsimple to simulate system
+xsssim &lt;- SS.sim(F=F, H=Hs.all, Q=Q, R=R.all, length.out=tau, beta0=0)
+Z.all &lt;- xsssim$Z ###### system observation matrix
+
+
+######## suppose use the global mean as a prediction
+
+z.mean &lt;- mean(Z.all)
+
+Z.delta &lt;- Z.all - z.mean
+
+
+z.lags.vec &lt;- rep(0, n.all)
+
+geodesic &lt;- FALSE
+alpha &lt;- 5
+flatten &lt;- 1
+
+## emmulate cross-validation, i.e., 
+## don't use observed site values to predict themselves (zero-based)
+self.refs &lt;- 0 
+lags &lt;- 0
+
+locs1 &lt;- cbind(locs.all, rep(0, n.all))
+locs2 &lt;- cbind(locs.all, rep(0, n.all))
+
+Z.adj &lt;- crispify(locs1, locs2, Z.delta, z.lags.vec, geodesic, alpha, 
+    flatten, self.refs, lags, stnd.d = FALSE, log10cutoff = -16) 
+
+Z.adj
+
+Z.hat &lt;- z.mean + Z.adj
+
+sqrt( mean( (Z.all - Z.hat)^2 ) )
+
+
+######### set flatten to zero -- this means no crispification
+
+Z.adj &lt;- crispify(locs1, locs2, Z.delta, z.lags.vec, geodesic, alpha, 
+    flatten=0, self.refs, lags, stnd.d = FALSE, log10cutoff = -16) 
+
+Z.adj
+
+Z.hat &lt;- z.mean + Z.adj
+
+sqrt( mean( (Z.all - Z.hat)^2 ) )
+
+
+</code></pre>
+
+
+</div>

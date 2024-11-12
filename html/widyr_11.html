@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pairwise_pmi</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Pointwise mutual information of pairs of items</h2>
+
+<h3>Description</h3>
+
+<p>Find pointwise mutual information of pairs of items in a column, based on
+a "feature" column that links them together.
+This is an example of the spread-operate-retidy pattern.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pairwise_pmi(tbl, item, feature, sort = FALSE, ...)
+
+pairwise_pmi_(tbl, item, feature, sort = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tbl</code></td>
+<td>
+<p>Table</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item</code></td>
+<td>
+<p>Item to compare; will end up in <code>item1</code> and
+<code>item2</code> columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>feature</code></td>
+<td>
+<p>Column describing the feature that links one item to others</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort</code></td>
+<td>
+<p>Whether to sort in descending order of the pointwise mutual
+information</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Extra arguments passed on to <code>squarely</code>,
+such as <code>diag</code> and <code>upper</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tbl_df with three columns, <code>item1</code>, <code>item2</code>, and
+<code>pmi</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(dplyr)
+
+dat &lt;- tibble(group = rep(1:5, each = 2),
+              letter = c("a", "b",
+                         "a", "c",
+                         "a", "c",
+                         "b", "e",
+                         "b", "f"))
+
+# how informative is each letter about each other letter
+pairwise_pmi(dat, letter, group)
+pairwise_pmi(dat, letter, group, sort = TRUE)
+
+</code></pre>
+
+
+</div>

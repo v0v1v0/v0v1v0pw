@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>combine_signals</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Combine signals from the Hourly Collaboration query</h2>
+
+<h3>Description</h3>
+
+<p>Takes in an Hourly Collaboration Data, and for each hour sums and aggregates
+the signals (e.g.<code>Emails_sent</code> and <code>IMs_sent</code>) in <code>Signals_sent</code>. This is an
+internal function used in the Working Patterns functions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">combine_signals(data, hr, signals = c("Emails_sent", "IMs_sent"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Hourly Collaboration query containing signal variables (e.g.
+<code>Emails_sent_00_01</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hr</code></td>
+<td>
+<p>Numeric value between 0 to 23 to iterate through</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signals</code></td>
+<td>
+<p>Character vector for specifying which signal types to combine.
+Defaults to <code>c("Emails_sent", "IMs_sent")</code>. Other valid values include
+<code>"Unscheduled_calls"</code> and <code>"Meetings"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>combine_signals</code> uses string matching to aggregate columns.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a numeric vector that represents the sum of signals sent for a given
+hour.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Support: 
+<code>camel_clean()</code>,
+<code>check_inputs()</code>,
+<code>cut_hour()</code>,
+<code>extract_date_range()</code>,
+<code>extract_hr()</code>,
+<code>heat_colours()</code>,
+<code>is_date_format()</code>,
+<code>maxmin()</code>,
+<code>p_test()</code>,
+<code>pairwise_count()</code>,
+<code>plot_WOE()</code>,
+<code>read_preamble()</code>,
+<code>rgb2hex()</code>,
+<code>totals_bind()</code>,
+<code>totals_col()</code>,
+<code>totals_reorder()</code>,
+<code>tstamp()</code>,
+<code>us_to_space()</code>,
+<code>wrap()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Demo using simulated variables
+sim_data &lt;-
+  data.frame(Emails_sent_09_10 = sample(1:5, size = 10, replace = TRUE),
+             Unscheduled_calls_09_10 = sample(1:5, size = 10, replace = TRUE))
+
+combine_signals(sim_data, hr = 9, signals = c("Emails_sent", "Unscheduled_calls"))
+
+</code></pre>
+
+
+</div>

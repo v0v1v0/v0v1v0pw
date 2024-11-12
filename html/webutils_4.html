@@ -1,0 +1,61 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>parse_multipart</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Parse a multipart/form-data request</h2>
+
+<h3>Description</h3>
+
+<p>Parse a multipart/form-data request, which is usually generated from a HTML form
+submission. The parameters can include both text values as well as binary files.
+They can be distinguished from the presence of a <code>filename</code> attribute.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">parse_multipart(body, boundary)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>body</code></td>
+<td>
+<p>body of the HTTP request. Must be raw or character vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>boundary string as specified in the <code>Content-Type</code> request header.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A multipart/form-data request consists of a single body which contains one or more
+values plus meta-data, separated using a boundary string. This boundary string
+is chosen by the client (e.g. the browser) and specified in the <code>Content-Type</code>
+header of the HTTP request. There is no escaping; it is up to the client to choose
+a boundary string that does not appear in one of the values.
+</p>
+<p>The parser is written in pure R, but still pretty fast because it uses the regex
+engine.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: example form
+demo_rhttpd()
+
+## End(Not run)
+</code></pre>
+
+
+</div>

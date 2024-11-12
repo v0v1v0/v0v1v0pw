@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>computePosterior</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Internal function: Compute posterior mean and variance of normal location problem</h2>
+
+<h3>Description</h3>
+
+<p>Computes the posterior mean and variance of the normal location problem with
+fixed variance to 1, i.e. <code class="reqn">x | \gamma \sim N(\gamma, 1)</code>.
+The priors for <code class="reqn">\gamma</code> are either <code>weibull</code>,
+<code>subbotin</code> or <code>laplace</code>. Their properties
+are briefly discussed in Magnus and De Luca (2016).
+Default method of computePosterior uses numerical integration. This is used
+for the <code>weibull</code> and <code>subbotin</code> priors.
+For the <code>laplace</code> prior closed form expressions exist for the integrals.
+In the original MATLAB code, the Gauss-Kronrod quadrature was used for
+numerical integration. Here we use the default <code>integrate</code> which
+combines Gauss-Kronrod with Wynn's Epsilon algorithm for extrapolation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">computePosterior(object, ...)
+
+## S3 method for class 'familyPrior'
+computePosterior(object, x, ...)
+
+## S3 method for class 'familyPrior_laplace'
+computePosterior(object, x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>Object of class <code>"familyPrior"</code>, e.g. from
+<code>weibull</code>, should contain all necessary parameters needed
+for the posterior.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>vector. Observed values, i.e. in WALS these are the regression
+coefficients of the transformed regressor Z2 standardized by the standard
+deviation: <code class="reqn">\gamma_{2u} / s</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See section "Numerical integration in Bayesian estimation step"
+in the appendix of Huynh (2024b) for details.
+</p>
+<p><code>computePosterior.familyPrior_laplace()</code> is the specialized method for the
+S3 class <code>"familyPrior_laplace"</code> and computes the posterior
+first and second moments of the normal location problem with a Laplace prior
+using the analytical formula (without numerical integration).
+For more details, see De Luca et al. (2020) and the
+original code of Magnus and De Luca.
+</p>
+
+
+<h3>References</h3>
+
+<p>De Luca G, Magnus JR, Peracchi F (2020).
+“Posterior moments and quantiles for the normal location model with Laplace prior.”
+<em>Communications in Statistics - Theory and Methods</em>, <b>0</b>(0), 1-11.
+<a href="https://doi.org/10.1080/03610926.2019.1710756">doi:10.1080/03610926.2019.1710756</a>.<br><br> Huynh K (2024b).
+“WALS: Weighted-Average Least Squares Model Averaging in R.”
+University of Basel.
+Mimeo.<br><br> Magnus JR, De Luca G (2016).
+“Weighted-average least squares (WALS): A survey.”
+<em>Journal of Economic Surveys</em>, <b>30</b>(1), 117-148.
+<a href="https://doi.org/10.1111/joes.12094">doi:10.1111/joes.12094</a>.
+</p>
+<p>Original MATLAB code on Jan Magnus' website.
+<a href="https://www.janmagnus.nl/items/WALS.pdf">https://www.janmagnus.nl/items/WALS.pdf</a>
+</p>
+
+
+</div>

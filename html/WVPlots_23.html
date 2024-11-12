@@ -1,0 +1,120 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>PlotDistDensityNormal</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot an empirical density with the matching normal distribution</h2>
+
+<h3>Description</h3>
+
+<p>Compares empirical data to a normal distribution with the same mean and standard deviation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">PlotDistDensityNormal(
+  frm,
+  xvar,
+  title,
+  ...,
+  adjust = 0.5,
+  curve_color = "lightgray",
+  normal_color = "blue",
+  mean_color = "blue",
+  sd_color = "darkgray"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frm</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar</code></td>
+<td>
+<p>name of the independent (input or model) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adjust</code></td>
+<td>
+<p>passed to geom_density; controls smoothness of density plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>curve_color</code></td>
+<td>
+<p>color for empirical density curve</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normal_color</code></td>
+<td>
+<p>color for theoretical matching normal</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mean_color</code></td>
+<td>
+<p>color of mean line</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd_color</code></td>
+<td>
+<p>color for 1-standard deviation lines (can be NULL)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Plots the empirical density, the theoretical matching normal, the mean value,
+and plus/minus one standard deviation from the mean.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>geom_density</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+set.seed(52523)
+d &lt;- data.frame(wt=100*rnorm(100))
+PlotDistDensityNormal(d,'wt','example')
+
+# # no sd lines
+# PlotDistDensityNormal(d, 'wt', 'example', sd_color=NULL)
+
+</code></pre>
+
+
+</div>

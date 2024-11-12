@@ -1,0 +1,68 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>grab_assignments_from_dots</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Re-write captured <code>...</code> arguments as assignments.</h2>
+
+<h3>Description</h3>
+
+<p>Re-write captured <code>...</code> arguments as a <code>c(DESTINATION = TARGET)</code> character vector.
+Suggested capture code is: <code>substitute(list(...))</code>. Allows <code>bquote</code> <code>.()</code> substitution.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">grab_assignments_from_dots(
+  captured_args,
+  unpack_environment = parent.frame(),
+  allow_dot_on_left = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>captured_args</code></td>
+<td>
+<p>captured <code>...</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unpack_environment</code></td>
+<td>
+<p>environment to look in</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allow_dot_on_left</code></td>
+<td>
+<p>logical if TRUE allow forms like <code>.(a) = a</code> and <code>.(a)</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>named character vector describing the desired mapping.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+f &lt;- function(...) {
+  unpack_environment &lt;- parent.frame(n = 1)
+  orig_args &lt;- substitute(list(...))
+  grab_assignments_from_dots(orig_args, unpack_environment)
+}
+f(a, c = d, e := f, g &lt;- h, i -&gt; j)
+# should equal c('a', 'c' = 'd', 'e' = 'f', 'g' = 'h', 'j' = 'i')
+
+</code></pre>
+
+
+</div>

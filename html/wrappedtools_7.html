@@ -1,0 +1,138 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>compare2numvars</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Comparison for columns of numbers for 2 groups</h2>
+
+<h3>Description</h3>
+
+<p><code>compare2numvars</code> computes either t_var_test or wilcox.test,
+depending on parameter gaussian. Descriptive statistics, depending on distribution,
+are reported as well.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">compare2numvars(
+  data,
+  dep_vars,
+  indep_var,
+  gaussian,
+  round_p = 3,
+  round_desc = 2,
+  range = FALSE,
+  rangesep = " ",
+  pretext = FALSE,
+  mark = FALSE,
+  n = FALSE,
+  add_n = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>name of dataset (tibble/data.frame) to analyze.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dep_vars</code></td>
+<td>
+<p>vector of column names for independent variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indep_var</code></td>
+<td>
+<p>name of grouping variable, has to translate to 2 groups. If more levels are encountered, an error is produced.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gaussian</code></td>
+<td>
+<p>logical specifying normal or ordinal values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>round_p</code></td>
+<td>
+<p>level for rounding p-value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>round_desc</code></td>
+<td>
+<p>number of significant digits for rounding of descriptive stats.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>range</code></td>
+<td>
+<p>include min/max?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rangesep</code></td>
+<td>
+<p>text between statistics and range or other elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pretext</code></td>
+<td>
+<p>for function formatP.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mark</code></td>
+<td>
+<p>for function formatP.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>create columns for n per group?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add_n</code></td>
+<td>
+<p>add n to descriptive statistics?</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tibble with variable names, descriptive statistics, and p-value,
+number of rows is number of dep_vars.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Assuming Normal distribution:
+compare2numvars(
+  data = mtcars, dep_vars = c("wt", "mpg", "qsec"), indep_var = "am",
+  gaussian = TRUE
+)
+# Ordinal scale:
+compare2numvars(
+  data = mtcars, dep_vars = c("wt", "mpg", "qsec"), indep_var = "am",
+  gaussian = FALSE
+)
+# If dependent variable has more than 2 levels, consider fct_lump:
+mtcars |&gt; dplyr::mutate(gear=factor(gear) |&gt; forcats::fct_lump_n(n=1)) |&gt; 
+compare2numvars(dep_vars="wt",indep_var="gear",gaussian=TRUE)
+
+</code></pre>
+
+
+</div>

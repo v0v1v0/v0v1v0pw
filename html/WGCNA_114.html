@@ -1,0 +1,357 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hierarchicalConsensusTOM</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Calculation of hierarchical consensus topological overlap matrix
+</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates consensus topological overlap in a hierarchical manner.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">hierarchicalConsensusTOM(
+      # ... information needed to calculate individual TOMs
+      multiExpr,
+      multiWeights = NULL,
+
+      # Data checking options
+      checkMissingData = TRUE,
+
+      # Blocking options
+      blocks = NULL,
+      maxBlockSize = 20000,
+      blockSizePenaltyPower = 5,
+      nPreclusteringCenters = NULL,
+      randomSeed = 12345,
+
+      # Network construction options
+      networkOptions,
+
+      # Save individual TOMs?
+
+      keepIndividualTOMs = TRUE,
+      individualTOMFileNames = "individualTOM-Set%s-Block%b.RData",
+
+      # ... or information about individual (more precisely, input) TOMs
+      individualTOMInfo = NULL,
+
+      # Consensus calculation options 
+      consensusTree,
+
+      useBlocks = NULL,
+
+      # Save calibrated TOMs?
+      saveCalibratedIndividualTOMs = FALSE,
+      calibratedIndividualTOMFilePattern = "calibratedIndividualTOM-Set%s-Block%b.RData",
+
+      # Return options
+      saveConsensusTOM = TRUE,
+      consensusTOMFilePattern = "consensusTOM-%a-Block%b.RData",
+      getCalibrationSamples = FALSE,
+
+      # Return the intermediate results as well?  
+      keepIntermediateResults = saveConsensusTOM,
+
+      # Internal handling of TOMs
+      useDiskCache = NULL, 
+      chunkSize = NULL,
+      cacheDir = ".",
+      cacheBase = ".blockConsModsCache",
+
+      # Behavior
+      collectGarbage = TRUE,
+      verbose = 1,
+      indent = 0)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>multiExpr</code></td>
+<td>
+<p> Expression data in the multi-set format (see <code>checkSets</code>). A vector of
+lists, one per set. Each set must contain a component <code>data</code> that contains the expression data, with
+rows corresponding to samples and columns to genes or probes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multiWeights</code></td>
+<td>
+<p> optional observation weights in the same format (and dimensions) as <code>multiExpr</code>.
+These weights are used for correlation calculations with data in  <code>multiExpr</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checkMissingData</code></td>
+<td>
+
+<p>Logical: should data be checked for excessive numbers of missing entries in
+genes and samples, and for genes with zero variance? See details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blocks</code></td>
+<td>
+
+<p>Optional specification of blocks in which hierarchical clustering and module detection
+should be performed. If given, must be a numeric vector with one entry per gene
+of <code>multiExpr</code> giving the number of the block to which the corresponding gene belongs.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxBlockSize</code></td>
+<td>
+<p>Integer giving maximum block size for module detection. Ignored if <code>blocks</code>
+above is non-NULL. Otherwise, if the number of genes in <code>datExpr</code> exceeds <code>maxBlockSize</code>, genes
+will be pre-clustered into blocks whose size should not exceed <code>maxBlockSize</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blockSizePenaltyPower</code></td>
+<td>
+<p>Number specifying how strongly blocks should be penalized for exceeding the
+maximum size. Set to a lrge number or <code>Inf</code> if not exceeding maximum block size is very important.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nPreclusteringCenters</code></td>
+<td>
+<p>Number of centers to be used in the preclustering. Defaults to smaller of
+<code>nGenes/20</code> and <code>100*nGenes/maxBlockSize</code>, where <code>nGenes</code> is the nunber of genes (variables)
+in <code>multiExpr</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>randomSeed</code></td>
+<td>
+<p>Integer to be used as seed for the random number generator before the function
+starts. If a current seed exists, it is saved and restored upon exit. If <code>NULL</code> is given, the
+function will not save and restore the seed. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkOptions</code></td>
+<td>
+
+<p>A single list of class <code>NetworkOptions</code> giving options for network calculation for all of the
+networks, or a <code>multiData</code> structure containing one such list for each input data set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepIndividualTOMs</code></td>
+<td>
+
+<p>Logical: should individual TOMs be retained after the calculation is finished?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>individualTOMFileNames</code></td>
+<td>
+
+<p>Character string giving the file names to save individual TOMs into. The
+following tags should be used to make the file names unique for each set and block: <code>%s</code> will be
+replaced by the set number; <code>%N</code> will be replaced by the set name (taken from <code>names(multiExpr)</code>)
+if it exists, otherwise by set number; <code>%b</code> will be replaced by the block number. If the file names
+turn out to be non-unique, an error will be generated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>individualTOMInfo</code></td>
+<td>
+
+<p>A list, typically returned by <code>individualTOMs</code>, containing information about the topological
+overlap matrices in the individual data sets in <code>multiExpr</code>. See the output of 
+<code>individualTOMs</code> for
+details on the content of the list.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>consensusTree</code></td>
+<td>
+
+<p>A list specifying the consensus calculation. See details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useBlocks</code></td>
+<td>
+
+<p>Optional vector giving the blocks that should be used for the calcualtions. If <code>NULL</code>, all 
+all blocks will be used.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>saveCalibratedIndividualTOMs</code></td>
+<td>
+
+<p>Logical: should the calibrated individual TOMs be saved?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>calibratedIndividualTOMFilePattern</code></td>
+<td>
+
+<p>Specification of file names in which calibrated individual TOMs should be saved.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>saveConsensusTOM</code></td>
+<td>
+
+<p>Logical: should the consensus TOM be saved to disk?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>consensusTOMFilePattern</code></td>
+<td>
+
+<p>Character string giving the file names to save consensus TOMs into. The
+following tags should be used to make the file names unique for each set and block: <code>%s</code> will be
+replaced by the set number; <code>%N</code> will be replaced by the set name (taken from <code>names(multiExpr)</code>)
+if it exists, otherwise by set number; <code>%b</code> will be replaced by the block number. If the file names
+turn out to be non-unique, an error will be generated.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getCalibrationSamples</code></td>
+<td>
+
+<p>Logical: should the sampled values used for network calibration be returned?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepIntermediateResults</code></td>
+<td>
+
+<p>Logical: should intermediate consensus TOMs be saved as well?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useDiskCache</code></td>
+<td>
+
+<p>Logical: should disk cache be used for consensus calculations? The disk cache can be used to store chunks of
+calibrated data that are small enough to fit one chunk from each set into memory (blocks may be small enough
+to fit one block of one set into memory, but not small enough to fit one block from all sets in a consensus
+calculation into memory at the same time). Using disk cache is slower but lessens the memory footprint of
+the calculation.
+As a general guide, if individual data are split into blocks, we
+recommend setting this argument to <code>TRUE</code>. If this argument is <code>NULL</code>, the function will decide
+whether to use disk cache based on the number of sets and block sizes.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chunkSize</code></td>
+<td>
+<p> network similarities are saved in smaller chunks of size <code>chunkSize</code>. If <code>NULL</code>,
+an appropriate chunk size will be determined from an estimate of available memory. Note that if the chunk size
+is greater than the memory required for storing intemediate results, disk cache use will automatically be
+disabled. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cacheDir</code></td>
+<td>
+<p> character string containing the directory into which cache files should be written. The
+user should make sure that the filesystem has enough free space to hold the cache files which can get quite
+large.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cacheBase</code></td>
+<td>
+<p> character string containing the desired name for the cache files. The actual file
+names will consists of <code>cacheBase</code> and a suffix to make the file names unique. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>collectGarbage</code></td>
+<td>
+
+<p>Logical: should garbage be collected after memory-intensive operations?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is essentially a wrapper for <code>hierarchicalConsensusCalculation</code>, with a few
+additional operations specific to calculations of topological overlaps.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list that contains the output of <code>hierarchicalConsensusCalculation</code> and two extra components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>individualTOMInfo</code></td>
+<td>
+<p>A copy of the input <code>individualTOMInfo</code> if it was non-<code>NULL</code>, or the
+result of <code>individualTOMs</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>consensusTree</code></td>
+<td>
+<p>A copy of the input <code>consensusTree</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>hierarchicalConsensusCalculation</code> for the actual hierarchical consensus calculation;
+</p>
+<p><code>individualTOMs</code> for the calculation of individual TOMs in a format suitable for consensus
+calculation.
+</p>
+
+
+</div>

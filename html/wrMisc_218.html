@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>regrMultBy1or2point</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Rescaling of multiple data-sets according to reference data using regression</h2>
+
+<h3>Description</h3>
+
+<p><code>regrMultBy1or2point</code> regresses each col of matrix according to 'refLst'(describing rownames of inDat). 
+If 'refLst' conatins 2 groups, the 1st group will be set to the 1st value of 'regrTo' (and the 2nd group of 'refLst' to the 2nd 'regtTo')
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">regrMultBy1or2point(
+  inDat,
+  refLst,
+  regrTo = c(1, 0.5),
+  silent = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>inDat</code></td>
+<td>
+<p>matrix or data.frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refLst</code></td>
+<td>
+<p>list of names existing in inDat (one group of names for each value in 'regrTo'), to be transformed in values precised in 'regTo'; if no matches to names of 'inDat' found, the 2 lowest and/or highest highest values will be chosen</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>regrTo</code></td>
+<td>
+<p>(numeric,length=2) range (at scale 0-1) of target-values for mean of elements cited in 'refLst'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>normalized matrix
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>adjBy2ptReg</code>, <code>regrBy1or2point</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2016); dat2 &lt;- round(cbind(1:50 +(1:50)*runif(50),2.2*(1:50) +rnorm(50,0,3)),1)
+rownames(dat2) &lt;- 1:nrow(dat2)
+reg1 &lt;- regrBy1or2point(dat2[,1],refLst=list(as.character(5:7),as.character(44:45)))
+reg2 &lt;- regrMultBy1or2point(dat2,refLst=list(as.character(5:7),as.character(44:45)))
+plot(dat2[,1],reg2[,1])
+identical(reg1,reg2[,1])
+identical(dat2[,1],reg2[,1])
+</code></pre>
+
+
+</div>

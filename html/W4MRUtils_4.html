@@ -1,0 +1,130 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>check_one_integer</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>check_one_integer</h2>
+
+<h3>Description</h3>
+
+<p>Use this function to validate parameters.
+You're never assured that provided parameters from users are the right
+type, or length. This may be the case with your own code as well,
+if you have undetected bugs in your code.
+</p>
+<p>This function helps prevent unpredictable behaviour coming from
+bad parameters.
+</p>
+<p>It checks the size of vectors, and the type of values.
+If the parameter is not the good type or length, the program stops
+with an explanatory error.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>L.Pavot
+</p>
+
+
+<h3>See Also</h3>
+
+<p>check_parameter_type,check_parameter_length
+</p>
+<p>check_one_integer,check_one_logical,check_one_numeric
+</p>
+<p>check_one_complex,check_one_character
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## here is a simple utility function we will use in this example.
+## It is not important
+show_last_error &lt;- function(error) {
+  dump.frames()
+  message(base::attr(last.dump, "error.message"))
+}
+
+## The example really starts here
+## we have a simple function like this:
+custom_message &lt;- function(text) {
+  message(sprintf("Message: %s", text))
+}
+
+## this function needs to have a character vector as first
+## parameter.
+## So, to validate the parameter, we could write:
+custom_message &lt;- function(text) {
+  check_parameter_type(text, "character")
+  message(base::sprintf("Message: %s", text))
+}
+tryCatch(custom_message(42), error = show_last_error)
+
+
+## this function needs to have a vector of length 1.
+## So, to validate the parameter, we could write:
+custom_message &lt;- function(text) {
+  check_parameter_type(text, "character")
+  check_parameter_length(text, 1)
+  message(base::sprintf("Message: %s", text))
+}
+tryCatch(custom_message(c("uwu", "owo")), error = show_last_error)
+
+
+## Or, to be more concise:
+custom_message &lt;- function(text) {
+  check_param_type_n_length(text, "character", 1)
+  message(base::sprintf("Message: %s", text))
+}
+tryCatch(custom_message(c("uwu", "owo")), error = show_last_error)
+tryCatch(custom_message(42), error = show_last_error)
+
+
+## Let's say the text can be 1 or more elements, and can be null.
+custom_message &lt;- function(text) {
+  check_param_type_n_length(
+    text,
+    expected_type = "character",
+    or_null = TRUE,
+    expected_size = 1,
+    or_more = TRUE
+  )
+  message(paste0(base::sprintf("Message: %s", text), collapse = "\n"))
+}
+tryCatch(custom_message(c(42, 43)), error = show_last_error)
+tryCatch(custom_message(NULL), error = show_last_error)
+## no error, because or_null is TRUE
+tryCatch(custom_message(character(0)), error = show_last_error)
+tryCatch(custom_message(c("uwu", ":3")), error = show_last_error)
+## no error, because or_more is TRUE
+
+## With a function that has a lot of parameters, it may be usefull to
+## provide the parameter's number. And, because it becomes very long
+## to test all those parameters, we will use shortcuts functions
+write_msg &lt;- function(
+  text,
+  font = "owo",
+  font_size = 16,
+  italic = FALSE,
+  bold = FALSE
+) {
+  check_one_character(text, nth = "1st")
+  check_one_character(font, nth = "2nd")
+  check_one_numeric(font_size, nth = "3rd")
+  check_one_logical(italic, nth = "before last")
+  check_one_logical(bold, nth = "last")
+  message(paste0(base::sprintf("Message: %s", text), collapse = "\n"))
+}
+tryCatch(write_msg(text = 42, "font", 16), error = show_last_error)
+tryCatch(write_msg("uwu", font = 1, 16), error = show_last_error)
+tryCatch(write_msg("uwu", font_size = "16"), error = show_last_error)
+tryCatch(write_msg("uwu", italic = "FALSE"), error = show_last_error)
+tryCatch(write_msg("uwu", bold = "FALSE"), error = show_last_error)
+
+</code></pre>
+
+
+</div>

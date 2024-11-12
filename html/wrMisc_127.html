@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>countCloseToLimits</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Count from two vectors number of values close within given limits</h2>
+
+<h3>Description</h3>
+
+<p>This functions summarizes the serach of similar (or identical) numeric values from 2 initial vectors, it 
+evaluates the result from initial search run by findCloseMatch(), whose output is a less convenient list.
+<code>countCloseToLimits</code> checks furthermore how many results within additional (more stringent)
+distance-limits may be found and returns the number of distance values within the limits tested.
+Designed for checking if threshold used with findCloseMatch() may be set more stringent, eg  when searching reasonable FDR limits ...
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">countCloseToLimits(closeMatch, limitIdent = 5, prefix = "lim_")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>closeMatch</code></td>
+<td>
+<p>(list) output from findCloseMatch(), ie list indicating which instances of 2 series of data have close matches</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limitIdent</code></td>
+<td>
+<p>(numeric) max limit or panel of threshold values to test (if single value, in addtion a panel with values below will be tested)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prefix</code></td>
+<td>
+<p>(character)  prefix for names of output</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>integer vector with counts for number of list-elements with at least one absolue value below threshold, names
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>findCloseMatch</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2019); aa &lt;- sample(12:15,20,repl=TRUE) +round(runif(20),2)-0.5
+bb &lt;- 11:18
+match1 &lt;- findCloseMatch(aa,bb,com="diff",lim=0.65)
+head(match1)
+(tmp3 &lt;- countCloseToLimits(match1,lim=c(0.5,0.35,0.2)))
+(tmp4 &lt;- countCloseToLimits(match1,lim=0.7))
+</code></pre>
+
+
+</div>

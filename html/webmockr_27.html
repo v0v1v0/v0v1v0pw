@@ -1,0 +1,293 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>RequestPattern</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>RequestPattern class</h2>
+
+<h3>Description</h3>
+
+<p>class handling all request matchers
+</p>
+
+
+<h3>Public fields</h3>
+
+<div class="r6-fields">
+
+<dl>
+<dt><code>method_pattern</code></dt>
+<dd>
+<p>xxx</p>
+</dd>
+<dt><code>uri_pattern</code></dt>
+<dd>
+<p>xxx</p>
+</dd>
+<dt><code>body_pattern</code></dt>
+<dd>
+<p>xxx</p>
+</dd>
+<dt><code>headers_pattern</code></dt>
+<dd>
+<p>xxx</p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-RequestPattern-new"><code>RequestPattern$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-RequestPattern-matches"><code>RequestPattern$matches()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-RequestPattern-to_s"><code>RequestPattern$to_s()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-RequestPattern-clone"><code>RequestPattern$clone()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-RequestPattern-new"></a>
+
+
+
+<h4>Method <code>new()</code>
+</h4>
+
+<p>Create a new <code>RequestPattern</code> object
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>RequestPattern$new(
+  method,
+  uri = NULL,
+  uri_regex = NULL,
+  query = NULL,
+  body = NULL,
+  headers = NULL
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>method</code></dt>
+<dd>
+<p>the HTTP method (any, head, options, get, post, put,
+patch, trace, or delete). "any" matches any HTTP method. required.</p>
+</dd>
+<dt><code>uri</code></dt>
+<dd>
+<p>(character) request URI. required or uri_regex</p>
+</dd>
+<dt><code>uri_regex</code></dt>
+<dd>
+<p>(character) request URI as regex. required or uri</p>
+</dd>
+<dt><code>query</code></dt>
+<dd>
+<p>(list) query parameters, optional</p>
+</dd>
+<dt><code>body</code></dt>
+<dd>
+<p>(list) body request, optional</p>
+</dd>
+<dt><code>headers</code></dt>
+<dd>
+<p>(list) headers, optional</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>A new <code>RequestPattern</code> object
+</p>
+
+
+<hr>
+<a id="method-RequestPattern-matches"></a>
+
+
+
+<h4>Method <code>matches()</code>
+</h4>
+
+<p>does a request signature match the selected matchers?
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>RequestPattern$matches(request_signature)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>request_signature</code></dt>
+<dd>
+<p>a RequestSignature object</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>a boolean
+</p>
+
+
+<hr>
+<a id="method-RequestPattern-to_s"></a>
+
+
+
+<h4>Method <code>to_s()</code>
+</h4>
+
+<p>Print pattern for easy human consumption
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>RequestPattern$to_s()</pre></div>
+
+
+
+<h5>Returns</h5>
+
+<p>a string
+</p>
+
+
+<hr>
+<a id="method-RequestPattern-clone"></a>
+
+
+
+<h4>Method <code>clone()</code>
+</h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>RequestPattern$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt>
+<dd>
+<p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+<h3>See Also</h3>
+
+<p>pattern classes for HTTP method MethodPattern, headers
+HeadersPattern, body BodyPattern, and URI/URL UriPattern
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+(x &lt;- RequestPattern$new(method = "get", uri = "httpbin.org/get"))
+x$body_pattern
+x$headers_pattern
+x$method_pattern
+x$uri_pattern
+x$to_s()
+
+# make a request signature
+rs &lt;- RequestSignature$new(method = "get", uri = "http://httpbin.org/get")
+
+# check if it matches
+x$matches(rs)
+
+# regex uri
+(x &lt;- RequestPattern$new(method = "get", uri_regex = ".+ossref.org"))
+x$uri_pattern
+x$uri_pattern$to_s()
+x$to_s()
+
+# uri with query parameters
+(x &lt;- RequestPattern$new(
+    method = "get", uri = "https://httpbin.org/get",
+    query = list(foo = "bar")
+))
+x$to_s()
+## query params included in url, not separately
+(x &lt;- RequestPattern$new(
+  method = "get", uri = "https://httpbin.org/get?stuff=things"
+))
+x$to_s()
+x$query_params
+
+# just headers (via setting method=any &amp; uri_regex=.+)
+headers &lt;- list(
+  'User-Agent' = 'Apple',
+  'Accept-Encoding' = 'gzip, deflate', 
+  'Accept' = 'application/json, text/xml, application/xml, */*')
+x &lt;- RequestPattern$new(
+   method = "any",
+   uri_regex = ".+",
+   headers = headers)
+x$to_s()
+rs &lt;- RequestSignature$new(method = "any", uri = "http://foo.bar", 
+  options = list(headers = headers))
+rs
+x$matches(rs)
+
+# body
+x &lt;- RequestPattern$new(method = "post", uri = "httpbin.org/post",
+  body = list(y = crul::upload(system.file("CITATION"))))
+x$to_s()
+rs &lt;- RequestSignature$new(method = "post", uri = "http://httpbin.org/post",
+  options = list(
+     body = list(y = crul::upload(system.file("CITATION")))))
+rs
+x$matches(rs)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

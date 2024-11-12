@@ -1,0 +1,146 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>makeFragments</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Make terminal and internal fragments from proteins</h2>
+
+<h3>Description</h3>
+
+<p>Makes terminal and internal fragments based on protein-sequence and present as matrix including heading and/or tailing amino-acid or theoretical molecular mass of all fragments.
+As the number of theoretically possible fragments increases with the size of the peptide/protein treated it is recommended to adopt arguments like <code>masFragSize</code> to 
+realizstic values for the type of mass spectrometer used, since efficient filtering will reduce considerably the amount of memory (RAM) needed and will improve overal performance.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">makeFragments(
+  protTab,
+  minFragSize = 6,
+  maxFragSize = 300,
+  internFra = TRUE,
+  knownMods = NULL,
+  redRedundSeq = FALSE,
+  prefFragPat = NULL,
+  remNonConfPrefFragm = TRUE,
+  ambigLab = c(duplSequence = "duplSequence", isoMass = "isoMass"),
+  massTy = "mono",
+  specModif = NULL,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>protTab</code></td>
+<td>
+<p>(character or matrix) named vector of protein-seqences to fragment or matrix (character) with lines for initial proteins/peptides, cols as name/sequence/mass</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minFragSize</code></td>
+<td>
+<p>(integer) minimum number of amino-acids for being considered</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxFragSize</code></td>
+<td>
+<p>(integer) maximum number of amino-acids for being considered</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>internFra</code></td>
+<td>
+<p>(logical) toggle if internal framents will be produced or not</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>knownMods</code></td>
+<td>
+<p>(character) optional custom alternative to <code>AAfragSettings(ou="all")$knownMods</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>redRedundSeq</code></td>
+<td>
+<p>(logical) reduce redundant sequences to 1st appearance in all further treatments</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prefFragPat</code></td>
+<td>
+<p>(matrix) for preferential fragmentation rules (see also <code>.prefFragPattern</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remNonConfPrefFragm</code></td>
+<td>
+<p>(logical) allows to remove (peptide-)fragments non conform with preferential fragmentation rules (using <code>evalIsoFragm</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ambigLab</code></td>
+<td>
+<p>(character) text-labels for ambiguities (first for duplicated sequences second for iso-mass)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>massTy</code></td>
+<td>
+<p>(character) default 'mono' for mono-isotopic masses (alterative 'average')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>specModif</code></td>
+<td>
+<p>(list) supplemental custom fixed or variable modifications (eg Zn++ at given residue)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) for bug-tracking: more/enhanced messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>matrix with fragment sequence, mass, start- and end-position, heading and tailing AA (or NA if terminal fragment)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>makeFragments</code>;  <code>evalIsoFragm</code>, from package <a href="https://CRAN.R-project.org/package=wrProteo">wrProteo</a> <code>convAASeq2mass</code>, <code>AAmass</code>, <code>massDeFormula</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">protP &lt;- c(protP="PEPTIDE")
+pepT1 &lt;- makeFragments(protTab=protP, minFragSize=2, maxFragSize=9, internFra=TRUE)
+tail(pepT1)
+</code></pre>
+
+
+</div>

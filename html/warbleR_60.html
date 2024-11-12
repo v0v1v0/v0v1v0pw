@@ -1,0 +1,132 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>resample_est</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Resample wave objects in a extended selection table</h2>
+
+<h3>Description</h3>
+
+<p><code>resample_est</code> changes sampling rate and bit depth of wave objects in a extended selection table.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">resample_est(
+  X,
+  samp.rate = 44.1,
+  bit.depth = 16,
+  avoid.clip = TRUE,
+  pb = FALSE,
+  parallel = 1
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>object of class 'extended_selection_table' (see <code>selection_table</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>samp.rate</code></td>
+<td>
+<p>Numeric vector of length 1 with the sampling rate (in kHz) for output files. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bit.depth</code></td>
+<td>
+<p>Numeric vector of length 1 with the dynamic interval (i.e. bit depth) for output files.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>avoid.clip</code></td>
+<td>
+<p>Logical to control whether the volume is automatically
+adjusted to avoid clipping high amplitude samples when resampling. Ignored if
+'<code>sox = FALSE</code>. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Logical argument to control progress bar. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Numeric. Controls whether parallel computing is applied.
+It specifies the number of cores to be used. Default is 1 (i.e. no parallel computing).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function aims to simplify the process of homogenizing sound
+files (sampling rate and bit depth). This is a necessary step before running
+any further (bio)acoustic analysis. <a href="https://sourceforge.net/projects/sox/">SOX</a> must be installed.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An extended selection table with the modified wave objects.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+#last modification on oct-15-2018 (MAS)
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>mp32wav</code>, <code>fix_wavs</code>
+</p>
+<p>Other extended selection table manipulation: 
+<code>by_element_est()</code>,
+<code>rename_est_waves()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data(list = c("Phae.long1", "Phae.long2", "Phae.long3", "Phae.long4", "selec_table"))
+writeWave(Phae.long1, file.path(tempdir(), "Phae.long1.wav"))
+writeWave(Phae.long2, file.path(tempdir(), "Phae.long2.wav"))
+writeWave(Phae.long3, file.path(tempdir(), "Phae.long3.wav"))
+writeWave(Phae.long4, file.path(tempdir(), "Phae.long4.wav"))
+
+# create extended selection table
+X &lt;- selection_table(
+  X = lbh_selec_table, extended = TRUE, pb = FALSE,
+  path = tempdir()
+)
+
+# resample
+Y &lt;- resample_est(X)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

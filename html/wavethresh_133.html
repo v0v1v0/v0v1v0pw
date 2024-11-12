@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mwd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Discrete multiple wavelet transform (decomposition).</h2>
+
+<h3>Description</h3>
+
+<p>This function performs the discrete multiple wavelet transform (DMWT). Using an adaption of Mallat's pyramidal algorithm. The DMWT gives vector wavelet coefficients. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mwd(data, prefilter.type = "default", filter.type = "Geronimo",
+        bc ="periodic", verbose = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A vector containing the data you wish to decompose. The length of this vector must be a power of 2 times the dimension of the DMWT (multiplicity of wavelets).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prefilter.type</code></td>
+<td>
+<p>This chooses the method of preprocessing required. The arguments will depend on filter.type, but "default" will always work.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.type</code></td>
+<td>
+<p>Specifies which multi wavelet filter to use, The options are "<code>Geronimo</code>" (dimension 2) or "<code>Donovan3</code>" (dimension 3). The latter has not been tested fully and may contain bugs. See the function <code>mfilter.select</code> for further details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bc</code></td>
+<td>
+<p>specifies the boundary handling. If <code>bc=="periodic"</code> the default, then the function you decompose is assumed to be periodic on its interval of definition, if <code>bc=="symmetric"</code> then the function beyond its boundaries is assumed to be a symmetric reflection of the function in the boundary.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Controls the printing of "informative" messages whilst the computations progress. Such messages are generally annoying so it is turned off by default.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The code implements Mallat's pyramid algorithm adapted for multiple wavelets using Xia, Geronimo, Hardin and Suter, 1996. The method takes a data vector of length <code>2^J*M</code>, and preprocesses it. This has two effects, firstly it puts the data into matrix form and then filters it so that the DMWT can operate more efficiently Most of the technical details are similar to the single wavelet transform except for the matrix algebra considerations, and the prefiltering process. See Downie and Silverman (1998) for further details and how this transform can be used in a statistical context.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>mwd</code>. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.9.6 (Although Copyright Tim Downie 1996)</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Tim Downie
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>accessC.mwd</code>, <code>accessD.mwd</code>, <code>draw.mwd</code>, <code>mfirst.last</code>, <code>mfilter.select</code>, <code>mwd.object</code>, <code>mwr</code>, <code>plot.mwd</code>, <code>print.mwd</code>, <code>putC.mwd</code>, <code>putD.mwd</code>, <code>summary.mwd</code>, <code>threshold.mwd</code>, <code>wd</code>, <code>wr.mwd</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Generate some test data
+#
+test.data &lt;- example.1()$y
+## Not run: ts.plot(test.data)
+#
+# Decompose test.data with multiple wavelet transform and
+# plot the wavelet coefficients
+#
+tdmwd &lt;- mwd(test.data)
+## Not run: plot(tdmwd)
+#[1] 1.851894 1.851894 1.851894 1.851894 1.851894 1.851894 1.851894
+#
+# You should see a plot with wavelet coefficients like in
+#\code{\link{plot.wd}} but at each coefficient position
+# there are two coefficients in two different colours one for each of
+# the wavelets at that position.
+#
+# Note the scale for each level is returned by the function.
+</code></pre>
+
+
+</div>

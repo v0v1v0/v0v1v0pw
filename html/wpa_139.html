@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>network_describe</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Uncover HR attributes which best represent a population for a Person to
+Person query</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+</p>
+<p>Returns a data frame that gives a percentage of the group combinations that
+best represent the population provided. Uses a person to person query. This
+is used internally within <code>network_p2p()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">network_describe(
+  data,
+  hrvar = c("Organization", "LevelDesignation", "FunctionType")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Data frame containing a vertex table output from <code>network_p2p()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hrvar</code></td>
+<td>
+<p>Character vector of length 3 containing the HR attributes to be
+used. Defaults to <code>c("Organization", "LevelDesignation", "FunctionType")</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>data frame. A summary table giving the percentage of group
+combinations that best represent the provided data.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Tannaz Sattari Tabrizi <a href="mailto:Tannaz.Sattari@microsoft.com">Tannaz.Sattari@microsoft.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Network: 
+<code>external_network_plot()</code>,
+<code>g2g_data</code>,
+<code>internal_network_plot()</code>,
+<code>network_g2g()</code>,
+<code>network_p2p()</code>,
+<code>network_summary()</code>,
+<code>p2p_data_sim()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Simulate a P2P edge list
+sim_data &lt;- p2p_data_sim()
+
+# Perform Louvain Community Detection and return vertices
+lc_df &lt;-
+  sim_data %&gt;%
+  network_p2p(
+    community = "louvain",
+    return = "data"
+  )
+
+# Join org data from input edge list
+joined_df &lt;-
+  lc_df %&gt;%
+  dplyr::left_join(
+    sim_data %&gt;%
+      dplyr::select(TieOrigin_PersonId,
+                    TieOrigin_Organization,
+                    TieOrigin_LevelDesignation,
+                    TieOrigin_City),
+    by = c("name" = "TieOrigin_PersonId"))
+
+# Describe cluster 2
+joined_df %&gt;%
+  # dplyr::filter(cluster == "2") %&gt;%
+  network_describe(
+    hrvar = c(
+      "Organization",
+      "LevelDesignation",
+      "City"
+    )
+  ) %&gt;%
+  dplyr::glimpse()
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,178 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wtest.high</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>W-test for High Order Interaction Analysis</h2>
+
+<h3>Description</h3>
+
+<p>This function performs the <code>W-test</code> to calculate high-order interactions in case-control studies
+for categorical data sets. The test measures target variables' distributional difference between cases and controls via a combined
+log of odds ratio. It follows a Chi-squared probability distribution with data-adaptive degrees of freedom. For high-order interaction
+calculation, the user has 3 options: (1) calculate W-test of a set of SNPs, (2) calculate high-order interaction for a list of variables,
+which p-values are smaller than a threshold (<code>input.pval</code>); (3) calculate high-order interaction exhaustively for all variables.
+Output can be filtered by p-values, such that only sets with smaller p-value than a threshold (<code>output.pval</code>) will be returned.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wtest.high(data, y, w.order = 3, hf1 = "default.hf1",
+  hf.high.order = "default.high", which.marker = NULL,
+  output.pval = NULL, sort = TRUE, input.pval = 0.1,
+  input.poolsize = 10)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a data frame or matrix containing genotypes in the columns. Genotypes should be coded as (0, 1, 2) or (0, 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>a numeric vector of 0 or 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.order</code></td>
+<td>
+<p>an integer value, indicating the order of high-way interactions. For example, <code>w.order</code> = 3 for three-way interaction analysis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hf1</code></td>
+<td>
+<p><em>h</em> and <em>f</em> values to calculate main effect, organized as a matrix, with columns (<em>k</em>, <em>h</em>, <em>f</em>), <em>k</em> = 2 to 3.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hf.high.order</code></td>
+<td>
+<p><em>h</em> and <em>f</em> values to calculate high-order interactions, organized as a matrix, with columns (<em>k</em>, <em>h</em>, <em>f</em>), where <em>k</em> is the number of genotype combinations of a set of SNPs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>which.marker</code></td>
+<td>
+<p>a numeric vector indicating the column index of a set of SNPs to calculate. Default <code>which.marker</code> = NULL gives an exhaustively high-order interaction calculation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output.pval</code></td>
+<td>
+<p>a p-value threshold for filtering the output. If NULL, all the results will be listed; otherwise, the function will only output the results with p-values smaller than the <code>output.pval</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sort</code></td>
+<td>
+<p>a logical value indicating whether or not to sort the output by p-values in ascending order. Default = TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>input.pval</code></td>
+<td>
+<p>a p-value threshold to select markers for high-order interaction calculation, used only when <code>w.order</code> &gt; 2. When specified, only markers with main effect p-value smaller than <code>input.pval</code> will be passed to interaction effect calculation. Default = 0.10. Set <code>input.pval</code> = NULL or 1 for exhaustive calculation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>input.poolsize</code></td>
+<td>
+<p>an integer, with value less than the number of input variables. It is an optional filter to control the maximum number of variables to include in high-order interaction calculation, used only when <code>w.order</code> &gt; 2. When specified, the function selects top <code>input.poolsize</code> number of variables to calculate interactions. It can be used separately or jointly with <code>input.pval</code>, whichever gives smaller input pool size. Default = 10. Set <code>input.poolsize</code> = NULL for exhaustive calculation. It can be useful for data exploration, when there are a large number of variables with extremely small main effect p-values.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>W-test is a model-free statistical test orginally proposed to measure main effect or pairwise interactions in case-control studies with categorical variables.
+It can be extended to high-order interaction detection by the <em>wtest.high()</em> function. Theoretically, the test statistic follows a Chi-squared distribution with <em>f</em> degrees of freedom. The data-adaptive degree of freedom <em>f</em>,
+and a scalar <em>h</em> in the test statistics allow the W-test to correct for distributional bias due to sparse data and small sample size.
+Let <em>k</em> be the number of columns of the 2 by <em>k</em> contingency table formed by a single variable or a variable pair.
+When the sample size is large and there is no population stratification, the <em>h</em> and <em>f</em> will approximate well to the theoretical
+value <em>h</em> = (<em>k</em>-1)/<em>k</em>, and <em>f</em> = <em>k</em>-1. When sample size is small and there is population stratification, the <em>h</em> and
+<em>f</em> will vary to correct for distributional bias caused by the data structure.
+</p>
+<p>When <code>w.order</code> &gt; 2, the <code>wtest()</code> will automatically calculate the main effect first and then do a pre-filter before calculating interactions.
+This filtering is to avoid overloading the memory before having a better understanding of the data. User can specify a smaller input.pval such as 0.05 or 0.001
+for less output, or <code>input.pval</code>=1 or NULL for exhaustive high-order interaction calculation. Another optional filter is <code>input.poolsize</code>. It will select the top <code>input.poolsize</code>
+number of variables, ranked by p-values, to calculate high-order interactions. When used together with <code>input.pval</code>, the algorithm selects the smaller set in the high-order calculation.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object <code>"wtest"</code> containing:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>order</code></td>
+<td>
+<p>the "w.order" specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>results</code></td>
+<td>
+<p>When order &gt; 2 and which.marker = NULL, the test results include: (information of a set) [SNPs name, W-value, k, p-value]; (Information of the first variable in the set) [W-value, k, p-value]; (Information of the second variable in the set) [W-value, k, p-value] ...</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hf1</code></td>
+<td>
+<p>The <em>h</em> and <em>f</em> values used in main effect calculation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hf2</code></td>
+<td>
+<p>The <em>h</em> and <em>f</em> values used in high-order interaction calculation.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Rui Sun, Maggie Haitian Wang
+</p>
+
+
+<h3>References</h3>
+
+<p>Maggie Haitian Wang, Rui Sun, Junfeng Guo, Haoyi Weng, Jack Lee, Inchi Hu, Pak Sham and Benny C.Y. Zee (2016). A fast and powerful W-test for pairwise epistasis testing. Nucleic Acids Research. doi:10.1093/nar/gkw347.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>hf</code>, <code>w.diagnosis</code>, <code>w.qqplot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(diabetes.geno)
+data(phenotype1)
+
+## Step 1. HF Calculation
+# Please note that parameter B is recommended to be greater than 400 for w.order = 1 or 2.
+# For high order interaction analysis (w.order &gt; 2), it is recommended to use default n.sample.
+hf1 &lt;- hf(data = diabetes.geno, w.order = 1, B = 100)
+hf.high &lt;- hf(data = diabetes.geno, w.order = 3, B = 30, n.marker = 10)
+
+## Step 2. W-test Calculation
+w1 &lt;- wtest.high(diabetes.geno, phenotype1, w.order = 1, hf1 = hf1)
+w3 &lt;- wtest.high(diabetes.geno, phenotype1, w.order = 3, input.pval = 0.3,
+            input.poolsize = 50, output.pval = 0.5, hf1 = hf1, hf.high.order = hf.high)
+w.set &lt;- wtest.high(diabetes.geno, phenotype1, w.order = 3, which.marker = c(10,13,20),
+            hf.high.order = hf.high)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,428 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>workpatterns_classify</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Classify working pattern personas using a rule based algorithm</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+</p>
+<p>Apply a rule based algorithm to emails or instant messages sent by hour of
+day. Uses a binary week-based ('bw') method by default, with options to use
+the the person-average volume-based ('pav') method.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">workpatterns_classify(
+  data,
+  hrvar = "Organization",
+  values = "percent",
+  signals = c("email", "IM"),
+  start_hour = "0900",
+  end_hour = "1700",
+  exp_hours = NULL,
+  mingroup = 5,
+  active_threshold = 0,
+  method = "bw",
+  return = "plot"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data frame containing data from the Hourly Collaboration query.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hrvar</code></td>
+<td>
+<p>A string specifying the HR attribute to cut the data by.
+Defaults to <code>NULL</code>. This only affects the function when <code>"table"</code> is
+returned, and is only applicable for <code>method = "bw"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>Only valid if using <code>pav</code> method. Character vector to specify
+whether to return percentages or absolute values in <code>"data"</code> and <code>"plot"</code>.
+Valid values are <code>"percent"</code> (default) and <code>"abs"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signals</code></td>
+<td>
+<p>Character vector to specify which collaboration metrics to
+use:
+</p>
+
+<ul>
+<li> <p><code>"email"</code> (default) for emails only
+</p>
+</li>
+<li> <p><code>"IM"</code> for Teams messages only
+</p>
+</li>
+<li> <p><code>"unscheduled_calls"</code> for Unscheduled Calls only
+</p>
+</li>
+<li> <p><code>"meetings"</code> for Meetings only
+</p>
+</li>
+<li>
+<p> or a combination of signals, such as <code>c("email", "IM")</code>
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_hour</code></td>
+<td>
+<p>A character vector specifying starting hours, e.g.
+<code>"0900"</code>. Note that this currently only supports <strong>hourly</strong> increments. If
+the official hours specifying checking in and 9 AM and checking out at 5
+PM, then <code>"0900"</code> should be supplied here.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end_hour</code></td>
+<td>
+<p>A character vector specifying starting hours, e.g. <code>"1700"</code>.
+Note that this currently only supports <strong>hourly</strong> increments. If the
+official hours specifying checking in and 9 AM and checking out at 5 PM,
+then <code>"1700"</code> should be supplied here.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exp_hours</code></td>
+<td>
+<p>Numeric value representing the number of hours the
+population is expected to be active for throughout the workday. By default,
+this uses the difference between <code>end_hour</code> and <code>start_hour</code>. Only
+applicable with the 'bw' method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mingroup</code></td>
+<td>
+<p>Numeric value setting the privacy threshold / minimum group
+size. Defaults to 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>active_threshold</code></td>
+<td>
+<p>A numeric value specifying the minimum number of
+signals to be greater than in order to qualify as <em>active</em>. Defaults to 0.
+Only applicable for the binary-week method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>String to pass through specifying which method to use for
+classification. By default, a binary week-based (<code>bw</code>) method is used, with
+options to use the the person-average volume-based (<code>pav</code>) method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String specifying what to return. This must be one of the
+following strings:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>
+</p>
+</li>
+<li> <p><code>"data"</code>
+</p>
+</li>
+<li> <p><code>"table"</code>
+</p>
+</li>
+<li> <p><code>"plot-area"</code>
+</p>
+</li>
+<li> <p><code>"plot-hrvar"</code> (only for <code>bw</code> method)
+</p>
+</li>
+<li> <p><code>"plot-dist"</code> (only for <code>bw</code> method)
+</p>
+</li>
+</ul>
+<p>See <code>Value</code> for more information.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The working patterns archetypes are a set of segments created based on the
+aggregated hourly activity of employees. A motivation of creating these
+archetypes is to capture the diversity in working patterns, where for
+instance employees may choose to take multiple or extended breaks throughout
+the day, or choose to start or end earlier/later than their standard working
+hours. Two methods have been developed to capture the different working
+patterns.
+</p>
+<p>This function is a wrapper around <code>workpatterns_classify_bw()</code> and
+<code>workpatterns_classify_pav()</code>, and calls each function depending on what is
+supplied to the <code>method</code> argument. Both methods implement a rule-based
+classification of either <strong>person-weeks</strong> or <strong>persons</strong> that pull apart
+different working patterns.
+</p>
+<p>See individual sections below for details on the two different
+implementations.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Character vector to specify what to return. Valid options
+include:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>: ggplot object. With the <code>bw</code> method, this returns a grid
+showing the distribution of archetypes by 'breaks' and number of active
+hours (default). With the <code>pav</code> method, this returns a faceted bar plot
+which shows the percentage of signals sent in each hour, with each facet
+representing an archetype.
+</p>
+</li>
+<li> <p><code>"data"</code>: data frame. The raw data with the classified archetypes.
+</p>
+</li>
+<li> <p><code>"table"</code>: data frame. A summary table of the archetypes.
+</p>
+</li>
+<li> <p><code>"plot-area"</code>: ggplot object. With the <code>bw</code> method, this returns an area
+plot of the percentages of archetypes shown over time. With the <code>pav</code>
+method, this returns an area chart which shows the percentage of signals
+sent in each hour, with each line representing an archetype.
+</p>
+</li>
+<li> <p><code>"plot-hrvar"</code>: ggplot object. A bar plot showing the count of archetypes,
+faceted by the supplied HR attribute. This is only available for the <code>bw</code>
+method.
+</p>
+</li>
+<li> <p><code>"plot-dist"</code>: returns a heatmap plot of signal distribution by hour and
+archetypes. This is only available for the <code>bw</code> method.
+</p>
+</li>
+</ul>
+<h3>Binary Week method</h3>
+
+<p>This method classifies each <strong>person-week</strong> into one of the eight
+archetypes:
+</p>
+
+<ul>
+<li> <p><strong>0 Low Activity (&lt; 3 hours on)</strong>: fewer than 3 hours of active hours
+</p>
+</li>
+<li> <p><strong>1.1 Standard continuous (expected schedule)</strong>: active hours equal to
+<em>expected hours</em>, with all activity confined within the expected start and
+end time
+</p>
+</li>
+<li> <p><strong>1.2 Standard continuous (shifted schedule)</strong>: active hours equal to
+<em>expected hours</em>, with activity occurring beyond either the expected start
+or end time.
+</p>
+</li>
+<li> <p><strong>2.1 Standard flexible (expected schedule)</strong>: active hours less than or
+equal to <em>expected hours</em>, with all activity confined within the expected
+start and end time
+</p>
+</li>
+<li> <p><strong>2.2 Standard flexible (shifted schedule)</strong>: active hours less than or
+equal to <em>expected hours</em>, with activity occurring beyond either the
+expected start or end time.
+</p>
+</li>
+<li> <p><strong>3 Long flexible workday</strong>: number of active hours exceed <em>expected
+hours</em>, with breaks occurring throughout
+</p>
+</li>
+<li> <p><strong>4 Long continuous workday</strong>: number of active hours exceed <em>expected
+hours</em>, with activity happening in a continuous block (no breaks)
+</p>
+</li>
+<li> <p><strong>5 Always on (13h+)</strong>: number of active hours greater than or equal to
+13
+</p>
+</li>
+</ul>
+<p><em>Standard</em> here denotes the behaviour of not exhibiting total number of
+active hours which exceed the expected total number of hours, as supplied by
+<code>exp_hours</code>. <em>Continuous</em> refers to the behaviour of <em>not</em> taking breaks,
+i.e. no inactive hours between the first and last active hours of the day,
+where <em>flexible</em> refers to the contrary.
+</p>
+<p>This is the recommended method over <code>pav</code> for several reasons:
+</p>
+
+<ol>
+<li> <p><code>bw</code> ignores <em>volume effects</em>, where activity volume can still bias the
+results towards the 'standard working hours'.
+</p>
+</li>
+<li>
+<p> It captures the intuition that each individual can have 'light' and
+'heavy' weeks with respect to workload.
+</p>
+</li>
+</ol>
+<p>The notion of 'breaks' in the 'binary-week' method is best understood as
+'recurring disconnection time'. This denotes an hourly block where there is
+consistently no activity occurring throughout the week. Note that this
+applies a stricter criterion compared to the common definition of a break,
+which is simply a time interval where no active work is being done, and thus
+the more specific terminology 'recurring disconnection time' is preferred.
+</p>
+<p>In the standard plot output, the archetypes have been abbreviated to show the
+following:
+</p>
+
+<ul>
+<li> <p><strong>Low Activity</strong> - archetype 0
+</p>
+</li>
+<li> <p><strong>Standard</strong> - archetypes 1.1 and 1.2
+</p>
+</li>
+<li> <p><strong>Flexible</strong> - archetypes 2.1 and 2.2
+</p>
+</li>
+<li> <p><strong>Long continuous</strong> - archetype 4
+</p>
+</li>
+<li> <p><strong>Long flexible</strong> - archetype 3
+</p>
+</li>
+<li> <p><strong>Always On</strong> - archetype 5
+</p>
+</li>
+</ul>
+<h3>Person Average method</h3>
+
+<p>This method classifies each <strong>person</strong> (based on unique <code>PersonId</code>) into
+one of the six archetypes:
+</p>
+
+<ul>
+<li> <p><strong>Absent</strong>: Fewer than 10 signals over the week.
+</p>
+</li>
+<li> <p><strong>Extended Hours - Morning:</strong> 15%+ of collaboration before start hours and
+less than 70% within standard hours, and less than 15% of collaboration after
+end hours
+</p>
+</li>
+<li> <p><strong>Extended Hours - Evening</strong>: Less than 15% of collaboration before start
+hours and less than 70% within standard hours, and 15%+ of collaboration
+after end hours
+</p>
+</li>
+<li> <p><strong>Overnight workers</strong>: less than 30% of collaboration happens within
+standard hours
+</p>
+</li>
+<li> <p><strong>Standard Hours</strong>: over 70% of collaboration within standard hours
+</p>
+</li>
+<li> <p><strong>Always On</strong>: over 15% of collaboration happens before starting hour and
+end hour (both conditions must satisfy) and less than 70% of collaboration
+within standard hours
+</p>
+</li>
+</ul>
+<h3>Flexibility Index</h3>
+
+<p>The Working Patterns archetypes as calculated
+using the binary-week method shares many similarities with the Flexibility
+Index (see <code>flex_index()</code>):
+</p>
+
+<ul>
+<li>
+<p> Both are computed directly from the Hourly Collaboration Flexible Query.
+</p>
+</li>
+<li>
+<p> Both apply the same binary conversion of activity on the signals from the
+Hourly Collaboration Flexible Query.
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Ainize Cidoncha <a href="mailto:ainize.cidoncha@microsoft.com">ainize.cidoncha@microsoft.com</a>
+</p>
+<p>Carlos Morales Torrado <a href="mailto:carlos.morales@microsoft.com">carlos.morales@microsoft.com</a>
+</p>
+<p>Martin Chan <a href="mailto:martin.chan@microsoft.com">martin.chan@microsoft.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Clustering: 
+<code>personas_hclust()</code>,
+<code>workpatterns_hclust()</code>
+</p>
+<p>Other Working Patterns: 
+<code>flex_index()</code>,
+<code>identify_shifts()</code>,
+<code>identify_shifts_wp()</code>,
+<code>plot_flex_index()</code>,
+<code>workpatterns_area()</code>,
+<code>workpatterns_classify_bw()</code>,
+<code>workpatterns_classify_pav()</code>,
+<code>workpatterns_hclust()</code>,
+<code>workpatterns_rank()</code>,
+<code>workpatterns_report()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Returns a plot by default
+em_data %&gt;% workpatterns_classify(method = "bw")
+
+# Return an area plot
+# With custom expected hours
+em_data %&gt;%
+  workpatterns_classify(
+    method = "bw",
+    return = "plot-area",
+    exp_hours = 7
+      )
+
+em_data %&gt;% workpatterns_classify(method = "bw", return = "table")
+
+em_data %&gt;% workpatterns_classify(method = "pav")
+
+em_data %&gt;% workpatterns_classify(method = "pav", return = "plot-area")
+
+
+
+</code></pre>
+
+
+</div>

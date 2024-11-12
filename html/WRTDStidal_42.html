@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>lnres_sim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Simulate a water quality time series</h2>
+
+<h3>Description</h3>
+
+<p>Simulate a water quality time series with an estimated error structure and simulated discharge effect
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">lnres_sim(dat_in, lnQ_coef = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input <code>data.frame</code> that must include estimated error and simulated discharge time series, see <code>lnres_err</code> and <code>lnQ_sim</code> respectively</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lnQ_coef</code></td>
+<td>
+<p>numeric vector of coefficients of the same length of the time series in <code>dat_in</code> that is multiplied by the discharge vector, see details</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function creates a simulated water quality time series and requires error estimates for an observed water quality dataset and a simulated discharge time series.  The water quality time series is created as the additive combination of a seasonal, stationary time component (as in <code>lnQ_sim</code> for discharge), a random error component from <code>lnres_err</code>, and a simulated discharge time series from <code>lnQ_sim</code>.  The discharge time series is considered an explicit component of the water quality time series and is first centered at zero prior to adding.  The optional vector of coefficients passed to <code>lnQ_coef</code> can mediate the influence of discharge on the water quality time series.  For example, a vector of all zeroes implies no effect, whereas a vector of all ones implies a constant effect (default).
+</p>
+
+
+<h3>Value</h3>
+
+<p>The original data frame with additional columns for the seasonal water quality model (<code>lnres_seas</code>), a flow-independent water quality time series (<code>lnres_noQ</code>), and a flow-dependent time series (<code>lnres_Q</code>).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>daydat</code> for the format of an input dataset, <code>lnQ_sim</code> for simulating discharge, and <code>lnres_err</code> for estimating the error distribution of the water quality time series, <code>all_sims</code> for completing all steps at once.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## example data
+data(daydat)
+
+## get simulated discharge
+sims &lt;- lnQ_sim(daydat)
+
+## get error structure of wq time series
+sims &lt;- lnres_err(sims)
+
+## get simulated wq time series using results from previous
+lnres_sim(sims)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

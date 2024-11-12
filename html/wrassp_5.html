@@ -1,0 +1,218 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>affilter</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>affilter</h2>
+
+<h3>Description</h3>
+
+<p>affilter function adapted from libassp
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">affilter(
+  listOfFiles = NULL,
+  optLogFilePath = NULL,
+  highPass = 4000,
+  lowPass = 0,
+  stopBand = 96,
+  transition = 250,
+  useIIR = FALSE,
+  numIIRsections = 4,
+  toFile = TRUE,
+  explicitExt = NULL,
+  outputDirectory = NULL,
+  forceToLog = useWrasspLogger,
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>listOfFiles</code></td>
+<td>
+<p>vector of file paths to be processed by function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>optLogFilePath</code></td>
+<td>
+<p>path to option log file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>highPass</code></td>
+<td>
+<p>= &lt;num&gt;: set the high-pass cut-off frequency to &lt;num&gt; Hz (default: 4000, high-pass filtering is applied)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lowPass</code></td>
+<td>
+<p>= &lt;num&gt;: set the low-pass cut-off frequency to &lt;num&gt; Hz (default: 0, no low-pass filtering)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stopBand</code></td>
+<td>
+<p>= &lt;num&gt;: set the stop-band attenuation to &lt;num&gt; dB (default: 93.0 dB, minimum: 21.0 dB)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transition</code></td>
+<td>
+<p>= &lt;num&gt;: set the width of the transition band to &lt;num&gt; Hz (default: 250.0 Hz)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useIIR</code></td>
+<td>
+<p>switch from the default FIR to IIR filter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numIIRsections</code></td>
+<td>
+<p>= &lt;num&gt;: set the number of 2nd order sections to &lt;num&gt; (default: 4) where each section 
+adds 12dB/oct to the slope of the filter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>toFile</code></td>
+<td>
+<p>write results to file (for default extension see details section))</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>explicitExt</code></td>
+<td>
+<p>set if you wish to override the default extension</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outputDirectory</code></td>
+<td>
+<p>directory in which output files are stored. Defaults to NULL, i.e. 
+the directory of the input files</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>forceToLog</code></td>
+<td>
+<p>is set by the global package variable useWrasspLogger. This is set
+to FALSE by default and should be set to TRUE is logging is desired.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>display infos &amp; show progress bar</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Filters the audio signal in &lt;listOfFiles&gt;.
+By specifying the high-pass and/or low-pass cut-off
+frequency one of four filter characteristics may be
+selected as shown in the table below.
+</p>
+
+<table>
+<tr>
+<td style="text-align: center;">
+<strong>hp</strong> </td>
+<td style="text-align: center;"> <strong>lp</strong> </td>
+<td style="text-align: left;"> <strong>filter characteristic</strong> </td>
+<td style="text-align: left;"> <strong>extension</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+&gt; 0 </td>
+<td style="text-align: center;"> 0 </td>
+<td style="text-align: left;"> high-pass from hp </td>
+<td style="text-align: left;"> '.hpf'</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+ 0 </td>
+<td style="text-align: center;"> &gt; 0 </td>
+<td style="text-align: left;"> low-pass up to lp </td>
+<td style="text-align: left;"> '.lpf'</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+&gt; 0 </td>
+<td style="text-align: center;"> &gt; hp </td>
+<td style="text-align: left;"> band-pass from hp to lp </td>
+<td style="text-align: left;"> '.bpf'</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+&gt; lp </td>
+<td style="text-align: center;"> &gt; 0 </td>
+<td style="text-align: left;"> band-stop between lp and hp </td>
+<td style="text-align: left;"> '.bsf'</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+</td>
+</tr>
+</table>
+<p>Please note: per default a high-pass filter from 0 to 4000 Hz is applied.
+</p>
+<p>The Kaiser-window design method is used to compute the
+coefficients of a linear-phase FIR filter with unity gain
+in the pass-band. The cut-off frequencies (-6 dB points)
+of the filters are in the middle of the transition band.
+The filtered signal will be written to a file with the
+base name of the input file and an extension corresponding
+to the filter characteristic (see table). The format of
+the output file will be the same as that of the input file.
+</p>
+
+
+<h3>Value</h3>
+
+<p>nrOfProcessedFiles or if only one file to process return AsspDataObj of that file
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Raphael Winkelmann
+</p>
+<p>Lasse Bombien
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># get path to audio file
+path2wav &lt;- list.files(system.file("extdata", package = "wrassp"), 
+                       pattern = glob2rx("*.wav"), 
+                       full.names = TRUE)[1]
+
+# band-pass filter signal between 4000 and 5000 Hz
+res &lt;- affilter(path2wav, highPass=4000, lowPass=5000, toFile=FALSE)
+
+# plot samples
+# (only plot every 10th element to accelerate plotting)
+plot(seq(0,numRecs.AsspDataObj(res) - 1, 10) / rate.AsspDataObj(res), 
+     res$audio[c(TRUE, rep(FALSE,9))], 
+     type='l', 
+     xlab='time (s)', 
+     ylab='Audio samples')
+     
+</code></pre>
+
+
+</div>

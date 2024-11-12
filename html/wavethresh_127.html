@@ -1,0 +1,154 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mfilter.select</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Provide filter coefficients for multiple wavelets.</h2>
+
+<h3>Description</h3>
+
+<p>This function returns the filter coefficients necessary for doing a discrete multiple wavelet transform (and its inverse). 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mfilter.select(type = "Geronimo")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>The name for the multiple wavelet basis. The two possible types are "Geronimo" and "Donovan3"</p>
+</td>
+</tr></table>
+<p>. 
+</p>
+
+
+<h3>Details</h3>
+
+<p>This function supplies the multiple wavelet filter coefficients required by the <code>mwd</code> function.
+</p>
+<p>A multiple wavelet filter is somewhat different from a single wavelet filter. Firstly the filters are made up of matrices not single coefficients. Secondly there is no simple expression for the high pass coefficients G in terms of the low pass coefficients H, so both sets of coefficients must be specified. Note also that the transpose of the filter coefficients are used in the inverse transform, an unnecessary detail with scalar coefficients. There are two filters available at the moment. Geronimo is the default, and is recommended as it has been checked thoroughly. Donovan3 uses three orthogonal wavelets described in Donovan et al. but this coding has had little testing. 
+</p>
+<p>See Donovan, Geronimo and Hardin, 1996 and Geronimo, Hardin and Massopust, 1994. 
+</p>
+<p>This function fulfils the same purpose as the <code>filter.select</code> function does for the standard DWT <code>wd</code>. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list is returned with the following eight components which describe the filter:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>The multiple wavelet basis type string.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>H</code></td>
+<td>
+<p>A vector containing the low pass filter coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>G</code></td>
+<td>
+<p>A vector containing the high pass pass filter coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>A character string containing the full name of the filter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nphi</code></td>
+<td>
+<p>The number of scaling functions in the multiple wavelet basis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>npsi</code></td>
+<td>
+<p>The number of wavelet functions in the multiple wavelet basis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NH</code></td>
+<td>
+<p>The number of matrix coefficients in the filter. This is different from length(H).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ndecim</code></td>
+<td>
+<p>The decimation factor. I.e. the scale ratio between two successive resolution levels.</p>
+</td>
+</tr>
+</table>
+<h3>RELEASE</h3>
+
+<p>Version 3.9.6 (Although Copyright Tim Downie 1995-6)</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Tim Downie</p>
+
+
+<h3>See Also</h3>
+
+<p><code>accessC.mwd</code>, <code>accessD.mwd</code>, <code>draw.mwd</code>, <code>mfirst.last</code>, <code>mwd.object</code>, <code>mwd</code>, <code>mwr</code>, <code>plot.mwd</code>, <code>print.mwd</code>, <code>putC.mwd</code>, <code>putD.mwd</code>, <code>summary.mwd</code>, <code>threshold.mwd</code>, <code>wd</code>, <code>wr.mwd</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#This function is currently used by `mwr' and `mwd' in decomposing and
+#reconstructing, however you can view the coefficients.
+#
+# look at the filter coefficients for Geronimo multiwavelet
+#
+mfilter.select()
+#$type:
+#[1] "Geronimo"
+#
+#$name:
+#[1] "Geronimo Multiwavelets"
+#
+#$nphi:
+#[1] 2
+#
+#$npsi:
+#[1] 2
+#
+#$NH:
+#[1] 4
+#
+#$ndecim:
+#[1] 2
+#$H:
+# [1]  0.4242641  0.8000000 -0.0500000 -0.2121320  0.4242641  0.0000000
+# [7]  0.4500000  0.7071068  0.0000000  0.0000000  0.4500000 -0.2121320
+#[13]  0.0000000  0.0000000 -0.0500000  0.0000000
+#
+#$G:
+# [1] -0.05000000 -0.21213203  0.07071068  0.30000000  0.45000000 -0.70710678
+#
+# [7] -0.63639610  0.00000000  0.45000000 -0.21213203  0.63639610 -0.30000000
+#[13] -0.05000000  0.00000000 -0.07071068  0.00000000
+
+</code></pre>
+
+
+</div>

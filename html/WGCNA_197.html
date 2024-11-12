@@ -1,0 +1,272 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotEigengeneNetworks</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Eigengene network plot </h2>
+
+<h3>Description</h3>
+
+<p>This function plots dendrogram and eigengene representations of (consensus) eigengenes networks. 
+In the case of conensus eigengene networks the function also plots pairwise preservation  measures
+between consensus networks in different sets. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotEigengeneNetworks(
+  multiME, 
+  setLabels, 
+  letterSubPlots = FALSE, Letters = NULL, 
+  excludeGrey = TRUE, greyLabel = "grey", 
+  plotDendrograms = TRUE, plotHeatmaps = TRUE, 
+  setMargins = TRUE, marDendro = NULL, marHeatmap = NULL,
+  colorLabels = TRUE, signed = TRUE, 
+  heatmapColors = NULL, 
+  plotAdjacency = TRUE,
+  printAdjacency = FALSE, cex.adjacency = 0.9,
+  coloredBarplot = TRUE, barplotMeans = TRUE, barplotErrors = FALSE, 
+  plotPreservation = "standard",
+  zlimPreservation = c(0, 1), 
+  printPreservation = FALSE, cex.preservation = 0.9, 
+  ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>multiME</code></td>
+<td>
+<p> either a single data frame containing the module eigengenes, or 
+module eigengenes in the multi-set format (see <code>checkSets</code>). The multi-set format is a vector of
+lists, one per set. Each set must contain a component <code>data</code> whose
+rows correspond to samples and columns to eigengenes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>setLabels</code></td>
+<td>
+<p> A vector of character strings that label sets in <code>multiME</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>letterSubPlots</code></td>
+<td>
+<p> logical: should subplots be lettered? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Letters</code></td>
+<td>
+<p>optional specification of a sequence of letters for lettering. Defaults to "ABCD"... </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>excludeGrey</code></td>
+<td>
+<p> logical: should the grey module eigengene be excluded from the plots? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>greyLabel</code></td>
+<td>
+<p> label for the grey module. Usually either "grey" or the number 0. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotDendrograms</code></td>
+<td>
+<p> logical: should eigengene dendrograms be plotted? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotHeatmaps</code></td>
+<td>
+<p> logical: should eigengene network heatmaps be plotted? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>setMargins</code></td>
+<td>
+<p> logical: should margins be set? See <code>par</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>marDendro</code></td>
+<td>
+<p> a vector of length 4 giving the margin setting for dendrogram plots. See
+<code>par</code>. If <code>setMargins</code> is <code>TRUE</code> and <code>marDendro</code> is not given, the
+function will provide reasonable default values. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>marHeatmap</code></td>
+<td>
+<p> a vector of length 4 giving the margin setting for heatmap plots. See 
+<code>par</code>. If <code>setMargins</code> is <code>TRUE</code> and <code>marDendro</code> is not given, the  
+function will provide reasonable default values. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorLabels</code></td>
+<td>
+<p> logical: should module eigengene names be interpreted as color names and the colors
+used to label heatmap plots and barplots? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signed</code></td>
+<td>
+<p> logical: should eigengene networks be constructed as signed? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>heatmapColors</code></td>
+<td>
+<p> color palette for heatmaps. Defaults to <code>heat.colors</code> when
+<code>signed</code> is <code>FALSE</code>, and to <code>redWhiteGreen</code> when <code>signed</code> is <code>TRUE</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotAdjacency</code></td>
+<td>
+<p> logical: should module eigengene heatmaps plot adjacency (ranging from 0 to 1),
+or correlation (ranging from -1 to 1)? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>printAdjacency</code></td>
+<td>
+<p> logical: should the numerical values be printed into the adjacency or
+correlation heatmap? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.adjacency</code></td>
+<td>
+<p> character expansion factor for printing of numerical values into the adjacency or 
+correlation heatmap </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coloredBarplot</code></td>
+<td>
+<p> logical: should the barplot of eigengene adjacency preservation distinguish
+individual contributions by color? This is possible only if <code>colorLabels</code> is <code>TRUE</code> and module
+eigengene names encode valid colors. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>barplotMeans</code></td>
+<td>
+<p> logical: plot mean preservation in the barplot? This option effectively rescales
+the preservation by the number of eigengenes in the network. If means are plotted, the barplot is not
+colored. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>barplotErrors</code></td>
+<td>
+<p> logical: should standard errors of the mean preservation be plotted? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotPreservation</code></td>
+<td>
+<p> a character string specifying which type of preservation measure to plot.
+Allowed values are (unique abbreviations of)  <code>"standard"</code>, <code>"hyperbolic"</code>, <code>"both"</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zlimPreservation</code></td>
+<td>
+<p> a vector of length 2 giving the value limits for the preservation heatmaps. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>printPreservation</code></td>
+<td>
+<p> logical: should preservation values be printed within the heatmap? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.preservation</code></td>
+<td>
+<p> character expansion factor for preservation display. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p> other graphical arguments to function <code>labeledHeatmap</code>. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Consensus eigengene networks consist of a fixed set of eigengenes "expressed" in several different
+sets. Network connection strengths are given by eigengene correlations. This function aims to visualize
+the networks as well as their similarities and differences across sets. 
+</p>
+<p>The function partitions the screen appropriately and plots eigengene dendrograms in the top row, then a
+square matrix of plots: heatmap plots of eigengene networks in each set on the diagonal, heatmap plots of
+pairwise preservation networks below the diagonal, and barplots of aggregate network preservation of
+individual eigengenes above the diagonal. A preservation plot or barplot in the row i and column j of the
+square matrix represents the preservation between sets i and j. 
+</p>
+<p>Individual eigengenes are labeled by their name in the dendrograms; in the heatmaps and barplots they
+can optionally be labeled by color squares. For compatibility with other functions, the color labels are
+encoded in the eigengene names by prefixing the color with two letters, such as <code>"MEturquoise"</code>.  
+</p>
+<p>Two types of network preservation can be plotted: the <code>"standard"</code> is simply the difference
+between adjacencies in the two compared sets. The <code>"hyperbolic"</code> difference de-emphasizes the
+preservation of low adjacencies. When <code>"both"</code> is specified, standard preservation is plotted in the
+lower triangle and hyperbolic in the upper triangle of each preservation heatmap. 
+</p>
+<p>If the eigengenes are labeled by color, the bars in the barplot can be split into segments representing
+the contribution of each eigengene and labeled by the contribution. For example, a yellow segment in a
+bar labeled by a turquoise square represents the preservation of the adjacency between the yellow and
+turquoise eigengenes in the two networks compared by the barplot. 
+</p>
+<p>For large numbers of eigengenes and/or sets, it may be difficult to get a meaningful plot fit a
+standard computer screen. In such cases we recommend using a device such as <code>postscript</code> or
+<code>pdf</code> where the user can specify large dimensions; such plots can be conveniently viewed in
+standard pdf or postscript viewers.
+</p>
+
+
+<h3>Value</h3>
+
+<p>None.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder </p>
+
+
+<h3>References</h3>
+
+ 
+<p>For theory and applications of consensus eigengene networks, see
+</p>
+<p>Langfelder P, Horvath S (2007) Eigengene networks for studying the relationships between co-expression
+modules. BMC Systems Biology 2007, 1:54
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code>labeledHeatmap</code>, <code>labeledBarplot</code> for annotated heatmaps and barplots;
+</p>
+<p><code>hclust</code> for hierarchical clustering and dendrogram plots
+</p>
+
+
+</div>

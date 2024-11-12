@@ -1,0 +1,58 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>stub_registry</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>List stubs in the stub registry</h2>
+
+<h3>Description</h3>
+
+<p>List stubs in the stub registry
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">stub_registry()
+</code></pre>
+
+
+<h3>Value</h3>
+
+<p>an object of class <code>StubRegistry</code>, print method gives the
+stubs in the registry
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other stub-registry: 
+<code>StubRegistry</code>,
+<code>remove_request_stub()</code>,
+<code>stub_registry_clear()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># make a stub
+stub_request("get", "https://httpbin.org/get") %&gt;%
+  to_return(body = "success!", status = 200)
+
+# check the stub registry, there should be one in there
+stub_registry()
+
+# make another stub
+stub_request("get", "https://httpbin.org/get") %&gt;%
+  to_return(body = "woopsy", status = 404)
+
+# check the stub registry, now there are two there
+stub_registry()
+
+# to clear the stub registry
+stub_registry_clear()
+</code></pre>
+
+
+</div>

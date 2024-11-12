@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>controlNB</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Control function for initial NB fit</h2>
+
+<h3>Description</h3>
+
+<p>Defines controllable parameters of initial NB fit in <code>walsNB</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">controlNB(
+  start = list(mu = NULL, logTheta = NULL),
+  method = "BFGS",
+  controlOptim = list(maxit = 100),
+  initThetaMASS = FALSE,
+  initMASS = TRUE,
+  restricted = FALSE,
+  eps = .Machine$double.eps^0.25,
+  epsilonMASS = 1e-08
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p>Optional starting values for <code>fitNB2</code>. Only used if
+<code>initMASS = FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Optimization method used in <code>optim</code>. Only used if
+<code>initMASS = FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>controlOptim</code></td>
+<td>
+<p>List with parameters controlling optimization process of
+<code>optim</code>. Only used if <code>initMASS = FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initThetaMASS</code></td>
+<td>
+<p>If TRUE, then initial <code class="reqn">\log{\theta}</code> of
+<code>fitNB2</code> is estimated using <code>theta.ml</code>
+(ML-estimation over 1 variable) based on regression coefficients from
+Poisson regression. If <code>FALSE</code>, then initial <code class="reqn">\log{\theta}</code> = 0 is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initMASS</code></td>
+<td>
+<p>If <code>TRUE</code> (default), then initial fit in <code>fitNB2</code>
+is estimated via <code>glm.nb</code> and <code>initThetaMASS</code> is ignored.
+If <code>FALSE</code>, then the initial fit is estimated by minimizing the
+log-likelihood using <code>optim</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>restricted</code></td>
+<td>
+<p>If <code>TRUE</code>, then initial fit in <code>fitNB2</code>
+only considers the focus regressors. By default <code>FALSE</code>, then the unrestricted
+model is estimated in <code>fitNB2</code> (i.e. all regressors).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eps</code></td>
+<td>
+<p>Controls argument <code>eps</code> in <code>fitNB2</code> for generating
+starting value for <code>logTheta</code> (<code class="reqn">\log{\theta}</code>) via <code>theta.ml</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsilonMASS</code></td>
+<td>
+<p>Sets epsilon in control argument of <code>glm.nb</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a list containing the parameters specified in the arguments
+to be used in <code>walsNB</code> (and <code>walsNBfitIterate</code>).
+</p>
+
+
+<h3>See Also</h3>
+
+<p>walsNB, walsNBfitIterate.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("NMES1988", package = "AER")
+walsNB(visits ~ health + chronic + age + gender | I((age^2)/10) +
+       married + region, data = NMES1988, prior = weibull(),
+       controlInitNB = controlNB(initMASS = FALSE, restricted = TRUE))
+
+</code></pre>
+
+
+</div>

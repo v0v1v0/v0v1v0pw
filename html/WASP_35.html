@@ -1,0 +1,63 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>scal2freqM</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Scale to frequency by Matlab</h2>
+
+<h3>Description</h3>
+
+<p>Scale to frequency by Matlab
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">scal2freqM(wf, scale, delta)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wf</code></td>
+<td>
+<p>wavelet name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>a scale</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta</code></td>
+<td>
+<p>the sampling period.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A vector of two numbers: frequency and period.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">delta &lt;- 1 / 12 # monthly data
+scales &lt;- 2^(1:7)
+
+for (wf in c("haar", "d4", "d6", "d8", "d16")[1:5]) {
+  df1 &lt;- scal2freqM(wf, scales, delta)
+  df2 &lt;- scal2freqR(wf, scales, delta)
+
+  print(cbind(df1$frequency, df2$frequency))
+}
+</code></pre>
+
+
+</div>

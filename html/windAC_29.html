@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>triangleProb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate probabilities from a triangle distribution based on Hull and
+Muir (2010) maximum distance as proposed by Huso and Dalthorp (2014).</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the probabilities between one-unit increments of a right
+triangle distribution.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">triangleProb(hubHeight, bladeRadius, lowerBound = 0, upperBound = Inf, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>hubHeight</code></td>
+<td>
+<p>Numeric, turbine hub height.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bladeRadius</code></td>
+<td>
+<p>Numeric, turbine blade radius.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lowerBound</code></td>
+<td>
+<p>Numeric, default is zero, see Details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upperBound</code></td>
+<td>
+<p>Numeric, default is <code>Inf</code>, see Details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Currently ignored.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A right triangle is constructed with the 90 degree corner at the
+origin in the first quadrant of the cartesian plane. The <code>lowerBound</code>
+will move the left edge of the triangle to the right. The <code>upperBound</code> will truncate the
+triangle distribution at that value.
+</p>
+<p>The maximum horizontal distance is calculated using
+<code>hullMuirMaxDistance</code>. This is typically not a
+whole number and the <code>ceiling</code> is used. The maximum
+vertical distance is such that the area under the hypotenuse edge of triangle
+integrates to one. This is done using the equation for the area of a triangle.
+</p>
+<p>The two points that make up the hypotenuse are used to calculate the slope
+and intercept of the line. The area under the line in one-unit increments is
+calculated using
+</p>
+<p style="text-align: center;"><code class="reqn">\int_{x-1}^{x}mZ+b dZ = m(x-.5)+b</code>
+</p>
+
+<p>where <code>m</code> is
+the slope, <code>b</code> is the intercept, and <code>x</code> is a distance. Integrating
+between <code>x-1</code> and <code>x</code> gives the probability between the one-unit
+increments.
+</p>
+<p>All of this is done for three size classes (bats, small birds (SB), and large
+birds (LB)) separately. An additional size class (RAPTOR) is included and
+identical to the large bird result.
+</p>
+<p>The <code>floor</code> function is applied to <code>lowerBound</code>.
+</p>
+<p>It is assumed that <code>hubHeight</code> and <code>bladeRadius</code> have the same units.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List of two data frames: the first has distances in one-unit increments
+(the outer distance), the probabilities between the distances, and a column
+indicating size class; the second gives the maximum distance of each size class.
+</p>
+
+
+<h3>References</h3>
+
+<p>Hull, C. L., &amp; Muir, S. (2010).
+Search areas for monitoring bird and bat carcasses at wind farms using a Monte-Carlo model.
+Australasian Journal of Environmental Management, 17(2), 77-87.
+</p>
+<p>Huso, M. &amp; Dalthorp,D (2014).
+Accounting for Unsearched Areas in Estimating Wind Turbine-Caused Fatality.
+The Journal of Wildlife Management. 78. 10.1002/jwmg.663.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>hullMuirMaxDistance</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+triResult &lt;- triangleProb(hubHeight = 100, bladeRadius = 50, lowerBound = 0)
+names(triResult) ## list names
+triResult$maxDist ## max distance for each size class
+head(triResult$triDistProb)
+</code></pre>
+
+
+</div>

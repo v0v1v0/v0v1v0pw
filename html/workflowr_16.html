@@ -1,0 +1,211 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wflow_publish</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Publish the site</h2>
+
+<h3>Description</h3>
+
+<p><code>wflow_publish</code> is the main workflowr function. Use it when you are
+ready to publish an analysis to your site. <code>wflow_publish</code> performs
+three steps: 1) commit the file(s) (can include both Rmd and non-Rmd files,
+e.g. <code>_site.yml</code>), 2) rebuild the R Markdown file(s), 3) commit the
+generated website file(s). These steps ensure that the version of the HTML
+file is created by the latest version of the R Markdown file, which is
+critical for reproducibility.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wflow_publish(
+  files = NULL,
+  message = NULL,
+  all = FALSE,
+  force = FALSE,
+  update = FALSE,
+  republish = FALSE,
+  combine = "or",
+  view = getOption("workflowr.view"),
+  delete_cache = FALSE,
+  seed = 12345,
+  verbose = FALSE,
+  dry_run = FALSE,
+  project = "."
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>character (default: NULL). R Markdown files and other files to
+be added and committed with Git (step 1). Any R Markdown files will also be
+built (step 2) and their output HTML and figures will be subsequently
+committed (step 3). Supports file
+<a href="https://en.wikipedia.org/wiki/Glob_(programming)">globbing</a>.
+The files are always built in the order they are listed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>message</code></td>
+<td>
+<p>character (default: NULL). A commit message.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>all</code></td>
+<td>
+<p>logical (default: FALSE). Automatically stage files that have been
+modified and deleted. Equivalent to: <code>git commit -a</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>force</code></td>
+<td>
+<p>logical (default: FALSE). Allow adding otherwise ignored files.
+Equivalent to: <code>git add -f</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>update</code></td>
+<td>
+<p>logical (default: FALSE). Build any files that have been
+committed more recently than their corresponding HTML files (and do not
+have any unstaged or staged changes). This ensures that the commit version
+ID inserted into the HTML corresponds to the exact version of the source
+file that was used to produce it.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>republish</code></td>
+<td>
+<p>logical (default: FALSE). Build all published R Markdown
+files (that do not have any unstaged or staged changes). Useful for
+site-wide changes like updating the theme, navigation bar, or any other
+setting in <code>_site.yml</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>combine</code></td>
+<td>
+<p>character (default: <code>"or"</code>). Determine how to combine the
+files from the arguments <code>files</code>, <code>make</code> (<code>wflow_build()</code>
+only), <code>update</code>, and <code>republish</code>. When <code>combine</code> is
+<code>"or"</code>, any file specified by at least one of these arguments will be
+built. When <code>combine</code> is <code>"and"</code>, only files specified by all of
+these arguments will be built.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>view</code></td>
+<td>
+<p>logical (default: <code>getOption("workflowr.view")</code>). View the
+website with <code>wflow_view</code> after building files. If only one
+file is built, it is opened. If more than one file is built, the main index
+page is opened. Not applicable if no files are built or if <code>dry_run =
+TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delete_cache</code></td>
+<td>
+<p>logical (default: FALSE). Delete the cache directory (if
+it exists) for each R Markdown file prior to building it.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>numeric (default: 12345). The seed to set before building each
+file. Passed to <code>set.seed</code>. <b>DEPRECATED:</b> The seed set
+here has no effect if you are using <code>wflow_html</code> as the output
+format defined in <code>_site.yml</code>. This argument is for backwards
+compatibility with previous versions of workflowr.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical (default: FALSE). Display the build log directly in
+the R console as each file is built. This is useful for monitoring
+long-running code chunks.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dry_run</code></td>
+<td>
+<p>logical (default: FALSE). Preview the proposed action but do
+not actually add or commit any files.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>character (default: ".") By default the function assumes the
+current working directory is within the project. If this is not true,
+you'll need to provide the path to the project directory.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns an object of class <code>wflow_publish</code>, which is a list with
+the following elements:
+</p>
+
+<ul>
+<li> <p><b>step1</b>: An object of class <code>wflow_git_commit</code> from the first
+step of committing the files.
+</p>
+</li>
+<li> <p><b>step2</b>: An object of class <code>wflow_build</code> from the second
+step of building the HTML files.
+</p>
+</li>
+<li> <p><b>step3</b>: An object of class <code>wflow_git_commit</code> from the third
+step of committing the HTML files.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>wflow_git_commit</code>, <code>wflow_build</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# single file
+wflow_publish("analysis/file.Rmd", "Informative commit message")
+# All tracked files that have been edited
+wflow_publish(all = TRUE, message = "Informative commit message")
+# A new file plus all tracked files that have been edited
+wflow_publish("analysis/file.Rmd", "Informative commit message", all = TRUE)
+# Multiple files
+wflow_publish(c("analysis/file.Rmd", "analysis/another.Rmd"),
+              "Informative commit message")
+# All R Markdown files that start with the pattern "new_"
+wflow_publish("analysis/new_*Rmd", "Informative commit message")
+# Republish all published files even though they haven't been modified.
+# Useful for changing some universal aspect of the site, e.g. the theme
+# specified in _site.yml.
+wflow_publish("analysis/_site.yml", "Informative commit message",
+              republish = TRUE)
+# Publish all previously published files that have been committed more
+# recently than their corresponding HTML files. This is useful if you like to
+# manually commit your R Markdown files.
+wflow_publish(update = TRUE)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

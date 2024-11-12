@@ -1,0 +1,212 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>washi_theme</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create standard WaSHI plots</h2>
+
+<h3>Description</h3>
+
+<p>All changed defaults from this function can be overridden by another
+call to <code>ggplot2::theme()</code> with the desired changes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">washi_theme(
+  header_font = "Lato Black",
+  header_color = "#151414",
+  body_font = "Poppins",
+  body_color = "#151414",
+  text_scale = 1,
+  legend_position = "top",
+  facet_space = 2,
+  color_gridline = washi_pal[["standard"]][["tan"]],
+  gridline_y = TRUE,
+  gridline_x = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>header_font</code></td>
+<td>
+<p>Font family for title and subtitle. Defaults to
+"Lato Black".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>header_color</code></td>
+<td>
+<p>Font color for title and subtitle. Defaults to
+almost black.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>body_font</code></td>
+<td>
+<p>Font family for all other text Defaults to
+"Poppins".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>body_color</code></td>
+<td>
+<p>Font color for all other text Defaults to almost
+black.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>text_scale</code></td>
+<td>
+<p>Scalar that will grow/shrink all text defined
+within.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend_position</code></td>
+<td>
+<p>Position of legend ("none", "left", "right",
+"bottom", "top", or two-element numeric vector). Defaults to
+"top".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>facet_space</code></td>
+<td>
+<p>Controls how far apart facets are from each
+other.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color_gridline</code></td>
+<td>
+<p>Gridline color. Defaults to WaSHI tan.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gridline_y</code></td>
+<td>
+<p>Boolean indicating whether major gridlines are
+displayed for the y axis. Default is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gridline_x</code></td>
+<td>
+<p>Boolean indicating whether major gridlines are
+displayed for the x axis. Default is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Pass any parameters from theme that are not already
+defined within.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>ggplot2</code> object
+</p>
+
+
+<h3>Source</h3>
+
+<p>Adapted from <code>glitr::si_style()</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other ggplot2 functions: 
+<code>washi_scale()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># NOTE: These examples do not use Poppins or Lato in order to pass
+# automated checks on computers without these fonts installed.
+
+library(ggplot2)
+
+# Single geom_point plot
+example_data_wide |&gt;
+  subset(crop %in% c("Apple", "Cherry", "Potato")) |&gt;
+  ggplot(aes(x = pH, y = Mn_mg.kg, color = crop)) +
+  labs(
+    title = "Scatter plot of pH and Mn (mg/kg)",
+    subtitle = "Example with geom_point().",
+    caption = "This is a caption."
+  ) +
+  geom_point(size = 2.5) +
+  washi_theme(
+    header_font = "sans",
+    body_font = "sans"
+  ) +
+  washi_scale()
+
+# Bar plot
+if (requireNamespace("forcats")) {
+  example_data_wide |&gt;
+    ggplot(aes(x = forcats::fct_rev(forcats::fct_infreq(crop)))) +
+    geom_bar(fill = washi_pal[["standard"]][["blue"]]) +
+    geom_text(
+      aes(
+        y = after_stat(count),
+        label = after_stat(count)
+      ),
+      stat = "count",
+      hjust = 2.5,
+      color = "white"
+    ) +
+    # Flip coordinates to accommodate long crop names
+    coord_flip() +
+    labs(
+      title = "Number of samples in each crop",
+      subtitle = "Example plot with geom_bar() without gridlines.",
+      y = NULL,
+      x = NULL
+    ) +
+    # Turn gridlines off
+    washi_theme(
+      gridline_y = FALSE,
+      gridline_x = FALSE,
+      header_font = "sans",
+      body_font = "sans"
+    ) +
+    # Remove x-axis
+    theme(axis.text.x = element_blank())
+}
+
+# Facetted geom_density plots
+example_data_long |&gt;
+  subset(measurement %in% c("totalC_%", "poxC_mg.kg") &amp;
+    !texture == "Loamy Sand") |&gt;
+  ggplot(aes(x = value, fill = texture, color = texture)) +
+  labs(
+    title = "Distribution of POXC (mg/kg) and Total C (%)",
+    subtitle = "Example with geom_density() and facet_wrap()."
+  ) +
+  geom_density(alpha = 0.4) +
+  facet_wrap(. ~ measurement, scales = "free") +
+  washi_theme(
+    legend_position = "bottom",
+    header_font = "sans",
+    body_font = "sans"
+  ) +
+  washi_scale() +
+  xlab(NULL) +
+  guides(col = guide_legend(nrow = 2, byrow = TRUE))
+</code></pre>
+
+
+</div>

@@ -1,0 +1,295 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_formula</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add formula terms to a workflow</h2>
+
+<h3>Description</h3>
+
+
+<ul>
+<li> <p><code>add_formula()</code> specifies the terms of the model through the usage of a
+formula.
+</p>
+</li>
+<li> <p><code>remove_formula()</code> removes the formula as well as any downstream objects
+that might get created after the formula is used for preprocessing, such as
+terms. Additionally, if the model has already been fit, then the fit is
+removed.
+</p>
+</li>
+<li> <p><code>update_formula()</code> first removes the formula, then replaces the previous
+formula with the new one. Any model that has already been fit based on this
+formula will need to be refit.
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_formula(x, formula, ..., blueprint = NULL)
+
+remove_formula(x)
+
+update_formula(x, formula, ..., blueprint = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A workflow</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>A formula specifying the terms of the model. It is advised to
+not do preprocessing in the formula, and instead use a recipe if that is
+required.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blueprint</code></td>
+<td>
+<p>A hardhat blueprint used for fine tuning the preprocessing.
+</p>
+<p>If <code>NULL</code>, <code>hardhat::default_formula_blueprint()</code> is used and is passed
+arguments that best align with the model present in the workflow.
+</p>
+<p>Note that preprocessing done here is separate from preprocessing that
+might be done by the underlying model. For example, if a blueprint with
+<code>indicators = "none"</code> is specified, no dummy variables will be created by
+hardhat, but if the underlying model requires a formula interface that
+internally uses <code>stats::model.matrix()</code>, factors will still be expanded to
+dummy variables by the model.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>To fit a workflow, exactly one of <code>add_formula()</code>, <code>add_recipe()</code>, or
+<code>add_variables()</code> <em>must</em> be specified.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>x</code>, updated with either a new or removed formula preprocessor.
+</p>
+
+
+<h3>Formula Handling</h3>
+
+<p>Note that, for different models, the formula given to <code>add_formula()</code>
+might be handled in different ways, depending on the parsnip model being
+used. For example, a random forest model fit using ranger would not
+convert any factor predictors to binary indicator variables. This is
+consistent with what <code>ranger::ranger()</code> would do, but is inconsistent
+with what <code>stats::model.matrix()</code> would do.
+</p>
+<p>The documentation for parsnip models provides details about how the data
+given in the formula are encoded for the model if they diverge from the
+standard <code>model.matrix()</code> methodology. Our goal is to be consistent with
+how the underlying model package works.
+</p>
+
+
+<h4>How is this formula used?</h4>
+
+<p>To demonstrate, the example below uses <code>lm()</code> to fit a model. The
+formula given to <code>add_formula()</code> is used to create the model matrix and
+that is what is passed to <code>lm()</code> with a simple formula of
+<code>body_mass_g ~ .</code>:
+</p>
+<div class="sourceCode r"><pre>library(parsnip)
+library(workflows)
+library(magrittr)
+library(modeldata)
+library(hardhat)
+
+data(penguins)
+
+lm_mod &lt;- linear_reg() %&gt;% 
+  set_engine("lm")
+
+lm_wflow &lt;- workflow() %&gt;% 
+  add_model(lm_mod)
+
+pre_encoded &lt;- lm_wflow %&gt;% 
+  add_formula(body_mass_g ~ species + island + bill_depth_mm) %&gt;% 
+  fit(data = penguins)
+
+pre_encoded_parsnip_fit &lt;- pre_encoded %&gt;% 
+  extract_fit_parsnip()
+
+pre_encoded_fit &lt;- pre_encoded_parsnip_fit$fit
+
+# The `lm()` formula is *not* the same as the `add_formula()` formula: 
+pre_encoded_fit
+</pre></div>
+<div class="sourceCode"><pre>## 
+## Call:
+## stats::lm(formula = ..y ~ ., data = data)
+## 
+## Coefficients:
+##      (Intercept)  speciesChinstrap     speciesGentoo  
+##        -1009.943             1.328          2236.865  
+##      islandDream   islandTorgersen     bill_depth_mm  
+##            9.221           -18.433           256.913
+</pre></div>
+<p>This can affect how the results are analyzed. For example, to get
+sequential hypothesis tests, each individual term is tested:
+</p>
+<div class="sourceCode r"><pre>anova(pre_encoded_fit)
+</pre></div>
+<div class="sourceCode"><pre>## Analysis of Variance Table
+## 
+## Response: ..y
+##                   Df    Sum Sq   Mean Sq  F value Pr(&gt;F)    
+## speciesChinstrap   1  18642821  18642821 141.1482 &lt;2e-16 ***
+## speciesGentoo      1 128221393 128221393 970.7875 &lt;2e-16 ***
+## islandDream        1     13399     13399   0.1014 0.7503    
+## islandTorgersen    1       255       255   0.0019 0.9650    
+## bill_depth_mm      1  28051023  28051023 212.3794 &lt;2e-16 ***
+## Residuals        336  44378805    132080                    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+</pre></div>
+
+
+
+<h4>Overriding the default encodings</h4>
+
+<p>Users can override the model-specific encodings by using a hardhat
+blueprint. The blueprint can specify how factors are encoded and whether
+intercepts are included. As an example, if you use a formula and would
+like the data to be passed to a model untouched:
+</p>
+<div class="sourceCode r"><pre>minimal &lt;- default_formula_blueprint(indicators = "none", intercept = FALSE)
+
+un_encoded &lt;- lm_wflow %&gt;% 
+  add_formula(
+    body_mass_g ~ species + island + bill_depth_mm, 
+    blueprint = minimal
+  ) %&gt;% 
+  fit(data = penguins)
+
+un_encoded_parsnip_fit &lt;- un_encoded %&gt;% 
+  extract_fit_parsnip()
+
+un_encoded_fit &lt;- un_encoded_parsnip_fit$fit
+
+un_encoded_fit
+</pre></div>
+<div class="sourceCode"><pre>## 
+## Call:
+## stats::lm(formula = ..y ~ ., data = data)
+## 
+## Coefficients:
+##      (Intercept)     bill_depth_mm  speciesChinstrap  
+##        -1009.943           256.913             1.328  
+##    speciesGentoo       islandDream   islandTorgersen  
+##         2236.865             9.221           -18.433
+</pre></div>
+<p>While this looks the same, the raw columns were given to <code>lm()</code> and that
+function created the dummy variables. Because of this, the sequential
+ANOVA tests groups of parameters to get column-level p-values:
+</p>
+<div class="sourceCode r"><pre>anova(un_encoded_fit)
+</pre></div>
+<div class="sourceCode"><pre>## Analysis of Variance Table
+## 
+## Response: ..y
+##                Df    Sum Sq  Mean Sq F value Pr(&gt;F)    
+## bill_depth_mm   1  48840779 48840779 369.782 &lt;2e-16 ***
+## species         2 126067249 63033624 477.239 &lt;2e-16 ***
+## island          2     20864    10432   0.079 0.9241    
+## Residuals     336  44378805   132080                   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+</pre></div>
+
+
+
+<h4>Overriding the default model formula</h4>
+
+<p>Additionally, the formula passed to the underlying model can also be
+customized. In this case, the <code>formula</code> argument of <code>add_model()</code> can be
+used. To demonstrate, a spline function will be used for the bill depth:
+</p>
+<div class="sourceCode r"><pre>library(splines)
+
+custom_formula &lt;- workflow() %&gt;%
+  add_model(
+    lm_mod, 
+    formula = body_mass_g ~ species + island + ns(bill_depth_mm, 3)
+  ) %&gt;% 
+  add_formula(
+    body_mass_g ~ species + island + bill_depth_mm, 
+    blueprint = minimal
+  ) %&gt;% 
+  fit(data = penguins)
+
+custom_parsnip_fit &lt;- custom_formula %&gt;% 
+  extract_fit_parsnip()
+
+custom_fit &lt;- custom_parsnip_fit$fit
+
+custom_fit
+</pre></div>
+<div class="sourceCode"><pre>## 
+## Call:
+## stats::lm(formula = body_mass_g ~ species + island + ns(bill_depth_mm, 
+##     3), data = data)
+## 
+## Coefficients:
+##           (Intercept)       speciesChinstrap          speciesGentoo  
+##              1959.090                  8.534               2352.137  
+##           islandDream        islandTorgersen  ns(bill_depth_mm, 3)1  
+##                 2.425                -12.002               1476.386  
+## ns(bill_depth_mm, 3)2  ns(bill_depth_mm, 3)3  
+##              3187.839               1686.996
+</pre></div>
+
+
+
+<h4>Altering the formula</h4>
+
+<p>Finally, when a formula is updated or removed from a fitted workflow,
+the corresponding model fit is removed.
+</p>
+<div class="sourceCode r"><pre>custom_formula_no_fit &lt;- update_formula(custom_formula, body_mass_g ~ species)
+
+try(extract_fit_parsnip(custom_formula_no_fit))
+</pre></div>
+<div class="sourceCode"><pre>## Error in extract_fit_parsnip(custom_formula_no_fit) : 
+##   Can't extract a model fit from an untrained workflow.
+## i Do you need to call `fit()`?
+</pre></div>
+
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">workflow &lt;- workflow()
+workflow &lt;- add_formula(workflow, mpg ~ cyl)
+workflow
+
+remove_formula(workflow)
+
+update_formula(workflow, mpg ~ disp)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,151 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>modwt.vt</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Variance Transformation Operation - MODWT</h2>
+
+<h3>Description</h3>
+
+<p>Variance Transformation Operation - MODWT
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">modwt.vt(
+  data,
+  wf,
+  J,
+  boundary,
+  cov.opt = "auto",
+  flag = "biased",
+  detrend = FALSE,
+  backward = FALSE,
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A list of response x and dependent variables dp.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wf</code></td>
+<td>
+<p>Name of the wavelet filter to use in the decomposition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>Specifies the depth of the decomposition. This must be a number less than or equal to log(length(x),2).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>Character string specifying the boundary condition. If boundary=="periodic" the default, then the vector you decompose is assumed to be periodic on its defined interval, if boundary=="reflection", the vector beyond its boundaries is assumed to be a symmetric reflection of itself.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cov.opt</code></td>
+<td>
+<p>Options of Covariance matrix sign. Use "pos", "neg", or "auto".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flag</code></td>
+<td>
+<p>Biased or Unbiased variance transformation, c("biased","unbiased").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detrend</code></td>
+<td>
+<p>Detrend the input time series or just center, default (F).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>backward</code></td>
+<td>
+<p>Detrend the input time series or just center, default (F).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>A logical indicating if some “progress report” should be given.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of 8 elements: wf, J, boundary, x (data), dp (data), dp.n (variance transformed dp), and S (covariance matrix).
+</p>
+
+
+<h3>References</h3>
+
+<p>Jiang, Z., Sharma, A., &amp; Johnson, F. (2020). Refining Predictor Spectral Representation Using Wavelet Theory for Improved Natural System Modeling. Water Resources Research, 56(3), e2019WR026962.
+</p>
+<p>Jiang, Z., Rashid, M. M., Johnson, F., &amp; Sharma, A. (2020). A wavelet-based tool to modulate variance in predictors: an application to predicting drought anomalies. Environmental Modelling &amp; Software, 135, 104907.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">### real-world example
+data(Ind_AWAP.2.5)
+data(obs.mon)
+data(SPI.12)
+x &lt;- window(SPI.12, start = c(1950, 1), end = c(2009, 12))
+dp &lt;- window(obs.mon, start = c(1950, 1), end = c(2009, 12))
+
+op &lt;- par(mfrow = c(ncol(dp), 1), pty = "m", mar = c(1, 4, 1, 2))
+for (id in sample(Ind_AWAP.2.5, 1)) {
+  data &lt;- list(x = x[, id], dp = dp)
+  dwt &lt;- modwt.vt(data, wf = "d4", J = 7, boundary = "periodic", cov.opt = "auto")
+
+  for (i in 1:ncol(dp)) {
+    ts.plot(dwt$dp[, i], dwt$dp.n[, i], xlab = NA, col = c("black", "red"), lwd = c(2, 1))
+  }
+}
+par(op)
+
+### synthetic example
+# frequency, sampled from a given range
+fd &lt;- c(3, 5, 10, 15, 25, 30, 55, 70, 95)
+
+data.SW1 &lt;- data.gen.SW(nobs = 512, fp = 25, fd = fd)
+dwt.SW1 &lt;- modwt.vt(data.SW1, wf = "d4", J = 7, boundary = "periodic", cov.opt = "auto")
+
+x.modwt &lt;- waveslim::modwt(dwt.SW1$x, wf = "d4", n.levels = 7, boundary = "periodic")
+dp.modwt &lt;- waveslim::modwt(dwt.SW1$dp[, 1], wf = "d4", n.levels = 7, boundary = "periodic")
+dp.vt.modwt &lt;- waveslim::modwt(dwt.SW1$dp.n[, 1], wf = "d4", n.levels = 7, boundary = "periodic")
+
+sum(sapply(dp.modwt, var))
+var(dwt.SW1$dp[, 1])
+sum(sapply(dp.vt.modwt, var))
+var(dwt.SW1$dp.n[, 1])
+
+data &lt;- rbind(
+  sapply(dp.modwt, var) / sum(sapply(dp.modwt, var)),
+  sapply(dp.vt.modwt, var) / sum(sapply(dp.vt.modwt, var))
+)
+
+bar &lt;- barplot(data, beside = TRUE, col = c("red", "blue"))
+lines(x = bar[2, ], y = sapply(x.modwt, var) / sum(sapply(x.modwt, var)))
+points(x = bar[2, ], y = sapply(x.modwt, var) / sum(sapply(x.modwt, var)))
+
+</code></pre>
+
+
+</div>

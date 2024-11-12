@@ -1,0 +1,133 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>whiteningLoadings</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute Whitening Loadings</h2>
+
+<h3>Description</h3>
+
+<p><code>whiteningLoading</code> computes the loadings (= cross-covariance matrix <code class="reqn">\Phi=Cov(x, z)</code>) between the original and the whitened variables as well as the correlation loadings (= cross-correlation matrix  <code class="reqn">\Psi=Cor(x, z)</code>).  The original variables are in the rows and the whitened variables in the columns. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  whiteningLoadings(Sigma, method=c("ZCA", "ZCA-cor", "PCA", "PCA-cor", "Cholesky"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Sigma</code></td>
+<td>
+<p>Covariance matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Determines the type of whitening transformation.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code class="reqn">\Phi=Cov(x, z)</code> is the cross-covariance matrix between the original and the whitened variables. It satisfies <code class="reqn">\Phi \Phi^{T} = \Sigma = Var(x)</code>. This cross-covariance matrix is the inverse of the whitening matrix so that <code class="reqn">\Phi = W^{-1}</code>. The cross-covariance matrix is therefore relevant in inverse whitening transformations (=coloring transformations)  <code class="reqn">x = \Phi z</code>.
+</p>
+<p><code class="reqn">\Psi=Cor(x, z)</code> is the cross-correlation matrix between the original and the whitened variables.
+</p>
+<p>The following different whitening approaches can be selected:
+</p>
+<p><code>method="ZCA"</code>: ZCA whitening, also known as Mahalanobis whitening, ensures that the average covariance between whitened and orginal variables is maximal.  
+</p>
+<p><code>method="ZCA-cor"</code>: Likewise, ZCA-cor whitening leads to whitened variables that are maximally correlated (on average) with the original variables.  
+</p>
+<p><code>method="PCA"</code>: In contrast, PCA whitening lead to maximally compressed whitened variables, as measured by squared covariance.
+</p>
+<p><code>method="PCA-cor"</code>: PCA-cor whitening is similar to PCA whitening but uses squared correlations.  
+</p>
+<p><code>method="Cholesky"</code>: computes a whitening matrix by applying Cholesky decomposition.  This yields both a lower triangular positive diagonal whitening matrix and lower triangular positive diagonal loadings (cross-covariance and cross-correlation).  
+</p>
+<p>Note that Cholesky whitening depends on the ordering of input variables. In the convention used here the first input variable is linked with the first latent variable only, the second input variable is linked to the first and second latent variable only, and so on, and the last variable is linked to all latent variables. 
+</p>
+<p>ZCA-cor whitening is implicitely employed in computing CAT and CAR scores used for variable selection in classification and regression, see the functions <code>catscore</code> in the <code>sda</code> package and <code>carscore</code> in the <code>care</code> package.
+</p>
+<p>In both PCA and PCA-cor whitening there is a sign-ambiguity in the eigenvector matrices. In order to resolve the sign-ambiguity we use eigenvector matrices with a positive diagonal so that PCA and PCA-cor cross-correlations and cross-covariances have a positive diagonal for the given ordering of the original variables.
+</p>
+<p>For details see Kessy, Lewin, and Strimmer (2018). 
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>whiteningLoadings</code> returns a list with the following items:
+</p>
+<p><code>Phi</code> - cross-covariance matrix <code class="reqn">\Phi</code> - the loadings. 
+</p>
+<p><code>Psi</code> - cross-correlation matrix <code class="reqn">\Psi</code> - the correlation loadings. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Korbinian Strimmer (<a href="https://strimmerlab.github.io">https://strimmerlab.github.io</a>).
+</p>
+
+
+<h3>References</h3>
+
+<p>Kessy, A., A. Lewin, and K. Strimmer. 2018.
+Optimal whitening and decorrelation. The American Statistician. 72: 309-314.
+&lt;DOI:10.1080/00031305.2016.1277159&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>explainedVariation</code>, <code>whiten</code>, <code>whiteningMatrix</code>.</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load whitening library
+library("whitening")
+
+######
+
+# example data set
+# E. Anderson. 1935.  The irises of the Gaspe Peninsula.
+# Bull. Am. Iris Soc. 59: 2--5
+data("iris")
+X = as.matrix(iris[,1:4])
+d = ncol(X) # 4
+n = nrow(X) # 150
+colnames(X) # "Sepal.Length" "Sepal.Width"  "Petal.Length" "Petal.Width"
+
+# estimate covariance
+S = cov(X)
+
+# ZCA-cor whitening matrix
+W.ZCAcor = whiteningMatrix(S, method="ZCA-cor")
+
+# ZCA-cor loadings
+ldgs = whiteningLoadings(S, method="ZCA-cor")
+ldgs
+
+# cross-covariance matrix
+Phi.ZCAcor = ldgs$Phi
+
+# check constraint of cross-covariance matrix
+tcrossprod(Phi.ZCAcor)
+S
+
+# cross-covariance matrix aka loadings is equal to the inverse whitening matrix
+Phi.ZCAcor
+solve(W.ZCAcor)
+</code></pre>
+
+
+</div>

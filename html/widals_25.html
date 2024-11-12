@@ -1,0 +1,133 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>stnd.Hs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Standardize Spacial Covariates
+</h2>
+
+<h3>Description</h3>
+
+<p>Standardize spacial covariates with respect to both the space and time dimensions
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">stnd.Hs(Hs, Hs0 = NULL, intercept = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Hs</code></td>
+<td>
+
+<p>Spacial covariates (of supporting sites).  An <code class="reqn">n</code> x <code class="reqn">p_s</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hs0</code></td>
+<td>
+
+<p>Spacial covariates (of interpolation sites).  An <code class="reqn">n</code>* x <code class="reqn">p_s</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intercept</code></td>
+<td>
+
+<p>Include intercept term?  Boolean.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A named list.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>sHs</code></td>
+<td>
+<p>An <code class="reqn">n</code> x <code class="reqn">p_s</code> numeric matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sHs0</code></td>
+<td>
+<p>An <code class="reqn">n</code>* x <code class="reqn">p_s</code> numeric matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h.mean</code></td>
+<td>
+<p>The covariates' mean over space.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h.sd</code></td>
+<td>
+<p>The covariates' standard deviation over space.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Number of support sites.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intercept</code></td>
+<td>
+<p>The supplied intercept argument.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>stnd.Ht</code>, <code>stnd.Hst.ls</code>, <code>applystnd.Hs</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+##### Please see the examples in Hst.sumup
+
+
+
+## The function is currently defined as
+function (Hs, Hs0 = NULL, intercept = TRUE) 
+{
+    n &lt;- nrow(Hs)
+    h.mean &lt;- apply(Hs, 2, mean)
+    h.sd &lt;- apply(t(t(Hs) - h.mean), 2, function(x) {
+        sqrt(sum(x^2))
+    })
+    h.sd[h.sd == 0] &lt;- 1
+    sHs &lt;- t((t(Hs) - h.mean)/h.sd)
+    if (intercept) {
+        sHs[, 1] &lt;- 1/sqrt(n)
+    }
+    sHs0 &lt;- NULL
+    if (!is.null(Hs0)) {
+        sHs0 &lt;- t((t(Hs0) - h.mean)/h.sd)
+        if (intercept) {
+            sHs0[, 1] &lt;- 1/sqrt(n)
+        }
+    }
+    ls.out &lt;- list(sHs = sHs, sHs0 = sHs0, h.mean = h.mean, h.sd = h.sd, 
+        n = n, intercept = intercept)
+    return(ls.out)
+  }
+</code></pre>
+
+
+</div>

@@ -1,0 +1,145 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>GainCurvePlotC</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot the cumulative gain curve of a sort-order with costs.</h2>
+
+<h3>Description</h3>
+
+<p>Plot the cumulative gain curve of a sort-order with costs.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">GainCurvePlotC(
+  frame,
+  xvar,
+  costVar,
+  truthVar,
+  title,
+  ...,
+  estimate_sig = FALSE,
+  large_count = 1000,
+  model_color = "darkblue",
+  wizard_color = "darkgreen",
+  shadow_color = "darkgray"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frame</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar</code></td>
+<td>
+<p>name of the independent (input or model score) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>costVar</code></td>
+<td>
+<p>cost of each item (drives x-axis sum)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truthVar</code></td>
+<td>
+<p>name of the dependent (output or result to be modeled) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimate_sig</code></td>
+<td>
+<p>logical, if TRUE compute significance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>large_count</code></td>
+<td>
+<p>numeric, upper bound target for number of plotting points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model_color</code></td>
+<td>
+<p>color for the model curve</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wizard_color</code></td>
+<td>
+<p>color for the "wizard" (best possible) curve</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shadow_color</code></td>
+<td>
+<p>color for the shaded area under the curve</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>GainCurvePlotC</code> plots a cumulative gain curve for the case where
+items have an additional cost, in addition to an outcome value.
+</p>
+<p>The x-axis represents the fraction of total cost experienced when items are sorted by score, and the
+y-axis represents the cumulative summed true outcome represented by the items seen so far.
+</p>
+<p>For comparison, <code>GainCurvePlotC</code> also plots the "wizard curve": the gain curve when the
+data is sorted according to its true outcome/cost (the optimal sort order).
+</p>
+<p>To improve presentation quality, the plot is limited to approximately <code>large_count</code> points (default: 1000).
+For larger data sets, the data is appropriately randomly sampled down before plotting.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>GainCurvePlot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+set.seed(34903490)
+y = abs(rnorm(20)) + 0.1
+x = abs(y + 0.5*rnorm(20))
+frm = data.frame(model=x, value=y)
+frm$costs=1
+frm$costs[1]=5
+WVPlots::GainCurvePlotC(frm, "model", "costs", "value",
+   title="Example Continuous Gain CurveC")
+
+</code></pre>
+
+
+</div>

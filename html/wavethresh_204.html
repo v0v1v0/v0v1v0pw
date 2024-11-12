@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Shannon.entropy</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute Shannon entropy</h2>
+
+<h3>Description</h3>
+
+<p>Computes Shannon entropy of the squares of a set of coefficients. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Shannon.entropy(v, zilchtol=1e-300)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>v</code></td>
+<td>
+<p>A vector of coefficients (e.g. wavelet coefficients).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zilchtol</code></td>
+<td>
+<p>A small number. Any number smaller than this is considered to be zero for the purposes of this function.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function computes the Shannon entropy of the squares of a set of coefficients. The squares are used because we are only interested in the entropy of the energy of the coefficients, not their actual sign. 
+</p>
+<p>The entropy of the squares of <code>v</code> is given by <code>sum( v^2 * log(v^2) )</code>. In this implementation any zero coefficients (determined by being less than <code>zilchtol</code>) have a zero contribution to the entropy. 
+</p>
+<p>The Shannon entropy measures how "evenly spread" a set of numbers is. If the size of the entries in a vector is approximately evenly spread then the Shannon entropy is large. If the vector is sparsely populated or the entries are very different then the Shannon entropy is near zero. Note that the input vectors to this function usually have their norm normalized so that diversity of coefficients corresponds to sparsity. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A number representing the Shannon entropy of the input vector. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.7.2 Copyright Guy Nason 1996 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>MaNoVe.wst</code>, <code>wst</code>, 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Generate some test data
+#
+#
+# A sparse set
+#
+Shannon.entropy(c(1,0,0,0))
+#0
+#
+# A evenly spread set
+#
+Shannon.entropy( rep( 1/ sqrt(4), 4 ))
+#1.386294
+</code></pre>
+
+
+</div>

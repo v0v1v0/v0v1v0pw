@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>peek</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Data Frame Viewing</h2>
+
+<h3>Description</h3>
+
+<p>Convenience function to view all the columns of the head
+of a truncated <code>data.frame</code>.  <code>peek</code> invisibly returns
+<code>x</code>.  This makes its use ideal in a <span class="pkg">dplyr</span>/<span class="pkg">magrittr</span> pipeline.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">peek(x, n = 10, width = 10, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>data.frame</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Number of rows to display.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+<p>The width of the columns to be displayed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>For internal use.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>By default <span class="pkg">dplyr</span> does not print all columns of a data frame
+(<code>tbl_df</code>).  This makes inspection of data difficult at times,
+particularly with text string data.  <code>peek</code> allows the user to see a
+truncated head for inspection purposes.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Prints a truncated head but invisibly returns <code>x</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>head</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">(dat1 &lt;- r_data_frame(100, id, sentence, paragraph))
+peek(dat1)
+peek(dat1, n = 20)
+peek(dat1, width = 40)
+
+library(dplyr)
+
+## Use in a dplyr/magrittr pipeline to view the data (silly example)
+par(mfrow = c(2, 2))
+
+r_data_frame(1000, id, sex, pet, employment, eye, sentence, paragraph) %&gt;%
+    peek %&gt;%
+    (function(x, ind = 2:5){ invisible(lapply(ind, function(i) pie(table(x[[i]]))))})
+
+## A wider data set example
+dat2 &lt;- r_data_theme()
+
+dat2
+peek(dat2)
+</code></pre>
+
+
+</div>

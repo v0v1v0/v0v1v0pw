@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>LjungBox</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Ljung and Box Portmanteau Test</h2>
+
+<h3>Description</h3>
+
+<p>The Ljung-Box (1978) modified portmanteau test. In the
+multivariate time series, this test statistic is asymptotically equal to
+<code>Hosking</code>.
+</p>
+<p>This method and the bottom documentation is taken directly from the
+original 'portes' package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">LjungBox(
+  obj,
+  lags = seq(5, 30, 5),
+  order = 0,
+  season = 1,
+  squared.residuals = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>obj</code></td>
+<td>
+<p>a univariate or multivariate series with class "numeric",
+"matrix", "ts", or ("mts" "ts"). It can be also an object of fitted
+time-series model with class "ar", "arima0", "Arima", ("ARIMA forecast
+ARIMA Arima"), "lm", ("glm" "lm"), or "varest". obj may also an object with
+class "list" (see details and following examples).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lags</code></td>
+<td>
+<p>vector of lag auto-cross correlation coefficients used for
+<code>Hosking</code> test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>order</code></td>
+<td>
+<p>Default is zero for testing the randomness of a given sequence
+with class "numeric", "matrix", "ts", or ("mts" "ts"). In general order
+equals to the number of estimated parameters in the fitted model. If obj is
+an object with class "ar", "arima0", "Arima", "varest", ("ARIMA forecast
+ARIMA Arima"), or "list" then no need to enter the value of order as it
+will be automatically determined. For obj with other classes, the order is
+needed for degrees of freedom of asymptotic chi-square distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>season</code></td>
+<td>
+<p>seasonal periodicity for testing seasonality. Default is 1 for
+testing the non seasonality cases.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>squared.residuals</code></td>
+<td>
+<p>if <code>TRUE</code> then apply the test on the squared values.
+This checks for Autoregressive Conditional Heteroscedastic, <code>ARCH</code>,
+effects. When <code>squared.residuals = FALSE</code>, then apply the test on the usual
+residuals.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>However the portmanteau test statistic can be applied directly on
+the output objects from the built in R functions ar(), ar.ols(), ar.burg(),
+ar.yw(), ar.mle(), arima(), arim0(), Arima(), auto.arima(), lm(), glm(),
+and VAR(), it works with output objects from any fitted model. In this
+case, users should write their own function to fit any model they want,
+where they may use the built in R functions FitAR(), garch(), garchFit(),
+fracdiff(), tar(), etc. The object obj represents the output of this
+function. This output must be a list with at least two outcomes: the fitted
+residual and the order of the fitted model (list(res = ..., order = ...)).
+See the following example with the function FitModel().
+</p>
+<p>Note: In stats R, the function Box.test was built to compute the Box and
+Pierce (1970) and Ljung and Box (1978) test statistics only in the
+univariate case where we can not use more than one single lag value at a
+time. The functions BoxPierce and LjungBox are more accurate than Box.test
+function and can be used in the univariate or multivariate time series at
+vector of different lag values as well as they can be applied on an output
+object from a fitted model described in the description of the function
+BoxPierce.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The Ljung and Box test statistic with the associated p-values for different
+lags based on the asymptotic chi-square distribution with <code>k^2(lags-order)</code>
+degrees of freedom.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Esam Mahdi and A.I. McLeod
+</p>
+
+
+<h3>References</h3>
+
+<p>Ljung, G.M. and Box, G.E.P (1978). "On a Measure of Lack of Fit in Time
+Series Models". Biometrika, 65, 297-303.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- rnorm(100)
+LjungBox(x) # univariate test
+
+x &lt;- cbind(rnorm(100),rnorm(100))
+LjungBox(x) # multivariate test
+
+</code></pre>
+
+
+</div>

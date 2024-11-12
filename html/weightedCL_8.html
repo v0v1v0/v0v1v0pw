@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>iee</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>INDEPENDENT ESTIMATING EQUATIONS FOR BINARY AND COUNT REGRESSION</h2>
+
+<h3>Description</h3>
+
+<p>Independent estimating equations for binary and count regression.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">iee(xdat,ydat,margmodel,link) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>xdat</code></td>
+<td>
+<p>The <code class="reqn">d\times p</code> matrix of covariates, where <code class="reqn">d</code> is the length of the time-series and <code class="reqn">p</code> is the number of covariates including
+the unit first column  to account for the intercept (except for ordinal regression where there is no intercept).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ydat</code></td>
+<td>
+<p>The <code class="reqn">d</code>-dimensional vector of  dicrete time series reponse, where <code class="reqn">d</code> is the length of the series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>margmodel</code></td>
+<td>
+
+<p>Indicates the marginal model.
+Choices are “poisson” for Poisson, “bernoulli” for Bernoulli, 
+and  “nb1” , “nb2” for the NB1 and NB2 parametrization 
+of negative binomial in Cameron and Trivedi (1998).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+<p>The link function.
+Choices are “log” for the log link function, “logit” for 
+the logit link function, and “probit” for 
+the probit link function.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The univariate parameters  are
+estimated from the sum of univariate marginal log-likelihoods.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>coef</code></td>
+<td>
+<p>The vector with the estimated regression parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gam</code></td>
+<td>
+<p>The vector with the estimated parameters that  are not regression parameters. This is NULL for Poisson and binary regression.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Aristidis K. Nikoloulopoulos <a href="mailto:A.Nikoloulopoulos@uea.ac.uk">A.Nikoloulopoulos@uea.ac.uk</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Cameron, A. C. and Trivedi, P. K. (1998)
+<em>Regression Analysis of Count Data.</em>
+Cambridge: Cambridge University Press.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">################################################################################
+#                      NB2 regression for count time-series data
+################################################################################
+################################################################################
+#                      read and set up data set
+################################################################################
+data(polio)
+ydat &lt;-polio
+d=length(ydat)
+tvec=1:length(ydat)
+tvec1=tvec-73
+xdat &lt;- cbind(1, tvec1/1000, cos(2 * pi * tvec1 / 12), sin(2 * pi * tvec1 / 12),
+                      cos(2 * pi * tvec1 / 6), sin(2 * pi * tvec1 / 6)) 
+################################################################################
+#                      select the marginal model
+################################################################################
+margmodel="nb2"
+
+i.est&lt;-iee(xdat,ydat,margmodel)
+cat("\niest: IEE estimates\n")
+print(c(i.est$reg,i.est$gam))
+</code></pre>
+
+
+</div>

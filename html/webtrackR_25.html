@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>parse_path</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Parse parts of path for text analysis</h2>
+
+<h3>Description</h3>
+
+<p><code>parse_path()</code> parses parts of a path, i.e., anything separated by
+"/", "-", "_" or ".", and adds them as a new variable. Parts that do not
+consist of letters only, or of a real word, can be filtered via the argument <code>keep</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">parse_path(wt, varname = "url", keep = "letters_only", decode = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wt</code></td>
+<td>
+<p>webtrack data object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varname</code></td>
+<td>
+<p>character. name of the column from which to extract the host.
+Defaults to <code>"url"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep</code></td>
+<td>
+<p>character. Defines which types of path components to keep.
+If set to <code>"all"</code>, anything is kept. If <code>"letters_only"</code>, only parts
+containing letters are kept. If <code>"words_only"</code>, only parts constituting
+English words (as defined by the Word Game Dictionary,
+cf. https://cran.r-project.org/web/packages/words/index.html) are kept.
+Support for more languages will be added in future.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>decode</code></td>
+<td>
+<p>logical. Whether to decode the path (see <code>utils::URLdecode()</code>), default to TRUE</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>webtrack data.frame with the same columns as wt
+and a new column called <code>'path_split'</code>  (or, if varname not equal to <code>'url'</code>, <code>'&lt;varname&gt;_path_split'</code>)
+containing parts as a comma-separated string.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data("testdt_tracking")
+wt &lt;- as.wt_dt(testdt_tracking)
+wt &lt;- parse_path(wt)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

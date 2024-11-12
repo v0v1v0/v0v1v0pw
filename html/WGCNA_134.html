@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>matrixToNetwork</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Construct a network from a matrix
+</h2>
+
+<h3>Description</h3>
+
+<p>Constructs a network
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">matrixToNetwork(
+    mat, 
+    symmetrizeMethod = c("average", "min", "max"), 
+    signed = TRUE, 
+    min = NULL, max = NULL, 
+    power = 12,
+    diagEntry = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mat</code></td>
+<td>
+<p>matrix to be turned into a network. Must be square.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>symmetrizeMethod</code></td>
+<td>
+
+<p>method for symmetrizing the matrix. The method will be applied to each component of mat and its transpose.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signed</code></td>
+<td>
+
+<p>logical: should the resulting network be signed? Unsigned networks are constructed from <code>abs(mat)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min</code></td>
+<td>
+
+<p>minimum allowed value for <code>mat</code>. If <code>NULL</code>, the actual attained minimum of <code>mat</code> will be used.
+Missing data are ignored. Values below <code>min</code> are truncated to <code>min</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max</code></td>
+<td>
+
+<p>maximum allowed value for <code>mat</code>. If <code>NULL</code>, the actual attained maximum of <code>mat</code> will be used.
+Missing data are ignored. Values below <code>max</code> are truncated to <code>max</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+
+<p>the soft-thresholding power.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>diagEntry</code></td>
+<td>
+
+<p>the value of the entries on the diagonal in the result. This is usally 1 but some applications may require
+a zero (or even NA) diagonal.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If <code>signed</code> is <code>FALSE</code>, the matrix <code>mat</code> is first converted to its absolute value.
+</p>
+<p>This function then symmetrizes the matrix using the <code>symmetrizeMethod</code> component-wise on <code>mat</code>
+and <code>t(mat)</code> (i.e., the transpose of <code>mat</code>). 
+</p>
+<p>In the next step, the symmetrized matrix is linearly scaled to the interval [0,1] using either <code>min</code>
+and <code>max</code> (each either supplied or determined from the matrix). Values outside of the [min, max] range
+are truncated to <code>min</code> or <code>max</code>. 
+</p>
+<p>Lastly, the adjacency is calculated by rasing the matrix to <code>power</code>. 
+The diagonal of the result is set to
+<code>diagEntry</code>. Note that most WGCNA functions expect the diagonal of an adjacency matrix to be 1. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>The adjacency matrix that encodes the network.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>adjacency</code> for calculation of a correlation network (adjacency) from a numeric matrix such as
+expression data 
+</p>
+<p><code>adjacency.fromSimilarity</code> for simpler calculation of a network from a symmetric similarity matrix.
+</p>
+
+
+</div>

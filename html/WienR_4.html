@@ -1,0 +1,205 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dpWDM</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Wrapper function for the partial derivative of the first-passage time cumulative distribution function of the diffusion model</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the partial derivative of the first-passage time cumulative distribution function of the diffusion model with respect to one of a, v, w, t0, sv, sw, or st0, or calculate the gradient.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dpWDM(
+  wrt,
+  t,
+  response,
+  a,
+  v,
+  w,
+  t0 = 0,
+  sv = 0,
+  sw = 0,
+  st0 = 0,
+  precision = NULL,
+  K = NULL,
+  n.threads = FALSE,
+  n.evals = 6000
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wrt</code></td>
+<td>
+<p>partial derivative w.r.t. one of the following:
+</p>
+
+<ul>
+<li> <p><code>"a"</code> the upper barrier,
+</p>
+</li>
+<li> <p><code>"v"</code> the drift rate,
+</p>
+</li>
+<li> <p><code>"w"</code> the relative starting point,
+</p>
+</li>
+<li> <p><code>"t0"</code> the non-decision time,
+</p>
+</li>
+<li> <p><code>"sv"</code> the inter-trial variability of drift rate,
+</p>
+</li>
+<li> <p><code>"sw"</code> the inter-trial variability of relative starting point,
+</p>
+</li>
+<li> <p><code>"st0"</code> the inter-trial variability of non-decision time, or
+</p>
+</li>
+<li> <p><code>"grad"</code> all the above.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t</code></td>
+<td>
+<p>First-passage time. Numeric vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response</code></td>
+<td>
+<p>Response boundary. Character vector with <code>"upper"</code> and <code>"lower"</code> as possible values. Alternatively a numeric vector with
+<code>1</code>=lower and <code>2</code>=upper.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+<p>Upper barrier. Numeric vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>v</code></td>
+<td>
+<p>Drift rate. Numeric vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+<p>Relative starting point. Numeric vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t0</code></td>
+<td>
+<p>Non-decision time. Numeric vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sv</code></td>
+<td>
+<p>Inter-trial variability of drift rate. Numeric vector. Standard deviation of a normal distribution <code>N(v, sv)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sw</code></td>
+<td>
+<p>Inter-trial variability of relative starting point. Numeric vector. Range of uniform distribution <code>U(w-0.5*sw, w+0.5*sw)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>st0</code></td>
+<td>
+<p>Inter-trial variability of non-decision time. Numeric vector. Range of uniform distribution <code>U(t0, t0+st0)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>precision</code></td>
+<td>
+<p>Optional numeric value. Precision of the partial derivative. Numeric value. Default is <code>NULL</code>, which takes default value 1e-12.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K</code></td>
+<td>
+<p>Optional. Number of iterations to calculate the infinite sums. Numeric value (integer). Default is <code>NULL</code>.
+</p>
+
+<ul>
+<li> <p><code>precision = NULL</code> and <code>K = NULL</code>: Default <code>precision = 1e-12</code> used to calculate internal K.
+</p>
+</li>
+<li> <p><code>precision != NULL</code> and <code>K = NULL</code>: <code>precision</code> is used to calculate internal K,
+</p>
+</li>
+<li> <p><code>precision = NULL</code> and <code>K != NULL</code>: <code>K</code> is used as internal K,
+</p>
+</li>
+<li> <p><code>precision != NULL</code> and <code>K != NULL</code>: if internal K calculated through <code>precision</code> is smaller than <code>K</code>, <code>K</code> is used.
+</p>
+</li>
+</ul>
+<p>We recommend using either default (<code>precision = K = NULL</code>) or only <code>precision</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.threads</code></td>
+<td>
+<p>Optional numerical or logical value. Number of threads to use. If not provided (or 1 or <code>FALSE</code>) parallelization is not used. If set to <code>TRUE</code> then all available threads are used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.evals</code></td>
+<td>
+<p>Optional. Number of maximal function evaluations in the numeric integral if sv, sw, and/or st0 are not zero. Default is <code>6000</code> and <code>0</code> implies no limit and the 
+numeric integration goes on until the specified <code>precision</code> is guaranteed.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of the class <code>Diffusion_deriv</code> containing
+</p>
+
+<ul>
+<li> <p><code>deriv</code>: the derivatives of the CDF with respect to the chosen <code>wrt</code>,
+</p>
+</li>
+<li> <p><code>call</code>: the function call,
+</p>
+</li>
+<li> <p><code>err</code>: the absolute error. Only provided if sv, sw, or st0 is non-zero. If numerical integration is used, the precision cannot always be guaranteed.
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Raphael Hartmann
+</p>
+
+
+<h3>References</h3>
+
+<p>Hartmann, R., &amp; Klauer, K. C. (2021). Partial derivatives for the first-passage time distribution in Wiener diffusion models. <em>Journal of Mathematical Psychology, 103</em>, 102550. <a href="https://doi.org/10.1016/j.jmp.2021.102550">doi:10.1016/j.jmp.2021.102550</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">dpWDM(wrt = "a", t = 1.2, response = "upper", a = 1.1, v = 13, w = .6, precision = NULL, K = NULL)
+</code></pre>
+
+
+</div>

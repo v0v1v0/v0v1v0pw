@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>unpack</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Unpack or bind values by names into the calling environment.</h2>
+
+<h3>Description</h3>
+
+<p>Unpacks or binds values into the calling environment. Uses <code>bquote</code> escaping.
+NULL is a special case that is unpacked to all targets. NA targets are skipped.
+All non-NA target names must be unique.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">unpack(wrapr_private_value, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wrapr_private_value</code></td>
+<td>
+<p>list of values to copy</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>argument names to write to</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note: when using <code>[]&lt;-</code> notation, a reference to the unpacker object is written into the unpacking environment as a side-effect
+of the implied array assignment. <code>:=</code> assigment does not have this side-effect.
+Array-assign form can not use the names: <code>.</code>, <code>wrapr_private_self</code>, <code>value</code>, or <code>unpack</code>.
+Function form can not use the names: <code>.</code> or <code>wrapr_private_value</code>.
+For more details please see here <a href="https://win-vector.com/2020/01/20/unpack-your-values-in-r/">https://win-vector.com/2020/01/20/unpack-your-values-in-r/</a>.
+</p>
+<p>Related work includes <code>Python</code> tuple unpacking, <code>zeallot</code>'s arrow, and <code>vadr::bind</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>value passed in (invisible)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>pack</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# named unpacking
+# looks like assignment: DESTINATION = NAME_VALUE_USING
+d &lt;- data.frame(x = 1:2,
+                g=c('test', 'train'),
+                stringsAsFactors = FALSE)
+unpack[train_set = train, test_set = test] := split(d, d$g)
+# train_set and test_set now correctly split
+print(train_set)
+print(test_set)
+rm(list = c('train_set', 'test_set'))
+
+# named unpacking NEWNAME = OLDNAME implicit form
+# values are matched by name, not index
+unpack[train, test] := split(d, d$g)
+print(train)
+print(test)
+rm(list = c('train', 'test'))
+
+# function version
+unpack(split(d, d$g), train, test)
+print(train)
+print(test)
+rm(list = c('train', 'test'))
+
+# pipe version
+split(d, d$g) %.&gt;% unpack(., train, test)
+print(train)
+print(test)
+rm(list = c('train', 'test'))
+# Note: above is wrapr dot-pipe, piping does not currently work with
+# magrittr pipe due to magrittr's introduction of temporary
+# intermediate environments during evaluation.
+
+# bquote example
+train_col_name &lt;- 'train'
+test_col_name &lt;- 'test'
+unpack(split(d, d$g), train = .(train_col_name), test = .(test_col_name))
+print(train)
+print(test)
+rm(list = c('train', 'test'))
+
+</code></pre>
+
+
+</div>

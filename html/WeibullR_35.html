@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>weibayes</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Fitting for Minimal Failure Datasets
+</h2>
+
+<h3>Description</h3>
+
+<p>A simplistic fitting method also called "1-parameter Weibull" based on a "prior" known beta value. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">weibayes(x, s=NULL, beta)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>Either a vector of class <code>"numeric"</code> or <code>"integer"</code> with
+(life-)time observations, or a dataframe containing at least <code>$time</code> and <code>$event</code>
+columns and optionally a <code>$qty</code> column.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p>An optional vector of suspension data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+
+<p>A weibull shape parameter based on prior like kind study.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function implements a very simplistic relationship defined by two lines of R code:<br><code>t_eta&lt;-(times^beta)/nfail</code><br><code>out_val&lt;-sum(t_eta)^(1/beta)</code><br>
+Note: for a single failure dataset, with beta = 1, the return is simply the sum of the failure time value plus sum of all suspension times.
+Should no failures exist, then the nfail will be set to 1 for a pessimistic solution.<br></p>
+
+
+<h3>Value</h3>
+
+<p>Returns the Weibull scale, Eta, paramater value.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">fail&lt;-5
+susp&lt;-rweibull(10, 1, 10)
+eta&lt;-weibayes(fail, susp, beta=1)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Gini</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Gini coefficient</h2>
+
+<h3>Description</h3>
+
+<p>Computes Gini coefficient of a given variable taking into account weights.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Gini(X, W = rep(1, length(X)), fast = TRUE, rounded.weights = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>is a data vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p>is a vector of weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fast</code></td>
+<td>
+<p>logical, if TRUE (default), Gini is calculated via matrix operations - fast but may cause memory allocation problems. If FALSE, Gini is calculated via vector operations - slower but with better memory allocation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rounded.weights</code></td>
+<td>
+<p>logical, may be run when fast=FALSE. If TRUE (default), Gini is calculated through alternative formula based on ordered X and integer weights. Choose it when dealing with memory allocation problems.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Gini coefficient is given by:
+</p>
+<p style="text-align: center;"><code class="reqn">G = \frac{ \sum_{i=1}^n \sum_{j=1}^n \mid x_{i} - x_{j} \mid}{2n^{2} \overline{x}}</code>
+</p>
+
+
+
+<h3>Value</h3>
+
+<p>The value of Gini coefficient.
+</p>
+
+
+<h3>References</h3>
+
+<p>Dixon P. M., Weiner, J., Mitchell-Olds, T., and Woodley, R.: (1987) Bootstrapping the Gini Coefficient of Inequality. Ecology , Volume 68 (5)
+</p>
+<p>Firebaugh G.: (1999) Empirics of World Income Inequality, American Journal of Sociology
+</p>
+<p>Deininger K.; Squire L.: (1996) A New Data Set Measuring Income Inequality, The World Bank Economic Review, Vol. 10, No. 3
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Compare weighted and unweighted result
+X=1:10
+W=1:10
+Gini(X)
+Gini(X,W)
+
+data(Tourism)
+#Gini coefficient for Total expenditure with sample weights
+X=Tourism$Total_expenditure
+W=Tourism$Sample_weight
+Gini(X,W)
+
+
+</code></pre>
+
+
+</div>

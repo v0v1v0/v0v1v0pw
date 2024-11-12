@@ -1,0 +1,242 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>binarizeCategoricalVariable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Turn a categorical variable into a set of binary indicators
+</h2>
+
+<h3>Description</h3>
+
+<p>Given a categorical variable, this function creates a set of indicator variables for the various possible
+sets of levels.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">binarizeCategoricalVariable(
+   x,
+   levelOrder = NULL,
+   ignore = NULL,
+   minCount = 3,
+   val1 = 0, val2 = 1,
+   includePairwise = TRUE,
+   includeLevelVsAll = FALSE,
+   dropFirstLevelVsAll = FALSE,
+   dropUninformative = TRUE,
+   namePrefix = "",
+   levelSep = NULL,
+   nameForAll = "all",
+   levelSep.pairwise = if (length(levelSep)==0) ".vs." else levelSep,
+   levelSep.vsAll = if (length(levelSep)==0) 
+                       (if (nameForAll=="") "" else ".vs.") else levelSep,
+   checkNames = FALSE,
+   includeLevelInformation = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>A vector with categorical values.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>levelOrder</code></td>
+<td>
+
+<p>Optional specification of the levels (unique values) of <code>x</code>. Defaults to sorted unique values of
+<code>x</code>, but can be used to only include a subset of the existing levels as well as to specify the order of
+the levels in the output variables.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ignore</code></td>
+<td>
+
+<p>Optional specification of levels of <code>x</code> that are to be ignored. Note that the levels are ignored only when
+deciding which variables to include in the output; the samples with these values of <code>x</code> will be included
+in "all" in indicators of level vs. all others.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minCount</code></td>
+<td>
+
+<p>Levels of <code>x</code> for which there are fewer than <code>minCount</code> elements will be ignored.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>val1</code></td>
+<td>
+
+<p>Value for the lower level in binary comparisons.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>val2</code></td>
+<td>
+
+<p>Value for the higher level in binary comparisons.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>includePairwise</code></td>
+<td>
+
+<p>Logical: should pairwise binary indicators be included? For each pair of levels, the indicator is <code>val1</code>
+for the lower level (earlier in <code>levelOrder</code>), <code>val2</code> for the higher level and <code>NA</code> otherwise.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>includeLevelVsAll</code></td>
+<td>
+
+<p>Logical: should binary indicators for each level be included? The indicator is <code>val2</code> where <code>x</code>
+equals the level and <code>val1</code> otherwise. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dropFirstLevelVsAll</code></td>
+<td>
+
+<p>Logical: should the column representing first level vs. all be dropped? This makes the resulting matrix of
+indicators usable for regression models. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dropUninformative</code></td>
+<td>
+
+<p>Logical: should uninformative (constant) columns be dropped?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>namePrefix</code></td>
+<td>
+
+<p>Prefix to be used in column names of the output.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nameForAll</code></td>
+<td>
+
+<p>When naming columns that represent a level vs. all others, <code>nameForAll</code> will be used to represent all
+others.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>levelSep</code></td>
+<td>
+
+<p>Separator for levels to be used in column names of the output. If <code>NULL</code>, pairwise and level vs. all indicators will
+use different level separators set by <code>levelSep.pairwise</code> and <code>levelSep.vsAll</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>levelSep.pairwise</code></td>
+<td>
+
+<p>Separator for levels to be used in column names for pairwise indicators in the output.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>levelSep.vsAll</code></td>
+<td>
+
+<p>Separator for levels to be used in column names for level vs. all indicators in the output.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checkNames</code></td>
+<td>
+
+<p>Logical: should the names of the output be made into syntactically correct R language names?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>includeLevelInformation</code></td>
+<td>
+
+<p>Logical: should information about which levels are represented by which columns be included in the attributes
+of the output?
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function creates two types of indicators. The first is one level (unique value) of <code>x</code> vs. all
+others, i.e., for a given level, the indicator is <code>val2</code> (usually 1) for all elements of <code>x</code> that
+equal the level, and <code>val1</code> (usually 0) 
+otherwise. Column names for these indicators are the concatenation of <code>namePrefix</code>, the level,
+<code>nameSep</code> and <code>nameForAll</code>. The level vs. all indicators are created for all levels that have at
+least <code>minCounts</code> samples, are present in <code>levelOrder</code> (if it is non-NULL) and are not included in
+<code>ignore</code>.
+</p>
+<p>The second type of indicator encodes binary comparisons. For each pair of levels (both with at least
+<code>minCount</code> samples), the indicator is <code>val2</code> (usually 1) for the higher level and <code>val1</code>
+(usually 0) for the lower level. The level order is given by <code>levelOrder</code> (which defaults to the sorted
+levels of <code>x</code>), assumed to be sorted in increasing order. All levels with at least <code>minCount</code>
+samples that are included in <code>levelOrder</code> and not included in <code>ignore</code> are included.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix containing the indicators variabels, one in each column. When <code>includeLevelInformation</code> is
+<code>TRUE</code>, the attribute <code>includedLevels</code> is a table with one column per output column and two rows,
+giving the two levels (unique values of x) represented by the column.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Variations and wrappers for this function:
+<code>binarizeCategoricalColumns</code> for binarizing several columns of a matrix or data frame
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2);
+x = sample(c("A", "B", "C"), 15, replace = TRUE);
+out = binarizeCategoricalVariable(x, includePairwise = TRUE, includeLevelVsAll = TRUE);
+data.frame(x, out);
+attr(out, "includedLevels")
+# A different naming for level vs. all columns
+binarizeCategoricalVariable(x, includeLevelVsAll = TRUE, nameForAll = "");
+</code></pre>
+
+
+</div>

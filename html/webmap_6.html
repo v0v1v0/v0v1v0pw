@@ -1,0 +1,174 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>make_map</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a web map using TNM services</h2>
+
+<h3>Description</h3>
+
+<p>Create a <a href="https://leafletjs.com/">Leaflet</a> map widget that includes base maps offered through
+<a href="https://www.usgs.gov/programs/national-geospatial-program/national-map">The National Map</a> (TNM)
+cached <a href="https://apps.nationalmap.gov/services">service endpoints</a>.
+Information about the content of these base maps can be found within the
+<a href="https://apps.nationalmap.gov/help/3.0%20TNM%20Base%20Maps.htm">TNM Base Maps</a> document.
+TNM content is limited to the United States and territories.
+The map widget can be rendered on HTML pages generated from R Markdown, Shiny, or other applications.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">make_map(
+  maps,
+  ...,
+  protocol = c("WMTS", "WMS"),
+  hydro = FALSE,
+  collapse = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>maps</code></td>
+<td>
+<p>'character' vector.
+TNM base maps to include in the web map. Choices include
+"Topo", "Imagery", "Imagery Topo", "Hydrography", "Shaded Relief", and "Blank".
+See 'Details' section for a description of each base map.
+By default, all base maps are included.
+The one exception is the "Blank" map,
+which is only accessible using a Web Map Service (WMS),
+see <code>protocol</code> argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments to be passed to the <code>leaflet</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>protocol</code></td>
+<td>
+<p>'character' string.
+Standard protocol for serving pre-rendered georeferenced TNM map tiles.
+Select "WMTS" for the Web Map Tile Service (the default) and "WMS" for the Web Map Service.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hydro</code></td>
+<td>
+<p>'logical' flag.
+Whether to show or hide (the default) the "Hydrography" overlay base map.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>collapse</code></td>
+<td>
+<p>'logical' flag.
+Whether the layers control should be rendered as an icon that expands when hovered over.
+Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Composite base maps include:
+</p>
+
+<ul>
+<li>
+<p> "Topo" a tile base map that combines the most current TNM data,
+and other public-domain data, into a multi-scale topographic reference map.
+Data includes boundaries, geographic names, transportation,
+contours, hydrography, land cover, shaded relief, and bathymetry.<br><img src="../help/figures/basemap-topo.png" alt="basemap-topo.png"></p>
+</li>
+<li>
+<p> "Imagery" is a tile base map of orthoimagery in TNM.
+Orthoimagery data typically are high resolution aerial images that combine the
+visual attributes of an aerial photograph with the spatial accuracy and reliability of a planimetric map.
+USGS digital orthoimage resolution may vary from 6 inches to 1 meter.<br><img src="../help/figures/basemap-imagery.png" alt="basemap-imagery.png"></p>
+</li>
+<li>
+<p> "Imagery Topo" is a tile base map of orthoimagery in TNM as a backdrop,
+and a limited selection of topographic data
+(boundaries, names, transportation, contours, and hydrography).<br><img src="../help/figures/basemap-imagery-topo.png" alt="basemap-imagery-topo.png"></p>
+</li>
+<li>
+<p> "Hydrography" is a overlay of cartographic representation of the
+<a href="https://www.usgs.gov/national-hydrography/national-hydrography-dataset">National Hydrography Dataset</a> (NHD).
+The NHD is a comprehensive set of digital geospatial data that encodes information about naturally occurring
+and constructed bodies of surface water, paths through which water flows, related features such as
+stream gages and dams, and additional hydrologic information.<br><img src="../help/figures/basemap-hydrography.png" alt="basemap-hydrography.png"></p>
+</li>
+<li>
+<p> "Shaded Relief" is a tile base map of terrain representation in the form of hillshades created from the
+<a href="https://www.usgs.gov/3d-elevation-program">3D Elevation Program</a> (3DEP). 3DEP maintains a seamless dataset
+of best available raster elevation data, in the form of digital elevation models (DEMs) for the conterminous
+United States, Alaska, Hawaii, and Territorial Islands of the United States.<br><img src="../help/figures/basemap-shaded-relief.png" alt="basemap-shaded-relief.png"></p>
+</li>
+<li>
+<p> "OSM" is the <a href="https://www.openstreetmap.org/about">OpenStreetMap</a> tile base map.<br><img src="../help/figures/basemap-osm.png" alt="basemap-osm.png"></p>
+</li>
+<li>
+<p> "Blank" consists of ocean tints to give the outline of land cover as an empty base map.<br><img src="../help/figures/basemap-blank.png" alt="basemap-blank.png"></p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>An object of class 'leaflet', a hypertext markup language (HTML) map widget.
+See example for instructions on how to add additional graphic layers
+(such as points, lines, and polygons) to the map widget.
+Graphic layers added to the web map must be in latitude and longitude using WGS 84
+(also known as <a href="https://epsg.io/4326">EPSG:4326</a>).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>J.C. Fisher, U.S. Geological Survey, Idaho Water Science Center
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Create map widget
+map &lt;- make_map()
+
+# Print map widget
+map
+
+# Print map with markers
+pts &lt;- rbind(
+  c(-112.049, 43.517),
+  c(-122.171, 37.456),
+  c( -77.367, 38.947),
+  c(-149.803, 61.187),
+  c( -80.248, 26.080)
+)
+leaflet::addMarkers(map,
+  lng = pts[, 1],
+  lat = pts[, 2]
+)
+
+# Print map of satellite imagery with a rectangle in the vicinity of UCLA
+make_map(
+  maps = "Imagery",
+  collapse = TRUE
+) |&gt;
+  leaflet::addRectangles(
+    lng1 = -118.456,
+    lat1 =   34.078,
+    lng2 = -118.436,
+    lat2 =   34.062,
+    fillColor = "transparent"
+  )
+</code></pre>
+
+
+</div>

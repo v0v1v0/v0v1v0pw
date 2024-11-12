@@ -1,0 +1,152 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wp.crt3arm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Statistical Power Analysis for Cluster Randomized Trials with 3 Arms</h2>
+
+<h3>Description</h3>
+
+<p>Cluster randomized trials (CRT) are a type of multilevel design for the situation when the entire cluster is randomly assigned to either a treatment arm or a control arm <cite>(Liu, 2013)</cite>.
+The data from CRT can be analyzed in a two-level hierarchical linear model, where the indicator variable for treatment assignment is included in second level. If a study contains multiple treatments, then multiple indicators will be used.
+This function is for designs with 3 arms (i.e., two treatments and a control).
+Details leading to power calculation can be found in <cite>Raudenbush (1997)</cite> and <cite>Liu (2013)</cite>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wp.crt3arm(n = NULL, f = NULL, J = NULL, icc = NULL, power = NULL,
+  alpha = 0.05, alternative = c("two.sided", "one.sided"),
+  type = c("main", "treatment", "omnibus"), interval = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Sample size. It is the number of individuals within each cluster.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f</code></td>
+<td>
+<p>Effect size. It specifies one of the three types of effects:
+the main effect of treatment, the mean difference between the treatment clusters, and the control clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>Number of clusters / sides. It tells how many clusters are considered in the study design. At least two clusters are required.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>icc</code></td>
+<td>
+<p>Intra-class correlation. ICC is calculated as the ratio of between-cluster variance to the total variance.
+It quantifies the degree to which two randomly drawn observations within a cluster are correlated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>Statistical power.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>significance level chosed for the test. It equals 0.05 by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alternative</code></td>
+<td>
+<p>Type of the alternative hypothesis (<code>"two.sided"</code> or <code>"one.sided"</code>). The default is "two.sided". The option "one.sided" can be either "less" or "greater".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Type of effect (<code>"main"</code> or <code>"treatment"</code> or <code>"omnibus"</code>) with "main" as default.
+The type "main" tests the difference between the average treatment arms and the control arm;
+Type "treatment" tests the difference between the two treatment arms;
+and Type "omnibus" tests whether the tree arms are all equivalent.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interval</code></td>
+<td>
+<p>A vector containing the end-points of the interval to be searched for the root.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of the power analysis.
+</p>
+
+
+<h3>References</h3>
+
+<p>Liu, X. S. (2013). Statistical power analysis for the social and behavioral sciences: basic and advanced techniques. Routledge.
+</p>
+<p>Raudenbush, S. W. (1997). Statistical analysis and optimal design for cluster randomized trials. Psychological Methods, 2(2), 173.
+</p>
+<p>Zhang, Z., &amp; Yuan, K.-H. (2018). Practical Statistical Power Analysis Using Webpower and R (Eds). Granger, IN: ISDSA Press.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#To calculate the statistical power given sample size and effect size:
+wp.crt3arm(f = 0.5, n = 20, J = 10, icc = 0.1, alpha = 0.05, power = NULL)
+#  Cluster randomized trials with 3 arms
+#
+#     J  n   f icc     power alpha
+#    10 20 0.5 0.1 0.3940027  0.05
+#
+#  NOTE: n is the number of subjects per cluster.
+#  URL: http://psychstat.org/crt3arm
+
+#To generate a power curve given a sequence of sample sizes:
+res &lt;- wp.crt3arm(f = 0.5, n = seq(20, 100, 10), J = 10,
+                       icc = 0.1, alpha = 0.05, power = NULL)
+res
+#  Cluster randomized trials with 3 arms
+#
+#     J   n   f icc     power alpha
+#    10  20 0.5 0.1 0.3940027  0.05
+#    10  30 0.5 0.1 0.4304055  0.05
+#    10  40 0.5 0.1 0.4513376  0.05
+#    10  50 0.5 0.1 0.4649131  0.05
+#    10  60 0.5 0.1 0.4744248  0.05
+#    10  70 0.5 0.1 0.4814577  0.05
+#    10  80 0.5 0.1 0.4868682  0.05
+#    10  90 0.5 0.1 0.4911592  0.05
+#    10 100 0.5 0.1 0.4946454  0.05
+#
+#  NOTE: n is the number of subjects per cluster.
+#  URL: http://psychstat.org/crt3arm
+
+#To plot the power curve:
+plot(res)
+
+#To calculate the required sample size given power and effect size:
+wp.crt3arm(f = 0.8, n = NULL, J = 10, icc = 0.1, alpha = 0.05, power = 0.8)
+#  Cluster randomized trials with 3 arms
+#
+#     J        n   f icc power alpha
+#    10 27.25145 0.8 0.1   0.8  0.05
+#
+#  NOTE: n is the number of subjects per cluster.
+#  URL: http://psychstat.org/crt3arm
+</code></pre>
+
+
+</div>

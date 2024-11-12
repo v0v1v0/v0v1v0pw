@@ -1,0 +1,351 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>clic</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>CL1 INFORMATION CRITERIA</h2>
+
+<h3>Description</h3>
+
+<p>Composite likelihood (CL1) information criteria. </p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">clic1dePar(nbcl,r,b,gam,xdat,id,tvec,corstr,WtScMat,link,mvncmp)
+clic(nbcl,r,b,gam,xdat,id,tvec,corstr,WtScMat,link,mvncmp)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>nbcl</code></td>
+<td>
+<p>The negative value of the sum of bivariate marginal log-likelihoods at
+CL1 estimates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>The CL1 estimates of the latent correlations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+<p>The CL1 estimates of the regression coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gam</code></td>
+<td>
+<p>The CL1 estimates of the cutpoints.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xdat</code></td>
+<td>
+<p><code class="reqn">(\mathbf{x}_1 , \mathbf{x}_2 , \ldots ,
+  \mathbf{x}_n )^\top</code>, where the matrix <code class="reqn">\mathbf{x}_i,\,i=1,\ldots,n</code> for a given unit will
+depend on the  times of observation for that unit (<code class="reqn">j_i</code>) and will have
+number of rows <code class="reqn">j_i</code>, each row corresponding to one of the <code class="reqn">j_i</code> elements
+of <code class="reqn">y_i</code> and <code class="reqn">p</code> columns where <code class="reqn">p</code> is the number of covariates. This xdat matrix is
+of dimension <code class="reqn">(N\times p),</code> where <code class="reqn">N =\sum_{i=1}^n j_i</code> is the total
+number of observations from all units.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>An index for individuals or clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tvec</code></td>
+<td>
+<p>A vector with the time indicator of individuals or clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>WtScMat</code></td>
+<td>
+<p>A list containing the following components.
+omega: The array with the <code class="reqn">\Omega_i,\,i=1,\ldots,n</code> matrices;
+delta: The array with the <code class="reqn">\Delta_i,\,i=1,\ldots,n</code> matrices;
+X: The array with the <code class="reqn">X_i,\,i=1,\ldots,n</code> matrices.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corstr</code></td>
+<td>
+<p>Indicates the latent correlation structure of normal copula.
+Choices are “exch”, “ar”, and “unstr” for exchangeable, ar(1)
+and unstructured correlation structure, respectively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+<p>The link function. 
+Choices are  “logit” for 
+the logit link function, and “probit” for 
+the probit link function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mvncmp</code></td>
+<td>
+<p>The method of computation of the MVN rectangle probabilities. 
+Choices are  1 for <code>mvnapp</code> (faster), and 2 for 
+<code>pmvnorm</code> (more accurate).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>First, consider the sum of univariate log-likelihoods 
+</p>
+<p style="text-align: center;"><code class="reqn">L_1= \sum_{i=1}^n\sum_{j=1}^d\, \log f_1(y_{ij};\nu_{ij},\boldsymbol{\gamma})=\sum_{i=1}^n\sum_{j=1}^d\,
+ \ell_1(\nu_{ij},\boldsymbol{\gamma},\, y_{ij}),
+</code>
+</p>
+
+<p>and then the sum of bivariate log-likelihoods
+</p>
+<p style="text-align: center;"><code class="reqn">L_2=\sum_{i=1}^{n}\sum_{j&lt;k}
+\log{f_2(y_{ij},y_{ik};\nu_{ij},\nu_{ik},\boldsymbol{\gamma},\rho_{jk})}=\sum_{i=1}^{n}\sum_{j&lt;k}\ell_2(\nu_{ij},\nu_{ik},\boldsymbol{\gamma},\rho_{jk};y_{ij},y_{ik}),</code>
+</p>
+
+<p>where <code class="reqn">\ell_2(\cdot)=\log f_2(\cdot)</code> and
+</p>
+<p style="text-align: center;"><code class="reqn">
+f_2(y_{ij},y_{ik};\nu_{ij},\nu_{ik},\boldsymbol{\gamma},\rho_{jk})=\int_{\Phi^{-1}[F_1(y_{ij}-1;\nu_{ij},\boldsymbol{\gamma})]}^{\Phi^{-1}[F_1(y_{ij};\nu_{ij},\boldsymbol{\gamma})]}
+\int_{\Phi^{-1}[F_1(y_{ik}-1;\nu_{ik}),\boldsymbol{\gamma}]}^{\Phi^{-1}[F_1(y_{ik};\nu_{ik},\boldsymbol{\gamma})]}  \phi_2(z_j,z_d;\rho_{jk}) dz_j dz_k;
+</code>
+</p>
+ 
+<p><code class="reqn">\phi_2(\cdot;\rho)</code> denotes the standard bivariate normal density  with correlation
+<code class="reqn">\rho</code>.
+</p>
+<p>Let <code class="reqn">\mathbf{a}^\top=(\boldsymbol{\beta}^\top,\boldsymbol{\gamma}^\top)</code> be the
+column vector of all  <code class="reqn">r=p+q</code> univariate parameters. Differentiating <code class="reqn">L_1</code> with respect to <code class="reqn">\mathbf{a}</code> leads to the independent estimating equations or univariate composite score functions:
+</p>
+<p style="text-align: center;"><code class="reqn">
+\mathbf{g}_1=\mathbf{g}_1(\mathbf{a})=
+\frac{\partial L_1}{\partial \mathbf{a}}=  
+\sum_{i=1}^n\mathbf{X}_i^\top\mathbf{s}_i^{(1)}(\mathbf{a})=\bf 0,
+</code>
+</p>
+
+<p>Differentiating <code class="reqn">L_2</code> with respect to <code class="reqn">\mathbf{R}=\bigl(\rho_{jk},1\leq j&lt;k\leq d\bigr)</code> 
+leads to the bivariate composite score functions (Zhao and Joe, 2005):
+</p>
+<p style="text-align: center;"><code class="reqn">
+\mathbf{g}_2=\frac{\partial L_2}{\partial \mathbf{R}}= \sum_{i=1}^{n}\mathbf{s}_i^{(2)}(\mathbf{a},\mathbf{R})= \sum_{i=1}^n\Bigl(\mathbf{s}_{i,jk}^{(2)}(\mathbf{a},\rho_{jk}),1\leq j&lt;k\leq d\Bigr)=\mathbf{0},
+</code>
+</p>
+
+<p>where <code class="reqn">\mathbf{s}_i^{(2)}(\mathbf{a},\mathbf{R})=\frac{\partial\sum_{j&lt;k}\ell_2(\nu_{ij},\nu_{ik},\boldsymbol{\gamma},\rho_{jk};y_{ij},y_{ik})}{\partial \mathbf{R}}</code> and  <code class="reqn">\mathbf{s}_{i,jk}^{(2)}(\boldsymbol{\gamma},\rho_{jk})=\frac{\partial \ell_2(\nu_{ij},\nu_{ik},\boldsymbol{\gamma},\rho_{jk};y_{ij},y_{ik})}{\partial \rho_{jk}}</code>.
+The CL1 estimates <code class="reqn">\widetilde{\mathbf{a}}</code> and <code class="reqn">\widetilde{\mathbf{R}}</code>  of the discretized MVN model are obtained
+by solving the above CL1 estimating functions.
+</p>
+<p>The asymptotic covariance matrix for the estimator that solves them, also known as the inverse Godambe (Godambe, 1991) information matrix, is
+</p>
+<p style="text-align: center;"><code class="reqn">
+\mathbf{V}=(-\mathbf{H}_\mathbf{g})^{-1}\mathbf{J}_\mathbf{g}(-\mathbf{H}_\mathbf{g}^\top)^{-1},
+</code>
+</p>
+
+<p>where <code class="reqn">\mathbf{g}=(\mathbf{g}_1,\mathbf{g}_2)^\top</code>. First set <code class="reqn">\boldsymbol{\theta}=(\mathbf{a},\mathbf{R})^\top</code>,  then
+</p>
+<p style="text-align: center;"><code class="reqn">
+-\mathbf{H}_\mathbf{g}=E\Bigl(\frac{\partial \mathbf{g}}{\partial\boldsymbol{\theta}}\Bigr)=
+\left[\begin{array}{cc}
+E\Bigl(\frac{\partial \mathbf{g}_1}{\partial\mathbf{a}}\Bigr)
+&amp; E\Bigl(\frac{\partial \mathbf{g}_1}{\partial\mathbf{R}}\Bigr)\\
+E\Bigl(\frac{\partial \mathbf{g}_2}{\partial\mathbf{a}}\Bigr) &amp;
+E\Bigl(\frac{\partial \mathbf{g}_2}{\partial\mathbf{R}}\Bigr)
+\end{array}\right]=
+\left[\begin{array}{cc}
+-\mathbf{H}_{\mathbf{g}_1}&amp;\mathbf{0}\\
+-\mathbf{H}_{\mathbf{g}_{2,1}}&amp;-\mathbf{H}_{\mathbf{g}_2}
+\end{array}\right],
+</code>
+</p>
+
+<p>where <code class="reqn">-\mathbf{H}_{\mathbf{g}_1}=\sum_i^n\mathbf{X}_i^\top\boldsymbol{\Delta}_i^{(1)}
+\mathbf{X}_i</code>,
+<code class="reqn">-\mathbf{H}_{\mathbf{g}_{2,1}}=\sum_i^n\boldsymbol{\Delta}_i^{(2,1)}\mathbf{X}_i</code>,
+and
+<code class="reqn">-\mathbf{H}_{\mathbf{g}_2}=\sum_i^n\boldsymbol{\Delta}_i^{(2,2)}</code>.
+</p>
+<p>The covariance matrix <code class="reqn">\mathbf{J}_\mathbf{g}</code> of the composite score functions <code class="reqn">\mathbf{g}</code> is given as below
+</p>
+<p style="text-align: center;"><code class="reqn">
+\mathbf{J}_\mathbf{g}=\mbox{Cov}(\mathbf{g})=
+\left[\begin{array}{cc}
+\mbox{Cov}(\mathbf{g}_1) &amp; \mbox{Cov}(\mathbf{g}_1,\mathbf{g}_2)\\
+\mbox{Cov}(\mathbf{g}_2,\mathbf{g}_1) &amp; \mbox{Cov}(\mathbf{g}_2)
+\end{array}\right]=
+\left[\begin{array}{cc}\mathbf{J}_\mathbf{g}^{(1)}&amp; \mathbf{J}_\mathbf{g}^{(1,2)}\\
+\mathbf{J}_\mathbf{g}^{(2,1)}&amp; \mathbf{J}_\mathbf{g}^{(2)}\end{array}\right]=
+\sum_i\left[\begin{array}{cc}
+\mathbf{X}_i^\top\boldsymbol{\Omega}_i^{(1)}
+\mathbf{X}_i &amp; \mathbf{X}_i^\top\boldsymbol{\Omega}_i^{(1,2)}\\
+\boldsymbol{\Omega}_i^{(2,1)}\mathbf{X}_i&amp; \boldsymbol{\Omega}_i^{(2)}\end{array}\right],
+</code>
+</p>
+
+<p>where
+</p>
+<p style="text-align: center;"><code class="reqn">\left[\begin{array}{cc}
+\boldsymbol{\Omega}_i^{(1)}&amp; \boldsymbol{\Omega}_i^{(1,2)}\\
+\boldsymbol{\Omega}_i^{(2,1)}&amp; \boldsymbol{\Omega}_i^{(2)}
+\end{array}\right]=
+\left[\begin{array}{cc}
+\mbox{Cov}\Bigl(\mathbf{s}_i^{(1)}(\mathbf{a})\Bigr) &amp; 
+\mbox{Cov}\Bigl(\mathbf{s}_i^{(1)}(\mathbf{a}),
+\mathbf{s}_i^{(2)}(\mathbf{a},\mathbf{R})\Bigr)\\
+\mbox{Cov}\Bigl(\mathbf{s}_i^{(2)}(\mathbf{a},\mathbf{R}),
+\mathbf{s}_i^{(1)}(\mathbf{a})\Bigr) &amp; \mbox{Cov}\Bigl(\mathbf{s}_i^{(2)}(\mathbf{a},\mathbf{R})\Bigr)
+\end{array}\right].
+</code>
+</p>
+
+<p>To this end, the composite AIC (Varin and Vidoni, 2005) and  BIC (Gao and Song, 2011)  criteria have the forms:
+</p>
+<p style="text-align: center;"><code class="reqn">
+\mbox{CL1AIC} =  -2L_2 + 2\mbox{tr}\Bigl(\mathbf{J}_\mathbf{g}\mathbf{H}_\mathbf{g}^{-1}\Bigr),
+</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">
+\mbox{CL1BIC} =-2L_2+\log(n)\mbox{tr}\Bigl(\mathbf{J}_\mathbf{g}\mathbf{H}_\mathbf{g}^{-1}\Bigr).
+</code>
+</p>
+
+
+
+<h3>Value</h3>
+
+<p>A list containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>AIC</code></td>
+<td>
+<p>The CL1AIC.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>BIC</code></td>
+<td>
+<p>The CL1BIC.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Aristidis K. Nikoloulopoulos <a href="mailto:A.Nikoloulopoulos@uea.ac.uk">A.Nikoloulopoulos@uea.ac.uk</a><br></p>
+
+
+<h3>References</h3>
+
+<p>Gao, X. and Song, P.X.K. (2011).
+Composite likelihood EM algorithm with applications to
+multivariate hidden Markov model.
+<em>Statistica Sinica</em> <b>21</b>, 165–185.
+</p>
+<p>Godambe, V. P. (1991)
+<em>Estimating Functions</em>.
+Oxford: Oxford University Press
+</p>
+<p>Nikoloulopoulos, A.K., Joe, H. and Chaganty, N.R. (2011)
+Weighted scores method for regression models with dependent data.
+<em>Biostatistics</em>, <b>12</b>, 653–665. doi: <a href="https://doi.org/10.1093/biostatistics/kxr005">10.1093/biostatistics/kxr005</a>.
+</p>
+<p>Nikoloulopoulos, A.K. (2016)
+Correlation structure and variable selection in generalized estimating equations via composite likelihood information criteria.
+<em>Statistics in Medicine</em>, <b>35</b>, 2377–2390. doi: <a href="https://doi.org/10.1002/sim.6871">10.1002/sim.6871</a>.
+</p>
+<p>Nikoloulopoulos, A.K. (2017)
+Weighted scores method for longitudinal  ordinal data.
+<em>Arxiv e-prints</em>, &lt;arXiv:1510.07376&gt;. <a href="https://arxiv.org/abs/1510.07376">https://arxiv.org/abs/1510.07376</a>.
+</p>
+<p>Varin, C. and Vidoni, P. (2005).
+A note on composite likelihood inference and model selection.
+<em>Biometrika</em> <b>92</b>, 519–528.
+</p>
+<p>Zhao, Y. and Joe, H. (2005)
+Composite likelihood estimation in multivariate data analysis.
+<em>The Canadian Journal of Statistics</em>,  <b>33</b>, 335–356.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>solvewtsc</code>,
+<code>wtsc.wrapper</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+  ################################################################################
+  #                           Binary regression 
+  ################################################################################
+  ################################################################################
+  #                      read and set up the data set
+  ################################################################################
+  data(childvisit)
+  # covariates
+  season1&lt;-childvisit$q
+  season1[season1&gt;1]&lt;-0
+  xdat&lt;-cbind(childvisit$sex,childvisit$age,childvisit$m,season1)
+  # response
+  ydat&lt;-childvisit$hosp
+  ydat[ydat&gt;0]=1
+  ydat=2-ydat
+  #id
+  id&lt;-childvisit$id
+  #time
+  tvec&lt;-childvisit$q
+  ################################################################################
+  #                      select the link
+  ################################################################################
+  link="logit"
+  ################################################################################
+  #                      select the  correlation structure
+  ################################################################################
+  corstr="exch"
+  ################################################################################
+  #                      perform CL1 estimation
+  ################################################################################
+  i.est&lt;-iee.ord(xdat,ydat,link)
+  cat("\niest: IEE estimates\n")
+  print(c(i.est$reg,i.est$gam))
+  est.rho&lt;-cl1.ord(b=i.est$reg,gam=i.est$gam,xdat,ydat,id,tvec,corstr,link)
+  cat("\nest.rho: CL1 estimates\n")
+  print(est.rho$e)
+  cat("\nest.rho: negative CL1 log-likelhood\n")
+  print(est.rho$m)
+  ################################################################################
+  #                      obtain the fixed weight matrices
+  ################################################################################
+  WtScMat&lt;-weightMat.ord(b=i.est$reg,gam=i.est$gam,rh=0.1961,xdat,ydat,id,
+                         tvec,corstr,link)
+  ################################################################################
+  #                      obtain the CL1 information criteria
+  ################################################################################
+  out&lt;-clic1dePar(nbcl=est.rho$m,r=est.rho$e,i.est$r,i.est$g,xdat,id,tvec,corstr,WtScMat,link,1)
+
+</code></pre>
+
+
+</div>

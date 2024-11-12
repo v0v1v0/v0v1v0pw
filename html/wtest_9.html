@@ -1,0 +1,65 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>odds.ratio</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Odds Ratio</h2>
+
+<h3>Description</h3>
+
+<p>Calculate odds ratio for a single SNP or a pair of SNPs. Single marker odds ratio is computed by contigency table as the odds of disease at minor allele vs the odds of diseases at major allele. Odds ratio of a pair of SNPs is calculated by the Logistic Regression.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">odds.ratio(data, y, w.order, which.marker)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a data frame or matrix containing genotypes in the columns. Genotypes should be coded as (0, 1, 2) or (0, 1), according to minor allele count.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>binary values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.order</code></td>
+<td>
+<p>a numeric number taking values 1 or 2. If w.order = 1, odds ratio of main effect is calculated. If w.order = 2, odds ratio of pairwise interaction is calculated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>which.marker</code></td>
+<td>
+<p>a numeric vector, when w.order = 1, a single value indicating the column index of the variable to calculate; when w.order = 2, a vector indicating the column index of a SNP-pair to calculate.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The odds ratio of a SNP or a SNP-pair.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(diabetes.geno)
+data(phenotype1)
+y &lt;- as.numeric(phenotype1)
+OR.snp4.snp8 &lt;- odds.ratio(diabetes.geno, y, w.order=2, which.marker = c(4,8))
+OR.snp4 &lt;- odds.ratio(diabetes.geno, y, w.order = 1, which.marker = 4)
+</code></pre>
+
+
+</div>

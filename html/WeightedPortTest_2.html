@@ -1,0 +1,179 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Weighted.Box.test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Weighted Portmanteau Test
+
+</h2>
+
+<h3>Description</h3>
+
+<p>Weighted portmanteau tests for testing the null hypothesis of adequate ARMA fit and/or for detecting nonlinear processes. Written in the style of <code>Box.test()</code> and is capable of performing the traditional Box Pierce (1970), Ljung Box (1978) or Monti (1994) tests.
+
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Weighted.Box.test(x, lag = 1, 
+                 type = c("Box-Pierce", "Ljung-Box", "Monti"),
+                 fitdf = 0, sqrd.res = FALSE,
+                 log.sqrd.res = FALSE, abs.res = FALSE,
+                 weighted = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a numeric vector or univariate time series, or residuals of a fitted time series
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lag</code></td>
+<td>
+<p>the statistic will be based on <code>lag</code> autocorrelation coefficients. lag=1 by default
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>test to be performed, partial matching is used. "Box-Pierce" by default
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitdf</code></td>
+<td>
+<p>number of degrees of freedom to be subtracted if <code>x</code> is a series of residuals, set at 0 by default
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sqrd.res</code></td>
+<td>
+<p>A flag, should the series/residuals be squared to detect for nonlinear effects?, FALSE by default
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log.sqrd.res</code></td>
+<td>
+<p>A flag, should a log of the squared series/residuals be used to detect for nonlinear effects? FALSE by default
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abs.res</code></td>
+<td>
+<p>A flag, should the absolute series or residuals be used to detect for nonlinear effects? FALSE by default
+
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weighted</code></td>
+<td>
+<p>A flag determining if the weighting scheme should be utilized. TRUE by default. If set to FALSE, the traditional test is performed with no weights
+
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>These test are traditionally applied to a time series for detecting autocorrelation, or to the residuals of an <code>ARMA(p,q)</code> fit to check the adequacy of that fit or to detect nonlinear (i.e. GARCH) effects in the time/residual series. The weighting scheme utilized here is asymptotically similar to the results found in Pena and Rodriguez (2002) and Mahdi and McLeod (2012) (i.e. the <code>portes</code> package).
+
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with class "<code>htest</code>" containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>statistic</code></td>
+<td>
+<p>the value of the test statistic</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameter</code></td>
+<td>
+<p>The approximate shape and scale parameters for the weighted statistic or degrees of freedom of the chi-squared distribution if the weighted flag is set to false.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value</code></td>
+<td>
+<p>The p-value of the test</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>a character string indicating which type of test was performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data.name</code></td>
+<td>
+<p>a character string giving the name of the data</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>Like the <code>Box.test()</code> function, missing values are not handled
+
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Thomas J. Fisher
+
+</p>
+
+
+<h3>References</h3>
+
+<p>Box, G. E. P. and Pierce, D. A. (1970), Distribution of residual correlations in autoregressive-integrated moving average time series models. Journal of the American Statistical Association, 65, 1509-1526.
+</p>
+<p>Fisher, T. J. and Gallagher, C. M. (2012), New Weighted Portmanteau Statistics for Time Series Goodness-of-Fit Testing. Journal of the American Statistical Association, 107(498), 777-787.
+</p>
+<p>Ljung, G. M. and Box, G. E. P. (1978), On a measure of lack of fit in time series models. Biometrika 65, 297-303.
+</p>
+<p>Mahdi, E. and McLeod, A. I. (2012), Improved multivariate portmanteau test. Journal of Time Series Analysis 65(2), 297-303.
+</p>
+<p>Monti, A. C. (1994), A proposal for a residual autocorrelation test in linear models. Biometrika 81(4), 776-780.
+</p>
+<p>Pena, D. and Rodriguez, J. (2002) A powerful portmanteau test of lack of fit for time series. Journal of the American Statistical Association 97(458), 601-610.
+
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(1)
+x &lt;- rnorm(100);
+Weighted.Box.test(x, lag=10, type="Ljung");
+Weighted.Box.test(x, lag=10, type="Ljung", sqrd.res=TRUE);
+</code></pre>
+
+
+</div>

@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read.dsm.ucs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Load Raw DSM Data from Disk Files in UCS Export Format (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>This function loads raw DSM data – a cooccurrence frequency matrix and tables of marginal frequencies – in <b>UCS</b> export format. The data are read from a directory containing several text files with predefined names, which can optionally be compressed (see ‘File Format’ below for details).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+read.dsm.ucs(filename, encoding = getOption("encoding"), verbose = FALSE)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+
+<p>the name of a directory containing files with the raw DSM data.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>encoding</code></td>
+<td>
+
+<p>character encoding of the input files, which will automatically be converted to R's internal representation if possible.  See ‘Encoding’ in <code>file</code> for details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+
+<p>if <code>TRUE</code>, a few progress and information messages are shown
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class <code>dsm</code> containing a dense or sparse DSM.
+</p>
+<p>Note that the information tables for target terms (field <code>rows</code>) and feature terms (field <code>cols</code>) include the correct marginal frequencies from the UCS export files.  Nonzero counts for rows are and columns are added automatically unless they are already present in the disk files.  Additional fields from the information tables as well as all global variables are preserved with their original names.
+</p>
+
+
+<h3>File Format</h3>
+
+<p>The UCS export format is a directory containing the following files with the specified names:
+</p>
+
+<ul>
+<li> <p>‘<span class="file">M</span>’ <strong>or</strong> ‘<span class="file">M.mtx</span>’
+</p>
+<p>cooccurrence matrix (dense, plain text) or sparse matrix (MatrixMarket format)
+</p>
+</li>
+<li> <p>‘<span class="file">rows.tbl</span>’
+</p>
+<p>row information (labels <code>term</code>, marginal frequencies <code>f</code>)
+</p>
+</li>
+<li> <p>‘<span class="file">cols.tbl</span>’
+</p>
+<p>column information (labels <code>term</code>, marginal frequencies <code>f</code>)
+</p>
+</li>
+<li> <p>‘<span class="file">globals.tbl</span>’
+</p>
+<p>table with single row containing global variables; must include variable <code>N</code> specifying sample size
+</p>
+</li>
+</ul>
+<p>Each individual file may be compressed with an additional filename extension <code>.gz</code>, <code>.bz2</code> or <code>.xz</code>; <code>read.dsm.ucs</code> automatically decompresses such files when loading them.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+<h3>References</h3>
+
+<p>The UCS toolkit is a software package for collecting and manipulating co-occurrence data available from <a href="http://www.collocations.de/software.html">http://www.collocations.de/software.html</a>.
+</p>
+<p>UCS relies on compressed text files as its main storage format.  They can be exported as a DSM with <code>ucs-tool export-dsm-matrix</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dsm</code>, <code>read.dsm.triplet</code>
+</p>
+
+
+</div>

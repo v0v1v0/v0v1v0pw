@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>eofNum</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot EOF percent variance</h2>
+
+<h3>Description</h3>
+
+<p>Plots the variances associated with empirical orthogonal functions (EOF).
+Useful for deciding how many EOFs to retain for rotation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">eofNum(x, n = nrow(x), scale. = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a data frame or matrix, with no missing values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>effective sample size</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.</code></td>
+<td>
+<p>logical indicating whether the (centered) variables should be
+scaled to have unit variance</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Calculates the eigenvalues from an EOF analysis, as described in
+<code>eof</code>. The eigenvalues are plotted against eigenvalue number
+(sometimes called a “scree plot”), and the cumulative variance as %
+of total is plotted over each eigenvalue. The approximate 0.95 confidence
+limits are depicted for each eigenvalue using North et al.'s (1982)
+rule-of-thumb, which ignores any autocorrelation in the data. If the
+autocorrelation structure is assessed separately and can be expressed in
+terms of effective sample size (e.g., Thiebaux and Zwiers 1984), then
+<code>n</code> can be set equal to this number.
+</p>
+<p>There is no universal rule for deciding how many of the EOFs should be
+retained for rotation (Hannachi et al. 2007). In practice, the number is
+chosen by requiring a minimum cumulative variance, looking for a sharp break
+in the spectrum, requiring that confidence limits not overlap, various Monte
+Carlo methods, or many other techniques. The plot produced here enables the
+first three methods.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A plot of the eigenvectors.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alan Jassby, James Cloern
+</p>
+
+
+<h3>References</h3>
+
+<p>Hannachi, A., Jolliffe, I.T., and Stephenson, D.B. (2007)
+Empirical orthogonal functions and related techniques in atmospheric
+science: A review. <em>International Journal of Climatology</em> <b>27,</b>
+1119–1152.
+</p>
+<p>North, G., Bell, T., Cahalan, R., and Moeng, F. (1982) Sampling errors in
+the estimation of empirical orthogonal functions. <em>Monthly Weather
+Review</em> <b>110,</b> 699–706.
+</p>
+<p>Thiebaux H.J. and Zwiers F.W. (1984) The interpretation and estimation of
+effective sample sizes. <em>Journal of Climate and Applied Meteorology</em>
+<b>23,</b> 800–811.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>eof</code>, <code>interpTs</code>, <code>monthCor</code>,
+<code>eofPlot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Create an annual time series data matrix from sfbay chlorophyll data
+# Average over each year
+chla1 &lt;- aggregate(sfbayChla, 1, mean, na.rm = TRUE)  
+chla1 &lt;- chla1[, 1:12]  # remove stations with missing years
+eofNum(chla1)
+# These stations appear to act as one with respect to chlorophyll
+# variability on the annual scale because there's one dominant EOF.
+
+</code></pre>
+
+
+</div>

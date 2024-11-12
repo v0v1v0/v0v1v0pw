@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>vectorTOM</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Topological overlap for a subset of the whole set of genes </h2>
+
+<h3>Description</h3>
+
+<p>This function calculates topological overlap of a small set of vectors with respect to a whole data
+set.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">vectorTOM(
+  datExpr, 
+  vect, 
+  subtract1 = FALSE, 
+  blockSize = 2000, 
+  corFnc = "cor", corOptions = "use = 'p'", 
+  networkType = "unsigned", 
+  power = 6, 
+  verbose = 1, indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datExpr</code></td>
+<td>
+<p> a data frame containing the expression data of the whole set, 
+with rows corresponding to samples and columns to genes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vect</code></td>
+<td>
+<p> a single vector or a matrix-like object containing vectors whose topological overlap is to
+be calculated. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subtract1</code></td>
+<td>
+<p> logical: should calculation be corrected for self-correlation? Set this to
+<code>TRUE</code> if <code>vect</code> contains a subset of <code>datExpr</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blockSize</code></td>
+<td>
+<p> maximum block size for correlation calculations. Only important if <code>vect</code>
+contains a large number of columns. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corFnc</code></td>
+<td>
+<p> character string giving the correlation function to be used for the adjacency
+calculation. Recommended choices are <code>"cor"</code> and <code>"bicor"</code>, but other functions can be used as
+well. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corOptions</code></td>
+<td>
+<p>  character string giving further options to be passed to the correlation function. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkType</code></td>
+<td>
+<p> character string giving network type. Allowed values are (unique abbreviations of)
+<code>"unsigned"</code>, <code>"signed"</code>, <code>"signed hybrid"</code>. See <code>adjacency</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p> soft-thresholding power for network construction. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Topological overlap can be viewed as the normalized count of shared neighbors encoded in an adjacency
+matrix. In this case, the adjacency matrix is calculated between the columns of <code>vect</code> and
+<code>datExpr</code> and the topological overlap of vectors in <code>vect</code> measures the number of shared
+neighbors in <code>datExpr</code> that vectors of <code>vect</code> share. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix of dimensions <code>n*n</code>, where <code>n</code> is the number of columns in <code>vect</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder </p>
+
+
+<h3>References</h3>
+
+<p> Bin Zhang and Steve Horvath (2005) "A General Framework for Weighted Gene Co-Expression
+Network Analysis", Statistical Applications in Genetics and Molecular Biology: Vol. 4: No. 1, Article 17
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>TOMsimilarity</code> for standard calculation of topological overlap. </p>
+
+
+</div>

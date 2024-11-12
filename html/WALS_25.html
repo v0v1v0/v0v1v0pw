@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gammaToBeta</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Internal function: Transform gammas back to betas</h2>
+
+<h3>Description</h3>
+
+<p>Transforms posterior means <code class="reqn">\hat{\gamma}_2</code> and variances corresponding
+to transformed auxiliary regressors <code class="reqn">Z_2</code> back to regression coefficients
+<code class="reqn">\hat{\beta}</code> of original regressors <code class="reqn">X_1</code> and <code class="reqn">X_2</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">gammaToBeta(
+  posterior,
+  y,
+  Z1,
+  Z2,
+  Delta1,
+  D2,
+  sigma,
+  Z1inv,
+  method = "original",
+  svdZ1
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>posterior</code></td>
+<td>
+<p>Object returned from <code>computePosterior</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Response <code class="reqn">y</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z1</code></td>
+<td>
+<p>Transformed focus regressors <code class="reqn">Z_1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z2</code></td>
+<td>
+<p>Transformed auxiliary regressors <code class="reqn">Z_1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Delta1</code></td>
+<td>
+<p><code class="reqn">\Delta_1</code> or <code class="reqn">\bar{\Delta}_1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>D2</code></td>
+<td>
+<p>From <code>semiorthogonalize</code>, if <code>postmult = FALSE</code>
+was used, then D2 = <code class="reqn">\Delta_2 T \Lambda^{-1/2}</code>, where <code class="reqn">T</code> are the
+eigenvectors of <code class="reqn">\Xi</code> and <code class="reqn">\Lambda</code> the diagonal matrix containing
+the corresponding eigenvalues. If <code>postmult = TRUE</code> was used, then
+D2 = <code class="reqn">\Delta_2 T \Lambda^{-1/2} T^{\top} = \Delta_2 \Xi^{-1/2}</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>Prespecified or estimated standard deviation of the error term.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z1inv</code></td>
+<td>
+<p><code class="reqn">(Z_{1}^{\top} Z_{1})^{-1}</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Character. <code class="reqn">\hat{\gamma}_1</code> is obtained from a linear
+regression of <code class="reqn">Z_1</code> on pseudo-responses <code class="reqn">y - Z_2 \hat{\gamma}_2</code>.
+If <code>method = original</code>, then we use <code>lm.fit</code> to perform
+the linear regression, if <code>method = "svd"</code>, then reuse the SVD of
+<code class="reqn">Z_1</code> in <code>svdZ1</code> to perform the regression.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>svdZ1</code></td>
+<td>
+<p>Optional, only needed if <code>method = "svd"</code>. SVD of <code class="reqn">Z_1</code>
+computed using <code>svd</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The same transformations also work for GLMs, where we replace <code class="reqn">X_1</code>,
+<code class="reqn">X_2</code>, <code class="reqn">Z_1</code> and <code class="reqn">Z_2</code> with <code class="reqn">\bar{X}_1</code>, <code class="reqn">\bar{X}_2</code>,
+<code class="reqn">\bar{Z}_1</code> and <code class="reqn">\bar{Z}_2</code>, respectively. Generally, we need to
+replace all variables with their corresponding "bar" version. Further,
+for GLMs <code>sigma</code> is always 1.
+</p>
+<p>See Magnus and De Luca (2016), De Luca et al. (2018)
+and Huynh (2024b) for the definitions of the variables.
+</p>
+
+
+<h3>References</h3>
+
+<p>De Luca G, Magnus JR, Peracchi F (2018).
+“Weighted-average least squares estimation of generalized linear models.”
+<em>Journal of Econometrics</em>, <b>204</b>(1), 1–17.
+<a href="https://doi.org/10.1016/j.jeconom.2017.12.007">doi:10.1016/j.jeconom.2017.12.007</a>.<br><br> Huynh K (2024b).
+“WALS: Weighted-Average Least Squares Model Averaging in R.”
+University of Basel.
+Mimeo.<br><br> Magnus JR, De Luca G (2016).
+“Weighted-average least squares (WALS): A survey.”
+<em>Journal of Economic Surveys</em>, <b>30</b>(1), 117-148.
+<a href="https://doi.org/10.1111/joes.12094">doi:10.1111/joes.12094</a>.
+</p>
+
+
+</div>

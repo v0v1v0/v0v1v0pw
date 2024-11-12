@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>parse_MaxQuant</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Converting MaxQuant Output file proteinGroups.txt to CLARION format
+by creating a headline of metadata for each column</h2>
+
+<h3>Description</h3>
+
+<p>List with columns of reduced version (see config.json file)
+If you only want the samples of a specific keyword write: column;exp
+For example:
+You got:
+Intensity
+Intensity 'experiment_name'
+Do you want both add "Intensity" to the list.
+Do you only want the sample add "Intensity;exp" to the list
+Anything else like 'Intensity;ex' or 'Intensity;' results in writing both.
+Only works if there are samples of that type. If not, column does not show up in file
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">parse_MaxQuant(
+  proteinGroups_in,
+  summary_in,
+  outfile,
+  outfile_reduced,
+  config = system.file("extdata", "parser_MaxQuant_config.json", package = "wilson"),
+  delimiter = ";",
+  format = NULL,
+  version = NULL,
+  experiment_id = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>proteinGroups_in</code></td>
+<td>
+<p>path of proteinGroup.txt file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>summary_in</code></td>
+<td>
+<p>path of belonging summary.txt file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outfile</code></td>
+<td>
+<p>path of full CLARION output file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outfile_reduced</code></td>
+<td>
+<p>path of reduced CLARION output file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>config</code></td>
+<td>
+<p>path of config file (containing information about metadata)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delimiter</code></td>
+<td>
+<p>delimiter (Default = ;)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>pre-header information about format (optional)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>version</code></td>
+<td>
+<p>pre-header information about version (optional)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>experiment_id</code></td>
+<td>
+<p>pre-header information about experiment id (optional)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>TRUE on success
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Rene Wiegandt
+</p>
+
+
+</div>

@@ -1,0 +1,193 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_prob_mix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Probability Plot for Separated Mixture Models</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#soft-deprecated"><img src="../help/figures/lifecycle-soft-deprecated.svg" alt="[Soft-deprecated]"></a>
+</p>
+<p><code>plot_prob_mix()</code> is no longer under active development, switching to
+plot_prob is recommended.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_prob_mix(
+  x,
+  status,
+  id = rep("XXXXXX", length(x)),
+  distribution = c("weibull", "lognormal", "loglogistic"),
+  mix_output,
+  title_main = "Probability Plot",
+  title_x = "Characteristic",
+  title_y = "Unreliability",
+  title_trace = "Sample",
+  plot_method = c("plotly", "ggplot2"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector which consists of lifetime data. Lifetime data
+could be every characteristic influencing the reliability of a product, e.g.
+operating time (days/months in service), mileage (km, miles), load cycles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>A vector of binary data (0 or 1) indicating whether a unit is a
+right censored observation (= 0) or a failure (= 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>Identification for every unit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the random variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mix_output</code></td>
+<td>
+<p>A list returned by mixmod_regression or mixmod_em, which
+consists of values necessary to visualize the subgroups.The default value of
+<code>mix_output</code> is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_main</code></td>
+<td>
+<p>A character string which is assigned to the main title.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_x</code></td>
+<td>
+<p>A character string which is assigned to the title of the x axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_y</code></td>
+<td>
+<p>A character string which is assigned to the title of the y axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_trace</code></td>
+<td>
+<p>A character string which is assigned to the legend trace.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_method</code></td>
+<td>
+<p>Package, which is used for generating the plot output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is used to apply the graphical technique of probability
+plotting to univariate mixture models that have been separated with functions
+mixmod_regression or mixmod_em.
+</p>
+<p>If data has been split by <code>mixmod_em</code> the function <code>johnson_method</code> is applied
+to subgroup-specific data. The calculated plotting positions are shaped
+regarding the obtained split of the used splitting function.
+</p>
+<p>In mixmod_regression a maximum of three subgroups can be determined and thus
+being plotted. The intention of this function is to give the user a hint for
+the existence of a mixture model. An in-depth analysis should be done
+afterwards.
+</p>
+<p>The marker label for x and y are determined by the first word provided in the
+argument <code>title_x</code> and <code>title_y</code> respectively, i.e. if
+<code>title_x = "Mileage in km"</code> the x label of the marker is "Mileage".
+</p>
+<p>The name of the legend entry is a combination of the <code>title_trace</code> and the
+number of determined subgroups (if any). If <code>title_trace = "Group"</code> and the
+data has been split in two groups, the legend entries are "Group: 1" and
+"Group: 2".
+</p>
+
+
+<h3>References</h3>
+
+<p>Doganaksoy, N.; Hahn, G.; Meeker, W. Q., Reliability Analysis by
+Failure Mode, Quality Progress, 35(6), 47-52, 2002
+</p>
+
+
+<h3>See Also</h3>
+
+<p>plot_prob
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Vectors:
+hours &lt;- voltage$hours
+status &lt;- voltage$status
+
+# Example 1 - Using result of mixmod_em:
+mix_mod_em &lt;- mixmod_em(
+  x = hours,
+  status = status
+)
+
+plot_weibull_em &lt;- plot_prob_mix(
+  x = hours,
+  status = status,
+  distribution = "weibull",
+  mix_output = mix_mod_em
+)
+
+# Example 2 - Using result of mixmod_regression:
+john &lt;- estimate_cdf(
+  x = hours,
+  status = status,
+  method = "johnson"
+)
+
+mix_mod_reg &lt;- mixmod_regression(
+  x = john$x,
+  y = john$prob,
+  status = john$status,
+  distribution = "weibull"
+)
+
+plot_weibull_reg &lt;- plot_prob_mix(
+  x = hours,
+  status = status,
+  distribution = "weibull",
+  mix_output = mix_mod_reg
+)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,391 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sback</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Generalized additive and partially linear models
+</h2>
+
+<h3>Description</h3>
+
+<p>Main function for fitting generalized structured models by using smooth backfitting.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sback(formula, data, offset = NULL, weights = NULL, 
+  kernel = c("Gaussian", "Epanechnikov"), 
+  bw.grid = seq(0.01, 0.99, length = 30), c.bw.factor = FALSE,
+  KfoldCV = 5, kbin = 30, 
+  family = c("gaussian", "binomial", "poisson"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+
+<p>a <code>formula</code> object specifying the model to be fitted (see Details). 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>data frame representing the data and containing all needed variables
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+
+<p>an optional numerical vector containing priori known components to be included in the linear predictor during fitting. Default is zero.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+
+<p>an optional numeric vector of ‘prior weights’ to be used in the fitting process. By default, the weights are set to one.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kernel</code></td>
+<td>
+
+<p>a character specifying the kernel function. Implemented are: Gaussian and Epanechnikov. By default ‘Gaussian’.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bw.grid</code></td>
+<td>
+
+<p>numeric vector; a grid for for searching the bandwidth factor <code class="reqn">h_c</code> when using cross-validation. The bandwidth for dimension (covariate) <code class="reqn">j</code> is <code class="reqn">h_c \sigma_j</code>, with <code class="reqn">\sigma_j</code> being the standard deviation of <code class="reqn">X_j</code> (see Details). Default is a sequence of length 30 between 0.01 and 0.99.  
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.bw.factor</code></td>
+<td>
+
+<p>logical; indicates whether the common factor scheme for bandwidth selection proposed by Han and Park (2018) is performed. If TRUE, and provided the user has specified the (marginal) bandwidths for all nonparametric functions, say <code class="reqn">h_j</code>, the functions searches for the common factor <code class="reqn">c_h</code> that minimizes the deviance via (k-fold) cross-validation when the bandwidth used for dimension (covariate) <code class="reqn">j</code> is <code class="reqn">c_h h_j</code>. The search is done in an equispaced grid of length 15 between 0.5 and 1.5. The default is FALSE.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>KfoldCV</code></td>
+<td>
+
+<p>number of cross-validation folds to be used for either (1) automatically selecting the optimal bandwidth (in the sequence given in argument <code>bw.grid</code>) for each nonparametric function; or (2) automatically selecting the optimal common bandwidth factor (see argument <code>c.bw.factor</code>). Default is 5.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kbin</code></td>
+<td>
+
+<p>an integer value specifying the number of binning knots. Default is 30.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+
+<p>a character specifying the distribution family. Implemented are: Gaussian, Binomial and Poisson. In all cases, the link function is the canonical one (logit for binomial, identity for Gaussian and logarithm for Poisson). By default ‘gaussian’.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The argument <code>formula</code> corresponds to the model for the conditional mean function, i.e., 
+</p>
+<p style="text-align: center;"><code class="reqn">E[Y|X,Z] = G(g_0 + \sum_j g_j (X_j) Z_j  + Z_k^{'}\beta).</code>
+</p>
+
+<p>This formula is similar to that used for the <code>glm</code> function, except that nonparametric functions can be added to the additive predictor by means of function <code>sb</code>. For instance, specification <code>y ~ x1 + sb(x2, h = -1)</code> assumes a parametric effect of <code>x1</code> (with <code>x1</code> either numerical or categorical), and a nonparametric effect of <code>x2</code>. <code>h = -1</code> indicates that the bandwidth should be selected using k-fold cross-validation. Varying coefficient terms get incorporated similarly. For example, <code>y ~ sb(x1, by = x2)</code> indicates that the coefficients of <code>x2</code> depend, nonparametrically, on <code>x1</code>. In this case both, <code>x1</code> and <code>x2</code>, should be numerical predictors. 
+</p>
+<p>With respect to the bandwidths associated with each nonparametric function specified using function <code>sb</code>, the user has two options: a) to specify in the formula the desired bandwidth - on the scale of the predictor - through argument <code>h</code> of function <code>sb</code> (followed or not by the common bandwidth factor scheme proposed by Han and Park (2018); see argument <code>c.bw.factor</code>); or, b) to allow the bandwidths to be automatically and data adaptively selected via cross-validation. In the latter case, the estimation procedure tests each of the bandwidth factors supplied in argument <code>bw.grid</code>, and selects the one that minimizes the deviance via (k-fold) cross-validation. The number k of cross-validation folds is specified through argument <code>KfoldCV</code>, with 5 by default. We note that when using cross-validation, to ensure that the bandwidths associated with the nonparametric functions are on the scale of the predictors, the finally used bandwidth is <code class="reqn">h_j =  h \sigma_j</code> with <code class="reqn">\sigma_j</code> being the standard deviation of <code class="reqn">X_j</code>. That is, before fitting the model, each bandwidth factor <code class="reqn">h</code> provided in <code>bw.grid</code> is multiplied by the standard deviation of the corresponding predictor. Note that the user has also the possibility to specify the bandwidths for some nonparametric function (through argument <code>h</code>), while letting for the remaining nonparametric functions the procedure select the bandwidths by cross-validation. For these functions, argument <code>h</code> should be set to -1. In this case, the common bandwidth factor scheme proposed by Han and Park (2018) cannot be used as it requires that all bandwidths are specified. 
+</p>
+<p>Finally, it is worth noting that for identifiability purposes, the estimating algorithm implemented in the <code>wsbackfit</code> package decomposes each nonparametric function in two components: a linear (parametric) component and a nonlinear (nonparametric) component. Note that it implies that for a varying coefficient term <code>~ sb(x1, by = x2)</code>, the parametric part includes the linear component associated with <code>x1</code>, as well as the linear interaction between <code>x1</code> and <code>x2</code>.     
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>the matched call.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>the original supplied <code>formula</code> argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>the original supplied <code>data</code> argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+<p>the original supplied <code>offset</code> argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>the original supplied <code>weights</code> argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kernel</code></td>
+<td>
+<p>the original supplied <code>kernel</code> argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kbin</code></td>
+<td>
+<p>the original supplied <code>kbin</code> argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>the original supplied <code>family</code> argument.</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>effects</code></td>
+<td>
+<p>matrix with the estimated nonparametric functions (only the nonlinear component) for each covariate value in the original supplied data.</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>fitted.values</code></td>
+<td>
+<p>a numeric vector with the fitted values for the supplied data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>residuals</code></td>
+<td>
+<p>a numeric vector with the deviance residuals for the supplied data.</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>a numeric vector of the same length as the number of nonparametric functions, with the bandwidths actually used in the estimation (scaled. See Details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coeff</code></td>
+<td>
+<p>a numeric vector with the estimated coefficients. This vector includes both the parametric effects as well as the coefficients associated with the linear component of the nonparametric functions. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>err.CV</code></td>
+<td>
+<p>matrix with the cross-validated error (deviance) associated with the sequence of tested (unscaled) bandwidths. Each line corresponds to a particular bandwidth (unscaled. See Details).</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Javier Roca-Pardinas, Maria Xose Rodriguez-Alvarez and Stefan Sperlich</p>
+
+
+<h3>References</h3>
+
+<p>Han, K. and Park B.U. (2018). Smooth backfitting for errors-in-variables additive models. Annals of Statistics, 46, 2216-2250.</p>
+
+
+<h3>See Also</h3>
+
+<p><code>sb</code>, <code>print.sback</code>, <code>summary.sback</code>, <code>plot.sback</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(wsbackfit)
+###############################################
+# Gaussian Simulated Sample
+###############################################
+set.seed(123)
+# Define the data generating process
+n &lt;- 1000
+x1 &lt;- runif(n)*4-2
+x2 &lt;- runif(n)*4-2
+x3 &lt;- runif(n)*4-2
+x4 &lt;- runif(n)*4-2
+x5 &lt;- as.numeric(runif(n)&gt;0.6)
+
+f1 &lt;- 2*sin(2*x1)
+f2 &lt;- x2^2
+f3 &lt;- 0
+f4 &lt;- x4
+f5 &lt;- 1.5*x5
+
+mu &lt;- f1 + f2 + f3 + f4 + f5
+err &lt;- (0.5 + 0.5*x5)*rnorm(n)
+y &lt;- mu + err
+
+df &lt;- data.frame(x1 = x1, x2 = x2, x3 = x3, x4 = x4, x5 = as.factor(x5), y = y)
+
+# Fit the model with a fixed bandwidth for each covariate
+m0 &lt;- sback(formula = y ~ x5 + sb(x1, h = 0.1) + sb(x2, h = 0.1) 
+  + sb(x3, h = 0.1) + sb(x4, h = 0.1), kbin = 30, data = df)
+
+summary(m0)
+
+op &lt;- par(no.readonly = TRUE)
+
+par(mfrow = c(2,2))
+plot(m0)
+
+# Fit the model with bandwidths selectec using K-fold cross-validation
+## Not run: 
+m0cv &lt;- sback(formula = y ~ x5 + sb(x1) + sb(x2) 
+  + sb(x3) + sb(x4), kbin = 30, bw.grid = seq(0.01, 0.99, length = 30), KfoldCV = 5, 
+  data = df)
+
+summary(m0cv)
+
+par(mfrow = c(2,2))
+plot(m0cv)
+
+## End(Not run)
+
+# Estimate Variance as a function of x5 (which is binary)
+resid &lt;- y - m0$fitted.values
+sig0 &lt;- var(resid[x5 == 0])
+sig1 &lt;- var(resid[x5 == 1])
+w &lt;- x5/sig1 + (1-x5)/sig0
+m1 &lt;- sback(formula = y ~ x5 + sb(x1, h = 0.1) + sb(x2, h = 0.1) 
+  + sb(x3, h = 0.1) + sb(x4, h = 0.1), weights = w, kbin = 30, data = df)
+
+summary(m1)
+
+par(mfrow = c(2,2))
+plot(m1)
+
+###############################################
+# Poisson Simulated Data
+###############################################
+set.seed(123)
+# Define the data generating process
+n &lt;- 1000
+
+x1 &lt;- runif(n,-1,1)
+x2 &lt;- runif(n,-1,1)
+
+eta &lt;- 2 + 3*x1^2 + 5*x2^3
+
+exposure &lt;- round(runif(n, 50, 500))
+y &lt;- rpois(n, exposure*exp(eta))
+df &lt;- data.frame(y = y, x1 = x1, x2 = x2)
+
+# Fit the model
+m2 &lt;- sback(formula = y ~ sb(x1, h = 0.1) + sb(x2, h = 0.1), 
+  data = df, offset = log(exposure), 
+  kbin = 30, family = "poisson")
+
+summary(m2)
+
+par(mfrow = c(1,2))
+plot(m2)
+
+# Dataframe and offset for prediction
+n.p &lt;- 100
+newoffset &lt;- rep(0, n.p)
+df.pred &lt;- data.frame(x1 = seq(-1, 1,l = n.p), x2 = seq(-1, 1,l = n.p))
+
+m2p &lt;- predict(m2, newdata = df.pred, newoffset = newoffset)
+
+###############################################
+# Postoperative Infection Data
+###############################################
+data(infect)
+
+# Generalized varying coefficient model with binary response
+m3 &lt;- sback(formula = inf ~ sb(gluc, h = 10) + sb(gluc, by = linf, h = 10), 
+  data = infect, family = "binomial", kbin = 15)
+
+summary(m3)
+
+# Plot both linear and non linear 
+# components of nonparametric functions: composed = FALSE
+par(mfrow = c(1,3))
+plot(m3, composed = FALSE)
+
+# Personalized plots
+# First obtain predictions in new data
+# Create newdata for prediction
+ngrid &lt;- 30
+gluc0 &lt;- seq(50, 190, length = ngrid)
+linf0 &lt;- seq(0, 45, length = ngrid)
+df  &lt;- expand.grid(gluc = gluc0, linf = linf0)
+
+m3p &lt;- predict(m3, newdata = df)
+
+par(mfrow = c(1,2))
+ii &lt;- order(df[,"gluc"])
+
+## Parametric coefficients
+names(m3p$coeff)
+
+# Nonlinear components
+colnames(m3p$peffects) 
+
+# Include the linear component
+plot(df[ii,"gluc"], m3p$coeff[["gluc"]]*df[ii,"gluc"] + 
+  m3p$peffects[ii,"sb(gluc, h = 10)"], 
+  type = 'l', xlab = "Glucose (mg/dl)", ylab = "f_1(gluc)", 
+  main = "Nonparametric effect of Glucose")
+
+# Include the linear component
+plot(df[ii,"gluc"], m3p$coeff[["gluc:linf"]]*df[ii,"gluc"] + 
+  m3p$peffects[ii,"sb(gluc, h = 10, by = linf)"], 
+  type= 'l', xlab = "Glucose (mg/dl)", ylab = "f_2(gluc)",
+  main = "Varying coefficients as a function of Glucose")
+
+# Countour plot of the probability of post-opererational infection
+n &lt;- sqrt(nrow(df))
+Z &lt;- matrix(m3p$pfitted.values, n, n)
+filled.contour(z = Z, x = gluc0, y = linf0, 
+  xlab = "Glucose (mg/dl)", ylab = "Lymphocytes (%)",
+  main = "Probability of post-opererational infection")
+
+par(op)
+</code></pre>
+
+
+</div>

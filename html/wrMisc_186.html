@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>multiMatch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Simple Multi-to-Multi Matching of (Concatenated) Terms</h2>
+
+<h3>Description</h3>
+
+<p>This function allows convenient matching of multi-to-multi relationships between two objects/vectors. 
+It was designed for finding common elements in multiple to multiple matching situations (eg when comparing <code>c("aa; bb", "cc")</code>  to <code>c("bb; ab","dd")</code>, 
+ie to find 'bb' as matching between both objects).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">multiMatch(
+  x,
+  y,
+  sep = "; ",
+  sep2 = NULL,
+  method = "byX",
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(vector or list) first object to compare; if vector, the (partially) concatenated identifyers (will be split using separator <code>sep</code>), or list of items to be matched (ie already split)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>(vector or list) second object to compare; if vector, the (partially) concatenated identifyers (will be split using separator <code>sep</code>), or list of items to be matched (ie already split)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep</code></td>
+<td>
+<p>(character, length=1) separator used to split concatenated identifyers (if <code>x</code> or  <code>y</code> is vector)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep2</code></td>
+<td>
+<p>(character, length=1) optional separator used when <code>method="matched"</code> to concatenate all indexes of <code>y</code> for column <code>y.allInd</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>(character) mode of operation: 'asIndex' to return index of y (those hwo have matches) with names of x (which x are the correpsonding match)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>method='byX'</code> .. returns data.frame with view oriented towards entries of <code>x</code>: character column <code>x</code> for entire content of <code>x</code>; integer column <code>x.Ind</code> for index of <code>x</code>; 
+character column <code>TagBest</code> for most frequent matching isolated tag/ID; integer column <code>y.IndBest</code> index of most frequent matching <code>y</code>;
+character column <code>y.IndAll</code> index for all <code>y</code> matching any of the tags;
+character column <code>y.Match</code> for entire content of best matching <code>y</code>; 
+character column <code>y.Adj</code> for <code>y</code> adjusted to best matching <code>y</code> for easier subsequent perfect matching.
+</p>
+<p><code>method=c("byX","filter")</code> .. combinded argument to keep only lines with any matches 
+</p>
+<p><code>method='byTag'</code> .. returns matrix (of integers) from view of isolated tags from <code>x</code> (a separate line for each tag from  <code>x</code> matching to <code>y</code>);
+</p>
+<p><code>method=c("byTag","filter")</code> ..if combined as arguments, this will return a data.frame for all unique tags with any matches between <code>x</code> and <code>y</code>, with 
+additional colunms <code>x.AllInd</code> for all matching <code>x</code>-indexes,  <code>y.IndBest</code> best matching <code>y</code> index; <code>x.n</code> for number of different <code>x</code> conatining this tag;
+<code>y.AllInd</code> for all matching <code>y</code>-indexes 
+</p>
+<p><code>method='adjustXtoY'</code> .. returns vector with <code>x</code> adjusted to <code>y</code>, ie those elements of <code>x</code> matching are replace by the exact corresponding term of <code>y</code>.
+</p>
+<p><code>method=NULL</code> .. If no term matching the options shown above is given, another version of 'asIndex' is returned, but indexes to <code>y</code> _after_ spliting by <code>sep</code>. 
+Again, this method can be filtered by using <code>method="filter"</code> to focus on the best matches to <code>x</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>matrix, data.frame or list with matching results depending on <code>method</code> chosen
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>match</code>; <code>strsplit</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">aa &lt;- c("m","k", "j; aa", "m; aa; bb; o; ee", "n; dd; cc", "aa", "cc")
+bb &lt;- c("dd; r", "aa", "ee; bb; q; cc", "p; cc")
+(match1 &lt;- multiMatch(aa, bb, method=NULL))      # match bb to aa
+(match2 &lt;- multiMatch(aa, bb, method="byX"))     # match bb to aa
+(match3 &lt;- multiMatch(aa, bb, method="byTag"))   # match bb to aa
+(match4 &lt;- multiMatch(aa, bb, method=c("byTag","filter")))   # match bb to aa
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,69 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read_pot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>A function to read .PT files</h2>
+
+<h3>Description</h3>
+
+<p>The function reads .PT files once these are in a local folder: these files contain information on Peaks-Over-Threshold (POT) records from the instantaneous river flow measurements.
+The function checks for the presence of any [POT GAPS] and [POT REJECTED] periods.
+If these are present, they are merged and information on the proportion of days with missing records in each water year is provided.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read_pot(station, loc_WinFapFiles = getwd(), getAmax = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>station</code></td>
+<td>
+<p>NRFA station number(s) for which the .PT file (names <code>station.PT</code>) should be read.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loc_WinFapFiles</code></td>
+<td>
+<p>the file.path of the WINFAP files, i.e. the location in which the
+<code>station.PT</code> file can be found. Default is the working directory</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getAmax</code></td>
+<td>
+<p>logical. If <code>TRUE</code> the annual maxima values (extracted from a <code>station.AM</code>
+file) will be attached to the <code>WaterYearInfo</code> table</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a list of three objects <code>tablePOT</code>, <code>WaterYearInfo</code> and <code>dateRange</code>.
+</p>
+<p><code>tablePOT</code> contains a table with all the peaks above the threshold present in the .PT file
+</p>
+<p><code>WaterYearInfo</code> a table containing the information on the percentage of missing values
+in any water year for which some data is available in the POT record. This is useful to assess
+whether the lack of exceedances is genuine or the result of missing data and to assess whether the threshold
+exceedances present in <code>tablePOT</code> can be deemed to be representative of the whole year
+</p>
+<p><code>dateRange</code> a vector with the first and last date of recording for the POT record as provided in the [POT Details] field.
+Note that this period might be different than the period for which annual maxima records are available
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Information on the .PT files and river flow gauging in the UK can be found at the National River Flow Archive website <a href="https://nrfa.ceh.ac.uk">https://nrfa.ceh.ac.uk</a>
+</p>
+
+
+</div>

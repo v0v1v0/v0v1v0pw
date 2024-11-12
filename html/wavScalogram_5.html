@@ -1,0 +1,267 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>scale_index</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Scale index of a signal</h2>
+
+<h3>Description</h3>
+
+<p>This function computes the scale index of a signal in the scale interval
+<code class="reqn">[s_0,s_1]</code>, for a given set of scale parameters <code class="reqn">s_1</code> and taking <code class="reqn">s_0</code> as
+the minimum scale (see Benítez et al. 2010).
+</p>
+<p>The scale index of a signal in the scale interval <code class="reqn">[s_0,s_1]</code> is given by the
+quotient </p>
+<p style="text-align: center;"><code class="reqn">\frac{S(s_{min})}{S(s_{max})},</code>
+</p>
+<p> where <code class="reqn">S</code> is
+the scalogram, <code class="reqn">s_{max} \in [s_0,s_1]</code> is the smallest scale such that
+<code class="reqn">S(s)\le S(s_{max})</code> for all <code class="reqn">s \in [s_0,s_1]</code>, and
+<code class="reqn">s_{min} \in [s_{max},2s_1]</code> is the smallest scale such that
+<code class="reqn">S(s_{min})\le S(s)</code> for all <code class="reqn">s \in [s_{max},2s_1]</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">scale_index(signal = NULL,
+                   scalog = NULL,
+                   dt = 1,
+                   scales = NULL,
+                   powerscales = TRUE,
+                   s1 = NULL,
+                   wname = c("MORLET", "DOG", "PAUL", "HAAR", "HAAR2"),
+                   wparam = NULL,
+                   waverad = NULL,
+                   border_effects = c("BE", "INNER", "PER", "SYM"),
+                   makefigure = TRUE,
+                   figureperiod = TRUE,
+                   plot_scalog = FALSE,
+                   xlab = NULL,
+                   ylab = "Scale index",
+                   main = "Scale Index")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>signal</code></td>
+<td>
+<p>A vector containing the signal whose scale indices are wanted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scalog</code></td>
+<td>
+<p>A vector containing the scalogram from which the scale indices are going
+to be computed. If <code>scalog</code> is not <code>NULL</code>, then <code>signal</code>, <code>waverad</code>
+and <code>border_effects</code> are not necessary and they are ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dt</code></td>
+<td>
+<p>Numeric. The time step of the signals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scales</code></td>
+<td>
+<p>A vector containing the wavelet scales at wich the scalogram
+is computed. This can be either a vector with all the scales or, following Torrence
+and Compo 1998, a vector of 3 elements with the minimum scale, the maximum scale and
+the number of suboctaves per octave (in this case, <code>powerscales</code> must be TRUE in
+order to construct power 2 scales using a base 2 logarithmic scale). If <code>scales</code>
+is NULL, they are automatically constructed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>powerscales</code></td>
+<td>
+<p>Logical. It must be TRUE (default) in these cases:
+</p>
+
+<ul>
+<li>
+<p> If <code>scales</code> are power 2 scales, i.e. they use a base 2 logarithmic scale.
+</p>
+</li>
+<li>
+<p> If we want to construct power 2 scales automatically. In this case, <code>scales</code>
+must be <code>NULL</code>.
+</p>
+</li>
+<li>
+<p> If we want to construct power 2 scales from <code>scales</code>. In this case,
+<code>length(scales)</code> must be 3.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s1</code></td>
+<td>
+<p>A vector containing the scales <code class="reqn">s_1</code>. The scale indices are computed in
+the intervals <code class="reqn">[s_0,s_1]</code>, where <code class="reqn">s_0</code> is the minimum scale in <code>scales</code>.
+If <code>s1</code> are not power 2 scales, then <code>scales</code> should not be power 2 scales
+either and hence, <code>powerscales</code> must be <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wname</code></td>
+<td>
+<p>A string, equal to "MORLET", "DOG", "PAUL", "HAAR" or "HAAR2". The
+difference between "HAAR" and "HAAR2" is that "HAAR2" is more accurate but slower.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wparam</code></td>
+<td>
+<p>The corresponding nondimensional parameter for the wavelet function
+(Morlet, DoG or Paul).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>waverad</code></td>
+<td>
+<p>Numeric. The radius of the wavelet used in the computations for the cone
+of influence. If it is not specified, it is asumed to be <code class="reqn">\sqrt{2}</code> for Morlet and DoG,
+<code class="reqn">1/\sqrt{2}</code> for Paul and 0.5 for Haar.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>border_effects</code></td>
+<td>
+<p>A string, equal to "BE", "INNER", "PER" or "SYM", which indicates
+how to manage the border effects which arise usually when a convolution is performed on
+finite-lenght signals.
+</p>
+
+<ul>
+<li>
+<p> "BE": With border effects, padding time series with zeroes.
+</p>
+</li>
+<li>
+<p> "INNER": Normalized inner scalogram with security margin adapted for each
+different scale.
+</p>
+</li>
+<li>
+<p> "PER": With border effects, using boundary wavelets (periodization of the
+original time series).
+</p>
+</li>
+<li>
+<p> "SYM": With border effects, using a symmetric catenation of the original time
+series.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>makefigure</code></td>
+<td>
+<p>Logical. If TRUE (default), a figure with the scale indices is
+plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>figureperiod</code></td>
+<td>
+<p>Logical. If TRUE (default), periods are used in the figure instead
+of scales.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_scalog</code></td>
+<td>
+<p>Logical. If TRUE, it plots the scalogram from which the scale indices
+are computed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>A string giving a custom X axis label. If NULL (default) the X label is
+either "s1" or "Period of s1" depending on the value of <code>figureperiod</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>A string giving a custom Y axis label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>A string giving a custom main title for the figure.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with the following fields:
+</p>
+
+<ul>
+<li> <p><code>si</code>: A vector with the scale indices.
+</p>
+</li>
+<li> <p><code>s0</code>: The scale <code class="reqn">s_0</code>.
+</p>
+</li>
+<li> <p><code>s1</code>: A vector with the scales <code class="reqn">s_1</code>.
+</p>
+</li>
+<li> <p><code>smax</code>: A vector with the scales <code class="reqn">s_{max}</code>.
+</p>
+</li>
+<li> <p><code>smin</code>: A vector with the scales <code class="reqn">s_{min}</code>.
+</p>
+</li>
+<li> <p><code>scalog</code>: A vector with the scalogram from which the scale indices are
+computed.
+</p>
+</li>
+<li> <p><code>scalog_smax</code>: A vector with the maximum scalogram values <code class="reqn">S(s_{max})</code>.
+</p>
+</li>
+<li> <p><code>scalog_smin</code>: A vector with the minimum scalogram values <code class="reqn">S(s_{min})</code>.
+</p>
+</li>
+<li> <p><code>fourierfactor</code>: A factor for converting scales into periods.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>R. Benítez, V. J. Bolós, M. E. Ramírez. A wavelet-based tool for studying
+non-periodicity. Comput. Math. Appl. 60 (2010), no. 3, 634-641.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+dt &lt;- 0.1
+time &lt;- seq(0, 50, dt)
+signal &lt;- c(sin(pi * time), sin(pi * time / 2))
+si &lt;- scale_index(signal = signal, dt = dt)
+
+# Another way, giving the scalogram instead of the signal:
+
+sc &lt;- scalogram(signal = signal, dt = dt, energy_density = FALSE, makefigure = FALSE)
+si &lt;- scale_index(scalog = sc$scalog, scales = sc$scales, dt = dt)
+
+</code></pre>
+
+
+</div>

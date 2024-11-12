@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summaryTxDataFrameCreate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Creates a dataframe containing summary URL performance metrics
+</h2>
+
+<h3>Description</h3>
+
+<p>From a dataframe containing log data, calculate 95th percentile response, total wait and error counts, embed TeX hyperlinks referencing the URL.  
+Return these in a dataframe intended for printing in a report.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">summaryTxDataFrameCreate(logDataframe) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>logDataframe</code></td>
+<td>
+
+<p>a dataframe created by the functions that read log files.
+</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Returns a dataframe containing columns
+</p>
+
+<dl>
+<dt>Response (sec, 95th pctl)</dt>
+<dd>
+<p>95th Percentile response time for the URL</p>
+</dd>
+<dt>Transaction</dt>
+<dd>
+<p>The URL</p>
+</dd>
+<dt>Count</dt>
+<dd>
+<p>Number of requests for that URL</p>
+</dd>
+<dt>Total Wait (sec)</dt>
+<dd>
+<p>Total wait time for the URL in seconds</p>
+</dd>
+<dt>Server Errors</dt>
+<dd>
+<p>Number of HTTP 5xx  errors</p>
+</dd>
+<dt>Client Error</dt>
+<dd>
+<p>Number of HTTP 4xx errors</p>
+</dd>
+<dt>Redirect</dt>
+<dd>
+<p>Number of HTTP 3xx responses</p>
+</dd>
+<dt>Success</dt>
+<dd>
+<p>Number of HTTP 200 responses</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Greg Hunt &lt;greg@firmansyah.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+logFileName = logFileNamesGetLast(dataDirectory=datd, 
+  directoryNames=c(".", "."), 
+  fileNamePattern="*[.]log")[[1]]
+
+cols = logFileFieldsGetIIS(logFileName)
+
+logdf = logFileRead(logFileName, columnList=cols, 
+            logTimeZone = "", timeFormat = "")
+
+summarydf = summaryTxDataFrameCreate(logdf)
+</code></pre>
+
+
+</div>

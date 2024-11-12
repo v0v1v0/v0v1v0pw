@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ww_agreement_coefficient</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Agreement coefficients and related methods</h2>
+
+<h3>Description</h3>
+
+<p>These functions calculate the agreement coefficient and mean product
+difference (MPD), as well as their systematic and unsystematic components,
+from Ji and Gallo (2006). Agreement coefficients provides a useful
+measurement of agreement between two data sets which is bounded, symmetrical,
+and can be decomposed into systematic and unsystematic components;
+however, it assumes a linear relationship between the two data sets and
+treats both "truth" and "estimate" as being of equal quality, and as such may
+not be a useful metric in all scenarios.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ww_agreement_coefficient(data, ...)
+
+## S3 method for class 'data.frame'
+ww_agreement_coefficient(data, truth, estimate, na_rm = TRUE, ...)
+
+ww_agreement_coefficient_vec(truth, estimate, na_rm = TRUE, ...)
+
+ww_systematic_agreement_coefficient(data, ...)
+
+## S3 method for class 'data.frame'
+ww_systematic_agreement_coefficient(data, truth, estimate, na_rm = TRUE, ...)
+
+ww_systematic_agreement_coefficient_vec(truth, estimate, na_rm = TRUE, ...)
+
+ww_unsystematic_agreement_coefficient(data, ...)
+
+## S3 method for class 'data.frame'
+ww_unsystematic_agreement_coefficient(data, truth, estimate, na_rm = TRUE, ...)
+
+ww_unsystematic_agreement_coefficient_vec(truth, estimate, na_rm = TRUE, ...)
+
+ww_unsystematic_mpd(data, ...)
+
+## S3 method for class 'data.frame'
+ww_unsystematic_mpd(data, truth, estimate, na_rm = TRUE, ...)
+
+ww_unsystematic_mpd_vec(truth, estimate, na_rm = TRUE, ...)
+
+ww_systematic_mpd(data, ...)
+
+## S3 method for class 'data.frame'
+ww_systematic_mpd(data, truth, estimate, na_rm = TRUE, ...)
+
+ww_systematic_mpd_vec(truth, estimate, na_rm = TRUE, ...)
+
+ww_unsystematic_rmpd(data, ...)
+
+## S3 method for class 'data.frame'
+ww_unsystematic_rmpd(data, truth, estimate, na_rm = TRUE, ...)
+
+ww_unsystematic_rmpd_vec(truth, estimate, na_rm = TRUE, ...)
+
+ww_systematic_rmpd(data, ...)
+
+## S3 method for class 'data.frame'
+ww_systematic_rmpd(data, truth, estimate, na_rm = TRUE, ...)
+
+ww_systematic_rmpd_vec(truth, estimate, na_rm = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A <code>data.frame</code> containing the columns specified by the <code>truth</code>
+and <code>estimate</code> arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not currently used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truth</code></td>
+<td>
+<p>The column identifier for the true results
+(that is <code>numeric</code>). This should be an unquoted column name although
+this argument is passed by expression and supports
+quasiquotation (you can unquote column
+names). For <code style="white-space: pre;">⁠_vec()⁠</code> functions, a <code>numeric</code> vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimate</code></td>
+<td>
+<p>The column identifier for the predicted
+results (that is also <code>numeric</code>). As with <code>truth</code> this can be
+specified different ways but the primary method is to use an
+unquoted variable name. For <code style="white-space: pre;">⁠_vec()⁠</code> functions, a <code>numeric</code> vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na_rm</code></td>
+<td>
+<p>A <code>logical</code> value indicating whether <code>NA</code>
+values should be stripped before the computation proceeds.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Agreement coefficient values range from 0 to 1, with 1 indicating perfect
+agreement. <code>truth</code> and <code>estimate</code> must be the same length. This function is
+not explicitly spatial and as such can be applied to data with any number of
+dimensions and any coordinate reference system.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A tibble with columns .metric, .estimator, and .estimate and 1 row of values.
+For grouped data frames, the number of rows returned will be the same as the number of groups.
+For <code style="white-space: pre;">⁠_vec()⁠</code> functions, a single value (or NA).
+</p>
+
+
+<h3>References</h3>
+
+<p>Ji, L. and Gallo, K. 2006. "An Agreement Coefficient for Image Comparison."
+Photogrammetric Engineering &amp; Remote Sensing 72(7), pp 823–833,
+doi: 10.14358/PERS.72.7.823.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other agreement metrics: 
+<code>ww_willmott_d()</code>
+</p>
+<p>Other yardstick metrics: 
+<code>ww_global_geary_c()</code>,
+<code>ww_global_moran_i()</code>,
+<code>ww_local_geary_c()</code>,
+<code>ww_local_getis_ord_g()</code>,
+<code>ww_local_moran_i()</code>,
+<code>ww_willmott_d()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Calculated values match Ji and Gallo 2006:
+x &lt;- c(6, 8, 9, 10, 11, 14)
+y &lt;- c(2, 3, 5, 5, 6, 8)
+
+ww_agreement_coefficient_vec(x, y)
+ww_systematic_agreement_coefficient_vec(x, y)
+ww_unsystematic_agreement_coefficient_vec(x, y)
+ww_systematic_mpd_vec(x, y)
+ww_unsystematic_mpd_vec(x, y)
+ww_systematic_rmpd_vec(x, y)
+ww_unsystematic_rmpd_vec(x, y)
+
+example_df &lt;- data.frame(x = x, y = y)
+ww_agreement_coefficient(example_df, x, y)
+ww_systematic_agreement_coefficient(example_df, x, y)
+ww_unsystematic_agreement_coefficient(example_df, x, y)
+ww_systematic_mpd(example_df, x, y)
+ww_unsystematic_mpd(example_df, x, y)
+ww_systematic_rmpd(example_df, x, y)
+ww_unsystematic_rmpd(example_df, x, y)
+
+</code></pre>
+
+
+</div>

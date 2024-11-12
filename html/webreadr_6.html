@@ -1,0 +1,65 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>split_clf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>split requests from a CLF-formatted file</h2>
+
+<h3>Description</h3>
+
+<p>CLF (Combined/Common Log Format) files store the HTTP method, protocol
+and asset requested in the same field. <code>split_clf</code> takes this field as a vector
+and returns a data.frame containing these elements in distinct columns. The function
+also works nicely with the <code>uri</code> field from Amazon S3 files (see
+<code>read_s3</code>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">split_clf(requests)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>requests</code></td>
+<td>
+<p>the "request" field from a CLF-formatted file, read in with
+<code>read_clf</code> or <code>read_combined</code>.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>a data.frame of three columns - "method", "asset" and "protocol" - 
+representing, respectively, the HTTP method used ("GET"), the asset requested
+("/favicon.ico") and the protocol used ("HTTP/1.0"). In cases where
+the request is not intact (containing, for example, just the protocol
+or just the asset) a row of empty strings will currently be returned.
+In the future, this will be somewhat improved.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read_clf</code> and <code>read_combined</code> for reading
+in these files.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Grab CLF data and split out the request.
+data &lt;- read_combined(system.file("extdata/combined_log.clf", package = "webreadr"))
+requests &lt;- split_clf(data$request)
+
+# An example using S3 files
+s3_data &lt;- read_s3(system.file("extdata/s3.log", package = "webreadr"))
+s3_requests &lt;- split_clf(s3_data$uri)
+
+</code></pre>
+
+
+</div>

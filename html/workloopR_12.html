@@ -1,0 +1,159 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>select_cycles</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Select cycles from a work loop object</h2>
+
+<h3>Description</h3>
+
+<p>Retain data from a work loop experiment based on position cycle
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">select_cycles(
+  x,
+  cycle_def,
+  keep_cycles = 4:6,
+  bworth_order = 2,
+  bworth_freq = 0.05,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>workloop</code> object (see Details for how it should be
+organized)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cycle_def</code></td>
+<td>
+<p>A string specifying how cycles should be defined; one of:
+"lo", "p2p", or "t2t". See Details more info</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep_cycles</code></td>
+<td>
+<p>The indices of the cycles to keep. Include 0 to keep data
+identified as being outside complete cycles</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bworth_order</code></td>
+<td>
+<p>Filter order for low-pass filtering of <code>Position</code>
+via <code>signal::butter()</code> prior to finding L0</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bworth_freq</code></td>
+<td>
+<p>Critical frequency (scalar) for low-pass filtering of
+<code>Position</code> via <code>signal::butter()</code> prior to finding L0</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to/from other functions that make use
+of <code>select_cycles()</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>select_cycles()</code> subsets data from a workloop trial by
+position cycle. The <code>cycle_def</code> argument is used to specify which part
+of the cycle is understood as the beginning and end. There are currently
+three options: <br>
+'lo' for L0-to-L0; <br>
+'p2p' for peak-to-peak; and <br>
+'t2t' for trough-to-trough <br></p>
+<p>Peaks are identified using <code>pracma::findpeaks()</code>. L0 points on the
+rising edge are found by finding the midpoints between troughs and the
+following peak. However the first and last extrema and L0 points may be
+misidentified by this method. Please plot your <code>Position</code> cycles to
+ensure the edge cases are identified correctly.
+</p>
+<p>The <code>keep_cycles</code> argument is used to determine which cycles (as
+defined by <code>cycle_def</code> should be retained in the final dataset. Zero
+is the index assigned to all data points that are determined to be outside
+a complete cycle.
+</p>
+<p>The <code>muscle_stim</code> object (<code>x</code>) must be a <code>workloop</code>,
+preferably read in by one of our data import functions. Please see
+documentation for <code>as_muscle_stim()</code> if you need to manually construct
+a <code>muscle_stim</code> object from another source.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>workloop</code> object with rows subsetted by the chosen position
+cycles. A <code>Cycle</code> column is appended to denote which cycle each time
+point is associated with. Finally, all attributes from the input
+<code>workloop</code> object are retained and one new attribute is added to
+record which cycles from the original data were retained.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Vikram B. Baliga and Shreeram Senthivasan
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>analyze_workloop</code>,
+<code>read_analyze_wl</code>,
+<code>read_analyze_wl_dir</code>
+</p>
+<p>Other data transformations: 
+<code>fix_GR()</code>,
+<code>invert_position()</code>
+</p>
+<p>Other workloop functions: 
+<code>analyze_workloop()</code>,
+<code>fix_GR()</code>,
+<code>get_wl_metadata()</code>,
+<code>invert_position()</code>,
+<code>read_analyze_wl_dir()</code>,
+<code>read_analyze_wl()</code>,
+<code>summarize_wl_trials()</code>,
+<code>time_correct()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(workloopR)
+
+# import the workloop.ddf file included in workloopR
+wl_dat &lt;-read_ddf(system.file("extdata", "workloop.ddf",
+                              package = 'workloopR'),
+                  phase_from_peak = TRUE)
+
+# select cycles 3 through 5 via the peak-to-peak definition
+wl_selected &lt;- select_cycles(wl_dat, cycle_def = "p2p", keep_cycles = 3:5)
+
+
+# are the cycles of (approximately) the same length?
+summary(as.factor(wl_selected$Cycle))
+
+</code></pre>
+
+
+</div>

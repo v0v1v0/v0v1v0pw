@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>buildTree</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Connect edges to from tree and extract all possible branches</h2>
+
+<h3>Description</h3>
+
+<p>It is assumed that multiple fragments from a common ancestor bay be charcterized by the their start- and end-sites by integer values.  
+For example, If 'abcdefg' is the ancestor, the fragments 'bcd' (from position 2 to 4) to  and 'efg' may then be assembled. 
+To do so, all fragments must be presented as matix specifying all start- and end-sites (and fragment-names).  
+<code>buildTree</code> searchs contiguous fragments from columns 'posCo' (start/end) from 'disDat' to build tree &amp; extract path information starting with line 'startFr'.
+Made for telling if dissociated fragments contribute to long assemblies.
+This function uses various functions of package <a href="https://CRAN.R-project.org/package=data.tree">data.tree</a> which must be installed, too.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">buildTree(
+  disDat,
+  startFr = NULL,
+  posCo = c("beg", "end"),
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>disDat</code></td>
+<td>
+<p>(matrix or data.frame) integer values with 1st column, ie start site of fragment, 2nd column as end of fragments, rownames as unique IDs (node-names)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>startFr</code></td>
+<td>
+<p>(integer) index for 1st node (typically =1 if 'disDat' sorted by "beg"), should point to a terminal node for consective growing of branches</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>posCo</code></td>
+<td>
+<p>(character) colnames specifying the begin &amp; start sites in 'disDat', if NULL 1st &amp; 2nd col will be used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a list with $paths (branches as matrix with columns 'sumLen' &amp; 'n'), $usedNodes (character vector of all names used to build tree) and $tree (object from data.tree)
+</p>
+
+
+<h3>See Also</h3>
+
+<p>package <a href="https://CRAN.R-project.org/package=data.tree">data.tree</a> original function used <code>Node</code>; in this package : for exploiting edge/tree related issues <code>simpleFragFig</code>, <code>countSameStartEnd</code> and <code>contribToContigPerFrag</code>,
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">frag2 &lt;- cbind(beg=c(2,3,7,13,13,15,7,9,7,3,7,5,7,3),end=c(6,12,8,18,20,20,19,12,12,4,12,7,12,4)) 
+rownames(frag2) &lt;- c("A","E","B","C","D","F","H","G","I", "J","K","L","M","N")
+buildTree(frag2)
+countSameStartEnd(frag2)
+</code></pre>
+
+
+</div>

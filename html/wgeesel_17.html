@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>MQIC.gee</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+MQIC and MQICu for GEE
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculate MQIC (Modified QIC) and MQIC<code class="reqn">_{u}</code>. MQIC is an asymptotic unbiased estimator of the risk function based on the independent quasi-likelihood. MQIC and original QIC may have non-negligible effect for model selection, especially when the true correlation structure completely different from the working correlation structure.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">MQIC.gee(object)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>a fitted model object of class <code>"wgee"</code>.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Return a list of MQIC, MQIC<code class="reqn">_{u}</code> and Quasi-likelihood.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Cong Xu, Zheng Li and Ming Wang
+</p>
+
+
+<h3>References</h3>
+
+<p>Pan, W., 2001. Akaike's information criterion in generalized estimating equations. <em>Biometrics</em>, 57(1), pp.120-125.
+</p>
+<p>Gosho, M., Hamada, C., and Yoshimura, I. (2011). Modifications of QIC and CIC for Selecting a Working Correlation Structure in the Generalized Estimating Equation Method. <em>Japanese Journal of Biometrics</em>, 32(1), 1-12.
+</p>
+<p>Imori, S., 2013. On Properties of QIC in Generalized Estimating Equations. <em>Hiroshima University</em>, pp.1-8.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>geeglm</code> (<span class="pkg">geepack</span>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(imps)
+
+fit &lt;- wgee(IMPS79 ~ Drug+Sex+Time, data=imps,id=imps$ID,family="gaussian",
+             corstr="independence")
+MQIC.gee(fit)
+
+
+data(ohio)
+
+fit2 &lt;- wgee(resp ~ age + smoke+age:smoke, data=ohio, id=ohio$id, 
+             family="binomial", corstr="independence")
+MQIC.gee(fit2)
+
+
+</code></pre>
+
+
+</div>

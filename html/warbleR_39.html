@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>map_xc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Maps of 'Xeno-Canto' recordings by species</h2>
+
+<h3>Description</h3>
+
+<p><code>map_xc</code> creates maps to visualize the geographic spread of 'Xeno-Canto'
+recordings.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">map_xc(
+  X,
+  img = TRUE,
+  it = "jpeg",
+  res = 100,
+  labels = FALSE,
+  path = NULL,
+  leaflet.map = FALSE,
+  leaflet.cluster = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Data frame output from <code>query_xc</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>img</code></td>
+<td>
+<p>A logical argument specifying whether an image file of each species
+map should be returned, default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>it</code></td>
+<td>
+<p>A character vector of length 1 giving the image type to be used. Currently only
+"tiff" and "jpeg" are admitted. Default is "jpeg".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res</code></td>
+<td>
+<p>Numeric argument of length 1. Controls image resolution.
+Default is 100 (faster) although 300 - 400 is recommended for publication/
+presentation quality.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>A logical argument defining whether dots depicting recording locations are labeled.
+If <code>TRUE</code> then the Recording_ID is used as label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Character string with the directory path where the image files will be saved.
+If <code>NULL</code> (default) then the current working directory is used.
+Ignored if <code>img = FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>leaflet.map</code></td>
+<td>
+<p>Logical to control whether the package 'leaflet' is used for displaying the maps. 'leaflet' maps are interactive and display information about recordings and links to the Xeno-Canto website. If <code>TRUE</code> a single map is displayed regardless of the number of species and all other image related arguments are ignored. Default is <code>FALSE</code>. The hovering label shows the species scientific name (or the subspecies if only 1 species is present in 'X'). Note that colors will be recycled if more after 18 species (or subspecies).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>leaflet.cluster</code></td>
+<td>
+<p>Logical to control if icons are clustered by locality (as in Xeno-Canto maps). Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function creates maps for visualizing the geographic spread of recordings from the open-access
+online repository <a href="https://www.xeno-canto.org/">Xeno-Canto</a>. The function takes the output of
+<code>query_xc</code> as input. Maps can be displayed in the graphic device (or Viewer if 'leaflet.map = TRUE') or saved as images in the
+working directory. Note that only recordings with geographic coordinates are displayed.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A map of 'Xeno-Canto' recordings per species (image file), or a faceted
+plot of species map(s) in the active graphic device.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>) and Grace Smith Vidaurre
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# search in xeno-canto
+X &lt;- query_xc("Phaethornis anthophilus", download = FALSE)
+
+# create image in R graphic device
+map_xc(X, img = FALSE)
+
+# create leaflet map
+map_xc(X, leaflet.map = TRUE)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

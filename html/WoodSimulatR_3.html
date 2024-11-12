@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_transform_names</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Return labels for given transforms</h2>
+
+<h3>Description</h3>
+
+<p>The function <code>simbase_covar</code> allows the specification of a
+transform for one or more variables. The present function creates short
+names for such transforms for use in labelling (by default, the labelling is
+done by <code>simbase_labeler</code>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_transform_names(
+  transforms,
+  prefer_primitive = c("if_shorter", "never", "always")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>transforms</code></td>
+<td>
+<p>A named list of objects of class <code>trans</code>
+or class <code>transform</code>
+(see function <code>trans_new</code> in package <code>scales</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prefer_primitive</code></td>
+<td>
+<p>If "never", the function always returns the value of
+the field <code>name</code> (except if this is missing).
+If "always", the name of the called function is returned unless it cannot be
+identified (in many cases, the transform will not be primitive).
+If "if_shorter", the shorter option of the two above is returned if both can
+be retrieved.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The label of a transform could be the value of the field <code>name</code> from
+each object of class <code>trans</code> (or <code>transform</code>),
+but also the name of the transform
+function itself, if it is a primitive function or just calls one function.
+</p>
+<p>Each object of class <code>trans</code> (or <code>transform</code>)
+should have a field <code>name</code>
+which can be returned by the present function.
+</p>
+<p>The function examines the field <code>transform</code>.
+If this field contains a primitive function (see <code>is_primitive</code>),
+or if there is just one function call in the body of this <code>transform</code>
+function, we can also return the name of this called function.
+</p>
+<p>If there is no field <code>name</code> and no single function is called from the
+function defined in the field <code>transform</code>,
+a generic function name <code>"f."</code> is returned.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A named vector of transforms names.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">get_transform_names(list(a = scales::log_trans(), b = scales::boxcox_trans(0)));
+get_transform_names(list(x = list(name = 'a very long name', transform = log, inverse = exp)))
+</code></pre>
+
+
+</div>

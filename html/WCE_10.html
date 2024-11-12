@@ -1,0 +1,372 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WCE</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fit weighted cumulative exposure models</h2>
+
+<h3>Description</h3>
+
+<p><code>WCE</code> implements a flexible method for modeling cumulative effects of time-varying exposures, weighted according to their relative proximity in time, and represented by time-dependent covariates. The current implementation estimates the weight function in the Cox proportional hazards model. The function that assigns weights to doses taken in the past is estimated using cubic regression splines.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WCE(
+  data,
+  analysis = "Cox",
+  nknots,
+  cutoff,
+  constrained = FALSE,
+  aic = FALSE,
+  MatchedSet = NULL,
+  id,
+  event,
+  start,
+  stop,
+  expos,
+  covariates = NULL,
+  controls = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data frame in an interval (long) format, in which each line corresponds to one and only one time unit for a given individual.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>analysis</code></td>
+<td>
+<p>Character string. One of 'Cox', 'NCC' or 'CC' for Cox proportional hazards model, conditional logistic regression for nested case controls ('NCC') or logistic regression for case-controls ('CC'). Currently only 'Cox' for the Cox proportional hazards model is implemented, calling the <code>coxph</code> function of the survival package.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nknots</code></td>
+<td>
+<p>A scalar or a vector. Corresponds to the number(s) of interior knots for the cubic splines to estimate the weight function. For example, if <code>nknots</code> is set to 2, then a model with two interior knots is fitted. If <code>nknots</code>  is set to 1:3 or alternatively c(1,2,3) then three models with 1, 2, and 3 interior knots, respectively, are fitted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutoff</code></td>
+<td>
+<p>Integer. Time window over which the WCE model is estimated. Corresponds to the length of the estimated weight function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>constrained</code></td>
+<td>
+<p>Controls whether the weight function should be constrained to smoothly go to zero. Set to FALSE for unconstrained models, to 'Right' or 'R' to constrain the weight function to smoothly go to zero for exposure remote in time, and to 'Left' or 'L' to constrain the weight function to start a zero for the current values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aic</code></td>
+<td>
+<p>Logical. If TRUE, then the AIC is used to select the best fitting model among those estimated for the different numbers of interior knots requested with <code>nknots</code>. If FALSE, then the BIC is used instead of the AIC. Default to FALSE (BIC). Note that the BIC implemented in <code>WCE</code> is the version suggested by Volinsky and Raftery in Biometrics (2000), which corresponds to BIC = 2 * log(PL) + p * log(d) where PL is the model's partial likelihood, p is the number of estimated parameters and d is the number of uncensored events. See Sylvestre and Abrahamowicz (2009) for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MatchedSet</code></td>
+<td>
+<p>Argument required for 'NCC' analysis only. Corresponds to the variable in <code>data</code> that specifies the matched sets for the conditional logistic regression. Currently not implemented.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>Name of the variable in <code>data</code> corresponding to the identification of subjects.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>event</code></td>
+<td>
+<p>Name of the variable in <code>data</code> corresponding to event indicator. Must be coded 1 = event and 0 = no event.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p>Name of the variable in <code>data</code> corresponding to the starting time for the interval. Corresponds to <code>time</code> argument in function <code>Surv</code> in the survival package.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stop</code></td>
+<td>
+<p>Name of the variable in <code>data</code> corresponding to the ending time for the interval. Corresponds to <code>time2</code> argument in function <code>Surv</code> in the survival package.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expos</code></td>
+<td>
+<p>Name of the variable in <code>data</code> corresponding to the exposure variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>covariates</code></td>
+<td>
+<p>Optional. Vector of characters corresponding to the name(s) of the variable(s) in <code>data</code> corresponding to the covariate(s) to be included in the model. Default to NULL, which corresponds to fitting model(s) without covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>controls</code></td>
+<td>
+<p>List corresponding to the control parameters to be passed to the <code>coxph</code> function. See <code>coxph.control</code> for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Optional; other parameters to be passed through to <code>WCE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The current implementation of the <code>WCE</code> function does not allow missing values in the <code>Id</code>, <code>event</code>, <code>start</code>, <code>stop</code>, <code>expos</code> variables. Intervals in <code>data</code> determined by <code>start</code> and <code>stop</code> are assumed to be open on the left and closed on the right, (start, stop]. Intervals for a given individual (<code>Id</code>) must not overlap, and must cover the entire follow-up for the individual. The <code>start</code> and <code>stop</code> values for a given interval must not be equal. Delayed entry is not implemented in this version of the <code>WCE</code> function so all of the <code>Id</code> must start their follow-up at the same <code>start</code> value. The interior knots are placed at quantiles of the exposure variable distribution.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of elements:</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+<code>knotsmat</code> </td>
+<td style="text-align: left;"> List of vectors of knots used for the spline modelling of the weight function(s). </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>WCEmat</code> </td>
+<td style="text-align: left;"> Matrix of the estimated weight function. Each row corresponds to an estimated weight function. The number of columns in the <code>WCEmat</code> corresponds to the value of the argument <code>nknots</code>. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>loglik</code> </td>
+<td style="text-align: left;"> Partial likelihood for each estimated model. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>est</code> </td>
+<td style="text-align: left;"> List of vectors of estimated coefficients for the artificial time-dependent variables used to fit the WCE model(s). </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>vcovmat</code> </td>
+<td style="text-align: left;"> List of variance-covariance matrices estimated for each model. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>SED</code> </td>
+<td style="text-align: left;"> List of vectors of estimated standard errors of the estimated coefficients of the artificial time-dependent variables used to fit each WCE model. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>beta.hat.covariates</code> </td>
+<td style="text-align: left;"> List of vectors of estimated coefficients for the covariates. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>se.covariates</code> </td>
+<td style="text-align: left;"> List of vectors of standard errors of the estimated coefficients for the covariates. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>covariates</code> </td>
+<td style="text-align: left;"> Names of the covariates used in the estimation. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>constrained</code> </td>
+<td style="text-align: left;"> Indicator of whether the model(s) was(were) unconstrained, right-constrained or left-constrained. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>nevents</code> </td>
+<td style="text-align: left;"> Number of events. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>aic</code> </td>
+<td style="text-align: left;"> Logical value corresponding to the <code>aic</code> argument. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>info.criterion</code> </td>
+<td style="text-align: left;"> Value of the AIC or BIC for each model estimated. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>analysis</code> </td>
+<td style="text-align: left;"> Value of the <code>analysis</code> argument. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>...</code> </td>
+<td style="text-align: left;"> Optional, additional argument(s). </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>Note that the print method for a WCE object returns the estimated WCE function(s), the number of events, the partial likelihoods, the AIC or BIC values, the matrix of coefficients estimates for the covariates (if any) and the matrix of standard error estimates for the covariates (if any).
+</p>
+
+
+<h3>References</h3>
+
+<p>Sylvestre, M. P., &amp; Abrahamowicz, M. (2009). Flexible modeling of the cumulative effects of time-dependent exposures on the hazard. Statistics in medicine, 28(27), 3437-3453.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See also <code>checkWCE</code>, a function to check whether the arguments passed to <code>WCE</code> are correctly specified. See also <code>summary</code>, and <code>plot</code> for <code>WCE</code> objects.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+wce &lt;- WCE(drugdata, "Cox", 1, 90, constrained = "R", id = "Id", event = "Event",
+start = "Start", stop = "Stop", expos = "dose", covariates = c("age", "sex"))
+## Not run: 
+ # Confidence intervals for HR, as well as pointwise confidence bands
+ # for the estimated weight function can be obtained via bootstrap.
+
+ # Set the number of bootstrap resamples
+ #(set to 5 for demonstration purposes, should be higher)
+ B &lt;- 5
+
+ # Obtain the list of ID for sampling
+ ID &lt;- unique(drugdata$Id)
+
+ # Prepare vectors to extract estimated weight function and HR
+ # for the best-fitting model for each bootstrap resample
+ boot.WCE &lt;- matrix(NA, ncol = 90, nrow=B)
+ boot.HR &lt;- rep(NA, B)
+
+ # Sample IDs with replacement
+ for (i in 1:B){
+   ID.resamp &lt;- sort(sample(ID, replace=T))
+   datab &lt;- drugdata[drugdata$Id %in% ID.resamp,] # select obs. but duplicated Id are ignored
+
+   # deal with duplicated Id and assign them new Id
+   step &lt;- 1
+   repeat {
+   # select duplicated Id in ID.resamp
+     ID.resamp &lt;- ID.resamp[duplicated(ID.resamp)==TRUE]
+     if (length(ID.resamp)==0) break # stop when no more duplicated Id to deal with
+     # select obs. but remaining duplicated Id are ignored
+     subset.dup &lt;- drugdata[drugdata$Id %in% ID.resamp,]
+     # assign new Id to duplicates
+     subset.dup$Id &lt;- subset.dup$Id + step * 10^ceiling(log10(max(drugdata$Id)))
+     # 10^ceiling(log10(max(drugdata$Id)) is the power of 10
+     # above the maximum Id from original data
+     datab &lt;- rbind(datab, subset.dup)
+     step &lt;- step+1
+   }
+
+   mod &lt;- WCE(data = datab, analysis = "Cox", nknots = 1:3, cutoff = 90,
+   constrained = "R", aic = FALSE, MatchedSet = NULL, id = "Id",
+   event = "Event", start = "Start", stop = "Stop", expos = "dose",
+   covariates = c("sex", "age"))
+
+   # return best WCE estimates and corresponding HR
+   best &lt;- which.min(mod$info.criterion)
+   boot.WCE[i,] &lt;- mod$WCEmat[best,]
+   boot.HR[i] &lt;- HR.WCE(mod, rep(1, 90), rep(0, 90))
+ }
+
+ # Summarize bootstrap results using percentile method
+ apply(boot.WCE, 2, quantile, p = c(0.05, 0.95))
+ quantile(boot.HR, p = c(0.05, 0.95))
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

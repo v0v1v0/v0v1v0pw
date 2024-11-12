@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>winsrch_constrOptim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find the optimal half-window width combination</h2>
+
+<h3>Description</h3>
+
+<p>Find the optimal half-window width combination to use for weighted regression.  This differs from <code>winsrch_optim</code> by using <code>constrOptim</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">winsrch_constrOptim(dat_in, ...)
+
+## Default S3 method:
+winsrch_constrOptim(
+  dat_in,
+  wins_in = NULL,
+  control = list(),
+  lower = c(0.1, 1, 0.1),
+  upper = c(2, 15, 2),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input data object to use with weighted regression</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to <code>wrtdscv</code>, <code>wrtds</code>, or <code>getwts</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wins_in</code></td>
+<td>
+<p>starting list of window weights for initializing the search algorithm</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>A list of control parameters passed to <code>optim</code> (see details in <code>optim</code> help file).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower</code></td>
+<td>
+<p>vector of minimum half-window widths to evaluate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upper</code></td>
+<td>
+<p>vector of maximum half-window widths to evaluate</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function uses <code>optim</code> to minimize the error returned by <code>wrtdscv</code> for a given window combination.  The search algorithm uses the limited-memory modification of the BFGS quasi-Newton method to impose upper and lower limits on the optimization search. These limits can be changed using the <code>lower</code> and <code>upper</code> arguments.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Some stuff
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wrtdscv</code>, <code>winsrch_grid</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# setup parallel backend
+library(doParallel)
+ncores &lt;- detectCores() - 1  
+registerDoParallel(cores = ncores)
+
+# run search function - takes a while
+res &lt;- winsrch_optim(tidobjmean)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

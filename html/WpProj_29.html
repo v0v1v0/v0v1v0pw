@@ -1,0 +1,139 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WPR2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+<code class="reqn">W_p R^2</code> Function to Evaluate Performance</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+This function will calculate p-Wasserstein distances between the predictions of interest and the projected model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WPR2(
+  predictions = NULL,
+  projected_model,
+  p = 2,
+  method = "exact",
+  base = NULL,
+  ...
+)
+
+## S4 method for signature 'ANY,matrix'
+WPR2(
+  predictions = NULL,
+  projected_model,
+  p = 2,
+  method = "exact",
+  base = NULL,
+  ...
+)
+
+## S4 method for signature 'ANY,distcompare'
+WPR2(
+  predictions = NULL,
+  projected_model,
+  p = 2,
+  method = "exact",
+  base = NULL,
+  ...
+)
+
+## S4 method for signature 'ANY,list'
+WPR2(
+  predictions = NULL,
+  projected_model,
+  p = 2,
+  method = "exact",
+  base = NULL,
+  ...
+)
+
+## S4 method for signature 'ANY,WpProj'
+WPR2(
+  predictions = NULL,
+  projected_model,
+  p = 2,
+  method = "exact",
+  base = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>predictions</code></td>
+<td>
+<p>Predictions of interest, likely from the original model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>projected_model</code></td>
+<td>
+<p>A matrix of competing predictions, possibly from a WpProj fit, a WpProj fit itself, or a list of WpProj objects</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>Power of the Wasserstein distance to use in distance calculations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Method for calculating Wasserstein distance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>base</code></td>
+<td>
+<p>The baseline result to compare to. If not provided, defaults to the model with no covariates and only an intercept.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments passed to Wasserstein distance calculation. See <code>wasserstein</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code class="reqn">W_p R ^2</code> values
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (rlang::is_installed("stats")) {
+# this example is not a true posterior estimation, but is used for illustration
+n &lt;- 32
+p &lt;- 10
+s &lt;- 21
+x &lt;- matrix( stats::rnorm(n*p), nrow = n, ncol = p )
+beta &lt;- (1:10)/10
+y &lt;- x %*% beta + stats::rnorm(n)
+post_beta &lt;- matrix(beta, nrow=p, ncol=s) + 
+    matrix(rnorm(p*s), p, s) # not a true posterior
+post_mu &lt;- x %*% post_beta
+
+fit &lt;-  WpProj(X=x, eta=post_mu, power = 2.0)
+
+out &lt;- WPR2(predictions = post_mu, projected_model = fit, 
+base = rowMeans(post_mu) # same as intercept only projection
+)
+}
+</code></pre>
+
+
+</div>

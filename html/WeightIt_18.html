@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>make_full_rank</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Make a design matrix full rank</h2>
+
+<h3>Description</h3>
+
+<p>When writing user-defined methods for use with
+<code>weightit()</code>, it may be necessary to take the potentially non-full rank
+<code>covs</code> data frame and make it full rank for use in a downstream
+function. This function performs that operation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">make_full_rank(mat, with.intercept = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mat</code></td>
+<td>
+<p>a numeric matrix or data frame to be transformed. Typically this
+contains covariates. <code>NA</code>s are not allowed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>with.intercept</code></td>
+<td>
+<p>whether an intercept (i.e., a vector of 1s) should be
+added to <code>mat</code> before making it full rank. If <code>TRUE</code>, the
+intercept will be used in determining whether a column is linearly dependent
+on others. Regardless, no intercept will be included in the output.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>make_full_rank()</code> calls <code>qr()</code> to find the rank and linearly
+independent columns of <code>mat</code>, which are retained while others are
+dropped. If <code>with.intercept</code> is set to <code>TRUE</code>, an intercept column
+is added to the matrix before calling <code>qr()</code>. Note that dependent
+columns that appear later in <code>mat</code> will be dropped first.
+</p>
+<p>See example at <code>method_user</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of the same type as <code>mat</code> containing only linearly
+independent columns.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Older versions would drop all columns that only had one value. With
+<code>with.intercept = FALSE</code>, if only one column has only one value, it
+will not be removed, and it will function as though there was an intercept
+present; if more than only column has only one value, only the first one
+will remain.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>method_user</code>, <code>model.matrix()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+set.seed(1000)
+c1 &lt;- rbinom(10, 1, .4)
+c2 &lt;- 1-c1
+c3 &lt;- rnorm(10)
+c4 &lt;- 10*c3
+mat &lt;- data.frame(c1, c2, c3, c4)
+
+make_full_rank(mat) #leaves c2 and c4
+
+make_full_rank(mat, with.intercept = FALSE) #leaves c1, c2, and c4
+</code></pre>
+
+
+</div>

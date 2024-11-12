@@ -1,0 +1,77 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>womenStereotypeData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Students' scores (men and women) on an arithmetic test</h2>
+
+<h3>Description</h3>
+
+<p>An artificial dataset created by Lix et al. from summary data presented by Wicherts et al. (2005)
+(see the vignette). These authors examined the effects of stereotype threat on women's mathematics ability. 
+Originally there were four different tests administered to study participants (arithmetic,
+number series, word problems, and sums tests). The dataset contains only scores for the arithmetic test
+because these scores exhibited a greater magnitude of variance heterogeneity than scores for
+the other tests. It is an unbalanced design with cell sizes ranging from 45 to 50 participants, and a total
+sample size of 283.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">womenStereotypeData
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 283 rows and 3 variables:
+</p>
+
+<dl>
+<dt>condition</dt>
+<dd>
+<p>test condition (control, nullified, stereotype threat)</p>
+</dd>
+<dt>sex</dt>
+<dd>
+<p>the individual's sex (male, female)</p>
+</dd>
+<dt>y</dt>
+<dd>
+<p>score on the arithmetic test, out of 40</p>
+</dd>
+</dl>
+<h3>Source</h3>
+
+<p><a href="http://supp.apa.org/psycarticles/supplemental/met_13_2_110/Example_2_Factorial_Independent_Groups_Design.pdf">http://supp.apa.org/psycarticles/supplemental/met_13_2_110/Example_2_Factorial_Independent_Groups_Design.pdf</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>J.Wicherts, C. Dolan, and D. Hessen. Stereotype threat and group differences in test performance: 
+a question of measurement invariance. Journal of Personality and Social Psychology, 89(5):696-716, 2005.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">omnibus_LSM &lt;- welchADF.test(womenStereotypeData, response = "y", between.s =
+  c("condition", "sex"), contrast = "omnibus", effect = "condition")
+omnibus_trimmed &lt;- update(omnibus_LSM, trimming = TRUE, effect = NULL) # unset value of "effect"
+pairwise_LSM &lt;- update(omnibus_LSM, contrast = "all.pairwise", effect = c("condition", "sex"))
+pairwise_trimmed &lt;- update(pairwise_LSM, trimming = TRUE)
+summary(omnibus_LSM)
+summary(omnibus_trimmed)
+summary(pairwise_trimmed)
+## Not run: 
+  pairwise_trimmed_boot &lt;- update(pairwise_trimmed, bootstrap = TRUE, seed = 12345)
+  summary(pairwise_trimmed_boot)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>data.gen.SW</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate predictor and response data: Sinewave model</h2>
+
+<h3>Description</h3>
+
+<p>Generate predictor and response data: Sinewave model
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data.gen.SW(nobs = 512, fp = 25, fd, sd.x = 0.1, sd.y = 0.1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>nobs</code></td>
+<td>
+<p>The data length to be generated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fp</code></td>
+<td>
+<p>The frequencies in the generated response.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fd</code></td>
+<td>
+<p>A vector of frequencies for potential predictors. fd = c(3,5,10,15,25,30,55,70,95) used in the WRR paper.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd.x</code></td>
+<td>
+<p>The noise level in the predictor.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd.y</code></td>
+<td>
+<p>The noise level in the response.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of 3 elements: a vector of response (x), a matrix of potential predictors (dp) with each column containing one potential predictor, and a vector of true predictor numbers.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">###synthetic example
+#frequency, sampled from a given range
+fd &lt;- c(3,5,10,15,25,30,55,70,95)
+
+data.SW1 &lt;- data.gen.SW(nobs=512,fp=25,fd=fd)
+data.SW3 &lt;- data.gen.SW(nobs=512,fp=c(15,25,30),fd=fd)
+
+ts.plot(ts(data.SW1$x),ts(data.SW3$x),col=c("black","red"))
+plot.ts(cbind(data.SW1$x,data.SW1$dp))
+plot.ts(cbind(data.SW3$x,data.SW3$dp))
+</code></pre>
+
+
+</div>

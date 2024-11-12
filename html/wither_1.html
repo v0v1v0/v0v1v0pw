@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>with_here</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Temporarily Change Project Root</h2>
+
+<h3>Description</h3>
+
+<p>Temporarily change the here() root
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">with_here(new_here, expr, chdir = FALSE, verbose = FALSE)
+
+local_here(
+  new_here,
+  chdir = FALSE,
+  verbose = FALSE,
+  .local_envir = parent.frame()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>new_here</code></td>
+<td>
+<p>new temporary here root directory</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expr</code></td>
+<td>
+<p>expression to evaluate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chdir</code></td>
+<td>
+<p>also temporarily change working directory</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>show here's messages on setting new root</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.local_envir</code></td>
+<td>
+<p>the environment to use for scoping, see <code>withr::local_dir()</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Changes <code>here::here()</code> to temporarily point to a new
+directory. Automatically changes back to the original value when
+finished.
+</p>
+<p>The with_* and local_* flavours of this functionality mimics that
+which is typically used in the withr package.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>with_here()</code> returns the result of the
+expression. <code>local_here()</code> returns the original value of
+here(), before the change.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Torbjørn Lindahl
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(here)
+library(withr)
+
+d &lt;- local_tempdir()
+
+cat("here() is initially:", here(), "\n")
+
+# temporarily do things uner a different here() root:
+with_here(d, cat("but here() is now:", here(), "\n"))
+
+# check that everything is shifted back
+cat("here() is now again:", here(), "\n")
+
+local({
+
+  d &lt;- local_tempdir()
+
+  cat("here was initially: ", here(), "\n")
+
+  local_here(d)
+
+  cat("after local_here(), here() is: ",here(),"\n")
+  stopifnot(normalizePath(d) == normalizePath(here()))
+
+  # do something that requires here() be elsewhere
+
+})
+
+cat("outside the block, here() is again:", here(), "\n")
+</code></pre>
+
+
+</div>

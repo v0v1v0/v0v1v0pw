@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>new_generator_query</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Constructor for generator query type</h2>
+
+<h3>Description</h3>
+
+<p>Construct a new query to a <a href="https://www.mediawiki.org/wiki/API:Query#Example_6:_Generators">generator module</a> of
+the Action API. This low-level constructor only performs basic type-checking.
+It is your responsibility to ensure that the chosen <code>generator</code> is an
+existing API endpoint, and that you have composed the query correctly. For
+a more user-friendly interface, use query_generate_pages.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">new_generator_query(.req, generator, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.req</code></td>
+<td>
+<p>A <code>query/action_api/httr2_request</code> object,
+or a generator query as returned by this function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>generator</code></td>
+<td>
+<p>The generator to add to the query. If the generator is based
+on a <a href="https://www.mediawiki.org/wiki/API:Properties">property module</a>, then
+<code>.req</code> must be a subtype of
+<code>prop/query/action_api/httr2_request</code>. If the generator
+is based on a <a href="https://www.mediawiki.org/wiki/API:Lists">list module</a>, then
+<code>.req</code> must subclass
+<code>query/action_api/httr2_request</code> directly.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>&lt;<code>dynamic-dots</code>&gt; Further parameters to the generator</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The output type depends on the input. If <code>.req</code> is a
+<code>query/action_api/httr2_request</code>, then the output
+will be a <code>generator/query/action_api/httr2_request</code>. If <code>.req</code> is a
+<code>prop/query/action_api/httr2_request</code>, then the return
+object will be a subclass of the passed request, with "generator" as the
+first term in the class vector, i.e.
+<code>generator/(titles|pageids|revids)/prop/query/action_api/httr2_request</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Build a generator query using a list module
+# List all members of Category:Physics on English Wikipedia
+physics &lt;- wiki_action_request() %&gt;%
+  new_generator_query("categorymembers", gcmtitle = "Category:Physics")
+
+# Build a generator query on a property module
+# Generate the pages that are linked to Albert Einstein's page on English
+# Wikipedia
+einstein_categories &lt;- wiki_action_request() %&gt;%
+  new_prop_query("titles", "Albert Einstein") %&gt;%
+  new_generator_query("iwlinks")
+
+</code></pre>
+
+
+</div>

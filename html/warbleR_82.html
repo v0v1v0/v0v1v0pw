@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wav_2_flac</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert .wav files to .flac</h2>
+
+<h3>Description</h3>
+
+<p><code>wav_2_flac</code> converts several .wav files to .flac compressed lossless format
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wav_2_flac(
+  files = NULL,
+  path = NULL,
+  overwrite = FALSE,
+  pb = TRUE,
+  parallel = 1,
+  reverse = FALSE,
+  compression = 5,
+  flac.path = ""
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>character vector with the names of files to be converted. If <code>NULL</code> all files in the working directory (or 'path' if supplied) are converted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Character string containing the directory path where the .wav files are located.
+If <code>NULL</code> (default) then the current working directory is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overwrite</code></td>
+<td>
+<p>Logical. Control whether a .flac sound file that is already in the working directory should be
+overwritten.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Logical argument to control if progress bar is shown. Default is <code>TRUE</code>. It can also be
+set globally using the 'pb' option (see <code>warbleR_options</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Numeric. Controls whether parallel computing is applied.
+It specifies the number of cores to be used. Default is 1 (i.e. no parallel computing). It can also be
+set globally using the 'parallel' option (see <code>warbleR_options</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reverse</code></td>
+<td>
+<p>Logical argument to control if .wav files are converted into .flac files (default, <code>reverse = FALSE</code>) or .flac files are converted into .wav files <code>reverse = TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>compression</code></td>
+<td>
+<p>Numeric string on length 1 indicating the level of compression for .flac files. Must a number between 0 (lowest) to 8 (highest compression). Default is 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flac.path</code></td>
+<td>
+<p>Path to the flac program, mostly needed for windows OS.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function will convert all .wav files in working directory or 'path' supplied to .flac format (or the opposite if <code>reverse = TRUE</code>). For reading 'flac' files on windows the path to the .exe is required. This can be set using the 'flac.path' argument (or globally using the same argument in <code>warbleR_options</code>). Note that reading 'flac' files requires creating a temporary copy in 'wav' format, which can be particularly slow for long files.
+</p>
+<p>convert all .wav files in working directory to .flac compressed lossless format. It's just a silly wrapper over (<code>wav2flac</code>) to simplify converting several files at once. The function works recursively, converting files within all subfolders.
+</p>
+
+
+<h3>Value</h3>
+
+<p>.flac files saved in the working directory with same name as original wav files.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# create some .wav files
+data(list = c("Phae.long1", "Phae.long2", "Phae.long3", "Phae.long4"))
+writeWave(Phae.long1, file.path(tempdir(), "Phae.long1.wav"))
+writeWave(Phae.long2, file.path(tempdir(), "Phae.long2.wav"))
+writeWave(Phae.long3, file.path(tempdir(), "Phae.long3.wav"))
+writeWave(Phae.long4, file.path(tempdir(), "Phae.long4.wav"))
+
+# Convert all files to .flac format
+wav_2_flac(path = tempdir())
+
+# check this folder!!
+open_wd(tempdir())
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

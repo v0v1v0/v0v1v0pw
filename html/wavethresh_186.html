@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>putD.wp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Puts a whole resolution level of wavelet packet coeffients into wp wavelet object.</h2>
+
+<h3>Description</h3>
+
+<p>Makes a copy of the <code>wp</code> object, replaces a whole resolution level of wavelet packet coefficients data in the copy, and then returns the copy. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wp'
+putD(wp, level, value, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wp</code></td>
+<td>
+<p>Wavelet packet object into which you wish to insert the wavelet packet coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>the resolution level at which you wish to replace the wavelet packet coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>the replacement data, this should be of the correct length.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function <code>accessD.wp</code> obtains the wavelet packet coefficients for a particular level.
+</p>
+<p>For wavelet packet transforms the number of coefficients at each resolution level is the same and equal to <code>2^nlevelsWT</code> where <code>nlevels</code> is the number of levels in the <code>wp.object</code>. The number of coefficients at each resolution level is also, of course, the number of data points used to initially form the <code>wp</code> object in the first place. 
+</p>
+<p>Use the <code>accessD.wp</code> to extract whole resolution levels of wavelet packet coefficients. 
+</p>
+<p>We don't recommend that you use this function unless you really know what you are doing. Usually it is more convenient to manipulate individual <em>packets</em> of coefficients using <code>getpacket</code>/<code>putpacket</code> functions. If you must use this function to insert whole resolution levels of coefficients you must ensure that the data vector you supply is valid: i.e. contains packet coefficients in the right order. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>wp</code> class object containing the modified wavelet packet coefficients. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.5.3 Copyright Guy Nason 1994 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wp.object</code>, <code>wp</code>, <code>accessD</code>, <code>accessD.wp</code>, <code>getpacket.wp</code>, <code>putpacket.wp</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Generate an EMPTY wp object:
+#
+zero &lt;- rep(0, 16)
+zerowp &lt;- wp(zero)
+#
+# Put some random mother wavelet coefficients into the object at
+# resolution level 2. For the wavelet packet transform there
+# are always 16 coefficients at every resolution level. 
+#
+mod.zerowp &lt;- putD( zerowp, level=2, v=rnorm(16))
+#
+# If you plot mod.zerowp you will see that there are only 
+# coefficients at resolution level 2 where you just put the coefficients.
+</code></pre>
+
+
+</div>

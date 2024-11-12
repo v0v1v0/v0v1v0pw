@@ -1,0 +1,551 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wiqid-package</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Fast, simple estimation functions for wildlife population models
+</h2>
+
+<h3>Description</h3>
+
+<p>Quick and dirty functions to estimate occupancy, survival, abundance, species richness and diversity, etc. for wildlife populations.
+</p>
+
+
+<h3>Details</h3>
+
+<p>There are a number of sophisticated programs for the analysis of wildlife data, producing estimates of occupancy, survival, abundance, or density. <span class="pkg">wiqid</span> began as a collection of fast, bare-bones functions which can be run from R suitable for use when you are generating hundreds of simulated data sets. The package takes its name from the quick-and-dirty nature of the original functions.
+</p>
+<p>We now use <span class="pkg">wiqid</span> in basic wildlife study design and data analysis workshops, and most functions now have options to check the input data and give informative error messages. Workshop participants have used <code>lm</code>, <code>glm</code> and functions in the <code>secr</code> and <code>BEST</code> packages. So  <span class="pkg">wiqid</span> tries to match the look and feel of these functions.
+</p>
+<p>All functions use standard data frames or matrices for data input. ML estimation functions return objects of class <code>wiqid</code> with parameter estimates on the transformed scale (usually logit functions), variance-covariance matrix, and back-transformed ‘real’ values; there are <code>print</code>, <code>logLik</code> and <code>predict</code> methods. Bayesian functions (distinguished by an initial "B") return class <code>mcmcOutput</code> objects.
+</p>
+<p>Simulations and bootstraps often generate weird data sets, eg. capture histories with no captures. These functions do not throw errors or give warnings if the data are weird, but return NAs if estimates cannot be calculated. Errors may still occur if the data are impossible, eg. 6 detections in 5 occasions.
+</p>
+<p>Note that in version 0.2.0 the scaling of continuous covariates has changed to SD=1 (previously SD=0.5). This means that beta coefficients will now be exactly half the size, matching the output from other software.
+</p>
+<p>The functions are listed by topic below.
+</p>
+
+
+<h3>SIMPLE BAYESIAN POSTERIORS</h3>
+
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <code>Bbinomial</code> </td>
+<td style="text-align: left;"> generate draws from a conjugate beta posterior distribution </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>Bpoisson</code> </td>
+<td style="text-align: left;"> generate draws from a conjugate gamma posterior distribution </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>Bnormal</code> </td>
+<td style="text-align: left;"> fit a basic normal model to data </td>
+</tr>
+</table>
+<h3>OCCUPANCY</h3>
+
+<p><b>Single-season occupancy</b>
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <code>occSS</code> </td>
+<td style="text-align: left;"> general-purpose ML function; allows site- and survey-specific covariates </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>BoccSS</code> </td>
+<td style="text-align: left;"> general-purpose Bayesian implementation of the above </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>occSS0</code> </td>
+<td style="text-align: left;"> a basic psi(.) p(.) model, faster if this is all you need </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>BoccSS0</code> </td>
+<td style="text-align: left;"> a Bayesian implementation of the psi(.) p(.) model </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>occSSrn</code> </td>
+<td style="text-align: left;"> Royle-Nichols method </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>occSStime</code> </td>
+<td style="text-align: left;"> faster if you have only time effects, also does a plot </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>occSScovSite</code> </td>
+<td style="text-align: left;"> faster if you only have site-specific covariates </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>occ2sps</code> </td>
+<td style="text-align: left;"> single-season two-species models   </td>
+</tr>
+</table>
+<p><b>Multi-season occupancy</b>
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <code>occMS</code> </td>
+<td style="text-align: left;"> general-purpose function; parameters depend on covariates; slow </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>occMScovSite</code> </td>
+<td style="text-align: left;"> smaller range of covariate options </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>occMS0</code> </td>
+<td style="text-align: left;"> a simple multi-season model with four parameters; faster </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>occMStime</code> </td>
+<td style="text-align: left;"> parameters vary by season; faster  </td>
+</tr>
+</table>
+<h3>DENSITY from spatial capture-recapture data</h3>
+
+<p>We use the <span class="pkg">secr</span> package for ML estimation of density. For Bayesian estimation, <span class="pkg">wiqid</span> offers:
+</p>
+
+<table><tr>
+<td style="text-align: left;">
+  <code>Bsecr0</code> </td>
+<td style="text-align: left;"> a Bayesian implementation of the intercept-only model </td>
+</tr></table>
+<h3>ABUNDANCE from closed-population capture-recapture data</h3>
+
+<p>Although data for genuinely closed populations are rare, this is an important conceptual stepping-stone from CJS models to robust models for survival.
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <code>closedCapM0</code> </td>
+<td style="text-align: left;"> simple model with constant capture probability </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>closedCapMb</code> </td>
+<td style="text-align: left;"> permanent behavioural response to first capture </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>closedCapMt</code> </td>
+<td style="text-align: left;"> capture probability varies with time </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>closedCapMtcov</code> </td>
+<td style="text-align: left;"> allows for time-varying covariates </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>closedCapMh2</code> </td>
+<td style="text-align: left;"> heterogeneity with 2-mixture model </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>closedCapMhJK</code> </td>
+<td style="text-align: left;"> jackknife estimator for heterogeneity  </td>
+</tr>
+</table>
+<h3>SURVIVAL from capture-recapture data</h3>
+
+<p><b>Cormack-Jolly-Seber models</b>
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <code>survCJS</code> </td>
+<td style="text-align: left;"> model with time-varying covariates </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>BsurvCJS</code> </td>
+<td style="text-align: left;"> a Bayesian implementation of the above </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>survCJSaj</code> </td>
+<td style="text-align: left;"> allows for different survival for adults and juveniles </td>
+</tr>
+</table>
+<p><b>Pollock's robust design</b>
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <code>survRDah</code> </td>
+<td style="text-align: left;"> 2-stage estimation of survival and recruitment </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>survRD</code> </td>
+<td style="text-align: left;"> single stage maximum likelihood estimation </td>
+</tr>
+</table>
+<p>Note that the RD functions are preliminary attempts at coding these models and have not been fully tested or benchmarked.
+</p>
+
+
+<h3>SPECIES RICHNESS from species x sample matrices</h3>
+
+<p><b>Rarefaction</b>
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <code>richRarefy</code> </td>
+<td style="text-align: left;"> Mao's tau estimator for rarefaction </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>richCurve</code> </td>
+<td style="text-align: left;"> a shell for plug-in estimators, for example... </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>richSobs</code> </td>
+<td style="text-align: left;"> the number of species observed </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>richSingle</code> </td>
+<td style="text-align: left;"> the number of singletons observed </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>richDouble</code> </td>
+<td style="text-align: left;"> the number of doubletons observed </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>richUnique</code> </td>
+<td style="text-align: left;"> the number of uniques observed </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>richDuplicate</code> </td>
+<td style="text-align: left;"> the number of duplicates observed </td>
+</tr>
+</table>
+<p><b>Coverage estimators</b>
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <code>richACE</code> </td>
+<td style="text-align: left;"> Chao's Abundance-based Coverage Estimator </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>richICE</code> </td>
+<td style="text-align: left;"> Chao's Incidence-based Coverage Estimator </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>richChao1</code> </td>
+<td style="text-align: left;"> Chao1 estimator </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>richChao2</code> </td>
+<td style="text-align: left;"> Chao2 estimator </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>richJack1</code> </td>
+<td style="text-align: left;"> first-order jackknife estimator </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>richJack2</code> </td>
+<td style="text-align: left;"> second-order jackknife estimator </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>richJackA1</code> </td>
+<td style="text-align: left;"> abundance-based first-order jackknife estimator </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>richJackA2</code> </td>
+<td style="text-align: left;"> abundance-based second-order jackknife estimator </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>richBoot</code> </td>
+<td style="text-align: left;"> bootstrap estimator </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>richMM</code> </td>
+<td style="text-align: left;"> Michaelis-Menten estimator </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>richRenLau</code> </td>
+<td style="text-align: left;"> Rennolls and Laumonier's estimator  </td>
+</tr>
+</table>
+<h3>BIODIVERSITY INDICES</h3>
+
+<p><b>Alpha diversity</b>
+</p>
+<p>All of these functions express diversity as the number of common species in the assemblage.
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <code>biodSimpson</code> </td>
+<td style="text-align: left;"> inverse of Simpson's index of dominance </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>biodShannon</code> </td>
+<td style="text-align: left;"> exponential form of Shannon's entropy </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>biodBerger</code> </td>
+<td style="text-align: left;"> inverse of Berger and Parker's index of dominance </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>biodBrillouin</code> </td>
+<td style="text-align: left;"> exponential form of Brillouin's index </td>
+</tr>
+</table>
+<p><b>Beta diversity / distance</b>
+</p>
+<p>All of these functions produce distance measures (not similarity) on a scale of 0 to 1. The function <code>distShell</code> provides a wrapper to produce a matrix of distance measures across a number of sites.
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <code>distBrayCurtis</code> </td>
+<td style="text-align: left;"> complement of Bray-Curtis index, aka 'quantitative Sorensen' </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>distChaoJaccCorr</code> </td>
+<td style="text-align: left;"> complement of Chao's Jaccard corrected index </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>distChaoJaccNaive</code> </td>
+<td style="text-align: left;"> complement of Chao's Jaccard naive index </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>distChaoSorCorr</code> </td>
+<td style="text-align: left;"> complement of Chao's Sorensen corrected index </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>distChaoSorNaive</code> </td>
+<td style="text-align: left;"> complement of Chao's Sorensen naive index </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>distChord</code> </td>
+<td style="text-align: left;"> distance between points on a normalised sphere </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>distJaccard</code> </td>
+<td style="text-align: left;"> complement of Jaccard's index of similarity </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>distMorisitaHorn</code> </td>
+<td style="text-align: left;"> complement of the Morisita-Horn index of similarity </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>distOchiai</code> </td>
+<td style="text-align: left;"> complement of the Ochiai coefficient of similarity </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>distPreston</code> </td>
+<td style="text-align: left;"> Preston's coefficient of faunal dissimilarity </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>distRogersTanimoto</code> </td>
+<td style="text-align: left;"> complement of the Rogers and Tanimoto's coefficient of similarity </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>distSimRatio</code> </td>
+<td style="text-align: left;"> complement of the similarity ratio </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>distSorensen</code> </td>
+<td style="text-align: left;"> complement of the Sorensen or Dice index of similarity </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>distWhittaker</code> </td>
+<td style="text-align: left;"> Whittaker's index of association </td>
+</tr>
+</table>
+<h3>DATA SETS</h3>
+
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <code>dippers</code> </td>
+<td style="text-align: left;"> Capture-recapture data for European dippers </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>distTestData</code> </td>
+<td style="text-align: left;"> artificial data set for distance measures </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>GrandSkinks</code> </td>
+<td style="text-align: left;"> multi-season occupancy data </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>KanhaTigers</code> </td>
+<td style="text-align: left;"> camera-trap data for tigers </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>KillarneyBirds</code> </td>
+<td style="text-align: left;"> abundance of birds in Irish woodlands </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>MeadowVoles</code> </td>
+<td style="text-align: left;"> mark-recapture data from a robust design study </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>railSims</code> </td>
+<td style="text-align: left;"> simulated detection/non-detection data for two species of rails </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>salamanders</code> </td>
+<td style="text-align: left;"> detection/non-detection data for salamanders </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>seedbank</code> </td>
+<td style="text-align: left;"> number of seeds germinating from samples of soil </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>Temburong</code> </td>
+<td style="text-align: left;"> counts of tree species in a 1ha plot in Brunei </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>TemburongBA</code> </td>
+<td style="text-align: left;"> basal area of tree species in a 1ha plot in Brunei </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>weta</code> </td>
+<td style="text-align: left;"> detection/non-detection data and covariates for weta </td>
+</tr>
+</table>
+<h3>DISTRIBUTIONS</h3>
+
+<p>These are convenience wrappers for the related d/p/q/r functions in the <code>stats</code> package which allow for parameterisation with mean and sd or (for Beta) mode and concentration.
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <code>dbeta2 etc</code> </td>
+<td style="text-align: left;"> Beta distribution with mean and sd </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>dbeta3 etc</code> </td>
+<td style="text-align: left;"> Beta distribution with mode and concentration </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>dgamma2 etc</code> </td>
+<td style="text-align: left;"> Gamma distribution with mean and sd </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>dt2 etc</code> </td>
+<td style="text-align: left;"> t-distribution with location, scale and df parameters</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>dt3 etc</code> </td>
+<td style="text-align: left;"> t-distribution with mean, sd and df parameters
+  </td>
+</tr>
+</table>
+<h3>UTILITY FUNCTIONS</h3>
+
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <code>AICc</code> </td>
+<td style="text-align: left;"> AIC with small-sample correction </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>AICtable</code> </td>
+<td style="text-align: left;"> tabulate AIC for several models </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>allCombinations</code> </td>
+<td style="text-align: left;"> model formulae for combinations of covariates </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>standardize</code> </td>
+<td style="text-align: left;"> a simple alternative to <code>scale</code>.
+  </td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Mike Meredith
+</p>
+
+
+</div>

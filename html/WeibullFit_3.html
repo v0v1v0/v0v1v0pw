@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>weibullFit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Weibull-fitting function</h2>
+
+<h3>Description</h3>
+
+<p>This functions calculates the shape, scale and location parameters for the weibull distribution to the input data and save the plots.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">weibullFit(dataFrame, primaryGroup = "parcela",
+  secondaryGroup = "idadearred", restrValue, pValue = "dap",
+  leftTrunc = 5, folder = NA, limit = 1e+05,
+  selectedFunctions = NULL, amp = 2, pmaxIT = 20, verbose = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dataFrame</code></td>
+<td>
+<p>the input data frame containing the independent, continuous variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>primaryGroup</code></td>
+<td>
+<p>the name(String) of the primary grouping column of the data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>secondaryGroup</code></td>
+<td>
+<p>the name(String) of the secondary grouping column of the data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>restrValue</code></td>
+<td>
+<p>the restriction value choosen to be applied to the secondary group column.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValue</code></td>
+<td>
+<p>the name(String) of the independent, continuos variable to be analyzed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>leftTrunc</code></td>
+<td>
+<p>An integer, defining the value for the weibull's function truncation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>folder</code></td>
+<td>
+<p>the pathname of the folder where the plots will be saved.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit</code></td>
+<td>
+<p>A positive integer determining the maximum number of rows from the data frame (grouped by the primary group column) to be analyzed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>selectedFunctions</code></td>
+<td>
+<p>A character vector determining which weibull function to be applied. Can be any of the following: w2, w2te, w2td, w2tetd, w3, w3te, w3td, w3tetd</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>amp</code></td>
+<td>
+<p>The continuous variable class width to be accounted for the calculations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pmaxIT</code></td>
+<td>
+<p>A positive integer, the maximum number of iterations used by the algorithm to try to get the weibull function parameters, for each primary group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical, determines if the function prints more detailed results on the console.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function first extracts a subset of the input data frame using the restrValue parameter applied
+to the secondary group column. Then, it calculates the weibull function scale, shape and location parameters
+using the maximum-likelyhood method. Finally, it plots the results (as .wmf, .csv and .jpeg) inside the folder
+given by the Folder parameter.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame object containing the best results for shape, location and scale parameters.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">functions &lt;- c("w2", "w3")
+best &lt;- weibullFit(restrValue = 60, dataFrame = TreesDBH,
+selectedFunctions = functions, amp = 2, pmaxIT = 1, limit = 1)
+
+
+</code></pre>
+
+
+</div>

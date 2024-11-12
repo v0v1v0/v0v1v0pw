@@ -1,0 +1,136 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.whatif</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot Cumulative Frequencies of Distances for "whatif" Objects</h2>
+
+<h3>Description</h3>
+
+<p>Generates a cumulative frequency plot of distances from an
+object of class "whatif".  The cumulative frequencies (the fraction
+of rows in the observed data set with either Gower or (squared)
+Euclidian distances to
+the counterfactuals  less than the given value on the horizontal axis) 
+appear on the vertical axis.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'whatif'
+plot(x, type = "f", numcf = NULL, eps = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An object of class "whatif", the output of the
+function <code>whatif</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>A character string; the type of plot of the cumulative frequencies 
+of the distances to be produced.  Possible types are:  <code>"f"</code> 
+for cumulative frequencies only; <code>"l"</code> for LOWESS smoothing of
+cumulative frequencies only; and <code>"b"</code> for both cumulative
+frequencies and LOWESS smoothing.  The default is <code>"f"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numcf</code></td>
+<td>
+<p>A numeric vector; the specific counterfactuals to be plotted.
+Each element represents a counterfactual, specifically its row number
+from the matrix or data frame of counterfactuals.  By default, all
+counterfactuals are plotted.  Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eps</code></td>
+<td>
+<p>A Boolean; should an encapsulated postscript file be
+generated?  Setting the argument equal to <code>TRUE</code> generates an
+<code>.eps</code> file, which is saved to your working directory with
+file name of form '<code>graph_'type'_'numcf'.eps</code>', where
+<code>'type'</code> and <code>'numcf'</code> are the values of the respective
+arguments.  Specifically, <code>'numcf'</code> takes the value of 
+the first element of the argument <code>numcf</code> unless all counterfactuals
+were plotted, in which case <code>all</code> appears in the place of
+<code>'numcf'</code>. Default is <code>FALSE</code>,
+which instead prints the graph to the screen.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to and from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>LOWESS scatterplot smoothing using the function <code>lowess</code> is plotted 
+in blue. Counterfactuals in the convex hull are plotted with a solid line 
+and counterfactuals outside of the convex hull with a dashed line.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A graph printed to the screen or an encapsulated postscript file saved
+to your working directory.  In the latter case, the file name has form
+'<code>graph_'type'_'numcf'.eps</code>', where <code>'type'</code> and <code>'numcf'</code>
+are the values of the respective arguments.  
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stoll, Heather <a href="mailto:hstoll@polsci.ucsb.edu">hstoll@polsci.ucsb.edu</a>, King, Gary
+<a href="mailto:king@harvard.edu">king@harvard.edu</a> and Zeng, Langche <a href="mailto:zeng@ucsd.edu">zeng@ucsd.edu</a></p>
+
+
+<h3>References</h3>
+
+<p>King, Gary and Langche Zeng.  2006.  "The Dangers of
+Extreme Counterfactuals."  <em>Political Analysis</em> 14 (2).
+Available from <a href="https://gking.Harvard.Edu">https://gking.Harvard.Edu</a>.
+</p>
+<p>King, Gary and Langche Zeng.  2007.  "When Can History Be Our Guide?
+The Pitfalls of Counterfactual Inference."  <em>International Studies Quarterly</em>
+51 (March).  Available from <a href="https://gking.harvard.edu">https://gking.harvard.edu</a>.</p>
+
+
+<h3>See Also</h3>
+
+<p><code>whatif</code>,
+<code>summary.whatif</code>,
+<code>print.whatif</code>,
+<code>print.summary.whatif</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##  Create example data sets and counterfactuals
+my.cfact &lt;- matrix(rnorm(3*5), ncol = 5)
+my.data &lt;- matrix(rnorm(100*5), ncol = 5)
+
+##  Evaluate counterfactuals
+my.result &lt;- whatif(data = my.data, cfact = my.cfact, mc.cores = 1)
+
+##  Plot cumulative frequencies for the first two counterfactuals (rows
+##  1 and 2) in my.cfact
+plot(my.result, type = "b", numcf = c(1, 2), mc.cores = 1)
+</code></pre>
+
+
+</div>

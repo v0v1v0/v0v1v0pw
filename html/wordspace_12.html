@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rowNorms</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Compute Norms of Row and Column Vectors of a Matrix (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>Efficiently compute the norms of all row or column vectors of a dense or sparse matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+rowNorms(M, method = "euclidean", p = 2)
+
+colNorms(M, method = "euclidean", p = 2)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>a dense or sparse numeric matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>norm to be computed (see “Norms” below for details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>exponent of the <code>minkowski</code> p-norm, a numeric value in the range <code class="reqn">1 \le p \le \infty</code>.
+</p>
+<p>Values <code class="reqn">0 \le p &lt; 1</code> are also permitted as an extension but do not correspond to a proper mathematical norm (see details below).
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A numeric vector containing one norm value for each row or column of <code>M</code>.
+</p>
+
+
+<h3>Norms</h3>
+
+<p>Given a row or column vector <code class="reqn">x</code>, the following length measures can be computed:
+</p>
+
+<dl>
+<dt><code>euclidean</code></dt>
+<dd>
+<p>The <b>Euclidean</b> norm given by </p>
+<p style="text-align: center;"><code class="reqn">
+        \|x\|_2 = \sqrt{ \sum_i x_i^2 }</code>
+</p>
+
+</dd>
+<dt><code>maximum</code></dt>
+<dd>
+<p>The <b>maximum</b> norm given by </p>
+<p style="text-align: center;"><code class="reqn">
+        \|x\|_{\infty} = \max_i |x_i| </code>
+</p>
+
+</dd>
+<dt><code>manhattan</code></dt>
+<dd>
+<p>The <b>Manhattan</b> norm given by </p>
+<p style="text-align: center;"><code class="reqn">
+        \|x\|_1 = \sum_i |x_i| </code>
+</p>
+
+</dd>
+<dt><code>minkowski</code></dt>
+<dd>
+<p>The <b>Minkowski</b> (or <code class="reqn">L_p</code>) norm given by </p>
+<p style="text-align: center;"><code class="reqn">
+        \|x\|_p = \left( \sum_i |x_i|^p \right)^{1/p} </code>
+</p>
+
+<p>for <code class="reqn">p \ge 1</code>.  The Euclidean (<code class="reqn">p = 2</code>) and Manhattan (<code class="reqn">p = 1</code>) norms are special cases, and the maximum norm corresponds to the limit for <code class="reqn">p \to \infty</code>.
+</p>
+<p>As an extension, values in the range <code class="reqn">0 \le p &lt; 1</code> are also allowed and compute the length measure </p>
+<p style="text-align: center;"><code class="reqn">
+        \|x\|_p = \sum_i |x_i|^p </code>
+</p>
+
+<p>For <code class="reqn">0 &lt; p &lt; 1</code> this formula defines a <code class="reqn">p</code>-norm, which has the property <code class="reqn">\|r\cdot x\| = |r|^p \cdot \|x\|</code> for any scalar factor <code class="reqn">r</code> instead of being homogeneous. For <code class="reqn">p = 0</code>, it computes the Hamming length, i.e. the number of nonzero elements in the vector <code class="reqn">x</code>.
+</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dist.matrix</code>, <code>normalize.rows</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+rowNorms(DSM_TermContextMatrix, "manhattan")
+
+# fast and memory-friendly nonzero counts with "Hamming length"
+rowNorms(DSM_TermContextMatrix, "minkowski", p=0)
+colNorms(DSM_TermContextMatrix, "minkowski", p=0)
+sum(colNorms(DSM_TermContextMatrix, "minkowski", p=0)) # = nnzero(DSM_TermContextMatrix)
+</code></pre>
+
+
+</div>

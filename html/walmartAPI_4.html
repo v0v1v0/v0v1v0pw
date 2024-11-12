@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>lookup</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Looks up product information</h2>
+
+<h3>Description</h3>
+
+<p><code>lookup</code> gives access to item price and availability in real-time.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">lookup(key = auth_cache$KEY, lsPublisherId = NULL, id = NULL,
+  upc = NULL, list_output = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>Your API access key.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lsPublisherId</code></td>
+<td>
+<p>Your LinkShare Publisher Id.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>vector of item ids.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upc</code></td>
+<td>
+<p>upc of the item.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>list_output</code></td>
+<td>
+<p>Indicator for list output.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>An API key will be required to run this function and can be acquired by
+creating an account on the following website
+<a href="https://developer.walmartlabs.com/member">https://developer.walmartlabs.com/member</a>.
+</p>
+<p>For more information refer to the original documentation
+<a href="https://developer.walmartlabs.com/docs/read/Home">https://developer.walmartlabs.com/docs/read/Home</a>.
+</p>
+<p>Response formats are described at the url
+<a href="https://developer.walmartlabs.com/docs/read/Item_Field_Description">https://developer.walmartlabs.com/docs/read/Item_Field_Description</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A tibble with 15 columns in base response format.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+key &lt;- "************************"
+
+## Up to 20 ids can be called at once.
+lookup(id = c(12417882:12417937), key = key)
+
+lookup(id = 12417832, key = key)
+
+lookup(upc = 10001137891, key = key)
+
+## First argument will be used with conflicting arguments.
+lookup(id = 12417837, upc = 10001137891, key = key)
+
+lookup(id = 12417832, key = key, list_output = TRUE)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

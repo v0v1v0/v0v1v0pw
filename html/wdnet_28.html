@@ -1,0 +1,77 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_eta_directed</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute edge-level distributions for directed networks with respect to
+desired assortativity level(s).</h2>
+
+<h3>Description</h3>
+
+<p>Compute edge-level distributions for directed networks with respect to
+desired assortativity level(s).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_eta_directed(
+  edgelist,
+  target.assortcoef = list(outout = NULL, outin = NULL, inout = NULL, inin = NULL),
+  eta.obj = function(x) 0,
+  which.range,
+  control = cvxr_control()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>edgelist</code></td>
+<td>
+<p>A two-column matrix representing the directed edges of a
+network.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target.assortcoef</code></td>
+<td>
+<p>A list representing the predetermined value or range
+of assortativity coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eta.obj</code></td>
+<td>
+<p>A convex function of <code>eta</code> to be minimized when
+<code>which.range</code> is <code>NULL</code>. Defaults to 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>which.range</code></td>
+<td>
+<p>Character, "outout", "outin", "inout" or "inin"s,
+represents the interested degree based assortativity coefficient.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>A list of parameters passed to <code>CVXR::solve()</code> when
+solving for <code>eta</code> or computing the range of assortativity coefficient.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Assortativity coefficients and joint distributions. If
+<code>which.range</code> is specified, the range of the interested coefficient
+and the corresponding joint distributions will be returned, provided the
+predetermined <code>target.assortcoef</code> is satisfied.
+</p>
+
+
+</div>

@@ -1,0 +1,162 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>first.last</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Build a first/last database for wavelet transforms.</h2>
+
+<h3>Description</h3>
+
+<p>This function is not intended for user use, but is used by various functions involved in computing and displaying wavelet transforms. It basically constructs "bookeeping" vectors that <code>WaveThresh</code> uses for working out where coefficient vectors begin and end. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">first.last(LengthH, DataLength, type, bc="periodic", current.scale=0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>LengthH</code></td>
+<td>
+<p>Length of the filter used to produce a wavelet decomposition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DataLength</code></td>
+<td>
+<p>Length of the data before transforming. This must be a power of 2, say <code class="reqn">2^m</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>The type of wavelet transform. Can be "wavelet" or "periodic"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bc</code></td>
+<td>
+<p>This character string argument determines how the boundaries of the the function are to be handled. The permitted values are <code>periodic</code> or <code>symmetric</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>current.scale</code></td>
+<td>
+<p>Can handle a different initial scale, but usually
+left at the default</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Suppose you begin with <code class="reqn">2^m=2048</code> coefficients. At the next level you would expect 1024 smoothed data coefficients, and 1024 wavelet coefficients, and if <code>bc="periodic"</code> this is indeed what happens. However, if <code>bc="symmetric"</code> you actually need more than 1024 (as the wavelets extend over the edges). The first last database keeps track of where all these "extras" appear and also where they are located in the packed vectors C and D of pyramidal coefficients within wavelet structures. 
+</p>
+<p>For examples, given a <code>first.last.c row</code> of 
+</p>
+<p style="text-align: center;"><code class="reqn">-2 3 20</code>
+</p>
+
+<p>The actual coefficients would be 
+</p>
+<p style="text-align: center;"><code class="reqn">c_{-2}, c_{-1}, c_{0}, c_{1}, c_{2}, c_{3}</code>
+</p>
+
+<p>In other words, there are 6 coefficients, starting at -2 and ending at 3, and the first of these (<code class="reqn">c_{-2}</code>) appears at an offset of 20 from the beginning of the <code>$C</code> component vector of the wavelet structure. 
+</p>
+<p>You can “do” <code>first.last</code> in your head for <code>periodic</code> boundary handling but for more general boundary treatments (e.g. <code>symmetric</code>) <code>first.last</code> is indispensable.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A first/last database structure, a list containing the following information: 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>first.last.c</code></td>
+<td>
+<p>A (m+1)x3 matrix. The first column specifies the real index of the first coefficient of the smoothed data at a level, the 2nd column is the real index of the last coefficient, the last column specifies the offset of the first smoothed datum at that level. The offset is used by the C code to work out where the beginning of the sequence is within a packed vector of the pyramid structure. The first and 2nd columns can be used to work out how many numbers there are at a level. If <code>bc="periodic"</code> then the pyramid is a true power of 2 pyramid, that is it starts with a power of 2, and the next level is half of the previous. If <code>bc="symmetric"</code> then the pyramid is nearly exactly a power of 2, but not quite, see the Details section for why this is so. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ntotal</code></td>
+<td>
+<p>The total number of smoothed data/original data points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>first.last.d</code></td>
+<td>
+<p>A mx3 matrix. As for <code>first.last.c</code> but for the wavelet coefficients packed as the D component of a wavelet structure.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ntotal.d</code></td>
+<td>
+<p>The total number of wavelet coefficients.</p>
+</td>
+</tr>
+</table>
+<h3>RELEASE</h3>
+
+<p>Version 3.5.3 Copyright Guy Nason 1994 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>References</h3>
+
+<p>Nason, G.P. and Silverman, B.W. (1994). The discrete wavelet transform in S.</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wd</code>, <code>wr</code>, <code>wr.wd</code>, <code>accessC</code>, <code>accessD</code>, <code>filter.select</code>. <code>imwd</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+#If you're twisted then you may just want to look at one of these.
+#
+first.last(length(filter.select(2)), 64)
+#$first.last.c:
+#First Last Offset
+#[1,]     0    0    126
+#[2,]     0    1    124
+#[3,]     0    3    120
+#[4,]     0    7    112
+#[5,]     0   15     96
+#[6,]     0   31     64
+#[7,]     0   63      0
+#
+#$ntotal:
+#[1] 127
+#
+#$first.last.d:
+#First Last Offset
+#[1,]     0    0     62
+#[2,]     0    1     60
+#[3,]     0    3     56
+#[4,]     0    7     48
+#[5,]     0   15     32
+#[6,]     0   31      0
+#
+#$ntotal.d:
+#[1] 63
+#
+#
+</code></pre>
+
+
+</div>

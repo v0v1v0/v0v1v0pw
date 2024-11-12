@@ -1,0 +1,130 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>spat_ras</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>spat_ras</h2>
+
+<h3>Description</h3>
+
+<p>A function to get the WEGE index value for a provided polygon.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">spat_ras(
+  target_area,
+  input,
+  x,
+  y,
+  species = "binomial",
+  category = "category",
+  show_progress = FALSE,
+  ed,
+  res = 1
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>target_area</code></td>
+<td>
+<p>Either a sp or sf object to which to calculate the WEGE index.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>input</code></td>
+<td>
+<p>Species ranges, either from a shapefile or from a georeferenced species list with a column for species, two columns for coordinates and one for 
+the IUCN category.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>name of the longitude column.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>name of the latitude column.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>species</code></td>
+<td>
+<p>name of the species column.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>category</code></td>
+<td>
+<p>name of IUCN the category column. Terminology must be as 
+follows: DD for Data Deficient, LC for Least Concern, NT for Near Threatened, 
+EN, for Endangered, CR for Critically Endangered, EW for Extinct in the wild 
+and EX for Extinct.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show_progress</code></td>
+<td>
+<p>Progress of the analysis by showing the number of the grid where the function is calculating the different indices.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ed</code></td>
+<td>
+<p>name of the evolutionary distinctiveness column.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res</code></td>
+<td>
+<p>grid-cell size to use to calculate the range of the species in 
+case a georeferenced species list was provided.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A RasterStack with rasters for each KBA criteria (A1a,A1b,A1e,B1) and indices calculated (GE,ED,EDGE,WEGE)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(WEGE)
+library(sp)
+library(sf)
+library(raster)
+
+ species &lt;- sample(letters, 10)
+ range_list &lt;- list()
+ for (i in seq_along(species)) {
+   temp0 &lt;- cbind(runif(3,1,50),runif(3,1,50))
+   temp &lt;- Polygon(rbind(temp0,temp0[1,]))
+   range_list[[i]] &lt;- Polygons(list(temp), ID = c(species[i]))
+   }
+ input &lt;- st_as_sf(SpatialPolygons(range_list))
+ categories &lt;- c('LC','NT','VU','EN','CR')
+ input$binomial &lt;- species
+ input$category &lt;- sample(size = nrow(input),x = categories,replace = TRUE)
+ 
+ input$ed &lt;- runif(runif(10,1,50))
+ temp0 &lt;- cbind(runif(3,1,50),runif(3,1,50))
+ target_area &lt;- Polygon(rbind(temp0,temp0[1,]))
+ target_area &lt;- Polygons(list(target_area), ID = 'Target area')
+ target_area &lt;- st_as_sf(SpatialPolygons(list(target_area)))
+ spat_ras(target_area,input,species = 'binomial',ed='ed', res = 1)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,141 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sizeRestrictedClusterMerge</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Cluter merging with size restrictions
+</h2>
+
+<h3>Description</h3>
+
+<p>This function merges clusters by correlation of the first principal components such that the resulting merged clusters do
+not exceed a given maximum size.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sizeRestrictedClusterMerge(
+    datExpr,
+    clusters,
+    clusterSizes = NULL,
+    centers = NULL,
+    maxSize,
+    networkType = "unsigned",
+    verbose = 0,
+    indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datExpr</code></td>
+<td>
+
+<p>Data on which the clustering is based (e.g., expression data). Variables are in columns and observations (samples) in
+rows.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clusters</code></td>
+<td>
+
+<p>A vector with element per variable (column) in <code>datExpr</code> giving the cluster label for the corresponding variable.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clusterSizes</code></td>
+<td>
+
+<p>Optional pre-calculated cluster sizes. If not given, will be determined from given <code>clusters</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>centers</code></td>
+<td>
+
+<p>Optional pre-calculaed cluster centers (first principal components/singular vectors). 
+If not given, will be calculated from given data and
+cluster assignments.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxSize</code></td>
+<td>
+
+<p>Maximum allowed size of merged clusters. If any of the given <code>clusters</code> are larger than <code>maxSize</code>, they will not
+be changed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkType</code></td>
+<td>
+
+<p>One of <code>"unsigned"</code> and <code>"signed"</code>. Determines whether clusters with negatively correlated representatives will
+be considered similar (<code>"unsigned"</code>) or dis-similar (<code>"signed"</code>). 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function iteratively merges two closest clusters subject to the constraint that the merged cluster size cannot exceed
+maxSize. Merging stops when no two clusters can be merged without exceeding the maximum size.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with two components
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>clusters</code></td>
+<td>
+<p>A numeric vector with one component per input gene, giving the cluster number in
+which the gene is assigned. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>centers</code></td>
+<td>
+<p>Cluster centers, that is their first principal components/singular vectors. </p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p>The last step in <code>projectiveKMeans</code> uses this function.
+</p>
+
+
+</div>

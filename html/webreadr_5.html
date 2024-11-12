@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read_squid</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>read Squid files</h2>
+
+<h3>Description</h3>
+
+<p>the Squid default log formats are either the CLF - for which, use
+<code>read_clf</code> - or the "native" Squid format, which is described in more detail
+below. <code>read_squid</code> allows you to read the latter.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read_squid(file, has_header = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>the full path to the CLF-formatted file you want to read.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>has_header</code></td>
+<td>
+<p>whether or not the file has a header row. Set to FALSE by
+default.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The log format for Squid servers can be custom-set, but by default follows one of two
+patterns; it's either the Common Log Format (CLF), which you can read in with
+<code>read_clf</code>, or the "native log format", a Squid-specific format handled
+by this function. It consists of the fields:
+</p>
+
+<ul>
+<li>
+<p>timestamp: the timestamp identifying when the request was received. This is
+stored (from the file's point of view) as a count of seconds, in UNIX time:
+<code>read_squid</code> turns them into POSIXlt timestamps, assuming UTC as an
+origin timezone.
+</p>
+</li>
+<li>
+<p>time_elapsed: the amount of time (in milliseconds) that the connection and fulfilment
+of the request lasted for.
+</p>
+</li>
+<li>
+<p>ip_address: the IP address of the remote host making the request.
+</p>
+</li>
+<li>
+<p>status_code: the status code and Squid response code associated with that request,
+stored as a single field. This can be split into two distinct fields with <code>split_squid</code>
+</p>
+</li>
+<li>
+<p>bytes_sent: the number of bytes sent
+</p>
+</li>
+<li>
+<p>http_method: the HTTP method (POST, GET, etc) used.
+</p>
+</li>
+<li>
+<p>url: the URL of the requested asset.
+</p>
+</li>
+<li>
+<p>remote_user_ident: the <a href="https://tools.ietf.org/html/rfc1413">RFC 1413</a> remote
+user identifier.
+</p>
+</li>
+<li>
+<p>peer_info: the status of how forwarding to a peer server was handled and, if the
+request was forwarded, the server it was sent to.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>read_clf</code> for the Common Log Format (also used by Squids), and
+<code>split_squid</code> for splitting the "status_code" field into its component parts.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#Read in an example Squid file provided with the webreadr package.
+data &lt;- read_squid(system.file("extdata/log.squid", package = "webreadr"))
+</code></pre>
+
+
+</div>

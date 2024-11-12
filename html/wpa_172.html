@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>tm_clean</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Clean subject line text prior to analysis</h2>
+
+<h3>Description</h3>
+
+<p>This function processes the <code>Subject</code> column in a Meeting Query by applying
+tokenisation using<code>tidytext::unnest_tokens()</code>, and removing any stopwords
+supplied in a data frame (using the argument <code>stopwords</code>). This is a
+sub-function that feeds into <code>tm_freq()</code>, <code>tm_cooc()</code>, and <code>tm_wordcloud()</code>.
+The default is to return a data frame with tokenised counts of words or
+ngrams.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">tm_clean(data, token = "words", stopwords = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A Meeting Query dataset in the form of a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>token</code></td>
+<td>
+<p>A character vector accepting either <code>"words"</code> or <code>"ngrams"</code>,
+determining type of tokenisation to return.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stopwords</code></td>
+<td>
+<p>A character vector OR a single-column data frame labelled
+<code>'word'</code> containing custom stopwords to remove.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters to pass to <code>tidytext::unnest_tokens()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>data frame with two columns:
+</p>
+
+<ul>
+<li> <p><code>line</code>
+</p>
+</li>
+<li> <p><code>word</code>
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>Other Text-mining: 
+<code>meeting_tm_report()</code>,
+<code>pairwise_count()</code>,
+<code>subject_validate()</code>,
+<code>subject_validate_report()</code>,
+<code>tm_cooc()</code>,
+<code>tm_freq()</code>,
+<code>tm_wordcloud()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># words
+tm_clean(mt_data)
+
+# ngrams
+tm_clean(mt_data, token = "ngrams")
+
+</code></pre>
+
+
+</div>

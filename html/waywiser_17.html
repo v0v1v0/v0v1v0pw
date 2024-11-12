@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ww_build_neighbors</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Make 'nb' objects from sf objects</h2>
+
+<h3>Description</h3>
+
+<p>These functions can be used for geographic or projected coordinate reference
+systems and expect 2D data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ww_build_neighbors(data, nb = NULL, ..., call = rlang::caller_env())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>An sf object (of class "sf" or "sfc").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nb</code></td>
+<td>
+<p>An object of class "nb" (in which case it will be returned
+unchanged), or a function to create an object of class "nb" from <code>data</code> and
+<code>...</code>, or <code>NULL</code>. See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments passed to the neighbor-creating function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>The execution environment of a currently running
+function, e.g. <code>call = caller_env()</code>. The corresponding function
+call is retrieved and mentioned in error messages as the source
+of the error.
+</p>
+<p>You only need to supply <code>call</code> when throwing a condition from a
+helper function which wouldn't be relevant to mention in the
+message.
+</p>
+<p>Can also be <code>NULL</code> or a defused function call to
+respectively not display any call or hard-code a code to display.
+</p>
+<p>For more information about error calls, see Including function calls in error messages.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When <code>nb = NULL</code>, the method used to create neighbors from <code>data</code> is
+dependent on what geometry type <code>data</code> is:
+</p>
+
+<ul>
+<li>
+<p> If <code>nb = NULL</code> and <code>data</code> is a point geometry
+(classes "sfc_POINT" or "sfc_MULTIPOINT") the "nb" object will be created
+using <code>ww_make_point_neighbors()</code>.
+</p>
+</li>
+<li>
+<p> If <code>nb = NULL</code> and <code>data</code> is a polygon geometry
+(classes "sfc_POLYGON" or "sfc_MULTIPOLYGON") the "nb" object will be created
+using <code>ww_make_polygon_neighbors()</code>.
+</p>
+</li>
+<li>
+<p> If <code>nb = NULL</code> and <code>data</code> is any other geometry type, the "nb" object will
+be created using the centroids of the data as points, with a warning.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>An object of class "nb".
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">ww_build_neighbors(guerry)
+
+</code></pre>
+
+
+</div>

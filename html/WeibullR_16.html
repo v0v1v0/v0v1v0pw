@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mleframe</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Set life(time) data into the format required by mlefit</h2>
+
+<h3>Description</h3>
+
+<p>Validate input data by types and build a dataframe to be used as the primary argument object to mlefit
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mleframe(x, s=NULL, interval=NULL) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An expected vector of failure data. Alternative support is provided for a dataframe holding time and event columns,
+where event markers for failure occurrences are 1 and suspensions (right censored data) are 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p>An optional vector of suspension data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interval</code></td>
+<td>
+<p>A dataframe holding interval bounds for failure data in columns named 'left' and 'right'.
+The left(early) interval bound for left-censored data must be entered as zero (NA is not accepted).
+An optional column named 'qty' may contain the integer quantity of data entries having same interval values.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a dataframe of the life[time] data in columns named 'left', 'right', and 'qty' with an attribute of fsiq set to TRUE.
+Exact failure data (occurrences) have same time entered in both 'left' and 'right' columns.  
+Suspension data has last known life[time] entered in 'left' column and -1 entered in 'right' column.  
+The interval dataframe argument is appended.  The 'qty' field is populated with a value of 1 for all failure
+and suspension entries and interval rows where qty was not provided. 
+</p>
+
+
+<h3>References</h3>
+
+<p>William Q. Meeker and Luis A. Escobar, (1998) "Statistical Methods for Reliability Data", Wiley-Interscience, New York
+</p>
+<p>Robert B. Abernethy, (2008) "The New Weibull Handbook, Fifth Edition"
+</p>
+<p>John I. McCool, (2012) "Using the Weibull Distribution: Reliability, Modeling and Inference"
+</p>
+<p>Marie Laure Delignette-Muller, Christophe Dutang (2015). "fitdistrplus: An R Package for Fitting Distributions".
+Journal of Statistical Software, 64(4), 1-34. URL http://www.jstatsoft.org/v64/i04/.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">fail&lt;-c(10,40,40,50)
+susp&lt;-c(20,60)
+left&lt;-c(0,0,0,20,10)
+right&lt;-c(30,70,100,80,85)
+qty&lt;-c(2,1,1,2,1)
+interval_ex&lt;-data.frame(left,right,qty)
+input_frame&lt;-mleframe(fail,susp,interval_ex)
+## time_event dataframe argument
+failDF&lt;-data.frame(time=fail, event=1)
+suspDF&lt;-data.frame(time=susp, event=0)
+time_event_frame&lt;-rbind(failDF, suspDF)
+input_frame2&lt;-mleframe(time_event_frame)
+## now a time_event_qty dataframe argument
+fa&lt;-c(10,40,50)
+fq&lt;-c(1,2,1)
+su&lt;-susp
+faDF&lt;-data.frame(time=fa, event=rep(1,length(fa)), qty=fq)
+## note: data.frame is forgiving about repeated single column entry
+suDF&lt;-data.frame(time=su, event=0, qty=1)
+time_event_qty&lt;-rbind(faDF, suDF)
+input_frame3&lt;-mleframe(time_event_qty)
+</code></pre>
+
+
+</div>

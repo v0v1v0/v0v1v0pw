@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_fmdb_site_layer</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve WDNR's FMDB Site spatial layer</h2>
+
+<h3>Description</h3>
+
+<p>A function that can be used to retrieve the WDNR's Fish Management Database's
+(FMDB) monitoring site spatial layer.
+A spatial query can be performed to limit the output of the function by
+supplying a county name, watershed code, watershed name, or custom sf polygon
+object. Use the 'watershed_lookup' to find valid watershed codes and names.
+FMDB site sequance numbers (site_seq) or SWIMS (swims_site_seq) site sequance
+numbers can be provided to return specific sites. The 'where'
+arguement can be used to run custom SQL queries.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_fmdb_site_layer(
+  county = NULL,
+  watershed_code = NULL,
+  watershed_name = NULL,
+  sf_object = NULL,
+  site_seq = NULL,
+  swims_site_seq = NULL,
+  where = NULL,
+  layer_type = "points",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>county</code></td>
+<td>
+<p>A character object specifying a county name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>watershed_code</code></td>
+<td>
+<p>A character object specifying the HUC code for a
+watershed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>watershed_name</code></td>
+<td>
+<p>A character object specifying the HUC name for a
+watershed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sf_object</code></td>
+<td>
+<p>Any sf polygon object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>site_seq</code></td>
+<td>
+<p>A character object or string</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>swims_site_seq</code></td>
+<td>
+<p>A character object or string</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>where</code></td>
+<td>
+<p>SQL statement</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>layer_type</code></td>
+<td>
+<p>Character. Retrieve point stations, polygon stations, or
+both.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters to pass to
+<code>get_spatial_layer</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A sf object of class multipoints
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+get_fmdb_site_layer(county = "milwaukee")
+get_fmdb_site_layer(watershed_code = "07070006")
+get_fmdb_site_layer(site_seq = c(7511,10175131,128290))
+get_fmdb_site_layer(county = "waukesha",
+                    where = "STATION_TYPE_CODE = 'LAKE'")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

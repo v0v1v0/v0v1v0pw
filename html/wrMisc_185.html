@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>multiCharReplace</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Multiple replacement of entire character elements in simple vector, matrix or data.frame</h2>
+
+<h3>Description</h3>
+
+<p>This functions allows multiple types of replacements of entire character elements in simple vector, matrix or data.frame.
+In addtion, the result may be optionally directly transformed to logical or numeric
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">multiCharReplace(
+  mat,
+  repl,
+  convTo = NULL,
+  silent = FALSE,
+  debug = TRUE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mat</code></td>
+<td>
+<p>(character vector, matrix or data.frame) main data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>repl</code></td>
+<td>
+<p>(matrix or list) tells what to replace by what: If matrix the 1st oolumn will be considered as 'old' and the 2nd as 'replaceBy'; if named list, the names of the list-elements will be consdered as 'replaceBy'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>convTo</code></td>
+<td>
+<p>(character) optional conversion of content to 'numeric' or 'logical'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns an object of same dimension as input (with replaced content)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>grep</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x1 &lt;- c("ab","bc","cd","efg","ghj")
+multiCharReplace(x1, cbind(old=c("bc","efg"), new=c("BBCC","EF")))
+
+x2 &lt;- c("High","n/a","High","High","Low")
+multiCharReplace(x2, cbind(old=c("n/a","Low","High"), new=c(NA,FALSE,TRUE)),convTo="logical")
+
+# works also to replace numeric content :
+x3 &lt;- matrix(11:16, ncol=2)
+multiCharReplace(x3, cbind(12:13,112:113))
+</code></pre>
+
+
+</div>

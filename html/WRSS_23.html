@@ -1,0 +1,169 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>createReservoir.base</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+base function for class of <code>createReservoir</code>
+</h2>
+
+<h3>Description</h3>
+
+<p>this function constructs an object from class of <code>createReservoir</code>, which is able to simulate a storage reservoir under given a sort of demand(s).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  ## S3 method for class 'base'
+createReservoir(type,
+                                 name,
+                                 priority,
+                                 downstream,
+                                 netEvaporation,
+                                 seepageFraction,
+                                 seepageObject,
+                                 geometry,
+                                 plant,
+                                 penstock,
+                                 initialStorage)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>A string: the type of the reservoir being instantiated: by default 'storage', however, it can be 'hydropower'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>(optional) A string: the name of the reservoir.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>priority</code></td>
+<td>
+<p>(optional) An integer: the supplying priority. <code>priority</code> is a value in [1, 99] interval. If missing, the <code>priority</code> is set to Inf.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>downstream</code></td>
+<td>
+<p>(optional) An object; from either of classes of <code>createAquifer</code> , <code>createRiver</code>, <code>createReservoir</code>, <code>createJunction</code>, <code>createDiversion</code>, or <code>createDemandSite</code>; which spillage volume pours to it.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>netEvaporation</code></td>
+<td>
+<p>A vector: is a vector of net evaporation depth time series at the location of dam site (meter). If omitted, the evaporation is assumed to be zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seepageFraction</code></td>
+<td>
+<p>(optional) The seepage coeffcient of reservoir storage. The seepage is computed as the product of <code>seepageFraction</code> and reservoir storage. It is in <code>[0, 1]</code> interval</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seepageObject</code></td>
+<td>
+<p>(optional) An object; from either of classes of <code>createAquifer</code> , <code>createRiver</code>, <code>createReservoir</code>, <code>createJunction</code>, <code>createDiversion</code>, or <code>createDemandSite</code>;  which seepage volume pours to it.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geometry</code></td>
+<td>
+<p>A list of reservoir geometric specifications:
+</p>
+
+<ul>
+<li> <p><code>storageAreaTable</code>: is a matrix whose first column includes reservoir volume (MCM) for different elevation levels and the second column contains reservoir area (in Km^2) corresponding to the first column
+</p>
+</li>
+<li> <p><code>storageElevationTable</code>: is a matrix whose first column includes reservoir volume (MCM) for different elevation levels and the second column contains elevation (in meter) corresponding to the first column
+</p>
+</li>
+<li> <p><code>dischargeElevationTable</code>: is a matrix whose first column includes the capacity of reservoir tailwater discharge rate (in cms) for different elevation levels and the second column contains elevation levels corresponding to the first column, required if the <code>type = 'hydropower'</code> and the item <code>submerged = TRUE</code>
+</p>
+</li>
+<li> <p><code>deadStorage</code>: refers to water in a reservoir that cannot be drained by gravity through the dam outlet works (MCM)
+</p>
+</li>
+<li> <p><code>capacity</code>: The maximum capacity of the reservoir</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plant</code></td>
+<td>
+<p>A list of power plant specifications. It is provided if <code>type = 'hydropower'</code>:
+</p>
+
+<ul>
+<li> <p><code>installedCapacity</code>: the plant installed capacity (MW)
+</p>
+</li>
+<li> <p><code>efficiency</code>: is a matrix whose first column includes discharge rate (in cms) and the second column turbine effeciency, in <code>[0 1]</code> interval, corresponding to the first column
+</p>
+</li>
+<li> <p><code>designHead</code>: A vector of length of two, containing the minimum and maximum design water head (in meter) of the turbine respecively, that the it is in active state
+</p>
+</li>
+<li> <p><code>designFlow</code>: A vector of length of two, containing the minimum and maximum design flow rate (in cms) of the turbine respecively, that the it is in active state
+</p>
+</li>
+<li> <p><code>turbineAxisElevation</code>: The elevation of axis of the installed turbine (in meter)
+</p>
+</li>
+<li> <p><code>submerged</code>: logical: if the turbine is of type of submeged on, <code>TRUE</code>, otherwise, <code>FALSE</code>
+</p>
+</li>
+<li> <p><code>loss</code>: losses associated with the turbine (in meter)</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>penstock</code></td>
+<td>
+<p>(optional) A list of penstock specifications. It is provided if <code>type = 'hydropower'</code>:
+</p>
+
+<ul>
+<li> <p><code>diameter</code>: The diameter of the penstock (in meter)
+</p>
+</li>
+<li> <p><code>length</code>: The length of the penstock (in meter)
+</p>
+</li>
+<li> <p><code>roughness</code>: pipe roughness coefficient used for Hazen-Williams formulation</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initialStorage</code></td>
+<td>
+<p>(optional) The initial stored water at the reservoir in the first step of the simulation (MCM). If is missing the the function iterate to carry over the reservoir.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object from class of <code>list</code>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>createReservoir</code></p>
+
+
+</div>

@@ -1,0 +1,206 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fitmoplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot the fitted results for a tidal object by month</h2>
+
+<h3>Description</h3>
+
+<p>Plot a tidal object to view the response variable observations, predictions, and normalized results separately for each month.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fitmoplot(dat_in, ...)
+
+## S3 method for class 'tidal'
+fitmoplot(
+  dat_in,
+  month = c(1:12),
+  tau = NULL,
+  predicted = TRUE,
+  logspace = TRUE,
+  dt_rng = NULL,
+  ncol = NULL,
+  col_vec = NULL,
+  grids = TRUE,
+  pretty = TRUE,
+  lwd = 1,
+  size = 2,
+  alpha = 1,
+  ...
+)
+
+## S3 method for class 'tidalmean'
+fitmoplot(
+  dat_in,
+  month = c(1:12),
+  predicted = TRUE,
+  logspace = TRUE,
+  dt_rng = NULL,
+  ncol = NULL,
+  col_vec = NULL,
+  grids = TRUE,
+  pretty = TRUE,
+  lwd = 1,
+  size = 2,
+  alpha = 1,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input tidal or tidalmean object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>month</code></td>
+<td>
+<p>numeric indicating months to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>numeric vector of quantiles to plot, defaults to all in object if not supplied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>predicted</code></td>
+<td>
+<p>logical indicating if standard predicted values are plotted, default <code>TRUE</code>, otherwise normalized predictions are plotted</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logspace</code></td>
+<td>
+<p>logical indicating if plots are in log space</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dt_rng</code></td>
+<td>
+<p>Optional chr string indicating the date range of the plot. Must be two values in the format 'YYYY-mm-dd' which is passed to <code>as.Date</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncol</code></td>
+<td>
+<p>numeric argument passed to <code>facet_wrap</code> indicating number of facet columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col_vec</code></td>
+<td>
+<p>chr string of plot colors to use, passed to <code>gradcols</code>.  Any color palette from RColorBrewer can be used as a named input. Palettes from grDevices must be supplied as the returned string of colors for each palette.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grids</code></td>
+<td>
+<p>logical indicating if grid lines are present</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pretty</code></td>
+<td>
+<p>logical indicating if my subjective idea of plot aesthetics is applied, otherwise the <code>ggplot</code> default themes are used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd</code></td>
+<td>
+<p>numeric value indicating width of lines</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>numeric value indicating size of points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>numeric value indicating transparency of points or lines</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The plots are similar to those produced by <code>fitplot</code> except the values are faceted by month.  This allows an evaluation of trends over time independent of seasonal variation.  Multiple observations within each month for each year are averaged for a smoother plot.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>ggplot</code> object that can be further modified
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fitplot</code>, <code>prdnrmplot</code>, <code>sliceplot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## load a fitted tidal object
+data(tidfit)
+
+# plot using defaults
+fitmoplot(tidfit)
+## Not run:  
+# get the same plot but use default ggplot settings
+fitmoplot(tidfit, pretty = FALSE)
+
+# plot specific quantiles
+fitmoplot(tidfit, tau = c(0.1, 0.9))
+
+# plot the normalized predictions
+fitmoplot(tidfit, predicted = FALSE)
+
+# modify the plot as needed using ggplot scales, etc.
+
+library(ggplot2)
+
+fitmoplot(tidfit, pretty = FALSE, linetype = 'dashed') + 
+ theme_classic() + 
+ scale_y_continuous(
+   'Chlorophyll', 
+   limits = c(0, 5)
+   ) +
+ scale_colour_manual( 
+   'Predictions', 
+   labels = c('lo', 'md', 'hi'), 
+   values = c('red', 'green', 'blue'), 
+   guide = guide_legend(reverse = TRUE)
+   ) 
+   
+# plot a tidalmean object
+data(tidfitmean)
+
+fitmoplot(tidfitmean)    
+
+## End(Not run)
+</code></pre>
+
+
+</div>

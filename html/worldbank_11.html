@@ -1,0 +1,163 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_country_indicator</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>World Bank country indicator data</h2>
+
+<h3>Description</h3>
+
+<p>List all country indicators supported by the World Bank API.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_country_indicator(
+  indicator = "NY.GDP.MKTP.CD",
+  country = NULL,
+  lang = "en",
+  start_date = NULL,
+  end_date = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>indicator</code></td>
+<td>
+<p><code>character(1)</code> indicator to query.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>country</code></td>
+<td>
+<p><code>character()</code> country to query. Default <code>NULL</code>.
+If <code>NULL</code>, all countries are returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lang</code></td>
+<td>
+<p><code>character(1)</code> language to query. Default <code>"en"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_date</code></td>
+<td>
+<p><code>character(1)</code> or <code>integer(1)</code> start date to query. Default <code>NULL</code>.
+Supported formats:
+</p>
+
+<ul>
+<li>
+<p> YYYY for yearly data (e.g. <code>2020</code> or <code>"2020"</code>)
+</p>
+</li>
+<li>
+<p> YYYYQ[1-4] for quarterly data (e.g. "2020Q1")
+</p>
+</li>
+<li>
+<p> YYYYM[1-12] for monthly data (e.g. <code>"2020M02"</code>)
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end_date</code></td>
+<td>
+<p><code>character(1)</code> or <code>integer(1)</code> end date to query, in the same format
+as start_date. Default <code>NULL</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>data.frame()</code> with the available country indicators.
+The columns are:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>date</code></td>
+<td>
+<p>The date</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indicator_id</code></td>
+<td>
+<p>The indicator ID.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indicator_name</code></td>
+<td>
+<p>The indicator name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>country_id</code></td>
+<td>
+<p>The country ID.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>country_name</code></td>
+<td>
+<p>The country name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>country_code</code></td>
+<td>
+<p>The country code.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>The indicator value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unit</code></td>
+<td>
+<p>The indicator unit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>obs_status</code></td>
+<td>
+<p>The observation status.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>decimal</code></td>
+<td>
+<p>The decimal.</p>
+</td>
+</tr>
+</table>
+<h3>Source</h3>
+
+<p><a href="https://api.worldbank.org/v2/country/%7Bcountry%7D/indicator/%7Bindicator%7D">https://api.worldbank.org/v2/country/{country}/indicator/{indicator}</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wb_country_indicator("NY.GDP.MKTP.CD", "US")
+wb_country_indicator(
+  "DPANUSSPB", c("CHN", "BRA"),
+  start_date = "2012M01", end_date = "2012M08"
+)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,151 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>StubCounter</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>StubCounter</h2>
+
+<h3>Description</h3>
+
+<p>hash with counter to store requests and count number
+of requests made against the stub
+</p>
+
+
+<h3>Public fields</h3>
+
+<div class="r6-fields">
+
+<dl>
+<dt><code>hash</code></dt>
+<dd>
+<p>(list) a list for internal use only, with elements
+<code>key</code>, <code>sig</code>, and <code>count</code></p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-StubCounter-put"><code>StubCounter$put()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-StubCounter-count"><code>StubCounter$count()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-StubCounter-clone"><code>StubCounter$clone()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-StubCounter-put"></a>
+
+
+
+<h4>Method <code>put()</code>
+</h4>
+
+<p>Register a request by it's key
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>StubCounter$put(x)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>x</code></dt>
+<dd>
+<p>an object of class <code>RequestSignature</code></p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>nothing returned; registers request &amp; iterates internal counter
+</p>
+
+
+<hr>
+<a id="method-StubCounter-count"></a>
+
+
+
+<h4>Method <code>count()</code>
+</h4>
+
+<p>Get the count of number of times any matching request has
+been made against this stub
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>StubCounter$count()</pre></div>
+
+
+<hr>
+<a id="method-StubCounter-clone"></a>
+
+
+
+<h4>Method <code>clone()</code>
+</h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>StubCounter$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt>
+<dd>
+<p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- StubCounter$new()
+x
+x$hash
+x$count()
+z &lt;- RequestSignature$new(method = "get", uri = "https:/httpbin.org/get")
+x$put(z)
+x$count()
+x$put(z)
+x$count()
+</code></pre>
+
+
+</div>

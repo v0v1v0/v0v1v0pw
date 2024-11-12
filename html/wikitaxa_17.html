@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wt_wiki_url_build</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Build MediaWiki Page URL</h2>
+
+<h3>Description</h3>
+
+<p>Builds a MediaWiki page url from its component parts (wiki name, wiki type,
+and page title). Supports both static page urls and their equivalent API
+calls.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wt_wiki_url_build(
+  wiki,
+  type = NULL,
+  page = NULL,
+  api = FALSE,
+  action = "parse",
+  redirects = TRUE,
+  format = "json",
+  utf8 = TRUE,
+  prop = c("text", "langlinks", "categories", "links", "templates", "images",
+    "externallinks", "sections", "revid", "displaytitle", "iwlinks", "properties")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wiki</code></td>
+<td>
+<p>(character | list) Either the wiki name or a list with
+<code style="white-space: pre;">⁠$wiki⁠</code>, <code style="white-space: pre;">⁠$type⁠</code>, and <code style="white-space: pre;">⁠$page⁠</code> (the output of <code>wt_wiki_url_parse()</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>(character) Wiki type.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>page</code></td>
+<td>
+<p>(character) Wiki page title.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api</code></td>
+<td>
+<p>(boolean) Whether to return an API call or a static page url
+(default). If <code>FALSE</code>, all following (API-only) arguments are ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>action</code></td>
+<td>
+<p>(character) See <a href="https://en.wikipedia.org/w/api.php">https://en.wikipedia.org/w/api.php</a>
+for supported actions. This function currently only supports "parse".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>redirects</code></td>
+<td>
+<p>(boolean) If the requested page is set to a redirect,
+resolve it.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>(character) See <a href="https://en.wikipedia.org/w/api.php">https://en.wikipedia.org/w/api.php</a>
+for supported output formats.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>utf8</code></td>
+<td>
+<p>(boolean) If <code>TRUE</code>, encodes most (but not all) non-ASCII
+characters as UTF-8 instead of replacing them with hexadecimal escape
+sequences.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prop</code></td>
+<td>
+<p>(character) Properties to retrieve, either as a character vector
+or pipe-delimited string. See
+<a href="https://en.wikipedia.org/w/api.php?action=help&amp;modules=parse">https://en.wikipedia.org/w/api.php?action=help&amp;modules=parse</a> for
+supported properties.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a URL (character)
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other MediaWiki functions: 
+<code>wt_wiki_page_parse()</code>,
+<code>wt_wiki_page()</code>,
+<code>wt_wiki_url_parse()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wt_wiki_url_build(wiki = "en", type = "wikipedia", page = "Malus domestica")
+wt_wiki_url_build(
+  wt_wiki_url_parse("https://en.wikipedia.org/wiki/Malus_domestica"))
+wt_wiki_url_build("en", "wikipedia", "Malus domestica", api = TRUE)
+</code></pre>
+
+
+</div>

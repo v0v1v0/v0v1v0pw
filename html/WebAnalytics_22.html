@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotDataRateImpactOnResponse</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get list of latest files from log directories
+</h2>
+
+<h3>Description</h3>
+
+<p>Generates a plot of 95th percentile response time for a specified combination of transaction and response status against 
+aggregate data rate, for ten minute intervals in the dataframe provided.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotDataRateImpactOnResponse(dataFrame, filterURL, status) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dataFrame</code></td>
+<td>
+
+<p>a transaction data frame  
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filterURL</code></td>
+<td>
+
+<p>the URL to be examined
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+
+<p>the status of the request: 'Success', 'Redirect', 'Client Error' or 'Server Error'
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns an R base graphics plot.  This function is intended to be wrapped in a call to <code>plotSave</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Greg Hunt &lt;greg@firmansyah.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+logFileName = logFileNamesGetLast(dataDirectory=datd, 
+  directoryNames=c(".", "."), 
+  fileNamePattern="*[.]log")[[1]]
+
+cols = logFileFieldsGetIIS(logFileName)
+
+logdf = logFileRead(logFileName, columnList=cols, 
+            logTimeZone = "", timeFormat = "")
+plotDataRateImpactOnResponse(logdf, "/QWERTYTest/XRMServices/2011/Organization.svc", "Success") 
+
+</code></pre>
+
+
+</div>

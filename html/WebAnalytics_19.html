@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pdfGenerate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate a PDF using the R API for TinyTeX  
+</h2>
+
+<h3>Description</h3>
+
+<p>This function calls <a href="https://CRAN.R-project.org/package=brew"><span class="pkg">brew</span></a> to generate a TeX document and then calls the TinyTeX API to generate a PDF from the LaTeX document in the specified work directory.  
+</p>
+<p>The function does not attempt to install TinyTex itself, this must be done by the user calling the <code>tinytex::install_tinytex()</code> function. The first time that this function is called to generate a report, provided that TinyTeX is has been installed with default settings, it will install the required LaTeX packages for the report.  This may take some time.
+</p>
+<p>Tinytex has been observed to run glacially slowly on Windows.  For some users it may be preferable (and far quicker) to install some version of xelatex and run it with it set to automatically download packages.   
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pdfGenerate(configFile, templateFile="sampleRfile.R", workDir=".") 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+ 
+<table>
+<tr style="vertical-align: top;">
+<td><code>configFile</code></td>
+<td>
+
+<p>The name of the config file to use.  If this parameter is omitted, the work directory is searched for a file whose name ends, case insensitively, in <code>.config</code>.  If there is only one file with the extnsion <code>.config</code> it is used.  If there is no config file or multiple config files an error is signalled.  The leading part of the config file name, before <code>.config</code>, is used as the prefix for the gemerated PDF name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>templateFile</code></td>
+<td>
+
+<p>This defaults to <code>sampleRfile.R</code> which is the default name of the template.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>workDir</code></td>
+<td>
+
+<p>The directory to use for document generation.  This directory must contain the template and any associated support files, such as the LaTeX document class. <code>workingDirectoryPopulate</code> will populate this directory correctly and create a temporary files directory under it.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns the name of the generated PDF.  
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Greg Hunt &lt;greg@firmansyah.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+filesDir =  paste0(tempdir(),"/ex")
+wkDir = paste0(tempdir(),"/ey")
+configVariableSet("config.workdir", filesDir)
+# setup the work directory 
+workingDirectoryPopulate(wkDir)
+
+pdfGenerate(workDir=wkDir) 
+
+
+## End(Not run)
+
+
+</code></pre>
+
+
+</div>

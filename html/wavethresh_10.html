@@ -1,0 +1,114 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>accessD.wd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get detail (mother wavelet) coefficients from wavelet object (wd).</h2>
+
+<h3>Description</h3>
+
+<p>This function extracts and returns a vector of mother wavelet coefficients, corresponding to a particular resolution level, from a <code>wd</code> wavelet decomposition object.
+</p>
+<p>The pyramid of coefficients in a wavelet decomposition (returned from the <code>wd</code> function, say) are packed into a single vector in WaveThresh. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wd'
+accessD(wd, level, boundary=FALSE, aspect="Identity", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wd</code></td>
+<td>
+<p>Wavelet decomposition object from which you wish to extract the mother wavelet coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>The resolution level at which you wish to extract coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>some methods of wavelet transform computation handle the boundaries by keeping some extra bookkeeping coefficients at either end of a resolution level. If this argument is TRUE then these bookkeeping coefficients are returned when the mother wavelets are returned. Otherwise, if FALSE, these coefficients are not returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aspect</code></td>
+<td>
+<p>The aspect argument permits the user to supply a function to modify the returned coefficients. The function is applied to the vector of coefficients before it is returned. This can be useful, say, with the complex DWT where you could supply aspect="Mod" if you wanted to return the modulus of the coefficients at a given resolution level. The default argument, "Identity", ensures that the coefficients are not modified before returning.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The need for this function is a consequence of the pyramidal structure of Mallat's algorithm and the memory efficiency gain achieved by storing the pyramid as a linear vector. AccessD obtains information about where the smoothed data appears from the <code>fl.dbase</code> component of an <code>wd</code> object, in particular the array
+</p>
+<p><code>fl.dbase$first.last.d</code>
+</p>
+<p>which gives a complete specification of index numbers and offsets for
+</p>
+<p><code>wd.object$D</code>.
+</p>
+<p>Note that this function is a method for the generic function <code>accessD</code>. 
+</p>
+<p>Note also that this function only retrieves information from <code>wd</code> class objects. To insert coefficients into <code>wd</code> objects you have to use the <code>putD</code> function (or more precisely, the <code>putD.wd</code> method).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector containing the mother wavelet coefficients at the required resolution level (the coefficients might have been modified depending on the value of the aspect argument).
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.5.3 Copyright Guy Nason 1994 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>References</h3>
+
+<p>Mallat, S. G. (1989) A theory for multiresolution signal decomposition: the wavelet representation. <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em>. <b>11</b>, 674–693. 
+</p>
+<p>Nason, G. P. and Silverman, B. W. (1994). The discrete wavelet transform in S. <em>Journal of Computational and Graphical Statistics</em>, <b>3</b>, 163–191
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wr</code>, <code>wd</code>, <code>accessD</code>, <code>filter.select</code>, <code>threshold</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Get the 4th resolution level of wavelet coefficients. 
+#
+dat &lt;- rnorm(128)
+accessD(wd(dat), level=4)
+</code></pre>
+
+
+</div>

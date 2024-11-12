@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>PointInPolygon</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Checks whether a point is inside a polygon.</h2>
+
+<h3>Description</h3>
+
+<p>Uses the famous Jensen test to check whether a provided point is inside a polygon, the latter defined by a set of points.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">PointInPolygon(PointMat, TestPoint)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>PointMat</code></td>
+<td>
+
+<p>a 2 x 4 matrix, four corner points of each x and y coordinates.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>TestPoint</code></td>
+<td>
+
+<p>a vector of two containing x and y coordinates of a point to test.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>PointInPolygon</code> returns <code>TRUE</code> if the point is inside the polygon, or <code>FALSE</code>, else.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Carsten Croonenbroeck
+</p>
+
+
+<h3>References</h3>
+
+<p>Jensen, N. O. (1983). A note on wind generator interaction. Roskilde: Risø National Laboratory. Risø-M, No. 2411
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>JensenTrapezoid</code> to compute a Jensen trapezoid.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(1357)
+Angle &lt;- runif(n = 1, min = 0, max = 360)
+Point &lt;- runif(n = 2, min = 0, max = 1)
+Dist &lt;- rnorm(n = 1, mean = 200, sd = 200)
+
+MyTrapezoid &lt;- JensenTrapezoid(Angle, Point, Dist)
+
+plot(x = MyTrapezoid[1, ], y = MyTrapezoid[2, ], xlab = "", ylab = "")
+lines(x = c(MyTrapezoid[1, 1], MyTrapezoid[1, 2]), y = c(MyTrapezoid[2, 1], MyTrapezoid[2, 2]))
+lines(x = c(MyTrapezoid[1, 2], MyTrapezoid[1, 3]), y = c(MyTrapezoid[2, 2], MyTrapezoid[2, 3]))
+lines(x = c(MyTrapezoid[1, 3], MyTrapezoid[1, 4]), y = c(MyTrapezoid[2, 3], MyTrapezoid[2, 4]))
+lines(x = c(MyTrapezoid[1, 4], MyTrapezoid[1, 1]), y = c(MyTrapezoid[2, 4], MyTrapezoid[2, 1]))
+
+NumTest &lt;- 50
+
+xTest &lt;- runif(n = NumTest, min = min(MyTrapezoid[1, ]), max = max(MyTrapezoid[1, ]))
+yTest &lt;- runif(n = NumTest, min = min(MyTrapezoid[2, ]), max = max(MyTrapezoid[2, ]))
+
+for (i in 1:NumTest)
+{
+	ThisPoint &lt;- c(xTest[i], yTest[i])
+	if (PointInPolygon(MyTrapezoid, ThisPoint))
+	{
+		points(ThisPoint[1], ThisPoint[2], pch = 16, col = "green")
+	} else
+	{
+		points(ThisPoint[1], ThisPoint[2], pch = 16, col = "red")
+	}
+}
+</code></pre>
+
+
+</div>

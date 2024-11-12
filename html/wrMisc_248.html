@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>standardW</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Standardize (scale) data</h2>
+
+<h3>Description</h3>
+
+<p>This functions work similar to <code>scale</code>, however, it evaluates the entire input and not column-wise (and independeltly as <code>scale</code> does). 
+With Standarizing we speak of transforming the data to end up with mean=O and sd=1.
+Furthermore, in case of 3-dim arrays, this function returns also an object with the same dimensions as the input.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">standardW(
+  mat,
+  byColumn = FALSE,
+  na.rm = TRUE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mat</code></td>
+<td>
+<p>(matrix, data.frame or array) data that need to get standardized.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>byColumn</code></td>
+<td>
+<p>(logical) if <code>TRUE</code> the function will be run independently over all columns such as as <code>apply(mat,2,standardW)</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>(logical) if <code>NA</code>s in the data don't get ignored via this argument, the output will be all <code>NA</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This functions retruns a vector of rescaled data (in dimensions as input)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>scale</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">dat &lt;- matrix(2*round(runif(100),2), ncol=4)
+mean(dat); sd(dat)
+
+dat2 &lt;- standardW(dat)
+apply(dat2, 2, sd)
+summary(dat2)
+
+dat3 &lt;- standardW(dat, byColumn=TRUE)
+apply(dat2, 2, sd)
+summary(dat2)
+mean(dat2); sd(dat2)
+
+</code></pre>
+
+
+</div>

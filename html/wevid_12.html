@@ -1,0 +1,61 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotWdists</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot the distribution of the weight of evidence in cases and in controls</h2>
+
+<h3>Description</h3>
+
+<p>Plot the distribution of the weight of evidence in cases and in controls
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotWdists(densities, distlabels = c("Crude", "Model-based"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>densities</code></td>
+<td>
+<p>Densities object produced by <code>Wdensities</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distlabels</code></td>
+<td>
+<p>Character vector of length 2 to be used to label the crude
+and the model-based curves (in that order).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A ggplot object representing the distributions of crude and model-based
+weights of evidence in cases and in controls.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(cleveland)
+densities &lt;- with(cleveland, Wdensities(y, posterior.p, prior.p))
+plotWdists(densities)
+
+# Example which requires fitting a mixture distribution
+data(fitonly)
+densities &lt;- with(fitonly, Wdensities(y, posterior.p, prior.p))
+
+# truncate spike
+plotWdists(densities) + ggplot2::scale_y_continuous(limits=c(0, 0.5))
+
+</code></pre>
+
+
+</div>

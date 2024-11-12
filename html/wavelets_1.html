@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>align</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Align Wavelet Transform Coefficients
+</h2>
+
+<h3>Description</h3>
+
+<p>Aligns both wavelet (high pass) and scaling (low pass) coefficients of
+objects of class <code>dwt</code>, <code>modwt</code>, <code>dwpt</code>, and
+<code>modwpt</code> using phase shift values computed by
+<code>wt.filter.shift</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">align(wt, coe=FALSE, inverse=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wt</code></td>
+<td>
+<p>An object of class <code>dwt</code>, <code>modwt</code>, <code>dwpt</code>, or
+<code>modwpt</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coe</code></td>
+<td>
+<p>Logical value indicating whether to use center of energy
+method in computing phase shifts.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inverse</code></td>
+<td>
+<p>Logical value indicating whether to shift wavelet and
+scaling coefficients of an aligned object back to their original
+positions.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>An object of class <code>dwt</code>, <code>modwt</code>, is characterized as
+'unaligned' if the value in the <code>aligned</code> slot is <code>FALSE</code>.
+Similarly, these objects are classified as 'aligned' if the value in
+the <code>aligned</code> slot is <code>TRUE</code>. Thus, <code>align</code> will only
+operate on an 'unaligned' wavelet transform object if <code>inverse =
+    FALSE</code> and on an 'aligned' wavelet transform object if <code>inverse
+    = TRUE</code>.
+</p>
+<p>The argument <code>coe</code> is passed to the <code>wt.filter.shift</code>
+function to determine what method to use for computing phase shifts
+(see documentation for <code>wt.filter.shift</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Either an aligned or unaligned object of the same class as <code>wt</code>
+(see Details above). 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Eric Aldrich. ealdrich@gmail.com.</p>
+
+
+<h3>References</h3>
+
+<p>Percival, D. B. and A. T. Walden (2000) <em>Wavelet Methods for Time
+Series Analysis</em>, Cambridge University Press.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wt.filter.shift</code>,
+<code>dwt</code>,
+<code>modwt</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># obtain the two series listed in Percival and Walden (2000), page 42
+X1 &lt;- c(.2,-.4,-.6,-.5,-.8,-.4,-.9,0,-.2,.1,-.1,.1,.7,.9,0,.3)
+X2 &lt;- c(.2,-.4,-.6,-.5,-.8,-.4,-.9,0,-.2,.1,-.1,.1,-.7,.9,0,.3)
+
+# combine them and compute DWT
+newX &lt;- cbind(X1,X2)
+wt &lt;- dwt(newX, n.levels=3, boundary="reflection", fast=FALSE)
+
+# align
+wt.aligned &lt;- align(wt)
+</code></pre>
+
+
+</div>

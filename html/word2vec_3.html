@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.word2vec</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Predict functionalities for a word2vec model</h2>
+
+<h3>Description</h3>
+
+<p>Get either 
+</p>
+
+<ul>
+<li>
+<p>the embedding of words
+</p>
+</li>
+<li>
+<p>the nearest words which are similar to either a word or a word vector
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'word2vec'
+predict(
+  object,
+  newdata,
+  type = c("nearest", "embedding"),
+  top_n = 10L,
+  encoding = "UTF-8",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>a word2vec model as returned by <code>word2vec</code> or <code>read.word2vec</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>for type 'embedding', <code>newdata</code> should be a character vector of words<br>
+for type 'nearest', <code>newdata</code> should be a character vector of words or a matrix in the embedding space</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>either 'embedding' or 'nearest'. Defaults to 'nearest'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>top_n</code></td>
+<td>
+<p>show only the top n nearest neighbours. Defaults to 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>encoding</code></td>
+<td>
+<p>set the encoding of the text elements to the specified encoding. Defaults to 'UTF-8'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>not used</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>depending on the type, you get a different result back:
+</p>
+
+<ul>
+<li>
+<p>for type nearest: a list of data.frames with columns term, similarity and rank indicating with words which are closest to the provided <code>newdata</code> words or word vectors. If <code>newdata</code> is just one vector instead of a matrix, it returns a data.frame
+</p>
+</li>
+<li>
+<p>for type embedding: a matrix of word vectors of the words provided in <code>newdata</code>
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>word2vec</code>, <code>read.word2vec</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">path  &lt;- system.file(package = "word2vec", "models", "example.bin")
+model &lt;- read.word2vec(path)
+emb &lt;- predict(model, c("bus", "toilet", "unknownword"), type = "embedding")
+emb
+nn  &lt;- predict(model, c("bus", "toilet"), type = "nearest", top_n = 5)
+nn
+
+# Do some calculations with the vectors and find similar terms to these
+emb &lt;- as.matrix(model)
+vector &lt;- emb["buurt", ] - emb["rustige", ] + emb["restaurants", ]
+predict(model, vector, type = "nearest", top_n = 10)
+
+vector &lt;- emb["gastvrouw", ] - emb["gastvrij", ]
+predict(model, vector, type = "nearest", top_n = 5)
+
+vectors &lt;- emb[c("gastheer", "gastvrouw"), ]
+vectors &lt;- rbind(vectors, avg = colMeans(vectors))
+predict(model, vectors, type = "nearest", top_n = 10)
+</code></pre>
+
+
+</div>

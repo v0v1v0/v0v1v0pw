@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wflow_remove</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Remove files</h2>
+
+<h3>Description</h3>
+
+<p><code>wflow_remove</code> removes files. If the file to be removed is an R Markdown
+file, the corresponding HTML and other related files are also removed. If the
+workflowr project uses Git, <code>wflow_remove</code> commits the changes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wflow_remove(files, message = NULL, git = TRUE, dry_run = FALSE, project = ".")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>character. Files to be removed. Supports file
+<a href="https://en.wikipedia.org/wiki/Glob_(programming)">globbing</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>message</code></td>
+<td>
+<p>character (default: NULL). A commit message.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>git</code></td>
+<td>
+<p>logical (default: TRUE). Commit the changes (only applicable if
+Git repository is present).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dry_run</code></td>
+<td>
+<p>logical (default: FALSE). Preview the files to be removed but
+do not actually remove them.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>character (default: ".") By default the function assumes the
+current working directory is within the project. If this is not true,
+you'll need to provide the path to the project directory.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class <code>wflow_remove</code>, which is a list with the
+following elements:
+</p>
+
+<ul>
+<li> <p><b>files</b>: The relative path(s) to the removed file(s).
+</p>
+</li>
+<li> <p><b>message</b>: The message describing the commit (if applicable).
+</p>
+</li>
+<li> <p><b>dry_run</b>: The input argument <code>dry_run</code>.
+</p>
+</li>
+<li> <p><b>commit</b>:The object returned by
+git2r::<code>commit</code> (only included if <code>dry_run
+  == FALSE</code>).
+</p>
+</li>
+<li> <p><b>files_git</b>: The relative path(s) to the file(s) removed from
+the Git repository.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>wflow_git_commit</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+# Remove a single file
+wflow_remove("analysis/file.Rmd", "Remove old analysis.")
+# Remove multiple files
+wflow_remove(c("analysis/file.Rmd", "output/small-data.txt"),
+             "Remove old analysis and its associated data.")
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

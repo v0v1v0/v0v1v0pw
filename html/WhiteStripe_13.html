@@ -1,0 +1,155 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>whitestripe</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Performs White Stripe of T1 or T2 Images</h2>
+
+<h3>Description</h3>
+
+<p>Returns the mean/sd of the whitestripe and indices
+for them on the image
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">whitestripe(
+  img,
+  type = c("T1", "T2", "FA", "MD", "first", "last", "largest"),
+  breaks = 2000,
+  whitestripe.width = 0.05,
+  whitestripe.width.l = whitestripe.width,
+  whitestripe.width.u = whitestripe.width,
+  arr.ind = FALSE,
+  verbose = TRUE,
+  stripped = FALSE,
+  slices = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>img</code></td>
+<td>
+<p>Image (T1, T2, FA, or MD).  Array or object of class nifti</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>T1, T2, FA, or MD image whitestripe</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>breaks</code></td>
+<td>
+<p>Number of breaks passed to <code>hist</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>whitestripe.width</code></td>
+<td>
+<p>Radius of the white stripe</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>whitestripe.width.l</code></td>
+<td>
+<p>Lower Radius of the white stripe</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>whitestripe.width.u</code></td>
+<td>
+<p>Upper Radius of the white stripe</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arr.ind</code></td>
+<td>
+<p>Whether indices should be array notation or not,
+passed to <code>which</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Print diagnostic information</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stripped</code></td>
+<td>
+<p>Applying to skull-stripped image. NOTE: This does NOT do a
+subset of slices, as <code>make_img_voi</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>slices</code></td>
+<td>
+<p>slices to use for <code>make_img_voi</code> if only a subset to
+estimate the distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments to be passed to <code>get.last.mode</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function takes in an image and computes a window of the
+distribution called the white stripe.  If you wish to pass in values you have
+subset, such as single from a skull-stripped image, you can pass in <code>img</code>
+and set the class to <code>img_voi</code> (<code>class(img) = "img_voi"</code>) and this
+will not rerun <code>make_img_voi</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List of indices of whitestripe, last mode of histogram,
+array/nifti of 0/1 corresponding to the mask,
+mean of whitestripe, standard deviation of whitestripe
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+library(WhiteStripe)
+lib.loc = tempdir()
+if (WhiteStripe::download_img_data(lib.loc = lib.loc)){
+library(oro.nifti)
+set.seed(1)
+t1 = readNIfTI(system.file("T1Strip.nii.gz", package="WhiteStripe",
+lib.loc = lib.loc))
+t1.ind = whitestripe(t1, "T1")
+set.seed(2)
+t1_2 = readNIfTI(system.file("T1Strip.nii.gz", package="WhiteStripe",
+lib.loc = lib.loc))
+t1_2.ind = whitestripe(t1_2, "T1") 
+t1.mask = whitestripe_ind_to_mask(t1, t1.ind$whitestripe.ind)
+t1.mask[t1.mask == 0] = NA
+orthographic(t1, t1.mask, col.y="red")
+t2 = readNIfTI(system.file("T2Strip.nii.gz", package="WhiteStripe",
+lib.loc = lib.loc))
+t2.ind = whitestripe(t2, "T2")
+t2.mask = whitestripe_ind_to_mask(t2, t2.ind$whitestripe.ind)
+t2.mask[t2.mask == 0] = NA
+orthographic(t2, t2.mask, col.y="red")
+}
+
+## End(Not run)
+</code></pre>
+
+
+</div>

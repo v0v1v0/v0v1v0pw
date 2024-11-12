@@ -1,0 +1,232 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cwt_wst</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Continuous wavelet transform</h2>
+
+<h3>Description</h3>
+
+<p>This function computes the continuous wavelet transform for some families of wavelet
+bases: "MORLET", "DOG", "PAUL" and "HAAR".
+It is a translation from the Matlab(R) function published by Torrence and Compo
+(Torrence &amp; Compo, 1998).
+</p>
+<p>The difference between <code>cwt_wst</code> and <code>cwt</code> from package <code>Rwave</code> is that
+<code>cwt_wst</code> normalizes using <code class="reqn">L^2</code> and <code>cwt</code> uses <code class="reqn">L^1</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cwt_wst(signal,
+               dt = 1,
+               scales = NULL,
+               powerscales = TRUE,
+               wname = c("MORLET", "DOG", "PAUL", "HAAR", "HAAR2"),
+               wparam = NULL,
+               waverad = NULL,
+               border_effects = c("BE", "PER", "SYM"),
+               makefigure = TRUE,
+               time_values = NULL,
+               energy_density = FALSE,
+               figureperiod = TRUE,
+               xlab = "Time",
+               ylab = NULL,
+               main = NULL,
+               zlim = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>signal</code></td>
+<td>
+<p>A vector containing the signal whose wavelet transform is wanted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dt</code></td>
+<td>
+<p>Numeric. The time step of the signal.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scales</code></td>
+<td>
+<p>A vector containing the wavelet scales at which the CWT
+is computed. This can be either a vector with all the scales or, following Torrence
+and Compo 1998, a vector of 3 elements with the minimum scale, the maximum scale and
+the number of suboctaves per octave (in this case, <code>powerscales</code> must be TRUE in
+order to construct power 2 scales using a base 2 logarithmic scale). If <code>scales</code>
+is NULL, they are automatically constructed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>powerscales</code></td>
+<td>
+<p>Logical. It must be TRUE (default) in these cases:
+</p>
+
+<ul>
+<li>
+<p> If <code>scales</code> are power 2 scales, i.e. they use a base 2 logarithmic scale.
+</p>
+</li>
+<li>
+<p> If we want to construct power 2 scales automatically. In this case, <code>scales</code>
+must be <code>NULL</code>.
+</p>
+</li>
+<li>
+<p> If we want to construct power 2 scales from <code>scales</code>. In this case,
+<code>length(scales)</code> must be 3.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wname</code></td>
+<td>
+<p>A string, equal to "MORLET", "DOG", "PAUL", "HAAR" or "HAAR2". The
+difference between "HAAR" and "HAAR2" is that "HAAR2" is more accurate but slower.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wparam</code></td>
+<td>
+<p>The corresponding nondimensional parameter for the wavelet function
+(Morlet, DoG or Paul).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>waverad</code></td>
+<td>
+<p>Numeric. The radius of the wavelet used in the computations for the cone
+of influence. If it is not specified, it is asumed to be <code class="reqn">\sqrt{2}</code> for Morlet and DoG,
+<code class="reqn">1/\sqrt{2}</code> for Paul and 0.5 for Haar.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>border_effects</code></td>
+<td>
+<p>String, equal to "BE", "PER" or "SYM", which indicates how to
+manage the border effects which arise usually when a convolution is performed on
+finite-length signals.
+</p>
+
+<ul>
+<li>
+<p> "BE": Padding time series with zeroes.
+</p>
+</li>
+<li>
+<p> "PER": Using boundary wavelets (periodization of the original time series).
+</p>
+</li>
+<li>
+<p> "SYM": Using a symmetric catenation of the original time series.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>makefigure</code></td>
+<td>
+<p>Logical. If TRUE (default), a figure with the wavelet power spectrum
+is plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time_values</code></td>
+<td>
+<p>A numerical vector of length <code>length(signal)</code> containing custom
+time values for the figure. If NULL (default), it will be computed starting at 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>energy_density</code></td>
+<td>
+<p>Logical. If TRUE (default), divide the wavelet power spectrum by
+the scales in the figure and so, values for different scales are comparable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>figureperiod</code></td>
+<td>
+<p>Logical. If TRUE (default), periods are used in the figure instead
+of scales.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>A string giving a custom X axis label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>A string giving a custom Y axis label. If NULL (default) the Y label is
+either "Scale" or "Period" depending on the value of <code>figureperiod</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>A string giving a custom main title for the figure. If NULL
+(default) the main title is either "Wavelet Power Spectrum / Scales" or "Wavelet Power
+Spectrum" depending on the value of <code>energy_density</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zlim</code></td>
+<td>
+<p>A vector of length 2 with the limits for the z-axis (the color bar).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with the following fields:
+</p>
+
+<ul>
+<li> <p><code>coefs</code>: A matrix of size <code>length(signal)</code> x <code>length(scales)</code>,
+containing the CWT coefficients of the signal.
+</p>
+</li>
+<li> <p><code>scales</code>: The vector of scales.
+</p>
+</li>
+<li> <p><code>fourierfactor</code>: A factor for converting scales into periods.
+</p>
+</li>
+<li> <p><code>coi_maxscale</code>: A vector of length <code>length(signal)</code> containing the
+values of the maximum scale from which there are border effects at each time.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>C. Torrence, G. P. Compo. A practical guide to wavelet analysis. B. Am. Meteorol. Soc.
+79 (1998), 61–78.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">dt &lt;- 0.1
+time &lt;- seq(0, 50, dt)
+signal &lt;- c(sin(pi * time), sin(pi * time / 2))
+cwt &lt;- cwt_wst(signal = signal, dt = dt, energy_density = TRUE)
+
+</code></pre>
+
+
+</div>

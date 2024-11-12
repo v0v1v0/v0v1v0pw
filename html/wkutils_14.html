@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wkt_grob</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate grid geometries from well-known geometries</h2>
+
+<h3>Description</h3>
+
+<p>Using <code>wkt_meta()</code> and <code>wkt_coords()</code>, these functions create graphical objects
+using the grid package. Vectors that contain geometries of a single dimension
+are efficiently packed into a <code>grid::pointsGrob()</code>, <code>grid::polylineGrob()</code>,
+or <code>grid::pathGrob()</code>. Vectors with mixed types and nested collections are encoded
+less efficiently using a <code>grid::gTree()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wkt_grob(
+  wkt,
+  ...,
+  rule = "evenodd",
+  default.units = "native",
+  name = NULL,
+  vp = NULL
+)
+
+wkb_grob(
+  wkt,
+  ...,
+  rule = "evenodd",
+  default.units = "native",
+  name = NULL,
+  vp = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wkt</code></td>
+<td>
+<p>A character vector containing well-known text.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Graphical parameters passed to <code>grid::gpar()</code>. These are recycled along
+the input. Dynamic dots (e.g., <code style="white-space: pre;">⁠!!!⁠</code>) are supported.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rule</code></td>
+<td>
+<p>Use "winding" if polygon rings are correctly encoded with a winding
+direction.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>default.units</code></td>
+<td>
+<p>Coordinate units, which may be defined by the viewport (see
+<code>grid::unit()</code>). Defaults to native.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name, vp</code></td>
+<td>
+<p>Passed to <code>grid::pointsGrob()</code>, <code>grid::polylineGrob()</code>,
+<code>grid::pathGrob()</code>, or <code>grid::gTree()</code> depending on the types of geometries
+in the input.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A graphical object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">grid::grid.newpage()
+grid::grid.draw(wkt_grob("POINT (0.5 0.5)", pch = 16, default.units = "npc"))
+
+</code></pre>
+
+
+</div>

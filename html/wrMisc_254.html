@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>test2factLimma</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>2-Factorial Limma-Style t-Test</h2>
+
+<h3>Description</h3>
+
+<p>The aim of this function is to provide convenient acces to two-factorial (linear) testing withing the framework of <code>makeMAList</code> including the emprical Bayes shrinkage. 
+The input data 'datMatr' which should already be organized as limma-type MAList, eg using using <code>makeMAList</code>. 
+Note: This function uses the Bioconductor package <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a> (which must be installed).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">test2factLimma(
+  datMatr,
+  fac1,
+  fac2,
+  testSynerg = FALSE,
+  testOrientation = "=",
+  addResults = c("lfdr", "FDR", "Mval", "means"),
+  addGenes = NULL,
+  silent = FALSE,
+  callFrom = NULL,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datMatr</code></td>
+<td>
+<p>matrix or data.frame with lines as indenpendent series of measures (eg different genes)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fac1</code></td>
+<td>
+<p>(character or factor) vector describing grouping elements of each line of 'datMatr' for first factor, must be of same langth as fac2</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fac2</code></td>
+<td>
+<p>(character or factor) vector describing grouping elements of each line of 'datMatr' for second factor, must be of same langth as fac1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>testSynerg</code></td>
+<td>
+<p>(logical) decide if factor-interactions (eg synergy) should be tested in model, otherwise additive factors are supposed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>testOrientation</code></td>
+<td>
+<p>(character) default (or any non-recignized input) '=', otherwise either '&gt;','gerater','sup','upper' or '&lt;','inf','lower'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addResults</code></td>
+<td>
+<p>(character) vector defining which types of information should be included to output, may be 'lfdr','FDR' (for BY correction), 'Mval' (M values), 'means' (matrix with mean values for each group of replicates)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addGenes</code></td>
+<td>
+<p>(matrix or data.frame) additional information to add to output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns an object of class "MArrayLM" (from limma) containing/enriched by the testing results
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>makeMAList</code>, single line testing <code>lmFit</code> and the <code>eBayes</code>-family of functions in package <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2014)
+dat0 &lt;- rnorm(30) + rep(c(10,15,19,20),c(9,8,7,6))
+fa &lt;- factor(rep(letters[1:4],c(9,8,7,6)))
+dat2 &lt;- data.frame(facA=rep(c("-","A","-","A"), c(9,8,7,6)),
+  facB= rep(c("-","-","B","B"), c(9,8,7,6)), dat1=dat0, dat2=runif(30))
+grpNa &lt;- sub("-","",sub("\\.","", apply(dat2[,1:2], 1, paste, collapse="")))    
+test2f &lt;- test2factLimma(t(dat2[,3:4]), dat2$facA, dat2$facB)  
+test2f     # just the p-values
+# Similarly, you can easily summarize results using topTable from limma
+if(requireNamespace("limma", quietly=TRUE)) {
+  test2g &lt;- test2factLimma(t(dat2[,3:4]), dat2$facA, dat2$facB, addR=FALSE)  
+  library(limma)
+  topTable(test2g, coef=1, n=5) 
+  topTable(test2g, coef=2, n=5) } 
+</code></pre>
+
+
+</div>

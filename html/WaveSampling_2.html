@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>IB</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Spreading measure based on Moran's <code class="reqn">I</code> index</h2>
+
+<h3>Description</h3>
+
+<p>This function implements the spreading measure based on Moran's <code class="reqn">I</code> index.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">IB(W, s)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p>a stratification matrix inheriting from <code>sparseMatrix</code> that represents the spatial weights. See <code>wpik</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p>a vector of size <code class="reqn">N</code> with elements equal to 0 or 1. The value 1 indicates that the unit is selected while the value 0 is for non-chosen units.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This index is developped by Tillé et al. (2018) and measure the spreading of a sample drawn from a population.
+It uses a corrected version of the traditional Moran's <code class="reqn">I</code> index. Each row of the matrix <code class="reqn">\bf W</code> should represents a stratum. Each 
+stratum is defined by a particular unit and its neighbouring units. See <code>wpik</code>.
+The spatial balance measure is equal to
+</p>
+<p style="text-align: center;"><code class="reqn">I_B =\frac{( \bf s- \bar{s}_w)^\top  W ( s- \bar{s}_w)}{\bf \sqrt{( s- \bar{s}_w)^\top  D ( s- \bar{s}_w) ( s- \bar{s}_w)^\top  B ( s- \bar{s}_w)}},</code>
+</p>
+
+<p>where <code class="reqn">\bf D</code> is the diagonal matrix containing the <code class="reqn">w_i</code>, 
+</p>
+<p style="text-align: center;"><code class="reqn"> \bf \bar{s}_w =  1 \frac{ s^\top  W  1}{ 1^\top  W  1}</code>
+</p>
+
+<p>and 
+</p>
+<p style="text-align: center;"><code class="reqn"> \bf B =  W^\top  D^{-1}  W - \frac{ W^\top  1 1^\top  W}{1^\top  W  1}.</code>
+</p>
+
+<p>To specify the spatial weights uses the argument <code>W</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric value that represents the spatial balance. It could be any real value between -1 (spread) and 1 (clustered).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Raphaël Jauslin <a href="mailto:raphael.jauslin@unine.ch">raphael.jauslin@unine.ch</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Tillé, Y., Dickson, M.M., Espa, G., and Guiliani, D. (2018). Measuring the spatial balance of a sample: A new measure based on Moran's I index.
+<em>Spatial Statistics</em>, 23, 182-192.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wpik</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  N &lt;- 36
+  n &lt;- 12
+  x &lt;- seq(1,sqrt(N),1)
+  X &lt;- expand.grid(x,x)
+  pik &lt;- rep(n/N,N)
+  W &lt;- wpik(as.matrix(X),pik,bound = 1,tore = TRUE,shift = FALSE,toreBound = sqrt(N))
+  W &lt;- W - diag(diag(W))
+  s &lt;- wave(as.matrix(X),pik,tore = TRUE,shift = TRUE,comment = TRUE)
+  IB(W,s)
+
+</code></pre>
+
+
+</div>

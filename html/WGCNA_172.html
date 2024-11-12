@@ -1,0 +1,175 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>networkScreening</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Identification of genes related to a trait </h2>
+
+<h3>Description</h3>
+
+<p>This function blends standard and network approaches to selecting genes (or variables in general) highly
+related to a given trait.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">networkScreening(y, datME, datExpr, 
+                 corFnc = "cor", corOptions = "use = 'p'",
+                 oddPower = 3, 
+                 blockSize = 1000, 
+                 minimumSampleSize = ..minNSamples,
+                 addMEy = TRUE, removeDiag = FALSE, 
+                 weightESy = 0.5, getQValues = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p> clinical trait given as a numeric vector (one value per sample) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>datME</code></td>
+<td>
+<p> data frame of module eigengenes </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>datExpr</code></td>
+<td>
+<p> data frame of expression data </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corFnc</code></td>
+<td>
+<p> character string specifying the function to be used to calculate co-expression
+similarity. Defaults to Pearson correlation. Any function returning values between -1 and 1 can be used. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corOptions</code></td>
+<td>
+<p> character string specifying additional arguments to be passed to the function given
+by <code>corFnc</code>. Use <code>"use = 'p', method = 'spearman'"</code> to obtain Spearman correlation.   </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>oddPower</code></td>
+<td>
+<p> odd integer used as a power to raise module memberships and significances </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blockSize</code></td>
+<td>
+<p> block size to use for calculations with large data sets </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minimumSampleSize</code></td>
+<td>
+<p> minimum acceptable number of samples. Defaults to the default minimum number of
+samples used throughout the WGCNA package, currently 4.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addMEy</code></td>
+<td>
+<p> logical: should the trait be used as an additional "module eigengene"?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>removeDiag</code></td>
+<td>
+<p> logical: remove the diagonal? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weightESy</code></td>
+<td>
+<p> weight to use for the trait as an additional eigengene; should be between 0 and 1 </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getQValues</code></td>
+<td>
+<p> logical: should q-values be calculated? </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function should be considered experimental. It takes into account both the "standard" and the network
+measures of gene importance for the trait.
+</p>
+
+
+<h3>Value</h3>
+
+<p>datout = data.frame(p.Weighted, q.Weighted, Cor.Weighted,
+Z.Weighted, p.Standard, q.Standard, Cor.Standard, Z.Standard)
+Data frame reporting the following quantities for each given gene:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>p.Weighted </code></td>
+<td>
+<p>weighted p-value of association with the trait</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q.Weighted </code></td>
+<td>
+<p>q-value (local FDR) calculated from <code>p.Weighted</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cor.Weighted</code></td>
+<td>
+<p>correlation of trait with gene expression weighted by a network term</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z.Weighted</code></td>
+<td>
+<p> Fisher Z score of the weighted correlation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.Standard</code></td>
+<td>
+<p> standard Student p-value of association of the gene with the trait</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q.Standard</code></td>
+<td>
+<p> q-value (local FDR) calculated from <code>p.Standard</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cor.Standard</code></td>
+<td>
+<p> correlation of gene with the trait</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z.Standard</code></td>
+<td>
+<p> Fisher Z score of the standard correlation</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p> Steve Horvath </p>
+
+
+</div>

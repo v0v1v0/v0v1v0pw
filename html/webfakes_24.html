@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>oauth2_third_party_app</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>App representing the third-party app</h2>
+
+<h3>Description</h3>
+
+<p>The webfakes package comes with two fake apps that allow to imitate the
+OAuth2.0 flow in your test cases. (See <a href="https://aaronparecki.com/oauth-2-simplified/">Aaron Parecki’s tutorial</a> for a good
+introduction to OAuth2.0.) One app (<code>oauth2_resource_app()</code>) is the API
+server that serves both as the resource and provides authorization.
+<code>oauth2_third_party_app()</code> plays the role of the third-party app. They
+are useful when testing or demonstrating code handling OAuth2.0
+authorization, token caching, etc. in a package. The apps can be used in
+your tests directly, or you could adapt one or both of them to better
+mimic a particular OAuth2.0 flow.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">oauth2_third_party_app(name = "Third-Party app")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>Name of the third-party app</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Endpoints:
+</p>
+
+<ul>
+<li> <p><code>POST /login/config</code> Use this endpoint to configure the client ID
+and the client secret of the app, received from
+<code>oauth2_resource_app()</code> (or another resource app). You need to
+send in a JSON or URL encoded body:
+</p>
+
+<ul>
+<li> <p><code>auth_url</code>, the authorization URL of the resource app.
+</p>
+</li>
+<li> <p><code>token_url</code>, the token URL of the resource app.
+</p>
+</li>
+<li> <p><code>client_id</code>, the client ID, received from the resource app.
+</p>
+</li>
+<li> <p><code>client_secret</code> the client secret, received from the resource
+app.
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>GET /login</code> Use this endpoint to start the login process. It
+will redirect to the resource app for authorization and after the
+OAuth2.0 dance to <code style="white-space: pre;">⁠/login/redirect⁠</code>.
+</p>
+</li>
+<li> <p><code>GET /login/redirect</code>, <code>POST /login/redirect</code> This is the
+redirect URI of the third party app. (Some HTTP clients redirect
+a <code>POST</code> to a <code>GET</code>, others don't, so it has both.) This endpoint
+is used by the resource app, and it received the <code>code</code> that can
+be exchanged to an access token and the <code>state</code> which was
+generated in <code style="white-space: pre;">⁠/login⁠</code>. It contacts the resource app to get an
+access token, and then stores the token in its <code>app$locals</code>
+local variables. It fails with HTTP code 500 if it cannot obtain
+an access token. On success it returns a JSON dictionary with
+<code>access_token</code>, <code>expiry</code> and <code>refresh_token</code> (optionally) by
+default. This behavior can be changed by redefining the
+<code>app$redirect_hook()</code> function.
+</p>
+</li>
+<li> <p><code>GET /locals</code> returns the tokens that were obtained from the
+resource app.
+</p>
+</li>
+<li> <p><code>GET /data</code> is an endpoint that uses the obtained token(s) to
+connect to the <code style="white-space: pre;">⁠/data⁠</code> endpoint of the resource app. The <code style="white-space: pre;">⁠/data⁠</code>
+endpoint of the resource app needs authorization. It responds
+with the response of the resource app. It tries to refresh the
+access token of the app if needed.
+</p>
+</li>
+</ul>
+<p>For more details see <code>vignette("oauth", package = "webfakes")</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>webfakes app
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other OAuth2.0 functions: 
+<code>oauth2_httr_login()</code>,
+<code>oauth2_login()</code>,
+<code>oauth2_resource_app()</code>
+</p>
+
+
+</div>

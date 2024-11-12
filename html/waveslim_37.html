@@ -1,0 +1,136 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dwpt.2d</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>(Inverse) Discrete Wavelet Packet Transforms in Two Dimensions</h2>
+
+<h3>Description</h3>
+
+<p>All possible filtering combinations (low- and high-pass) are performed to
+decompose a matrix or image.  The resulting coefficients are associated with
+a quad-tree structure corresponding to a partitioning of the two-dimensional
+frequency plane.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dwpt.2d(x, wf = "la8", J = 4, boundary = "periodic")
+
+idwpt.2d(y, y.basis)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a matrix or image containing the data be to decomposed.  This
+ojbect must be dyadic (power of 2) in length in each dimension.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wf</code></td>
+<td>
+<p>Name of the wavelet filter to use in the decomposition.  By
+default this is set to <code>"la8"</code>, the Daubechies orthonormal compactly
+supported wavelet of length <code class="reqn">L=8</code> (Daubechies, 1992), least asymmetric
+family.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>Specifies the depth of the decomposition.  This must be a number
+less than or equal to <code class="reqn">\log(\mbox{length}(x),2)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>Character string specifying the boundary condition.  If
+<code>boundary=="periodic"</code> the default, then the vector you decompose is
+assumed to be periodic on its defined interval,<br> if
+<code>boundary=="reflection"</code>, the vector beyond its boundaries is assumed
+to be a symmetric reflection of itself.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p><code>dwpt.2d</code> object (list-based structure of matrices)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y.basis</code></td>
+<td>
+<p>Boolean vector, the same length as <code class="reqn">y</code>, where <code>TRUE</code>
+means the basis tensor should be used in the reconstruction.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The code implements the two-dimensional DWPT using the pyramid algorithm of
+Mallat (1989).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Basically, a list with the following components
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>w?.?-w?.?</code></td>
+<td>
+<p>Wavelet coefficient matrices (images).  The first index is
+associated with the scale of the decomposition while the second is
+associated with the frequency partition within that level.  The left and
+right strings, separated by the dash ‘-’, correspond to the first <code class="reqn">(x)</code>
+and second <code class="reqn">(y)</code> dimensions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wavelet</code></td>
+<td>
+<p>Name of the wavelet filter
+used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>How the boundaries were handled.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>B. Whitcher
+</p>
+
+
+<h3>References</h3>
+
+<p>Mallat, S. G. (1989) A theory for multiresolution signal
+decomposition: the wavelet representation, <em>IEEE Transactions on
+Pattern Analysis and Machine Intelligence</em>, <b>11</b>, No. 7, 674-693.
+</p>
+<p>Wickerhauser, M. V. (1994) <em>Adapted Wavelet Analysis from Theory to
+Software</em>, A K Peters.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dwt.2d</code>, <code>modwt.2d</code>,
+<code>wave.filter</code>.
+</p>
+
+
+</div>

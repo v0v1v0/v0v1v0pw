@@ -1,0 +1,64 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>DSM_GoodsMatrix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+A Scored Co-occurrence Matrix of Nouns Denoting Goods (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>A pre-scored verb-object co-occurrence matrix for 240 target nouns denoting goods
+and the 3 feature verbs <em>own</em>, <em>buy</em> and <em>sell</em>.
+This matrix is useful for illustrating the application and purpose of dimensionality reduction techniques.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+DSM_GoodsMatrix
+
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A numeric matrix with 240 rows corresponding to target nouns denoting goods and 4 columns, corresponding to
+</p>
+
+<dl>
+<dt>
+<code>own</code>, <code>buy</code>, <code>sell</code>:</dt>
+<dd>
+<p>association scores for co-occurrences of the nouns with the verbs <em>own</em>, <em>buy</em> and <em>sell</em>
+</p>
+</dd>
+<dt>
+<code>fringe</code>:</dt>
+<dd>
+<p>an indicator of how close each point is to the “fringe” of the data set (ranging from 0 to 1)
+</p>
+</dd>
+</dl>
+<h3>Details</h3>
+
+<p>Co-occurrence data are based on verb-object dependency relations in the British National Corpus, obtained from <code>DSM_VerbNounTriples_BNC</code>.  Only nouns that co-occur with all three verbs are included in the data set.
+</p>
+<p>The co-occurrence matrix is weighted with <em>non-sparse</em> log-likelihood (<code>simple-ll</code>) and an additional logarithmic transformation (<code>log</code>).  Row vectors are <em>not</em> normalized.
+</p>
+<p>The <em>fringeness score</em> in column <code>fringe</code> indicates how close a data point is to the fringe of the data set.  Values are distance quantiles based on PCA-whitened Manhattan distance from the centroid.  For example, <code>fringe &gt;= .8</code> characterizes 20% of points that are closest to the fringe.  Fringeness is mainly used to select points to be labelled in plots or to take stratified samples from the data set.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+DSM_GoodsMatrix[c("time", "goods", "service"), ]
+
+</code></pre>
+
+
+</div>

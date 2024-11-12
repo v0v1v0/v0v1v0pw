@@ -1,0 +1,145 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>glove</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract word vectors from GloVe word embedding</h2>
+
+<h3>Description</h3>
+
+<p>The calculations are done with the text2vec package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">glove(
+  text,
+  tokenizer = text2vec::space_tokenizer,
+  dim = 10L,
+  window = 5L,
+  min_count = 5L,
+  n_iter = 10L,
+  x_max = 10L,
+  stopwords = character(),
+  convergence_tol = -1,
+  threads = 1,
+  composition = c("tibble", "data.frame", "matrix"),
+  verbose = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>text</code></td>
+<td>
+<p>Character string.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tokenizer</code></td>
+<td>
+<p>Function, function to perform tokenization. Defaults to
+text2vec::space_tokenizer.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dim</code></td>
+<td>
+<p>Integer, number of dimension of the resulting word vectors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>window</code></td>
+<td>
+<p>Integer, skip length between words. Defaults to 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_count</code></td>
+<td>
+<p>Integer, number of times a token should appear to be
+considered in the model. Defaults to 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_iter</code></td>
+<td>
+<p>Integer, number of training iterations. Defaults to 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x_max</code></td>
+<td>
+<p>Integer, maximum number of co-occurrences to use in the
+weighting function. Defaults to 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stopwords</code></td>
+<td>
+<p>Character, a vector of stop words to exclude from training.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>convergence_tol</code></td>
+<td>
+<p>Numeric, value determining the convergence criteria.
+<code>numeric = -1</code> defines early stopping strategy. Stop fitting
+when one of two following conditions will be satisfied: (a) passed
+all iterations (b) <code>cost_previous_iter / cost_current_iter - 1 &lt;
+    convergence_tol</code>. Defaults to -1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threads</code></td>
+<td>
+<p>number of CPU threads to use. Defaults to 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>composition</code></td>
+<td>
+<p>Character, Either "tibble", "matrix", or "data.frame" for
+the format out the resulting word vectors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical, controls whether progress is reported as operations
+are executed.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tibble, data.frame or matrix containing
+the token in the first column and word vectors in the remaining columns.
+</p>
+
+
+<h3>Source</h3>
+
+<p><a href="https://nlp.stanford.edu/projects/glove/">https://nlp.stanford.edu/projects/glove/</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Jeffrey Pennington, Richard Socher, and Christopher D. Manning.
+2014. GloVe: Global Vectors for Word Representation.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">glove(fairy_tales, x_max = 5)
+</code></pre>
+
+
+</div>

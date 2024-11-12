@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>phenoPhase</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Phenological phase</h2>
+
+<h3>Description</h3>
+
+<p>Finds various measures of the phase of the annual cycle, or of some
+specified month range.
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A seasonal time series, or a class <code>zoo</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>season.range</code></td>
+<td>
+<p>A vector of two numbers specifying the season range to
+be considered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>out</code></td>
+<td>
+<p>The form of the output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to be passed for changing integration
+defaults.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>phenoPhase</code> gives three measures of the phasing of a seasonal cycle:
+the time of the maximum (Cloern and Jassby 2008), the <em>fulcrum</em> or
+center of gravity, and the weighted mean season (Colebrook 1979). The latter
+has sometimes been referred to in the literature as “centre of
+gravity”, but it is not actually the same. These measures differ in their
+sensitivity to changes in the seasonal pattern, and therefore also in their
+susceptibility to sampling variability. The time of maximum is the most
+sensitive, the weighted mean the least.
+</p>
+<p>These measures can be restricted to a subset of the year by giving the
+desired range of seasons. This can be useful for isolating measures of, say,
+the spring and autumn phytoplankton blooms in temperate waters. In the case
+of a seasonal time series, a non-missing value is required for every season
+or the result will be <code>NA</code>, so using a period shorter than one year can
+also help avoid any seasons that are typically not covered by the sampling
+program. Similarly, in the case of dated observations, a shorter period can
+help avoid times of sparse data. The method for time series allows for other
+than monthly frequencies, but <code>season.range</code> is always interpreted as
+months for <code>zoo</code> objects. The method for time series requires data for
+all seasons in <code>season.range</code>. The method for <code>zoo</code> objects will
+provide a result regardless of number of sampling days, so make sure that
+data are sufficient for a meaningful result.
+</p>
+<p>The measures are annum-centric, i.e., they reflect the use of calendar year
+as the annum, which may not be appropriate for cases in which important
+features occur in winter and span two calendar years. Such cases can be
+handled by lagging the time series by an appropriate number of months, or by
+subtracting an appropriate number of days from the individual dates.
+</p>
+<p><code>tsMake</code> can be used to produce <code>ts</code> and <code>zoo</code> objects
+suitable as arguments to this function.
+</p>
+<p>The default parameters used for the <code>integrate</code> function in
+<code>phenoPhase</code> may fail for certain datasets. Try increasing the number
+of subdivisions above its default of 100 by adding, for example,
+<code>subdivisions = 1000</code> to the arguments of <code>phenoPhase</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with columns year, time of the maximum, fulcrum,
+weighted mean time and – in the case of <code>zoo</code> objects – number of
+observations. In the case of seasonal time series, the results are all given
+as decimal seasons of the year. In the case of dated observations, the
+results can be dates, day of the year, or julian day with an origin of
+1970-01-01, depending on the option <code>out</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Cloern, J.E. and Jassby, A.D. (2008) Complex seasonal patterns
+of primary producers at the land-sea interface. <em>Ecology Letters</em>
+<b>11,</b> 1294–1303.
+</p>
+<p>Colebrook, J.M. (1979) Continuous plankton records - seasonal cycles of
+phytoplankton and copepods in the North Atlantic ocean and the North Sea.
+<em>Marine Biology</em> <b>51,</b> 23–32.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>phenoAmp</code>, <code>tsMake</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# ts example
+y &lt;- sfbayChla[, "s27"]
+p1 &lt;- phenoPhase(y)
+p1
+apply(p1, 2, sd, na.rm = TRUE)  # max.time &gt; fulcrum &gt; mean.wt
+phenoPhase(y, c(3, 10))
+
+# zoo example
+sfb &lt;- wqData(sfbay, c(1, 3, 4), 5:12, site.order = TRUE, type = "wide",
+  time.format = "%m/%d/%Y")
+y &lt;- tsMake(sfb, focus = "chl", layer = c(0, 5), type = "zoo")
+phenoPhase(y[, "s27"])
+
+</code></pre>
+
+
+</div>

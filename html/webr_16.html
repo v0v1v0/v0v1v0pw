@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>numSummaryTable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Make a table showing numerical summary</h2>
+
+<h3>Description</h3>
+
+<p>Make a table showing numerical summary
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">numSummaryTable(
+  x,
+  ...,
+  lang = getOption("numSummaryTable.lang", "en"),
+  vanilla = FALSE,
+  add.rownames = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A grouped_df or a data.frame or a vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further argument to be passed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lang</code></td>
+<td>
+<p>Language. choices are one of c("en","kor")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vanilla</code></td>
+<td>
+<p>Logical. Whether make vanilla table or not</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add.rownames</code></td>
+<td>
+<p>Logical. Whether or not add rownames</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">require(moonBook)
+require(dplyr)
+numSummaryTable(acs)
+numSummaryTable(acs$age)
+acs %&gt;% group_by(sex) %&gt;% select(age) %&gt;% numSummaryTable
+acs %&gt;% group_by(sex) %&gt;% select(age,EF) %&gt;% numSummaryTable
+acs %&gt;% group_by(sex,Dx) %&gt;% select(age,EF) %&gt;% numSummaryTable(vanilla=FALSE)
+acs %&gt;% group_by(sex,Dx) %&gt;% numSummaryTable(age,EF,add.rownames=FALSE)
+</code></pre>
+
+
+</div>

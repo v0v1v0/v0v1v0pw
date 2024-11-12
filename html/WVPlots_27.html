@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_Keras_fit_trajectory</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot the trajectory of a Keras model fit.</h2>
+
+<h3>Description</h3>
+
+<p>Plot a history of model fit performance over the number of training epochs.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_Keras_fit_trajectory(
+  d,
+  title,
+  ...,
+  epoch_name = "epoch",
+  lossname = "loss",
+  loss_pretty_name = "minus binary cross entropy",
+  perfname = "acc",
+  perf_pretty_name = "accuracy",
+  pick_metric = loss_pretty_name,
+  fliploss = TRUE,
+  discount_rate = NULL,
+  draw_ribbon = FALSE,
+  val_color = "#d95f02",
+  train_color = "#1b9e77",
+  pick_color = "#e6ab02"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>d</code></td>
+<td>
+<p>data frame to get values from.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>character title for plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>force later arguments to be bound by name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epoch_name</code></td>
+<td>
+<p>name for epoch or trajectory column.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lossname</code></td>
+<td>
+<p>name of training loss column (default 'loss')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loss_pretty_name</code></td>
+<td>
+<p>name for loss on graph (default 'minus binary cross entropy')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>perfname</code></td>
+<td>
+<p>name of training performance column (default 'acc')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>perf_pretty_name</code></td>
+<td>
+<p>name for performance metric on graph (default 'accuracy')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pick_metric</code></td>
+<td>
+<p>character: metric to maximize (NULL for no pick line - default loss_pretty_name)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fliploss</code></td>
+<td>
+<p>flip the loss so that "larger is better"? (default TRUE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>discount_rate</code></td>
+<td>
+<p>numeric: what fraction of over-fit to subtract from validation performance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>draw_ribbon</code></td>
+<td>
+<p>present the difference in training and validation performance as a ribbon rather than two curves? (default FALSE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>val_color</code></td>
+<td>
+<p>color for validation performance curve</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>train_color</code></td>
+<td>
+<p>color for training performance curve</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pick_color</code></td>
+<td>
+<p>color for indicating optimal stopping point</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Assumes a performance matrix that carries information for both training and validation loss,
+and an additional training and validation performance metric, in the format that
+a Keras history object returns.
+</p>
+<p>By default, flips the loss so that better performance is larger for both the loss and the performance metric,
+and then draws a vertical line at the minimum validation loss (maximum flipped validation loss).
+If you choose not to flip the loss, you should not use the loss as the pick_metric.
+</p>
+<p>The example below gives
+a fit plot for a history report from Keras R package.
+Please see <a href="https://winvector.github.io/FluidData/PlotExample/KerasPerfPlot.html">https://winvector.github.io/FluidData/PlotExample/KerasPerfPlot.html</a>
+for some details.
+</p>
+
+
+<h3>Value</h3>
+
+<p>ggplot2 plot
+</p>
+
+
+<h3>See Also</h3>
+
+<p>plot_fit_trajectory
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+# example data (from Keras)
+d &lt;- data.frame(
+  val_loss = c(0.3769818, 0.2996994, 0.2963943, 0.2779052, 0.2842501),
+  val_acc  = c(0.8722000, 0.8895000, 0.8822000, 0.8899000, 0.8861000),
+  loss     = c(0.5067290, 0.3002033, 0.2165675, 0.1738829, 0.1410933),
+  acc      = c(0.7852000, 0.9040000, 0.9303333, 0.9428000, 0.9545333) )
+
+plt &lt;- plot_Keras_fit_trajectory(
+  d,
+  title = "model performance by epoch, dataset, and measure")
+
+print(plt)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,157 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>outStat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>A faceted ggplot of the chromosome outlier statistics or the
+interval blups/outlier statistics obtained from specified iteratons of wgaim.</h2>
+
+<h3>Description</h3>
+
+<p>A faceted <code>ggplot()</code> of the chromosome outlier statistics or the
+interval blups/outlier statistics from specified iteratons of
+<code>wgaim</code>. The interval blups/outlier statistics appear as
+a trace across the genome separated by chromosomes and appropriately
+spaced by their cM distances.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">outStat(object, intervalObj, iter = NULL, chr = NULL, statistic =
+        "outlier", plot.chr = FALSE, chr.lines = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>object of class <code>"wgaim"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intervalObj</code></td>
+<td>
+<p>object of class <code>"interval"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iter</code></td>
+<td>
+<p>range of integers determining which iterations will be
+plotted.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chr</code></td>
+<td>
+<p>character vector naming the subset of chromosomes to
+plot.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>statistic</code></td>
+<td>
+<p>character string naming the type of diagnostic statistic to be
+plotted. Default is <code>"outlier"</code> (outlier statistics). Other option is
+<code>"blups"</code> for the scaled empirical blups calculated during each
+iteration.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.chr</code></td>
+<td>
+<p>logical value, if <code>TRUE</code> then plot chromosome outlier
+statistics. If <code>FALSE</code> then plot interval outlier
+statistics (see Details). Defaults to <code>FALSE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chr.lines</code></td>
+<td>
+<p>logical value, if <code>TRUE</code> then plot vertical
+lines to show separation of linkage groups. This is only useful if
+<code>plot.chr = FALSE</code>. Defaults to <code>FALSE</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If <code>plot.chr = TRUE</code> then outlier statistics for each chromosome
+are plotted in separate faceted panels for specified values of <code>chr</code> and
+<code>iter</code>. This option requies <code>selection="chromosome"</code> to be set
+in the <code>wgaim.asreml()</code> call. If <code>plot.chr = FALSE</code> then interval blups or
+outlier statistics are plotted in separate faceted panels for specified
+values of <code>chr</code> and <code>iter</code>.
+</p>
+<p>Additionally, the set of significant QTL (chromosome and interval position) are
+extracted from the model <code>object</code> and annotated on the plot in
+their appropriate positions in each facet panel. Graphical aesthetics,
+such as themes, text, font etc. can be further manipulated through
+the inclusion of additional overlays to the returned <code>ggplot()</code> object.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The blups or outlier statistics are plotted in a faceted <code>ggplot()</code>
+with information of significant QTL overlayed.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Julian Taylor</p>
+
+
+<h3>References</h3>
+
+<p>Verbyla, A. P &amp; Taylor, J. D, Verbyla, K. L (2012). RWGAIM: An efficient high
+dimensional random whole genome average (QTL) interval mapping approach.
+<em>Genetics Research</em>. <b>94</b>, 291-306.
+</p>
+<p>Julian Taylor, Arunas Vebyla (2011). R Package wgaim: QTL Analysis in
+Bi-Parental Populations Using Linear Mixed Models. <em>Journal of
+Statistical Software</em>, <b>40</b>(7), 1-18. URL <a href="https://www.jstatsoft.org/v40/i07/">https://www.jstatsoft.org/v40/i07/</a>.
+</p>
+<p>Verbyla, A. P., Cullis, B. R., Thompson, R (2007) The analysis of QTL
+by simultaneous use of the full linkage map. <em>Theoretical and
+Applied Genetics</em>, <b>116</b>, 95-111.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>tr.wgaim</code>, <code>wgaim</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+# fit wgaim model
+
+rkyld.qtl &lt;- wgaim(rkyld.asf, intervalObj = genoRxK, merge.by = "Genotype",
+                  trace = "trace.txt", na.action = na.method(x = "include"))
+
+# plot QTL interval outlier statistics
+
+outStat(rkyld.qtl, genoRxK, iter = 1:5)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

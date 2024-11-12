@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>explainedVariation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute Explained Variation from Loadings</h2>
+
+<h3>Description</h3>
+
+<p><code>explainedVariation</code> computes the explained variation for each whitened variables from the loadings (both covariance loadings and correlation loadings).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  explainedVariation(Phi)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>Phi</code></td>
+<td>
+<p>Loading matrix (with columns referring to whitened variables).</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p><code>explainedVariation</code> computes for each column of
+the loading matrix the sum of squares of the elements in that column.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>explainedVariation</code> returns a vector with the explained variation contributed by each whitened variable.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Korbinian Strimmer (<a href="https://strimmerlab.github.io">https://strimmerlab.github.io</a>).
+</p>
+
+
+<h3>References</h3>
+
+<p>Kessy, A., A. Lewin, and K. Strimmer. 2018.
+Optimal whitening and decorrelation. The American Statistician. 72: 309-314.
+&lt;DOI:10.1080/00031305.2016.1277159&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>whiteningLoadings</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load whitening library
+library("whitening")
+
+######
+
+# example data set
+# E. Anderson. 1935.  The irises of the Gaspe Peninsula.
+# Bull. Am. Iris Soc. 59: 2--5
+data("iris")
+X = as.matrix(iris[,1:4])
+d = ncol(X) # 4
+n = nrow(X) # 150
+colnames(X) # "Sepal.Length" "Sepal.Width"  "Petal.Length" "Petal.Width"
+
+# estimate covariance
+S = cov(X)
+
+# PCA-cor loadings
+ldgs = whiteningLoadings(S, method="PCA-cor")
+
+# Explained variation from correlation loadings
+explainedVariation( ldgs$Psi )
+
+
+</code></pre>
+
+
+</div>

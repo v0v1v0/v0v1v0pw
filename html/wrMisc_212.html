@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>readCsvBatch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read batch of csv-files</h2>
+
+<h3>Description</h3>
+
+<p>This function was designed to read screening data split in parts (with common structure) and saved to multiple files,  
+to extract the numeric columns and to compile all (numeric) data to a single array (or list).  Some screening platforms save results while progressing 
+through a pile of microtiter-plates separately. The organization of the resultant files is structured through file-names and all files have exactely the same organization of lines and columns/ 
+European or US-formatted csv files can be read, if argument <code>fileFormat</code> is <code>NULL</code> both types will be tested, otherwise it allows to specify a given format.
+The presence of headers (to be used as column-names) may be tested using <code>checkFormat</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">readCsvBatch(
+  fileNames = NULL,
+  path = ".",
+  fileFormat = "Eur",
+  checkFormat = TRUE,
+  returnArray = TRUE,
+  columns = c("Plate", "Well", "StainA"),
+  excludeFiles = "All infected plates",
+  simpleNames = TRUE,
+  minNamesLe = 4,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fileNames</code></td>
+<td>
+<p>(character) names of files to be read, if <code>NULL</code> all files fitting 'fileFormat'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>(character) where files should be read (folders should be written in R-style)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fileFormat</code></td>
+<td>
+<p>(character) may be <code>NULL</code> (both US and European formats will be tried), 'Eur' or 'US'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checkFormat</code></td>
+<td>
+<p>(logical) if <code>TRUE</code>: check header, remove empty columns, 1st line if all empmty, set output format for each file to matrix, if rownames are increasing integeres try to use 2nd of 'columns' as rownames</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnArray</code></td>
+<td>
+<p>(logical) allows switching from array to list-output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>columns</code></td>
+<td>
+<p>(NULL or character) column-headers to be extracted (if specified), 2nd value may be comlumn with rownames (if rownames are encountered as increasing rownames)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>excludeFiles</code></td>
+<td>
+<p>(character) names of files to exclude (only used when reading all files of given directory)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simpleNames</code></td>
+<td>
+<p>(logical) allows truncating names (from beginning) to get to variable part (using .trimLeft()), but keeping 'minNamesLe'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minNamesLe</code></td>
+<td>
+<p>(interger) min length of column-names if simpleNames=TRUE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns an array (or list if <code>returnArray=FALSE</code>) of all numeric data read (numerical columns only) from individual files
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read.table</code>, <code>writeCsv</code>, <code>readXlsxBatch</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">path1 &lt;- system.file("extdata", package="wrMisc")
+fiNa &lt;-  c("pl01_1.csv","pl01_2.csv","pl02_1.csv","pl02_2.csv")
+datAll &lt;- readCsvBatch(fiNa, path1)
+str(datAll)
+## batch reading of all csv files in specified path :
+datAll2 &lt;- readCsvBatch(fileNames=NULL, path=path1, silent=TRUE)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>createsrch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a grid of half-window widths to evaluate</h2>
+
+<h3>Description</h3>
+
+<p>Create a grid of all unique combinations of half-window widths to evaluate.  The result can be passed to <code>winsrch_grid</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">createsrch(
+  mos = c(seq(0.5, 1, by = 0.25), 2, 10),
+  yrs = c(seq(5, 15, by = 3), 50),
+  flo = c(seq(0.5, 1, by = 0.1), 5)
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mos</code></td>
+<td>
+<p>numeric vector of half-window widths for months, a value of one indicates twelve months</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yrs</code></td>
+<td>
+<p>numeric vector of half-window widths for years, a value of one indicates one-year</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flo</code></td>
+<td>
+<p>numeric vector of half-window widths for salinity or flow, a value of one indicates the full range of values (100 percent)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The weighting function uses a tri-cube weighting scheme such that weights diminish with distance from the center of the window.  For example, a value of one for the month window does not mean that all months are weighted equally even though the window covers an entire calendar year.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix with number of rows equal to the product of the lengths of each input vector, where each row is a unique combination for the selected half-window widths.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>winsrch_grid</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">createsrch()
+createsrch(1, 1, 1)
+</code></pre>
+
+
+</div>

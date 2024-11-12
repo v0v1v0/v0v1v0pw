@@ -1,0 +1,480 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>configVariablesLoad</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read a configuration file and store the variables
+</h2>
+
+<h3>Description</h3>
+
+<p>These are functions to read, validate and execute a report configuration file placing its output as a series of variables in a hidden scope; they also access and check existence of the variables.  Variables whose names begin 'config.' will be printed at load time along with their values.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">configVariablesLoad(fileName="report.config")
+configVariableGet(name)
+configVariableIs(name)
+configVariablesAll()
+configVariableSet(name, value)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fileName</code></td>
+<td>
+
+<p>The name of the configuration file
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+
+<p>The name of a variable from the config file. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+
+<p>The value to be assigned to the config variable name.  
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The configuration file is an R script that is intended to be used to define the variables and helper functions that control the supplied sample report script.  The config file may be executed more than once as part of validating its content.  
+</p>
+<p>String values in the config file should be quoted using double quote characters. Lists of values are written using the R <code>c()</code> function, for example <code>c("a","b")</code> 
+</p>
+<p>Switches controlling behaviour 
+</p>
+
+<dl>
+<dt><code>config.projectName</code></dt>
+<dd>
+<p>The Project name for the cover page of the document.  This is also printed on the internal page headers.
+</p>
+ 
+<ul>
+<li>
+<p> Required
+</p>
+</li>
+<li>
+<p> No Default Value
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.documentName</code></dt>
+<dd>
+<p>The name to be printed on the document cover page.
+</p>
+ 
+<ul>
+<li>
+<p> Required
+</p>
+</li>
+<li>
+<p> No Default value
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.current.dataDir</code></dt>
+<dd>
+<p>Data is assumed to be stored in a directory hierarchy, with a root directory and a series of child directories corresponding with the individual web servers, this variable specifies the root directory of that hierarchy.  For example a directory structure might be a series of server specific logs under <code>/var/logs/apache</code>, with the individual servers' logs being located in <code>/var/logs/apache/server1</code>, <code>/var/logs/apache/server2</code> and <code>/var/logs/apache/server3</code>.  the data dir in this case is <code>/var/logs/apache</code> with the <code>config.current.dirNames</code> being specified as <code>c("server1", "server2", "server3")</code>.
+</p>
+ 
+<ul>
+<li>
+<p> Required
+</p>
+</li>
+<li>
+<p> No Default Value
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.current.dirNames</code></dt>
+<dd>
+<p>This is the list of child directory paths, often corresponding with a list of server names, it must be a concatenation of strings, for example <code>c("PRODMAW1","PRODMAW2")</code>.  
+Multiple directory names can be coded here: <code>c("PRODMAW1/app1","PRODMAW2/app1")</code>.
+</p>
+ 
+<ul>
+<li>
+<p> Required
+</p>
+</li>
+<li>
+<p> No Default Value
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.current.columnList</code></dt>
+<dd>
+<p>The list of column names in the log file, for example 
+</p>
+<p><code>c("Apache", "elapsedus", "jsessionid")</code>.  
+</p>
+<p>See <code>logFileRead</code> for the list of valid column names.  The name <code>Apache</code> is an abbreviation for the Apache common log format: 
+</p>
+<p><code>c("userip", "ignored column 1", "username", "ApacheTimestamp", "url", "httpcode", "responsebytes")</code>
+</p>
+
+<ul>
+<li>
+<p> Required 
+</p>
+</li>
+<li>
+<p> No Default Value
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.readBaseline</code></dt>
+<dd> 
+<p>Read a baseline log to be compared with current behaviour. Valid values are either <code>TRUE</code> or <code>FALSE</code>. 
+</p>
+
+<ul>
+<li>
+<p> Optional 
+</p>
+</li>
+<li>
+<p> Default value: <code>FALSE</code>
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.baseline.dataDir</code></dt>
+<dd>
+<p>The root directory for the baseline data files 
+</p>
+
+<ul>
+<li>
+<p> Must be supplied if <code>config.readBaseline=TRUE</code> 
+</p>
+</li>
+<li>
+<p> No Default Value
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.baseline.dirNames</code></dt>
+<dd> 
+<p>The list of baseline log server-specific directories, usually a list of server names, it must be a concatenation of strings, for example <code>c("PRODMAW1","PRODMAW2")</code> 
+</p>
+
+<ul>
+<li>
+<p> Must be specified if <code>config.readBaseline=TRUE</code> 
+</p>
+</li>
+<li>
+<p> No Default Value, 
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.baseline.columnList</code></dt>
+<dd>
+<p>The list of columns to be read.  It is the baseline version of 
+</p>
+<p><code>config.current.columnList</code> 
+</p>
+
+<ul>
+<li>
+<p> Must be specified if <code>config.readBaseline=TRUE</code>
+</p>
+</li>
+<li>
+<p> No Default Value
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.generateGraphForTimeOver</code></dt>
+<dd>
+<p>Response time graphs and histograms are generated for URLs whose maximum elapsed time exceeds this number of milliseconds 
+</p>
+
+<ul>
+<li>
+<p> Optional 
+</p>
+</li>
+<li>
+<p> Default Value: 10000
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.generateServerSessionStats</code></dt>
+<dd>
+<p>Generate histograms and counts of requests by server.  These are only generated if <code>jsessionid</code> is also one of the column names in the current data 
+</p>
+
+<ul>
+<li>
+<p> Optional 
+</p>
+</li>
+<li>
+<p> Default Value: <code>TRUE</code>
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.generatePercentileRankings</code></dt>
+<dd>
+<p>Generate tables that compare frequencies and total elapsed times of URLs in the baseline and current data.  Intended to be used for calibrating performance test workloads 
+</p>
+
+<ul>
+<li>
+<p> Optional 
+</p>
+</li>
+<li>
+<p> Default Value: <code>FALSE</code>
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.fix.data</code></dt>
+<dd>
+<p>An R function definition that is used to adjust the data read from the log files.  This is provided in the sample report configuration file.  The function must categorise records using the literals <code>"Static Content Requests"</code> and <code>"Monitoring"</code>.  The function supplied in the sample.config file created by <code>workingDirectoryPopulate</code> is a good starting point and can be used to subset or correct the log data as it is read to focus on a smaller subset of records.   
+</p>
+
+<ul>
+<li>
+<p> Optional 
+</p>
+</li>
+<li>
+<p> No Default Value 
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.fix.current.data</code></dt>
+<dd>
+<p>The function to be used to adjust baseline data if different cleaning functions are to be applied to current and baseline data 
+</p>
+
+<ul>
+<li>
+<p> Optional
+</p>
+</li>
+<li>
+<p> No Default Value
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.fix.baseline.data</code></dt>
+<dd>
+<p>The function to use if different functions are to be applied to current and baseline data
+</p>
+
+<ul>
+<li>
+<p> Optional
+</p>
+</li>
+<li>
+<p> Default value: <code>config.fix.current.data</code>
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.tempdir</code></dt>
+<dd>
+<p>The name of the temp dir to be used for storage of generated graphics.
+</p>
+
+<ul>
+<li>
+<p> Optional
+</p>
+</li>
+<li>
+<p> Default Value: ./txdata/
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.useragent.generateFrequencies</code></dt>
+<dd>
+<p>Generate the User Agent Frequency Section of the report.  Setting this to FALSE suppresses the report, which in any case is only produced if the current dataset contains user agent strings.   
+</p>
+
+<ul>
+<li>
+<p> Optional
+</p>
+</li>
+<li>
+<p> Default Value: TRUE
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.useragent.minimumPercentage</code></dt>
+<dd>
+<p>The minimum percentage that a User Agent family or version must represent to be considered.   
+</p>
+
+<ul>
+<li>
+<p> Optional
+</p>
+</li>
+<li>
+<p> Default Value: 2
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.useragent.maximumPercentile</code></dt>
+<dd>
+<p>The maximum cumulative percentile to report.  The last few percent is made up of very low frequency of occurrence 
+User agents that are not feasible (or in many cases possible) to test.  
+</p>
+
+<ul>
+<li>
+<p> Optional
+</p>
+</li>
+<li>
+<p> Default Value: 96
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.useragent.discardOther</code></dt>
+<dd>
+<p>Discard browser family "Other" records.  These are typically monitoring or heartbeat sources whose frequencies distort 
+the percentile calculations.  
+</p>
+
+<ul>
+<li>
+<p> Optional
+</p>
+</li>
+<li>
+<p> Default Value: TRUE
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.author</code></dt>
+<dd>
+<p>Name of the author of the report.  Displayed on the default first page and in the page footer.   
+</p>
+
+<ul>
+<li>
+<p> Optional
+</p>
+</li>
+<li>
+<p> Default Value: Author
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.securityClass</code></dt>
+<dd>
+<p>The security classification of the document.  Displayed on the default first page and in the page footer.
+</p>
+
+<ul>
+<li>
+<p> Optional
+</p>
+</li>
+<li>
+<p> Default Value: Commercial-In-Confidence
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>config.longurls.threshold</code></dt>
+<dd>
+<p>The length in characters of a URL above which the URL text is replaced by a placeholder and the URL content is logged. Increasing this number will allow processing of longer URL text, but can lead to problems in LaTeX's processing the file. 
+</p>
+
+<ul>
+<li>
+<p> Optional
+</p>
+</li>
+<li>
+<p> Default Value: 1000
+</p>
+</li>
+</ul>
+</dd>
+</dl>
+<h3>Value</h3>
+
+<p>configVariableIs returns a boolean to indicate existence of a named variable
+configVariableGet returns the value of the variable
+configVariableAll returns a list of all variables
+configVariableSet does not return a value
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Greg Hunt &lt;greg@firmansyah.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>workingDirectoryPopulate</code>
+<code>logFileRead</code>
+<code>logFileListRead</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+configVariablesLoad(fileName=paste0(tempdir(),"/xx/sample.config"))
+if(configVariableIs("config.documentName"))
+{
+  print(configVariableGet("config.documentName"))
+}
+allvars = configVariablesAll()
+
+</code></pre>
+
+
+</div>

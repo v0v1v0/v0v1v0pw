@@ -1,0 +1,114 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simulate_conditionally.simbase_list</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add simulated values to a dataset conditionally, based on a <code>simbase_list</code> object</h2>
+
+<h3>Description</h3>
+
+<p>Add simulated values to a dataset conditionally, based on a <code>simbase_list</code> object
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'simbase_list'
+simulate_conditionally(
+  data,
+  simbase,
+  force_positive = TRUE,
+  ...,
+  error_when_groups_missing = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The dataset where simulated values are added to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simbase</code></td>
+<td>
+<p>Basic data object for the simulation, as calculated by
+<code>simbase_list</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>force_positive</code></td>
+<td>
+<p>If <code>TRUE</code>, the resulting values are forced
+to be <code class="reqn">\ge 0</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>error_when_groups_missing</code></td>
+<td>
+<p>Whether to raise an error if for a certain
+value combination in the grouping variables no dedicated <code>simbase</code>
+exists (see details).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Simulating values based on a <code>simbase_list</code> object
+has some special aspects compared to that of other <code>simbase_*</code> objects,
+(see <code>simulate_conditionally</code>).
+</p>
+<p>In particular, a <code>simbase_list</code> object stores <code>simbase</code>s
+for specific value combinations within the grouping variables.
+</p>
+<p>These grouping variables must also be present in <code>data</code>.
+</p>
+<p>If there is a value combination in these grouping variables for which no
+dedicated <code>simbase</code> object exists, this will lead to <code>NA</code> values
+in the columns to be simulated and either to an error
+(if <code>error_when_groups_missing = TRUE</code>) or to a warning.
+</p>
+<p>Due to the internal call to <code>nest</code> and subsequent call to
+<code>unnest</code>, the returned dataset will be ordered according to
+the grouping variables in the simbase, with any grouping variable
+combinations missing in the simbase coming last.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The modified dataset <code>data</code> with simulated values.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># create a simbase_list object for the values of subsets = c('AT', 'DE')
+dataset_0 &lt;- simulate_dataset(subsets = c('AT', 'DE'));
+simbase &lt;- simbase_covar(dplyr::group_by(dataset_0, country), c('f', 'E', 'E_dyn'));
+
+# simulate on another dataset
+dataset &lt;- data.frame(E_dyn = rnorm(n = 100, mean = 12500, sd = 2200), country = 'AT');
+dataset_1 &lt;- simulate_conditionally(dataset, simbase);
+head(dataset_1);
+
+# warning if for some value of country we don't have an entry in the simbase
+dataset$country &lt;- 'CH';
+dataset_2 &lt;- simulate_conditionally(dataset, simbase, error_when_groups_missing = FALSE);
+head(dataset_2);
+
+</code></pre>
+
+
+</div>

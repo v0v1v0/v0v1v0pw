@@ -1,0 +1,232 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>loglik_function.default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Log-Likelihood Function for Parametric Lifetime Distributions</h2>
+
+<h3>Description</h3>
+
+<p>This function computes the log-likelihood value with respect to a given set
+of parameters. In terms of <em>Maximum Likelihood Estimation</em> this function can
+be optimized (optim) to estimate the parameters and
+variance-covariance matrix of the parameters.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+loglik_function(
+  x,
+  status,
+  wts = rep(1, length(x)),
+  dist_params,
+  distribution = c("weibull", "lognormal", "loglogistic", "sev", "normal", "logistic",
+    "weibull3", "lognormal3", "loglogistic3", "exponential", "exponential2"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector which consists of lifetime data. Lifetime data
+could be every characteristic influencing the reliability of a product,
+e.g. operating time (days/months in service), mileage (km, miles), load
+cycles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>A vector of binary data (0 or 1) indicating whether a unit is
+a right censored observation (= 0) or a failure (= 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wts</code></td>
+<td>
+<p>Optional vector of case weights. The length of <code>wts</code> must be equal
+to the number of observations in <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist_params</code></td>
+<td>
+<p>A vector of parameters. An overview of the
+distribution-specific parameters can be found in section 'Distributions'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the random variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns the log-likelihood value for the parameters in <code>dist_params</code> given
+the data.
+</p>
+
+
+<h3>Distributions</h3>
+
+<p>The following table summarizes the available distributions and their parameters
+</p>
+
+<ul>
+<li> <p><em>location parameter</em> <code class="reqn">\mu</code>,
+</p>
+</li>
+<li> <p><em>scale parameter</em> <code class="reqn">\sigma</code> or <code class="reqn">\theta</code> and
+</p>
+</li>
+<li> <p><em>threshold parameter</em> <code class="reqn">\gamma</code>.
+</p>
+</li>
+</ul>
+<p>The order within <code>dist_params</code> is given in the table header.</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   <strong><code>distribution</code></strong> </td>
+<td style="text-align: center;"> <strong><code>dist_params[1]</code></strong> </td>
+<td style="text-align: center;"> <strong><code>dist_params[2]</code></strong> </td>
+<td style="text-align: center;"> <strong><code>dist_params[3]</code></strong> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"sev"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"weibull"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"weibull3"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> <code class="reqn">\gamma</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"normal"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"lognormal"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"lognormal3"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> <code class="reqn">\gamma</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"logistic"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"loglogistic"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"loglogistic3"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> <code class="reqn">\gamma</code> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"exponential"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\theta</code> </td>
+<td style="text-align: center;"> - </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"exponential2"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\theta</code> </td>
+<td style="text-align: center;"> <code class="reqn">\gamma</code> </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Meeker, William Q; Escobar, Luis A., Statistical methods for
+reliability data, New York: Wiley series in probability and statistics, 1998
+</p>
+
+
+<h3>See Also</h3>
+
+<p>loglik_function
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Vectors:
+cycles &lt;- alloy$cycles
+status &lt;- alloy$status
+
+# Example 1 - Evaluating Log-Likelihood function of two-parametric weibull:
+loglik_weib &lt;- loglik_function(
+  x = cycles,
+  status = status,
+  dist_params = c(5.29, 0.33),
+  distribution = "weibull"
+)
+
+# Example 2 - Evaluating Log-Likelihood function of three-parametric weibull:
+loglik_weib3 &lt;- loglik_function(
+  x = cycles,
+  status = status,
+  dist_params = c(4.54, 0.76, 92.99),
+  distribution = "weibull3"
+)
+
+</code></pre>
+
+
+</div>

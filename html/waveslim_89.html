@@ -1,0 +1,166 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mra</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Multiresolution Analysis of Time Series</h2>
+
+<h3>Description</h3>
+
+<p>This function performs a level <code class="reqn">J</code> additive decomposition of the input
+vector or time series using the pyramid algorithm (Mallat 1989).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mra(x, wf = "la8", J = 4, method = "modwt", boundary = "periodic")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A vector or time series containing the data be to decomposed.  This
+must be a dyadic length vector (power of 2) for <code>method="dwt"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wf</code></td>
+<td>
+<p>Name of the wavelet filter to use in the decomposition.  By
+default this is set to <code>"la8"</code>, the Daubechies orthonormal compactly
+supported wavelet of length L=8 least asymmetric family.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>Specifies the depth of the decomposition.  This must be a number
+less than or equal to log(length(x), 2).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Either <code>"dwt"</code> or <code>"modwt"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>Character string specifying the boundary condition.  If
+<code>boundary=="periodic"</code> the default, then the vector you decompose is
+assumed to be periodic on its defined interval,<br> if
+<code>boundary=="reflection"</code>, the vector beyond its boundaries is assumed
+to be a symmetric reflection of itself.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This code implements a one-dimensional multiresolution analysis introduced
+by Mallat (1989).  Either the DWT or MODWT may be used to compute the
+multiresolution analysis, which is an additive decomposition of the original
+time series.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Basically, a list with the following components </p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>D?</code></td>
+<td>
+<p>Wavelet
+detail vectors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>S?</code></td>
+<td>
+<p>Wavelet smooth vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wavelet</code></td>
+<td>
+<p>Name of
+the wavelet filter used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>How the boundaries were handled.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>B. Whitcher
+</p>
+
+
+<h3>References</h3>
+
+<p>Gencay, R., F. Selcuk and B. Whitcher (2001) <em>An
+Introduction to Wavelets and Other Filtering Methods in Finance and
+Economics</em>, Academic Press.
+</p>
+<p>Mallat, S. G. (1989) A theory for multiresolution signal decomposition: the
+wavelet representation, <em>IEEE Transactions on Pattern Analysis and
+Machine Intelligence</em>, <b>11</b>, No. 7, 674-693.
+</p>
+<p>Percival, D. B. and A. T. Walden (2000) <em>Wavelet Methods for Time
+Series Analysis</em>, Cambridge University Press.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dwt</code>, <code>modwt</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Easy check to see if it works...
+x &lt;- rnorm(32)
+x.mra &lt;- mra(x)
+sum(x - apply(matrix(unlist(x.mra), nrow=32), 1, sum))^2
+
+## Figure 4.19 in Gencay, Selcuk and Whitcher (2001)
+data(ibm)     
+ibm.returns &lt;- diff(log(ibm))
+ibm.volatility &lt;- abs(ibm.returns)
+## Haar
+ibmv.haar &lt;- mra(ibm.volatility, "haar", 4, "dwt")
+names(ibmv.haar) &lt;- c("d1", "d2", "d3", "d4", "s4")
+## LA(8)
+ibmv.la8 &lt;- mra(ibm.volatility, "la8", 4, "dwt")
+names(ibmv.la8) &lt;- c("d1", "d2", "d3", "d4", "s4")
+## plot multiresolution analysis of IBM data
+par(mfcol=c(6,1), pty="m", mar=c(5-2,4,4-2,2))
+plot.ts(ibm.volatility, axes=FALSE, ylab="", main="(a)")
+for(i in 1:5)
+  plot.ts(ibmv.haar[[i]], axes=FALSE, ylab=names(ibmv.haar)[i])
+axis(side=1, at=seq(0,368,by=23), 
+  labels=c(0,"",46,"",92,"",138,"",184,"",230,"",276,"",322,"",368))
+par(mfcol=c(6,1), pty="m", mar=c(5-2,4,4-2,2))
+plot.ts(ibm.volatility, axes=FALSE, ylab="", main="(b)")
+for(i in 1:5)
+  plot.ts(ibmv.la8[[i]], axes=FALSE, ylab=names(ibmv.la8)[i])
+axis(side=1, at=seq(0,368,by=23), 
+  labels=c(0,"",46,"",92,"",138,"",184,"",230,"",276,"",322,"",368))
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,226 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cl</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>COMPOSITE LIKELIHOOD ESTIMATION FOR MVN COPULA</h2>
+
+<h3>Description</h3>
+
+<p>Composite likelihood estimation for MVN copula.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cl(p,q,b,gam,xdat,ydat,margmodel,link)
+cl.ord(p,q,b,gam,xdat,ydat,link)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>The order of the autoregressive component.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+<p>The order of the moving average component.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+<p>The regression coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gam</code></td>
+<td>
+<p>The uinivariate parameters that are not regression coefficients. That is the parameter <code class="reqn">\gamma</code> of negative binomial distribution or  the <code class="reqn">q</code>-dimensional vector of the univariate cutpoints of ordinal model. <code class="reqn">\gamma</code> is NULL for Poisson and binary regression.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xdat</code></td>
+<td>
+<p>The <code class="reqn">d\times p</code> matrix of covariates, where <code class="reqn">d</code> is the length of the time-series and <code class="reqn">p</code> is the number of covariates including
+the unit first column  to account for the intercept (except for ordinal regression where there is no intercept).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ydat</code></td>
+<td>
+<p>The <code class="reqn">d</code>-dimensional vector of  dicrete time series reponse, where <code class="reqn">d</code> is the length of the series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>margmodel</code></td>
+<td>
+
+<p>Indicates the marginal model.
+Choices are “poisson” for Poisson, “bernoulli” for Bernoulli, 
+and  “nb1” , “nb2” for the NB1 and NB2 parametrization 
+of negative binomial in Cameron and Trivedi (1998).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+<p>The link function. 
+Choices are “log” for the log link function, “logit” for 
+the logit link function, and “probit” for 
+the probit link function. 
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The
+composite likelihood method in Zhao and Joe (2005). The
+univariate parameters  are estimated
+from the sum of univariate marginal log-likelihoods and then the dependence
+parameters are estimated from the sum of bivariate marginal log-likelihoods
+with the univariate parameters fixed from the first step. 
+</p>
+<p>Note that <code>cl.ord</code> is a variant of the code for ordinal (probit and logistic) regression.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>minimum</code></td>
+<td>
+<p>The negative value of the sum of bivariate marginal log-likelihoods at
+CL1 estimates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimate</code></td>
+<td>
+<p>The composite likelihood estimates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gradient</code></td>
+<td>
+<p>The gradient at the estimated minimum of CL1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>code</code></td>
+<td>
+<p>An integer indicating why the optimization process terminated,
+same as in <code>nlm</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Aristidis K. Nikoloulopoulos <a href="mailto:A.Nikoloulopoulos@uea.ac.uk">A.Nikoloulopoulos@uea.ac.uk</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Zhao, Y. and Joe, H. (2005)
+Composite likelihood estimation in multivariate data analysis.
+<em>The Canadian Journal of Statistics</em>,  <b>33</b>, 335–356.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wcl</code>
+<code>iee</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+################################################################################
+#                      NB2 regression for count time-series data
+################################################################################
+################################################################################
+#                      read and set up data set
+################################################################################
+data(polio)
+ydat &lt;-polio
+d=length(ydat)
+tvec=1:length(ydat)
+tvec1=tvec-73
+xdat &lt;- cbind(1, tvec1/1000, cos(2 * pi * tvec1 / 12), sin(2 * pi * tvec1 / 12),
+                      cos(2 * pi * tvec1 / 6), sin(2 * pi * tvec1 / 6)) 
+################################################################################
+#                      select the marginal model
+################################################################################
+margmodel="nb2"
+################################################################################
+#                      select the  ARMA structure
+################################################################################
+p=2;q=1
+################################################################################
+#                      perform CL1 estimation
+################################################################################
+i.est&lt;-iee(xdat,ydat,margmodel)
+cat("\niest: IEE estimates\n")
+print(c(i.est$reg,i.est$gam))
+est.rho&lt;-cl(p=p,q=q,b=i.est$reg,gam=i.est$gam,
+             xdat,ydat,margmodel,link)
+cat("\nest.rho: CL estimates\n")
+print(est.rho$e)
+################################################################################
+#                         Ordinal time-series regression 
+################################################################################
+################################################################################
+#                      read and set up data set
+################################################################################
+data(sleep)
+ydat=sleep$sleep
+bydat=oydat=ydat
+bydat[ydat==4]=0
+bydat[ydat&lt;4]=1
+oydat[ydat==4]=1
+oydat[ydat&lt;4]=2
+oydat[ydat==2]=3
+oydat[ydat==3]=4
+
+x1=sleep$heartrate
+x2=sleep$temperature
+z1=(x1-mean(x1))/sd(x1)
+z2=(x2-mean(x2))/sd(x2)
+xdat=cbind(z1,z2)
+################################################################################
+#                      select the link
+################################################################################
+link="probit"
+################################################################################
+#                      select the ARMA structure
+################################################################################
+p=1;q=0
+################################################################################
+#                      perform CL1 estimation
+################################################################################
+i.est&lt;-iee.ord(xdat,oydat,link)
+cat("\niest: IEE estimates\n")
+print(c(i.est$reg,i.est$gam))
+est.rho&lt;-cl.ord(p=p,q=q,b=i.est$reg,gam=i.est$gam,
+             xdat,oydat,link)
+cat("\nest.rho: CL estimates\n")
+print(est.rho$e)
+
+</code></pre>
+
+
+</div>

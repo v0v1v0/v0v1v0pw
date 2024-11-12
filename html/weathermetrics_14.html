@@ -1,0 +1,148 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>heat.index</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate heat index.</h2>
+
+<h3>Description</h3>
+
+<p><code>heat.index</code> creates a numeric vector of heat index values from
+numeric vectors of air temperature and either relative humidity or
+dew point temperature.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">heat.index(t = NA, dp = c(), rh = c(),
+  temperature.metric = "fahrenheit", output.metric = NULL, round = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>t</code></td>
+<td>
+<p>Numeric vector of air temperatures.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dp</code></td>
+<td>
+<p>Numeric vector of dew point temperatures.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rh</code></td>
+<td>
+<p>Numeric vector of relative humidity (in %).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>temperature.metric</code></td>
+<td>
+<p>Character string indicating the temperature
+metric of air temperature and dew point temperature. Possible values
+are 'fahrenheit' or 'celsius'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output.metric</code></td>
+<td>
+<p>Character string indicating the metric into which
+heat index should be calculated. Possible values are 'fahrenheit' or
+'celsius'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>round</code></td>
+<td>
+<p>Integer indicating the number of decimal places to
+round converted value.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Include air temperature (<code>t</code>) and either dew point
+temperature (<code>dp</code>) or relative humdity (<code>rh</code>). You cannot
+specify both dew point temperature and relative humidity– this will
+return an error. Heat index is calculated as <code>NA</code> when impossible
+values of dew point temperature or humidity are input (e.g., humidity
+above 100% or below 0%, dew point temperature above air temperature).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector of heat index values in the metric specified
+by <code>output.metric</code>. (If <code>output.metric</code> is not specified,
+heat index will be returned in the same metric in which air
+temperature was input, specified by <code>temperature.metric</code>.)
+</p>
+
+
+<h3>Note</h3>
+
+<p>Equations are from the source code for the US National Weather
+Service's
+<a href="http://www.wpc.ncep.noaa.gov/html/heatindex.shtml">online heat index calculator</a>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Brooke Anderson <a href="mailto:brooke.anderson@colostate.edu">brooke.anderson@colostate.edu</a>,
+Roger Peng <a href="mailto:rdpeng@gmail.com">rdpeng@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Anderson GB, Bell ML, Peng RD. 2013. Methods to calculate the heat index
+as an exposure metric in environmental health research.
+Environmental Health Perspectives 121(10):1111-1119.
+</p>
+<p>National Weather Service Hydrometeorological Prediction
+Center Web Team. Heat Index Calculator. 30 Jan 2015.
+<a href="http://www.wpc.ncep.noaa.gov/html/heatindex.shtml">http://www.wpc.ncep.noaa.gov/html/heatindex.shtml</a>.
+Accessed 18 Dec 2015.
+</p>
+<p>Rothfusz L. 1990. The heat index (or, more than you ever wanted to know
+about heat index) (Technical Attachment SR 90-23). Fort Worth:
+Scientific Services Division, National Weather Service.
+</p>
+<p>R. Steadman, 1979. The assessment of sultriness. Part I: A
+temperature-humidity index based on human physiology and clothing
+science. Journal of Applied Meteorology, 18(7):861–873.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Calculate heat index from temperature (in Fahrenheit)
+# and relative humidity.
+
+data(suffolk)
+suffolk$heat.index &lt;- heat.index(t = suffolk$TemperatureF,
+                                 rh = suffolk$Relative.Humidity)
+suffolk
+
+# Calculate heat index (in Celsius) from temperature (in
+# Celsius) and dew point temperature (in Celsius).
+
+data(lyon)
+lyon$heat.index &lt;- heat.index(t = lyon$TemperatureC,
+                              dp = lyon$DewpointC,
+                              temperature.metric = 'celsius',
+                              output.metric = 'celsius')
+lyon
+
+</code></pre>
+
+
+</div>

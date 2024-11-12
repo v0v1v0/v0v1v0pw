@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>w_SearchByIdentifiers</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Search for entities that may match identifiers in a database or authorities'
+catalog.</h2>
+
+<h3>Description</h3>
+
+<p>The identifiers are in id_list. The database or authorities' catalog to which
+these identifiers belong must be provided in parameter <code>Pauthority</code>.
+If parameter langsorder=”, then no labels or descriptions of the entities
+are returned, otherwise the function returns them in the language order
+indicated in <code>langsorder</code>. Duplicated entities are deleted before search.
+Index of the data-frame returned are also set to id_list.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">w_SearchByIdentifiers(
+  id_list,
+  Pauthority,
+  langsorder = "",
+  nlimit = 3000,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id_list</code></td>
+<td>
+<p>List of identifiers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Pauthority</code></td>
+<td>
+<p>Wikidata property identifier of the database or
+authorities' catalog. For example, if Pauthority = "P4439", then the function
+searches for entities that have the identifiers in the MNCARS (Museo Nacional
+Centro de Arte Reina Sofía) database. Following library abbreviations for the
+databases can be also used in the parameter 'Pauthority':
+</p>
+<p>library   : VIAF, LC,   BNE , ISNI, JPG,  ULAN, BNF,  GND, DNB,
+Pauthority: P214, P244, P950, P213, P245, P245, P268, P227,P227,
+</p>
+<p>library   : SUDOC, NTA,  J9U,   ELEM,  NUKAT, MNCARS
+Pauthority: P269, P1006, P8189, P1565, P1207, P4439</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>langsorder</code></td>
+<td>
+<p>Order of languages in which the information will be
+returned, separated with '|'. If no information is given in the first
+language, next is used. If langsorder=”, then labels or descriptions are
+not returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlimit</code></td>
+<td>
+<p>If the number of entities in the database or authorities'
+catalog exceeds this number, then query are made in chunks. The value can
+increase if langorder=”. Please, reduce the default value if error is raised.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>For debugging purposes (default FALSE). If debug='info'
+information about chunked queries is shown. If debug='query' also the query
+launched is shown. If debug='count' the function only returns the number of
+entities with have identifier in that authority.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data-frame with columns: 'entity', 'entityLabel', 'entityDescription',
+'instanceof', instanceofLabel' and the identifier in the "Pauthority" database.
+Index of the data-frame is also set to the list of entities found.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Angel Zazo, Department of Computer Science and Automatics, University of Salamanca
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+w_SearchByIdentifiers(c("4938246", "36092166", "40787112"), Pauthority='P214')
+w_SearchByIdentifiers(c("4938246", "36092166", "40787112"), Pauthority='P214', langsorder='en|fr')
+
+## End(Not run)
+</code></pre>
+
+
+</div>

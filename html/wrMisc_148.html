@@ -1,0 +1,132 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>findCloseMatch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find close numeric values between two vectors</h2>
+
+<h3>Description</h3>
+
+<p><code>findCloseMatch</code> finds close matches (similar values) between two numeric vectors ('x','y') based on method 'compTy' and threshold 'limit'. 
+Return list with close matches of 'x' to given 'y', the numeric value dependes on 'sortMatch' (if FALSE then always value of 'y' otherwise of longest of x&amp;y).  
+Note: Speed &amp; memory improvement if 'sortMatch'=TRUE (but result might be inversed!): adopt search of x-&gt;y or y-&gt;x to searching matches of each longest to each shorter  (ie flip x &amp;y).
+Otherwise, if length of 'x' &amp; 'y' are very different, it may be advantagous to use a long(er) 'x'  and short(er) 'y' (with 'sortMatch'=FALSE).  
+Note: Names of 'x' &amp; 'y' or (if no names) prefix letters 'x' &amp; 'y' are always added as names to results.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">findCloseMatch(
+  x,
+  y,
+  compTy = "ppm",
+  limit = 5,
+  asIndex = FALSE,
+  maxFitShort = 100,
+  sortMatch = FALSE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>numeric vector for comparison</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>numeric vector for comparison</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>compTy</code></td>
+<td>
+<p>(character) may be 'diff' or 'ppm', will be used with threshold from argument 'limit'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit</code></td>
+<td>
+<p>(numeric) threshold value for retaining values, used with distace-type specified in argument 'compTy'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>asIndex</code></td>
+<td>
+<p>(logical) optionally rather report index of retained values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxFitShort</code></td>
+<td>
+<p>(numeric) limit output to max number of elements (avoid returning high number of results if filtering was not enough stringent)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sortMatch</code></td>
+<td>
+<p>(logical) if TRUE than matching will be preformed as 'match longer (of x &amp; y) to closer', this may process slightly faster (eg 'x' longer: list for each 'y' all 'x' that are close, otherwise list of each 'x'),</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a list with close matches of 'x' to given 'y', the numeric value dependes on 'sortMatch' (if FASLE then always value of 'y' otherwise of longest of x&amp;y)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>checkSimValueInSer</code> and (from this package) <code>.compareByDiff</code>, for convient output <code>countCloseToLimits</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">aa &lt;- 11:14 ; bb &lt;- c(13.1,11.5,14.3,20:21)
+findCloseMatch(aa,bb,com="diff",lim=0.6)
+findCloseMatch(c(a=5,b=11,c=12,d=18),c(G=2,H=11,I=12,J=13)+0.5, comp="diff", lim=2)
+findCloseMatch(c(4,5,11,12,18),c(2,11,12,13,33)+0.5, comp="diff", lim=2)
+findCloseMatch(c(4,5,11,12,18),c(2,11,12,13,33)+0.5, comp="diff", lim=2, sort=FALSE)
+.compareByDiff(list(c(a=10,b=11,c=12,d=13),c(H=11,I=12,J=13,K=33)+0.5),limit=1) #' return matrix
+
+a2 &lt;- c(11:20); names(a2) &lt;- letters[11:20]
+b2 &lt;- c(25:5)+c(rep(0,5),(1:10)/50000,rep(0,6)); names(b2) &lt;- LETTERS[25:5]
+which(abs(b2-a2[8]) &lt; a2[8]*1e-6*5)                                     #'  find R=18 : no10
+findCloseMatch(a2, b2, com="ppm", lim=5)                                #'  find Q,R,S,T
+findCloseMatch(a2, b2, com="ppm", lim=5,asI=TRUE)                       #'  find Q,R,S,T
+findCloseMatch(b2, a2, com="ppm", lim=5,asI=TRUE,sort=FALSE)
+findCloseMatch(a2, b2, com="ratio", lim=1.000005)                       #'  find Q,R,S,T
+findCloseMatch(a2, b2, com="diff", lim=0.00005)                         #'  find S,T
+</code></pre>
+
+
+</div>

@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ww_dvUSGS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Process USGS daily values</h2>
+
+<h3>Description</h3>
+
+<p>This function is a wrapper around readNWISdv but includes
+added variables like water year, lat/lon, station name, altitude and tidied dates.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ww_dvUSGS(
+  sites,
+  parameter_cd = "00060",
+  start_date = "",
+  end_date = "",
+  stat_cd = "00003",
+  parallel = FALSE,
+  wy_month = 10,
+  verbose = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>sites</code></td>
+<td>
+<p>A vector of USGS NWIS sites</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameter_cd</code></td>
+<td>
+<p>A USGS code for metric, default is "00060".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_date</code></td>
+<td>
+<p>A character of date format, e.g. <code>"1990-09-01"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end_date</code></td>
+<td>
+<p>A character of date format, e.g. <code>"1990-09-01"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stat_cd</code></td>
+<td>
+<p>character USGS statistic code. This is usually 5 digits. Daily mean (00003) is the default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p><code>logical</code> indicating whether to use future_map().</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wy_month</code></td>
+<td>
+<p><code>numeric</code> indicating the start month of the water year. e.g. 10 (default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p><code>logical</code> for printing information. TRUE (default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments to pass on to future_map.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>tibble</code> with daily metrics and added meta-data.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Use it the same way you would use readNWISdv.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+library(whitewater)
+yaak_river_dv &lt;- ww_dvUSGS('12304500',
+parameter_cd = '00060',
+wy_month = 10)
+
+#parallel
+
+#get sites
+
+huc17_sites &lt;- dataRetrieval::whatNWISdata(huc = 17,
+siteStatus = 'active',
+service = 'dv',
+parameterCd = '00060')
+
+library(future)
+#need to call future::plan()
+plan(multisession(workers = availableCores()-1))
+
+pnw_dv &lt;- ww_dvUSGS(huc17_sites$site_no,
+parameter_cd = '00060',
+wy_month = 10,
+parallel = TRUE)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

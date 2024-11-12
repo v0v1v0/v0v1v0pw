@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>bestm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Function called by makewpstRO to identify which packets are individually
+good for correlating with a response
+</h2>
+
+<h3>Description</h3>
+
+<p>This function is used when you have a huge number of packets where you
+want to identify which ones are, individually, candidates for the good
+prediction of a response
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">bestm(w2mobj, y, percentage = 50)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>w2mobj</code></td>
+<td>
+
+<p>The w2m object that contains the packets you wish to preselect
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>The response time series
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percentage</code></td>
+<td>
+
+<p>The percentage of the w2m packets that you wish to select
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function naively addresses a very common problem. The object
+w2mobj contains a huge number of variables which might shed some light
+on the response object <code>y</code>. The problem is that the dimensionality
+of <code>w2mobj</code> is larger than that of the length of the series <code>y</code>.
+</p>
+<p>The solution here is to choose a large, but not huge, subset of the variables
+that might be potentially useful in correlating with <code>y</code>, discard the
+rest, and return the "best" or preselected variables. Then the dimensionality
+is reduced and more sophisticated methods can be used to perform better
+quality modelling of the response <code>y</code> on the packets in <code>w2mobj</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of class w2m with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>A matrix containing the select packets (as columns), reordered
+so that the best packets come first</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ixvec</code></td>
+<td>
+<p>A vector which indexes the best packets into the original
+supplied matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pktix</code></td>
+<td>
+<p>The original wavelet packet indices corresponding to each packet</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>As <code>pktix</code> but for the wavelet packet levels</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlevelsWT</code></td>
+<td>
+<p>The number of resolution levels in the original wavelet
+packet object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cv</code></td>
+<td>
+<p>The ordered correlations</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p> G P Nason </p>
+
+
+<h3>See Also</h3>
+
+<p><code>makewpstRO</code></p>
+
+
+</div>

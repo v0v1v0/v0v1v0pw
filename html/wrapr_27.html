@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>bquote_call_args</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Treat ... argument as bquoted-values.</h2>
+
+<h3>Description</h3>
+
+<p>bquote_call_args is a helper to allow the user to write functions with bquote-enabled argument substitution.
+Uses convetion that := is considered a alias for =.
+Re-writes call args to evaluate <code>expr</code> with <code>bquote</code> <code>.()</code> substitution.
+Including <code>.(-x)</code> promoting <code>x</code>'s value from character to a name,
+which is called "quote negation" (hence the minus-sign).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">bquote_call_args(call, env = parent.frame())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>result of match.call()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>env</code></td>
+<td>
+<p>environment to perform lookups in.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>name list of values
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>bquote_function</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+f &lt;- function(q, ...) {
+  env = parent.frame()
+  # match.call() best called in function context.
+  captured_call &lt;- match.call()
+  captured_args &lt;- bquote_call_args(captured_call, env)
+  captured_args
+}
+
+z &lt;- "x"
+y &lt;- 5
+qv &lt;- 3
+
+# equivalent to f(3, x = 5)
+f(.(qv), .(z) := .(y))
+
+# equivalent to f(q = 7)
+qname &lt;- 'q'
+f(.(qname) := 7)
+
+
+</code></pre>
+
+
+</div>

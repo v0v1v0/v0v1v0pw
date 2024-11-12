@@ -1,0 +1,56 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wbs-package</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Wild Binary Segmentation for multiple change-point detection</h2>
+
+<h3>Description</h3>
+
+<p>The package implements Wild Binary Segmentation, a technique for
+consistent estimation of  the number and locations of multiple change-points in data.
+It also provides a fast implementation of the standard Binary Segmentation algorithm.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The main routines of the package are <code>wbs</code>, <code>sbs</code> and <code>changepoints</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>P. Fryzlewicz (2014), Wild Binary Segmentation for multiple change-point detection. Annals of Statistics, to appear. (<a href="http://stats.lse.ac.uk/fryzlewicz/wbs/wbs.pdf">http://stats.lse.ac.uk/fryzlewicz/wbs/wbs.pdf</a>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#an example in which standard Binary Segmentation fails to detect change points
+x &lt;- rnorm(300)+ c(rep(0,130),rep(-1,20),rep(1,20),rep(0,130))
+
+s &lt;- sbs(x)
+w &lt;- wbs(x)
+
+s.cpt &lt;- changepoints(s)
+s.cpt
+
+w.cpt &lt;- changepoints(w)
+w.cpt
+# in this example, both algorithms work well
+x &lt;- rnorm(300) + c(rep(1,50),rep(0,250))
+
+s &lt;- sbs(x)
+w &lt;- wbs(x)
+
+s.cpt &lt;- changepoints(s)
+s.cpt
+
+w.cpt &lt;- changepoints(w)
+w.cpt
+</code></pre>
+
+
+</div>

@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>HR.WCE</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Obtain a hazard ratio (HR) from a WCE Cox proportional hazards model</h2>
+
+<h3>Description</h3>
+
+<p>This function extracts the estimated coefficients from a WCE object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">HR.WCE(x, vecnum, vecdenom, allres = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>WCE</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vecnum</code></td>
+<td>
+<p>A vector of time-dependent exposures corresponding to a scenario of interest (numerator of the HR).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vecdenom</code></td>
+<td>
+<p>A vector of time-dependent exposures corresponding to a scenario for the reference category (denominator of the HR).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allres</code></td>
+<td>
+<p>Logical. If FALSE, prints the results using the best model from the WCE object, i.e. among the models fitted with the different numbers of interior knots requested by <code>nknots</code>, based on AIC or BIC as specified in the <code>WCE</code> call. If TRUE, prints the results for all the estimated models available from the WCE object. Default to FALSE.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Both <code>vecnum</code> and <code>vecdenom</code> need to be of the same length as the weight function <code>cutof</code> argument used in the call to WCE. The first value of each vector represents the exposure today (t1) and subsequent values represent the exposures in the past. The hazard ratio computed by <code>HR.WCE</code> corresponds to the ratio of the weighted cumulative exposures for the scenario of interest (<code>vecnum</code>) and the reference scenario (<code>vecdenom</code>). It corresponds to equation (8) of Sylvestre and Abrahamowicz (2009).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns one or several hazard ratios. Inference may be obtained by bootstrap and has to be coded separately (please see <code>WCE</code> for an example).
+</p>
+
+
+<h3>References</h3>
+
+<p>Sylvestre, M. P., &amp; Abrahamowicz, M. (2009). Flexible modeling of the cumulative effects of time-dependent exposures on the hazard. Statistics in medicine, 28(27), 3437-3453.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wce &lt;- WCE(drugdata, "Cox", 1, 90, constrained = "R", id = "Id", event = "Event",
+start = "Start", stop = "Stop", expos = "dose",covariates = c("age", "sex"))
+# Exposed at a dose of 1 (constant) vs. unexposed over the time window of 90 days
+scenario1 &lt;- rep(1, 90)
+scenario2 &lt;- rep(0, 90)
+HR.WCE(wce, vecnum = scenario1, vecdenom = scenario2)
+
+</code></pre>
+
+
+</div>

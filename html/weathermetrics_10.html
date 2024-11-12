@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dewpoint.to.humidity</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate relative humidity.</h2>
+
+<h3>Description</h3>
+
+<p><code>dewpoint.to.humidity</code> creates a numeric vector of relative humidity
+from numerical vectors of air temperature and dew point temperature.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dewpoint.to.humidity(dp = NA, t = NA, temperature.metric = "fahrenheit")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dp</code></td>
+<td>
+<p>Numeric vector of dew point temperatures.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t</code></td>
+<td>
+<p>Numeric vector of air temperatures.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>temperature.metric</code></td>
+<td>
+<p>Character string indicating the temperature
+metric of air temperature and dew point temperature. Possible values
+are <code>fahrenheit</code> or <code>celsius</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Dew point temperature and temperature must be in the same
+metric (i.e., either both in Celsius or both in Fahrenheit). If
+necessary, use <code>convert_temperature</code> to convert before
+using this function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector of relative humidity (in %)
+</p>
+
+
+<h3>Note</h3>
+
+<p>Equations are from the source code for the US National Weather
+Service's
+<a href="http://www.wpc.ncep.noaa.gov/html/heatindex.shtml">online heat index calculator</a>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Brooke Anderson <a href="mailto:brooke.anderson@colostate.edu">brooke.anderson@colostate.edu</a>,
+Roger Peng <a href="mailto:rdpeng@gmail.com">rdpeng@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>National Weather Service Hydrometeorological Prediction
+Center Web Team. Heat Index Calculator. 30 Jan 2015.
+<a href="http://www.wpc.ncep.noaa.gov/html/heatindex.shtml">http://www.wpc.ncep.noaa.gov/html/heatindex.shtml</a>.
+Accessed 18 Dec 2015.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>humidity.to.dewpoint,
+   fahrenheit.to.celsius,
+   celsius.to.fahrenheit</code>,
+convert_temperature
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Calculate relative humidity from air temperature and
+# dew point temperature.
+
+data(lyon)
+lyon$RH &lt;- dewpoint.to.humidity(t = lyon$TemperatureC,
+                                dp = lyon$DewpointC,
+                                temperature.metric = 'celsius')
+lyon
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>goodGenes</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Filter genes with too many missing entries </h2>
+
+<h3>Description</h3>
+
+<p>This function checks data for missing entries and returns a list of genes that have non-zero variance
+and pass two criteria on maximum
+number of missing values and values whose weight is below a threshold: 
+the fraction of missing values must be below a given threshold and the total number
+of present samples must be at least equal to a given threshold. If weights are given, entries whose relative
+weight is below a threshold will be considered missing.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">goodGenes(
+  datExpr, 
+  weights = NULL,
+  useSamples = NULL, 
+  useGenes = NULL, 
+  minFraction = 1/2, 
+  minNSamples = ..minNSamples, 
+  minNGenes = ..minNGenes, 
+  tol = NULL,
+  minRelativeWeight = 0.1,
+  verbose = 1, indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datExpr</code></td>
+<td>
+<p>  expression data. A data frame in which columns are genes and rows ar samples. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>optional observation weights in the same format (and dimensions) as <code>datExpr</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useSamples</code></td>
+<td>
+<p> optional specifications of which samples to use for the check. Should be a logical
+vector; samples whose entries are <code>FALSE</code> will be ignored for the missing value counts. Defaults to
+using all samples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useGenes</code></td>
+<td>
+<p> optional specifications of genes for which to perform the check. Should be a logical 
+vector; genes whose entries are <code>FALSE</code> will be ignored. Defaults to 
+using all genes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minFraction</code></td>
+<td>
+<p> minimum fraction of non-missing samples for a gene to be considered good. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minNSamples</code></td>
+<td>
+<p> minimum number of non-missing samples for a gene to be considered good.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minNGenes</code></td>
+<td>
+<p> minimum number of good genes for the data set to be considered fit for analysis. If
+the actual number of good genes falls below this threshold, an error will be issued. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p> an optional 'small' number to compare the variance against. Defaults to the square of
+<code>1e-10 * max(abs(datExpr), na.rm = TRUE)</code>. The reason of comparing the variance to this number, rather than
+zero, is that the fast way of computing variance used by this function sometimes causes small numerical
+overflow errors which make variance of constant vectors slightly non-zero; comparing the variance to
+<code>tol</code> rather than zero prevents the retaining of such genes as 'good genes'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minRelativeWeight</code></td>
+<td>
+<p> observations whose relative weight is below
+this threshold will be considered missing. Here relative weight is weight divided by the maximum weight in
+the column (gene).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The constants <code>..minNSamples</code> and <code>..minNGenes</code> are both set to the value 4.
+</p>
+<p>If weights are given, entries whose relative
+weight (i.e., weight divided by maximum weight in the column or gene) will be considered missing.
+</p>
+<p>For most data sets, the fraction of missing samples criterion will be much more stringent than the
+absolute number of missing samples criterion.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A logical vector with one entry per gene that is <code>TRUE</code> if the gene is considered good and
+<code>FALSE</code> otherwise. Note that all genes excluded by <code>useGenes</code> are automatically assigned
+<code>FALSE</code>. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder and Steve Horvath </p>
+
+
+<h3>See Also</h3>
+
+ <p><code>goodSamples</code>, <code>goodSamplesGenes</code> </p>
+
+
+</div>

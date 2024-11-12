@@ -1,0 +1,173 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wass_regress</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Perform Frechet Regression with the Wasserstein Distance</h2>
+
+<h3>Description</h3>
+
+<p>Perform Frechet Regression with the Wasserstein Distance
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wass_regress(rightside_formula, Xfit_df, Ytype, Ymat, Sup = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>rightside_formula</code></td>
+<td>
+<p>a right-side formula</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Xfit_df</code></td>
+<td>
+<p>n-by-p matrix (or dataframe) of predictor values for fitting (do not include a column for the intercept)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ytype</code></td>
+<td>
+<p>'quantile' or 'density'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ymat</code></td>
+<td>
+<p>one of the following matrices:
+</p>
+
+<ul>
+<li>
+<p>if Ytype = 'quantile' Ymat is an n-by-m matrix of the observed quantile functions. Ymat[i, :] is a 1-by-m vector of quantile function values on grid <code>Sup</code>.
+</p>
+</li>
+<li>
+<p>if Ytype = 'density' Ymat is an n-by-m matrix of the observed density functions. Ymat[i, :] is a 1-by-m vector of density function values on grid <code>Sup</code>.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Sup</code></td>
+<td>
+<p>one of the following vectors:
+</p>
+
+<ul>
+<li>
+<p>if Ytype = 'quantile' Sup is a length m vector - common grid for all quantile functions in Ymat (default: seq(0, 1, length.out = ncol(Ymat))).
+</p>
+</li>
+<li>
+<p>if Ytype = 'density' Sup is a length m vector - common grid for all density functions in Ymat (default: seq(0, 1, length.out = ncol(Ymat))).
+</p>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a list containing the following objects:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>function call</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rformula</code></td>
+<td>
+<p><code>rightside_formula</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>predictor_names</code></td>
+<td>
+<p>names of predictors as the colnames given in the xfit matrix or dataframe.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Qfit</code></td>
+<td>
+<p>n-by-m matrix of fitted quantile functions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xfit</code></td>
+<td>
+<p>design matrix in quantile fitting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Xfit_df</code></td>
+<td>
+<p>n-by-p matrix (or dataframe) of predictor values for fitting</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Yobs</code></td>
+<td>
+<p>a list containing the following matrices:
+</p>
+
+<ul>
+<li>
+<p>Qobs: n-by-m matrix of the observed quantile functions.
+</p>
+</li>
+<li>
+<p>qobs: n-by-m matrix of the observed quantile density functions.
+</p>
+</li>
+<li>
+<p>qobs_prime: n-by-m matrix of the first derivative of the observed quantile density functions.
+</p>
+</li>
+<li>
+<p>fobs: n-by-m matrix of the observed density functions.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t_vec</code></td>
+<td>
+<p>a length m vector - common grid for all quantile functions in Qobs.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p><cite>Wasserstein F-tests and confidence bands for the Frechet regression of density response curves, Alexander Petersen, Xi Liu and Afshin A. Divani, 2019</cite>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(strokeCTdensity)
+predictor = strokeCTdensity$predictors
+dSup = strokeCTdensity$densitySupport
+densityCurves = strokeCTdensity$densityCurve
+
+res1 = wass_regress(rightside_formula = ~., Xfit_df = predictor,
+ Ytype = 'density', Ymat = densityCurves, Sup = dSup)
+res2 = wass_regress(rightside_formula = ~ log_b_vol * weight, Xfit_df = predictor,
+ Ytype = 'density', Ymat = densityCurves, Sup = dSup)
+</code></pre>
+
+
+</div>

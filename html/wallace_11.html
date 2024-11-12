@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>espace_occDens</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Occurrence density grid</h2>
+
+<h3>Description</h3>
+
+<p>calculates the part of environmental space more densely
+populated by species &amp; the availability of environmental conditions in the
+background
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">espace_occDens(sp.name1, sp.name2, pca, logger = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>sp.name1</code></td>
+<td>
+<p>character name of species 1 to be analyzed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sp.name2</code></td>
+<td>
+<p>character name of species 2 to be analyzed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pca</code></td>
+<td>
+<p>pca output of pca component ( in list format)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+<p>stores all notification messages to be displayed in the Log
+Window of Wallace GUI. Insert the logger reactive list here for running in
+shiny, otherwise leave the default NULL.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function implements a density estimation for each region in the
+environmental space (gridded at 100*100 pixels). Then an occurrence
+density is estimated using a kernel density approach. The density of
+environmental conditions in the background is calculated in the same way.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a list of 2 lists (one for each species). Each list is an
+ecospat niche object that contains 10 species specific slots with
+information outputed by ecospat::grid.clim.dyn. z.uncor is the density of
+occurrence of the species and z.cor the occupancy of the environment by
+the species. It has the input parameters as individual slots.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jamie Kass &lt;jamie.m.kass@gmail.com &gt;
+</p>
+<p>Olivier Broennimann &lt;olivier.broennimann@unil.ch&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>espace_pca</code> <code>espace_nicheOv</code>
+<code>ecospat.grid.clim.dyn</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+sp.name1 &lt;- "Bassaricyon_alleni"
+sp.name2 &lt;- "Bassaricyon_neblina"
+envs &lt;- envs_userEnvs(rasPath = list.files(system.file("extdata/wc",
+                                           package = "wallace"),
+                      pattern = ".tif$", full.names = TRUE),
+                      rasName = list.files(system.file("extdata/wc",
+                                           package = "wallace"),
+                      pattern = ".tif$", full.names = FALSE))
+
+occs.z1 &lt;- read.csv(system.file("extdata/Bassaricyon_alleni.csv",
+                    package = "wallace"))
+occs.z2 &lt;- read.csv(system.file("extdata/Bassaricyon_neblina.csv",
+                    package = "wallace"))
+
+bgPts.z1 &lt;- read.csv(system.file("extdata/Bassaricyon_alleni_bgPoints.csv",
+                     package = "wallace"))
+bgPts.z2 &lt;- read.csv(system.file("extdata/Bassaricyon_neblina_bgPoints.csv",
+                     package = "wallace"))
+
+occsExt.z1 &lt;- raster::extract(envs, occs.z1[, c("longitude", "latitude")])
+occsExt.z2 &lt;- raster::extract(envs, occs.z2[, c("longitude", "latitude")])
+bgExt.z1 &lt;- raster::extract(envs, bgPts.z1[, c("longitude", "latitude")])
+bgExt.z2 &lt;- raster::extract(envs, bgPts.z2[, c("longitude", "latitude")])
+pcaZ &lt;- espace_pca(sp.name1, sp.name2,
+                   occsExt.z1, occsExt.z2,
+                   bgExt.z1, bgExt.z2)
+occDens &lt;- espace_occDens(sp.name1, sp.name2, pcaZ)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

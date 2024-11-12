@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>envs_worldclim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>envs_worldclim Obtain WorldClim variables</h2>
+
+<h3>Description</h3>
+
+<p>download WorldClim variables. See www.worldclim.com.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">envs_worldclim(bcRes, bcSel, mapCntr, doBrick = FALSE, logger = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>bcRes</code></td>
+<td>
+<p>numeric. Resolution of the climatic layers. Currently
+available resolutions are 0.5, 2.5 and 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bcSel</code></td>
+<td>
+<p>character. Vector with bionames to be selected.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mapCntr</code></td>
+<td>
+<p>numeric. Vector with longitude and latitude for a tile.
+Required for bcRes 0.5, for other resolutions world data will be downloaded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doBrick</code></td>
+<td>
+<p>logical. Converts downloaded rasters to brick for faster
+processing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+<p>Stores all notification messages to be displayed in the
+Log Window of Wallace GUI. Insert the logger reactive list here for
+running in shiny, otherwise leave the default NULL.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is called by the module envs to download
+WorldClim variables from www.worldclim.com. The variables to be downloaded
+are selected by the user with bcSel and the resolution with bcRes. It
+returns either a rasterStack or rasterBrick of selected variables with
+appropriate names for further analyses.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A rasterStack or a rasterBrick (if doBrick=TRUE) of downloaded
+worldclim rasters at the requested resolution.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jamie Kass &lt;jamie.m.kass@gmail.com&gt;
+</p>
+<p>Gonzalo E. Pinilla-Buitrago &lt;gepinillab@gmail.com&gt;
+</p>
+<p>Bethany A. Johnson &lt;bjohnso005@citymail.cuny.edu&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>worldclim_global</code>, <code>worldclim_tile</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+bcRes &lt;- 10 # (10 arcmin)
+envar &lt;- c('bio05', 'bio06', 'bio13', 'bio14')
+arcmin10 &lt;- envs_worldclim(bcRes, bcSel = envar)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

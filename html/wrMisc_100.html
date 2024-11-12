@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cleanReplicates</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Replace Most Distant Values by NA</h2>
+
+<h3>Description</h3>
+
+<p>This procedures aims to streighten (clean) the most extreme values of noisy replicates by identifying the most distant points 
+(among a set of replicates). The input 'x' (matrix or data.frame) is supposed to come from multiple different measures taken 
+in replicates (eg weight of different individuals as rows taken as multiple replicate measures in subsequent columns).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cleanReplicates(
+  x,
+  centrMeth = "median",
+  nOutl = 2,
+  retOffPos = FALSE,
+  silent = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>matrix (or data.frame)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>centrMeth</code></td>
+<td>
+<p>(character) method to summarize (mean or median)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nOutl</code></td>
+<td>
+<p>(integer) determines how many points per line will be set to <code>NA</code> (with n=1 the worst row of replicates will be 'cleaned')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>retOffPos</code></td>
+<td>
+<p>(logical) if <code>TRUE</code>, replace the most extreme outlyer only</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppres messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>With the argument <code>nOutl</code> the user chooses the total number of most extreme values to replace by <code>NA</code>.
+how many of the most extreme replicates of the whole dataset will replaced by <code>NA</code>, ie with <code>nOutl=1</code> 
+only the single most extreme outlyer will be replaced by <code>NA</code>. 
+Outlier points are determined as point(s) with highest distance to (row) center (median and mean choice via argument 'centrMeth').
+Thus function returns input data with "removed" points set to <code>NA</code>, or if <code>retOffPos=TRUE</code> the most extreme/outlier positions.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a matrix of same dimensions as input <code>x</code>,  data-points which were tagged/removed are set to <code>NA</code>, or if <code>retOffPos=TRUE</code> the most extreme/outlier positions
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">mat3 &lt;- matrix(c(19,20,30, 18,19,28, 16,14,35),ncol=3)
+cleanReplicates(mat3, nOutl=1)
+</code></pre>
+
+
+</div>

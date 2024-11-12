@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>unifyEnumerator</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Unify Enumerators</h2>
+
+<h3>Description</h3>
+
+<p>The aim of this function is to provide help in automatically harmonizing enumerators at the end of sample-names.
+When data have same grouped setup/design, many times this is reflected in their names, eg 'A_sample1', 'A_sample2' and 'B_sample1'.
+However, human operators may use multiple similar (but not identical) ways of expressing the same meanin, eg writng 'A_Samp_1'.
+This function allows testing a panel of different extensions of enumerators and (if recognized) to replace them by a user-defined standard text/enumerator.
+Please note that the more recent function <code>rmEnumeratorName</code> offers better/more flexible options.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">unifyEnumerator(
+  x,
+  refSep = "_",
+  baseSep = c("\\-", "\\ ", "\\."),
+  suplEnu = c("Repl", "Rep", "R", "Number", "No", "Sample", "Samp"),
+  stringentMatch = TRUE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(character) main input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refSep</code></td>
+<td>
+<p>(character) separator for output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>baseSep</code></td>
+<td>
+<p>(character) basic seprators to test (you have to protect special characters)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suplEnu</code></td>
+<td>
+<p>(character) additional text</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stringentMatch</code></td>
+<td>
+<p>(logical) decide if enumerator text has to be found in all instances or only once</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function has been developed for matching series of the same samples passing in parallel through different evaluation software (see R package wrProteo).
+The way human operators may name things may easily leave room for surprises and this function allows testing only a limited number of common ways of writing.
+Thus, in any case, the user is advised to inspect the results by eye and - if needed- to adjust the parameters.
+</p>
+<p>Basically enumerator separators can be constructed by combing a base-separator <code>baseSep</code> (like '-', '_' etc) and an enumerator-abbreviation <code>suplEnu</code>.
+Then, all possible combinations will be tested if they occur in the text <code>x</code>.
+Furthermore, the text searched has to be followd by on or multiple digts at the end of text-entry (decimal comma-separators etc are not allowed).
+Thus, if there is other 'free text' following to the right after the enumerator-text this function will not find any enumerators to replace.
+</p>
+<p>The argument <code>stringentMatch</code> allows defining if this text has to be found in all text-entries of <code>x</code> or just one of them.
+Whe using <code>stringentMatch=FALSE</code> there is risk that other text not meant to design enumerators may be picked up and modified.
+</p>
+<p>Please note, that with large data-sets (ie many columns) testing/checking a larger panel of enumerator-abreviations may result in slower performance.
+In cases of larger data-sets it may be more effective to first study the data and then run simple subsitions using sub targeted for this very case.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a character vector of same length as input <code>x</code>, with it's content as adjusted enumerators
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>rmEnumeratorName</code> for better/more flexible options; <code>grep</code> or <code>sub()</code>, etc if exact and consistent patterns are known
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">unifyEnumerator(c("ab-1","ab-2","c-3"))
+unifyEnumerator(c("ab-R1","ab-R2","c-R3"))
+unifyEnumerator(c("ab-1","c3-2","dR3"), strin=FALSE);
+
+</code></pre>
+
+
+</div>

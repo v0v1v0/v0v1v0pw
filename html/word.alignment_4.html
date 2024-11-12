@@ -1,0 +1,240 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>align.test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Computing One-to-Many Word Alignment Using a Parallel Corpus for a Given Test Set 
+</h2>
+
+<h3>Description</h3>
+
+<p>For a given parallel corpus based on IBM Model 1, it aligns the words of a given sentence-aligned test set.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">align.test(file.sorc, file.trgt, test.sorc, test.trgt, 
+           n.train = -1, n.test = -1, minlen.train = 5, maxlen.train = 40, 
+           minlen.test = 5, maxlen.test = 40, null.tokens = TRUE, 
+           dtfile.path = NULL, file.align = 'alignment',
+           name.sorc='f',name.trgt='e',iter = 3, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file.sorc</code></td>
+<td>
+
+<p>the name of source language file in training set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file.trgt</code></td>
+<td>
+
+<p>the name of  target language file in training set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>test.sorc</code></td>
+<td>
+
+<p>the name of source language file in test set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>test.trgt</code></td>
+<td>
+
+<p>the name of target language file in test set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.train</code></td>
+<td>
+
+<p>the number of sentences in the training set to be read. If  -1, it considers all sentences.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.test</code></td>
+<td>
+
+<p>the number of sentences in the test set to be read. If  -1, it considers all sentences.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minlen.train</code></td>
+<td>
+
+<p>a minimum length of sentences in training set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxlen.train</code></td>
+<td>
+
+<p>a maximum length of sentences in training set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minlen.test</code></td>
+<td>
+
+<p>a minimum length of sentences in test set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxlen.test</code></td>
+<td>
+
+<p>a maximum length of sentences in test set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>null.tokens</code></td>
+<td>
+
+<p>logical. If <code>TRUE</code>, "null" is added at the first of each source sentence of the test set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dtfile.path</code></td>
+<td>
+
+<p>if <code>NULL</code> (usually for the first time), a data.table will be created contaning cross words of all sentences with their matched probabilities. It saves into a file named as a combination of <code>name.sorc</code>, <code>name.trgt</code>, <code>n</code> and <code>iter</code> as "f.e.n.iter.RData".
+</p>
+<p>If specific file name is set, it will be read and continue the rest of the function, i.e. : finding the word alignments for the test set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file.align</code></td>
+<td>
+
+<p>the output results file name.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name.sorc</code></td>
+<td>
+
+<p>it is a notation for the source language (default = <code>'f'</code>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name.trgt</code></td>
+<td>
+
+<p>it is a notation for the target language (default = <code>'e'</code>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iter</code></td>
+<td>
+
+<p>the number of  iterations for IBM Model 1.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments to be passed to <code>prepare.data</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If <code>dtfile.path = NULL</code>, the following question will be asked:
+</p>
+<p>"Are you sure that you want to run the align.ibm1 function (It takes time)? (Yes/ No: if you want to specify word alignment path, please press 'No'.)
+</p>
+
+
+<h3>Value</h3>
+
+<p>an RData object as "file.align.n.iter.Rdata".
+
+
+
+
+</p>
+
+
+<h3>Note</h3>
+
+<p>Note that we have a memory restriction and so just special computers with a high
+CPU and a big RAM can allocate the vectors of this function. Of course, it depends on the
+corpus size. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Neda Daneshgar and Majid Sarmad.
+</p>
+
+
+<h3>References</h3>
+
+<p>Koehn P. (2010), "Statistical Machine Translation.",
+Cambridge University, New York.
+</p>
+<p>Lopez A. (2008), "Statistical Machine Translation.", ACM Computing Surveys, 40(3).
+</p>
+<p>Peter F., Brown J. (1990), "A Statistical
+Approach to Machine Translation.", Computational Linguistics, 16(2), 79-85.
+</p>
+<p>Supreme Council of Information and Communication Technology. (2013), Mizan English-Persian Parallel Corpus. Tehran, I.R. Iran. Retrieved from http://dadegan.ir/catalog/mizan.
+</p>
+<p><a href="http://statmt.org/europarl/v7/bg-en.tgz">http://statmt.org/europarl/v7/bg-en.tgz</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>align.ibm1</code>, <code>evaluation</code>, <code>scan</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Since the extraction of  bg-en.tgz in Europarl corpus is time consuming, 
+# so the aforementioned unzip files have been temporarily exported to 
+# http://www.um.ac.ir/~sarmad/... .
+# In addition, in this example we use the first five sentence pairs of training set as the 
+# test set.
+## Not run: 
+
+ats = align.test ('http://www.um.ac.ir/~sarmad/word.a/euro.bg',
+                      'http://www.um.ac.ir/~sarmad/word.a/euro.en',  
+                      'http://www.um.ac.ir/~sarmad/word.a/euro.bg',
+                      'http://www.um.ac.ir/~sarmad/word.a/euro.en',
+                       n.train = 100,n.test = 5, encode.sorc = 'UTF-8')               
+
+## End(Not run)
+</code></pre>
+
+
+</div>

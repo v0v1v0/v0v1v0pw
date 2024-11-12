@@ -1,0 +1,307 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict_race</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Race prediction function.</h2>
+
+<h3>Description</h3>
+
+<p><code>predict_race</code> makes probabilistic estimates of individual-level race/ethnicity.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">predict_race(
+  voter.file,
+  census.surname = TRUE,
+  surname.only = FALSE,
+  census.geo = c("tract", "block", "block_group", "county", "place", "zcta"),
+  census.key = Sys.getenv("CENSUS_API_KEY"),
+  census.data = NULL,
+  age = FALSE,
+  sex = FALSE,
+  year = "2020",
+  party = NULL,
+  retry = 3,
+  impute.missing = TRUE,
+  skip_bad_geos = FALSE,
+  use.counties = FALSE,
+  model = "BISG",
+  race.init = NULL,
+  name.dictionaries = NULL,
+  names.to.use = "surname",
+  control = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>voter.file</code></td>
+<td>
+<p>An object of class <code>data.frame</code>.
+Must contain a row for each individual being predicted,
+as well as a field named <code><var>surname</var></code> containing each individual's surname.
+If using geolocation in predictions, <code><var>voter.file</var></code> must contain a field named
+<code><var>state</var></code>, which contains the two-character abbreviation for each individual's
+state of residence (e.g., <code>"nj"</code> for New Jersey).
+If using Census geographic data in race/ethnicity predictions,
+<code><var>voter.file</var></code> must also contain at least one of the following fields:
+<code><var>county</var></code>, <code><var>tract</var></code>, <code><var>block_group</var></code>, <code><var>block</var></code>,
+and/or <code><var>place</var></code>.
+These fields should contain character strings matching U.S. Census categories.
+County is three characters (e.g., <code>"031"</code> not <code>"31"</code>),
+tract is six characters, block group is usually a single character and block
+is four characters. Place is five characters.
+See below for other optional fields.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>census.surname</code></td>
+<td>
+<p>A <code>TRUE</code>/<code>FALSE</code> object. If <code>TRUE</code>,
+function will call <code>merge_surnames</code> to merge in Pr(Race | Surname)
+from U.S. Census Surname List (2000, 2010, or 2020) and Spanish Surname List.
+If <code>FALSE</code>, user must provide a <code>name.dictionary</code> (see below).
+Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>surname.only</code></td>
+<td>
+<p>A <code>TRUE</code>/<code>FALSE</code> object. If <code>TRUE</code>, race predictions will
+only use surname data and calculate Pr(Race | Surname). Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>census.geo</code></td>
+<td>
+<p>An optional character vector specifying what level of
+geography to use to merge in U.S. Census geographic data. Currently
+<code>"county"</code>, <code>"tract"</code>, <code>"block_group"</code>, <code>"block"</code>, and <code>"place"</code>
+are supported.
+Note: sufficient information must be in user-defined <code><var>voter.file</var></code> object.
+If <code><var>census.geo</var> = "county"</code>, then <code><var>voter.file</var></code>
+must have column named <code>county</code>.
+If <code><var>census.geo</var> = "tract"</code>, then <code><var>voter.file</var></code>
+must have columns named <code>county</code> and <code>tract</code>.
+And if <code><var>census.geo</var> = "block"</code>, then <code><var>voter.file</var></code>
+must have columns named <code>county</code>, <code>tract</code>, and <code>block</code>.
+If <code><var>census.geo</var> = "place"</code>, then <code><var>voter.file</var></code>
+must have column named <code>place</code>.
+If <code>census.geo = "zcta"</code>, then <code>voter.file</code> must have column named <code>zcta</code>.
+Specifying <code><var>census.geo</var></code> will call <code>census_helper</code> function
+to merge Census geographic data at specified level of geography.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>census.key</code></td>
+<td>
+<p>A character object specifying user's Census API key.
+Required if <code>census.geo</code> is specified, because a valid Census API key is
+required to download Census geographic data.
+</p>
+<p>If <code>NULL</code>, the default, attempts to find a census key stored in an
+environment variable named <code>CENSUS_API_KEY</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>census.data</code></td>
+<td>
+<p>A list indexed by two-letter state abbreviations,
+which contains pre-saved Census geographic data.
+Can be generated using <code>get_census_data</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>age</code></td>
+<td>
+<p>An optional <code>TRUE</code>/<code>FALSE</code> object specifying whether to
+condition race predictions on age (in addition to surname and geolocation).
+Default is <code>FALSE</code>. Must be same as <code><var>age</var></code> in <code><var>census.data</var></code> object.
+May only be set to <code>TRUE</code> if <code>census.geo</code> option is specified.
+If <code>TRUE</code>, <code><var>voter.file</var></code> should include a numerical variable <code><var>age</var></code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sex</code></td>
+<td>
+<p>optional <code>TRUE</code>/<code>FALSE</code> object specifying whether to
+condition race predictions on sex (in addition to surname and geolocation).
+Default is <code>FALSE</code>. Must be same as <code><var>sex</var></code> in <code><var>census.data</var></code> object.
+May only be set to <code>TRUE</code> if <code>census.geo</code> option is specified.
+If <code>TRUE</code>, <code><var>voter.file</var></code> should include a numerical variable <code><var>sex</var></code>,
+where <code><var>sex</var></code> is coded as 0 for males and 1 for females.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>year</code></td>
+<td>
+<p>An optional character vector specifying the year of U.S. Census geographic
+data to be downloaded. Use <code>"2010"</code>, or <code>"2020"</code>. Default is <code>"2020"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>party</code></td>
+<td>
+<p>An optional character object specifying party registration field
+in <code><var>voter.file</var></code>, e.g., <code><var>party</var> = "PartyReg"</code>.
+If specified, race/ethnicity predictions will be conditioned
+on individual's party registration (in addition to geolocation).
+Whatever the name of the party registration field in <code><var>voter.file</var></code>,
+it should be coded as 1 for Democrat, 2 for Republican, and 0 for Other.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>retry</code></td>
+<td>
+<p>The number of retries at the census website if network interruption occurs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>impute.missing</code></td>
+<td>
+<p>Logical, defaults to TRUE. Should missing be imputed?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skip_bad_geos</code></td>
+<td>
+<p>Logical. Option to have the function skip any geolocations that are not present
+in the census data, returning a partial data set. Default is set to <code>FALSE</code>, in which case it
+will break and provide error message with a list of offending geolocations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use.counties</code></td>
+<td>
+<p>A logical, defaulting to FALSE. Should census data be filtered by counties
+available in <var>census.data</var>?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>Character string, either "BISG" (default) or "fBISG" (for error-correction,
+fully-Bayesian model).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>race.init</code></td>
+<td>
+<p>Vector of initial race for each observation in voter.file.
+Must be an integer vector, with 1=white, 2=black, 3=hispanic, 4=asian, and
+5=other. Defaults to values obtained using <code>model="BISG_surname"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name.dictionaries</code></td>
+<td>
+<p>Optional named list of <code>data.frame</code>'s
+containing counts of names by race. Any of the following named elements
+are allowed: "surname", "first", "middle". When present, the objects must
+follow the same structure as <code>last_c</code>, <code>first_c</code>,
+<code>mid_c</code>, respectively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>names.to.use</code></td>
+<td>
+<p>One of 'surname', 'surname, first', or  'surname, first,
+middle'. Defaults to 'surname'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>List of control arguments only used when <code>model="fBISG"</code>, including
+</p>
+
+<dl>
+<dt>iter</dt>
+<dd>
+<p>Number of MCMC iterations. Defaults to 1000.</p>
+</dd>
+<dt>burnin</dt>
+<dd>
+<p>Number of iterations discarded as burnin. Defaults to half of <code>iter</code>.</p>
+</dd>
+<dt>verbose</dt>
+<dd>
+<p>Print progress information. Defaults to <code>TRUE</code>.</p>
+</dd>
+<dt>me.correct</dt>
+<dd>
+<p>Boolean. Should the model correct measurement error for <code>races|geo</code>? Defaults to <code>TRUE</code>.</p>
+</dd>
+<dt>seed</dt>
+<dd>
+<p>RNG seed. If <code>NULL</code>, a seed is generated and returned as an attribute for reproducibility.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function implements the Bayesian race prediction methods outlined in
+Imai and Khanna (2015). The function produces probabilistic estimates of
+individual-level race/ethnicity, based on surname, geolocation, and party.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Output will be an object of class <code>data.frame</code>. It will
+consist of the original user-input <code>voter.file</code> with additional columns with
+predicted probabilities for each of the five major racial categories:
+<code><var>pred.whi</var></code> for White,
+<code><var>pred.bla</var></code> for Black,
+<code><var>pred.his</var></code> for Hispanic/Latino,
+<code><var>pred.asi</var></code> for Asian/Pacific Islander, and
+<code><var>pred.oth</var></code> for Other/Mixed.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+#' data(voters)
+try(predict_race(voter.file = voters, surname.only = TRUE))
+## Not run: 
+try(predict_race(voter.file = voters, census.geo = "tract"))
+
+## End(Not run)
+## Not run: 
+try(predict_race(
+  voter.file = voters, census.geo = "place", year = "2020"))
+
+## End(Not run)
+## Not run: 
+CensusObj &lt;- try(get_census_data(state = c("NY", "DC", "NJ")))
+try(predict_race(
+  voter.file = voters, census.geo = "tract", census.data = CensusObj, party = "PID")
+  )
+
+## End(Not run)
+## Not run: 
+CensusObj2 &lt;- try(get_census_data(state = c("NY", "DC", "NJ"), age = T, sex = T))
+try(predict_race(
+  voter.file = voters, census.geo = "tract", census.data = CensusObj2, age = T, sex = T))
+
+## End(Not run)
+## Not run: 
+CensusObj3 &lt;- try(get_census_data(state = c("NY", "DC", "NJ"), census.geo = "place"))
+try(predict_race(voter.file = voters, census.geo = "place", census.data = CensusObj3))
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

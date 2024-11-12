@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>woeBinning</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Package for Supervised Weight of Evidence Binning</h2>
+
+<h3>Description</h3>
+
+<p>This package generates, visualizes, tabulates and deploys a supervised weight of evidence (WOE) binning of variables.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The package <code>woeBinning</code> automates the process of binning of numeric
+variables and factors with respect to a dichotomous target variable.
+Additionally, it visualizes the realized binning solution, tabulates it and
+deploys it to (new) data. All functions can be used with single variables
+or an entire data frame.
+</p>
+
+
+<h3>Binning Functions</h3>
+
+ 
+<ul>
+<li> <p><code>woe.binning</code> generates a supervised fine and coarse classing of numeric variables and factors.
+</p>
+</li>
+<li> <p><code>woe.tree.binning</code> generates a supervised tree-like segmentation of numeric variables and factors.    
+</p>
+</li>
+<li> <p><code>woe.binning.plot</code> visualizes the binning solution generated and saved via <code>woe.binning</code> or <code>woe.tree.binning</code>. 
+</p>
+</li>
+<li> <p><code>woe.binning.table</code> tabulates the binning solution generated and saved via <code>woe.binning</code> or <code>woe.tree.binning</code>. 
+</p>
+</li>
+<li> <p><code>woe.binning.deploy</code> deploys the binning solution generated and saved via <code>woe.binning</code> or <code>woe.tree.binning</code> to (new) data. 
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Siddiqi, N. 2006: <em>Credit Risk Scorecards: Developing and Implementing Intelligent Credit Scoring</em>. Hoboken, New Jersey: John Wiley &amp; Sons.
+</p>
+<p>Anderson, R. 2007: <em>The Credit Scoring Toolkit: Theory and Practice for Retail Credit Risk Management and Decision Automation</em>. Oxford / New York: Oxford University Press.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Load German credit data and create subset
+data(germancredit)
+df &lt;- germancredit[, c('creditability', 'credit.amount', 'duration.in.month',
+                  'savings.account.and.bonds', 'purpose')]
+
+# Bin all variables of the data frame (apart from the target variable)
+# with default parameter settings
+binning &lt;- woe.binning(df, 'creditability', df)
+
+# Plot the binned variables
+woe.binning.plot(binning)
+
+# Tabulate the binned variables
+tabulate.binning &lt;- woe.binning.table(binning)
+tabulate.binning
+						  
+# Deploy the binning solution to the data frame
+# (i.e. add binned variables and corresponding WOE variables)
+df.with.binned.vars.added &lt;- woe.binning.deploy(df, binning,
+                                               add.woe.or.dum.var='woe')		
+
+</code></pre>
+
+
+</div>

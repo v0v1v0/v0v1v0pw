@@ -1,0 +1,178 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>xfer_time</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>xfer_time Transfer model to a new time</h2>
+
+<h3>Description</h3>
+
+<p>Function transfers the model generated in previous components to
+a new time and area using provided layers.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">xfer_time(
+  evalOut,
+  curModel,
+  envs,
+  xfExt,
+  alg,
+  outputType = NULL,
+  clamp = NULL,
+  logger = NULL,
+  spN = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>evalOut</code></td>
+<td>
+<p>ENMevaluate output from previous module and using any of
+the available algorithms.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>curModel</code></td>
+<td>
+<p>if algorithm is maxent, model selected by user as best
+or optimal, in terms of feature class and regularization multiplier (e.g
+'L_1'). Otherwise must be 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>envs</code></td>
+<td>
+<p>environmental layers of different time to be used for transferring
+the model. They must match the layers used for generating the model in the
+model component.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xfExt</code></td>
+<td>
+<p>extent of the area to transfer the model. This is defined by the
+user in the map of the GUI and is provided as a SpatialPolygons object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alg</code></td>
+<td>
+<p>modeling algorithm used in the model component. Can be one of:
+'bioclim', 'maxent.jar' or 'maxnet'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outputType</code></td>
+<td>
+<p>output type to be used when algorithm is maxnet or
+maxent.jar.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clamp</code></td>
+<td>
+<p>logical. Whether transfer will be of clamped or unclamped
+model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+<p>Stores all notification messages to be displayed in the Log
+Window of Wallace GUI. Insert the logger reactive list here for running in
+shiny, otherwise leave the default NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spN</code></td>
+<td>
+<p>character. Used to obtain species name for logger messages.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This functions allows transferring the model created in previous
+components to a new time and area. The area of transfer is user provided in
+the map of the GUI and the transfer time user selected. The model will
+be transferred to the new area and time as long as the environmental
+variables are available for the area. This function returns a list
+including the cropped environmental variables used for transferring and
+the transferred model.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of two elements: xferExt and xferTime. The first is a
+RasterBrick or RasterStack of the environmental variables cropped to the
+area of transfer. The second element is a raster of the transferred model
+with the specified output type.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jamie Kass &lt;jamie.m.kass@gmail.com&gt;
+</p>
+<p>Andrea Paz &lt;paz.andreita@gmail.com&gt;
+</p>
+<p>Gonzalo E. Pinilla-Buitrago &lt;gepinillab@gmail.com&gt;
+</p>
+<p>Bethany A. Johnson &lt;bjohnso005@citymail.cuny.edu&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>predict</code>, <code>xfer_time</code>
+<code>xfer_userEnvs</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+envs &lt;- envs_userEnvs(rasPath = list.files(system.file("extdata/wc",
+                                                       package = "wallace"),
+                                           pattern = ".tif$",
+                                           full.names = TRUE),
+                      rasName = list.files(system.file("extdata/wc",
+                                                       package = "wallace"),
+                                           pattern = ".tif$",
+                                           full.names = FALSE))
+## extent to transfer
+# set coordinates
+longitude &lt;- c(-71.58400, -78.81300, -79.34034, -69.83331, -66.47149, -66.71319,
+               -71.11931)
+latitude &lt;- c(13.18379, 7.52315, 0.93105, -1.70167, 0.98391, 6.09208, 12.74980)
+# generate matrix
+selCoords &lt;- matrix(c(longitude, latitude), byrow = FALSE, ncol = 2)
+polyExt &lt;- sp::SpatialPolygons(list(sp::Polygons(list(sp::Polygon(selCoords)),
+                                                 ID = 1)))
+# load model
+m &lt;- readRDS(system.file("extdata/model.RDS",
+                         package = "wallace"))
+occsEnvs &lt;- m@occs
+bgEnvs &lt;- m@bg
+envsFut &lt;- list.files(path = system.file('extdata/wc/future',
+                                         package = "wallace"),
+                      full.names = TRUE)
+envsFut &lt;- raster::stack(envsFut)
+modXfer &lt;- xfer_time(evalOut = m, curModel = 1,
+                     envs = envsFut, alg = 'maxent.jar',
+                     xfExt = polyExt, clamp = FALSE, outputType = 'cloglog')
+
+## End(Not run)
+</code></pre>
+
+
+</div>

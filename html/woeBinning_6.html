@@ -1,0 +1,211 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>woe.tree.binning</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Binning via Tree-Like Segmentation</h2>
+
+<h3>Description</h3>
+
+<p><code>woe.tree.binning</code> generates a supervised tree-like segmentation of numeric variables
+and factors with respect to a dichotomous target variable. Its parameters provide
+flexibility in finding a binning that fits specific data characteristics and practical
+needs.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">woe.tree.binning(df, target.var, pred.var, min.perc.total,
+                min.perc.class, stop.limit, abbrev.fact.levels, event.class)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>Name of data frame with input data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target.var</code></td>
+<td>
+<p>Name of dichotomous target variable in quotes. Only target variables with
+two distinct values (e.g. 0, 1 or “Y”, “N”) are accepted;
+cases with NAs in the target variable will be ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pred.var</code></td>
+<td>
+<p>Name of predictor variable(s) to be binned in quotes.
+A single variable name can be provided, e.g. “varname1”, or a list of
+variable names, e.g. c(“varname1”, “varname2”). Alternatively one
+can repeat the name of the input data frame; the function will be applied
+to all its variables apart from the target variable then.
+Numeric variables and factors are supported and may contain NAs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.perc.total</code></td>
+<td>
+<p>For numeric variables this parameter defines the number of initial
+classes before any merging or tree-like splitting is applied. For example
+<em>min.perc.total=0.05</em> (5%) will result in 20 initial classes. For factors
+the original levels with a percentage below this limit are collected in a
+‘miscellaneous’ level before the merging based on the <em>min.perc.class</em>
+and the tree-like splitting based on the WOE values starts. Increasing the
+<em>min.perc.total</em> parameter will avoid sparse bins. Accepted range: 0.0001-0.2;
+default: 0.01.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.perc.class</code></td>
+<td>
+<p>If a column percentage of one of the target classes within a bin is
+below this limit (e.g. below 0.01=1%) then the respective bin will be
+joined with others. In case of numeric variables adjacent predictor classes
+are merged. For factors respective levels (including sparse NAs) are
+assigned to a ‘miscellaneous’ level. Setting <em>min.perc.class</em>&gt;0
+may provide more reliable WOE values. Accepted range: 0-0.2;
+default: 0, i.e. no merging with respect to sparse target classes
+is applied.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stop.limit</code></td>
+<td>
+<p>Stops WOE based segmentation of the predictor's classes/levels in case the
+resulting information value (IV) increases less than <em>x</em>% (e.g. 0.05 = 5%)
+compared to the preceding binning step. Increasing the <em>stop.limit</em> will
+simplify the binning solution and may avoid overfitting. Accepted range: 0-0.5;
+default: 0.1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abbrev.fact.levels</code></td>
+<td>
+<p>Abbreviates the names of new (merged) factor levels via the base R
+<code>abbreviate</code> function in case the specified number of
+characters is exceeded. Accepted range: 0-1000; default: 200.
+0 will prevent applying any abbreviation, i.e. only factor levels with
+more than 1000 characters will be truncated then.
+This option is particularly relevant in case one wants to generate dummy
+variables via the <code>woe.binning.deploy</code> function, because the
+factor levels will be part of the dummy variable names then.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>event.class</code></td>
+<td>
+<p>Optional parameter for specifying the class of the target event. This
+class typically indicates a negative event like a loan default or a
+disease. Use integers (e.g. 1) or characters in quotes (e.g. “bad”).
+This class will be represented by negative WOE values then.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>woe.tree.binning</code> generates an object with the information necessary
+for studying and applying the realized binning solution. When saved
+it can be used with the functions <code>woe.binning.plot</code>, <code>woe.binning.table</code>
+and <code>woe.binning.deploy</code>.
+</p>
+
+
+<h3>Binning of Numeric Variables</h3>
+
+<p>Numeric variables (continuous and ordinal) are binned beginning with initial classes with
+similar frequencies. The number of initial bins results from the <em>min.perc.total</em>
+parameter: min.perc.total will result in trunc(1/min.perc.total) initial bins,
+whereby <em>trunc</em> is needed to guarantee bins with similar frequencies.
+For example <em>min.perc.total=0.07</em> will cause trunc(14.3)=14 initial classes.
+Next, if <em>min.perc.class</em>&gt;0, bins with sparse target classes will be merged with
+the next upper bin, and in case of the last bin with the next lower one. NAs have
+their own bin and will not be merged with others. Finally the actual tree-like procedure
+starts: binary splits iteratively assign nearby classes with similar weight of evidence
+(WOE) values to segments in a way that maximizes the resulting information value (IV).
+The procedure stops when the IV increases less then specified by a percentage value
+(<em>stop.limit</em> parameter).
+</p>
+
+
+<h3>Binning of Factors</h3>
+
+<p>Factors (categorical variables) are binned via factor levels. As a start sparse levels
+(defined via the <em>min.perc.total</em> and <em>min.perc.class</em> parameters) are merged
+to a ‘miscellaneous’ level: if possible, respective levels (including sparse NAs)
+are bundled as ‘misc. level pos.’ (associated with positive WOE values), respectively
+as ‘misc. level neg.’ (associated with negative WOE values). In case a misc. level
+contains only NAs it will be named ‘Missing’. Afterwards the actual tree-like
+procedure starts: binary splits iteratively assign levels with similar WOE values to
+segments in a way that maximizes the resulting information value (IV). The procedure stops
+when the IV increases less then specified by a percentage value (<em>stop.limit</em> parameter).
+</p>
+
+
+<h3>Adjustment of 0 Frequencies</h3>
+
+<p>In case the crosstab of the bins with the target classes contains frequencies = 0
+the column percentages are adjusted to be able to compute the WOE and IV values:
+the offset 0.0001 (=0.01%) is added to each column percentage cell and the column
+percentages are recomputed then. This allows considering bins associated with one target
+class only, but may cause extreme WOE values for these bins. If a correction is not
+appropriate choose <em>min.perc.class</em>&gt;0; bins with sparse target classes will be
+merged then before computing any WOE or IV value.
+</p>
+
+
+<h3>Handling of Missing Data</h3>
+
+<p>Cases with NAs in the target variable will be ignored. For predictor variables the following
+applies: in case NAs already occurred when generating the binning solution
+the code ‘Missing’ is displayed and a corresponding WOE value can be computed.
+(Note that factor NAs may be joined with other sparse levels to a ‘miscellaneous’
+level - see above; only this ‘miscellaneous’ level will be displayed then.)
+In case NAs occur in the deployment scenario only ‘Missing’ is
+displayed for numeric variables and ‘unknown’ for factors; and
+the corresponding WOE values will be NA then, as well.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other binning functions: <code>woe.binning</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Load German credit data and create subset
+data(germancredit)
+df &lt;- germancredit[, c('creditability', 'credit.amount', 'duration.in.month',
+                  'savings.account.and.bonds', 'purpose')]
+
+# Bin a single numeric variable
+binning &lt;- woe.tree.binning(df, 'creditability', 'duration.in.month',
+                           min.perc.total=0.01, min.perc.class=0.01,
+                           stop.limit=0.1, event.class='bad')
+
+# Bin a single factor
+binning &lt;- woe.tree.binning(df, 'creditability', 'purpose',
+                           min.perc.total=0.05, min.perc.class=0, stop.limit=0.1,
+                           abbrev.fact.levels=50, event.class='bad')
+
+# Bin two variables (one numeric and one factor)
+# with default parameter settings
+binning &lt;- woe.tree.binning(df, 'creditability', c('credit.amount','purpose'))
+
+# Bin all variables of the data frame (apart from the target variable)
+# with default parameter settings
+binning &lt;- woe.tree.binning(df, 'creditability', df)
+
+</code></pre>
+
+
+</div>

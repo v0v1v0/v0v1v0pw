@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_geo_box</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get geographic entities based on a bounding box</h2>
+
+<h3>Description</h3>
+
+<p><code>get_geo_box</code> retrieves all geographic entities in
+Wikidata that fall between a bounding box between two existing items
+with geographic attributes (usually cities).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_geo_box(
+  first_city_code,
+  first_corner,
+  second_city_code,
+  second_corner,
+  language = "en",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>first_city_code</code></td>
+<td>
+<p>a Wikidata item, or series of items, to use for
+one corner of the bounding box.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>first_corner</code></td>
+<td>
+<p>the direction of <code>first_city_code</code> relative
+to <code>city</code> (eg "NorthWest", "SouthEast").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>second_city_code</code></td>
+<td>
+<p>a Wikidata item, or series of items, to use for
+one corner of the bounding box.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>second_corner</code></td>
+<td>
+<p>the direction of <code>second_city_code</code> relative
+to <code>city</code> (eg "NorthWest", "SouthEast").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>the two-letter language code to use for the name
+of the item. "en" by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>\dots</code></td>
+<td>
+<p>further arguments to pass to httr's GET.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a data.frame of 5 columns:
+</p>
+
+<ul>
+<li>
+<p>item the Wikidata identifier of each object associated with
+<code>entity</code>.
+</p>
+</li>
+<li>
+<p>name the name of the item, if available, in the requested language. If it
+is not available, <code>NA</code> will be returned instead.
+</p>
+</li>
+<li>
+<p>latitude the latitude of <code>item</code>
+</p>
+</li>
+<li>
+<p>longitude the longitude of <code>item</code>
+</p>
+</li>
+<li>
+<p>entity the entity the item is associated with (necessary for multi-entity
+queries).
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>get_geo_entity</code> for using an unrestricted search or simple radius,
+rather than a bounding box.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Simple bounding box
+bruges_box &lt;- get_geo_box("Q12988", "NorthEast", "Q184287", "SouthWest")
+
+# Custom language
+bruges_box_fr &lt;- get_geo_box("Q12988", "NorthEast", "Q184287", "SouthWest",
+                                        language = "fr")
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,258 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ef2C</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Evidence Factors For Matched Triples With Two Control Groups
+</h2>
+
+<h3>Description</h3>
+
+<p>In an observational complete block design, with bocks of size three, each containing
+a treated individual and one control from each of two control groups, ef2C (with the default settings) performs
+the evidence factor analysis suggested in Rosenbaum (2023).  One factor compares
+the treated group to the first control group in a matched pairs analysis.  The
+other factor pools the treated group and the first control group and compares it
+to the second control group.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ef2C(y, gamma=1, upsilon=1, alternative="greater", trunc=0.2,
+    m=c(8,8), m1=c(7,8), m2=c(8,8), scores=c(1,2,5), range=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>With I blocks and 3 individuals in each block, y is and I x 3 matrix or dataframe containing the outcomes.  The first column is the response of the treated individual.  The second response is the response of the control from the first control group.  The third response is the response of the control from the second control group.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma</code></td>
+<td>
+
+<p>A real number &gt;=1 giving the value of the sensitivity parameter for the comparison of the treated group and the first control group.  gamma=1 yields a randomization test.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upsilon</code></td>
+<td>
+
+<p>A real number &gt;=1 giving the value of the sensitivity parameter for the comparison of the second control group and the combination of the treated group plus the first control group.  upsilon=1 yields a randomization test.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alternative</code></td>
+<td>
+
+<p>Use alternative=greater if the treatment is expect to cause an increase in the response in y.
+Use alternative=less if the treatment is expect to cause a decrease in the response in y.  In this context, a two-sided test is best viewed as two one-sided tests with a Bonferroni correction, e.g., testing in both tails at level 0.025 to ensure overall level of 0.05; see Cox (1977).  For more information, see the notes.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trunc</code></td>
+<td>
+
+<p>The two P-values from the two factors are combined using the trucated product of P-values due to Zaykin et al. (2002): it is the P-value derived from the product of those P-values that are less
+than trunc.  For more information, see the notes.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+
+<p>A vector of two integers greater than or equal to 1.  The first coordinate of m is for the first evidence factor, comparing the treated individual to the control from the first control group.  The second coordinate of m is for the second evidence factor, comparing the control from the second control group to the set containing the treated individual and the first control.  One of three parameters that define the weights that attach to blocks.  The three parameters are integers with 1 &lt;= m1[1] &lt;= m2[1] &lt;= m[1] and 1 &lt;= m1[2] &lt;= m2[2] &lt;= m[2].  The default settings are
+suggested in Rosenbaum (2023).  See Details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m1</code></td>
+<td>
+
+<p>A vector of two integers greater than or equal to 1.  See m.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m2</code></td>
+<td>
+
+<p>A vector of two integers greater than or equal to 1.  See m.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scores</code></td>
+<td>
+
+<p>A vector of three nonnegative integer scores used to rank the three responses in each block in the test concerning the second evidence factor.  The default settings are
+suggested in Rosenbaum (2023).  See Details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>range</code></td>
+<td>
+
+<p>A TRUE or a FALSE for the second evidence factor.  If TRUE, blocks are ranked by their within-block ranges.  If FALSE, blocks are ranked by the so-called gap, which is the difference between the maximum order statistic in a block and the average of the remaining order statistics.  The default setting of FALSE is
+suggested in Rosenbaum (2023).  See Details.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The default settings produce the recommended evidence-factor analysis in Rosenbaum (2023).  The example below reproduces
+some results from the example in that paper.  That paper considered 40 test statistics in terms of
+the Bahadur efficiency of a sensitivity – all of these analyses can be reproduced by the more flexible but more complicated dwgtRank function.  The ef2C function calls dwgtRank twice and combines the
+resulting two analyses.
+</p>
+<p>The comparison of the treated group and the first control group is equivalent to
+dwgtRank(y[,1:2],gamma=gamma,m=8,m1=7,m2=8,range=TRUE,alternative="greater"), and
+these settings are motivated by results in Rosenbaum (2011, 2015).  Notice that
+y[,1:2] uses the first two columns of y.
+</p>
+<p>The comparison of the second control group and the merger of the treated group
+with the first control group is equivalent to
+dwgtRank(y[,3:1], gamma=upsilon, m=8,m1=8,m2=8, range=FALSE, alternative="less", scores=c(1,2,5)), and  these settings are motivated by results in Rosenbaum (2023).  Notice that
+y[,3:1] compares the third column to the pooled group consisting of columns 1 and 2.
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>pvals </code></td>
+<td>
+<p>Upper bounds on the one-sided P-values for the two factors and their combination.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detail </code></td>
+<td>
+<p>A matrix with some details of the computations that produced the
+P-values.</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>The two P-values from the two factors are combined using the trucated product of P-values due to Zaykin et al. (2002): it is the P-value derived from the product of those P-values that are less
+than trunc.  Taking trunc=1 yields Fisher's method for combining independent P-values.  Fisher's method is not ideal when combining P-value bounds produced by sensitivity analyses; see Hsu et al. (2013).  Reasonable values are trunc=.1, truc=.15 and trunc=.2.  As illustrated in the example
+below, lower truncation values produce smaller combined P-values when the P-values are
+below the truncation point, but a P-value that barely exceeds the truncation point
+is effectively discarded.  Hsu et al. (2013) compare truncation values when used in a sensitivity analysis.  For discussion of combining sensitivity analyses as
+independent, see the required conditions in Rosenbaum (2011b, 2021).  These conditions
+hold for the comparison performed by ef2C.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The setting alternative = "less" simply replaces y by -y before testing in the
+upper tail.
+</p>
+
+
+<h3>Note</h3>
+
+<p>For a deeper understanding, see the documentation of dwgtRank.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Paul R. Rosenbaum
+</p>
+
+
+<h3>References</h3>
+
+<p>Cox, D. R. (1977). The role of significance tests [with discussion and reply]. Scandinavian Journal of Statistics, 4, 49-70.
+</p>
+<p>Hsu, J. Y., Small, D. S., &amp; Rosenbaum, P. R. (2013).
+&lt;doi:10.1080/01621459.2012.742018&gt; Effect modification and design sensitivity in observational studies. Journal of the American Statistical Association, 108(501), 135-148.
+</p>
+<p>Rosenbaum, P. R. (1987). &lt;doi:10.1214/ss/1177013232&gt; The role of a second control group in an observational study. Statistical Science, 2, 292-306.
+</p>
+<p>Rosenbaum, P. R. (2011a). &lt;doi:10.1111/j.1541-0420.2010.01535.x&gt; A new U‐Statistic with superior design sensitivity in matched observational studies. Biometrics, 67(3), 1017-1027.
+</p>
+<p>Rosenbaum, P. R. (2011a). &lt;doi:10.1111/j.1541-0420.2010.01535.x&gt; A new U‐Statistic with superior design sensitivity in matched observational studies. Biometrics, 67(3), 1017-1027.
+</p>
+<p>Rosenbaum, P. R. (2011b). &lt;doi:10.1198/jasa.2011.tm10422&gt; Some approximate evidence factors in observational studies. Journal of the American Statistical Association, 106(493), 285-295.
+</p>
+<p>Rosenbaum, P. R. (2015). &lt;doi:10.1080/01621459.2014.960968&gt; Bahadur efficiency of sensitivity analyses in observational studies. Journal of the American Statistical Association, 110(509), 205-217.
+</p>
+<p>Rosenbaum, P. R. (2021) &lt;doi:10.1201/9781003039648&gt; Replication and Evidence Factors in Observational Studies.  Chapman and Hall/CRC.
+</p>
+<p>Rosenbaum, P. R. (2023) &lt;doi:10.1111/biom.13921&gt; A second evidence factor for a second control group.  Biometrics 79, 3968-3980.
+</p>
+<p>Zaykin, D. V., Zhivotovsky, L. A., Westfall, P. H. and Weir, B. S. (2002) &lt;doi:10.1002/gepi.0042&gt; Truncated product method of combining P-values. Genetic Epidemiology, 22, 170-185.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># The calculation below reproduce analyses from Rosenbaum (2023).
+
+data(aBP)
+attach(aBP)
+
+yD&lt;-t(matrix(bpDiastolic,3,207))
+yS&lt;-t(matrix(bpSystolic,3,207))
+vS&lt;-c(yS[,1]-yS[,2],yS[,1]-yS[,3],yS[,2]-yS[,3])
+vD&lt;-c(yD[,1]-yD[,2],yD[,1]-yD[,3],yD[,2]-yD[,3])
+y&lt;-(yD/median(abs(vD)))+(yS/median(abs(vS)))
+
+# EVIDENCE FACTOR ANALYSIS, COMBINING TWO FACTORS
+# The evidence factor analysis compares treated to the first control group,
+# then compares the second control group to the pooled group consisting of
+# treated and first control, then combines the two analyses using meta-analysis.
+# Treated/first-control matched pairs are compared using the method in
+# Rosenbaum (2011).
+
+ef2C(y,gamma=2.3,upsilon=1.45)
+amplify(2.3,4)
+amplify(1.45,2.5)
+
+# THE COMBINED ANALYSIS IS INSENSITIVE TO LARGER BIASES
+# The combined analysis is insensitive to larger biases
+# than are its components
+ef2C(y,gamma=2.6,upsilon=1.7)
+amplify(2.6, 5)
+amplify(1.7,c(2.7,3))
+
+# The calculations above are also produced in the
+# example for dwgtRank, where alternative
+# analyses from Rosenbaum (2023) are compared.
+
+####################################################
+
+# Comparing trucation points to understand trunc:
+ef2C(y,gamma=2.6,upsilon=1.7,trunc=.2) # Default
+ef2C(y,gamma=2.6,upsilon=1.7,trunc=1) # Fisher's method
+ef2C(y,gamma=2.6,upsilon=1.7,trunc=.1)
+ef2C(y,gamma=2.5,upsilon=1.6,trunc=.2)
+ef2C(y,gamma=2.5,upsilon=1.6,trunc=.1)
+# See Hsu et al. (2013) for discussion of the
+# truncation point for a sensitivity analysis.
+</code></pre>
+
+
+</div>

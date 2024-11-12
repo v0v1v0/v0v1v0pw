@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summary-densities</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summary evaluation of predictive performance</h2>
+
+<h3>Description</h3>
+
+<p>Summary evaluation of predictive performance
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'Wdensities'
+summary(object, ...)
+
+## S3 method for class 'Wdensities'
+mean(x, ...)
+
+auroc.crude(densities)
+
+auroc.model(densities)
+
+lambda.crude(densities)
+
+lambda.model(densities)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object, x, densities</code></td>
+<td>
+<p>Densities object produced by
+<code>Wdensities</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. These are
+currently ignored.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>summary</code> returns a data frame that reports the number of cases and
+controls, the test log-likelihood, the crude and model-based C-statistic
+and expected weight of evidence Lambda.
+</p>
+<p><code>mean</code> returns a numeric vector listing the mean densities of the weight
+of evidence in controls and in cases.
+</p>
+<p><code>auroc.crude</code> and <code>auroc.model</code> return the area under the ROC curve
+according to the crude and the model-based densities of weight of evidence,
+respectively.
+</p>
+<p><code>lambda.crude</code> and <code>lambda.model</code> return the expected weight of
+evidence (expected information for discrimination) in bits from the crude
+and the model-based densities, respectively.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(cleveland)
+densities &lt;- with(cleveland, Wdensities(y, posterior.p, prior.p))
+
+summary(densities)
+mean(densities)
+auroc.model(densities)
+lambda.model(densities)
+
+</code></pre>
+
+
+</div>

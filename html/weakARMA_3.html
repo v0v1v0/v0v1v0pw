@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ARMA.selec</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Selection of ARMA models</h2>
+
+<h3>Description</h3>
+
+<p>Identifies the orders p and q of an ARMA model according to several
+information criteria.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ARMA.selec(data, P, Q, c = 2)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Univariate time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>P</code></td>
+<td>
+<p>Integer for the maximum lag order of autoregressive component.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Q</code></td>
+<td>
+<p>Integer for the maximum lag order of moving-average component.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c</code></td>
+<td>
+<p>Real number &gt;1 needed to compute Hannan-Quinn information criterion.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The fitted model which is favored is the one corresponding to the
+minimum value of the criterion. The most popular criterion is the Akaike information
+criterion (<code>AIC</code>). This was designed to be an approximately unbiased
+estimator of a fitted model. For small sample or when  the number of fitted
+parameters is large, it is more appropriate to  manipulate a corrected AIC
+version (<code>AICc</code>) which is more nearly unbiased. But these two criteria
+are inconsistent for model orders selection. If you want to use a consistent
+criterion, it is possible to take the Bayesian information criterion
+(<code>BIC</code>) or the Hannan-Quinn information  criteria (<code>HQ</code>).
+</p>
+<p>For the weak ARMA, i.e under the assumption that the errors are uncorrelated
+but not necessarily independant, modified criteria has been adapted :
+<code>AICm</code>, <code>AICcm</code>, <code>BICm</code>, <code>HQm</code>.
+</p>
+<p>The criteria definitions are the following :
+</p>
+<p style="text-align: center;"><code class="reqn">AIC = n\log(\sigma^{2}) + 2(p + q)</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">AICm = n\log(\sigma^{2}) + \frac{Tr(IJ^{-1})}{\sigma^2}</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">AICc = n\log(\sigma^{2}) + n + \frac{n}{(n-(p + q + 1))} 2(p + q)</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">AICcm = n\log(\sigma^{2}) + \frac{n^{2}}{(n-(p + q + 1))}  + \frac{n}{(2(n-(p + q + 1)))} \frac{Tr(IJ^{-1})}{\sigma^2}</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">BIC = n\log(\sigma^{2}) + (p + q)log(n)</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">BICm = n\log(\sigma^{2}) + \frac{1}{2} \frac{Tr(IJ^{-1})}{\sigma^2}log(n)</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">HQ = n\log(\sigma^{2}) + 2c(p + q)log(log(n))</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">HQm = n\log(\sigma^{2}) + c\frac{Tr(IJ^{-1})}{\sigma^2}log(log(n))</code>
+</p>
+
+
+
+<h3>Value</h3>
+
+<p>A list of the different criteria, each item contains the matrix of the 
+computed value for the different model and the selected order with this criterion 
+(corresponding to the minimum value in the previous matrix).
+</p>
+
+
+<h3>References</h3>
+
+<p>Boubacar Maïnassara, Y. 2012, Selection of weak VARMA models by
+modified Akaike's information  criteria, <em>Journal of Time Series
+Analysis</em>, vol. 33, no. 1, pp. 121-130
+</p>
+<p>Boubacar Maïnassara, Y. and Kokonendji, C. C. 2016, Modified Schwarz
+and Hannan-Quin information criteria for weak VARMA models, <em>Stat
+Inference Stoch Process</em>, vol. 19, no. 2, pp. 199-217
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">ARMA.selec (CAC40return.sq, P = 3, Q = 3)
+
+</code></pre>
+
+
+</div>

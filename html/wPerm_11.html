@@ -1,0 +1,199 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>perm.ind.test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+
+Permutation Independence Test
+</h2>
+
+<h3>Description</h3>
+
+
+<p>Performs a permutation (randomization) test for independence of two
+variables, using chi-square as the test statistic.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">perm.ind.test(x, type = c("cont", "flat", "raw"),
+              var.names = NULL, R = 9999)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+
+<p>a data frame (see details below).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+
+
+<p>a character string indicating the type of data frame; must be one
+of "cont" (default), "flat", or "raw".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var.names</code></td>
+<td>
+
+
+<p>an optional character string of length two that gives the names of the
+variables under consideration; if omitted Var.1 and Var.2 are used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+
+
+<p>number of replications (default = 9999).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+<p>The null hypothesis is that the two variables are not associated (i.e.,
+are independent). The alternative hypothesis is that the two variables
+are associated (i.e., are dependent).
+</p>
+<p>Types of data frames permitted:
+</p>
+<p>cont: In this type of data frame, the first variable gives the possible
+values of one of the two variables under consideration. The remaining
+variables of the data frame give the observed frequencies.
+</p>
+<p>flat: This type of data frame consists of three variables. The first
+two variables give the pairs of possible values of the two variables
+under consideration; the third variable of the data frame gives the
+frequencies of the pairs.
+</p>
+<p>raw: This type of data frame consists of two variables, which give the
+raw data of the two variables under consideration.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with class "perm.two.var" containing the following components:
+
+
+
+
+
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Perm.values </code></td>
+<td>
+<p>the values of chi-square obtained from the permutations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Header </code></td>
+<td>
+<p>the main title for the output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Variable.1 </code></td>
+<td>
+<p>the name of the first variable or Var.1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Variable.2 </code></td>
+<td>
+<p>the name of the second variable or Var.2</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Statistic </code></td>
+<td>
+<p>the statistic used for the permutation test; here, always chi.square.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Observed </code></td>
+<td>
+<p>the value of the chi-square statistic for the observed data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n </code></td>
+<td>
+<p>the sample size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Null </code></td>
+<td>
+<p>the null hypothesis; here, always nonassociated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Alternative </code></td>
+<td>
+<p>the alternative hypothesis; here, always associated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>P.value </code></td>
+<td>
+<p>the P-value or a statement like P &lt; 0.001.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value </code></td>
+<td>
+<p>the P-value.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+
+<p>Neil A. Weiss
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Religious belief vs education for a sample of 509 people.
+data("relig.and.ed")
+str(relig.and.ed)
+relig.and.ed
+# Note that relig.and.ed is in the form of a flat contingency table ("flat").
+
+# Permutation independence test to decide whether an association exists
+# between religiosity and education, using 999 replications.
+perm.ind.test(relig.and.ed, "flat", c("Religiosity", "Education"), 999)
+
+# Social class vs nursery-rhyme knowledge for a sample of 66 grade-school
+# children.
+data("learning")
+str(learning)
+learning
+# Note that the learning data is in the form of a contingency table ("cont").
+
+# Permutation independence test to decide whether an association exists
+# between social class and nursery-rhyme knowledge, using 999 replications.
+perm.ind.test(learning, "cont", c("Social class", "Nursery-rhyme knowledge"), 999)
+# Or, equivalently, since "cont" is the default "type":
+perm.ind.test(learning, var.names = c("Social class", "Nursery-rhyme knowledge"), R = 999)
+</code></pre>
+
+
+</div>

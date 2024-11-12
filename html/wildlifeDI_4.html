@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>conDisplacement</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate net displacement from contacts</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the net-displacement (distance) of fixes before and after a contact phase from the nearest contact pahse in time.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">conDisplacement(traj, def = "all")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>traj</code></td>
+<td>
+<p>an object of the class <code>move2</code> which should be output from the function <code>conPhase</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>def</code></td>
+<td>
+<p>how to define the point-of-contact. The default is to define it as all fixes in a phase <code>type = 'all'</code>, alternatively contacts can be defined as a single point along the phase defined as one of: <code>'first','last','minDist','minTime'</code>, which corresponds to the first fix int he contact phase, the last fix in the contact phase, the fix with the minimum time difference and the fix with the closest contact distance.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is used to compute the net displacement away from contacts by an animal before and after a contact phase. Net displacement represents an important variable related to the movement of the individual.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An move2 object with a new 'contact_displacement' column indicating the straight-line distance to the nearest (in time) contact phase (defined using parameter def). If there are no contacts associated with an individual the contact displacement is NA.
+</p>
+
+
+<h3>References</h3>
+
+<p>Long, JA, Webb, SL, Harju, SM, Gee, KL (2022) Analyzing Contacts and Behavior from High Frequency 
+Tracking Data Using the wildlifeDI R Package. <em>Geographical Analysis</em>. <b>54</b>, 648–663.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>conProcess, conPhase, conTimelag
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data(does)
+doecons &lt;- conProcess(does,tc=15*60,dc=50)
+doephas &lt;- conPhase(doecons,pc=60*60)
+disp_f &lt;- conDisplacement(doephas,def='first')
+disp_l &lt;- conDisplacement(doephas,def='last')
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

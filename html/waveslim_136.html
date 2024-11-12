@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wavelet.filter</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Higher-Order Wavelet Filters</h2>
+
+<h3>Description</h3>
+
+<p>Create a wavelet filter at arbitrary scale.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wavelet.filter(wf.name, filter.seq = "L", n = 512)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wf.name</code></td>
+<td>
+<p>Character string of wavelet filter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.seq</code></td>
+<td>
+<p>Character string of filter sequence.  <code>H</code> means
+high-pass filtering and <code>L</code> means low-pass filtering.  Sequence is read
+from right to left.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Length of zero-padded filter.  Frequency resolution will be
+<code>n</code>/2+1.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Uses <code>cascade</code> subroutine to compute higher-order wavelet coefficient
+vector from a given filtering sequence.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Vector of wavelet coefficients.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>B. Whitcher
+</p>
+
+
+<h3>References</h3>
+
+<p>Bruce, A. and H.-Y. Gao (1996).  <em>Applied Wavelet Analysis
+with S-PLUS</em>, Springer: New York.
+</p>
+<p>Doroslovacki, M. L. (1998) On the least asymmetric wavelets, <em>IEEE
+Transactions on Signal Processing</em>, <b>46</b>, No. 4, 1125-1130.
+</p>
+<p>Daubechies, I. (1992) <em>Ten Lectures on Wavelets</em>, CBMS-NSF Regional
+Conference Series in Applied Mathematics, SIAM: Philadelphia.
+</p>
+<p>Morris and Peravali (1999) Minimum-bandwidth discrete-time wavelets,
+<em>Signal Processing</em>, <b>76</b>, No. 2, 181-193.
+</p>
+<p>Nielsen, M. (2001) On the Construction and Frequency Localization of Finite
+Orthogonal Quadrature Filters, <em>Journal of Approximation Theory</em>,
+<b>108</b>, No. 1, 36-52.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>squared.gain</code>, <code>wave.filter</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Figure 4.14 in Gencay, Selcuk and Whitcher (2001)
+par(mfrow=c(3,1), mar=c(5-2,4,4-1,2))
+f.seq &lt;- "HLLLLL"
+plot(c(rep(0,33), wavelet.filter("mb4", f.seq), rep(0,33)), type="l",
+     xlab="", ylab="", main="D(4) in black, MB(4) in red")
+lines(c(rep(0,33), wavelet.filter("d4", f.seq), rep(0,33)), col=2)
+plot(c(rep(0,35), -wavelet.filter("mb8", f.seq), rep(0,35)), type="l",
+     xlab="", ylab="", main="D(8) in black, -MB(8) in red")
+lines(c(rep(0,35), wavelet.filter("d8", f.seq), rep(0,35)), col=2)
+plot(c(rep(0,39), wavelet.filter("mb16", f.seq), rep(0,39)), type="l",
+     xlab="", ylab="", main="D(16) in black, MB(16) in red")
+lines(c(rep(0,39), wavelet.filter("d16", f.seq), rep(0,39)), col=2)
+
+</code></pre>
+
+
+</div>

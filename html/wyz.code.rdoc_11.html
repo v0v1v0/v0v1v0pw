@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>generateMarkup</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Generate <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> documentation atomic piece
+</h2>
+
+<h3>Description</h3>
+
+<p>Generate <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> documentation atomic pieces, managing various parameters to fulfil <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>
+documentation requirements.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">generateMarkup(content_s, keyword_s_1 = NA_character_,
+               content2_s = NA_character_,
+               inline_b_1 = TRUE, useSpace_b_1 = FALSE,
+               escapeBraces_b_1 = FALSE,
+               content3_s = NA_character_)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>content_s</code></td>
+<td>
+<p> a <em><code>vector</code></em> of strings, that is the content to consider </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keyword_s_1</code></td>
+<td>
+<p> a <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> documentation keyword. See
+<em><b><code>rdocKeywords</code></b>.</em></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>content2_s</code></td>
+<td>
+<p> a <em><code>vector</code></em> of strings that is a second content, useful with some keywords that require
+two members</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inline_b_1</code></td>
+<td>
+<p> a single <em><code>boolean</code></em> expressing if the result should be printed on a single line or not? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useSpace_b_1</code></td>
+<td>
+<p> a single <em><code>boolean</code></em> asking for space insertion. When dealing with documentation keywords that requires two members, some may require a space in between to work properly. This
+parameters allows you to ask for this.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>escapeBraces_b_1</code></td>
+<td>
+<p> when <em><code>TRUE</code></em>, braces characters are escaped </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>content3_s</code></td>
+<td>
+<p> a <em><code>vector</code></em> of strings that is a third content,
+useful with some keywords that require three members</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Very convenient function, to customize your <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> documentation output.
+</p>
+<p>Might be used programmatically to generate pieces or full documentation.
+</p>
+<p>Tested thoroughly with zero, one, two and three contents to cover all the markups of
+<span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> documentation.
+</p>
+<p>See examples below.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A single <em><code>string</code></em>, containing one or several lines of text.
+Provided content is processed by function <em><b><code>escapeContent</code></b></em>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+<p>Maintainer: Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+
+
+<h3>References</h3>
+
+<p>Refer to
+<a href="https://cran.r-project.org/doc/manuals/R-exts.html">Writing <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> extensions</a>
+to know more about R documentation requirements.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Refer to <em><b><code>escapeContent</code></b></em>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># 0. zero content example
+print(generateMarkup(keyword = 'R'))
+# "\\R"
+
+# 1. one content example
+print(generateMarkup('a title', 'title'))
+# "\\title{a title}"
+
+# 2. Two contents examples
+print(generateMarkup('https://neonira.github.io/offensiveProgrammingBook/',
+'href', 'Offensive Programming Book'))
+# "\\href{https://neonira.github.io/offensiveProgrammingBook/}{Offensive Programming Book}"
+
+print(generateMarkup('a', 'item', 'description of a', useSpace_b_1 = TRUE))
+# "\\item{a} {description of a}"
+
+print(generateMarkup('a', 'item', 'description of a', useSpace_b_1 = FALSE))
+"\\item{a}{description of a}"
+
+# 3. Three contents example
+print(generateMarkup('content_1', 'ifelse', 'content_2', content3_s = 'content_3'))
+# "\\ifelse{content_1}{content_2}{content_3}"
+
+</code></pre>
+
+
+</div>

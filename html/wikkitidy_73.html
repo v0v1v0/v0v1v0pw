@@ -1,0 +1,138 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>xtools_page</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Access page-level statistics from the <a href="https://www.mediawiki.org/wiki/XTools/API/Page">XTools Page API endpoint</a>
+</h2>
+
+<h3>Description</h3>
+
+<p><code>get_xtools_page_info()</code> returns <a href="https://www.mediawiki.org/wiki/XTools/API/Page#Article_info">basic statistics</a>
+about articles' history and quality, including their total edits, creation
+date, and assessment value (good, featured etc.)
+</p>
+<p><code>get_xtools_page_prose()</code> returns <a href="https://www.mediawiki.org/wiki/XTools/API/Page#Prose">statistics about the word counts and referencing</a> of
+articles
+</p>
+<p><code>get_xtools_page_links()</code> returns <a href="https://www.mediawiki.org/wiki/XTools/API/Page#Links">the number of ingoing and outgoing links to articles, including redirects</a>
+</p>
+<p><code>get_xtools_page_top_editors()</code> returns the <a href="https://www.mediawiki.org/wiki/XTools/API/Page#Top_editors">list of top editors for articles</a>, with
+optional filters by date range and non-bot status
+</p>
+<p><code>get_xtools_page_assessment()</code> returns more detailed <a href="https://www.mediawiki.org/wiki/XTools/API/Page#Assessments">statistics about articles' assessment status and Wikiproject importance levels</a>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_xtools_page_info(
+  title,
+  language = "en",
+  failure_mode = c("error", "quiet")
+)
+
+get_xtools_page_prose(
+  title,
+  language = "en",
+  failure_mode = c("error", "quiet")
+)
+
+get_xtools_page_links(
+  title,
+  language = "en",
+  failure_mode = c("error", "quiet")
+)
+
+get_xtools_page_top_editors(
+  title,
+  start = NULL,
+  end = NULL,
+  limit = 1000,
+  nobots = FALSE,
+  language = "en",
+  failure_mode = c("error", "quiet")
+)
+
+get_xtools_page_assessment(
+  title,
+  classonly = FALSE,
+  language = "en",
+  failure_mode = c("error", "quiet")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>Character vector of page titles</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>Language code for the version of Wikipedia to query</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>failure_mode</code></td>
+<td>
+<p>What to do if no data is found. See <code>get_rest_resource()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p>A character vector or date object (optional): the start date for
+calculating top editors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end</code></td>
+<td>
+<p>A character vector or date object (optional): the end date for
+calculating top editors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit</code></td>
+<td>
+<p>An integer: the maximum number of top editors to return</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nobots</code></td>
+<td>
+<p>TRUE or FALSE: if TRUE, bots are excluded from the top editor
+calculation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>classonly</code></td>
+<td>
+<p>TRUE or FALSE: if TRUE, only return the article's assessment
+status, without Wikiproject information</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list or tbl of results, the same length as <code>title</code>. <strong>NB:</strong> The
+results for <code>get_xtools_page_assessment</code> are still not parsed properly.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Get basic statistics about Erich Auerbach on German Wikipedia
+auerbach &lt;- get_xtools_page_info("Erich Auerbach", language = "de")
+auerbach
+</code></pre>
+
+
+</div>

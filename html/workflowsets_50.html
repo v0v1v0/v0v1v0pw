@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>update_workflow_model</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Update components of a workflow within a workflow set</h2>
+
+<h3>Description</h3>
+
+<p>Workflows can take special arguments for the recipe (e.g. a blueprint) or a
+model (e.g. a special formula). However, when creating a workflow set, there
+is no way to specify these extra components.
+</p>
+<p><code>update_workflow_model()</code> and <code>update_workflow_recipe()</code> allow users to set
+these values <em>after</em> the workflow set is initially created. They are
+analogous to <code>workflows::add_model()</code> or <code>workflows::add_recipe()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">update_workflow_model(x, id, spec, formula = NULL)
+
+update_workflow_recipe(x, id, recipe, blueprint = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A workflow set outputted by <code>workflow_set()</code> or <code>workflow_map()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>A single character string from the <code>wflow_id</code> column indicating
+which workflow to update.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spec</code></td>
+<td>
+<p>A parsnip model specification.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>An optional formula override to specify the terms of the
+model. Typically, the terms are extracted from the formula or recipe
+preprocessing methods. However, some models (like survival and bayesian
+models) use the formula not to preprocess, but to specify the structure
+of the model. In those cases, a formula specifying the model structure
+must be passed unchanged into the model call itself. This argument is
+used for those purposes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>recipe</code></td>
+<td>
+<p>A recipe created using <code>recipes::recipe()</code>. The recipe
+should not have been trained already with <code>recipes::prep()</code>; workflows
+will handle training internally.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blueprint</code></td>
+<td>
+<p>A hardhat blueprint used for fine tuning the preprocessing.
+</p>
+<p>If <code>NULL</code>, <code>hardhat::default_recipe_blueprint()</code> is used.
+</p>
+<p>Note that preprocessing done here is separate from preprocessing that
+might be done automatically by the underlying model.</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>The package supplies two pre-generated workflow sets, <code>two_class_set</code>
+and <code>chi_features_set</code>, and associated sets of model fits
+<code>two_class_res</code> and <code>chi_features_res</code>.
+</p>
+<p>The <code style="white-space: pre;">⁠two_class_*⁠</code> objects are based on a binary classification problem
+using the <code>two_class_dat</code> data from the modeldata package. The six
+models utilize either a bare formula or a basic recipe utilizing
+<code>recipes::step_YeoJohnson()</code> as a preprocessor, and a decision tree,
+logistic regression, or MARS model specification. See <code>?two_class_set</code>
+for source code.
+</p>
+<p>The <code style="white-space: pre;">⁠chi_features_*⁠</code> objects are based on a regression problem using the
+<code>Chicago</code> data from the modeldata package. Each of the three models
+utilize a linear regression model specification, with three different
+recipes of varying complexity. The objects are meant to approximate the
+sequence of models built in Section 1.3 of Kuhn and Johnson (2019). See
+<code>?chi_features_set</code> for source code.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(parsnip)
+
+new_mod &lt;-
+  decision_tree() %&gt;%
+  set_engine("rpart", method = "anova") %&gt;%
+  set_mode("classification")
+
+new_set &lt;- update_workflow_model(two_class_res, "none_cart", spec = new_mod)
+
+new_set
+
+extract_workflow(new_set, id = "none_cart")
+</code></pre>
+
+
+</div>

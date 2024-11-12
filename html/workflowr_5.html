@@ -1,0 +1,349 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wflow_build</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Build the site</h2>
+
+<h3>Description</h3>
+
+<p><code>wflow_build</code> builds the website from the files in the analysis
+directory. This is intended to be used when developing your code to preview
+the changes. When you are ready to commit the files, use
+<code>wflow_publish</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wflow_build(
+  files = NULL,
+  make = is.null(files),
+  update = FALSE,
+  republish = FALSE,
+  combine = "or",
+  view = getOption("workflowr.view"),
+  clean_fig_files = FALSE,
+  delete_cache = FALSE,
+  seed = 12345,
+  log_dir = NULL,
+  verbose = FALSE,
+  local = FALSE,
+  dry_run = FALSE,
+  project = "."
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>character (default: NULL). Files to build. Only allows files in
+the analysis directory with the extension Rmd or rmd. If <code>files</code> is
+<code>NULL</code>, the default behavior is to build all outdated files (see
+argument <code>make</code> below). Supports file
+<a href="https://en.wikipedia.org/wiki/Glob_(programming)">globbing</a>.
+The files are always built in the order they are listed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>make</code></td>
+<td>
+<p>logical (default: <code>is.null(files)</code>). When <code>make =
+TRUE</code>, build any files that have been modified more recently than their
+corresponding HTML files (inspired by
+<a href="https://en.wikipedia.org/wiki/Make_(software)">Make</a>). This is the
+default action if no files are specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>update</code></td>
+<td>
+<p>logical (default: FALSE). Build any files that have been
+committed more recently than their corresponding HTML files (and do not
+have any unstaged or staged changes). This ensures that the commit version
+ID inserted into the HTML corresponds to the exact version of the source
+file that was used to produce it.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>republish</code></td>
+<td>
+<p>logical (default: FALSE). Build all published R Markdown
+files (that do not have any unstaged or staged changes). Useful for
+site-wide changes like updating the theme, navigation bar, or any other
+setting in <code>_site.yml</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>combine</code></td>
+<td>
+<p>character (default: <code>"or"</code>). Determine how to combine the
+files from the arguments <code>files</code>, <code>make</code> (<code>wflow_build()</code>
+only), <code>update</code>, and <code>republish</code>. When <code>combine</code> is
+<code>"or"</code>, any file specified by at least one of these arguments will be
+built. When <code>combine</code> is <code>"and"</code>, only files specified by all of
+these arguments will be built.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>view</code></td>
+<td>
+<p>logical (default: <code>getOption("workflowr.view")</code>). View the
+website with <code>wflow_view</code> after building files. If only one
+file is built, it is opened. If more than one file is built, the main index
+page is opened. Not applicable if no files are built or if <code>dry_run =
+TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clean_fig_files</code></td>
+<td>
+<p>logical (default: FALSE). Delete existing figure files
+for each R Markdown file prior to building it. This ensures that only
+relevant figure files are saved. As you develop an analysis, it is easy to
+generate lots of unused plots due to changes in the number of code chunks
+and their names. However, if you are caching chunks during code
+development, this could cause figures to disappear. Note that
+<code>wflow_publish</code> uses <code>clean_fig_files = TRUE</code> to ensure
+the results can be reproduced.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delete_cache</code></td>
+<td>
+<p>logical (default: FALSE). Delete the cache directory (if
+it exists) for each R Markdown file prior to building it.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>numeric (default: 12345). The seed to set before building each
+file. Passed to <code>set.seed</code>. <b>DEPRECATED:</b> The seed set
+here has no effect if you are using <code>wflow_html</code> as the output
+format defined in <code>_site.yml</code>. This argument is for backwards
+compatibility with previous versions of workflowr.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log_dir</code></td>
+<td>
+<p>character (default: NULL). The directory to save log files
+from building files. It will be created if necessary and ignored if
+<code>local = TRUE</code>. The default is to use a directory named
+<code>workflowr</code> in <code>tempdir</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical (default: FALSE). Display the build log directly in
+the R console as each file is built. This is useful for monitoring
+long-running code chunks.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>local</code></td>
+<td>
+<p>logical (default: FALSE). Build files locally in the R console.
+This should only be used for debugging purposes. The default is to build
+each file in its own separate fresh R process to ensure each file is
+reproducible in isolation. This is done using
+<code>callr::r_safe</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dry_run</code></td>
+<td>
+<p>logical (default: FALSE). List the files to be built, without
+building them.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>character (default: ".") By default the function assumes the
+current working directory is within the project. If this is not true,
+you'll need to provide the path to the project directory.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>wflow_build</code> has multiple, non-mutually exclusive options for deciding
+which files to build. If multiple options are used, then the argument
+<code>combine</code> determines which files will be built. If <code>combine ==
+"or"</code> (the default), then any file specified by at least one of the arguments
+will be built. In contrast, if <code>combine == "and"</code>, then only files
+specified by all of the arguments will be built. The argument <code>make</code> is
+the most useful for interactively performing your analysis. The other options
+are more useful when you are ready to publish specific files with
+<code>wflow_publish</code> (which passes these arguments to
+<code>wflow_build</code>). Here are the options for specifying files to be built:
+</p>
+
+<ul>
+<li>
+<p> Files specified via the argument <code>files</code>
+</p>
+</li>
+<li> <p><code>make = TRUE</code> - Files which have been modified more recently
+than their corresponding HTML files
+</p>
+</li>
+<li> <p><code>update = TRUE</code> - Previously published files which have been
+committed more recently than their corresponding HTML files.
+However, files which currently have staged or unstaged changes are not
+included.
+</p>
+</li>
+<li> <p><code>republish = TRUE</code> - All published files.
+However, files which currently have staged or unstaged changes are not
+included.
+</p>
+</li>
+</ul>
+<p>Under the hood, <code>wflow_build</code> is a wrapper for
+<code>render_site</code> from the package rmarkdown. By
+default (<code>local = FALSE</code>), the code is executed in an isolated R
+session. This is done using <code>callr::r_safe</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>wflow_build</code>, which is a list with the
+following elements:
+</p>
+
+<ul>
+<li> <p><b>files</b>: The input argument <code>files</code>
+</p>
+</li>
+<li> <p><b>make</b>: The input argument <code>make</code>
+</p>
+</li>
+<li> <p><b>update</b>: The input argument <code>update</code>
+</p>
+</li>
+<li> <p><b>republish</b>: The input argument <code>republish</code>
+</p>
+</li>
+<li> <p><b>view</b>: The input argument <code>view</code>
+</p>
+</li>
+<li> <p><b>clean_fig_files</b>: The input argument <code>clean_fig_files</code>
+</p>
+</li>
+<li> <p><b>delete_cache</b>: The input argument <code>delete_cache</code>
+</p>
+</li>
+<li> <p><b>seed</b>: The input argument <code>seed</code>
+</p>
+</li>
+<li> <p><b>log_dir</b>: The directory where the log files were saved
+</p>
+</li>
+<li> <p><b>verbose</b>: The input argument <code>verbose</code>
+</p>
+</li>
+<li> <p><b>local</b>: The input argument <code>local</code>
+</p>
+</li>
+<li> <p><b>dry_run</b>: The input argument <code>dry_run</code>
+</p>
+</li>
+<li> <p><b>built</b>: The relative paths to the built R Markdown files
+</p>
+</li>
+<li> <p><b>html</b>: The relative paths to the corresponding HTML files
+</p>
+</li>
+</ul>
+<h3>Comparison to RStudio Knit button</h3>
+
+<p><code>wflow_build</code> is intentionally designed to be similar to clicking on the
+Knit button in RStudio. Both isolate the code execution in a separate R
+process, thus ensuring the results are not dependent on the state of the
+current R session. However, they do differ in a few ways:
+</p>
+
+<dl>
+<dt>Number of files</dt>
+<dd>
+<p>The RStudio Knit button only builds the current Rmd
+file open in the editor. In contrast, <code>wflow_build</code> can build any
+number of Rmd files (each in their own separate R process) with a single
+invocation, including accepting file globs.</p>
+</dd>
+<dt>System and user profiles</dt>
+<dd>
+<p>The two methods diverge the most in
+their use of <code>.Rprofile</code> files. <code>wflow_build</code> ignores any system
+or user profiles (i.e. <code>~/.Rprofile</code> on Linux/macOS or
+<code>~/Documents/.Rprofile</code> on Windows). This is the default behavior of
+<code>callr::r_safe</code>, which it calls to run the separate R
+process. This is ideal for reproducibility. Otherwise the results could be
+affected by custom settings made only on the user's machine. In contrast,
+the RStudio Knit button loads any system or user level profiles, consistent
+with its role as a development tool.</p>
+</dd>
+<dt>Project-specific profiles</dt>
+<dd>
+<p>A project-specific <code>.Rprofile</code> is
+treated differently than system or user profiles. <code>wflow_build</code> only
+loads a project-specific <code>.Rprofile</code> if it is located in the current
+working directory in which <code>wflow_build</code> is invoked. This may be
+confusing if this differs from the directory in which the code in the Rmd
+is actually executed (the option <code>knit_root_dir</code> defined in
+<code>_workflowr.yml</code>). The RStudio Knit button only loads a
+project-specific <code>.Rprofile</code> if it is located in the same directory as
+its setting "Knit Directory" is configured. For example, if "Knit Directory"
+is set to "Document Directory", it will ignore any <code>.Rprofile</code> in the
+root of the project. But it would load the <code>.Rprofile</code> if "Knit
+Directory" was changed to "Project Directory".</p>
+</dd>
+</dl>
+<p>The main takeaway from the above is that you should try to limit settings and
+options defined in <code>.Rprofile</code> to affect the interactive R experience
+and superficial behavior, e.g. the option <code>max.print</code> to limit the
+number of lines that can be printed to the console. Any critical settings
+that affect the results of the analysis should be explicitly set in the Rmd
+file.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wflow_publish</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+# Build any files which have been modified
+wflow_build() # equivalent to wflow_build(make = TRUE)
+# Build a single file
+wflow_build("file.Rmd")
+# Build multiple files
+wflow_build(c("file1.Rmd", "file2.Rmd"))
+# Build multiple files using a file glob
+wflow_build("file*.Rmd")
+# Build every published file
+wflow_build(republish = TRUE)
+# Build file.Rmd and any files which have been modified
+wflow_build("file.Rmd", make = TRUE)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

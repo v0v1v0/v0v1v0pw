@@ -1,0 +1,230 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>scalogram</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Scalogram of a signal</h2>
+
+<h3>Description</h3>
+
+<p>This function computes the normalized scalogram of a signal for the scales
+given. It is important to note that the notion of scalogram here is analogous
+to the spectrum of the Fourier transform. It gives the contribution of each scale to
+the total energy of the signal. For each scale <code class="reqn">s</code>, it is defined as the square
+root of the integral of the squared modulus of the wavelet transform w.r.t. the time
+variable <code class="reqn">t</code>, i.e.
+</p>
+<p style="text-align: center;"><code class="reqn">S(s):= (\int_{-\infty}^{+\infty}|Wf(t,s)|^2 dt)^{1/2}.</code>
+</p>
+
+<p>"Normalized" means that the scalogram is divided by the square root of the number of
+times, for comparison purposes between different values of the parameter
+<code>border_effects</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">scalogram(signal,
+                 dt = 1,
+                 scales = NULL,
+                 powerscales = TRUE,
+                 wname = c("MORLET", "DOG", "PAUL", "HAAR", "HAAR2"),
+                 wparam = NULL,
+                 waverad = NULL,
+                 border_effects = c("BE", "INNER", "PER", "SYM"),
+                 energy_density = TRUE,
+                 makefigure = TRUE,
+                 figureperiod = TRUE,
+                 xlab = NULL,
+                 ylab = "Scalogram",
+                 main = "Scalogram")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>signal</code></td>
+<td>
+<p>A vector containing the signal whose scalogram is wanted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dt</code></td>
+<td>
+<p>Numeric. The time step of the signal.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scales</code></td>
+<td>
+<p>A vector containing the wavelet scales at wich the scalogram
+is computed. This can be either a vector with all the scales or, following Torrence
+and Compo 1998, a vector of 3 elements with the minimum scale, the maximum scale and
+the number of suboctaves per octave (in this case, <code>powerscales</code> must be TRUE in
+order to construct power 2 scales using a base 2 logarithmic scale). If <code>scales</code>
+is NULL, they are automatically constructed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>powerscales</code></td>
+<td>
+<p>Logical. It must be TRUE (default) in these cases:
+</p>
+
+<ul>
+<li>
+<p> If <code>scales</code> are power 2 scales, i.e. they use a base 2 logarithmic scale.
+</p>
+</li>
+<li>
+<p> If we want to construct power 2 scales automatically. In this case, <code>scales</code>
+must be <code>NULL</code>.
+</p>
+</li>
+<li>
+<p> If we want to construct power 2 scales from <code>scales</code>. In this case,
+<code>length(scales)</code> must be 3.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wname</code></td>
+<td>
+<p>A string, equal to "MORLET", "DOG", "PAUL", "HAAR" or "HAAR2". The
+difference between "HAAR" and "HAAR2" is that "HAAR2" is more accurate but slower.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wparam</code></td>
+<td>
+<p>The corresponding nondimensional parameter for the wavelet function
+(Morlet, DoG or Paul).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>waverad</code></td>
+<td>
+<p>Numeric. The radius of the wavelet used in the computations for the cone
+of influence. If it is not specified, it is asumed to be <code class="reqn">\sqrt{2}</code> for Morlet and DoG,
+<code class="reqn">1/\sqrt{2}</code> for Paul and 0.5 for Haar.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>border_effects</code></td>
+<td>
+<p>String, equal to "BE", "INNER", "PER" or "SYM", which indicates
+how to manage the border effects which arise usually when a convolution is performed on
+finite-lenght signals.
+</p>
+
+<ul>
+<li>
+<p> "BE": With border effects, padding time series with zeroes.
+</p>
+</li>
+<li>
+<p> "INNER": Normalized inner scalogram with security margin adapted for each
+different scale.
+</p>
+</li>
+<li>
+<p> "PER": With border effects, using boundary wavelets (periodization of the
+original time series).
+</p>
+</li>
+<li>
+<p> "SYM": With border effects, using a symmetric catenation of the original time
+series.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>energy_density</code></td>
+<td>
+<p>Logical. If TRUE (default), divide the scalogram by the square
+root of the scales for convert it into energy density.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>makefigure</code></td>
+<td>
+<p>Logical. If TRUE (default), a figure with the scalogram is plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>figureperiod</code></td>
+<td>
+<p>Logical. If TRUE (default), periods are used in the figure instead
+of scales.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>A string giving a custom X axis label. If NULL (default) the X label is
+either "Scale" or "Period" depending on the value of <code>figureperiod</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>A string giving a custom Y axis label.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>A string giving a custom main title for the figure.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with the following fields:
+</p>
+
+<ul>
+<li> <p><code>scalog</code>: A vector of length <code>length(scales)</code>, containing the values of
+the scalogram at each scale.
+</p>
+</li>
+<li> <p><code>scales</code>: The vector of scales.
+</p>
+</li>
+<li> <p><code>energy</code>: If <code>energy_density</code> is TRUE, it is the <code class="reqn">L^2</code> norm of
+<code>scalog</code>.
+</p>
+</li>
+<li> <p><code>fourierfactor</code>: A factor for converting scales into periods.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>C. Torrence, G. P. Compo. A practical guide to wavelet analysis. B. Am. Meteorol. Soc.
+79 (1998), 61–78.
+</p>
+<p>V. J. Bolós, R. Benítez, R. Ferrer, R. Jammazi. The windowed scalogram difference: a
+novel wavelet tool for comparing time series. Appl. Math. Comput., 312 (2017), 49-65.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">dt &lt;- 0.1
+time &lt;- seq(0, 50, dt)
+signal &lt;- c(sin(pi * time), sin(pi * time / 2))
+scalog &lt;- scalogram(signal = signal, dt = dt, border_effects = "INNER")
+
+</code></pre>
+
+
+</div>

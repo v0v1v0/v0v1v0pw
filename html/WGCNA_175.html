@@ -1,0 +1,210 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>newBlockwiseData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Create, merge and expand BlockwiseData objects 
+</h2>
+
+<h3>Description</h3>
+
+<p>These functions create, merge and expand BlockwiseData objects for holding in-memory or disk-backed blockwise
+data. Blockwise here means
+that the data is too large to be loaded or processed in one piece and is therefore split into blocks that can
+be handled one by one in a divide-and-conquer manner.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">newBlockwiseData(
+   data, 
+   external = FALSE, 
+   fileNames = NULL, 
+   doSave = external, 
+   recordAttributes = TRUE, 
+   metaData = list())
+
+mergeBlockwiseData(...)
+
+addBlockToBlockwiseData(
+   bwData,
+   blockData,
+   external = bwData$external,
+   blockFile = NULL,
+   doSave = external,
+   recordAttributes = !is.null(bwData$attributes),
+   metaData = NULL)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>A list in which each component carries the data of a single block.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>external</code></td>
+<td>
+
+<p>Logical: should the data be disk-backed (<code>TRUE</code>) or in-memory (<code>FALSE</code>)?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fileNames</code></td>
+<td>
+
+<p>When <code>external</code> is <code>TRUE</code>, this argument must be a 
+character vector of the same length as <code>data</code>, giving the file names for the data to be saved to, or
+where the data is already located.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doSave</code></td>
+<td>
+
+<p>Logical: should data be saved? If this is <code>FALSE</code>, it is the user's responsibility to ensure the files
+supplied in <code>fileNames</code> already exist and contain the expected data.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>recordAttributes</code></td>
+<td>
+
+<p>Logical: should <code>attributes</code> of the given data be recorded within the object?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metaData</code></td>
+<td>
+
+<p>A list giving any additional meta-data for <code>data</code> that should be attached to the object.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bwData</code></td>
+<td>
+<p>An existing <code>BlockwiseData</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blockData</code></td>
+<td>
+<p>A vector, matrix or array carrying the data of a single block.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blockFile</code></td>
+<td>
+
+<p>File name where data contained in <code>blockData</code> should be saved.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>One or more objects of class <code>BlockwiseData</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Several functions in this package use the concept of blockwise, or "divide-and-conquer", analysis. The
+BlockwiseData class is meant to hold the blockwise data, or all necessary information about blockwise data
+that is saved in disk files. 
+</p>
+<p>The data can be stored in disk files (one file per block) or in-memory. In memory storage is provided so that
+same code can be used for both smaller (single-block) data where disk storage could slow down operations as
+well as larger data sets where disk storage and block by block analysis are necessary.
+</p>
+
+
+<h3>Value</h3>
+
+<p>All three functions return a list with the class set to <code>"BlockwiseData"</code>, containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>external</code></td>
+<td>
+<p>Copy of the input argument <code>external</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>If <code>external</code> is <code>TRUE</code>, an empty list, otherwise a copy of the input <code>data</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fileNames</code></td>
+<td>
+<p>Copy of the input argument <code>fileNames</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lengths</code></td>
+<td>
+<p>A vector of lengths (results of <code>length</code>) of elements of <code>data</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>attributes</code></td>
+<td>
+<p>If input <code>recordAttributes</code> is <code>TRUE</code>, a list with one component per block
+(component of <code>data</code>); each component is in turn a list of attributes of that component of <code>data</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metaData</code></td>
+<td>
+<p>A copy of the input <code>metaData</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Warning</h3>
+
+<p>The definition of <code>BlockwiseData</code> should be considered experimental and may change in
+the future.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other functions on <code>BlockwiseData</code>: 
+</p>
+<p><code>BD.getData</code> for retrieving data
+</p>
+<p><code>BD.actualFileNames</code> for retrieving file names of files containing data;
+</p>
+<p><code>BD.nBlocks</code> for retrieving the number of blocks;
+</p>
+<p><code>BD.blockLengths</code> for retrieving block lengths;
+</p>
+<p><code>BD.getMetaData</code> for retrieving metadata;
+</p>
+<p><code>BD.checkAndDeleteFiles</code> for deleting files of an unneeded object.
+</p>
+
+
+</div>

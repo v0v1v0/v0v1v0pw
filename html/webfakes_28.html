@@ -1,0 +1,545 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>new_app</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a new web application</h2>
+
+<h3>Description</h3>
+
+<p>Create a new web application
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">new_app()
+</code></pre>
+
+
+<h3>Details</h3>
+
+<p>The typical workflow of creating a web application is:
+</p>
+
+<ol>
+<li>
+<p> Create a <code>webfakes_app</code> object with <code>new_app()</code>.
+</p>
+</li>
+<li>
+<p> Add middleware and/or routes to it.
+</p>
+</li>
+<li>
+<p> Start is with the <code>webfakes_app$listen()</code> method, or start it in
+another process with <code>new_app_process()</code>.
+</p>
+</li>
+<li>
+<p> Make queries to the web app.
+</p>
+</li>
+<li>
+<p> Stop it via <code>CTRL+C</code> / <code>ESC</code>, or, if it is running in another
+process, with the <code style="white-space: pre;">⁠$stop()⁠</code> method of <code>new_app_process()</code>.
+</p>
+</li>
+</ol>
+<p>A web application can be
+</p>
+
+<ul>
+<li>
+<p> restarted,
+</p>
+</li>
+<li>
+<p> saved to disk,
+</p>
+</li>
+<li>
+<p> copied to another process using the callr package, or a similar way,
+</p>
+</li>
+<li>
+<p> embedded into a package,
+</p>
+</li>
+<li>
+<p> extended by simply adding new routes and/or middleware.
+</p>
+</li>
+</ul>
+<p>The webfakes API is very much influenced by the
+<a href="http://expressjs.com/">express.js</a> project.
+</p>
+
+
+<h4>Create web app objects</h4>
+
+<div class="sourceCode r"><pre>new_app()
+</pre></div>
+<p><code>new_app()</code> returns a <code>webfakes_app</code> object the has the methods listed
+on this page.
+</p>
+<p>An app is an environment with S3 class <code>webfakes_app</code>.
+</p>
+
+
+
+<h4>The handler stack</h4>
+
+<p>An app has a stack of handlers. Each handler can be a route or
+middleware. The differences between the two are:
+</p>
+
+<ul>
+<li>
+<p> A route is bound to one or more paths on the web server. Middleware
+is not (currently) bound to paths, but run for all paths.
+</p>
+</li>
+<li>
+<p> A route is usually (but not always) the end of the handler stack for
+a request. I.e. a route takes care of sending out the response to
+the request. Middleware typically performs some action on the request
+or the response, and then the next handler in the stack is invoked.
+</p>
+</li>
+</ul>
+<h4>Routes</h4>
+
+<p>The following methods define routes. Each method corresponds to the
+HTTP verb with the same name, except for <code>app$all()</code>, which creates a
+route for all HTTP methods.
+</p>
+<div class="sourceCode r"><pre>app$all(path, ...)
+app$delete(path, ...)
+app$get(path, ...)
+app$head(path, ...)
+app$patch(path, ...)
+app$post(path, ...)
+app$put(path, ...)
+... (see list below)
+</pre></div>
+
+<ul>
+<li> <p><code>path</code> is a path specification, see 'Path specification' below.
+</p>
+</li>
+<li> <p><code>...</code> is one or more handler functions. These will be placed in the
+handler stack, and called if they match an incoming HTTP request.
+See 'Handler functions' below.
+</p>
+</li>
+</ul>
+<p>webfakes also has methods for the less frequently used HTTP verbs:
+<code>CONNECT</code>, <code>MKCOL</code>, <code>OPTIONS</code>, <code>PROPFIND</code>, <code>REPORT</code>. (The method
+names are always in lowercase.)
+</p>
+<p>If a request is not handled by any routes (or handler functions in
+general), then webfakes will send a simple HTTP 404 response.
+</p>
+
+
+
+<h4>Middleware</h4>
+
+<p><code>app$use()</code> adds a middleware to the handler stack. A middleware is
+a handler function, see 'Handler functions' below. webfakes comes with
+middleware to perform common tasks:
+</p>
+
+<ul>
+<li> <p><code>mw_cookie_parser()</code> parses <code>Cookie</code> headers.
+</p>
+</li>
+<li> <p><code>mw_etag()</code> adds an <code>ETag</code> header to the response.
+</p>
+</li>
+<li> <p><code>mw_json()</code> parses JSON request bodies.
+</p>
+</li>
+<li> <p><code>mw_log()</code> logs each requests to standard output, or another connection.
+</p>
+</li>
+<li> <p><code>mw_multipart()</code> parses multipart request bodies.
+</p>
+</li>
+<li> <p><code>mw_range_parser()</code> parses <code>Range</code> headers.
+</p>
+</li>
+<li> <p><code>mw_raw()</code> parses raw request bodies.
+</p>
+</li>
+<li> <p><code>mw_static()</code> serves static files from a directory.
+</p>
+</li>
+<li> <p><code>mw_text()</code> parses plain text request bodies.
+</p>
+</li>
+<li> <p><code>mw_urlencoded()</code> parses URL encoded request bodies.
+</p>
+</li>
+</ul>
+<div class="sourceCode r"><pre>app$use(..., .first = FALSE)
+</pre></div>
+
+<ul>
+<li> <p><code>...</code> is a set of (middleware) handler functions. They are added to
+the handler stack, and called for every HTTP request. (Unless an HTTP
+response is created before reaching this point in the handler stack.)
+</p>
+</li>
+<li> <p><code>.first</code> set to <code>TRUE</code> is you want to add the handler function
+to the bottom of the stack.
+</p>
+</li>
+</ul>
+<h4>Handler functions</h4>
+
+<p>A handler function is a route or middleware. A handler function is
+called by webfakes with the incoming HTTP request and the outgoing
+HTTP response objects (being built) as arguments. The handler function
+may query and modify the members of the request and/or the response
+object. If it returns the string <code>"next"</code>, then it is <em>not</em> a terminal
+handler, and once it returns, webfakes will move on to call the next
+handler in the stack.
+</p>
+<p>A typical route:
+</p>
+<div class="sourceCode r"><pre>app$get("/user/:id", function(req, res) {
+  id &lt;- req$params$id
+  ...
+  res$
+    set_status(200L)$
+    set_header("X-Custom-Header", "foobar")$
+    send_json(response, auto_unbox = TRUE)
+})
+</pre></div>
+
+<ul>
+<li>
+<p> The handler belongs to an API path, which is a wildcard path in
+this case. It matches <code style="white-space: pre;">⁠/user/alice⁠</code>, <code style="white-space: pre;">⁠/user/bob⁠</code>, etc. The handler
+will be only called for GET methods and matching API paths.
+</p>
+</li>
+<li>
+<p> The handler receives the request (<code>req</code>) and the response (<code>res</code>).
+</p>
+</li>
+<li>
+<p> It sets the HTTP status, additional headers, and sends the data.
+(In this case the <code>webfakes_response$send_json()</code> method automatically
+converts <code>response</code> to JSON and sets the <code>Content-Type</code> and
+<code>Content-Length</code> headers.
+</p>
+</li>
+<li>
+<p> This is a terminal handler, because it does <em>not</em> return <code>"next"</code>.
+Once this handler function returns, webfakes will send out the HTTP
+response.
+</p>
+</li>
+</ul>
+<p>A typical middleware:
+</p>
+<div class="sourceCode r"><pre>app$use(function(req, res) {
+  ...
+  "next"
+})
+</pre></div>
+
+<ul>
+<li>
+<p> There is no HTTP method and API path here, webfakes will call the
+handler for each HTTP request.
+</p>
+</li>
+<li>
+<p> This is not a terminal handler, it does return <code>"next"</code>, so after it
+returns webfakes will look for the next handler in the stack.
+</p>
+</li>
+</ul>
+<h4>Errors</h4>
+
+<p>If a handler function throws an error, then the web server will return
+a HTTP 500 <code>text/plain</code> response, with the error message as the
+response body.
+</p>
+
+
+
+<h4>Request and response objects</h4>
+
+<p>See webfakes_request and webfakes_response for the methods of the
+request and response objects.
+</p>
+
+
+
+<h4>Path specification</h4>
+
+<p>Routes are associated with one or more API paths. A path specification
+can be
+</p>
+
+<ul>
+<li>
+<p> A "plain" (i.e. without parameters) string. (E.g. <code>"/list"</code>.)
+</p>
+</li>
+<li>
+<p> A parameterized string. (E.g. <code>"/user/:id"</code>.)
+</p>
+</li>
+<li>
+<p> A regular expression created via <code>new_regexp()</code> function.
+</p>
+</li>
+<li>
+<p> A list or character vector of the previous ones. (Regular expressions
+must be in a list.)
+</p>
+</li>
+</ul>
+<h4>Path parameters</h4>
+
+<p>Paths that are specified as parameterized strings or regular expressions
+can have parameters.
+</p>
+<p>For parameterized strings the keys may contain letters, numbers and
+underscores. When webfakes matches an API path to a handler with a
+parameterized string path, the parameters will be added to the
+request, as <code>params</code>. I.e. in the handler function (and subsequent
+handler functions, if the current one is not terminal), they are
+available in the <code>req$params</code> list.
+</p>
+<p>For regular expressions, capture groups are also added as parameters.
+It is best to use named capture groups, so that the parameters are in
+a named list.
+</p>
+<p>If the path of the handler is a list of parameterized strings or
+regular expressions, the parameters are set according to the first
+matching one.
+</p>
+
+
+
+<h4>Templates</h4>
+
+<p>webfakes supports templates, using any template engine. It comes with
+a template engine that uses the glue package, see <code>tmpl_glue()</code>.
+</p>
+<p><code>app$engine()</code> registers a template engine, for a certain file
+extension. The <code style="white-space: pre;">⁠$render()⁠</code> method of webfakes_response
+can be called from the handler function to evaluate a template from a
+file.
+</p>
+<div class="sourceCode r"><pre>app$engine(ext, engine)
+</pre></div>
+
+<ul>
+<li> <p><code>ext</code>: the file extension for which the template engine is added.
+It should not contain the dot. E.g. <code style="white-space: pre;">⁠"html"', ⁠</code>"brew"'.
+</p>
+</li>
+<li> <p><code>engine</code>: the template engine, a function that takes the file path
+(<code>path</code>) of the template, and a list of local variables (<code>locals</code>)
+that can be used in the template. It should return the result.
+</p>
+</li>
+</ul>
+<p>An example template engine that uses glue might look like this:
+</p>
+<div class="sourceCode r"><pre>app$engine("txt", function(path, locals) {
+  txt &lt;- readChar(path, nchars = file.size(path))
+  glue::glue_data(locals, txt)
+})
+</pre></div>
+<p>(The built-in <code>tmpl_glue()</code> engine has more features.)
+</p>
+<p>This template engine can be used in a handler:
+</p>
+<div class="sourceCode r"><pre>app$get("/view", function(req, res) {
+ txt &lt;- res$render("test")
+ res$
+   set_type("text/plain")$
+   send(txt)
+})
+</pre></div>
+<p>The location of the templates can be set using the <code>views</code> configuration
+parameter, see the <code style="white-space: pre;">⁠$set_config()⁠</code> method below.
+</p>
+<p>In the template, the variables passed in as <code>locals</code>, and also the
+response local variables (see <code>locals</code> in webfakes_response), are
+available.
+</p>
+
+
+
+<h4>Starting and stopping</h4>
+
+<div class="sourceCode r"><pre>app$listen(port = NULL, opts = server_opts(), cleanup = TRUE)
+</pre></div>
+
+<ul>
+<li> <p><code>port</code>: port to listen on. When <code>NULL</code>, the operating system will
+automatically select a free port.
+</p>
+</li>
+<li> <p><code>opts</code>: options to the web server. See <code>server_opts()</code> for the
+list of options and their default values.
+</p>
+</li>
+<li> <p><code>cleanup</code>: stop the server (with an error) if the standard input
+of the process is closed. This is handy when the app runs in a
+<code>callr::r_session</code> subprocess, because it stops the app (and the
+subprocess) if the main process has terminated.
+</p>
+</li>
+</ul>
+<p>This method does not return, and can be interrupted with <code>CTRL+C</code> / <code>ESC</code>
+or a SIGINT signal. See <code>new_app_process()</code> for interrupting an app that
+is running in another process.
+</p>
+<p>When <code>port</code> is <code>NULL</code>, the operating system chooses a port where the
+app will listen. To be able to get the port number programmatically,
+before the listen method blocks, it advertises the selected port in a
+<code>webfakes_port</code> condition, so one can catch it:
+</p>
+<p>webfakes by default binds only to the loopback interface at 127.0.0.1, so
+the webfakes web app is never reachable from the network.
+</p>
+<div class="sourceCode r"><pre>withCallingHandlers(
+  app$listen(),
+  "webfakes_port" = function(msg) print(msg$port)
+)
+</pre></div>
+
+
+
+<h4>Logging</h4>
+
+<p>webfakes can write an access log that contains an entry for all incoming
+requests, and also an error log for the errors that happen while
+the server is running. This is the default behavior for local app
+(the ones started by <code>app$listen()</code> and for remote apps (the ones
+started via <code>new_app_process()</code>:
+</p>
+
+<ul>
+<li>
+<p> Local apps do not write an access log by default.
+</p>
+</li>
+<li>
+<p> Remote apps write an access log into the
+<code style="white-space: pre;">⁠&lt;tmpdir&gt;/webfakes/&lt;pid&gt;/access.log⁠</code> file, where <code style="white-space: pre;">⁠&lt;tmpdir&gt;⁠</code> is the
+session temporary directory of the <em>main process</em>, and <code style="white-space: pre;">⁠&lt;pid&gt;⁠</code> is
+the process id of the <em>subprocess</em>.
+</p>
+</li>
+<li>
+<p> Local apps write an error log to <code style="white-space: pre;">⁠&lt;tmpdir&gt;/webfakes/error.log⁠</code>, where
+<code style="white-space: pre;">⁠&lt;tmpdir&gt;⁠</code> is the session temporary directory of the current process.
+</p>
+</li>
+<li>
+<p> Remote app write an error log to the <code style="white-space: pre;">⁠&lt;tmpdir&gt;/webfakes/&lt;pid&gt;/error.log⁠</code>,
+where <code style="white-space: pre;">⁠&lt;tmpdir&gt;⁠</code> is the session temporary directory of the
+<em>main process</em> and <code style="white-space: pre;">⁠&lt;pid&gt;⁠</code> is the process id of the <em>subprocess</em>'.
+</p>
+</li>
+</ul>
+<p>See <code>server_opts()</code> for changing the default logging behavior.
+</p>
+
+
+
+<h4>Shared app data</h4>
+
+<div class="sourceCode r"><pre>app$locals
+</pre></div>
+<p>It is often useful to share data between handlers and requests in an
+app. <code>app$locals</code> is an environment that supports this. E.g. a
+middleware that counts the number of requests can be implemented as:
+</p>
+<div class="sourceCode"><pre>app$use(function(req, res) {
+  locals &lt;- req$app$locals
+  if (is.null(locals$num)) locals$num &lt;- 0L
+  locals$num &lt;- locals$num + 1L
+  "next"
+})
+</pre></div>
+<p>webfakes_response objects also have a <code>locals</code> environment, that is
+initially populated as a copy of <code>app$locals</code>.
+</p>
+
+
+
+<h4>Configuration</h4>
+
+<div class="sourceCode r"><pre>app$get_config(key)
+app$set_config(key, value)
+</pre></div>
+
+<ul>
+<li> <p><code>key</code>: configuration key.
+</p>
+</li>
+<li> <p><code>value</code>: configuration value.
+</p>
+</li>
+</ul>
+<p>Currently used configuration values:
+</p>
+
+<ul><li> <p><code>views</code>: path where webfakes searches for templates.
+</p>
+</li></ul>
+<h3>Value</h3>
+
+<p>A new <code>webfakes_app</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>webfakes_request for request objects, webfakes_response for
+response objects.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># see example web apps in the `/examples` directory in
+system.file(package = "webfakes", "examples")
+
+app &lt;- new_app()
+app$use(mw_log())
+
+app$get("/hello", function(req, res) {
+  res$send("Hello there!")
+})
+
+app$get(new_regexp("^/hi(/.*)?$"), function(req, res) {
+  res$send("Hi indeed!")
+})
+
+app$post("/hello", function(req, res) {
+  res$send("Got it, thanks!")
+})
+
+app
+
+# Start the app with: app$listen()
+# Or start it in another R session: new_app_process(app)
+</code></pre>
+
+
+</div>

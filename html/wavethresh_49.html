@@ -1,0 +1,163 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>CWavDE</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Simple wavelet density estimator with hard thresholding</h2>
+
+<h3>Description</h3>
+
+<p>This function implements the density estimator with hard thresholding
+described by Hall, P. and Patil, P. (1995) Formulae for mean integrated squared
+error of nonlinear wavelet-based density estimators,
+<em>Ann. Statist.</em>, <b>23</b>, 905-928.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">CWavDE(x, Jmax, threshold=0, nout=100, primary.resolution=1, filter.number=10,
+	family="DaubLeAsymm", verbose=0, SF=NULL, WV=NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Vector of real numbers. This is the data for which you want
+a density estimate for</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Jmax</code></td>
+<td>
+<p>The maximum resolution of wavelets</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>The hard threshold value for the wavelet coefficients</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nout</code></td>
+<td>
+<p>The number of ordinates in the density estimate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>primary.resolution</code></td>
+<td>
+<p>The usual wavelet density estimator primary
+resolution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.number</code></td>
+<td>
+<p>The wavelet filter number, see <code>filter.select</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>The wavelet family, see <code>filter.select</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>The level of reporting performed by the function, legit
+values are 0, 1 or 2, with 2 being more reports</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SF</code></td>
+<td>
+<p>Scaling function values in format as returned by
+<code>draw.default</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>WV</code></td>
+<td>
+<p>Wavelet function values in format as returned by
+<code>draw.default</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>As the description.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A vector of length <code>nout</code> that covers the range of the
+input data <code>x</code>, plus some more depending on the
+support of the wavelet and the primary resolution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A vector of length <code>nout</code> that contains the output
+wavelet density estimate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sfix</code></td>
+<td>
+<p>The integer values of the translates of the scaling functions
+used in the estimate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wvixmin</code></td>
+<td>
+<p>As for sfix, but a vector of length <code>Jmax</code> which
+contains the minimum integer wavelet translates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wvixmax</code></td>
+<td>
+<p>As for wvixmin, but with the maxima</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Let's generate a bi-modal artificial set of data.
+#
+x &lt;- c( rnorm(100), rnorm(100, 10))
+#
+# Now perform simple wavelet density estimate
+#
+wde &lt;- CWavDE(x, Jmax=10, threshold=1)
+#
+# Plot results
+#
+## Not run: plot(wde$x, wde$y, type="l")
+</code></pre>
+
+
+</div>

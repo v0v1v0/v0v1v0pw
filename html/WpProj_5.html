@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>distCompare</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compares Optimal Transport Distances Between WpProj and Original Models</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+Will compare the Wasserstein distance between the original model and the <code>WpProj</code> model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">distCompare(
+  models,
+  target = list(parameters = NULL, predictions = NULL),
+  power = 2,
+  method = "exact",
+  quantity = c("parameters", "predictions"),
+  parallel = NULL,
+  transform = function(x) {
+     return(x)
+ },
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>models</code></td>
+<td>
+<p>A list of models from WpProj methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target</code></td>
+<td>
+<p>The target to compare the methods to. Should be a list with slots "parameters" to compare the parameters and "predictions" to compare predictions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>The power parameter of the Wasserstein distance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Which approximation to the Wasserstein distance to use. Should be one of the outputs of <code>transport_options()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quantity</code></td>
+<td>
+<p>Should the function target the "parameters" or the "predictions". Can choose both.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Parallel backend to use for the <code>foreach</code> package. See <code style="white-space: pre;">⁠foreach::registerDoParallel(⁠</code> for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transform</code></td>
+<td>
+<p>Transformation function for the predictions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other options passed to the <code>wasserstein()</code> distance function</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For the data frames, <code>dist</code> is the Wasserstein distance, <code>nactive</code> is the number of active variables in the model, <code>groups</code> is the name distinguishing the model, and <code>method</code> is the method used to calculate the distance (i.e., exact, sinkhorn, etc.). If the list in <code>models</code> is named, these will be used as the group names otherwise the group names will be created based on the call from the <code>WpProj</code> method.
+</p>
+
+
+<h3>Value</h3>
+
+<p>an object of class <code>distcompare</code> with slots <code>parameters</code>, <code>predictions</code>, and <code>p</code>. The slots <code>parameters</code> and <code>predictions</code> are data frames. See the details for more info. The slot <code>p</code> is the power parameter of the Wasserstein distance used in the distance calculation.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if(rlang::is_installed("stats")) {
+n &lt;- 32
+p &lt;- 10
+s &lt;- 21
+x &lt;- matrix( stats::rnorm( p * n ), nrow = n, ncol = p )
+beta &lt;- (1:10)/10
+y &lt;- x %*% beta + stats::rnorm(n)
+post_beta &lt;- matrix(beta, nrow=p, ncol=s) + stats::rnorm(p*s, 0, 0.1)
+post_mu &lt;- x %*% post_beta
+
+fit1 &lt;-  WpProj(X=x, eta=post_mu, power = 2.0,
+               options = list(penalty = "lasso")
+)
+fit2 &lt;-  WpProj(X=x, eta=post_mu, theta = post_beta, power = 2.0,
+               method = "binary program", solver = "lasso",
+               options = list(solver.options = list(penalty = "mcp"))
+)
+dc &lt;- distCompare(models = list("L1" = fit1, "BP" = fit2),
+                 target = list(parameters = post_beta, predictions = post_mu))
+plot(dc)
+}
+</code></pre>
+
+
+</div>

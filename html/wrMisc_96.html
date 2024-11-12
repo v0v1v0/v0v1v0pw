@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>checkSimValueInSer</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check for similar values in series</h2>
+
+<h3>Description</h3>
+
+<p>This function checks all values of 'x' for similar neighbour values within (relative) range of 'ppm' (ie parts per milion as measure of distance).
+By default values will be sorted internally, so if a given value of <code>x</code> has anywhere in  <code>x</code>  another value close enough, this will be detected.
+However, if <code>sortX=FALSE</code> only the values next to left and right will be considered.
+Return logical vector : FALSE for each entry of 'x' if value inside of ppm range to neighbour (of sorted values)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">checkSimValueInSer(
+  x,
+  ppm = 5,
+  sortX = TRUE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>numeric vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ppm</code></td>
+<td>
+<p>(numeric, length=1) ppm-range for considering as similar</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sortX</code></td>
+<td>
+<p>(logical) allows speeding up function when set to FALSE, for large data that are already sorted</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a logical vector : <code>TRUE</code> for each entry of <code>x</code> where at least one neighbour is inside of ppm distance/range
+</p>
+
+
+<h3>See Also</h3>
+
+<p>similar with more options <code>withinRefRange</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">va1 &lt;- c(4:7,7,7,7,7,8:10)+(1:11)/28600; checkSimValueInSer(va1)
+data.frame(va=sort(va1),simil=checkSimValueInSer(va1))
+</code></pre>
+
+
+</div>

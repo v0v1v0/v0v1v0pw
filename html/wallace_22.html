@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>penvs_bgExtent</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>penvs_bgExtent Generate background extent</h2>
+
+<h3>Description</h3>
+
+<p>This function generates a background area according to a user-
+provided method.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">penvs_bgExtent(occs, bgSel, bgBuf, logger = NULL, spN = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>occs</code></td>
+<td>
+<p>data frame of cleaned or processed occurrences obtained from
+components occs: Obtain occurrence data or, poccs: Process occurrence data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bgSel</code></td>
+<td>
+<p>character. Method of background building. Must be one of three
+options: 'bounding box' , 'point buffers' or ' minimum convex polygon'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bgBuf</code></td>
+<td>
+<p>numeric. Buffer distance in degrees to be used in the building
+of the background area.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+<p>Stores all notification messages to be displayed in the Log
+Window of Wallace GUI. Insert the logger reactive list here for running in
+shiny, otherwise leave the default NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spN</code></td>
+<td>
+<p>data frame of cleaned occurrences obtained from component occs:
+Obtain occurrence data. Used to obtain species name for logger messages.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is used in the select study region component. Here,
+the user can select between three methods ('bounding box', 'point buffers'
+or ' minimum convex polygon') to determine the background extent based on the
+observed occurrences. The function returns a SpatialPolygonsDataFrame
+object of the desired extent.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A SpatialPolygons object that contains all occurrences from occs
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jamie Kass &lt;jamie.m.kass@gmail.com&gt;
+</p>
+<p>Gonzalo E. Pinilla-Buitrago &lt;gepinillab@gmail.com&gt;
+</p>
+<p>Bethany A. Johnson &lt;bjohnso005@citymail.cuny.edu&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>penvs_userBgExtent</code>, <code>penvs_drawBgExtent</code>,
+<code>penvs_bgMask</code> , <code>penvs_bgSample</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">occs &lt;- read.csv(system.file("extdata/Bassaricyon_alleni.csv",
+                 package = "wallace"))[, 2:3]
+occs$occID &lt;- 1:nrow(occs)
+bgExt &lt;- penvs_bgExtent(occs, bgSel = 'bounding box', bgBuf = 0.5)
+
+</code></pre>
+
+
+</div>

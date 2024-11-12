@@ -1,0 +1,132 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>m_reqMediaWiki</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve responses using the MediaWiki API.</h2>
+
+<h3>Description</h3>
+
+<p>Use the MediaWiki API to check Wikipedia pages titles, get redirections of
+Wikipedia pages, get image URL of Wikipedia pages or get URL of files in
+Wikipedia pages
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">m_reqMediaWiki(
+  titles,
+  mode = c("wikidataEntity", "redirects", "pagePrimaryImage", "pageFiles"),
+  project = "en.wikipedia.org",
+  redirects = TRUE,
+  exclude_ext = "svg|webp|xcf"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>titles</code></td>
+<td>
+<p>A vector of page titles to search for.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>Select an action to perform:
+'wikidataEntity' -&gt;
+Use reqMediaWiki to check if page titles are in a Wikimedia project and returns
+the Wikidata entity for them. Automatically resolves redirects if parameter
+redirects = TRUE (default). If a page title exists in the Wikimedia project,
+the status column in the returned data-frame is set to 'OK'. If a page is a
+disambiguation page, that column is set to 'disambiguation', and if a title
+is not in the Wikimedia project, it is set to 'missing' and no Wikidata
+entity is returned;
+'redirects' -&gt;
+Obtains redirection of pages of the article titles in the Wikimedia project
+restricted to namespace 0. Returns a vector for each title, in each vector the
+first element is the page destiny, the rest are all pages that redirect to it. If
+a title is not in the Wikimedia project its list is NA;
+'pagePrimaryImage' -&gt;
+Return the URL of the image associated with the Wikipedia pages of the titles,
+if pages has one. Automatically resolves redirects, the "normalized" column
+of the returned data-frames contains the destiny page of the redirection.
+See https://www.mediawiki.org/w/api.php?action=help&amp;modules=query%2Bpageimages;
+'pageFiles' -&gt;
+Search for URL of files inserted in Wikipedia pages. Exclude extensions
+in exclude_ext. Note that the query API named this search as 'images',
+but all source files in the page are returned. The function only return URL
+that not end with extensions in exclude_ext parameter (case insensitive).
+Automatically resolves redirects, the "normalized" column of the returned
+data-frame contains the destiny page of the redirection.
+See https://en.wikipedia.org/w/api.php?action=help&amp;modules=query%2Bimages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>Wikimedia project, defaults "en.wikipedia.org"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>redirects</code></td>
+<td>
+<p>If page redirects must be resolved. If redirects=TRUE
+(default) then the "normalized" column of the returned data-frames contains
+the destiny page title of the redirection. Only for mode=wikidataEntity.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclude_ext</code></td>
+<td>
+<p>File extensions excluded in results.
+Only for mode=PageFiles. Default 'svg|webp|xcf'</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>depends on the mode selected:
+'wikidataEntity' Null if there is any error in response, else a data-frame
+with four columns: first, the original page title string, second, the
+normalized one, third, logical error=FALSE, if Wikidata entity exists for
+the page, or error=TRUE it does not, last, the Wikidata entity itself or a
+clarification of the error;
+'redirects' A vector for each title, with all pages that are redirects to the
+first element;
+'pagePrimaryImage' A data-frame with original titles, normalized ones, the
+status of the pages and the primary image of the page or NA if it does not
+exist;
+'pageFiles' A data-frame with original titles, the normalized ones, status
+for the page and the URL files of the Wikipedia pages, using use "|" to
+separate ones) or NA if files do not exits or are excluded.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Angel Zazo, Department of Computer Science and Automatics, University of Salamanca
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Note that URLdecode("a%CC%8C") is
+# the letter "a" with the combining caron
+df &lt;- m_reqMediaWiki(c('Max Planck', URLdecode("a%CC%8C"), 'Max', 'Cervante', 'humanist'),
+                    mode='wikidataEntity', project='en.wikipedia.org')
+a &lt;- m_reqMediaWiki(c('Cervantes', 'Planck', 'Noexiste'), mode='redirects',
+                    project='es.wikipedia.org')
+i &lt;- m_reqMediaWiki(c('Max Planck', URLdecode("a%CC%8C"), 'Max', 'Cervante', 'humanist'),
+                    mode='pagePrimaryImage')
+f &lt;- m_reqMediaWiki(c('Max Planck', URLdecode("a%CC%8C"), 'Max', 'Cervante', 'humanist'),
+                    mode='pageFiles', exclude_ext = "svg|webp|xcf")
+</code></pre>
+
+
+</div>

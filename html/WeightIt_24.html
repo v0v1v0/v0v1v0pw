@@ -1,0 +1,293 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>method_glm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Propensity Score Weighting Using Generalized Linear Models</h2>
+
+<h3>Description</h3>
+
+<p>This page explains the details of estimating weights from generalized linear model-based propensity scores by setting <code>method = "glm"</code> in the call to <code>weightit()</code> or <code>weightitMSM()</code>. This method can be used with binary, multi-category, and continuous treatments.
+</p>
+<p>In general, this method relies on estimating propensity scores with a parametric generalized linear model and then converting those propensity scores into weights using a formula that depends on the desired estimand. For binary and multi-category treatments, a binomial or multinomial regression model is used to estimate the propensity scores as the predicted probability of being in each treatment given the covariates. For ordinal treatments, an ordinal regression model is used to estimate generalized propensity scores. For continuous treatments, a generalized linear model is used to estimate generalized propensity scores as the conditional density of treatment given the covariates.
+</p>
+
+
+<h4>Binary Treatments</h4>
+
+<p>For binary treatments, this method estimates the propensity scores using <code>glm()</code>. An additional argument is <code>link</code>, which uses the same options as <code>link</code> in <code>family()</code>. The default link is "logit", but others, including "probit", are allowed. The following estimands are allowed: ATE, ATT, ATC, ATO, ATM, and ATOS. Weights can also be computed using marginal mean weighting through stratification for the ATE, ATT, and ATC. See <code>get_w_from_ps()</code> for details.
+</p>
+
+
+
+<h4>Multi-Category Treatments</h4>
+
+<p>For multi-category treatments, the propensity scores are estimated using multinomial regression from one of a few functions depending on the argument supplied to <code>multi.method</code> (see Additional Arguments below). The following estimands are allowed: ATE, ATT, ATC, ATO, and ATM. The weights for each estimand are computed using the standard formulas or those mentioned above. Weights can also be computed using marginal mean weighting through stratification for the ATE, ATT, and ATC. See <code>get_w_from_ps()</code> for details. Ordinal treatments are treated exactly the same as non-order multi-category treatments except that additional models are available to estimate the generalized propensity score (e.g., ordinal logistic regression).
+</p>
+
+
+
+<h4>Continuous Treatments</h4>
+
+<p>For continuous treatments, weights are estimated as <code class="reqn">w_i = f_A(a_i) / f_{A|X}(a_i)</code>, where <code class="reqn">f_A(a_i)</code> (known as the stabilization factor) is the unconditional density of treatment evaluated the observed treatment value and <code class="reqn">f_{A|X}(a_i)</code> (known as the generalized propensity score) is the conditional density of treatment given the covariates evaluated at the observed value of treatment. The shape of <code class="reqn">f_A(.)</code> and <code class="reqn">f_{A|X}(.)</code> is controlled by the <code>density</code> argument described below (normal distributions by default), and the predicted values used for the mean of the conditional density are estimated using linear regression. Kernel density estimation can be used instead of assuming a specific density for the numerator and denominator by setting <code>density = "kernel"</code>. Other arguments to <code>density()</code> can be specified to refine the density estimation parameters.
+</p>
+
+
+
+<h4>Longitudinal Treatments</h4>
+
+<p>For longitudinal treatments, the weights are the product of the weights estimated at each time point.
+</p>
+
+
+
+<h4>Sampling Weights</h4>
+
+<p>Sampling weights are supported through <code>s.weights</code> in all scenarios except for multi-category treatments with <code>link = "bayes.probit"</code> and for binary and continuous treatments with <code>missing = "saem"</code> (see below). Warning messages may appear otherwise about non-integer successes, and these can be ignored.
+</p>
+
+
+
+<h4>Missing Data</h4>
+
+<p>In the presence of missing data, the following value(s) for <code>missing</code> are allowed:
+</p>
+
+<dl>
+<dt>
+<code>"ind"</code> (default)</dt>
+<dd>
+<p>First, for each variable with missingness, a new missingness indicator variable is created which takes the value 1 if the original covariate is <code>NA</code> and 0 otherwise. The missingness indicators are added to the model formula as main effects. The missing values in the covariates are then replaced with the covariate medians (this value is arbitrary and does not affect estimation). The weight estimation then proceeds with this new formula and set of covariates. The covariates output in the resulting <code>weightit</code> object will be the original covariates with the <code>NA</code>s.
+</p>
+</dd>
+<dt><code>"saem"</code></dt>
+<dd>
+<p>For binary treatments with <code>link = "logit"</code> or continuous treatments, a stochastic approximation version of the EM algorithm (SAEM) is used via the <a href="https://CRAN.R-project.org/package=misaem"><span class="pkg">misaem</span></a> package. No additional covariates are created. See Jiang et al. (2019) for information on this method. In some cases, this is a suitable alternative to multiple imputation.
+</p>
+</dd>
+</dl>
+<h4>M-estimation</h4>
+
+<p>For binary treatments, M-estimation is supported when <code>link</code> is neither <code>"flic"</code> nor <code>"flac"</code> (see below). For multi-category treatments, M-estimation is supported when <code>multi.method</code> is <code>"weightit"</code> (the default) or <code>"glm"</code>. For continuous treatments, M-estimation is supported when <code>density</code> is not <code>"kernel"</code>. The conditional treatment variance and unconditional treatment mean and variance are included as parameters to estimate, as these all go into calculation of the weights. For all treatment types, M-estimation is not supported when <code>missing = "saem"</code>. See <code>glm_weightit()</code> and <code>vignette("estimating-effects")</code> for details. For longitudinal treatments, M-estimation is supported whenever the underlying methods are.
+</p>
+
+
+
+<h3>Additional Arguments</h3>
+
+<p>For binary treatments, the following additional argument can be specified:
+</p>
+
+<dl>
+<dt><code>link</code></dt>
+<dd>
+<p>the link used in the generalized linear model for the propensity scores. <code>link</code> can be any of those allowed by <code>binomial()</code>. A <code>br.</code> prefix can be added (e.g., <code>"br.logit"</code>); this changes the fitting method to the bias-corrected generalized linear models implemented in the <a href="https://CRAN.R-project.org/package=brglm2"><span class="pkg">brglm2</span></a> package. <code>link</code> can also be either <code>"flic"</code> or <code>"flac"</code> to fit the corresponding Firth corrected logistic regression models implemented in the <a href="https://CRAN.R-project.org/package=logistf"><span class="pkg">logistf</span></a> package.</p>
+</dd>
+</dl>
+<p>For multi-category treatments, the following additional arguments can be specified:
+</p>
+
+<dl>
+<dt><code>multi.method</code></dt>
+<dd>
+<p>the method used to estimate the generalized propensity scores. Allowable options include <code>"weightit"</code> (the default) to use multinomial logistic regression implemented in <span class="pkg">WeightIt</span>, <code>"glm"</code> to use a series of binomial models using <code>glm()</code>, <code>"mclogit"</code> to use multinomial logistic regression as implemented in <code>mclogit::mblogit()</code>, <code>"mnp"</code> to use Bayesian multinomial probit regression as implemented in <code>MNP::MNP()</code>, and <code>"brmultinom"</code> to use bias-reduced multinomial logistic regression as implemented in <code>brglm2::brmultinom()</code>. <code>"weightit"</code> and <code>"mclogit"</code> should give near-identical results, the main difference being increased robustness and customizability when using <code>"mclogit"</code> at the expense of not being able to use M-estimation to compute standard errors after weighting. For ordered treatments, allowable options include <code>"weightit"</code> (the default) to use ordinal regression implemented in <span class="pkg">WeightIt</span> or <code>"polr"</code> to use ordinal regression implemented in <code>MASS::polr()</code>, unless <code>link</code> is <code>"br.logit"</code>, in which case bias-reduce ordinal logistic regression as implemented in <code>brglm2::bracl()</code> is used. Ignored when <code>missing = "saem"</code>. Using the defaults allows for the use of M-estimation and requires no additional dependencies, but other packages may provide benefits such as speed and flexibility.</p>
+</dd>
+<dt><code>link</code></dt>
+<dd>
+<p>The link used in the multinomial, binomial, or ordered regression model for the generalized propensity scores depending on the argument supplied to <code>multi.method</code>. When <code>multi.method = "glm"</code>, <code>link</code> can be any of those allowed by <code>binomial()</code>. When treatment is ordered and <code>multi.method</code> is <code>"weightit"</code> or <code>"polr"</code>, <code>link</code> can be any of those allowed by <code>MASS::polr()</code> or <code>"br.logit"</code>. Otherwise, <code>link</code> should be <code>"logit"</code> or not specified.</p>
+</dd>
+</dl>
+<p>For continuous treatments, the following additional arguments may be supplied:
+</p>
+
+<dl>
+<dt><code>density</code></dt>
+<dd>
+<p>A function corresponding the conditional density of the treatment. The standardized residuals of the treatment model will be fed through this function to produce the numerator and denominator of the generalized propensity score weights. If blank, <code>dnorm()</code> is used as recommended by Robins et al. (2000). This can also be supplied as a string containing the name of the function to be called. If the string contains underscores, the call will be split by the underscores and the latter splits will be supplied as arguments to the second argument and beyond. For example, if <code>density = "dt_2"</code> is specified, the density used will be that of a t-distribution with 2 degrees of freedom. Using a t-distribution can be useful when extreme outcome values are observed (Naimi et al., 2014).
+</p>
+<p>Can also be <code>"kernel"</code> to use kernel density estimation, which calls <code>density()</code> to estimate the numerator and denominator densities for the weights. (This used to be requested by setting <code>use.kernel = TRUE</code>, which is now deprecated.)</p>
+</dd>
+<dt>
+<code>bw</code>, <code>adjust</code>, <code>kernel</code>, <code>n</code>
+</dt>
+<dd>
+<p>If <code>density = "kernel"</code>, the arguments to <code>density()</code>. The defaults are the same as those in <code>density()</code> except that <code>n</code> is 10 times the number of units in the sample.</p>
+</dd>
+<dt><code>plot</code></dt>
+<dd>
+<p>If <code>density = "kernel"</code>, whether to plot the estimated densities.</p>
+</dd>
+<dt><code>link</code></dt>
+<dd>
+<p>The link used to fit the linear model for the generalized propensity score. Can be any allowed by <code>gaussian()</code>.
+</p>
+</dd>
+</dl>
+<p>Additional arguments to <code>glm()</code> can be specified as well when it is used for fitting. The <code>method</code> argument in <code>glm()</code> is renamed to <code>glm.method</code>. This can be used to supply alternative fitting functions, such as those implemented in the <a href="https://CRAN.R-project.org/package=glm2"><span class="pkg">glm2</span></a> package. Other arguments to <code>weightit()</code> are passed to <code>...</code> in <code>glm()</code>. In the presence of missing data with <code>link = "logit"</code> and <code>missing = "saem"</code>, additional arguments are passed to <code>misaem::miss.glm()</code> and <code>misaem::predict.miss.glm()</code>, except the <code>method</code> argument in <code>misaem::predict.miss.glm()</code> is replaced with <code>saem.method</code>.
+</p>
+<p>For continuous treatments in the presence of missing data with <code>missing = "saem"</code>, additional arguments are passed to <code>misaem::miss.lm()</code> and <code>misaem::predict.miss.lm()</code>.
+</p>
+
+
+<h3>Additional Outputs</h3>
+
+
+<dl>
+<dt><code>obj</code></dt>
+<dd>
+<p>When <code>include.obj = TRUE</code>, the (generalized) propensity score model fit. For binary treatments, the output of the call to <code>glm()</code> or the requested fitting function. For multi-category treatments, the output of the call to the fitting function (or a list thereof if <code>multi.method = "glm"</code>). For continuous treatments, the output of the call to <code>glm()</code> for the predicted values in the denominator density.
+</p>
+</dd>
+</dl>
+<h3>References</h3>
+
+
+
+<h4>Binary treatments</h4>
+
+
+<ul><li> <p><code>estimand = "ATO"</code>
+</p>
+</li></ul>
+<p>Li, F., Morgan, K. L., &amp; Zaslavsky, A. M. (2018). Balancing covariates via propensity score weighting. <em>Journal of the American Statistical Association</em>, 113(521), 390–400. <a href="https://doi.org/10.1080/01621459.2016.1260466">doi:10.1080/01621459.2016.1260466</a>
+</p>
+
+<ul><li> <p><code>estimand = "ATM"</code>
+</p>
+</li></ul>
+<p>Li, L., &amp; Greene, T. (2013). A Weighting Analogue to Pair Matching in Propensity Score Analysis. <em>The International Journal of Biostatistics</em>, 9(2). <a href="https://doi.org/10.1515/ijb-2012-0030">doi:10.1515/ijb-2012-0030</a>
+</p>
+
+<ul><li> <p><code>estimand = "ATOS"</code>
+</p>
+</li></ul>
+<p>Crump, R. K., Hotz, V. J., Imbens, G. W., &amp; Mitnik, O. A. (2009). Dealing with limited overlap in estimation of average treatment effects. <em>Biometrika</em>, 96(1), 187–199. <a href="https://doi.org/10.1093/biomet/asn055">doi:10.1093/biomet/asn055</a>
+</p>
+
+<ul><li>
+<p> Other estimands
+</p>
+</li></ul>
+<p>Austin, P. C. (2011). An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies. <em>Multivariate Behavioral Research</em>, 46(3), 399–424. <a href="https://doi.org/10.1080/00273171.2011.568786">doi:10.1080/00273171.2011.568786</a>
+</p>
+
+<ul><li>
+<p> Marginal mean weighting through stratification
+</p>
+</li></ul>
+<p>Hong, G. (2010). Marginal mean weighting through stratification: Adjustment for selection bias in multilevel data. <em>Journal of Educational and Behavioral Statistics</em>, 35(5), 499–531. <a href="https://doi.org/10.3102/1076998609359785">doi:10.3102/1076998609359785</a>
+</p>
+
+<ul><li>
+<p> Bias-reduced logistic regression
+</p>
+</li></ul>
+<p>See references for the <a href="https://CRAN.R-project.org/package=brglm2"><span class="pkg">brglm2</span></a> package.
+</p>
+
+<ul><li>
+<p> Firth corrected logistic regression
+</p>
+</li></ul>
+<p>Puhr, R., Heinze, G., Nold, M., Lusa, L., &amp; Geroldinger, A. (2017). Firth’s logistic regression with rare events: Accurate effect estimates and predictions? <em>Statistics in Medicine</em>, 36(14), 2302–2317. <a href="https://doi.org/10.1002/sim.7273">doi:10.1002/sim.7273</a>
+</p>
+
+<ul><li>
+<p> SAEM logistic regression for missing data
+</p>
+</li></ul>
+<p>Jiang, W., Josse, J., &amp; Lavielle, M. (2019). Logistic regression with missing covariates — Parameter estimation, model selection and prediction within a joint-modeling framework. <em>Computational Statistics &amp; Data Analysis</em>, 106907. <a href="https://doi.org/10.1016/j.csda.2019.106907">doi:10.1016/j.csda.2019.106907</a>
+</p>
+
+
+
+<h4>Multi-Category Treatments</h4>
+
+
+<ul><li> <p><code>estimand = "ATO"</code>
+</p>
+</li></ul>
+<p>Li, F., &amp; Li, F. (2019). Propensity score weighting for causal inference with multiple treatments. <em>The Annals of Applied Statistics</em>, 13(4), 2389–2415. <a href="https://doi.org/10.1214/19-AOAS1282">doi:10.1214/19-AOAS1282</a>
+</p>
+
+<ul><li> <p><code>estimand = "ATM"</code>
+</p>
+</li></ul>
+<p>Yoshida, K., Hernández-Díaz, S., Solomon, D. H., Jackson, J. W., Gagne, J. J., Glynn, R. J., &amp; Franklin, J. M. (2017). Matching weights to simultaneously compare three treatment groups: Comparison to three-way matching. <em>Epidemiology</em> (Cambridge, Mass.), 28(3), 387–395. <a href="https://doi.org/10.1097/EDE.0000000000000627">doi:10.1097/EDE.0000000000000627</a>
+</p>
+
+<ul><li>
+<p> Other estimands
+</p>
+</li></ul>
+<p>McCaffrey, D. F., Griffin, B. A., Almirall, D., Slaughter, M. E., Ramchand, R., &amp; Burgette, L. F. (2013). A Tutorial on Propensity Score Estimation for Multiple Treatments Using Generalized Boosted Models. <em>Statistics in Medicine</em>, 32(19), 3388–3414. <a href="https://doi.org/10.1002/sim.5753">doi:10.1002/sim.5753</a>
+</p>
+
+<ul><li>
+<p> Marginal mean weighting through stratification
+</p>
+</li></ul>
+<p>Hong, G. (2012). Marginal mean weighting through stratification: A generalized method for evaluating multivalued and multiple treatments with nonexperimental data. <em>Psychological Methods</em>, 17(1), 44–60. <a href="https://doi.org/10.1037/a0024918">doi:10.1037/a0024918</a>
+</p>
+
+
+
+<h4>Continuous treatments</h4>
+
+<p>Robins, J. M., Hernán, M. Á., &amp; Brumback, B. (2000). Marginal Structural Models and Causal Inference in Epidemiology. <em>Epidemiology</em>, 11(5), 550–560.
+</p>
+
+<ul><li>
+<p> Using non-normal conditional densities
+</p>
+</li></ul>
+<p>Naimi, A. I., Moodie, E. E. M., Auger, N., &amp; Kaufman, J. S. (2014). Constructing Inverse Probability Weights for Continuous Exposures: A Comparison of Methods. <em>Epidemiology</em>, 25(2), 292–299. <a href="https://doi.org/10.1097/EDE.0000000000000053">doi:10.1097/EDE.0000000000000053</a>
+</p>
+
+<ul><li>
+<p> SAEM linear regression for missing data
+</p>
+</li></ul>
+<p>Jiang, W., Josse, J., &amp; Lavielle, M. (2019). Logistic regression with missing covariates — Parameter estimation, model selection and prediction within a joint-modeling framework. <em>Computational Statistics &amp; Data Analysis</em>, 106907. <a href="https://doi.org/10.1016/j.csda.2019.106907">doi:10.1016/j.csda.2019.106907</a>
+</p>
+
+
+
+<h3>See Also</h3>
+
+<p><code>weightit()</code>, <code>weightitMSM()</code>, <code>get_w_from_ps()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library("cobalt")
+data("lalonde", package = "cobalt")
+
+#Balancing covariates between treatment groups (binary)
+(W1 &lt;- weightit(treat ~ age + educ + married +
+                  nodegree + re74, data = lalonde,
+                method = "glm", estimand = "ATT",
+                link = "probit"))
+summary(W1)
+bal.tab(W1)
+
+#Balancing covariates with respect to race (multi-category)
+(W2 &lt;- weightit(race ~ age + educ + married +
+                  nodegree + re74, data = lalonde,
+                method = "glm", estimand = "ATE"))
+summary(W2)
+bal.tab(W2)
+
+#Balancing covariates with respect to re75 (continuous)
+#with kernel density estimate
+(W3 &lt;- weightit(re75 ~ age + educ + married +
+                  nodegree + re74, data = lalonde,
+                method = "glm", density = "kernel"))
+summary(W3)
+bal.tab(W3)
+</code></pre>
+
+
+</div>

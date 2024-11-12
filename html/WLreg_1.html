@@ -1,0 +1,197 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>winreg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Double Cox regression for win product</h2>
+
+<h3>Description</h3>
+
+<p>Use two Cox regression models (one for the terminal event and the other for the non-trminal event) to model the win product adjusting for covariates</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">winreg(y1,y2,d1,d2,z)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y1</code></td>
+<td>
+<p> a numeric vector of event times denoting the minimum of event times <code class="reqn">T_1</code>, <code class="reqn">T_2</code> and censoring time <code class="reqn">C</code>, where the endpoint <code class="reqn">T_2</code>, corresponding to the terminal event, is considered of higher clinical importance than the endpoint <code class="reqn">T_1</code>, corresponding to the non-terminal event. Note that the terminal event may censor the non-terminal event, resulting in informative censoring.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y2</code></td>
+<td>
+<p> a numeric vector of event times denoting the minimum of event time <code class="reqn">T_2</code> and censoring time <code class="reqn">C</code>. Clearly, y2 is not smaller than y1. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d1</code></td>
+<td>
+<p> a numeric vector of event indicators with 1 denoting the non-terminal event is observed and 0 else. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d2</code></td>
+<td>
+<p> a numeric vector of event indicators with 1 denoting the terminal event is observed and 0 else. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p> a numeric matrix of covariates.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function uses two Cox regression models (one for the terminal event and the other for the non-trminal event) to model the win product adjusting for covariates.</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>beta1</code></td>
+<td>
+<p>Estimated regression parameter based on the non-terminal event times <code>y1</code>, <code class="reqn">\exp</code>(<code>beta1</code>) is the adjusted hazard ratio</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma1</code></td>
+<td>
+<p>Estimated variance of <code>beta1</code> using the residual method instead of the inverse of Fisher information</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tb1</code></td>
+<td>
+<p>Wald test statistics based on <code>beta1</code> and <code>sigma1</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb1</code></td>
+<td>
+<p>Two-sided p-values of the Wald test statistics <code>tb1</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta2</code></td>
+<td>
+<p>Estimated regression parameter based on the terminal event times <code>y2</code>, <code class="reqn">\exp</code>(<code>beta2</code>) is the adjusted hazard ratio</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma2</code></td>
+<td>
+<p>Estimated variance of <code>beta2</code> using the residual method instead of the inverse of Fisher information</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tb2</code></td>
+<td>
+<p>Wald test statistics based on <code>beta2</code> and <code>sigma2</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb2</code></td>
+<td>
+<p>Two-sided p-values of the Wald test statistics <code>tb2</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p><code>beta1</code>+<code>beta2</code>,<code class="reqn">\exp</code>(-<code>beta</code>) is the adjusted win product</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>Estimated variance of <code>beta</code> using the residual method</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tb</code></td>
+<td>
+<p>Wald test statistics based on <code>beta</code> and <code>sigma</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Two-sided p-values of the Wald test statistics <code>tb</code></p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Xiaodong Luo</p>
+
+
+<h3>References</h3>
+
+<p>Pocock S.J., Ariti C.A., Collier T. J. and Wang D. 2012. The win ratio: a new approach to the analysis of composite endpoints in clinical trials based on clinical priorities. European Heart Journal, 33, 176-182.
+</p>
+<p>Luo X., Tian H., Mohanty S. and Tsai W.-Y. 2015. An alternative approach to confidence interval estimation for the win ratio statistic. Biometrics, 71, 139-145.
+</p>
+<p>Luo X., Qiu J., Bai S. and Tian H. 2017. Weighted win loss approach for analyzing prioritized outcomes. Statistics in Medicine, to appear.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wrlogistic</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">###Generate data
+n&lt;-300
+rho&lt;-0.5
+b2&lt;-c(1.0,-1.0)
+b1&lt;-c(0.5,-0.9)
+bc&lt;-c(1.0,0.5)
+lambda10&lt;-0.1;lambda20&lt;-0.08;lambdac0&lt;-0.09
+lam1&lt;-rep(0,n);lam2&lt;-rep(0,n);lamc&lt;-rep(0,n)
+z1&lt;-rep(0,n)
+z1[1:(n/2)]&lt;-1
+z2&lt;-rnorm(n)
+z&lt;-cbind(z1,z2)
+
+lam1&lt;-lam2&lt;-lamc&lt;-rep(0,n)
+for (i in 1:n){
+    lam1[i]&lt;-lambda10*exp(-sum(z[i,]*b1))
+    lam2[i]&lt;-lambda20*exp(-sum(z[i,]*b2))
+    lamc[i]&lt;-lambdac0*exp(-sum(z[i,]*bc))
+}
+tem&lt;-matrix(0,ncol=3,nrow=n)
+
+y2y&lt;-matrix(0,nrow=n,ncol=3)
+y2y[,1]&lt;-rnorm(n);y2y[,3]&lt;-rnorm(n)
+y2y[,2]&lt;-rho*y2y[,1]+sqrt(1-rho^2)*y2y[,3]
+tem[,1]&lt;--log(1-pnorm(y2y[,1]))/lam1
+tem[,2]&lt;--log(1-pnorm(y2y[,2]))/lam2
+tem[,3]&lt;--log(1-runif(n))/lamc
+
+y1&lt;-apply(tem,1,min)
+y2&lt;-apply(tem[,2:3],1,min)
+d1&lt;-as.numeric(tem[,1]&lt;=y1)
+d2&lt;-as.numeric(tem[,2]&lt;=y2)
+
+y&lt;-cbind(y1,y2,d1,d2)
+z&lt;-as.matrix(z)
+aa&lt;-winreg(y1,y2,d1,d2,z)
+aa
+</code></pre>
+
+
+</div>

@@ -1,0 +1,120 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotSeason</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plots seasonal patterns for a time series</h2>
+
+<h3>Description</h3>
+
+<p>Divides the time range for a monthly time series into different eras and
+plots composites of seasonal pattern. Can also plot each month separately
+for the entire record.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotSeason(
+  x,
+  type = c("by.era", "by.month"),
+  num.era = 4,
+  same.plot = TRUE,
+  ylab = NULL,
+  num.col = 3
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Monthly time series</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Plot seasonal pattern by era, or each month for the entire
+record</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num.era</code></td>
+<td>
+<p>Integer number of eras, or vector of era year breaks</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>same.plot</code></td>
+<td>
+<p>Should eras be plotted by month?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>Optional character string label for y-axis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num.col</code></td>
+<td>
+<p>Number of columns when plotted <code>"by.month"</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If <code>num.era</code> is an integer, the time range is divided into that many
+equal eras; otherwise, the time range is divided into eras determined by the
+<code>num.era</code> vector of years. When plotted <code>"by.era"</code> and
+<code>same.plot = FALSE</code>, the composite patterns are plotted in a horizontal
+row for easier comparison, which limits the number of periods that can be
+examined. Boxes based on fewer than half of the maximum possible years
+available are outlined in red. If <code>same.plot = TRUE</code>, a single plot is
+produced with era boxplots arranged by month. When plotted
+<code>"by.month"</code>, values for each month are first converted to standardized
+anomalies, i.e., by subtraction of long-term mean and division by standard
+deviation. As always, and especially with these plots, experiment with the
+device aspect ratio and size to get the clearest information.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A plot (and the corresponding object of class <code>"ggplot"</code>).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alan Jassby, James Cloern
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>decompTs</code>, <code>seasonTrend</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+chl27 &lt;- sfbayChla[, "s27"]
+plotSeason(chl27, num.era = c(1978, 1988, 1998, 2008), ylab = "Stn 27 Chl-a")
+## Not run: 
+plotSeason(chl27, num.era = 3, same.plot = FALSE, ylab = "Stn 27 Chl-a")
+plotSeason(chl27, "by.month", ylab = "Stn 27 Chl-a")
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

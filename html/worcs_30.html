@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>load_data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Load WORCS project data</h2>
+
+<h3>Description</h3>
+
+<p>Scans the WORCS project file for data that have been saved using
+<code>open_data</code> or <code>closed_data</code>, and loads these data
+into the global (working) environment. The function will load the original
+data if available on the current system. If only a synthetic dataset is
+available, this function loads the synthetic data.
+The name of the object containing the data is derived from the file name by
+removing the file extension, and, when applicable, the prefix
+<code>"synthetic_"</code>. Thus, both <code>"data.csv"</code> and
+<code>"synthetic_data.csv"</code> will be loaded into an object called <code>data</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">load_data(
+  worcs_directory = ".",
+  to_envir = TRUE,
+  envir = parent.frame(1),
+  verbose = TRUE,
+  use_metadata = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>worcs_directory</code></td>
+<td>
+<p>Character, indicating the WORCS project directory from
+which to load data. The default value <code>"."</code> points to the current
+directory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to_envir</code></td>
+<td>
+<p>Logical, indicating whether to load objects directly into
+the environment, or return a <code>list</code> containing the objects. The
+environment is designated by argument <code>envir</code>. Loading
+objects directly into the global environment is user-friendly, but has the
+risk of overwriting an existing object with the same name, as explained in
+<code>load</code>. The function <code>load_data</code> gives a warning when this
+happens.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>envir</code></td>
+<td>
+<p>The environment where the data should be loaded. The default
+value <code>parent.frame(1)</code> refers to the global environment in an
+interactive session.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical. Whether or not to print status messages to
+the console. Default: TRUE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use_metadata</code></td>
+<td>
+<p>Logical. Whether or not to use the codebook and
+value labels and attempt to coerce the class and values of variables to
+those recorded therein. Default: TRUE</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a list invisibly. If <code>to_envir = TRUE</code>, this list
+contains the loaded data files. If <code>to_envir = FALSE</code>, the list is
+empty, and the loaded data files are attached directly to the global
+environment.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">test_dir &lt;- file.path(tempdir(), "loaddata")
+old_wd &lt;- getwd()
+dir.create(test_dir)
+setwd(test_dir)
+worcs:::write_worcsfile(".worcs")
+df &lt;- iris[1:5, ]
+suppressWarnings(closed_data(df, codebook = NULL))
+load_data()
+data
+rm("data")
+file.remove("data.csv")
+load_data()
+data
+setwd(old_wd)
+unlink(test_dir, recursive = TRUE)
+</code></pre>
+
+
+</div>

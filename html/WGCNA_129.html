@@ -1,0 +1,169 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>labelPoints</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Label scatterplot points 
+</h2>
+
+<h3>Description</h3>
+
+<p>Given scatterplot point coordinates, the function tries to place labels near the points such that the
+labels overlap as little as possible. User beware: the algorithm implemented here is quite primitive and
+while it will help in many cases, it is by no means perfect. Consider this function experimental. We hope to
+improve the algorithm in the future to make it useful in a broader range of situations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">labelPoints(
+   x, y, labels, 
+   cex = 0.7, offs = 0.01, xpd = TRUE, 
+   jiggle = 0, protectEdges = TRUE, 
+   doPlot = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>a vector of x coordinates of the points
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>a vector of y coordinates of the points
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+
+<p>labels to be placed next to the points
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex</code></td>
+<td>
+
+<p>character expansion factor for the labels
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offs</code></td>
+<td>
+
+<p>offset of the labels from the plotted coordinates in inches
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xpd</code></td>
+<td>
+
+<p>logical: controls truncating labels to fit within the plotting region. See <code>par</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>jiggle</code></td>
+<td>
+
+<p>amount of random noise to be added to the coordinates. This may be useful if the scatterplot is too
+regular (such as all points on one straight line). 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>protectEdges</code></td>
+<td>
+<p> logical: should labels be shifted inside the (actual or virtual) frame of the plot? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doPlot</code></td>
+<td>
+<p>logical: should the labels be actually added to the plot? Value <code>FALSE</code> may be useful if
+the user would like to simply compute the best label positions the function can come up with.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>other arguments to function <code>text</code>. 
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The algorithm basically works by finding the direction of most surrounding points, and attempting to place
+the label in the opposite direction. There are (not uncommon) situations in which this placement is
+suboptimal; the author promises to further develop the function sometime in the future.
+</p>
+<p>Note that this function does not plot the actual scatterplot; only the labels are plotted. Plotting the
+scatterplot is the responsibility of the user. 
+</p>
+<p>The argument <code>offs</code> needs to be carefully tuned to the size of the plotted symbols. Sorry, no automation
+here yet.
+</p>
+<p>The argument <code>protectEdges</code> can be used to shift labels that would otherwise extend beyond the plot to
+within the plot. Sometimes this may cause some overlapping with other points or labels; use with care.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Invisibly, a data frame with 3 columns, giving the x and y positions of the labels, and the labels themselves.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>plot.default</code>, <code>text</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># generate some random points
+   set.seed(11);
+   n = 20;
+   x = runif(n);
+   y = runif(n);
+
+# Create a basic scatterplot
+   col = standardColors(n);
+   plot(x,y, pch = 21, col =1, bg = col, cex = 2.6, 
+        xlim = c(-0.1, 1.1), ylim = c(-0.1, 1.0));
+   labelPoints(x, y, paste("Pt", c(1:n), sep=""), offs = 0.10, cex = 1);
+
+# label points using longer text labels. Note the positioning is not perfect, but close enough.
+
+   plot(x,y, pch = 21, col =1, bg = col, cex = 2.6, 
+        xlim = c(-0.1, 1.1), ylim = c(-0.1, 1.0));
+   labelPoints(x, y, col, offs = 0.10, cex = 0.8);
+</code></pre>
+
+
+</div>

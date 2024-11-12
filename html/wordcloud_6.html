@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wordlayout</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Word Layout
+</h2>
+
+<h3>Description</h3>
+
+<p>finds text plot layout coordinates such that no text overlaps
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wordlayout(x, y, words, cex=1, rotate90 = FALSE,
+		xlim=c(-Inf,Inf), ylim=c(-Inf,Inf), tstep=.1, rstep=.1, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>x coordinates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>y coordinates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>words</code></td>
+<td>
+<p>the text to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex</code></td>
+<td>
+<p>font size</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rotate90</code></td>
+<td>
+<p>a value or vector indicating whether words should be rotated 90 degrees</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim</code></td>
+<td>
+<p>x axis bounds for text</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylim</code></td>
+<td>
+<p>y axis bounds for text</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tstep</code></td>
+<td>
+<p>the angle (theta) step size as the algorithm spirals out</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rstep</code></td>
+<td>
+<p>the radius step size (in standard deviations) as the algorithm spirals out</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters to be passed to strwidth and strheight.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A matrix with columns representing x, y width and height.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+#calculate standardized MDS coordinates
+dat &lt;- sweep(USArrests,2,colMeans(USArrests))
+dat &lt;- sweep(dat,2,sqrt(diag(var(dat))),"/")
+loc &lt;- cmdscale(dist(dat))
+x &lt;- loc[,1]
+y &lt;- loc[,2]
+w &lt;- rownames(loc)
+
+#plot with no overlap and all words visible
+plot(x,y,type="n",xlim=c(-3,3),ylim=c(-3,2))
+lay &lt;- wordlayout(x,y,w,xlim=c(-3,3),ylim=c(-3,2))
+text(lay[,1]+.5*lay[,3],lay[,2]+.5*lay[,4],w)
+
+#notice north dakota is only partially visible
+textplot(x,y,w)
+
+</code></pre>
+
+
+</div>

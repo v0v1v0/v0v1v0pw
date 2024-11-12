@@ -1,0 +1,201 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WpProj</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>p-Wasserstein Linear Projections</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+This function will calculate linear projections from a set of predictions into the space of the covariates in terms of the p-Wasserstein distance.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WpProj(
+  X,
+  eta = NULL,
+  theta = NULL,
+  power = 2,
+  method = c("L1", "binary program", "stepwise", "simulated annealing", "L0"),
+  solver = c("lasso", "ecos", "lpsolve", "mosek"),
+  options = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>An <code class="reqn">n \times p</code> matrix of covariates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eta</code></td>
+<td>
+<p>An <code class="reqn">n \times s</code> matrix of predictions from a model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>An optional An <code class="reqn">p \times s</code> parameter matrix for selection methods. Only makes sense if the original model is a linear model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>The power of the Wasserstein distance to use. Must be <code style="white-space: pre;">⁠&gt;= 1.0⁠</code>. Will default to <code>2.0</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>The algorithm to calculate the Wasserstein projections. One of "L1", "binary program", "IP", "stepwise","simulated annealing", or "L0". Will default to "L1" if not provided. See details for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>solver</code></td>
+<td>
+<p>Which solver to use? One of "lasso", "ecos", "lpsolve", or "mosek". See details for more information</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>options</code></td>
+<td>
+<p>Options passed to the particular method and desired solver. See details for more information.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+
+<h4>Methods</h4>
+
+<p>The <code>WpProj</code> function is a wrapper for the various Wasserstein projection methods. It is designed to be a one-stop shop for all Wasserstein projection methods. It will automatically choose the correct method and solver based on the arguments provided. It will also return a standardized output for all methods. Each method has its own set of options that can be passed to it. See the documentation for each method for more information.
+</p>
+<p>For the L1 methods, see <code>L1_method_options()</code> for more information. For the binary program methods, see <code>binary_program_method_options()</code> for more information. For the stepwise methods, see <code>stepwise_method_options()</code> for more information. For the simulated annealing methods, see <code>simulated_annealing_method_options()</code> for more information.
+</p>
+<p>In most cases, we recommend using the L1 methods or binary program methods. The L1 methods are the fastest and applicable to Wasserstein powers of any value greater than 1 and function as direct linear projections into the space of the covariates. The binary program methods instead preserve the coefficients of the original model if this is of interest, such as when the original model was already a linear model. The binary program will instead function as a way of turning on and off certain coefficients in a way that minimizes the Wasserstein distance between reduced and original models. Of note, we also have available an approximate binary program method using a lasso solver. This method is faster than the exact binary program method but is not guaranteed to find the optimal solution. It is recommended to use the exact binary program method if possible. See <code>binary_program_method_options()</code> for more information on how to set up the approximate method as some arguments for the lasso solver should be specified. For more information on how this works, please also see the referenced paper.
+</p>
+<p>The stepwise, simulated annealing, and L0 methods also select covariates like the binary program methods but they can be slower. They are presented merely for comparison purposes given they were used in the original paper.
+</p>
+
+
+
+<h4>Wasserstein distances and powers</h4>
+
+<p>The Wasserstein distance is a measure of distance between two probability distributions. It is defined as:
+</p>
+<p style="text-align: center;"><code class="reqn">W_p(\mu,\nu) = \left(\inf_{\pi \in \Pi(\mu,\nu)} \int_{\mathbb{R}^d \times \mathbb{R}^d} \|x-y\|^p d\pi(x,y)\right)^{1/p},</code>
+</p>
+
+<p>where <code class="reqn">\Pi(\mu,\nu)</code> is the set of all joint distributions with marginals <code class="reqn">\mu</code> and <code class="reqn">\nu</code>. The Wasserstein distance is a generalization of the Euclidean distance, which is the case when <code class="reqn">p=2</code>. In our function we have argument <code>power</code> that corresponds to the <code class="reqn">p</code> of the equation above. The default <code>power</code> is <code>2.0</code> but any value greater than or equal to <code>1.0</code> is allowed. For more information, see the references.
+</p>
+<p>The particular implementation of the Wasserstein distance is as follows. If  <code class="reqn">\mu</code> is the original prediction from the original model, then we seek to find a new prediction <code class="reqn">\nu</code> that minimizes the Wasserstein distance between the two: <code class="reqn">\text{argmin}_\nu W_p(\mu,\nu)</code>.
+</p>
+
+
+
+<h3>Value</h3>
+
+<p>object of class <code>WpProj</code>, which is a list with the following slots:
+</p>
+
+<ul>
+<li>
+<p><code>call</code>: The call to the function
+</p>
+</li>
+<li>
+<p><code>theta</code>: A list of the final parameter matrices for each returned model
+</p>
+</li>
+<li>
+<p><code>fitted.values</code>: A list of the fitted values for each returned model
+</p>
+</li>
+<li>
+<p><code>power</code>: The power of the Wasserstein distance used
+</p>
+</li>
+<li>
+<p><code>method</code>: The method used to calculate the Wasserstein projections
+</p>
+</li>
+<li>
+<p><code>solver</code>: The solver used to calculate the Wasserstein projections
+</p>
+</li>
+<li>
+<p><code>niter</code>: The number of iterations used to calculate the Wasserstein projections. Not all methods return a number of iterations so this may be <code>NULL</code>
+</p>
+</li>
+<li>
+<p><code>nzero</code>: The number of non zero coefficients in the final models
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Dunipace, Eric and Lorenzo Trippa (2020) <a href="https://arxiv.org/abs/2012.09999">https://arxiv.org/abs/2012.09999</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if(rlang::is_installed("stats")) {
+# note we don't generate believable data with real posteriors
+# these examples are just to show how to use the function
+n &lt;- 32
+p &lt;- 10
+s &lt;- 21
+
+# covariates and coefficients
+x &lt;- matrix( stats::rnorm( p * n ), nrow = n, ncol = p )
+beta &lt;- (1:10)/10
+
+#outcome
+y &lt;- x %*% beta + stats::rnorm(n)
+
+# fake posterior
+post_beta &lt;- matrix(beta, nrow=p, ncol=s) + stats::rnorm(p*s, 0, 0.1)
+post_mu &lt;- x %*% post_beta #posterior predictive distributions
+
+# fit models
+## L1 model
+fit.p2     &lt;-  WpProj(X=x, eta=post_mu, power = 2.0,
+                   method = "L1", #default
+                   solver = "lasso" #default
+)
+
+## approximate binary program
+fit.p2.bp &lt;-  WpProj(X=x, eta=post_mu, theta = post_beta, power = 2.0,
+                   method = "binary program",
+                   solver = "lasso" #default because approximate algorithm is faster
+)
+
+## compare performance by measuring distance from full model
+dc &lt;- distCompare(models = list("L1" = fit.p2, "BP" = fit.p2.bp))
+plot(dc)
+
+## compare performance by measuring the relative distance between a null model 
+## and the predictions of interest as a pseudo R^2
+r2.expect &lt;- WPR2(predictions = post_mu, projected_model = dc) # can have negative values
+r2.null  &lt;- WPR2(projected_model = dc) # should be between 0 and 1
+plot(r2.null)
+
+## we can also examine how predictions change in the models for individual observations
+ridgePlot(fit.p2, index = 21, minCoef = 0, maxCoef = 10)
+}
+</code></pre>
+
+
+</div>

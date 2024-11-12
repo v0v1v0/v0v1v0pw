@@ -1,0 +1,61 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mbic.penalty</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Modified Bayes Information Criterion penalty term</h2>
+
+<h3>Description</h3>
+
+<p>The function evaluates the penalty term for the  Modified Bayes Information Criterion proposed in N. Zhang and D. Siegmund (2007). This routine is typically not called directly by the user; its name can be passed as an argument to <code>changepoints</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mbic.penalty(n, cpt)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>the number of observations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cpt</code></td>
+<td>
+<p>a vector with localisations of change-points</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>the penalty term </p>
+<p style="text-align: center;"><code class="reqn">\frac{3}{2}k\log(n)+\frac{1}{2}\sum_{i=1}^{k+1}\log\frac{l_{i}}{n},</code>
+</p>
+<p> where  <code class="reqn">k</code> denotes the number of elements in <code>cpt</code> and <code class="reqn">l_{i}</code> are the lengths of the intervals between changepoints in <code>cpt</code>
+</p>
+
+
+<h3>References</h3>
+
+<p>N. Zhang and D. Siegmund (2007), A modified Bayes information criterion with applications to the analysis of comparative genomic hybridization data, Biometrics.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- rnorm(300) + c(rep(1,50),rep(0,250))
+w &lt;- wbs(x)
+w.cpt &lt;- changepoints(w,penalty="mbic.penalty")
+w.cpt$cpt.ic
+</code></pre>
+
+
+</div>

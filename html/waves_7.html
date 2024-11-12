@@ -1,0 +1,186 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>format_cv</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Format multiple trials with or without overlapping genotypes into
+training and test sets according to user-provided cross validation scheme</h2>
+
+<h3>Description</h3>
+
+<p>Standalone function that is also used within
+<code>train_spectra</code> to divide trials or studies into training and
+test sets based on overlap in trial environments and genotype entries
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">format_cv(
+  trial1,
+  trial2,
+  trial3 = NULL,
+  cv.scheme,
+  stratified.sampling = TRUE,
+  proportion.train = 0.7,
+  seed = NULL,
+  remove.genotype = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>trial1</code></td>
+<td>
+<p><code>data.frame</code> object that is for use only when
+<code>cv.scheme</code> is provided. Contains the trial to be tested in subsequent
+model training functions. The first column contains unique identifiers,
+second contains genotypes, third contains reference values, followed by
+spectral columns. Include no other columns to right of spectra! Column
+names of spectra must start with "X", reference column must be named
+"reference", and genotype column must be named "genotype".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trial2</code></td>
+<td>
+<p><code>data.frame</code> object that is for use only when
+<code>cv.scheme</code> is provided. This data.frame contains a trial that has
+overlapping genotypes with <code>trial1</code> but that were grown in a different
+site/year (different environment). Formatting must be consistent with
+<code>trial1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trial3</code></td>
+<td>
+<p><code>data.frame</code> object that is for use only when
+<code>cv.scheme</code> is provided. This data.frame contains a trial that may or
+may not contain genotypes that overlap with <code>trial1</code>. Formatting must
+be consistent with <code>trial1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cv.scheme</code></td>
+<td>
+<p>A cross validation (CV) scheme from Jarquín et al., 2017.
+Options for <code>cv.scheme</code> include:
+</p>
+
+<ul>
+<li>
+<p> "CV1": untested lines in tested environments
+</p>
+</li>
+<li>
+<p> "CV2": tested lines in tested environments
+</p>
+</li>
+<li>
+<p> "CV0": tested lines in untested environments
+</p>
+</li>
+<li>
+<p> "CV00": untested lines in untested environments
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stratified.sampling</code></td>
+<td>
+<p>If <code>TRUE</code>, training and test
+sets will be selected using stratified random sampling. Default is
+<code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>proportion.train</code></td>
+<td>
+<p>Fraction of samples to include in the training set.
+Default is 0.7.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>Number used in the function <code>set.seed()</code> for reproducible
+randomization. If <code>NULL</code>, no seed is set. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remove.genotype</code></td>
+<td>
+<p>boolean that, if <code>TRUE</code>, removes the "genotype"
+column is removed from the output <code>data.frame</code>. Default is
+<code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Use of a cross-validation scheme requires a column in the input
+<code>data.frame</code> named "genotype" to ensure proper sorting of training and
+test sets. Variables <code>trial1</code> and <code>trial2</code> are required, while
+<code>trial 3</code> is optional.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List of data.frames ($train.set, $test.set) compiled according to
+user-provided cross validation scheme.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jenna Hershberger <a href="mailto:jmh579@cornell.edu">jmh579@cornell.edu</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Jarquín, D., C. Lemes da Silva, R. C. Gaynor, J. Poland, A.
+Fritz, R. Howard, S. Battenfield, and J. Crossa. 2017. Increasing
+genomic-enabled prediction accuracy by modeling genotype × environment
+interactions in Kansas wheat. Plant Genome 10(2):1-15.
+&lt;doi:10.3835/plantgenome2016.12.0130&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Must have a column called "genotype", so we'll create a fake one for now
+# We will use CV00, which does not require any overlap in genotypes
+# In real scenarios, CV schemes that rely on genotypes should not be applied
+# when genotypes are unknown, as in this case.
+library(magrittr)
+trials &lt;- ikeogu.2017 %&gt;%
+  dplyr::mutate(genotype = 1:nrow(ikeogu.2017)) %&gt;% # fake for this example
+  dplyr::rename(reference = DMC.oven) %&gt;%
+  dplyr::select(
+    study.name, sample.id, genotype, reference,
+    tidyselect::starts_with("X")
+  )
+trial1 &lt;- trials %&gt;%
+  dplyr::filter(study.name == "C16Mcal") %&gt;%
+  dplyr::select(-study.name)
+trial2 &lt;- trials %&gt;%
+  dplyr::filter(study.name == "C16Mval") %&gt;%
+  dplyr::select(-study.name)
+cv.list &lt;- format_cv(
+  trial1 = trial1, trial2 = trial2, cv.scheme = "CV00",
+  stratified.sampling = FALSE, remove.genotype = TRUE
+)
+cv.list$train.set[1:5, 1:5]
+cv.list$test.set[1:5, 1:5]
+</code></pre>
+
+
+</div>

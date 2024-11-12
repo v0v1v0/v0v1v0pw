@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wcSilhouetteObs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Compute the silhouette of each object using weighted data.
+</h2>
+
+<h3>Description</h3>
+
+<p>Compute the silhouette of each object using weighted data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wcSilhouetteObs(diss, clustering, weights = NULL, measure="ASW")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>diss</code></td>
+<td>
+<p>A dissimilarity matrix or a dist object (see <code>dist</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clustering</code></td>
+<td>
+<p>Factor. A vector of clustering membership.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>optional numerical vector containing weights.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>measure</code></td>
+<td>
+<p>"ASW" or "ASWw", the measure of the silhouette. See the WeigthedCluster vignettes.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See the <code>silhouette</code> function in the <code>cluster</code> package for a detailed explanation of the silhouette.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector containing the silhouette of each observation.</p>
+
+
+<h3>References</h3>
+
+<p>Maechler, M., P. Rousseeuw, A. Struyf, M. Hubert and K. Hornik (2011).
+cluster: Cluster Analysis Basics and Extensions. 
+R package version 1.14.1 — For new features, see the 'Changelog' file (in the package source).
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See also <code>silhouette</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(mvad)
+## Aggregating state sequence
+aggMvad &lt;- wcAggregateCases(mvad[, 17:86], weights=mvad$weight)
+
+## Creating state sequence object
+mvad.seq &lt;- seqdef(mvad[aggMvad$aggIndex, 17:86], weights=aggMvad$aggWeights)
+## Computing Hamming distance between sequence
+diss &lt;- seqdist(mvad.seq, method="HAM")
+
+## KMedoids using PAMonce method (clustering only)
+clust5 &lt;- wcKMedoids(diss, k=5, weights=aggMvad$aggWeights, cluster.only=TRUE)
+
+## Compute the silhouette of each observation
+sil &lt;- wcSilhouetteObs(diss, clust5, weights=aggMvad$aggWeights, measure="ASWw")
+
+## If you want to compute the average silhouette width, 
+## you should take weights into account
+weighted.mean(sil, w=aggMvad$aggWeights)
+
+## Plotting sequences ordred by silhouette width, 
+## best classified are draw on the top.
+seqIplot(mvad.seq, group=clust5, sortv=sil)
+
+</code></pre>
+
+
+</div>

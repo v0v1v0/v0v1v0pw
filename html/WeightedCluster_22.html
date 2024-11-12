@@ -1,0 +1,250 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>seqclararange</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+CLARA Clustering for Sequence Analysis
+</h2>
+
+<h3>Description</h3>
+
+<p>Cluster large databases of sequences for a different number of groups using the CLARA algorithm based on subsampling to reduce computational burden. Crisp, fuzzy and representativeness clustering are available. The function further computes several cluster quality measures. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">seqclararange(seqdata, R = 100, sample.size = 40 + 2 * max(kvals), 
+  kvals = 2:10,  seqdist.args = list(method = "LCS"),
+  method=c("crisp", "fuzzy", "representativeness", "noise"), 
+  m = 1.5, criteria = c("distance"), stability = FALSE, dnoise=NULL,
+  parallel = FALSE, progressbar = FALSE, keep.diss = FALSE, 
+  max.dist = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>seqdata</code></td>
+<td>
+<p>State sequence object of class <code>stslist</code>. The sequence data to use. Use <code>seqdef</code> to create such an object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+<p>Numeric. The number of subsamples to use.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sample.size</code></td>
+<td>
+<p>Numeric. The size of the subsamples, the default values is the one proposed by Kaufmann and Rousseuuw (1990). However, larger values (typically between 1000 and 10 000) are recommended.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kvals</code></td>
+<td>
+<p>Numeric vector. The different number of groups to compute. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seqdist.args</code></td>
+<td>
+<p>List of arguments passed to <code>seqdist</code> for computing the distances.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Character. The clustering approach to use, with default to "crisp" clustering. "fuzzy", "noise" or "representativeness" approaches can also be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>Numeric. Only used for fuzzy clustering, the value of the fuzzifier. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>criteria</code></td>
+<td>
+<p>Character. The name of the criteria used for selecting the best clustering among the different runs. The following values are accepted: "distance" (Default, average value to cluster medoids),  "db" (Davies-Bouldin Index), "xb" (Xie-Beni index), "pbm" (PBM Index), "ams" (Average medoid silhouette value). </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stability</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>, stability measures are computed (can be time consuming, especially for fuzzy clustering). Default to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dnoise</code></td>
+<td>
+<p>Numerical. The theoretically defined distance to the noise cluster. Mandatory for noise clustering.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Logical. Whether to initialize the parallel processing of the <code>future</code> package using the default <code>multisession</code> strategy. If <code>FALSE</code> (default), then the current <code>plan</code> is used. If <code>TRUE</code>, <code>multisession</code> <code>plan</code> is initialized using default values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>progressbar</code></td>
+<td>
+<p>Logical. Whether to initialize a progressbar using the <code>future</code> package. If <code>FALSE</code> (default), then the current progress bar <code>handlers</code> is used . If <code>TRUE</code>, a new global progress bar <code>handlers</code> is initialized.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep.diss</code></td>
+<td>
+<p>Logical. Whether to keep the distances to the medoids. Set to <code>FALSE</code> by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.dist</code></td>
+<td>
+<p>Numeric. Maximal theoretical distance value between sequences. Required for <code>method="representativeness"</code> clustering.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>seqclararange</code> relies on the CLARA algorithm to cluster large database. The algorithm works as follows. 
+</p>
+
+<ol>
+<li>
+<p> Randomly take a subsample of the data of size <code>sample.size</code>.
+</p>
+</li>
+<li>
+<p> Cluster the subsample using the PAM algorithm initialized using Ward to speed up the computations (see <code>wcKmedoids</code>).
+</p>
+</li>
+<li>
+<p> Use the identified medoids to assign cluster membership in the whole dataset.
+</p>
+</li>
+<li>
+<p> Evaluate the resulting clustering using a <code>criteria</code> (see argument), the average distances to the medoids by default.
+</p>
+</li>
+</ol>
+<p>These steps are repeated <code>R</code> times and the best solution according to the given criterion is kept.
+</p>
+<p>To minimize the computation, the operation is repeated for different number of groups, which then allows to choose the best number of groups according to different cluster quality indices. The following indices are computed automatically: <code>"Avg dist"</code> (Average distance to cluster medoids), <code>"PBM"</code>(PBM Index), <code>"DB"</code> (Davies-Bouldin Index), <code>"XB"</code> (Xie-Beni Index), <code>"AMS"</code> (Average medoid silhouette width), <code>"ARI&gt;0.8"</code> (Number of iteration similar to the current best, only if <code>stability=TRUE</code>, <code>"JC&gt;0.8"</code> (Number of iteration similar to the current best, only if <code>stability=TRUE</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>seqclararange</code> object with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>kvals:</code></td>
+<td>
+<p>The different number of groups evaluated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clustering:</code></td>
+<td>
+<p>The retained clustering for each number of groups. For <code>"crisp"</code> clustering, a <code>data.frame</code> with the clustering in column named clusterX, with X the number of groups. For <code>"fuzzy"</code> and <code>"representativeness"</code>, a list of membership matrix, with each elements named clusterX, with X the number of groups.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td>
+<code>stats</code>:</td>
+<td>
+<p>A <code>matrix</code> containing the clustering statistics of each cluster solution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clara:</code></td>
+<td>
+<p>Detailed information on the best clustering for each number of groups, in the same order as kvals.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Studer, M., R. Sadeghi and L. Tochon (2024). Sequence Analysis for Large Databases. <em>LIVES Working Papers 104</em> <a href="https://doi.org/10.12682/lives.2296-1658.2024.104">doi:10.12682/lives.2296-1658.2024.104</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See also as <code>plot.seqclararange</code> to plot the results. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(biofam) #load illustrative data
+## Defining the new state labels 
+statelab &lt;- c("Parent", "Left", "Married", "Left/Married",  "Child", 
+            "Left/Child", "Left/Married/Child", "Divorced")
+## Creating the state sequence object,
+biofam.seq &lt;- seqdef(biofam[1:100, 10:25], alphabet=0:7, states=statelab)
+
+
+
+## Clara clustering
+bfclara &lt;- seqclararange(biofam.seq, R = 3, sample.size = 10, kvals = 2:3, 
+  seqdist.args = list(method = "HAM"), parallel=FALSE, 
+  stability=TRUE)
+
+
+#Show the cluster quality measures.
+bfclara
+#Plot and normalize the values for easier identification of minimum and maximum values.
+plot(bfclara, norm="range")
+## Stability values.
+plot(bfclara, stat="stabmean")
+plot(bfclara, stat="stability")
+
+seqdplot(biofam.seq, group=bfclara$clustering$cluster3)
+
+## Cluster quality indices estimation using boostrap
+
+bCQI &lt;- bootclustrange(bfclara, biofam.seq, seqdist.args = list(method = "HAM"), 
+  R = 3, sample.size = 10,  parallel=FALSE)
+
+bCQI
+plot(bCQI, norm="zscore")
+
+## Not run: 
+## Fuzzy clustering
+bfclaraf &lt;- seqclararange(biofam.seq, R = 3, sample.size = 20, kvals = 2:3, 
+  method="fuzzy", seqdist.args = list(method = "HAM"), 
+	parallel=FALSE)
+
+
+bfclaraf
+plot(bfclaraf, norm="zscore")
+
+
+fuzzyseqplot(biofam.seq, group=bfclaraf$clustering$cluster3, type="I", 
+  sortv="membership", membership.threashold=0.2)
+
+## Noise clustering
+bfclaran &lt;- seqclararange(biofam.seq, R = 3, sample.size = 20, kvals = 2:3, 
+  method="noise", seqdist.args = list(method = "HAM"), dnoise=6,
+	parallel=FALSE)
+
+fuzzyseqplot(biofam.seq, group=bfclaran$clustering$cluster3, type="I", 
+  sortv="membership", membership.threashold=0.2)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

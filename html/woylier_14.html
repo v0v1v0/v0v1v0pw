@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>guided_tour_givens</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a guided tour with Givens interpolation</h2>
+
+<h3>Description</h3>
+
+<p>Create a guided tour with Givens interpolation
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">guided_tour_givens(
+  index_f,
+  d = 2,
+  alpha = 0.5,
+  cooling = 0.99,
+  max.tries = 25,
+  max.i = Inf,
+  optim = "search_geodesic",
+  n_sample = 100,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>index_f</code></td>
+<td>
+<p>the index function to optimize.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d</code></td>
+<td>
+<p>target dimensionality</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>the initial size of the search window, in radians</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cooling</code></td>
+<td>
+<p>the amount the size of the search window should be adjusted
+by after each step</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.tries</code></td>
+<td>
+<p>the maximum number of unsuccessful attempts to find
+a better projection before giving up</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.i</code></td>
+<td>
+<p>the maximum index value, stop search if a larger value is found</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>optim</code></td>
+<td>
+<p>character indicating the search strategy to use: <code>search_geodesic</code>, <code>search_better</code>,
+<code>search_better_random</code>, <code>search_polish</code>. Default is <code>search_geodesic</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_sample</code></td>
+<td>
+<p>number of samples to generate if <code>search_f</code> is <code>search_polish</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments sent to the search_f</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>creates guided tour
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(sine_curve)
+tourr::animate_xy(sine_curve, guided_tour_givens(tourr::splines2d()), sphere=FALSE)
+</code></pre>
+
+
+</div>

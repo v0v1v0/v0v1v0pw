@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>page_external_links</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve a page's links</h2>
+
+<h3>Description</h3>
+
+<p>page_external_links, when provided with a page title, retrieves external wikilinks from the
+current revision of that page.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">page_external_links(
+  language = NULL,
+  project = NULL,
+  domain = NULL,
+  page,
+  protocol = NULL,
+  clean_response = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>The language code of the project you wish to query,
+if appropriate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>The project you wish to query ("wikiquote"), if appropriate.
+Should be provided in conjunction with <code>language</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>domain</code></td>
+<td>
+<p>as an alternative to a <code>language</code> and <code>project</code> combination,
+you can also provide a domain ("rationalwiki.org") to the URL constructor, allowing
+for the querying of non-Wikimedia MediaWiki instances.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>page</code></td>
+<td>
+<p>the title of the page you want the links of.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>protocol</code></td>
+<td>
+<p>limit links to those with certain link protocols. Options are listed
+in Special:ApiSandbox's
+<a href="https://en.wikipedia.org/wiki/Special:ApiSandbox#action=query&amp;prop=extlinks">elprotocol field</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clean_response</code></td>
+<td>
+<p>whether to do some basic sanitising of the resulting data structure.
+Set to FALSE by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments to pass to httr's GET.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+#Links
+external_links &lt;- page_external_links("en","wikipedia", page = "Aaron Halfaker")
+
+#Protocol-specific links
+external_http_links &lt;- page_external_links("en","wikipedia",
+                                          page = "Aaron Halfaker", protocol = "http")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

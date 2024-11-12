@@ -1,0 +1,198 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotROC</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot ROC curves</h2>
+
+<h3>Description</h3>
+
+<p><code>plotROC</code> plots ROC curves based on results from <code>summarizeForROC</code>.
+This function plots only, it does not return any data. It allows printing simultaneously multiple ROC curves from different studies,
+it is also compatible with data from 3 species mix as in proteomics benchmark.
+Input can be prepared using <code>moderTest2grp</code> followed by <code>summarizeForROC</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotROC(
+  dat,
+  ...,
+  useColumn = 2:3,
+  methNames = NULL,
+  col = NULL,
+  pch = 1,
+  bg = NULL,
+  tit = NULL,
+  xlim = NULL,
+  ylim = NULL,
+  point05 = 0.05,
+  pointSi = 0.85,
+  nByMeth = NULL,
+  speciesOrder = NULL,
+  txtLoc = NULL,
+  legCex = 0.72,
+  las = 1,
+  addSuplT = TRUE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(matrix) from testing (eg  <code>summarizeForROC</code> )</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>optional additional data-sets to include as seprate ROC-curves to same plot (must be of same type of format as 'dat')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useColumn</code></td>
+<td>
+<p>(integer or character, length=2) columns from <code>dat</code> to be used for pecificity and sensitivity</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>methNames</code></td>
+<td>
+<p>(character) names of methods (data-sets) to be displayed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>(character) custom colors for lines and text (choose one color for each different data-set)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pch</code></td>
+<td>
+<p>(integer) type of symbol to be used (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bg</code></td>
+<td>
+<p>(character) background color in plot (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tit</code></td>
+<td>
+<p>(character) custom title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim</code></td>
+<td>
+<p>(numeric, length=2) custom x-axis limits</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylim</code></td>
+<td>
+<p>(numeric, length=2) custom y-axis limits</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>point05</code></td>
+<td>
+<p>(numeric) specific point to highlight in plot (typically at alpha=0.05)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pointSi</code></td>
+<td>
+<p>(numeric) size of points (as expansion factor <code>cex</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nByMeth</code></td>
+<td>
+<p>(integer) value of n to display</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>speciesOrder</code></td>
+<td>
+<p>(integer) custom order of species in legend</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>txtLoc</code></td>
+<td>
+<p>(numeric, length=3) location for text (x, y location and proportional factor for line-offset, default is c(0.4,0.3,0.04))</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legCex</code></td>
+<td>
+<p>(numeric) cex expansion factor for legend (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>las</code></td>
+<td>
+<p>(numeric) factor for text-orientation (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addSuplT</code></td>
+<td>
+<p>(logical) add text with information about precision,accuracy and FDR</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns only a plot with ROC curves
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>summarizeForROC</code>, <code>moderTest2grp</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">roc0 &lt;- cbind(alph=c(2e-6,4e-5,4e-4,2.7e-3,1.6e-2,4.2e-2,8.3e-2,1.7e-1,2.7e-1,4.1e-1,5.3e-1,
+	 6.8e-1,8.3e-1,9.7e-1), spec=c(1,1,1,1,0.957,0.915,0.915,0.809,0.702,0.489,0.362,0.234,
+  0.128,0.0426), sens=c(0,0,0.145,0.942,2.54,2.68,3.33,3.99,4.71,5.87,6.67,8.04,8.77,
+  9.93)/10, n.pos.a=c(0,0,0,0,2,4,4,9,14,24,36,41) )
+plotROC(roc0)
+</code></pre>
+
+
+</div>

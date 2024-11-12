@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>warnOptim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Optimize the weaning parameters
+</h2>
+
+<h3>Description</h3>
+
+<p><code>warnOptim</code> optimzes the weaning parameters for a given skeletal population. This function can be preliminaly used in order to set efficient priors of the weaning parameters.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+warnOptim(age, d15N, female.mean,
+  fraction = "collagen",
+  par.initial = c(0.5, 3, 1.9, female.mean), 
+  form = "parabolic", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>age</code></td>
+<td>
+<p>a vector of estimated ages of non-adult skeletons. Ages greater than 10 years are not allowed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d15N</code></td>
+<td>
+<p>a vector of bone collagen nitrogen isotope ratio (d15N) of non-adult skeletons. Other geochemical values (e.g., d18O, Sr/Ca, and Ba/Ca) can be used with this argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fraction</code></td>
+<td>
+<p>fraction of bone analyzed. The allowed values are <code>collagen</code> and <code>mineral</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>par.initial</code></td>
+<td>
+<p>a vector of the initial parameter values for optimizetion: t1, t2, enrichment, and weaning food, in sequence. The values are succeeded to the <code>par</code> arguments of <code>optim</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>female.mean</code></td>
+<td>
+<p>the mean d15N (or other geochemical value) of adult females, single value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>form</code></td>
+<td>
+<p>form of the model curve for the weaning process. The allowed values are <code>"linear"</code>, <code>"parabolic"</code> (the default), <code>"reverse"</code>, and <code>"sigmoid"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional argunemts passed to <code>optim</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>warnOptim</code> calculates the weaning parameters (i.e., weaning ages, enrichment factor, and d15N of bone collagen synthesized entirely from the weaning foods), which minimize the mean squared distance between the measured and modeled d15Ns using <code>optim</code>. Result of this function is just a rough indication and initial parameter dependent, and can be preliminaly used in order to set efficient priors of the weaning parameters.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>warnOptim</code> directly returns a result list of <code>optim</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>WARN</code>, <code>warn</code>, <code>warnCI</code>, <code>warnProb</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Data from the Lerna population.
+nonadult &lt;- subset(lerna, lerna$age &lt;= 10)
+adult &lt;- subset(lerna, lerna$age &gt; 17)
+female &lt;- subset(adult, adult$sex == "f")
+
+## Simple optimization without probability.
+(opt.lerna &lt;- warnOptim(
+  age = nonadult$age,
+  d15N = nonadult$d15N,
+  female.mean = mean(female$d15N),
+  control = list(maxit = 10000, ndeps = 1e-2, reltol = 1e-7)))
+</code></pre>
+
+
+</div>

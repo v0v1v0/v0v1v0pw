@@ -1,0 +1,146 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wfg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Weighted Fast Greedy Algorithm
+</h2>
+
+<h3>Description</h3>
+
+<p>Implementation of weighted fast greedy algorithm for community detection in networks with mixed types of attributes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  wfg(net, attr=NULL, under.sample=FALSE, prioritize=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>net</code></td>
+<td>
+
+<p>network for community detection
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>attr</code></td>
+<td>
+
+<p>data frame of attribute information. The default value is NULL, when no attribute information will be used. Under default this method is identical to fast greedy community detection algorithm.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>under.sample</code></td>
+<td>
+
+<p>a boolean parameter. When it is TRUE, the vertex pairs without links will be under-sampled to have the same number as that of the linked pairs of vertices.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prioritize</code></td>
+<td>
+
+<p>a boolean parameter. When it is TRUE, a matrix of cummunity-specific coefficients will be returned, by which the communities can be prioritized.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Each column of attr data frame can be a vector with type of either numeric (continuous) or factor (categorical). The matrix of cummunity-specific coefficients gives estimates as to the relative homogeneity of each attribute within each community. Specifically, a negative beta with large absolute value indicates corresponding attribute is homogeneous.
+</p>
+
+
+<h3>Value</h3>
+
+
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p>Estimates of coefficients from logistic regression.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta.matrix</code></td>
+<td>
+<p>Estimates of community specific coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>memb</code></td>
+<td>
+<p>Community membership of vertices.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Han Yu &amp; Rachael Hageman Blair
+</p>
+
+
+<h3>References</h3>
+
+<p>Clauset, Aaron, Mark EJ Newman, and Cristopher Moore. "Finding community structure in very large networks." Physical review E 70.6 (2004): 066111.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+##### implementation of wfg on a computer generated network with
+##### structually relevant continuous attribute and irrelevant categorical attribute
+set.seed(7)
+##### set network properties
+## four groups, each with 32 vertices
+nv &lt;- c(32,32,32,32)
+l &lt;- length(nv)
+## obtain p.in and p.out from z.out
+z.out &lt;- 6
+z.in &lt;- 16-z.out
+p.out &lt;- z.out/96
+p.in &lt;- rep(z.in/31, l)
+
+##### simulate network
+net.simu &lt;- network.simu(nv=nv, p.in=p.in, p.out=p.out, p.del=0)
+net &lt;- net.simu$net
+group &lt;- net.simu$group
+
+##### simulate attributes
+## separation of continuous attribute
+delta &lt;- 1
+## p's for the multinomial distribution of categorical attributes
+p1 &lt;- 0.25
+p2 &lt;- (1-p1)/3
+attr1 &lt;- c(rnorm(nv[1],0), rnorm(nv[2],1*delta), rnorm(nv[3],2*delta), rnorm(nv[4],3*delta))
+attr2 &lt;- c(sample(c(1,2,3,4), size=nv[1], prob=c(p1, p2, p2, p2), replace=TRUE),
+           sample(c(1,2,3,4), size=nv[2], prob=c(p2, p1, p2, p2), replace=TRUE),
+           sample(c(1,2,3,4), size=nv[3], prob=c(p2, p2, p1, p2), replace=TRUE),
+           sample(c(1,2,3,4), size=nv[4], prob=c(p2, p2, p2, p1), replace=TRUE))
+attributes &lt;- data.frame(attr1, attr2)
+
+##### implementation of wfg
+wfg.result &lt;- wfg(net=net, attr=attributes, under.sample = FALSE, prioritize = TRUE)
+
+##### plot network colored by wfg result
+V(net)$size &lt;- 7
+V(net)$color &lt;- wfg.result$memb
+plot(net, vertex.label='')
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,311 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hierarchicalMergeCloseModules</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Merge close (similar) hierarchical consensus modules
+</h2>
+
+<h3>Description</h3>
+
+<p>Merges hierarchical consensus modules that are too close as measured by the correlation of their
+eigengenes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">hierarchicalMergeCloseModules(
+  # input data
+  multiExpr, 
+  multiExpr.imputed = NULL,
+  labels,
+
+  # Optional starting eigengenes
+  MEs = NULL,
+
+  unassdColor = if (is.numeric(labels)) 0 else "grey",
+  # If missing data are present, impute them?
+  impute = TRUE,
+
+
+  # Options for eigengene network construction
+  networkOptions,
+
+  # Options for constructing the consensus
+  consensusTree,
+  calibrateMESimilarities = FALSE,
+
+  # Merging options
+  cutHeight = 0.2,
+  iterate = TRUE,
+
+  # Output options
+  relabel = FALSE,
+  colorSeq = NULL,
+  getNewMEs = TRUE,
+  getNewUnassdME = TRUE,
+
+  # Options controlling behaviour of the function
+  trapErrors = FALSE,
+  verbose = 1, indent = 0)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>multiExpr</code></td>
+<td>
+<p> Expression data in the multi-set format (see <code>multiData</code>). A vector of
+lists, one per set. Each set must contain a component <code>data</code> that contains the expression data, with
+rows corresponding to samples and columns to genes or probes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multiExpr.imputed</code></td>
+<td>
+<p>If <code>multiExpr</code> contain missing data, this argument can be used to supply the
+expression data with missing data imputed. If not given, the <code>impute.knn</code> function will
+be used to impute the missing data within each module (see <code>imputeByModule</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+
+<p>A vector (numeric, character or a factor) giving module labels for genes (variables) in <code>multiExpr</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MEs</code></td>
+<td>
+
+<p>If module eigengenes have been calculated before, the user can save some computational time
+by inputting them. <code>MEs</code> should have the same format as <code>multiExpr</code>.
+If they are not given, they will be calculated.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unassdColor</code></td>
+<td>
+<p>The label (value in <code>labels</code>)
+that represents unassigned genes. Module of this label will
+not enter the module eigengene clustering and will not be merged with other modules.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>impute</code></td>
+<td>
+<p>Should missing values be imputed in eigengene calculation? If imputation is disabled, the
+presence of <code>NA</code> entries will cause the eigengene calculation to fail and eigengenes will be
+replaced by their hubgene approximation. See <code>moduleEigengenes</code> for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkOptions</code></td>
+<td>
+
+<p>A single list of class <code>NetworkOptions</code> giving options for network calculation for all of the
+networks, or a <code>multiData</code> structure containing one such list for each input data set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>consensusTree</code></td>
+<td>
+
+<p>A list specifying the consensus calculation. See <code>newConsensusTree</code> for details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>calibrateMESimilarities</code></td>
+<td>
+
+<p>Logical: should module eigengene similarities be calibrated? This setting overrides the calibration options
+in <code>consensusTree</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutHeight</code></td>
+<td>
+
+<p>Maximum dissimilarity (i.e., 1-correlation) that qualifies modules for merging. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iterate</code></td>
+<td>
+<p>Controls whether the merging procedure should be repeated until there is no change. If
+FALSE, only one iteration will be executed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>relabel</code></td>
+<td>
+<p>Controls whether, after merging, color labels should be ordered by module size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorSeq</code></td>
+<td>
+<p>Color labels to be used for relabeling. Defaults to the standard color order used
+in this package if <code>colors</code> are not numeric, and to integers starting from 1 if
+<code>colors</code> is numeric.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getNewMEs</code></td>
+<td>
+<p>Controls whether module eigengenes of merged modules should be calculated and
+returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getNewUnassdME</code></td>
+<td>
+<p>When doing module eigengene manipulations, the function does not normally
+calculate the eigengene of the 'module' of unassigned ('grey') genes. Setting this option to
+<code>TRUE</code> will force the calculation of the unassigned eigengene in the returned newMEs, but not
+in the returned oldMEs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trapErrors</code></td>
+<td>
+<p>Controls whether computational errors in calculating module eigengenes, their
+dissimilarity, and merging trees should be trapped. If <code>TRUE</code>, errors will be trapped and the
+function will return the input colors. If <code>FALSE</code>, errors will cause the function to stop.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Controls verbosity of printed progress messages. 0 means silent, up to (about) 5 the
+verbosity gradually increases.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p>A single non-negative integer controlling indentation of printed messages. 0 means no
+indentation, each unit above that adds two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function merges input modules 
+that are closely related. The similarities are quantified by correlations of module eigengenes; a
+“consensus” similarity is calculated using <code>hierarchicalConsensusMEDissimilarity</code> 
+according to the recipe in <code>consensusTree</code>. Once the
+(dis-)similarities are calculated, average linkage hierarchical clustering of the module eigengenes is
+performed, the dendrogram is cut at the height <code>cutHeight</code> and modules on each branch are merged.
+The process is (optionally) repeated until no more modules are merged.
+</p>
+<p>If, for a particular module, the module eigengene calculation fails, a hubgene approximation will be
+used.
+</p>
+<p>The user should be aware that if a computational error occurs and <code>trapErrors==TRUE</code>,
+the returned list (see below) will not contain all of the components returned upon normal execution.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If no errors occurred, a list with components
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>Labels for the genes corresponding to merged modules. The function attempts to
+mimic the mode of the input <code>labels</code>: if the input <code>labels</code> is numeric, character and
+factor, respectively, so is the output. Note, however, that if the function performs relabeling, a
+standard sequence of labels will be used: integers starting at 1 if the input <code>labels</code> is
+numeric, and a sequence of color labels otherwise (see <code>colorSeq</code> above).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dendro</code></td>
+<td>
+<p>Hierarchical clustering dendrogram (average linkage) of the eigengenes of the most
+recently computed tree. If <code>iterate</code> was set TRUE, this will be the dendrogram of the merged
+modules, otherwise it will be the dendrogram of the original modules.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>oldDendro</code></td>
+<td>
+<p>Hierarchical clustering dendrogram (average linkage) of the eigengenes of the original
+modules.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutHeight</code></td>
+<td>
+<p>The input cutHeight.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>oldMEs</code></td>
+<td>
+<p>Module eigengenes of the original modules in the sets given by <code>useSets</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newMEs</code></td>
+<td>
+<p>Module eigengenes of the merged modules in the sets given by <code>useSets</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allOK</code></td>
+<td>
+<p>A logical set to <code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<p>If an error occurred and <code>trapErrors==TRUE</code>, the list only contains these components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>colors</code></td>
+<td>
+<p>A copy of the input colors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allOK</code></td>
+<td>
+<p>a logical set to <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>multiSetMEs</code> for calculation of (consensus) module eigengenes across multiple data sets;
+</p>
+<p><code>newConsensusTree</code> for information about consensus trees;
+</p>
+<p><code>hierarchicalConsensusMEDissimilarity</code> for calculation of hierarchical consensus eigengene
+dissimilarity.
+</p>
+
+
+</div>

@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sort_colms</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Sort columns in a more intuitive order</h2>
+
+<h3>Description</h3>
+
+<p><code>sort_colms</code> sorts selection table columns in a more intuitive order.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sort_colms(X)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Data frame containing columns for sound file (sound.files), selection
+(selec), start and end time of signals ('start' and 'end') and low and high
+frequency ('bottom.freq' and 'top.freq', optional). See the example data 'lbh_selec_table'.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The function returns the data from the input data frame with the most relevant information
+for acoustic analysis located in the first columns. The priority order for column names is: "sound.files", "channel", "selec", "start", "end", "top.freq", and "bottom.freq".
+</p>
+
+
+<h3>Value</h3>
+
+<p>The same data as in the input data frame but with the most relevant information
+for acoustic analysis located in the first columns.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(warbleR)
+data("lbh_selec_table")
+
+# mess column order
+lbh_selec_table &lt;- lbh_selec_table[, sample(seq_len(ncol(lbh_selec_table)))]
+
+# check names
+names(lbh_selec_table)
+
+lbh_selec_table &lt;- sort_colms(X = lbh_selec_table)
+
+# check names again
+names(lbh_selec_table)
+
+</code></pre>
+
+
+</div>

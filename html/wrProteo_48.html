@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>removeSampleInList</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Remove Samples/Columns From list of matrixes</h2>
+
+<h3>Description</h3>
+
+<p>Remove samples (ie columns) from every instance of list of matrixes.
+Note: This function assumes same order of columns in list-elements 'listElem' !
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">removeSampleInList(
+  dat,
+  remSamp,
+  listElem = c("raw", "quant", "counts", "sampleSetup"),
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(list) main input to be filtered</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remSamp</code></td>
+<td>
+<p>(integer) column number to exclude</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>listElem</code></td>
+<td>
+<p>(character) names of list-elements where columns indicated with 'remSamp' should be removed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a matrix including imputed values or list of final and matrix with number of imputed by group (plus optional plot)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>testRobustToNAimputation</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2019)
+datT6 &lt;- matrix(round(rnorm(300)+3,1), ncol=6, dimnames=list(paste("li",1:50,sep=""),
+  letters[19:24]))
+datL &lt;- list(raw=datT6, quant=datT6, annot=matrix(nrow=nrow(datT6), ncol=2))
+datDelta2 &lt;- removeSampleInList(datL, remSam=2)
+</code></pre>
+
+
+</div>

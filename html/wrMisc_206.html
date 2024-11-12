@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>protectSpecChar</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Protect Special Characters</h2>
+
+<h3>Description</h3>
+
+<p>Some characters do have a special meaning when used with regular expressions.
+This concerns characters like a point, parinthesis, backslash etc.
+Thus, when using <code>grep</code> or any related command, shuch special characters must get protected in order to get considered as they are.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">protectSpecChar(
+  x,
+  prot = c(".", "\\", "|", "(", ")", "[", "{", "^", "$", "*", "+", "?"),
+  silent = TRUE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>character vector to be prepared for use in regular expressions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prot</code></td>
+<td>
+<p>(character) collection of characters that need to be protected</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a modified character vector
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">aa &lt;- c("abc","abcde","ab.c","ab.c.e","ab*c","ab\\d")
+grepl("b.", aa)             # all TRUE
+grepl("b\\.", aa)           # manual prootection
+grepl(protectSpecChar("b."), aa)
+</code></pre>
+
+
+</div>

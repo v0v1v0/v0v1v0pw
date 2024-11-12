@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>risk</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+risk-based criteria 
+</h2>
+
+<h3>Description</h3>
+
+<p>this function returns risk-based criteria for demand site(s) built-in the object inherited from class of <code>sim</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">risk(object , s.const = 0.95)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object from class of <code>sim</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s.const</code></td>
+<td>
+<p>satisfactory constant: a value in [0, 1] interval, which refers to the level at which if a demand is supplied over the <code>s.const</code> is considered fully supplied.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function computes the riks criteria based on the formulations proposed by Hashimoto et.al (1982).
+</p>
+
+
+<h3>Value</h3>
+
+<p>a matrix of criteria
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Rezgar Arabzadeh
+</p>
+
+
+<h3>References</h3>
+
+<p>Hashimoto, Tsuyoshi, Jery R. Stedinger, and Daniel P. Loucks. "Reliability, resiliency, and vulnerability criteria for water resource system performance evaluation." Water resources research 18.1 (1982): 14-20.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>sim</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">Res&lt;-createReservoir(name="R1",type='storage',
+                     netEvaporation=rnorm(120,0.5,0.1),
+                     geometry=list(deadStorage= 10,
+                                   capacity= 700,
+                                   storageAreaTable= cbind(seq(0,900,100),seq(0,9,1))))
+R&lt;-createRiver(name="Riv1",downstream=Res,discharge=rnorm(120,500,4))
+waterVariation&lt;-round(sin(seq(0,pi,length.out=12))*
+                       100/sum(sin(seq(0,pi,length.out=12))))
+D1&lt;-createDemandSite(name ="D1",
+                     demandParams=list(waterUseRate=5,
+                                       waterVariation=waterVariation,
+                                       cropArea=500),
+                     suppliers=list(Res),priority=1)
+D2&lt;-createDemandSite(name ="D2",
+                     demandParams=list(waterUseRate=5,
+                                       waterVariation=waterVariation,
+                                       cropArea=500),
+                     suppliers=list(Res),priority=2)
+D3&lt;-createDemandSite(name ="D3",
+                     demandParams=list(waterUseRate=5,
+                                       waterVariation=waterVariation,
+                                       cropArea=500),
+                     suppliers=list(Res),priority=3)
+area&lt;-createArea(simulation=list(start='2000-01-01',end='2009-12-29',interval='month'))
+area&lt;-addObjectToArea(area,R)
+area&lt;-addObjectToArea(area,Res)
+area&lt;-addObjectToArea(area,D1)
+area&lt;-addObjectToArea(area,D2)
+area&lt;-addObjectToArea(area,D3)
+risk(sim(area))
+</code></pre>
+
+
+</div>

@@ -1,0 +1,164 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fuseProteomicsProjects</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Combine Multiple Proteomics Data-Sets</h2>
+
+<h3>Description</h3>
+
+<p>This function allows combining up to 3 separate data-sets previously imported using wrProteo.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fuseProteomicsProjects(
+  x,
+  y,
+  z = NULL,
+  columnNa = "Accession",
+  NA.rm = TRUE,
+  listNa = c(quant = "quant", annot = "annot"),
+  all = FALSE,
+  textModif = NULL,
+  shortNa = NULL,
+  retProtLst = FALSE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(list) First Proteomics data-set</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>(list) Second Proteomics data-set</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>(list) optional third Proteomics data-set</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>columnNa</code></td>
+<td>
+<p>(character) column names from annotation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NA.rm</code></td>
+<td>
+<p>(logical) remove <code>NA</code>s</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>listNa</code></td>
+<td>
+<p>(character) names of key list-elemnts from <code>x</code> to be treated; the first one is used as pattern for the format of quantitation data, 
+,  the last one for the annotation data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>all</code></td>
+<td>
+<p>(logical) union of intersect or merge should be performed between x, y and z</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>textModif</code></td>
+<td>
+<p>(character) Additional modifications to the identifiers from argument <code>columnNa</code>; 
+so far intregrated: <code>rmPrecAA</code> for removing preceeding caps letters (amino-acids, eg [KR].AGVIFPVGR.[ML] =&gt; AGVIFPVGR) 
+or <code>rmTerminalDigit</code> for removing terminal digits (charge-states)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shortNa</code></td>
+<td>
+<p>(character) for appending to output-colnames</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>retProtLst</code></td>
+<td>
+<p>(logical) return list-object similar to input, otherwise a matrix of fused/aligned quantitation data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Some quantification software way give some identifyers multiple times, ie as multiple lines (eg for different modifictions or charge states, etc).
+In this case this function tries first to summarize all lines with identical identifyers (using the function <code>combineRedundLinesInList</code>
+which used by default the median value). 
+Thus, it is very important to know your data and to understand when lines that appear with the same identifyers should/may be fused/summarized without 
+doing damage to the later biological interpretation ! The user may specify for each dataset the colum out of the protein/peptide-annotation to use
+via the argument <code>columnNa</code>. 
+Then, this content will be matched as identical match, so when combining data from different software special care shoud be taken !
+</p>
+<p>Please note, that (at this point) the data from different series/objects will be joined as they are, ie without any additional normalization.
+It is up to the user to inspect the resulting data and to decide if and which type of normalization may be suitable !
+</p>
+<p>Please do NOT try combining protein and peptide quntification data.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a list with the same number of list-elements as  <code>$x</code>, ie typically this contains :
+<code>$raw</code> (initial/raw abundance values), <code>$quant</code> with final normalized quantitations, 
+<code>$annot</code>, optionally <code>$counts</code> an array with number of peptides, <code>$quantNotes</code> or <code>$notes</code>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>sd</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">path1 &lt;- system.file("extdata", package="wrProteo")
+dataMQ &lt;- readMaxQuantFile(path1, specPref=NULL, normalizeMeth="median")
+MCproFi1 &lt;- "tinyMC.RData"
+dataMC &lt;- readMassChroQFile(path1, file=MCproFi1, plotGraph=FALSE)
+dataFused &lt;- fuseProteomicsProjects(dataMQ, dataMC)
+dim(dataMQ$quant)
+dim(dataMC$quant)
+dim(dataFused$quant)
+</code></pre>
+
+
+</div>

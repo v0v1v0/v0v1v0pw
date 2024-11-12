@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ortho.basis</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Derive Orthonormal Basis from Wavelet Packet Tree</h2>
+
+<h3>Description</h3>
+
+<p>An orthonormal basis for the discrete wavelet transform may be characterized
+via a disjoint partitioning of the frequency axis that covers
+<code class="reqn">[0,\frac{1}{2})</code>.  This subroutine produces an orthonormal
+basis from a full wavelet packet tree.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ortho.basis(xtree)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>xtree</code></td>
+<td>
+<p>is a vector whose entries are associated with a wavelet packet
+tree.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>A wavelet packet tree is a binary tree of Boolean variables.  Parent nodes
+are removed if any of their children exist.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Boolean vector describing the orthonormal basis for the DWPT.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>B. Whitcher
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(japan)
+J &lt;- 4
+wf &lt;- "mb8"
+japan.mra &lt;- mra(log(japan), wf, J, boundary="reflection")
+japan.nomean &lt;-
+  ts(apply(matrix(unlist(japan.mra[-(J+1)]), ncol=J, byrow=FALSE), 1, sum),
+     start=1955, freq=4)
+japan.nomean2 &lt;- ts(japan.nomean[42:169], start=1965.25, freq=4)
+plot(japan.nomean2, type="l")
+japan.dwpt &lt;- dwpt(japan.nomean2, wf, 6)
+japan.basis &lt;-
+  ortho.basis(portmanteau.test(japan.dwpt, p=0.01, type="other"))
+# Not implemented yet
+# par(mfrow=c(1,1))
+# plot.basis(japan.basis)
+
+</code></pre>
+
+
+</div>

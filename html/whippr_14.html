@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>perform_average</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Perform average on second-by-second data</h2>
+
+<h3>Description</h3>
+
+<p>This function performs either a bin- or a rolling-average on the interpolated data.
+You must specify the <code>type</code> of the average before continuing.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">perform_average(
+  .data,
+  type = c("bin", "rolling", "ensemble"),
+  bins = 30,
+  rolling_window = 30
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.data</code></td>
+<td>
+<p>The second-by-second data retrieved from <code>interpolate()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>The type of the average to perform. Either <code>bin</code>, <code>rolling</code>, or <code>ensemble</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bins</code></td>
+<td>
+<p>If bin-average is chosen, here you can specify the size of the bin-average, in seconds. Default to 30-s bin-average.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rolling_window</code></td>
+<td>
+<p>If rolling-average is chosen, here you can specify the rolling-average window, in seconds. Default to 30-s rolling-average.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Ensemble average is used in VO2 kinetics analysis, where a series of transitions from baseline to
+the moderate/heavy/severe intensity-domain is ensembled averaged into a single 'bout' for further data processing.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a tibble
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## get file path from example data
+path_example &lt;- system.file("example_cosmed.xlsx", package = "whippr")
+
+## read data
+df &lt;- read_data(path = path_example, metabolic_cart = "cosmed")
+
+## interpolate and perform 30-s bin-average
+df %&gt;%
+ interpolate() %&gt;%
+ perform_average(type = "bin", bins = 30)
+
+## interpolate and perform 30-s rolling-average
+df %&gt;%
+ interpolate() %&gt;%
+ perform_average(type = "rolling", rolling_window = 30)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

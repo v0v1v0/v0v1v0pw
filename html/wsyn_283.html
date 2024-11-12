@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>syncexpl</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Amount of synchrony explained, and related quantities</h2>
+
+<h3>Description</h3>
+
+<p>Gives amount of synchrony explained by a wavelet linear model, as a function of 
+timescale, and related quantities (see details)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">syncexpl(object)
+
+## S3 method for class 'wlm'
+syncexpl(object)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A <code>wlm</code> object</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>This function only works for <code>norm="powall"</code> at present. See
+Sheppard et al (2018) for details of the meaning and computation of the 
+columns.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>syncexpl</code> returns a data frame with columns for <code>timescales</code>,
+<code>sync</code> (the time-averaged square magnitude of the wavelet mean field of the
+response transforms), <code>syncexpl</code> (synchrony explained by the model 
+predictors), columns named for each predictor (synchrony explained by that 
+predictor), <code>interactions</code> (synchrony explained by all interaction effects),
+columns named for each pair of predictors (synchrony explained by individual
+pairwise interactions). There are also columns for <code>crossterms</code> and 
+<code>resids</code> (residuals). The cross terms must be small for a given timescale band for
+the other results to be meaningful. All columns are functions of timescales.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Thomas Anderson, <a href="mailto:anderstl@gmail.com">anderstl@gmail.com</a>, Jon Walter, <a href="mailto:jaw3es@virginia.edu">jaw3es@virginia.edu</a>; Lawrence 
+Sheppard, <a href="mailto:lwsheppard@ku.edu">lwsheppard@ku.edu</a>; Daniel Reuman, <a href="mailto:reuman@ku.edu">reuman@ku.edu</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Sheppard, LW et al. (2019) Synchrony is more than its top-down and climatic parts: interacting 
+Moran effects on phytoplankton in British seas. Plos Computational Biology 15, e1006744. doi: 10.1371/journal.pcbi.1006744
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wlm</code>, <code>predsync</code>, <code>wlmtest</code>,
+<code>browseVignettes("wsyn")</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">times&lt;-(-3:100)
+ts1&lt;-sin(2*pi*times/10)
+ts2&lt;-5*sin(2*pi*times/3)
+artsig_x&lt;-matrix(NA,11,length(times)) #the driver
+for (counter in 1:11)
+{
+  artsig_x[counter,]=ts1+ts2+rnorm(length(times),mean=0,sd=1.5)
+}
+times&lt;-0:100
+artsig_y&lt;-matrix(NA,11,length(times)) #the driven
+for (counter1 in 1:11)
+{
+  for (counter2 in 1:101)
+  {
+    artsig_y[counter1,counter2]&lt;-mean(artsig_x[counter1,counter2:(counter2+2)])
+  }
+}
+artsig_y&lt;-artsig_y+matrix(rnorm(length(times)*11,mean=0,sd=3),11,length(times))
+artsig_x&lt;-artsig_x[,4:104]
+artsig_i&lt;-matrix(rnorm(11*length(times)),11,length(times)) #the irrelevant
+artsig_x&lt;-cleandat(artsig_x,times,1)$cdat
+artsig_y&lt;-cleandat(artsig_y,times,1)$cdat
+artsig_i&lt;-cleandat(artsig_i,times,1)$cdat
+
+dat&lt;-list(driven=artsig_y,driver=artsig_x,irrelevant=artsig_i)
+resp&lt;-1
+pred&lt;-2:3
+norm&lt;-"powall"
+wlmobj&lt;-wlm(dat,times,resp,pred,norm)
+
+res&lt;-syncexpl(wlmobj)
+ 
+</code></pre>
+
+
+</div>

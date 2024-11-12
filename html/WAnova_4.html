@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wanova_pwr.test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>wanova_pwr.test</h2>
+
+<h3>Description</h3>
+
+<p>This function computes the approximate sample size required to achieve a desired power level for Welch's F-test in a one-way heteroscedastic ANOVA. The function takes the initial sample size, group means, and standard deviations, and iteratively determines the necessary sample size to meet the specified power and significance level.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wanova_pwr.test(n, means, sd, power = 0.9, alpha = 0.05)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>A numeric vector of initial sample sizes for each group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>means</code></td>
+<td>
+<p>A numeric vector of the means for each group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd</code></td>
+<td>
+<p>A numeric vector of the standard deviations for each group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>Desired power of the test. Default is 0.90.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Significance level for the test. Default is 0.05.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function adjusts the sample sizes iteratively until the desired power level is achieved.
+It uses the F-distribution to determine critical values and compute the power of the test.
+The output includes the sample size required for each group to achieve the specified power.
+</p>
+<p>Reference: Levy, K. J. (1978a). Some empirical power results associated with
+Welch's robust analysis of variance technique. Journal of Statistical Computation and Simulation, 8, 43-48.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The adjusted sample sizes for each group. If all adjusted sizes are the same, it returns a single value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>The significance level used in the computation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>The calculated power of the test, rounded to two decimal places.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>print.wsize</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Example usage of the wsize function
+n &lt;- c(10, 10, 10, 10)
+means &lt;- c(1, 0, 0, -1)
+sd &lt;- c(1, 1, 1, 1)
+result &lt;- wanova_pwr.test(n, means, sd, power = 0.90, alpha = 0.05)
+print(result)
+
+
+</code></pre>
+
+
+</div>

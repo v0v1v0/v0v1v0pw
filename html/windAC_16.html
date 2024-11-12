@@ -1,0 +1,162 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hullMuirAreaCorrection</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate an area correction based on the Hull and Muir (2010) maximum
+distance and a triangular distribution as proposed by Huso and Dalthorp (2014).</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the maximum fall distance from a turbine using the
+regression model from Hull and Muir (2010). Calculate the carcass fall proabilities
+between one-unit increments of a right triangle distribution as proposed by Huso and Dalthorp (2014). Use the
+probabilities and proportion of area searched to calculate an area correction
+value.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">hullMuirAreaCorrection(
+  hubHeight,
+  bladeRadius,
+  lowerBound = 0,
+  upperBound = Inf,
+  proportionSearchDF,
+  distanceCol,
+  proportionCol,
+  additionalCol = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>hubHeight</code></td>
+<td>
+<p>Numeric, turbine hub height.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bladeRadius</code></td>
+<td>
+<p>Numeric, turbine blade radius.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lowerBound</code></td>
+<td>
+<p>Numeric, default is zero, see <code>triangleProb</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upperBound</code></td>
+<td>
+<p>Numeric, default is <code>Inf</code>, see <code>triangleProb</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>proportionSearchDF</code></td>
+<td>
+<p>Data frame with at least two columns: distance from
+turbine and proportion of area searched at each distance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distanceCol</code></td>
+<td>
+<p>Character string indicating the distance column in
+<code>proportionSearchDF</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>proportionCol</code></td>
+<td>
+<p>Character string indicating the proportion column in
+<code>proportionSearchDF</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>additionalCol</code></td>
+<td>
+<p>Character vector, default is NULL, indicating additional
+columns of how the area correction value should be calculated, see examples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Currently ignored.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The maximum Hull and Muir distances are calculated using
+<code>hullMuirMaxDistance</code> and the carcass fall probabilities are calculated using
+<code>triangleProb</code>. The probabilites are multipled by the proportion
+of area searched from <code>proportionSearchDF</code> by distance. These products are
+summed across distances by size class and <code>additionalCol</code>.
+</p>
+<p>The distances in the <code>distanceCol</code> will be rounded to the nearest
+integer for matching up with the probabilities. The distances, <code>hubHeight</code>, and <code>bladeRadius</code> are assumed to be in the same units.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Data frame of size class, <code>additionalCol</code> columns, and area
+correction
+</p>
+
+
+<h3>References</h3>
+
+<p>Hull, C. L., &amp; Muir, S. (2010).
+Search areas for monitoring bird and bat carcasses at wind farms using a Monte-Carlo model.
+Australasian Journal of Environmental Management, 17(2), 77-87.
+</p>
+<p>Huso, M. &amp; Dalthorp,D (2014).
+Accounting for Unsearched Areas in Estimating Wind Turbine-Caused Fatality.
+The Journal of Wildlife Management. 78. 10.1002/jwmg.663.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>hullMuirMaxDistance triangleProb
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## proportion of area searched data
+data(proportionAreaSearched)
+
+hullMuirAreaCorrection(hubHeight = 87.5, bladeRadius = 62.5,
+                       proportionSearchDF = proportionAreaSearched,
+                       distanceCol = 'distanceFromTurbine',
+                       proportionCol = 'proportionAreaSearched',
+                       additionalCol = 'plotType')
+
+## without additional columns but must separate the proportion of area searched
+## data frame
+hullMuirAreaCorrection(hubHeight = 87.5, bladeRadius = 62.5,
+                       proportionSearchDF = subset(proportionAreaSearched, plotType == 'RP'),
+                       distanceCol = 'distanceFromTurbine',
+                       proportionCol = 'proportionAreaSearched')
+
+hullMuirAreaCorrection(hubHeight = 87.5, bladeRadius = 62.5,
+                       proportionSearchDF = subset(proportionAreaSearched, plotType == 'FULL'),
+                       distanceCol = 'distanceFromTurbine',
+                       proportionCol = 'proportionAreaSearched')
+</code></pre>
+
+
+</div>

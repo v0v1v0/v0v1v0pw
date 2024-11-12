@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wtd.chi.sq</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Produces weighted chi-squared tests.
+</h2>
+
+<h3>Description</h3>
+
+<p><code>wtd.chi.sq</code> produces weighted chi-squared tests for two- and three-variable contingency tables.  Decomposes parts of three-variable contingency tables as well. Note that weights run with the default parameters here treat the weights as an estimate of the precision of the information. A prior version of this software was set to default to <code>mean1=FALSE</code>.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wtd.chi.sq(var1, var2, var3=NULL, weight=NULL, na.rm=TRUE,
+drop.missing.levels=TRUE, mean1=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>var1</code></td>
+<td>
+
+<p><code>var1</code> is a vector of values which the researcher would like to use to divide any data set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var2</code></td>
+<td>
+
+<p><code>var2</code> is a vector of values which the researcher would like to use to divide any data set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var3</code></td>
+<td>
+
+<p><code>var3</code> is an optional additional vector of values which the researcher would like to use to divide any data set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight</code></td>
+<td>
+
+<p><code>weight</code> is an optional vector of weights to be used to determine the weighted chi-squared for all analyses.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+
+<p><code>na.rm</code> removes missing data from analyses.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drop.missing.levels</code></td>
+<td>
+
+<p><code>drop.missing.levels</code> drops missing levels from variables.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mean1</code></td>
+<td>
+
+<p><code>mean1</code> is an optional parameter for determining whether the weights should be forced to have an average value of 1. If this is set as false, the weighted correlations will be produced with the assumption that the true N of the data is equivalent to the sum of the weights.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A two-way chi-squared produces a vector including a single chi-squared value, degrees of freedom measure, and p-value for each analysis.
+</p>
+<p>A three-way chi-squared produces a matrix with a single chi-squared value, degrees of freedom measure, and p-value for each of seven analyses.  These include: (1) the values using a three-way contingency table, (2) the values for a two-way contingency table with each pair of variables, and (3) assessments for whether the relations between each pair of variables are significantly different across levels of the third variable.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Josh Pasek, Assistant Professor of Communication Studies at the University of Michigan (www.joshpasek.com).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wtd.cor</code>
+<code>wtd.t.test</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">var1 &lt;- c(1,1,1,1,1,2,2,2,2,2,3,3,3,3,3)
+var2 &lt;- c(1,1,2,2,3,3,1,1,2,2,3,3,1,1,2)
+var3 &lt;- c(1,2,3,1,2,3,1,2,3,1,2,3,1,2,3)
+weight &lt;- c(.5,.5,.5,.5,.5,1,1,1,1,1,2,2,2,2,2)
+
+wtd.chi.sq(var1, var2)
+wtd.chi.sq(var1, var2, weight=weight)
+
+wtd.chi.sq(var1, var2, var3)
+wtd.chi.sq(var1, var2, var3, weight=weight)
+</code></pre>
+
+
+</div>

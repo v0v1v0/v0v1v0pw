@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getPPP</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Alias for <code>getPercentilePlottingPositions</code>, sets data into the format required by lslr.</h2>
+
+<h3>Description</h3>
+
+<p>Determination of plotting positions to be used for linear regression of life data analysis is a highly debated topic.
+This function implements a wide assortment of options for the Weibull-R project.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getPPP(x, s=NULL, interval=NULL, ppos="beta", aranks="Johnson", ties="none")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>Either a dataframe containing at least <code>$time</code> and <code>$event</code>
+columns and optionally a <code>$qty</code> column, or a vector of class <code>"numeric"</code> or <code>"integer"</code> with
+(life-)time observations.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p>An optional vector of suspension data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interval</code></td>
+<td>
+<p>reserved argument for interval censored data - NOT YET IMPLEMENTED.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ppos</code></td>
+<td>
+<p>A string defining a plotting position method.  Implemented options include "beta" the incomplete beta function (as default), "Benard", "mean" also known as Herd-Johnson, "Hazen" or modified Kaplan-Meier, "Kaplan-Meier" with modification for final complete failure, and "Blom.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aranks</code></td>
+<td>
+<p>A string defining the method for establishing adjusted ranks when suspension data (right censored) are present. Implemented options include "Johnson" (as default) and "KMestimator"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ties</code></td>
+<td>
+<p>A string defining a method of eliminating ties, or duplicate time valued data, from plotting. Implemented options include "highest" (used as 'Inspection Option #1' by Abernethy), "mean", "lowest", and "sequential".</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a dataframe with the failure data (as potentially reduced by ties argument), the probability plotting positions, and adjusted ranks.
+</p>
+
+
+<h3>References</h3>
+
+<p>Robert B. Abernethy, (2008) "The New Weibull Handbook, Fifth Edition"
+Leonard C. Johnson (1964) "The Statistical Treatment of Fatigue Experiments"  
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">failures&lt;-c(90,96,30,49,82)
+suspensions&lt;-c(100,45,10)
+median_percentile_ranks&lt;-getPPP(failures, suspensions)[,2]
+</code></pre>
+
+
+</div>

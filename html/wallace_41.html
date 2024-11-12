@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>vis_bioclimPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>vis_bioclimPlot Visualize bivariate plot of BIOCLIM model</h2>
+
+<h3>Description</h3>
+
+<p>This functions creates a bivariate plot with two of the environmental
+variables used for modeling as x and y axes and occurrences as observations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">vis_bioclimPlot(x, a = 1, b = 2, p = 0.9)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>bioclim model including values for each environmental layer at
+each occurrence point</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+<p>numeric Environmental layer to be used as x axis. Default is
+layer 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+<p>numeric. Environmental layer to be used as x axis. Default is
+layer 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>numeric. (0-1) percentile distribution to be used for plotting
+envelope and showing points outside of envelope. Default is 0.9</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is a bivariate plot with x and y axes representing two of the
+environmental layers used for modeling (user selected although 1 and 2 as
+default). Occurrences used for modeling are shown with differential
+visualization if they are outside of the selected percentile distribution
+(for any variable). Plot also includes a rectangle representing the
+bivariate bioclimatic envelope according to a provided percentile.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A bivariate plot of environmental values for occurrences. Includes a
+blue rectangle representing the bioclimatic envelope given p. Occurrences
+that are inside the envelope for all layers (included those not plotted)
+are shown as green circles and those outside of the envelope for one ore
+more variables are plotted as orange triangles.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jamie Kass &lt;jamie.m.kass@gmail.com&gt;
+</p>
+<p>Gonzalo E. Pinilla-Buitrago &lt;gepinillab@gmail.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>model_bioclim</code> <code>ENMevaluate</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+envs &lt;- envs_userEnvs(rasPath = list.files(system.file("extdata/wc",
+                                           package = "wallace"),
+                      pattern = ".tif$", full.names = TRUE),
+                      rasName = list.files(system.file("extdata/wc",
+                                           package = "wallace"),
+                      pattern = ".tif$", full.names = FALSE))
+occs &lt;- read.csv(system.file("extdata/Bassaricyon_alleni.csv",
+                 package = "wallace"))
+bg &lt;- read.csv(system.file("extdata/Bassaricyon_alleni_bgPoints.csv",
+               package = "wallace"))
+partblock &lt;- part_partitionOccs(occs, bg, method = 'block')
+m &lt;- model_bioclim(occs, bg, partblock, envs)
+bioclimPlot &lt;- vis_bioclimPlot(x = m@models$bioclim,
+                               a = 1, b = 2, p = 1)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,148 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pull_wos</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Pull data from the Web of Science</h2>
+
+<h3>Description</h3>
+
+<p><code>pull_wos</code> wraps the process of querying, downloading, parsing, and
+processing Web of Science data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pull_wos(query, editions = c("SCI", "SSCI", "AHCI", "ISTP", "ISSHP",
+  "BSCI", "BHCI", "IC", "CCR", "ESCI"),
+  sid = auth(Sys.getenv("WOS_USERNAME"), Sys.getenv("WOS_PASSWORD")),
+  ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>Query string. See the <a href="https://images.webofknowledge.com/images/help/WOK/hs_search_operators.html#dsy863-TRS_search_operator_precedence">WoS query documentation</a> page
+for details on how to write a query as well as this list of <a href="http://images.webofknowledge.com.ezproxy.lib.vt.edu/WOKRS527R13/help/WOS/hp_advanced_examples.html">example queries</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>editions</code></td>
+<td>
+<p>Web of Science editions to query. Possible values are listed
+<a href="http://ipscience-help.thomsonreuters.com/wosWebServicesLite/dbEditionsOptionsGroup/databaseEditionsWos.html">here</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sid</code></td>
+<td>
+<p>Session identifier (SID). The default setting is to get a fresh
+SID each time you query WoS via a call to <code>auth</code>. However,
+you should try to reuse SIDs across queries so that you don't run into the
+throttling limits placed on new sessions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments passed along to <code>POST</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of the following data frames:
+</p>
+
+<dl>
+<dt>publication</dt>
+<dd>
+<p>A data frame where each row corresponds to a different
+publication. Note that each publication has a distinct <code>ut</code>. There is
+a one-to-one relationship between a <code>ut</code> and each of the columns
+in this table.</p>
+</dd>
+<dt>author</dt>
+<dd>
+<p>A data frame where each row corresponds to a different
+publication/author pair (i.e., a <code>ut</code>/<code>author_no</code> pair). In
+other words, each row corresponds to a different author on a publication.
+You can link the authors in this table to the <code>address</code> and
+<code>author_address</code> tables to get their addresses (if they exist). See
+example in FAQs for details.</p>
+</dd>
+<dt>address</dt>
+<dd>
+<p>A data frame where each row corresponds to a different
+publication/address pair (i.e., a <code>ut</code>/<code>addr_no</code> pair). In
+other words, each row corresponds to a different address on a publication.
+You can link the addresses in this table to the <code>author</code> and
+<code>author_address</code> tables to see which authors correspond to which
+addresses. See example in FAQs for details.</p>
+</dd>
+<dt>author_address</dt>
+<dd>
+<p>A data frame that specifies which authors correspond
+to which addresses on a given publication. This data frame is meant to
+be used to link the <code>author</code> and <code>address</code> tables together.</p>
+</dd>
+<dt>jsc</dt>
+<dd>
+<p>A data frame where each row corresponds to a different
+publication/jsc (journal subject category) pair. There is a many-to-many
+relationship between <code>ut</code>'s and <code>jsc</code>'s.</p>
+</dd>
+<dt>keyword</dt>
+<dd>
+<p>A data frame where each row corresponds to a different
+publication/keyword pair. These are the author-assigned keywords.</p>
+</dd>
+<dt>keywords_plus</dt>
+<dd>
+<p>A data frame where each row corresponds to a different
+publication/keywords_plus pair. These keywords are the keywords assigned
+by Clarivate Analytics through an automated process.</p>
+</dd>
+<dt>grant</dt>
+<dd>
+<p>A data frame where each row corresponds to a different
+publication/grant agency/grant ID triplet. Not all publications acknowledge
+a specific grant number in the funding acknowledgement section, hence the
+<code>grant_id</code> field can be <code>NA</code>.</p>
+</dd>
+<dt>doc_type</dt>
+<dd>
+<p>A data frame where each row corresponds to a different
+publication/document type pair.</p>
+</dd>
+</dl>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+sid &lt;- auth("your_username", password = "your_password")
+pull_wos("TS = (dog welfare) AND PY = 2010", sid = sid)
+
+# Re-use session ID. This is best practice to avoid throttling limits:
+pull_wos("TI = \"dog welfare\"", sid = sid)
+
+# Get fresh session ID:
+pull_wos("TI = \"pet welfare\"", sid = auth("your_username", "your_password"))
+
+# It's best to see how many records your query matches before actually
+# downloading the data. To do this, call query_wos before running pull_wos:
+query &lt;- "TS = ((cadmium AND gill*) NOT Pisces)"
+query_wos(query, sid = sid) # shows that there are 1,611 matching publications
+pull_wos(query, sid = sid)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

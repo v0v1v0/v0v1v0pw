@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>imwr.imwd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Inverse two-dimensional discrete wavelet transform.</h2>
+
+<h3>Description</h3>
+
+<p>This functions performs the reconstruction stage of Mallat's pyramid algorithm (i.e. the inverse discrete wavelet transform) for images. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'imwd'
+imwr(imwd, bc=imwd$bc, verbose=FALSE, ...) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>imwd</code></td>
+<td>
+<p>An object of class '<code>imwd</code>'. This type of object is returned by '<code>imwd</code>'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bc</code></td>
+<td>
+<p>This argument specifies the boundary handling, it is best left to be the boundary handling specified by that in the supplied imwd (as is the default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>If this argument is true then informative messages are printed detailing the computations to be performed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Details of the algorithm are to be found in Mallat (1989). Similarly to the decomposition function, <code>imwd</code> the inverse algorithm works by applying many 1D reconstruction algorithms to the coefficients. The filters in these 1D reconstructions are incorporated in the supplied <code>imwd.object</code> and originally created by the <code>filter.select</code> function in WaveThresh3.
+</p>
+<p>This function is a method for the generic function <code>imwr</code> for class <code>imwd.object</code>. It can be invoked by calling <code>imwr</code> for an object of the appropriate class, or directly by calling imwr.imwd regardless of the class of the object. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix, of dimension determined by the original data set supplied to the initial decomposition (more precisely, determined by the <code>nlevelsWT</code> component of the <code>imwd.object</code>). This matrix is the highest resolution level of the reconstruction. If a <code>imwd</code> two-dimensional wavelet transform is followed immediately by a <code>imwr</code> inverse two-dimensional wavelet transform then the returned matrix will be exactly the same as the original image. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.5.3 Copyright Guy Nason 1994 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>imwd</code>, <code>imwd.object</code>, <code>imwr</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Do a decomposition, then exact reconstruction
+# Look at the error
+#
+test.image &lt;- matrix(rnorm(32*32), nrow=32)
+#
+# Test image is just some sort of  square matrix whose side length
+# is a power of two.
+#
+max( abs(imwr(imwd(test.image)) - test.image))
+# [1] 1.014611e-11
+</code></pre>
+
+
+</div>

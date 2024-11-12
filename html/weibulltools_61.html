@@ -1,0 +1,170 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_mod_mix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add Estimated Population Lines of a Separated Mixture Model to a
+Probability Plot</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#soft-deprecated"><img src="../help/figures/lifecycle-soft-deprecated.svg" alt="[Soft-deprecated]"></a>
+</p>
+<p><code>plot_mod_mix()</code> is no longer under active development, switching to
+plot_mod is recommended.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_mod_mix(
+  p_obj,
+  x,
+  status,
+  mix_output,
+  distribution = c("weibull", "lognormal", "loglogistic"),
+  title_trace = "Fit",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>p_obj</code></td>
+<td>
+<p>A plot object returned by plot_prob_mix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector containing the x-coordinates of the respective
+regression line.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>A vector of binary data (0 or 1) indicating whether a unit is a
+right censored observation (= 0) or a failure (= 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mix_output</code></td>
+<td>
+<p>A list returned by mixmod_regression or mixmod_em,
+which consists of elements necessary to visualize the regression lines.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the random variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_trace</code></td>
+<td>
+<p>A character string which is assigned to the legend trace.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function adds one or multiple estimated regression lines to an existing
+probability plot plot_prob). Depending on the output of the function
+mixmod_regression or mixmod_em one or multiple lines are plotted.
+</p>
+<p>The name of the legend entry is a combination of the <code>title_trace</code> and the
+number of determined subgroups. If <code>title_trace = "Line"</code> and the data has
+been split in two groups, the legend entries would be <code>"Line: 1"</code> and
+<code>"Line: 2"</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A plot object containing the probability plot with plotting positions
+and estimated regression line(s).
+</p>
+
+
+<h3>References</h3>
+
+<p>Doganaksoy, N.; Hahn, G.; Meeker, W. Q., Reliability Analysis by
+Failure Mode, Quality Progress, 35(6), 47-52, 2002
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Vectors:
+hours &lt;- voltage$hours
+status &lt;- voltage$status
+
+# Example 1 - Using result of mixmod_em in mix_output:
+mix_mod_em &lt;- mixmod_em(
+  x = hours,
+  status = status,
+  distribution = "weibull",
+  conf_level = 0.95,
+  k = 2,
+  method = "EM",
+  n_iter = 150
+)
+
+plot_weibull_em &lt;- plot_prob_mix(
+  x = hours,
+  status = status,
+  id = id,
+  distribution = "weibull",
+  mix_output = mix_mod_em
+)
+
+plot_weibull_emlines &lt;- plot_mod_mix(
+  p_obj = plot_weibull_em,
+  x = hours,
+  status = status,
+  mix_output = mix_mod_em,
+  distribution = "weibull"
+)
+
+# Example 2 - Using result of mixmod_regression in mix_output:
+john &lt;- johnson_method(x = hours, status = status)
+mix_mod_reg &lt;- mixmod_regression(
+  x = john$x,
+  y = john$prob,
+  status = john$status,
+  distribution = "weibull"
+)
+
+plot_weibull_reg &lt;- plot_prob_mix(
+  x = john$x,
+  status = john$status,
+  id = john$id,
+  distribution = "weibull",
+  mix_output = mix_mod_reg,
+)
+
+plot_weibull_reglines &lt;- plot_mod_mix(
+  p_obj = plot_weibull_reg,
+  x = john$x,
+  status = john$status,
+  mix_output = mix_mod_reg,
+  distribution = "weibull"
+)
+
+</code></pre>
+
+
+</div>

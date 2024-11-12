@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>request_registry</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>List or clear requests in the request registry</h2>
+
+<h3>Description</h3>
+
+<p>List or clear requests in the request registry
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">request_registry()
+
+request_registry_clear()
+</code></pre>
+
+
+<h3>Details</h3>
+
+<p><code>request_registry()</code> lists the requests that have been made
+that webmockr knows about; <code>request_registry_clear()</code> resets the
+request registry (removes all recorded requests)
+</p>
+
+
+<h3>Value</h3>
+
+<p>an object of class <code>RequestRegistry</code>, print method gives the
+requests in the registry and the number of times each one has been
+performed
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other request-registry: 
+<code>HashCounter</code>,
+<code>RequestRegistry</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">webmockr::enable()
+stub_request("get", "https://httpbin.org/get") %&gt;%
+  to_return(body = "success!", status = 200)
+
+# nothing in the request registry
+request_registry()
+
+# make the request
+z &lt;- crul::HttpClient$new(url = "https://httpbin.org")$get("get")
+
+# check the request registry - the request was made 1 time
+request_registry()
+
+# do the request again
+z &lt;- crul::HttpClient$new(url = "https://httpbin.org")$get("get")
+
+# check the request registry - now it's been made 2 times, yay!
+request_registry()
+
+# clear the request registry
+request_registry_clear()
+webmockr::disable()
+</code></pre>
+
+
+</div>

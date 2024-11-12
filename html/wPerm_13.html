@@ -1,0 +1,215 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>perm.paired.loc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+
+Paired-Sample Permutation Test for Difference in Location
+</h2>
+
+<h3>Description</h3>
+
+
+<p>Performs a permutation (randomization) test for difference in location
+based on a paired sample.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">perm.paired.loc(x, y, parameter, variable = NULL,
+                alternative = c("two.sided", "less", "greater"),
+                R = 9999)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+
+<p>a numeric vector of data values representing the first components of the pairs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+
+<p>a numeric vector of data values representing the second components of the pairs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameter</code></td>
+<td>
+
+
+<p>the location parameter under consideration (e.g., mean, trimmed mean).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variable</code></td>
+<td>
+
+
+<p>an optional character string that gives the name of the variable under consideration.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alternative</code></td>
+<td>
+
+
+<p>a character string specifying the alternative hypothesis; must be one of "two.sided"
+(default), "less", or "greater".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+
+
+<p>number of replications (default = 9999).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+<p>The null hypothesis is that the distributions of the variable on the 
+two populations are identical—"identical".
+</p>
+<p>The possible alternative hypotheses are:
+</p>
+<p>Two tailed ("two.sided"): The distribution of the variable on the first population has
+either systematically smaller values or systematically larger values than
+that of the variable on the second population—"shifted".
+</p>
+<p>Left tailed ("less"): The distribution of the variable on the first population has
+systematically smaller values than that of the variable on the second
+population—"shifted.left".
+</p>
+<p>Right tailed ("greater"): The distribution of the variable on the first population has
+systematically larger values than that of the variable on the second
+population—"shifted.right".
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with class "perm.paired.loc" containing the following components:
+
+
+
+
+
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Perm.values </code></td>
+<td>
+<p>the values of the test statistic obtained from the permutations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Header </code></td>
+<td>
+<p>the main title for the output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Variable </code></td>
+<td>
+<p>the name of the variable under consideration or NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Pop.1 </code></td>
+<td>
+<p>the first population.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Pop.2 </code></td>
+<td>
+<p>the second population.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n </code></td>
+<td>
+<p>the sample size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Statistic </code></td>
+<td>
+<p>the test statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Observed </code></td>
+<td>
+<p>the observed value of the test statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Null </code></td>
+<td>
+<p>the null hypothesis; here, always identical.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Alternative </code></td>
+<td>
+<p>the alternative hypothesis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>P.value </code></td>
+<td>
+<p>the P-value or a statement like P &lt; 0.001.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value </code></td>
+<td>
+<p>the P-value.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+
+<p>Neil A. Weiss
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Ages of a sample of 10 heterosexual spouses.
+data("spouse.ages")
+str(spouse.ages)
+attach(spouse.ages)
+
+# Paired-sample permutation test to decide whether there is a difference
+# in location for age distributions of married men and married women,
+# using the mean as the location parameter. Variable named "Age".
+perm.paired.loc(HUSBAND, WIFE, mean, "Age")
+
+# Paired-sample permutation test to decide whether married men have
+# systematically greater ages than married women, using the 10% trimmed
+# mean as the location parameter.
+tr10.mean &lt;- function(x) mean(x, trim = 0.10)
+perm.paired.loc(HUSBAND, WIFE, tr10.mean, alternative = "greater")
+
+detach(spouse.ages)  # clean up.
+</code></pre>
+
+
+</div>

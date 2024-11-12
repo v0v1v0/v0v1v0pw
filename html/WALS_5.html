@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>computeGamma1r</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Internal function: Computes fully restricted one-step ML estimator for
+transformed regressors in walsNB</h2>
+
+<h3>Description</h3>
+
+<p>Computes one-step ML estimator of fully restricted model
+(coefs of transformed regressors of <code class="reqn">\bar{Z}_1</code>)
+in walsNB by using SVD on transformed design matrix of the focus regressors
+<code class="reqn">\bar{Z}_1</code>. The matrix <code class="reqn">\bar{Z_1}</code> should have full column rank.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">computeGamma1r(
+  U,
+  V,
+  singularVals,
+  ellStart,
+  gStart,
+  epsilonStart,
+  qStart,
+  y0Start,
+  tStart,
+  psiStart
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>U</code></td>
+<td>
+<p>Left singular vectors of <code class="reqn">\bar{Z}_1</code> from <code>svd</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>V</code></td>
+<td>
+<p>Right singular vectors of <code class="reqn">\bar{Z}_1</code> from <code>svd</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>singularVals</code></td>
+<td>
+<p>Singular values of <code class="reqn">\bar{Z}_1</code> from <code>svd</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ellStart</code></td>
+<td>
+<p>Vector <code class="reqn">\bar{\ell}</code> see details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gStart</code></td>
+<td>
+<p>Derivative of dispersion parameter <code class="reqn">\rho</code> of NB2 with
+respect to <code class="reqn">\alpha = \log(\rho)</code> evaluated at starting values of
+one-step ML. <code>gStart</code> is a scalar.
+See section "ML estimation" of  Huynh (2024a).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsilonStart</code></td>
+<td>
+<p>Scalar <code class="reqn">\bar{\epsilon}</code>, see section
+"One-step ML estimator" of Huynh (2024a) for definition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qStart</code></td>
+<td>
+<p>Vector <code class="reqn">\bar{q}</code>, see section "One-step ML estimator" of
+Huynh (2024a) for definition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y0Start</code></td>
+<td>
+<p>Vector <code class="reqn">\bar{y}_0</code>, see section "One-step ML estimator" of
+Huynh (2024a) for definition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tStart</code></td>
+<td>
+<p>Scalar <code class="reqn">\bar{t}</code>, see section "One-step ML estimator" of
+Huynh (2024a) for definition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>psiStart</code></td>
+<td>
+<p>Diagonal matrix <code class="reqn">\bar{\Psi}</code>, see section
+"One-step ML estimator" of Huynh (2024a) for definition.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See section "Simplification for computing <code class="reqn">\tilde{\gamma}_{1r}</code>"
+in the appendix of Huynh (2024b) for details of the
+implementation and for the definitions of argument <code>ellStart</code>.
+</p>
+<p>All parameters that contain "start" feature the starting values for the
+one-step ML estimation of submodels. See section "One-step ML estimator" of
+Huynh (2024a) for details.
+</p>
+<p>Uses <code>svdLSplus</code> under-the-hood.
+</p>
+
+
+<h3>References</h3>
+
+<p>Huynh K (2024a).
+“Weighted-Average Least Squares for Negative Binomial Regression.”
+arXiv 2404.11324, arXiv.org E-Print Archive.
+<a href="https://doi.org/10.48550/arXiv.2404.11324">doi:10.48550/arXiv.2404.11324</a>.<br><br> Huynh K (2024b).
+“WALS: Weighted-Average Least Squares Model Averaging in R.”
+University of Basel.
+Mimeo.
+</p>
+
+
+</div>

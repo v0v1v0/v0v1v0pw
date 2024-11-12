@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>writeWKB</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert Spatial Objects to <abbr><span class="acronym">WKB</span></abbr>
+</h2>
+
+<h3>Description</h3>
+
+<p>Converts <code>Spatial</code> objects to well-known binary (<abbr><span class="acronym">WKB</span></abbr>) geometry
+representations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">writeWKB(obj, endian = "little")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>obj</code></td>
+<td>
+<p>object inheriting class <code>Spatial</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>endian</code></td>
+<td>
+<p>The byte order (<code>"big"</code> or <code>"little"</code>) for encoding
+numeric types. The default is <code>"little"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The argument <code>obj</code> may be an object of class
+<code>SpatialPoints</code>,
+<code>SpatialPointsDataFrame</code>,
+<code>SpatialLines</code>,
+<code>SpatialLinesDataFrame</code>,
+<code>SpatialPolygons</code>, or
+<code>SpatialPolygonsDataFrame</code>,
+or a <code>list</code> in which each element is an object of class
+<code>SpatialPoints</code> or
+<code>SpatialPointsDataFrame</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>list</code> with class <code>AsIs</code>. The length of the returned list
+is the same as the length of the argument <code>obj</code>. Each element of the
+returned list is a <code>raw</code> vector consisting of a
+<abbr><span class="acronym">WKB</span></abbr> geometry representation. The <abbr><span class="acronym">WKB</span></abbr> geometry type
+depends on the class of <code>obj</code> as shown in the table below.
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+<strong>Class of <code>obj</code></strong> </td>
+<td style="text-align: left;"> <strong>Type of <abbr><span class="acronym">WKB</span></abbr> geometry</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>SpatialPoints</code> or <code>SpatialPointsDataFrame</code> </td>
+<td style="text-align: left;"> Point</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>list</code> of <code>SpatialPoints</code> or <code>SpatialPointsDataFrame</code> </td>
+<td style="text-align: left;"> MultiPoint</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>SpatialLines</code> or <code>SpatialLinesDataFrame</code> </td>
+<td style="text-align: left;"> MultiLineString</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>SpatialPolygons</code> or <code>SpatialPolygonsFrame</code> </td>
+<td style="text-align: left;"> Polygon or MultiPolygon</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>A <code>SpatialPolygons</code> or <code>SpatialPolygonsFrame</code> object is represented
+as <abbr><span class="acronym">WKB</span></abbr> Polygons if each <code>Polygons</code> object within it represents
+a single polygon; otherwise it is represented as <abbr><span class="acronym">WKB</span></abbr> MultiPolygons.
+</p>
+<p>The byte order of numeric types in the returned <abbr><span class="acronym">WKB</span></abbr> geometry
+representations depends on the value of the argument <code>endian</code>.
+Little-endian byte order is known as <abbr><span class="acronym">NDR</span></abbr> encoding, and big-endian
+byte order is known as <abbr><span class="acronym">XDR</span></abbr> encoding.
+</p>
+<p>When this function is run in TIBCO Enterprise Runtime for R (<abbr><span class="acronym">TERR</span></abbr>),
+the return value has the SpotfireColumnMetaData attribute set to enable TIBCO
+Spotfire to recognize it as a <abbr><span class="acronym">WKB</span></abbr> geometry representation.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>writeEnvelope</code>, <code>readWKB</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load package sp
+library(sp)
+
+# create an object of class SpatialPoints
+x = c(1, 2)
+y = c(3, 2)
+obj &lt;- SpatialPoints(data.frame(x, y))
+
+# convert to WKB Point
+wkb &lt;- writeWKB(obj)
+
+
+# create a list of objects of class SpatialPoints
+x1 = c(1, 2, 3, 4, 5)
+y1 = c(3, 2, 5, 1, 4)
+x2 &lt;- c(9, 10, 11, 12, 13)
+y2 &lt;- c(-1, -2, -3, -4, -5)
+Sp1 &lt;- SpatialPoints(data.frame(x1, y1))
+Sp2 &lt;- SpatialPoints(data.frame(x2, y2))
+obj &lt;- list("a"=Sp1, "b"=Sp2)
+
+# convert to WKB MultiPoint
+wkb &lt;- writeWKB(obj)
+
+
+# create an object of class SpatialLines
+l1 &lt;- data.frame(x = c(1, 2, 3), y = c(3, 2, 2))
+l1a &lt;- data.frame(x = l1[, 1] + .05, y = l1[, 2] + .05)
+l2 &lt;- data.frame(x = c(1, 2, 3), y = c(1, 1.5, 1))
+Sl1 &lt;- Line(l1)
+Sl1a &lt;- Line(l1a)
+Sl2 &lt;- Line(l2)
+S1 &lt;- Lines(list(Sl1, Sl1a), ID = "a")
+S2 &lt;- Lines(list(Sl2), ID = "b")
+obj &lt;- SpatialLines(list(S1, S2))
+
+# convert to WKB MultiLineString
+wkb &lt;- writeWKB(obj)
+
+
+# create an object of class SpatialPolygons
+triangle &lt;- Polygons(
+  list(
+    Polygon(data.frame(x = c(2, 2.5, 3, 2), y = c(2, 3, 2, 2)))
+  ), "triangle")
+rectangles &lt;- Polygons(
+   list(
+     Polygon(data.frame(x = c(0, 0, 1, 1, 0), y = c(0, 1, 1, 0, 0))),
+     Polygon(data.frame(x = c(0, 0, 2, 2, 0), y = c(-2, -1, -1, -2, -2)))
+   ), "rectangles")
+obj &lt;- SpatialPolygons(list(triangle, rectangles))
+
+# convert to WKB MultiPolygon
+wkb &lt;- writeWKB(obj)
+
+
+# use the WKB as a column in a data frame
+ds &lt;- data.frame(ID = c("a","b"), Geometry = wkb)
+
+# calculate envelope columns and cbind to the data frame
+coords &lt;- writeEnvelope(obj)
+ds &lt;- cbind(ds, coords)
+</code></pre>
+
+
+</div>

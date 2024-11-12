@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>conPhase</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Process contact phases</h2>
+
+<h3>Description</h3>
+
+<p>Computes phases where contacts occur based on a temporal tolerance.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">conPhase(traj, pc = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>traj</code></td>
+<td>
+<p>an object of the class <code>move2</code> which contains the time-stamped movement fixes of at least two individuals. For more information on objects of this type see <code>help(mt_as_move2)</code>. This will be output from the function <code>conProcess</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pc</code></td>
+<td>
+<p>time (in seconds) to allow for which to combine contact events (see details).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is used following the <code>conProcess</code> function to arrange contacts into phases where continuous contact occurs (based on the user-defined time threshold <code>pc</code>. The idea is that we can consider a phase to be a continuous contact event (based on <code>dc</code> see <code>conProcess</code>) as long as the contact is only interrupted for no more than <code>pc</code> time units.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>move2</code> object with new column <code>contact_pha</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Long, JA, Webb, SL, Harju, SM, Gee, KL (2022) Analyzing Contacts and Behavior from High Frequency 
+Tracking Data Using the wildlifeDI R Package. <em>Geographical Analysis</em>. <b>54</b>, 648–663.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>conProcess, conSpatial, conTemporal, conSummary
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data(does)
+doecons &lt;- conProcess(does,tc=15*60,dc=50)
+doephas &lt;- conPhase(doecons,pc=60*60)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

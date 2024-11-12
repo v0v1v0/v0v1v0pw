@@ -1,0 +1,196 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WFO.prepare</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Prepare a data set for analysis with WFO.match</h2>
+
+<h3>Description</h3>
+
+<p>The main function of <code>WFO.prepare</code> attempts to split a list of species names with naming authorities in different fields of botanical names and authorities.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WFO.prepare(spec.data = NULL, spec.full="spec.full",
+    squish = TRUE, spec.name.nonumber = TRUE,
+        spec.name.sub = TRUE, 
+        sub.pattern = c(" sp[.] A", " sp[.] B", " sp[.] C", " sp[.]", " spp[.]", " pl[.]",
+            " indet[.]", " ind[.]", " gen[.]", " g[.]", " fam[.]", " nov[.]", " prox[.]", 
+            " cf[.]", " aff[.]", " s[.]s[.]", " s[.]l[.]", 
+            " p[.]p[.]", " p[.] p[.]", "[?]", " inc[.]", " stet[.]", "Ca[.]", 
+            "nom[.] cons[.]", "nom[.] dub[.]", " nom[.] err[.]", " nom[.] illeg[.]", 
+            " nom[.] inval[.]", " nom[.] nov[.]", " nom[.] nud[.]", " nom[.] obl[.]", 
+            " nom[.] prot[.]", " nom[.] rej[.]", " nom[.] supp[.]", " sensu auct[.]"),  
+    genus.2.flag = TRUE, species.2.flag = TRUE, 
+    punctuation.flag = TRUE, pointless.flag = TRUE,
+    trinomial = c("cultivar.", "f.", "sect.", "subf.", "subg.", 
+        "subsp.", "subvar.", "var.",
+        "CULTIVAR.",  "SECT.", "SUBF.", "SUBG.", "SUBSP.", "SUBVAR.", "VAR."),
+    authors.ending.f=c("Aiton f.", "Baker f.", "Bak. f.", "Burm. f.", 
+                       "Cheng f.", "Chrtek f.", 
+                       "De Marco f.", "Fang f.", "Ferry f.", "Forsyth f.", 
+                       "Forster f.", "Fraser f.", "G.Don f.", "Haller f.",
+                       "Hallier f.", "Hook. f.", "Hooker f.", "Hsueh f.", 
+                       "J.Kickx f.", "J. Kickx f.", "Keng f.", 
+                       "Kickx f.", "Klokov f.", "Koster f.",
+                       "Liou f.", "L. f.", "Ma f.", "Mikan f.",
+                       "Occhioni f.", "Rchb. f.", 
+                       "Schultes f.", "Schult. f.", "Stapf f."),
+    verbose = TRUE, counter = 1000)
+    
+WFO.preprepare(spec.data=NULL, spec.full="spec.full",
+    trinomial.first="subsp.", trinomial.second="var.")     
+    
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>spec.data</code></td>
+<td>
+<p> A data.frame containing variables with species names. In case that a character vector is provided, then this vector will be converted to a data.frame </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spec.full</code></td>
+<td>
+<p> Name of the column with full taxonomic names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>squish</code></td>
+<td>
+<p> If <code>TRUE</code>, remove repeated whitespace and white space from the start and end of the submitted full name via str_squish. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spec.name.nonumber</code></td>
+<td>
+<p> If <code>TRUE</code>, then submitted <code>spec.full</code> that contain numbers will be interpreted as genera, only matching the first word. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spec.name.sub</code></td>
+<td>
+<p> If <code>TRUE</code>, then delete sections of the <code>spec.full</code> that match the <code>sub.pattern</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sub.pattern</code></td>
+<td>
+<p> Sections of the <code>spec.full</code> to be deleted </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>genus.2.flag</code></td>
+<td>
+<p> Flag first part of the names with only 2 characters. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>species.2.flag</code></td>
+<td>
+<p> Flag second part of the names with only 2 characters. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>punctuation.flag</code></td>
+<td>
+<p> Flag if the retained plant name has punctuation characters. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pointless.flag</code></td>
+<td>
+<p> Flag if the retained plant name has sub.pattern without the point. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trinomial</code></td>
+<td>
+<p> Descriptors for trinomial names. In case a trinomial name is expected, the species name will be obtained from the first two words and the two words starting with the trinomial descriptor. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>authors.ending.f</code></td>
+<td>
+<p> Author names that end with ' f.', not confuse the function about trinomials with 'f.', indicating 'filius' ('son of'). </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> Give details on the process. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>counter</code></td>
+<td>
+<p> Progress on the process is reported by multiples of this counter. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trinomial.first</code></td>
+<td>
+<p> Pattern to split species name in different columns. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trinomial.second</code></td>
+<td>
+<p> Second pattern to split species name in different columns. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Function <code>WFO.prepare</code> splits submitted names into the botanical name ('spec.name') and the naming authority ('Authorship'). When the submitted name contains section between brackets that are not at the beginning of the naming authority, these sections will be removed. Function <code>WFO.preprepare</code> was designed to deal with situations where author names are given at species and infra-specific levels (see examples).
+</p>
+
+
+<h3>Value</h3>
+
+<p>The function splits names in the botanical name and the naming authority.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Roeland Kindt (World Agroforestry)</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+WFO.prepare("Terminalia superba Engl. &amp; Diels (**) (In review)")
+WFO.prepare("Sorbus aucuparia subsp. praemorsa (Guss.) Nyman")
+WFO.prepare("Ormosia aff. coarctata Jackson")
+WFO.prepare("Ormosia aff coarctata Jackson")
+WFO.prepare("Ormosia /coarctata Jackson")
+WFO.prepare("Qualea TMG 148 Aubl.")
+# Note that the sub.pattern is ' cf.'
+WFO.prepare("cf Myrcia M1")
+# Dealing with author names that end with ' f.' ('filius')
+WFO.prepare("Malveopsis scabrosum Stapf f.")
+
+# Using preprepare to deal with authorities at multiple levels
+WFO.preprepare("Agave deserti Engelm. subsp. simplex Gentry")
+WFO.preprepare("Zoysia matrella (L.) Merr. var. pacifica Goudsw.")
+
+test.name &lt;- paste0("Agastache pallidiflora (A. Heller) Rydb.",
+  " subsp. neomexicana (Briq.) Lint &amp; Epling",
+  " var. havardii (A. Gray) R.W. Sanders")
+WFO.preprepare(test.name)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

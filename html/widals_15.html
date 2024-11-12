@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>H.Earth.solar</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Solar Radiation
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculate Incident Solar Area (ISA)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">H.Earth.solar(x, y, dateDate)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>Longitude.  Numeric vector of length <code class="reqn">n</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>Latitude.  Numeric vector of length <code class="reqn">n</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dateDate</code></td>
+<td>
+
+<p>Posix date.  Numeric vector of length <code class="reqn">\tau</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function returns a spacio-temporal covariate list (Earth's ISA is space-time <em>non-seperable</em>).  A negative value indicates that at that time (list index), and at that location (matrix row), the sun is below the horizon all day.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An unnamed list of length <code class="reqn">\tau</code>, each element of which is an <code class="reqn">n</code> x 1 matrix.  
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+lat &lt;- c(0, -88)
+lon &lt;- c(0, 0)
+dateDate &lt;- strptime( c('20120621', '20120320'), '%Y%m%d')
+
+H.Earth.solar(lon, lat, dateDate)
+
+
+## The function is currently defined as
+function (x, y, dateDate) 
+{
+    Hst.ls &lt;- list()
+    n &lt;- length(y)
+    tau &lt;- length(dateDate)
+    equinox &lt;- strptime("20110320", "%Y%m%d")
+    for (i in 1:tau) {
+        this.date &lt;- dateDate[i]
+        dfe &lt;- as.integer(difftime(this.date, equinox, units = "day"))
+        dfe
+        psi &lt;- 23.5 * sin(2 * pi * dfe/365.25)
+        psi
+        eta &lt;- 90 - (360/(2 * pi)) * acos(cos(2 * pi * y/360) * 
+            cos(2 * pi * psi/360) + sin(2 * pi * y/360) * sin(2 * 
+            pi * psi/360))
+        surface.area &lt;- sin(2 * pi * eta/360)
+        surface.area
+        Hst.ls[[i]] &lt;- cbind(surface.area)
+    }
+    return(Hst.ls)
+  }
+</code></pre>
+
+
+</div>

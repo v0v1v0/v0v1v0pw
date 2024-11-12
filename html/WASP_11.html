@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>data.gen.HL</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate predictor and response data: Hysteresis Loop</h2>
+
+<h3>Description</h3>
+
+<p>Generate predictor and response data: Hysteresis Loop
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data.gen.HL(n = 3, m = 5, nobs = 512, fp = 25, fd, sd.x = 0.1, sd.y = 0.1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Positive integer for the split line parameter. If n=1, split line is linear; If n is even, split line has a u shape; If n is odd and higher than 1, split line has a chair or classical shape.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>Positive odd integer for the bulging parameter, indicates degree of outward curving (1=highest level of bulging).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nobs</code></td>
+<td>
+<p>The data length to be generated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fp</code></td>
+<td>
+<p>The frequency in the generated response.fp = 25 used in the WRR paper.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fd</code></td>
+<td>
+<p>A vector of frequencies for potential predictors. fd = c(3,5,10,15,25,30,55,70,95) used in the WRR paper.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd.x</code></td>
+<td>
+<p>The noise level in the predictor.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd.y</code></td>
+<td>
+<p>The noise level in the response.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The Hysteresis is a common nonlinear phenomenon in natural systems and it can be numerical simulated by the following formulas:
+</p>
+<p style="text-align: center;"><code class="reqn">x_{t} = a*cos(2pi*f*t)</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">y_{t} = b*cos(2pi*f*t)^n + c*sin(2pi*f*t)^m</code>
+</p>
+
+<p>The default selection for the system parameters (<em>a</em> = 0.8, <em>b</em> = 0.6, <em>c</em> = -0.2, <em>n</em> = 3, <em>m</em> = 5) is known to generate a classical hysteresis loop.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of 3 elements: a vector of response (x), a matrix of potential predictors (dp) with each column containing one potential predictor, and a vector of true predictor numbers.
+</p>
+
+
+<h3>References</h3>
+
+<p>LAPSHIN, R. V. 1995. Analytical model for the approximation of hysteresis loop and its application to the scanning tunneling microscope. Review of Scientific Instruments, 66, 4718-4730.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">###synthetic example - Hysteresis loop
+#frequency, sampled from a given range
+fd &lt;- c(3,5,10,15,25,30,55,70,95)
+
+data.HL &lt;- data.gen.HL(n=3,m=5,nobs=512,fp=25,fd=fd)
+plot.ts(cbind(data.HL$x,data.HL$dp))
+</code></pre>
+
+
+</div>

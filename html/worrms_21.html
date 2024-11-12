@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wm_id2name</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get taxonomic name for an AphiaID</h2>
+
+<h3>Description</h3>
+
+<p>Get taxonomic name for an AphiaID
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wm_id2name(id, ...)
+
+wm_id2name_(id, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>(numeric/integer) an AphiaID, required. For <code>wm_id2name</code>
+must be <code>length(id) == 1</code>, but for <code>wm_id2name_</code> can be
+<code>length(id) &gt;= 1</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>named curl options. see <code>curl::curl_options</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An character string that is the taxnomic name. When using underscore
+method, a list, named by the input IDs
+</p>
+
+
+<h3>Singular vs. plural</h3>
+
+<p>Of the two sister functions, the one without the underscore is the original
+function that wraps the relavant WoRMS API method - and only accepts
+one thing (i.e., name or AphiaID) per request.
+</p>
+<p>The sister function with the underscore at the end is the plural version,
+accepting more than one input. Internally this function loops over
+the non-underscore method, and labels output (whether it's a list or
+data.frame rows) with the input names or IDs so that you can easily
+parse output by your inputs.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+wm_id2name(id = 105706)
+wm_id2name_(id = c(105706, 126436))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

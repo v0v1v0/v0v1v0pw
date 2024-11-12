@@ -1,0 +1,213 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cthresh</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimate real signal using complex-valued wavelets </h2>
+
+<h3>Description</h3>
+
+<p>Implements the multiwavelet style and empirical Bayes shrinkage procedures described in Barber &amp; Nason (2004) 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cthresh(data, j0 = 3, dwwt, dev = madmad, rule = "hard", 
+    filter.number = 3.1, family = "LinaMayrand", plotfn = FALSE,  
+    TI = FALSE, details = FALSE, policy = "mws", code = "NAG", tol = 0.01)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The data to be analysed. This should be real-valued and of length a power of two.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>j0</code></td>
+<td>
+<p>Primary resolution level; no thresholding is done below this level.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dwwt</code></td>
+<td>
+<p>description to come</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dev</code></td>
+<td>
+<p>A function to be used to estimate the noise level of the data. The function supplied must return a value of spread on the variance scale (i.e. not standard deviation) such as the var() function. A popular, useful and robust alternative is the madmad function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rule</code></td>
+<td>
+<p>The type of thresholding done. If policy = "mws", available rules are "hard" or "soft"; if policy = "ebayes", then rule can be "hard", "soft" or "mean".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.number, family</code></td>
+<td>
+<p>These parameters specify the wavelet used. See <code>filter.select</code> for details. 
+</p>
+<p>Also, if filter.number = 5, estimation is done with all the complex-valued wavelets with 5 vanishing moments and the results averaged. If filter.number = 0, then he averaging is over all available complex-valued wavelets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotfn</code></td>
+<td>
+<p>If <code>plotfn = true</code>, then a plot of the noisy data and estimated signal are produced.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>TI</code></td>
+<td>
+<p>If TI = T, then the non-decimated transform is used. See the help pages for wd and wst for more on the non-decimated transform.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>details</code></td>
+<td>
+<p>If <code>details = FALSE</code> (the default), only the estimate of the underlying signal is returned. If <code>details = TRUE</code>, many other details are also returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>policy</code></td>
+<td>
+<p>Controls the type of thresholding done. Available policies are multiwavelet style (policy = "mws") and empirical Bayes (policy = "ebayes").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>code</code></td>
+<td>
+<p>Tells cthresh whether external C or NAG code is available to help with the calculations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>A tolerance parameter used in searching for prior parameters if the empirical Bayes policy is used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If a real-valued signal is decomposed using a complex-valued wavelet (like the Lina-Mayrand wavelets supplied by filter.select), then the wavelet coefficients are also complex-valued. Wavelet shrinkage can still be used to estimate the signal, by asking the question "which coefficients are small (and represent noise) and which are large (and represent signal)?" Two methods of determining which coefficients are small and which are large are proposed by Barber &amp; Nason (2004). One is "multiwavelet style" thresholding (similar to that in Downie &amp; Silverman (1998) where the coefficients are treated like the coefficients of a multiwavelet). Here, the "size" of the wavelet coefficient is determined as modulus of a standardised version of the coefficient. The standardisation is by the square root of the covariance matrix of the coefficient. A Bayesian method is to place a mixture prior on each coefficient. The prior has two components: a bivariate normal and a point mass at (0,0). The parameters are determined by an empirical Bayes argument and then the prior is updated by the data. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>Either a vector containing the estimated signal (if details = FALSE), or a list with the following components: 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The original data as supplied to cthresh.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data.wd</code></td>
+<td>
+<p>The wavelet decomposition of the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thr.wd</code></td>
+<td>
+<p>The thresholded version of data.wd.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimate</code></td>
+<td>
+<p>The estimate of the underlying signal.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Sigma</code></td>
+<td>
+<p>The covariance matrices induced by the wavelet transform. See <code>make.dwwt</code> for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigsq</code></td>
+<td>
+<p>The estimate of the variance of the noise which corrupted the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rule</code></td>
+<td>
+<p>Which thresholding rule was used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>EBpars</code></td>
+<td>
+<p>The empirical Bayes parameters found by the function find.parameters. Only present if the "ebayes" policy was used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wavelet</code></td>
+<td>
+<p>A list with components filter.number and family which, when supplied to <code>link{filter.select}</code>, determine the wavelet used to decompose the data.</p>
+</td>
+</tr>
+</table>
+<h3>RELEASE</h3>
+
+<p>Part of the CThresh addon to WaveThresh. Copyright Stuart Barber and Guy Nason 2004.</p>
+
+
+<h3>Note</h3>
+
+<p>The estimates returned by cthresh have an imaginary component. In practice, this component is usually negligible. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stuart Barber</p>
+
+
+<h3>See Also</h3>
+
+<p><code>filter.select</code>, <code>find.parameters</code>, <code>make.dwwt</code>, <code>test.dataCT</code>, and the undocumented functions in CThresh. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Make up some noisy data
+#
+y &lt;- example.1()$y
+ynoise &lt;- y + rnorm(512, sd=0.1)
+#
+# Do complex-valued wavelet shrinkage with decimated wavelets
+#
+est1 &lt;- cthresh(ynoise, TI=FALSE)
+#
+# Do complex-valued wavelet shrinkage with nondecimated wavelets
+#
+est2 &lt;- cthresh(ynoise, TI=TRUE)
+#
+#
+#
+plot(1:512, y, lty=2, type="l")
+lines(1:512, est1, col=2)
+lines(1:512, est2, col=3)
+</code></pre>
+
+
+</div>

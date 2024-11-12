@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>invert_position</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Invert the position data</h2>
+
+<h3>Description</h3>
+
+<p>Multiply instantaneous position by -1.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">invert_position(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>muscle_stim</code> object</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The <code>muscle_stim</code> object can be of any type, including
+<code>workloop</code>, <code>twitch</code>, or <code>tetanus</code>.
+</p>
+<p>If you have manually constructed the object via <code>as_muscle_stim()</code>,
+the <code>muscle_stim</code> object should have a column entitled <code>Position</code>.
+Other columns and attributes are welcome and will be passed along unchanged.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>workloop</code> object with inverted position. The
+<code>position_inverted</code> attribute is set to <code>TRUE</code> and all others are
+retained.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Vikram B. Baliga
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other data transformations: 
+<code>fix_GR()</code>,
+<code>select_cycles()</code>
+</p>
+<p>Other workloop functions: 
+<code>analyze_workloop()</code>,
+<code>fix_GR()</code>,
+<code>get_wl_metadata()</code>,
+<code>read_analyze_wl_dir()</code>,
+<code>read_analyze_wl()</code>,
+<code>select_cycles()</code>,
+<code>summarize_wl_trials()</code>,
+<code>time_correct()</code>
+</p>
+<p>Other twitch functions: 
+<code>fix_GR()</code>,
+<code>isometric_timing()</code>
+</p>
+<p>Other tetanus functions: 
+<code>fix_GR()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(workloopR)
+
+# import the workloop.ddf file included in workloopR
+wl_dat &lt;-read_ddf(system.file("extdata", "workloop.ddf",
+                              package = 'workloopR'),
+                  phase_from_peak = TRUE)
+
+# invert the sign of Position
+wl_fixed &lt;- invert_position(wl_dat)
+
+# quick check:
+max(wl_fixed$Position) / min(wl_dat$Position) # -1
+
+</code></pre>
+
+
+</div>

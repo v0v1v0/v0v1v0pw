@@ -1,0 +1,120 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>BinaryYScatterPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot a scatter plot of a binary variable with smoothing curve.</h2>
+
+<h3>Description</h3>
+
+<p>Plot the scatter plot of a binary variable with a smoothing curve.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">BinaryYScatterPlot(
+  frame,
+  xvar,
+  yvar,
+  title,
+  ...,
+  se = FALSE,
+  use_glm = TRUE,
+  point_color = "black",
+  smooth_color = "blue"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frame</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar</code></td>
+<td>
+<p>name of the independent column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yvar</code></td>
+<td>
+<p>name of the dependent (output or result to be modeled) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>se</code></td>
+<td>
+<p>if TRUE, add error bars (defaults to FALSE). Ignored if useGLM is TRUE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use_glm</code></td>
+<td>
+<p>if TRUE, "smooths" with a one-variable logistic regression (defaults to TRUE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>point_color</code></td>
+<td>
+<p>color for points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>smooth_color</code></td>
+<td>
+<p>color for smoothing line</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The points are jittered for legibility. By default, a logistic regression fit is
+used, so that the smoothing curve represents the probability of y == 1 (as fit by
+the logistic regression). If
+<code>use_glm</code> is set to FALSE, a standard smoothing curve (either loess or a
+spline fit) is used.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+set.seed(34903490)
+x = rnorm(50)
+y = 0.5*x^2 + 2*x + rnorm(length(x))
+frm = data.frame(x=x,y=y,yC=y&gt;=as.numeric(quantile(y,probs=0.8)))
+frm$absY &lt;- abs(frm$y)
+frm$posY = frm$y &gt; 0
+frm$costX = 1
+WVPlots::BinaryYScatterPlot(frm, "x", "posY",
+   title="Example 'Probability of Y' Plot")
+
+</code></pre>
+
+
+</div>

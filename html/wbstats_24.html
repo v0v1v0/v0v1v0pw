@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_search</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Search indicator information available through the World Bank API</h2>
+
+<h3>Description</h3>
+
+<p>This function allows finds indicators that match a search term and returns
+a data frame of matching results
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_search(
+  pattern,
+  fields = c("indicator_id", "indicator", "indicator_desc"),
+  extra = FALSE,
+  cache,
+  ignore.case = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>pattern</code></td>
+<td>
+<p>Character string or regular expression to be matched</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fields</code></td>
+<td>
+<p>Character vector of column names through which to search</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>extra</code></td>
+<td>
+<p>if FALSE, only the indicator ID and short name are returned,
+if <code>TRUE</code>, all columns of the <code>cache</code> parameter's indicators data frame
+are returned. Default is <code>FALSE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cache</code></td>
+<td>
+<p>List of data frames returned from <code>wb_cache()</code>. If omitted,
+wb_cachelist is used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ignore.case</code></td>
+<td>
+<p>if <code>FALSE</code>, the pattern matching is case sensitive and
+if <code>TRUE</code>, case is ignored during matching. Default is <code>TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Any additional <code>grep()</code> agruments you which to pass</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a tibble with indicators that match the search pattern.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">d &lt;- wb_search(pattern = "education")
+
+d &lt;- wb_search(pattern = "Food and Agriculture Organization", fields = "source_org")
+
+# with regular expression operators
+# 'poverty' OR 'unemployment' OR 'employment'
+d &lt;- wb_search(pattern = "poverty|unemployment|employment")
+
+# pass any other grep argument along as well
+# everything without 'education'
+d &lt;- wb_search(pattern = "education", invert = TRUE)
+
+# contains "gdp" AND "trade"
+d &lt;- wb_search("^(?=.*gdp)(?=.*trade).*", perl = TRUE)
+
+# contains "gdp" and NOT "trade"
+d &lt;- wb_search("^(?=.*gdp)(?!.*trade).*", perl = TRUE)
+</code></pre>
+
+
+</div>

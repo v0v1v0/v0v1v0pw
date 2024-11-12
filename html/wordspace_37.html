@@ -1,0 +1,229 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>eval.similarity.correlation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Evaluate DSM on Correlation with Similarity Ratings (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>Performs evaluation by comparing the distances (or similarities) computed by a DSM with (typically human) word similarity ratings.
+Well-know examples are the noun pair ratings collected by Rubenstein &amp; Goodenough (1965; <code>RG65</code>) and Finkelstein et al. (2002;  <code>WordSim353</code>).
+</p>
+<p>The quality of the DSM predictions is measured by Spearman rank correlation <code class="reqn">rho</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">eval.similarity.correlation(task, M, dist.fnc=pair.distances,
+                            details=FALSE, format=NA, taskname=NA,
+                            word1.name="word1", word2.name="word2", score.name="score",
+                            ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>task</code></td>
+<td>
+<p>a data frame containing word pairs (usually in columns <code>word1</code> and <code>word2</code>) with similarity ratings (usually in column <code>score</code>); any other columns will be ignored</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>a scored DSM matrix, passed to <code>dist.fnc</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist.fnc</code></td>
+<td>
+<p>a callback function used to compute distances or similarities between word pairs.
+It will be invoked with character vectors containing the components of the word pairs as first and second argument,
+the DSM matrix <code>M</code> as third argument, plus any additional arguments (<code>...</code>) passed to <code>eval.similarity.correlation</code>.
+The return value must be a numeric vector of appropriate length.  If one of the words in a pair is not represented in the DSM,
+the corresponding distance value should be set to <code>Inf</code> (or <code>-Inf</code> in the case of similarities).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>details</code></td>
+<td>
+<p>if <code>TRUE</code>, a detailed report with information on each task item is returned (see Value below for details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>if the task definition specifies POS-disambiguated lemmas in CWB/Penn format, they can automatically be transformed into some other notation conventions; see <code>convert.lemma</code> for details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>taskname</code></td>
+<td>
+<p>optional row label for the short report (<code>details=FALSE</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any further arguments are passed to <code>dist.fnc</code> and can be used e.g. to select a distance measure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>word1.name</code></td>
+<td>
+<p>the name of the column of <code>task</code> containing the first word of each pair</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>word2.name</code></td>
+<td>
+<p>the name of the column of <code>task</code> containing the second word of each pair</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>score.name</code></td>
+<td>
+<p>the name of the column of <code>task</code> containing the corresponding similarity ratings</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>DSM distances are computed for all word pairs and compared with similarity ratings from the gold standard.
+As an evaluation criterion, Spearman rank correlation between the DSM and gold standard scores is computed.
+The function also reports a confidence interval for Pearson correlation, which might require suitable transformation
+to ensure a near-linear relationship in order to be meaningful.
+</p>
+<p><b>NB:</b> Since the correlation between similarity ratings and DSM distances will usually be negative, the evaluation
+report omits minus signs on the correlation coefficients.
+</p>
+<p>With the default <code>dist.fnc</code>, the distance values can optionally be transformed through an arbitrary function specified in the <code>transform</code> argument (see <code>pair.distances</code> for details).
+Examples include <code>transform=log</code> (esp. for neighbour rank as a distance measure) 
+and <code>transform=function (x) 1/(1+x)</code> (in order to transform distances into similarities).
+Note that Spearman rank correlation is not affected by any monotonic transformation, so the main evaluation results
+will remain unchanged.
+</p>
+<p>If one or both words of a pair are not found in the DSM, the distance is set to a fixed value 10% above the
+maximum of all other DSM distances, or 10% below the minimum in the case of similarity values.
+This is done in order to avoid numerical and visualization problems with <code>Inf</code> values;
+the particular value used does not affect the rank correlation coefficient.
+</p>
+<p>With the default <code>dist.fnc</code> callback, additional arguments <code>method</code> and <code>p</code> can be used to select 
+a distance measure (see <code>dist.matrix</code> for details); <code>rank=TRUE</code> can be specified in order to 
+use neighbour rank as a measure of semantic distance.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The default short report (<code>details=FALSE</code>) is a data frame with a single row and the following columns:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>rho</code></td>
+<td>
+<p>(absolute value of) Spearman rank correlation coefficient <code class="reqn">rho</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value</code></td>
+<td>
+<p>p-value indicating evidence for a significant correlation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>missing</code></td>
+<td>
+<p>number of pairs not included in the DSM</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>(absolute value of) Pearson correlation coefficient <code class="reqn">r</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r.lower</code></td>
+<td>
+<p>lower bound of confidence interval for Pearson correlation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r.upper</code></td>
+<td>
+<p>upper bound of confidence interval for Pearson correlation</p>
+</td>
+</tr>
+</table>
+<p>The detailed report (<code>details=TRUE</code>) is a copy of the original task data with two additional columns:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>distance</code></td>
+<td>
+<p>distance calculated by the DSM for each word pair, possibly transformed (numeric)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>missing</code></td>
+<td>
+<p>whether word pair is missing from the DSM (logical)</p>
+</td>
+</tr>
+</table>
+<p>In addition, the short report is appended to the data frame as an attribute <code>"eval.result"</code>, 
+and the optional <code>taskname</code> value as attribute <code>"taskname"</code>.  The data frame is marked as an
+object of class <code>eval.similarity.correlation</code>, for which suitable <code>print</code>
+and <code>plot</code> methods are defined.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+<h3>References</h3>
+
+<p>Finkelstein, Lev, Gabrilovich, Evgeniy, Matias, Yossi, Rivlin, Ehud, Solan, Zach, Wolfman, Gadi, and Ruppin, Eytan (2002).
+Placing search in context: The concept revisited.
+<em>ACM Transactions on Information Systems</em>, <b>20</b>(1), 116–131.
+</p>
+<p>Rubenstein, Herbert and Goodenough, John B. (1965).
+Contextual correlates of synonymy.
+<em>Communications of the ACM</em>, <b>8</b>(10), 627–633.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Suitable gold standard data sets in this package: <code>RG65</code>, <code>WordSim353</code>
+</p>
+<p>Support functions: <code>pair.distances</code>, <code>convert.lemma</code>
+</p>
+<p>Plotting and printing evaluation results: <code>plot.eval.similarity.correlation</code>, <code>print.eval.similarity.correlation</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+eval.similarity.correlation(RG65, DSM_Vectors)
+
+## Not run: 
+plot(eval.similarity.correlation(RG65, DSM_Vectors, details=TRUE))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

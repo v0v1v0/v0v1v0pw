@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gaps</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Gap duration</h2>
+
+<h3>Description</h3>
+
+<p><code>gaps</code> measures gap duration
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">gaps(X = NULL, by = "sound.files", parallel = 1, pb = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>'selection_table', 'extended_selection_table' (created 'by.song') or data frame with the following columns: 1) "sound.files": name of the sound
+files, 2) "selec": number of the selections, 3) "start": start time of selections, 4) "end":
+end time of selections.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>by</code></td>
+<td>
+<p>Character vector with column names. Controls the levels at which gaps will be measured. "sound.files" must always be included.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Numeric. Controls whether parallel computing is applied.
+It specifies the number of cores to be used. Default is 1 (i.e. no parallel computing).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Logical argument to control progress bar and messages. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function measures the time intervals (i.e. gaps) between selections.  The gap for a given selection is calculated as the time interval to the selection immediately after. Hence, there is no gap for the last selection in a sound file (or level determined by the 'by' argument). Gap is set to 0  when selections overlap in time. Note that the sound files are not required.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame identical to that supplied in 'X', with and additional column ('gaps') with the duration of the time interval between selections.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>inflections</code>, <code>song_analysis</code>,
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">{
+# get warbleR sound file examples
+data(list = "lbh_selec_table")
+
+# get gaps
+gaps(X = lbh_selec_table)
+}
+
+</code></pre>
+
+
+</div>

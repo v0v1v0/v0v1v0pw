@@ -1,0 +1,180 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wp.mc.sem.power.curve</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Statistical Power Curve for Structural Equation Modeling / Mediation based on Monte Carlo Simulation</h2>
+
+<h3>Description</h3>
+
+<p>A power curve is useful to graphically display how power changes with sample size (e.g., <cite>Zhang &amp; Wang</cite>).
+This function is to generate a power curve for SEM based on Monte Carlo simulation, either using Sobel test or bootstrap method to test the indirect / mediation effects if applicable.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wp.mc.sem.power.curve(model, indirect = NULL, nobs = 100, type = "basic",
+  nrep = 1000, nboot = 1000, alpha = 0.95, skewness = NULL,
+  kurtosis = NULL, ovnames = NULL, se = "default",
+  estimator = "default", parallel = "no",
+  ncore = Sys.getenv("NUMBER_OF_PROCESSORS"), cl = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>Model specified using lavaan syntax. More about model specification can be found in <cite>Rosseel (2012)</cite>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indirect</code></td>
+<td>
+<p>Indirect effect difined using lavaan syntax.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nobs</code></td>
+<td>
+<p>Sample size. It is 100 by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>The method used to test the indirect effects (<code>'basic'</code> or <code>'boot'</code>). By default type='basic'.
+The type 'basic' is to use Sobel test (see also <cite>wp.mc.sem.basic</cite>), while 'boot' is to use bootstrap method (see also <cite>wp.mc.sem.boot</cite>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nrep</code></td>
+<td>
+<p>Number of replications for the Monte Carlo simulation. It is 1000 by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nboot</code></td>
+<td>
+<p>Number of replications for the bootstrap to test the specified parameter (e.g., mediation). It is 1000 by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>significance level chosed for the test. It equals 0.05 by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skewness</code></td>
+<td>
+<p>A sequence of skewnesses of the observed variables. It is not required.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kurtosis</code></td>
+<td>
+<p>A sequence of kurtosises of the observed variables. It is not required.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ovnames</code></td>
+<td>
+<p>Names of the observed variables in the model. It is not required.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>se</code></td>
+<td>
+<p>The method for calculatating the standard errors. Its default method "default" is regular standard errors.
+More about methods specification standard errors calculatationcan be found in <cite>Rosseel (2012)</cite>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimator</code></td>
+<td>
+<p>Estimator. It is Maxmum likelihood estimator by default. More about estimator specification can be found in <cite>Rosseel (2012)</cite>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Parallel computing (<code>"no"</code> or <code>"parallel"</code> or <code>"snow"</code>). It is "no" by default, which means it will not use parallel computing.
+The option "parallel" is to use multiple cores in a computer for parallel computing. It is used with the number of cores (<cite>ncore</cite>).
+The option "snow" is to use clusters for parallel computing. It is used with the number of clusters (<cite>cl</cite>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncore</code></td>
+<td>
+<p>Number of processors used for parallel computing. By default, ncore = Sys.getenv('NUMBER_OF_PROCESSORS').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cl</code></td>
+<td>
+<p>Number of clusters. It is NULL by default. When it is NULL, the program will detect the number of clusters automatically.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Extra arguments. It is not required.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of the power analysis. The power for all parameters in the model as well as the indirect effects if specified.
+</p>
+
+
+<h3>References</h3>
+
+<p>Rosseel, Y. (2012). Lavaan: An R package for structural equation modeling and more. Version 0.5–12 (BETA). Ghent, Belgium: Ghent University.
+</p>
+<p>Thoemmes, F., MacKinnon, D. P., &amp; Reiser, M. R. (2010). Power analysis for complex mediational designs using Monte Carlo methods. Structural Equation Modeling, 17(3), 510-534.
+</p>
+<p>Zhang, Z., &amp; Yuan, K.-H. (2018). Practical Statistical Power Analysis Using Webpower and R (Eds). Granger, IN: ISDSA Press.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+set.seed(20220722)
+
+#To specify the model
+ex2model ="
+		ept ~ start(0.4)*hvltt + b*hvltt + start(0)*age + start(0)*edu + start(2)*R
+		hvltt ~ start(-0.35)*age + a*age +c*edu + start(0.5)*edu
+		R ~ start(-0.06)*age + start(0.2)*edu
+		R =~ 1*ws + start(0.8)*ls + start(0.5)*lt
+		age ~~ start(30)*age
+		edu ~~ start(8)*edu
+		age ~~ start(-2.8)*edu
+		hvltt ~~ start(23)*hvltt
+		R ~~ start(14)*R
+		ws ~~ start(3)*ws
+		ls ~~ start(3)*ls
+		lt ~~ start(3)*lt
+		ept ~~ start(3)*ept
+	"
+#To specify the indirect effects
+indirect = "ind1 := a*b + c*b" 
+nobs &lt;- seq(100, 2000, by =200)
+#To calculate power curve:
+# change nrep and nboot to at least 1,000 in real analysis
+power.curve = wp.mc.sem.power.curve(model=ex2model, indirect=indirect,
+                              nobs=nobs, type='boot',
+							  nrep=10, nboot=10)
+
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,260 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>run_galaxy_processing</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>run_galaxy_processing - automate running code in galaxy</h2>
+
+<h3>Description</h3>
+
+<p>run_galaxy_processing takes the tool's name, and the code to execute.
+It detects galaxy-specific environement variable, and show headers
+and footer if we are in a galaxy env.
+</p>
+<p>It will automatically convert command line parameters using
+W4MRUtils::parse_args if args is not provided.
+</p>
+<p>Then, it unmangles galaxy parameters (galaxy params / values can be
+mangled if they contains special characters)
+</p>
+<p>It creates a logger, and provide access to the <code>logger</code> and <code>args</code>
+variables from withing the code to execute.
+</p>
+<p>Also, before executing the code, if <code>source_files</code> is set to some paths,
+these paths will be source'd, so the code has access to functions
+defined in these scripts.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">run_galaxy_processing(
+  tool_name,
+  code,
+  tool_version = "unknown",
+  unmangle_parameters = TRUE,
+  args = NULL,
+  logger = NULL,
+  source_files = c(),
+  env = NULL,
+  do_traceback = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tool_name</code></td>
+<td>
+
+<ul><li>
+<p> Mandatory. The name of the tool to run.
+</p>
+</li></ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>code</code></td>
+<td>
+
+<ul><li>
+<p> Mandatory. The code to run the tool
+</p>
+</li></ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tool_version</code></td>
+<td>
+
+<ul><li>
+<p> The version number of the tool to run.
+</p>
+</li></ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unmangle_parameters</code></td>
+<td>
+
+<ul><li>
+<p> Whether or not to revert mangling from galaxy
+useful if galaxy produces strange command parameters.
+Not necessary, but produces more explicit outputs.
+</p>
+</li></ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>args</code></td>
+<td>
+
+<ul><li>
+<p> The result of commandArgs function, or from
+the optparse_parameters function.
+Can be NULL. In this case, uses commandArgs to get the args.
+</p>
+</li></ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+
+<ul><li>
+<p> You can provide a logger to use. If not provided,
+a logger will be created with the tool's name.
+</p>
+</li></ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>source_files</code></td>
+<td>
+
+<ul><li>
+<p> You may provide some paths to source before executing
+the provided code.
+</p>
+</li></ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>env</code></td>
+<td>
+
+<ul><li>
+<p> You may provide a environment object to execute the code
+within.
+</p>
+</li></ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>do_traceback</code></td>
+<td>
+
+<ul><li>
+<p> logical - tells whether to produce a traceback in
+case of error.
+</p>
+</li></ul>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>L.Pavot
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+write_r_file_with_content &lt;- function(content) {
+  "
+  This function creates a temp R file. It writes the provided
+  content in the R file. Then it returns the path of the script.
+  "
+  path &lt;- tempfile(fileext = ".R")
+  file.create(path)
+  writeLines(content, con = path)
+  return(path)
+}
+## let's fake a galaxy env
+Sys.setenv(GALAXY_SLOTS = 1)
+## let's says the tool has been launched with this command line
+log_file &lt;- tempfile()
+file.create(log_file)
+raw_args &lt;- list(
+  "--args",
+  "--input", "in.csv",
+  "--output", "out.csv",
+  "--logs", log_file,
+  "--one-float", "3.14",
+  "--one-integer", "456",
+  "--one-logical", "FALSE",
+  "--some-floats", "1.5,2.4,3.3",
+  "--some-characters", "test,truc,bidule",
+  "--debug", "TRUE",
+  "--verbose", "FALSE"
+)
+
+##
+# example 1
+##
+
+my_r_script &lt;- write_r_file_with_content('
+  my_processing &lt;- function(args, logger) {
+    logger$info("The tool is running")
+    logger$infof("Input file: %s.", args$input)
+    logger$info("The tool ended.")
+  }
+')
+
+W4MRUtils::run_galaxy_processing(
+  "Test tool 1",
+  my_processing(args, logger),
+  source_file = my_r_script,
+  args = W4MRUtils::parse_args(args = raw_args)
+)
+
+
+##
+# example 2
+
+## let's say we have a R script with this content:
+path &lt;- write_r_file_with_content('
+  setup_logger &lt;- function(args, logger) {
+    if (!is.null(args$verbose)) {
+      logger$set_verbose(args$verbose)
+    }
+    if (!is.null(args$debug)) {
+      logger$set_debug(args$debug)
+    }
+    if (!is.null(args$logs)) {
+      logger$add_out_paths(args$logs)
+    }
+  }
+  stop_logger &lt;- function(logger) {
+    logger$close_files()
+  }
+  processing &lt;- function(args, logger) {
+    setup_logger(args, logger)
+    logger$info("The tool is working...")
+    logger$infof("Input: %s.", args$input)
+    logger$info("The tool stoping.")
+    stop_logger(logger)
+    return(NULL)
+  }')
+
+
+## wrapper script:
+
+args &lt;- W4MRUtils::optparse_parameters(
+  input = W4MRUtils::optparse_character(),
+  output = W4MRUtils::optparse_character(),
+  logs = W4MRUtils::optparse_character(),
+  one_float = W4MRUtils::optparse_numeric(),
+  one_integer = W4MRUtils::optparse_integer(),
+  one_logical = W4MRUtils::optparse_flag(),
+  some_floats = W4MRUtils::optparse_list(of = "numeric"),
+  some_characters = W4MRUtils::optparse_list(of = "character"),
+  debug = W4MRUtils::optparse_flag(),
+  verbose = W4MRUtils::optparse_flag(),
+  args = raw_args[raw_args != "--args"]
+)
+
+W4MRUtils::run_galaxy_processing("A Test tool", args = args, {
+  ## processing is from the other R script
+  processing(args, logger)
+}, source_files = path)
+
+
+</code></pre>
+
+
+</div>

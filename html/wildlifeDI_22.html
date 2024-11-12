@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Prox</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Proximity Index</h2>
+
+<h3>Description</h3>
+
+<p>The function <code>Prox</code> simply computes the proportion of (simultaneous) fixes that are proximal, based on some spatial
+threshold – <code>dc</code> (Bertrand et al. 1996). It also facilitates local-level proximity analysis
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Prox(traj, traj2, tc = 0, dc = 50, local = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>traj</code></td>
+<td>
+<p>an object of the class <code>move2</code> which contains the time-stamped movement fixes of at least two individuals. For more information on objects of this type see <code>help(mt_as_move2)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>traj2</code></td>
+<td>
+<p>(optional) same as traj, but for the second group of individuals. See <code>checkTO</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tc</code></td>
+<td>
+<p>time threshold for determining simultaneous fixes – see function: <code>GetSimultaneous</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dc</code></td>
+<td>
+<p>distance tolerance limit (in appropriate units) for defining when two fixes are spatially together.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>local</code></td>
+<td>
+<p>logical value indicating. When local = FALSE (the default) prox returns a data.frame with the global proximity ratio (proportion of all fixes below dc and tc) for each pair of individuals. When local = TRUE, prox returns the input move2 object with the distance to the most proximal fix, and the number of fixes that are considered proximal for each fix in the dataset.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function <code>Prox</code> can be used to test for the presence of attraction (via proximity) in wildlife telemetry data. Prox is simply the proportion of simultaneous fixes within the threshold distance – <code>dc</code>. The local output (dataframe) can be useful for examining variation in proximity through time.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>local=FALSE</code> (the default) Prox returns the numeric value of the Prox index for each pair of individuals.
+If <code>local=TRUE</code> Prox returns a <code>move2</code> containing the original trajectory (or both trajectories) with three additional columns prox (the distance to the nearest proximal fix), prox.id (the id of the nearest proximal fix) and prox.n (the number of individuals with proximal fixes)
+</p>
+
+
+<h3>References</h3>
+
+<p>Bertrand, M.R., DeNicola, A.J., Beissinger, S.R, Swihart, R.K. (1996) Effects of parturition
+on home ranges and social affiliations of female white-tailed deer.
+<em>Journal of Wildlife Management</em>, <b>60</b>: 899-909.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>GetSimultaneous, contacts
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(deer)
+#tc = 7.5 minutes, dc = 50 meters
+Prox(deer, tc=7.5*60, dc=50)
+deer &lt;- Prox(deer, tc=7.5*60, dc=50, local=TRUE)
+
+</code></pre>
+
+
+</div>

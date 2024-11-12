@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>DoubleHistogramPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot two histograms conditioned on an outcome variable.</h2>
+
+<h3>Description</h3>
+
+<p>Plot two histograms conditioned on a binary outcome variable.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">DoubleHistogramPlot(
+  frame,
+  xvar,
+  truthVar,
+  title,
+  ...,
+  palette = "Dark2",
+  breaks = 40
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frame</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar</code></td>
+<td>
+<p>name of the independent (input or model) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truthVar</code></td>
+<td>
+<p>name of the dependent (output or result to be modeled) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>palette</code></td>
+<td>
+<p>name of Brewer palette (can be NULL)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>breaks</code></td>
+<td>
+<p>breaks to pass to histogram</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>To distinguish the two conditions, one histogram is plotted upside-down.
+</p>
+<p>The use case for this visualization is to plot a predictive model score (usually the predicted probability
+of a desired outcome) conditioned on the actual outcome. However, you can use it to compare any
+numerical quantity conditioned on a binary feature.
+</p>
+<p>If <code>palette</code> is NULL, plot colors will be chosen from the default ggplot2 palette. Setting <code>palette</code> to NULL
+allows the user to choose a non-Brewer palette, for example with <code>scale_fill_manual</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+set.seed(34903490)
+x = rnorm(50)
+y = 0.5*x^2 + 2*x + rnorm(length(x))
+frm = data.frame(x=x,y=y,yC=y&gt;=as.numeric(quantile(y,probs=0.8)))
+frm$absY &lt;- abs(frm$y)
+frm$posY = frm$y &gt; 0
+frm$costX = 1
+WVPlots::DoubleHistogramPlot(frm, "x", "yC", title="Example double histogram plot")
+
+if (FALSE) {
+# redo the plot with a custom palette
+plt = WVPlots::DoubleHistogramPlot(frm, "x", "yC", palette=NULL,
+                              title="Example double histogram plot")
+cmap = c("TRUE" = "#b2df8a", "FALSE" = "#1f78b4")
+plt + ggplot2::scale_color_manual(values=cmap) +
+      ggplot2::scale_fill_manual(values=cmap)
+}
+
+</code></pre>
+
+
+</div>

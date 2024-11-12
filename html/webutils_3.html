@@ -1,0 +1,62 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>parse_http</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Parse http request</h2>
+
+<h3>Description</h3>
+
+<p>Parse the body of a http request, based on the <code>Content-Type</code> request
+header. Currently supports the three most important content types:
+<code>application/x-www-form-urlencoded</code> with <code>parse_query()</code>,
+<code>multipart/form-data</code> with <code>parse_multipart()</code>, and <code>application/json</code>
+with <code>jsonlite::fromJSON()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">parse_http(body, content_type, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>body</code></td>
+<td>
+<p>request body of the http request</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>content_type</code></td>
+<td>
+<p>content-type http request header as specified by the client</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to parser function</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Parse json encoded payload:
+parse_http('{"foo":123, "bar":true}', 'application/json')
+
+# Parse url-encoded payload
+parse_http("foo=1%2B1%3D2&amp;bar=yin%26yang", "application/x-www-form-urlencoded")
+
+## Not run: use demo app to parse multipart/form-data payload
+demo_rhttpd()
+
+## End(Not run)
+</code></pre>
+
+
+</div>

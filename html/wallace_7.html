@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>envs_ecoClimate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>envs_ecoClimate Obtain ecoClimate variables</h2>
+
+<h3>Description</h3>
+
+<p>download ecoClimate variables. See www.ecoclimate.org.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">envs_ecoClimate(bcAOGCM, bcScenario, ecoClimSel, logger = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>bcAOGCM</code></td>
+<td>
+<p>Name of the Atmospheric and Oceanic Global Circulation Model.
+Options are: "CCSM", "CNRM", "MIROC", "FGOALS", "GISS", "IPSL","MRI", "MPI"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bcScenario</code></td>
+<td>
+<p>Select the temporal scenario that you want to download.
+Options are: "LGM" (21,000 years ago), "Holo" (6,000 years ago),
+"Present", "Future 2.6" (rcp 2.6), "Future 4.5" (rcp 4.5),
+"Future 6" (rcp 6), "Future 8.5" (rcp 8.5)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ecoClimSel</code></td>
+<td>
+<p>Numeric vector with list of variables to select.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+<p>Stores all notification messages to be displayed in the Log
+Window of Wallace GUI. Insert the logger reactive list here for running in
+shiny, otherwise leave the default NULL.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is called by the module envs to download ecoClimate
+variables from www.ecoclimate.org. The variables to be downloaded are
+selected by the user with bcSel and the resolution is fixed to 0.5 degrees.
+This function currently gets variables from Dropbox and the process takes
+significantly more time than for other datasets. It returns a rasterStack
+of selected variables.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A rasterStack of selected variables
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Sara Varela &lt;sara_varela@yahoo.com&gt;
+</p>
+<p>Jamie M. Kass &lt;jamie.m.kass@gmail.com&gt;
+</p>
+<p>Gonzalo E. Pinilla-Buitrago &lt;gepinillab@gmail.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">bcAOGCM &lt;- "CCSM"
+bcScenario &lt;- "LGM"
+ecoClimSel &lt;- c(1,2,3)
+## Not run: 
+varsEcoClimate &lt;- envs_ecoClimate(bcAOGCM, bcScenario, ecoClimSel)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

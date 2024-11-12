@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Don</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Doncaster's measure of dynamic interaction</h2>
+
+<h3>Description</h3>
+
+<p>The function <code>Don</code> measures the dynamic interaction between two moving objects following
+the methods outlined by Doncaster (1990).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Don(traj, traj2, tc = 0, dc = 0, plot = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>traj</code></td>
+<td>
+<p>an object of the class <code>move2</code> which contains the time-stamped movement fixes of at least two individuals. For more information on objects of this type see <code>help(mt_as_move2)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>traj2</code></td>
+<td>
+<p>(optional) same as traj, but for the second group of individuals. See <code>checkTO</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tc</code></td>
+<td>
+<p>time threshold for determining simultaneous fixes – see function: <code>GetSimultaneous</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dc</code></td>
+<td>
+<p>distance tolerance limit (in appropriate units) for defining when two fixes are spatially together.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>logical, whether or not to plot the Doncaster plot. Default = TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function can be used to compute the Doncaster (1990) methods for measuring
+dynamic interaction between two objects. The Doncaster method tests the proportion
+of simultaneous fixes that are below <code>dc</code> against that which would be
+expected based on the distribution of distances between all fixes.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data.frame is returned that contains the values for the contingency table of simultaneous fixes (paired) and non-paired fixes below and above <code>dc</code>, along with the associated <em>p</em>-value from the Chi-squared test.This function can optionally return a plot, for distance values ranging from 0 to the maximum distance separating two fixes, of the observed proportion of simultaneous fixes below each distance value (for each pair). The expected values based on all fixes are also included.
+</p>
+
+
+<h3>References</h3>
+
+<p>Doncaster, C.P. (1992) Non-parametric estimates of interaction from radio-tracking
+data. <em>Journal of Theoretical Biology</em>, <b>143</b>: 431-443.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>GetSimultaneous
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(deer)
+#tc = 7.5 minutes, dc = 50 meters
+Don(deer, tc = 7.5*60, dc = 50)
+</code></pre>
+
+
+</div>

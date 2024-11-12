@@ -1,0 +1,77 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>conTimelag</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute time-lags from contact phases</h2>
+
+<h3>Description</h3>
+
+<p>Computes the time-lag from the nearest contact phase.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">conTimelag(traj, def = "all")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>traj</code></td>
+<td>
+<p>an object of the class <code>move2</code> which should be output from the function <code>conPhase</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>def</code></td>
+<td>
+<p>how to define the point-of-contact. The default is to define it as all fixes in a phase <code>def = 'all'</code>, alternatively contacts can be defined as a single point along the phase defined as one of: <code>'first','last','minDist','minTime'</code>, which corresponds to the first fix int he contact phase, the last fix in the contact phase, the fix with the minimum time difference and the fix with the closest contact distance.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is used following the <code>conphase</code> function. One should choose how to define the contact point (i.e., the parameter <code>contact</code>) depending on the research question.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A move2 object with an additional column contact_timelag with the time to the nearest (in time) contact phase. Negative values indicate times prior to the nearest contact phase and postive values indicate times after the nearest contact phase. If an individual has no contacts, the contact time-lag is NA.
+</p>
+
+
+<h3>References</h3>
+
+<p>Long, JA, Webb, SL, Harju, SM, Gee, KL (2022) Analyzing Contacts and Behavior from High Frequency 
+Tracking Data Using the wildlifeDI R Package. <em>Geographical Analysis</em>. <b>54</b>, 648–663.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>conPhase, conProcess, conDisplacement
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+data(does)
+doecons &lt;- conProcess(does,tc=15*60,dc=50)
+doephas &lt;- conPhase(doecons,pc=60*60)
+conTL_first &lt;- conTimelag(doephas,def='first')
+conTL_all &lt;- conTimelag(doephas,def='all')
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

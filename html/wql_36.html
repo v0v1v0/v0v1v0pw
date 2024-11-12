@@ -1,0 +1,146 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>seasonTrend</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Determine seasonal trends</h2>
+
+<h3>Description</h3>
+
+<p>Finds the trend for each season and each variable in a time series.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">seasonTrend(x, plot = FALSE, type = c("slope", "relative"), pval = 0.05, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Time series vector, or time series matrix with column names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>Should the results be plotted?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Type of trend to be plotted, actual or relative to series median</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pval</code></td>
+<td>
+<p>p-value for significance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further options to pass to plotting function</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The Mann-Kendall test is applied for each season and series (in the case of
+a matrix). The actual and relative Sen slope (actual divided by median for
+that specific season and series); the p-value for the trend; and the
+fraction of missing slopes involving the first and last fifths of the data
+are calculated (see <code>mannKen</code>).
+</p>
+<p>If <code>plot = TRUE</code>, each season for each series is represented by a bar
+showing the trend. The fill colour indicates whether <code class="reqn">p &lt; 0.05</code> or not.
+If the fraction of missing slopes is 0.5 or more, the corresponding trends
+are omitted.
+</p>
+<p>Parameters can be passed to the plotting function, in particular, to
+<code>facet_wrap</code> in <span class="pkg">ggplot2</span>. The most useful parameters here are
+<code>ncol</code> (or <code>nrow</code>), which determines the number of columns (or
+rows) of plots, and <code>scales</code>, which can be set to <code>"free_y"</code> to
+allow the y-axis to change for each time series. Like all <span class="pkg">ggplot2</span>
+objects, the plot output can also be customized extensively by modifying and
+adding layers.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with the following fields: </p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>series</code></td>
+<td>
+<p>series names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>season</code></td>
+<td>
+<p>season number</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sen.slope</code></td>
+<td>
+<p>Sen slope in original units
+per year</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sen.slope.rel</code></td>
+<td>
+<p>Sen slope divided by median for that specific
+season and series</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>p-value for the trend according to the
+Mann-Kendall test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>missing</code></td>
+<td>
+<p>Proportion of slopes joining first and
+last fifths of the data that are missing</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Alan Jassby, James Cloern
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>mannKen</code>, <code>plotSeason</code>,
+<code>facet_wrap</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+x &lt;- sfbayChla
+seasonTrend(x)
+seasonTrend(x, plot = TRUE, ncol = 4)
+
+</code></pre>
+
+
+</div>

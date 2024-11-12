@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>execute_parallel</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Execute f in parallel partitioned by partition_column.</h2>
+
+<h3>Description</h3>
+
+<p>Execute f in parallel partitioned by <code>partition_column</code>, see
+<code>partition_tables</code> for details.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">execute_parallel(
+  tables,
+  f,
+  partition_column,
+  ...,
+  cl = NULL,
+  debug = FALSE,
+  env = parent.frame()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tables</code></td>
+<td>
+<p>named map of tables to use.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f</code></td>
+<td>
+<p>function to apply to each tableset signature is function takes a single argument that is a named list of data.frames.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>partition_column</code></td>
+<td>
+<p>character name of column to partition on</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>force later arguments to bind by name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cl</code></td>
+<td>
+<p>parallel cluster.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>logical if TRUE use lapply instead of parallel::clusterApplyLB.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>env</code></td>
+<td>
+<p>environment to look for values in.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>list of f evaluations.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>partition_tables</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if(requireNamespace("parallel", quietly = TRUE)) {
+  cl &lt;- parallel::makeCluster(2)
+
+  d &lt;- data.frame(x = 1:5, g = c(1, 1, 2, 2 ,2))
+  f &lt;- function(dl) {
+    d &lt;- dl$d
+    d$s &lt;- sqrt(d$x)
+    d
+  }
+  r &lt;- execute_parallel(list(d = d), f,
+                        partition_column = "g",
+                        cl = cl) %.&gt;%
+    do.call(rbind, .) %.&gt;%
+    print(.)
+
+  parallel::stopCluster(cl)
+}
+
+</code></pre>
+
+
+</div>

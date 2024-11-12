@@ -1,0 +1,49 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sel.best.window</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Selection of the best window computed with cv.wpls</h2>
+
+<h3>Description</h3>
+
+<p>Takes as input the object containing metrics of the several models computed
+with cv.wpls and selects the best basing on the lowest RMSE available; then computes
+PLS and gives as output an object containing results.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sel.best.window(wpls = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>wpls, </code></td>
+<td>
+<p>object obtained from cv.wpls.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>An object containing results of the best model. Has the same content of a model obtained from the function <strong>pls</strong> of <strong>mdatools</strong>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(beer)
+conc=beer[,1]
+sp=beer[,2:ncol(beer)]
+names(sp)=convert.names.wl(1100,2250,2)
+conc=unlist(conc)
+mywpls=cv.wpls(sp, conc,mode='wpls', windows = 5)
+best.pls=sel.best.window(mywpls)
+</code></pre>
+
+
+</div>

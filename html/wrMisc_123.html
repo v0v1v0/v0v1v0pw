@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>convToNum</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert Vector To Numeric</h2>
+
+<h3>Description</h3>
+
+<p>This function checks if input vector/character string contains numbers (with or without comma) and attempts converting to numeric.
+This functions was designed for extracting the numeric part of character-vectors (or matrix) containing both numbers and character-elements.
+Depending on the parameters <code>convert</code> and <code>remove</code> text-entries can be converted to NA (in resulting numeric objects) or removed (the number of elements/lines gets reduced, in consequece). 
+Note: if 'x' is a matrix, its matrix-dimensions &amp; -names will be preserved.
+Note: so far Inf  and -Inf do not get recognized as numeric.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">convToNum(
+  x,
+  autoConv = TRUE,
+  spaceRemove = TRUE,
+  convert = c(NA, "sparseChar"),
+  remove = NULL,
+  euroStyle = TRUE,
+  sciIncl = TRUE,
+  callFrom = NULL,
+  silent = TRUE,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>vector to be converted</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>autoConv</code></td>
+<td>
+<p>(logical) simple automatic conversion based on function <code>as.numeric</code>; if <code>TRUE</code> all other arguments exept  <code>spaceRemove</code> will not be considered</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spaceRemove</code></td>
+<td>
+<p>(logical) to remove all heading and trailing (white) space (until first non-space character)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>convert</code></td>
+<td>
+<p>(character) define which type of non-conform entries to convert to NAs. Note, if <code>remove</code> is selected to eliminate character-entries they cannot be converted any more. Use 'allChar' for all character-entries; 'sparseChar' sparse (ie rare) character entries; <code>NA</code> for converting 'Na' or 'na' to <code>NA</code>; if 'none' or <code>NULL</code> no conversions at all.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remove</code></td>
+<td>
+<p>(character) define which type of non-conform entries to remove, removed items cannot be converted to <code>NA</code> any more. Use 'allChar' for removing all character entries; <code>NA</code> for removing all instances of <code>NA</code> (execept thise created by converting text); all elements will be kept if 'none' or <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>euroStyle</code></td>
+<td>
+<p>(logical) if <code>TRUE</code> will convert all ',' (eg used as European decimal-separator) to '.' (as internally used by R as decimal-separator), thus allowing converting the European decimal format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sciIncl</code></td>
+<td>
+<p>(logical) include recognizing scientific notation (eg 2e-4)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function may be used in two modes, depening if argument <code>autoConv</code> is <code>TRUE</code> or <code>FALSE</code>.
+The first options allows accessing an automatic mode based on <code>as.numeric</code>, 
+while the second options investigates all characters if they may belong to numeric expressions and allows removing specific text-elements.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a numeric vector (or matrix (if 'x' is matrix))
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>numeric</code> and <code>as.numeric</code> (on same help-page)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x1 &lt;- c("+4"," + 5","6","bb","Na","-7") 
+convToNum(x1) 
+convToNum(x1, autoConv=FALSE, convert=c("allChar"))
+convToNum(x1, autoConv=FALSE)      # too many non-numeric instances for 'sparseChar'
+
+x2 &lt;- c("+4"," + 5","6","-7"," - 8","1e6","+ 2.3e4","-3E4","- 4E5") 
+convToNum(x2) 
+convToNum(x2, autoConv=FALSE, convert=NA,remove=c("allChar",NA))
+convToNum(x2, autoConv=FALSE, convert=NA,remove=c("allChar",NA),sciIncl=FALSE)
+</code></pre>
+
+
+</div>

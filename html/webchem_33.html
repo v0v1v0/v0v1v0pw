@@ -1,0 +1,221 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_cid</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve Pubchem Compound ID (CID)</h2>
+
+<h3>Description</h3>
+
+<p>Retrieve compound IDs (CIDs) from PubChem.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_cid(
+  query,
+  from = "name",
+  domain = c("compound", "substance", "assay"),
+  match = c("all", "first", "ask", "na"),
+  verbose = getOption("verbose"),
+  arg = NULL,
+  first = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>character; search term, one or more compounds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>character; type of input. See details for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>domain</code></td>
+<td>
+<p>character; query domain, can be one of <code>"compound"</code>,
+<code>"substance"</code>, <code>"assay"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>match</code></td>
+<td>
+<p>character; How should multiple hits be handled?, <code>"all"</code>
+all matches are returned, <code>"first"</code> the first matching is returned,
+<code>"ask"</code> enters an interactive mode and the user is asked for input,
+<code>"na"</code> returns NA if multiple hits are found.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical; should a verbose output be printed on the console?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arg</code></td>
+<td>
+<p>character; optinal arguments like "name_type=word" to match
+individual words.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>first</code></td>
+<td>
+<p>deprecated. Use 'match' instead.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>currently unused.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Valid values for the <code>from</code> argument depend on the
+<code>domain</code>:
+</p>
+
+<ul>
+<li>
+<p><code>compound</code>: <code>"name"</code>, <code>"smiles"</code>, <code>"inchi"</code>,
+<code>"inchikey"</code>, <code>"formula"</code>, <code>"sdf"</code>, <code>"cas"</code> (an alias for
+<code>"xref/RN"</code>), &lt;xref&gt;, &lt;structure search&gt;, &lt;fast search&gt;.
+</p>
+</li>
+<li>
+<p><code>substance</code>: <code>"name"</code>, <code>"sid"</code>,
+<code>&lt;xref&gt;</code>, <code>"sourceid/&lt;source id&gt;"</code> or <code>"sourceall"</code>.
+</p>
+</li>
+<li>
+<p><code>assay</code>: <code>"aid"</code>, <code>&lt;assay target&gt;</code>.
+</p>
+</li>
+</ul>
+<p>&lt;structure search&gt; is assembled as "<code>substructure</code> |
+<code>superstructure</code> | <code>similarity</code> | <code>identity</code> / <code>smiles</code>
+| <code>inchi</code> | <code>sdf</code> | <code>cid</code>", e.g.
+<code>from = "substructure/smiles"</code>.
+</p>
+<p><code>&lt;xref&gt;</code> is assembled as "<code>xref</code>/{<code>RegistryID</code> |
+<code>RN</code> | <code>PubMedID</code> | <code>MMDBID</code> | <code>ProteinGI</code>,
+<code>NucleotideGI</code> | <code>TaxonomyID</code> | <code>MIMID</code> | <code>GeneID</code> |
+<code>ProbeID</code> | <code>PatentID</code>}", e.g. <code>from = "xref/RN"</code> will query
+by CAS RN.
+</p>
+<p>&lt;fast search&gt; is either <code>fastformula</code> or it is assembled as
+"<code>fastidentity</code> | <code>fastsimilarity_2d</code> | <code>fastsimilarity_3d</code> |
+<code>fastsubstructure</code> | <code>fastsuperstructure</code>/<code>smiles</code> |
+<code>smarts</code> | <code>inchi</code> | <code>sdf</code> | <code>cid</code>", e.g.
+<code>from = "fastidentity/smiles"</code>.
+</p>
+<p><code>&lt;source id&gt;</code> is any valid PubChem Data Source ID. When
+<code>from = "sourceid/&lt;source id&gt;"</code>, the query is the ID of the substance in
+the depositor's database.
+</p>
+<p>If <code>from = "sourceall"</code> the query is one or more valid Pubchem
+depositor names. Depositor names are not case sensitive.
+</p>
+<p>Depositor names and Data Source IDs can be found at
+<a href="https://pubchem.ncbi.nlm.nih.gov/sources/">https://pubchem.ncbi.nlm.nih.gov/sources/</a>.
+</p>
+<p><code>&lt;assay target&gt;</code> is assembled as "<code>target</code>/{<code>gi</code> |
+<code>proteinname</code> | <code>geneid</code> | <code>genesymbol</code> | <code>accession</code>}",
+e.g. <code>from = "target/geneid"</code> will query by GeneID.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a tibble.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Please respect the Terms and Conditions of the National Library of
+Medicine, <a href="https://www.nlm.nih.gov/databases/download.html">https://www.nlm.nih.gov/databases/download.html</a> the data
+usage policies of National Center for Biotechnology Information,
+<a href="https://www.ncbi.nlm.nih.gov/home/about/policies/">https://www.ncbi.nlm.nih.gov/home/about/policies/</a>,
+<a href="https://pubchem.ncbi.nlm.nih.gov/docs/programmatic-access">https://pubchem.ncbi.nlm.nih.gov/docs/programmatic-access</a>, and the data
+usage policies of the indicidual data sources
+<a href="https://pubchem.ncbi.nlm.nih.gov/sources/">https://pubchem.ncbi.nlm.nih.gov/sources/</a>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Wang, Y., J. Xiao, T. O. Suzek, et al. 2009 PubChem: A Public
+Information System for
+Analyzing Bioactivities of Small Molecules. Nucleic Acids Research 37:
+623–633.
+</p>
+<p>Kim, Sunghwan, Paul A. Thiessen, Evan E. Bolton, et al. 2016
+PubChem Substance and Compound Databases. Nucleic Acids Research 44(D1):
+D1202–D1213.
+</p>
+<p>Kim, S., Thiessen, P. A., Bolton, E. E., &amp; Bryant, S. H. (2015).
+PUG-SOAP and PUG-REST: web services for programmatic access to chemical
+information in PubChem. Nucleic acids research, gkv396.
+</p>
+<p>Eduard Szöcs, Tamás Stirling, Eric R. Scott, Andreas Scharmüller,
+Ralf B. Schäfer (2020). webchem: An R Package to Retrieve Chemical
+Information from the Web. Journal of Statistical Software, 93(13).
+<a href="https://doi.org/10.18637/jss.v093.i13">doi:10.18637/jss.v093.i13</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# might fail if API is not available
+get_cid("Triclosan")
+get_cid("Triclosan", arg = "name_type=word")
+# from SMILES
+get_cid("CCCC", from = "smiles")
+# from InChI
+get_cid("InChI=1S/CH5N/c1-2/h2H2,1H3", from = "inchi")
+# from InChIKey
+get_cid("BPGDAMSIGCZZLK-UHFFFAOYSA-N", from = "inchikey")
+# from formula
+get_cid("C26H52NO6P", from = "formula")
+# from CAS RN
+get_cid("56-40-6", from = "xref/rn")
+# similarity
+get_cid(5564, from = "similarity/cid")
+get_cid("CCO", from = "similarity/smiles")
+# from SID
+get_cid("126534046", from = "sid", domain = "substance")
+# sourceid
+get_cid("VCC957895", from = "sourceid/23706", domain = "substance")
+# sourceall
+get_cid("Optopharma Ltd", from = "sourceall", domain = "substance")
+# from AID (CIDs of substances tested in the assay)
+get_cid(170004, from = "aid", domain = "assay")
+# from GeneID (CIDs of substances tested on the gene)
+get_cid(25086, from = "target/geneid", domain = "assay")
+
+# multiple inputs
+get_cid(c("Triclosan", "Aspirin"))
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pairwise_ordcat_test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Pairwise comparison for ordinal categories</h2>
+
+<h3>Description</h3>
+
+<p><code>pairwise_ordcat_test</code> calculates pairwise comparisons for ordinal
+categories between all group levels with corrections for multiple testing.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pairwise_ordcat_test(
+  dep_var,
+  indep_var,
+  adjmethod = "fdr",
+  plevel = 0.05,
+  symbols = letters[-1],
+  ref = FALSE,
+  cmh = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dep_var</code></td>
+<td>
+<p>dependent variable, containing the data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indep_var</code></td>
+<td>
+<p>independent variable, should be factor</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adjmethod</code></td>
+<td>
+<p>method for adjusting p values (see p.adjust)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plevel</code></td>
+<td>
+<p>threshold for significance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>symbols</code></td>
+<td>
+<p>predefined as b,c, d...;  provides footnotes to mark group
+differences, e.g. b means different from group 2</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ref</code></td>
+<td>
+<p>is the 1st subgroup the reference (like in Dunnett test)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cmh</code></td>
+<td>
+<p>Should  Cochran-Mantel-Haenszel test (coin::cmh_test) be used for
+testing? If false, the linear-by-linear association test (coin::lbl_test)
+is applied.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with elements "methods" (character), "p.value" (matrix),
+"plevel" (numeric), and "sign_colwise" (vector of length number of levels - 1)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># All pairwise comparisons
+mtcars2 &lt;- dplyr::mutate(mtcars, cyl = factor(cyl, ordered = TRUE))
+pairwise_ordcat_test(dep_var = mtcars2$cyl, indep_var = mtcars2$gear)
+# Only comparison against reference gear=3
+pairwise_ordcat_test(dep_var = mtcars2$cyl, indep_var = mtcars2$gear, ref = TRUE)
+</code></pre>
+
+
+</div>

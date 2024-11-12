@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>runFunction</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Run a <em><code>function</code></em>
+</h2>
+
+<h3>Description</h3>
+
+<p>Run a function from an object, according to the mentioned evaluation mode, and to the
+chosen type factory</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">runFunction(object_o_1, functionName_s_1, arguments_l, evaluationMode_o_1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object_o_1</code></td>
+<td>
+<p>the  <em><code>object</code></em> to consider</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>functionName_s_1</code></td>
+<td>
+<p> a single <em><code>string</code></em> that is the name of the function to run</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arguments_l</code></td>
+<td>
+<p> a <em><code>list</code></em> of arguments to pass to the function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>evaluationMode_o_1</code></td>
+<td>
+<p> an evaluation mode <em><code>object</code></em>. See
+<b><em><code>EvaluationMode</code></em></b></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>list</code> with names
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p> a single <em><code>boolean</code></em>. Always <em><code>TRUE</code></em> when evaluation mode is <b><code>standard_R_evaluation</code></b>. Otherwise, will reflect result validity in the chose evaluation mode. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>the result of the computation, might be a scalar or not, a warning, an error, ... </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>the evaluation mode used to check the results</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>function_return_type_check</code></td>
+<td>
+<p>available if mode is different of <b><code>standard_R_evaluation</code></b> </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameter_type_checks</code></td>
+<td>
+<p>available if mode is <b><code>type_checking_inforcement</code></b> </p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+<p>Maintainer: Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Refer to  <b><em><code>FunctionParameterTypeFactory</code></em></b> and
+<b><em><code>runFunction</code></em></b>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##---- typical case ----
+library('data.table')
+source(system.file('code-samples/frt-defs/good/full/AdditionFI.R',
+                   package = 'wyz.code.offensiveProgramming'))
+fi &lt;- AdditionFI()
+runFunction(fi, 'addDouble', list(34, 44.6), EvaluationMode(defineEvaluationModes()[1]))
+runFunction(fi, 'addDouble', list(34, 44.6), EvaluationMode(defineEvaluationModes()[2]))
+runFunction(fi, 'addDouble', list(34, 44.6), EvaluationMode(defineEvaluationModes()[3]))
+</code></pre>
+
+
+</div>

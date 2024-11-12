@@ -1,0 +1,60 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sum_activity</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summarize activity per person</h2>
+
+<h3>Description</h3>
+
+<p><code>sum_activity()</code> counts the number of active time periods (i.e., days, weeks,
+months, years, or waves) by <code>panelist_id</code>. A period counts as "active" if
+the panelist provided at least one visit for that period.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sum_activity(wt, timeframe = "date")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wt</code></td>
+<td>
+<p>webtrack data object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timeframe</code></td>
+<td>
+<p>character. Indicates for what time frame to aggregate visits.
+Possible values are <code>"date"</code>, <code>"week"</code>, <code>"month"</code>, <code>"year"</code> or <code>"wave"</code>. If
+set to <code>"wave"</code>, <code>wt</code> must contain a column call <code>wave</code>. Defaults to <code>"date"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a data.frame with columns <code>panelist_id</code>, column indicating the
+number of active time units.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data("testdt_tracking")
+wt &lt;- as.wt_dt(testdt_tracking)
+# summarize activity by day
+wt_sum &lt;- sum_activity(wt, timeframe = "date")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

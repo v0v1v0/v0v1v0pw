@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_resdist</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get a matrix of resistance distances for resist_gd</h2>
+
+<h3>Description</h3>
+
+<p>Create a distance matrix based on coordinates and a connectivity layer.
+The output is a distance matrix where rows represent cells on the landscape
+and columns represent individual locations on the landscape. Each value is
+the resistance distance between each sample and each cell calculated
+using the gdistance package. This matrix is used by resist_gd.
+If coords_only = TRUE, the result is a distance matrix for the sample coordinates
+only.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_resdist(
+  coords,
+  lyr,
+  fact = 0,
+  transitionFunction = mean,
+  directions = 8,
+  geoCorrection = TRUE,
+  coords_only = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>coords</code></td>
+<td>
+<p>coordinates of samples as sf points, a two-column matrix, or a data.frame representing x and y coordinates (see Details for important information about projections)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lyr</code></td>
+<td>
+<p>conductivity layer (higher values should mean greater conductivity) for generating distances. Can be either a SpatRaster or RasterLayer.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fact</code></td>
+<td>
+<p>aggregation factor to apply to <code>lyr</code> (defaults to 0; <em>note:</em> increasing this value reduces computational time)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transitionFunction</code></td>
+<td>
+<p>function to calculate transition values from grid values (defaults to mean)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>directions</code></td>
+<td>
+<p>directions in which cells are connected (4, 8, 16, or other), see adjacent (defaults to 8)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geoCorrection</code></td>
+<td>
+<p>whether to apply correction to account for local distances (defaults to TRUE). Geographic correction is necessary for all objects of the class Transition that are either: (1) based on a grid in a geographic (lonlat) projection and covering a large area; (2) made with directions &gt; 4 (see geoCorrection for more details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coords_only</code></td>
+<td>
+<p>whether to return distances only for sample coordinates</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a distance matrix used by resist_gd
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">load_mini_ex()
+distmat &lt;- get_resdist(mini_coords, mini_lyr)
+</code></pre>
+
+
+</div>

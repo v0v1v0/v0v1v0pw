@@ -1,0 +1,133 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>tm_wordcloud</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate a wordcloud with meeting subject lines</h2>
+
+<h3>Description</h3>
+
+<p>Generate a wordcloud with the meeting query.
+This is a sub-function that feeds into <code>meeting_tm_report()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">tm_wordcloud(
+  data,
+  stopwords = NULL,
+  seed = 100,
+  keep = 100,
+  return = "plot",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A Meeting Query dataset in the form of a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stopwords</code></td>
+<td>
+<p>A character vector OR a single-column data frame labelled
+<code>'word'</code> containing custom stopwords to remove.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>A numeric vector to set seed for random generation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep</code></td>
+<td>
+<p>A numeric vector specifying maximum number of words to keep.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String specifying what to return. This must be one of the
+following strings:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>
+</p>
+</li>
+<li> <p><code>"table"</code>
+</p>
+</li>
+</ul>
+<p>See <code>Value</code> for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional parameters to be passed to
+<code>ggwordcloud::geom_text_wordcloud()</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Uses the 'ggwordcloud' package for the underlying implementation, thus
+returning a 'ggplot' object. Additional layers can be added onto the plot
+using a ggplot <code>+</code> syntax.
+The recommendation is not to return over 100 words in a word cloud.
+</p>
+<p>This function uses <code>tm_clean()</code> as the underlying data wrangling function.
+There is an option to remove stopwords by passing a data frame into the
+<code>stopwords</code> argument.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A different output is returned depending on the value passed to the <code>return</code>
+argument:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>: 'ggplot' object containing a word cloud.
+</p>
+</li>
+<li> <p><code>"table"</code>: data frame returning the data used to generate the word cloud.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>Other Text-mining: 
+<code>meeting_tm_report()</code>,
+<code>pairwise_count()</code>,
+<code>subject_validate()</code>,
+<code>subject_validate_report()</code>,
+<code>tm_clean()</code>,
+<code>tm_cooc()</code>,
+<code>tm_freq()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">tm_wordcloud(mt_data, keep = 30)
+
+# Removing stopwords
+tm_wordcloud(mt_data, keep = 30, stopwords = c("weekly", "update"))
+
+</code></pre>
+
+
+</div>

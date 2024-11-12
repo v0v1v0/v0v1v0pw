@@ -1,0 +1,237 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mixmod_regression.default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Mixture Model Identification using Segmented Regression</h2>
+
+<h3>Description</h3>
+
+<p>This function uses piecewise linear regression to divide the data into
+subgroups. See 'Details'.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+mixmod_regression(
+  x,
+  y,
+  status,
+  distribution = c("weibull", "lognormal", "loglogistic"),
+  conf_level = 0.95,
+  k = 2,
+  control = segmented::seg.control(),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector which consists of lifetime data. Lifetime data
+could be every characteristic influencing the reliability of a product,
+e.g. operating time (days/months in service), mileage (km, miles), load
+cycles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A numeric vector which consists of estimated failure probabilities
+regarding the lifetime data in <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>A vector of binary data (0 or 1) indicating whether a unit is
+a right censored observation (= 0) or a failure (= 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the random variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conf_level</code></td>
+<td>
+<p>Confidence level of the interval.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>Number of mixture components. If the data should be split in an
+automated fashion, <code>k</code> must be set to <code>NULL</code>. The argument <code>fix.psi</code> of
+<code>control</code> is then set to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>Output of the call to seg.control,
+which is passed to segmented.lm. See 'Examples' for usage.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The segmentation process is based on the lifetime realizations of failed
+units and their corresponding estimated failure probabilities for which intact
+items are taken into account. It is performed with the support of
+segmented.lm.
+</p>
+<p>Segmentation can be done with a specified number of subgroups or in an automated
+fashion (see argument <code>k</code>). The algorithm tends to overestimate the number of
+breakpoints when the separation is done automatically (see 'Warning' in
+segmented.lm).
+</p>
+<p>In the context of reliability analysis it is important that the main types of
+failures can be identified and analyzed separately. These are
+</p>
+
+<ul>
+<li>
+<p> early failures,
+</p>
+</li>
+<li>
+<p> random failures and
+</p>
+</li>
+<li>
+<p> wear-out failures.
+</p>
+</li>
+</ul>
+<p>In order to reduce the risk of overestimation as well as being able to consider
+the main types of failures, a maximum of three subgroups (<code>k = 3</code>) is recommended.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with classes <code>wt_model</code> and <code>wt_rank_regression</code> if no breakpoint
+was detected. See rank_regression. The returned tibble <code>data</code> is of class
+<code>wt_cdf_estimation</code> and contains the dummy columns <code>cdf_estimation_method</code> and
+<code>id</code>. The former is filled with <code>NA_character</code>, due to internal usage and the
+latter is filled with <code>"XXXXXX"</code> to point out that unit identification is not
+possible when using the vector-based approach.
+</p>
+<p>A list with classes <code>wt_model</code> and <code>wt_mixmod_regression</code> if at least one
+breakpoint was determined. The length of the list depends on the number of
+identified subgroups. Each list contains the information provided by
+rank_regression. The returned tibble <code>data</code> of each list element only retains
+information on the failed units and has modified and additional columns:
+</p>
+
+<ul>
+<li> <p><code>id</code> : Modified id, overwritten with <code>"XXXXXX"</code> to point out that unit
+identification is not possible when using the vector-based approach.
+</p>
+</li>
+<li> <p><code>cdf_estimation_method</code> : A character that is always <code>NA_character</code>. Only
+needed for internal use.
+</p>
+</li>
+<li> <p><code>q</code> : Quantiles of the standard distribution calculated from column <code>prob</code>.
+</p>
+</li>
+<li> <p><code>group</code> : Membership to the respective segment.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Doganaksoy, N.; Hahn, G.; Meeker, W. Q., Reliability Analysis by
+Failure Mode, Quality Progress, 35(6), 47-52, 2002
+</p>
+
+
+<h3>See Also</h3>
+
+<p>mixmod_regression
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Vectors:
+## Data for mixture model:
+hours &lt;- voltage$hours
+status &lt;- voltage$status
+
+## Data for simple unimodal distribution:
+distance &lt;- shock$distance
+status_2 &lt;- shock$status
+
+# Probability estimation with one method:
+prob_mix &lt;- estimate_cdf(
+  x = hours,
+  status = status,
+  method = "johnson"
+)
+
+prob &lt;- estimate_cdf(
+  x = distance,
+  status = status_2,
+  method = "johnson"
+)
+
+ # Example 1 - Mixture identification using k = 2 two-parametric Weibull models:
+mix_mod_weibull &lt;- mixmod_regression(
+   x = prob_mix$x,
+   y = prob_mix$prob,
+   status = prob_mix$status,
+   distribution = "weibull",
+   conf_level = 0.99,
+   k = 2
+)
+
+# Example 2 - Mixture identification using k = 3 two-parametric lognormal models:
+mix_mod_lognorm &lt;- mixmod_regression(
+   x = prob_mix$x,
+   y = prob_mix$prob,
+   status = prob_mix$status,
+   distribution = "lognormal",
+   k = 3
+)
+
+# Example 3 - Mixture identification using control argument:
+mix_mod_control &lt;- mixmod_regression(
+  x = prob_mix$x,
+  y = prob_mix$prob,
+  status = prob_mix$status,
+  distribution = "weibull",
+  k = 2,
+  control = segmented::seg.control(display = TRUE)
+)
+
+# Example 4 - Mixture identification performs rank_regression for k = 1:
+mod &lt;- mixmod_regression(
+  x = prob$x,
+  y = prob$prob,
+  status = prob$status,
+  distribution = "weibull",
+  k = 1
+)
+
+</code></pre>
+
+
+</div>

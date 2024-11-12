@@ -1,0 +1,136 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Hals.ses</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Effective Standard Errors
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the ALS so-called 'effective standard errors'
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Hals.ses(Z, Hs, Ht, Hst.ls, rho, reg, b.lag, test.rng)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+
+<p>Space-time data.  A <code class="reqn">\tau</code> x <code class="reqn">n</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hs</code></td>
+<td>
+
+<p>Spacial covariates (of supporting sites).  An <code class="reqn">n</code> x <code class="reqn">p_s</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ht</code></td>
+<td>
+
+<p>Temporal covariates (of supporting sites).  A <code class="reqn">\tau</code> x <code class="reqn">p_t</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hst.ls</code></td>
+<td>
+
+<p>Space-time covariates (of supporting sites).  A list of length <code class="reqn">\tau</code>, each element should be a numeric <code class="reqn">n</code> x <code class="reqn">p_st</code> matrix. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho</code></td>
+<td>
+
+<p>ALS signal-to-noise ratio (SNR).  A non-negative scalar.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reg</code></td>
+<td>
+
+<p>ALS regularizer.  A non-negative scalar.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b.lag</code></td>
+<td>
+
+<p>ALS lag.  A scalar integer, typically -1 (<em>a-prior</em>), or 0 (<em>a-posteriori</em>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>test.rng</code></td>
+<td>
+
+<p>Temporal test range.  A vector of temporal indices of the model test range.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A named list.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>estimates</code></td>
+<td>
+<p>A <code class="reqn">p_s+p_t+p_st</code> x 2 matrix, each row giving the ALS partial slope estimate/prediction at time <code class="reqn">\tau</code>, and the 'effective standard error (prediction error)' for the partial slope.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inv.LHH</code></td>
+<td>
+<p>A <code class="reqn">(p_s+p_t+p_st)</code> x <code class="reqn">(p_s+p_t+p_st)</code> matrix.  This is the (ALS predicted) covariate precision matrix at time <code class="reqn">\tau</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ALS.g</code></td>
+<td>
+<p>The ALS gain at time <code class="reqn">\tau</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Please see the example in H.als.b
+
+## The function is currently defined as
+function (Z, Hs, Ht, Hst.ls, rho, reg, b.lag, test.rng) 
+{
+    tau &lt;- nrow(Z)
+    xALS &lt;- H.als.b(Z = Z, Hs = Hs, Ht = Ht, Hst.ls = Hst.ls, 
+        rho = rho, reg = reg, b.lag = b.lag, Hs0 = NULL, Ht0 = NULL, 
+        Hst0.ls = NULL)
+    rmse &lt;- sqrt(mean((Z[test.rng, ] - xALS$Z.hat[test.rng, ])^2))
+    rmse
+    als.se &lt;- rmse * sqrt(xALS$ALS.g) * sqrt(diag(xALS$inv.LHH))
+    return(list(estimates = cbind(xALS$B[tau, ], als.se), inv.LHH = xALS$inv.LHH, 
+        ALS.g = xALS$ALS.g))
+  }
+</code></pre>
+
+
+</div>

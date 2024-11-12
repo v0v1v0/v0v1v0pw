@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>test2grp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>t-test each line of 2 groups of data</h2>
+
+<h3>Description</h3>
+
+<p><code>test2grp</code> performs t-test on two groups of data using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a>,
+this is a custom implementation of <code>moderTest2grp</code> for proteomics.
+The final obkect also includes the results without moderation by <code>limma</code> (eg BH-FDR in <code>$nonMod.BH</code>). 
+Furthermore, there is an option to make use of package ROTS (note, this will increase the time of computatins considerably).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">test2grp(
+  dat,
+  questNo,
+  useCol = NULL,
+  grp = NULL,
+  annot = NULL,
+  ROTSn = 0,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(matrix or data.frame) main data (may contain NAs)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>questNo</code></td>
+<td>
+<p>(integer) specify here which question, ie comparison should be adressed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useCol</code></td>
+<td>
+<p>(integer or character)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grp</code></td>
+<td>
+<p>(character or factor)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annot</code></td>
+<td>
+<p>(matrix or data.frame)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ROTSn</code></td>
+<td>
+<p>(integer) number of iterations ROTS runs (stabilization of reseults may be seen with &gt;300)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a limma-type S3 object of class 'MArrayLM' (which can be accessed like a list); multiple testing correction types or modified testing by ROTS may get included ('p.value','FDR','BY','lfdr' or 'ROTS.BH')
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>moderTest2grp</code>, <code>pVal2lfdr</code>, <code>t.test</code>, <code>ROTS</code> from the Bioconductor package <a href="https://www.bioconductor.org/packages/release/bioc/html/ROTS.html">ROTS</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2018);  datT8 &lt;- matrix(round(rnorm(800)+3,1), nc=8, dimnames=list(paste(
+  "li",1:100,sep=""), paste(rep(LETTERS[1:3],c(3,3,2)),letters[18:25],sep="")))
+datT8[3:6,1:2] &lt;- datT8[3:6,1:2] +3   # augment lines 3:6 (c-f) 
+datT8[5:8,5:6] &lt;- datT8[5:8,5:6] +3   # augment lines 5:8 (e-h) 
+grp8 &lt;- gl(3,3,labels=LETTERS[1:3],length=8)
+datL &lt;- list(data=datT8, filt= wrMisc::presenceFilt(datT8,grp=grp8,maxGrpM=1,ratMa=0.8))
+testAvB0 &lt;- wrMisc::moderTest2grp(datT8[,1:6], gl(2,3))
+testAvB &lt;- test2grp(datL, questNo=1)
+</code></pre>
+
+
+</div>

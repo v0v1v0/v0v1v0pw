@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>webfakes_request</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>A webfakes request object</h2>
+
+<h3>Description</h3>
+
+<p>webfakes creates a <code>webfakes_request</code> object for every incoming HTTP
+request. This object is passed to every matched route and middleware,
+until the response is sent. It has reference semantics, so handlers
+can modify it.
+</p>
+
+
+<h3>Details</h3>
+
+<p>Fields and methods:
+</p>
+
+<ul>
+<li> <p><code>app</code>: The <code>webfakes_app</code> object itself.
+</p>
+</li>
+<li> <p><code>headers</code>: Named list of HTTP request headers.
+</p>
+</li>
+<li> <p><code>hostname</code>: The Host header, the server hostname and maybe port.
+</p>
+</li>
+<li> <p><code>method</code>: HTTP method.
+</p>
+</li>
+<li> <p><code>path</code>: Server path.
+</p>
+</li>
+<li> <p><code>protocol</code>: <code>"http"</code> or <code>"https"</code>.
+</p>
+</li>
+<li> <p><code>query_string</code>: The raw query string, without the starting <code style="white-space: pre;">⁠?⁠</code>.
+</p>
+</li>
+<li> <p><code>query</code>: Parsed query parameters in a named list.
+</p>
+</li>
+<li> <p><code>remote_addr</code>: String, the domain name or IP address of the client.
+webfakes runs on the localhost, so this is <code style="white-space: pre;">⁠127.0.0.1⁠</code>.
+</p>
+</li>
+<li> <p><code>url</code>: The full URL of the request.
+</p>
+</li>
+<li> <p><code>get_header(field)</code>: Function to query a request header. Returns
+<code>NULL</code> if the header is not present.
+</p>
+</li>
+</ul>
+<p>Body parsing middleware adds additional fields to the request object.
+See <code>mw_raw()</code>, <code>mw_text()</code>, <code>mw_json()</code>, <code>mw_multipart()</code> and
+<code>mw_urlencoded()</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>webfakes_response for the webfakes response object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># This is how you can see the request and response objects:
+app &lt;- new_app()
+app$get("/", function(req, res) {
+  browser()
+  res$send("done")
+})
+app
+
+# Now start this app on a port:
+# app$listen(3000)
+# and connect to it from a web browser: http://127.0.0.1:3000
+# You can also use another R session to connect:
+# httr::GET("http://127.0.0.1:3000")
+# or the command line curl tool:
+# curl -v http://127.0.0.1:3000
+# The app will stop while processing the request.
+</code></pre>
+
+
+</div>

@@ -1,0 +1,138 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>clustcoef</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Directed clustering coefficient</h2>
+
+<h3>Description</h3>
+
+<p>Compute the clustering coefficient of a weighted and directed network.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">clustcoef(
+  netwk,
+  edgelist,
+  edgeweight,
+  adj,
+  directed = TRUE,
+  method = c("Clemente", "Fagiolo"),
+  isolates = 0
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>netwk</code></td>
+<td>
+<p>A <code>wdnet</code> object that represents the network. If
+<code>NULL</code>, the function will compute the coefficient using either
+<code>edgelist</code>, <code>edgeweight</code>, or <code>adj</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edgelist</code></td>
+<td>
+<p>A two-column matrix, each row represents a directed edge of
+the network.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edgeweight</code></td>
+<td>
+<p>A vector representing the weight of edges.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adj</code></td>
+<td>
+<p>An adjacency matrix of a weighted and directed network.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>directed</code></td>
+<td>
+<p>Logical. Indicates whether the edges in <code>edgelist</code> or
+<code>adj</code> are directed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Which method used to compute clustering coefficients: Clemente
+and Grassi (2018) or Fagiolo (2007).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>isolates</code></td>
+<td>
+<p>Binary, defines how to treat vertices with degree zero and
+one. If 0, then their clustering coefficient is returned as 0 and are
+included in the averaging. Otherwise, their clustering coefficient is <code>NaN</code>
+and are excluded in the averaging. Default value is 0.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Lists of local clustering coefficients (in terms of a vector), global
+clustering coefficient (in terms of a scalar) and number of weighted
+directed triangles (in terms of a vector) based on <code>total</code>, <code>in</code>,
+<code>out</code>, middleman (<code>middle</code>), or <code>cycle</code> triplets.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Self-loops (if exist) are removed prior to the computation of
+clustering coefficient. When the adjacency matrix is symmetric (i.e.,
+undirected but possibly unweighted networks), <code>clustcoef</code> returns
+local and global clustering coefficients proposed by Barrat et al. (2010).
+</p>
+
+
+<h3>References</h3>
+
+
+<ul>
+<li>
+<p> Barrat, A., Barthelemy, M., Pastor-Satorras,
+R. and Vespignani, A. (2004). The architecture of complex weighted
+networks. <em>Proceedings of National Academy of Sciences of the United
+States of America</em>, 101(11), 3747–3752.
+</p>
+</li>
+<li>
+<p> Clemente, G.P. and Grassi,
+R. (2018). Directed clustering in weighted networks: A new perspective.
+<em>Chaos, Solitons &amp; Fractals</em>, 107, 26–38.
+</p>
+</li>
+<li>
+<p> Fagiolo, G. (2007).
+Clustering in complex directed networks. <em>Physical Review E</em>, 76,
+026107.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate a network according to the Erd\"{o}s-Renyi model of order 20
+## and parameter p = 0.3
+edge_ER &lt;- rbinom(400, 1, 0.3)
+weight_ER &lt;- sapply(edge_ER, function(x) x * sample(3, 1))
+adj_ER &lt;- matrix(weight_ER, 20, 20)
+mycc &lt;- clustcoef(adj = adj_ER, method = "Clemente")
+system.time(mycc)
+
+</code></pre>
+
+
+</div>

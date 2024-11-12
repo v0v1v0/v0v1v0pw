@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_recipe</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add Recipe to Generate Endpoints</h2>
+
+<h3>Description</h3>
+
+<p>Add a recipe to a WORCS project file to generate its endpoints.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_recipe(
+  worcs_directory = ".",
+  recipe = "rmarkdown::render('manuscript/manuscript.Rmd')",
+  terminal = FALSE,
+  verbose = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>worcs_directory</code></td>
+<td>
+<p>Character, indicating the WORCS project directory
+to which to save data. The default value "." points to the current directory.
+Default: '.'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>recipe</code></td>
+<td>
+<p>Character string, indicating the function call to evaluate in
+order to reproduce the endpoints of the WORCS project.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>terminal</code></td>
+<td>
+<p>Logical, indicating whether or not to evaluate the <code>recipe</code>
+in the terminal (<code>TRUE</code>) or in R (<code>FALSE</code>). Defaults to <code>FALSE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical. Whether or not to print status messages to the
+console. Default: <code>TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>No return value. This function is called for its side effects.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>add_endpoint</code>
+<code>snapshot_endpoints</code>
+<code>check_endpoints</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Create directory to run the example
+old_wd &lt;- getwd()
+test_dir &lt;- file.path(tempdir(), "add_recipe")
+dir.create(test_dir)
+setwd(test_dir)
+file.create(".worcs")
+writeLines("test", "test.txt")
+add_recipe()
+# Cleaning example directory
+setwd(old_wd)
+unlink(test_dir, recursive = TRUE)
+</code></pre>
+
+
+</div>

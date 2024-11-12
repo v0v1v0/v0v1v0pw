@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pVal2lfdr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert p-values to lfdr</h2>
+
+<h3>Description</h3>
+
+<p>This function takes a numeric vector of p-values and returns a vector of lfdr-values (local false discovery) using 
+the package <a href="https://CRAN.R-project.org/package=fdrtool">fdrtool</a>.
+Multiple testing correction should be performed with caution, short series of p-values typically pose problems for transforming to lfdr. 
+The transformation to lfdr values may give warning messages, in this case the resultant lfdr values may be invalid !
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pVal2lfdr(x, silent = TRUE, debug = FALSE, callFrom = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(numeric) vector of p.values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a (numeric) vector of lfdr values (or <code>NULL</code> if data insufficient to run the function 'fdrtool')
+</p>
+
+
+<h3>See Also</h3>
+
+<p>lfdr from <code>fdrtool</code>, other p-adjustments (multiple test correction, eg FDR) in <code>p.adjust</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Note that this example is too small for estimating really meaningful fdr values
+## In consequence, a warning will be issued.
+set.seed(2017); t8 &lt;- matrix(round(rnorm(160,10,0.4),2), ncol=8,
+  dimnames=list(letters[1:20], c("AA1","BB1","CC1","DD1","AA2","BB2","CC2","DD2")))
+t8[3:6,1:2] &lt;- t8[3:6,1:2]+3   # augment lines 3:6 (c-f) for AA1&amp;BB1
+t8[5:8,5:6] &lt;- t8[5:8,5:6]+3   # augment lines 5:8 (e-h) for AA2&amp;BB2 (c,d,g,h should be found)
+head(pVal2lfdr(apply(t8, 1, function(x) t.test(x[1:4], x[5:8])$p.value)))
+</code></pre>
+
+
+</div>

@@ -1,0 +1,184 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>method_bart</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Propensity Score Weighting Using BART</h2>
+
+<h3>Description</h3>
+
+<p>This page explains the details of estimating weights from Bayesian additive regression trees (BART)-based propensity scores by setting <code>method = "bart"</code> in the call to <code>weightit()</code> or <code>weightitMSM()</code>. This method can be used with binary, multi-category, and continuous treatments.
+</p>
+<p>In general, this method relies on estimating propensity scores using BART and then converting those propensity scores into weights using a formula that depends on the desired estimand. This method relies on <code>dbarts::bart2()</code> from the <a href="https://CRAN.R-project.org/package=dbarts"><span class="pkg">dbarts</span></a> package.
+</p>
+
+
+<h4>Binary Treatments</h4>
+
+<p>For binary treatments, this method estimates the propensity scores using <code>dbarts::bart2()</code>. The following estimands are allowed: ATE, ATT, ATC, ATO, ATM, and ATOS. Weights can also be computed using marginal mean weighting through stratification for the ATE, ATT, and ATC. See <code>get_w_from_ps()</code> for details.
+</p>
+
+
+
+<h4>Multi-Category Treatments</h4>
+
+<p>For multi-category treatments, the propensity scores are estimated using several calls to <code>dbarts::bart2()</code>, one for each treatment group; the treatment probabilities are not normalized to sum to 1. The following estimands are allowed: ATE, ATT, ATC, ATO, and ATM. The weights for each estimand are computed using the standard formulas or those mentioned above. Weights can also be computed using marginal mean weighting through stratification for the ATE, ATT, and ATC. See <code>get_w_from_ps()</code> for details.
+</p>
+
+
+
+<h4>Continuous Treatments</h4>
+
+<p>For continuous treatments, weights are estimated as <code class="reqn">w_i = f_A(a_i) / f_{A|X}(a_i)</code>, where <code class="reqn">f_A(a_i)</code> (known as the stabilization factor) is the unconditional density of treatment evaluated the observed treatment value and <code class="reqn">f_{A|X}(a_i)</code> (known as the generalized propensity score) is the conditional density of treatment given the covariates evaluated at the observed value of treatment. The shape of <code class="reqn">f_A(.)</code> and <code class="reqn">f_{A|X}(.)</code> is controlled by the <code>density</code> argument described below (normal distributions by default), and the predicted values used for the mean of the conditional density are estimated using BART as implemented in <code>dbarts::bart2()</code>. Kernel density estimation can be used instead of assuming a specific density for the numerator and denominator by setting <code>density = "kernel"</code>. Other arguments to <code>density()</code> can be specified to refine the density estimation parameters.
+</p>
+
+
+
+<h4>Longitudinal Treatments</h4>
+
+<p>For longitudinal treatments, the weights are the product of the weights estimated at each time point.
+</p>
+
+
+
+<h4>Sampling Weights</h4>
+
+<p>Sampling weights are not supported.
+</p>
+
+
+
+<h4>Missing Data</h4>
+
+<p>In the presence of missing data, the following value(s) for <code>missing</code> are allowed:
+</p>
+
+<dl>
+<dt>
+<code>"ind"</code> (default)</dt>
+<dd>
+<p>First, for each variable with missingness, a new missingness indicator variable is created which takes the value 1 if the original covariate is <code>NA</code> and 0 otherwise. The missingness indicators are added to the model formula as main effects. The missing values in the covariates are then replaced with the covariate medians. The weight estimation then proceeds with this new formula and set of covariates. The covariates output in the resulting <code>weightit</code> object will be the original covariates with the <code>NA</code>s.
+</p>
+</dd>
+</dl>
+<h4>M-estimation</h4>
+
+<p>M-estimation is not supported.
+</p>
+
+
+
+<h3>Details</h3>
+
+<p>BART works by fitting a sum-of-trees model for the treatment or probability of treatment. The number of trees is determined by the <code>n.trees</code> argument. Bayesian priors are used for the hyperparameters, so the result is a posterior distribution of predicted values for each unit. The mean of these for each unit is taken for use in computing the (generalized) propensity score. Although the hyperparameters governing the priors can be modified by supplying arguments to <code>weightit()</code> that are passed to the BART fitting function, the default values tend to work well and require little modification (though the defaults differ for continuous and categorical treatments; see the <code>dbarts::bart2()</code> documentation for details). Unlike many other machine learning methods, no loss function is optimized and the hyperparameters do not need to be tuned (e.g., using cross-validation), though performance can benefit from tuning. BART tends to balance sparseness with flexibility by using very weak learners as the trees, which makes it suitable for capturing complex functions without specifying a particular functional form and without overfitting.
+</p>
+
+
+<h4>Reproducibility</h4>
+
+<p>BART has a random component, so some work must be done to ensure reproducibility across runs. See the <em>Reproducibility</em> section at <code>dbarts::bart2()</code> for more details. To ensure reproducibility, one can do one of two things: 1) supply an argument to <code>seed</code>, which is passed to <code>dbarts::bart2()</code> and sets the seed for single- and multi-threaded uses, or 2) call <code>set.seed()</code>, though this only ensures reproducibility when using single-threading, which can be requested by setting <code>n.threads = 1</code>. Note that to ensure reproducibility on any machine, regardless of the number of cores available, one should use single-threading and either supply <code>seed</code> or call <code>set.seed()</code>.
+</p>
+
+
+
+<h3>Additional Arguments</h3>
+
+<p>All arguments to <code>dbarts::bart2()</code> can be passed through <code>weightit()</code> or <code>weightitMSM()</code>, with the following exceptions:
+</p>
+
+<ul>
+<li> <p><code>test</code>, <code>weights</code>,<code>subset</code>, <code>offset.test</code> are ignored
+</p>
+</li>
+<li> <p><code>combine.chains</code> is always set to <code>TRUE</code>
+</p>
+</li>
+<li> <p><code>sampleronly</code> is always set to <code>FALSE</code>
+</p>
+</li>
+</ul>
+<p>For continuous treatments only, the following arguments may be supplied:
+</p>
+
+<dl>
+<dt><code>density</code></dt>
+<dd>
+<p>A function corresponding to the conditional density of the treatment. The standardized residuals of the treatment model will be fed through this function to produce the numerator and denominator of the generalized propensity score weights. If blank, <code>dnorm()</code> is used as recommended by Robins et al. (2000). This can also be supplied as a string containing the name of the function to be called. If the string contains underscores, the call will be split by the underscores and the latter splits will be supplied as arguments to the second argument and beyond. For example, if <code>density = "dt_2"</code> is specified, the density used will be that of a t-distribution with 2 degrees of freedom. Using a t-distribution can be useful when extreme outcome values are observed (Naimi et al., 2014).
+</p>
+<p>Can also be <code>"kernel"</code> to use kernel density estimation, which calls <code>density()</code> to estimate the numerator and denominator densities for the weights. (This used to be requested by setting <code>use.kernel = TRUE</code>, which is now deprecated.)</p>
+</dd>
+<dt>
+<code>bw</code>, <code>adjust</code>, <code>kernel</code>, <code>n</code>
+</dt>
+<dd>
+<p>If <code>density = "kernel"</code>, the arguments to <code>density()</code>. The defaults are the same as those in <code>density()</code> except that <code>n</code> is 10 times the number of units in the sample.</p>
+</dd>
+<dt><code>plot</code></dt>
+<dd>
+<p>If <code>density = "kernel"</code>, whether to plot the estimated densities.</p>
+</dd>
+</dl>
+<h3>Additional Outputs</h3>
+
+
+<dl>
+<dt><code>obj</code></dt>
+<dd>
+<p>When <code>include.obj = TRUE</code>, the <code>bart2</code> fit(s) used to generate the predicted values. With multi-category treatments, this will be a list of the fits; otherwise, it will be a single fit. The predicted probabilities used to compute the propensity scores can be extracted using <code>fitted()</code>.
+</p>
+</dd>
+</dl>
+<h3>References</h3>
+
+<p>Hill, J., Weiss, C., &amp; Zhai, F. (2011). Challenges With Propensity Score Strategies in a High-Dimensional Setting and a Potential Alternative. <em>Multivariate Behavioral Research</em>, 46(3), 477–513. <a href="https://doi.org/10.1080/00273171.2011.570161">doi:10.1080/00273171.2011.570161</a>
+</p>
+<p>Chipman, H. A., George, E. I., &amp; McCulloch, R. E. (2010). BART: Bayesian additive regression trees. <em>The Annals of Applied Statistics</em>, 4(1), 266–298. <a href="https://doi.org/10.1214/09-AOAS285">doi:10.1214/09-AOAS285</a>
+</p>
+<p>Note that many references that deal with BART for causal inference focus on estimating potential outcomes with BART, not the propensity scores, and so are not directly relevant when using BART to estimate propensity scores for weights.
+</p>
+<p>See <code>method_glm</code> for additional references on propensity score weighting more generally.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>weightit()</code>, <code>weightitMSM()</code>, <code>get_w_from_ps()</code>
+</p>
+<p><code>method_super</code> for stacking predictions from several machine learning methods, including BART.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library("cobalt")
+data("lalonde", package = "cobalt")
+
+#Balancing covariates between treatment groups (binary)
+(W1 &lt;- weightit(treat ~ age + educ + married +
+                  nodegree + re74, data = lalonde,
+                method = "bart", estimand = "ATT"))
+summary(W1)
+bal.tab(W1)
+
+#Balancing covariates with respect to race (multi-category)
+(W2 &lt;- weightit(race ~ age + educ + married +
+                nodegree + re74, data = lalonde,
+                method = "bart", estimand = "ATE"))
+summary(W2)
+bal.tab(W2)
+
+#Balancing covariates with respect to re75 (continuous)
+#assuming t(3) conditional density for treatment
+(W3 &lt;- weightit(re75 ~ age + educ + married +
+                  nodegree + re74, data = lalonde,
+                method = "bart", density = "dt_3"))
+ summary(W3)
+ bal.tab(W3)
+
+
+</code></pre>
+
+
+</div>

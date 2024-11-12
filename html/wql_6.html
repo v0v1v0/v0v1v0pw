@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ec2pss</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert conductivity to salinity</h2>
+
+<h3>Description</h3>
+
+<p>Electrical conductivity data are converted to salinity using the Practical
+Salinity Scale and an extension for salinities below 2.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ec2pss(ec, t, p = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ec</code></td>
+<td>
+<p>conductivity, mS/cm</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t</code></td>
+<td>
+<p>temperature, Celsius</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>gauge pressure, decibar</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>ec2pss</code> converts electrical conductivity data to salinity using the
+Practical Salinity Scale 1978 in the range of 2-42 (Fofonoff and Millard
+1983). Salinities below 2 are calculated using the extension of the
+Practical Salinity Scale (Hill et al. 1986).
+</p>
+<p><code>R2pss</code> is the same function, except that conductivity ratios rather
+than conductivities are used as input.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>ec2pss</code> and <code>R2pss</code> both return salinity values on the
+Practical Salinity Scale.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Input pressures are not absolute pressures but rather gauge pressures.
+Gauge pressures are measured relative to 1 standard atmosphere, so the gauge
+pressure at the surface is 0.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alan Jassby, James Cloern
+</p>
+
+
+<h3>References</h3>
+
+<p>Fofonoff N.P. and Millard Jr R.C. (1983) <em>Algorithms for
+Computation of Fundamental Properties of Seawater.</em> UNESCO Technical Papers
+in Marine Science 44. UNESCO, Paris, 53 p.
+</p>
+<p>Hill K.D., Dauphinee T.M. and Woods D.J. (1986) The extension of the
+Practical Salinity Scale 1978 to low salinities. <em>IEEE Journal of
+Oceanic Engineering</em> <b>11,</b> 109-112.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Check values from Fofonoff and Millard (1983):
+R = c(1, 1.2, 0.65) 
+t = c(15, 20, 5)
+p = c(0, 2000, 1500)
+R2pss(R, t, p)  # 35.000 37.246 27.995
+# Repeat calculation with equivalent conductivity values by setting 
+# ec &lt;- R * C(35, 15, 0):
+ec = c(1, 1.2, 0.65) * 42.9140
+ec2pss(ec, t, p)  # same results
+
+</code></pre>
+
+
+</div>

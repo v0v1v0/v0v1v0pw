@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>seqclustname</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Automatic labeling of cluster using sequence medoids
+</h2>
+
+<h3>Description</h3>
+
+<p>This function automatically name the cluster using the sequence medoid of each cluster.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">seqclustname(seqdata, group, diss, weighted = TRUE, perc = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>seqdata</code></td>
+<td>
+<p>State sequence object (see <code>seqdef</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group</code></td>
+<td>
+<p>A vector of clustering membership.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>diss</code></td>
+<td>
+<p>a dissimilarity matrix or a <code>dist</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weighted</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>, <code>weights</code> of the <code>seqdata</code> object are taken to find the medoids.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>perc</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>, the percentage of sequences in each cluster is added to the label of each group.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A factor of clustering membership. The labels are defined using sequences medoids and optionnaly percentage of case in each cluster.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(mvad)
+## Aggregating state sequence
+aggMvad &lt;- wcAggregateCases(mvad[, 17:86], weights=mvad$weight)
+
+## Creating state sequence object
+mvad.seq &lt;- seqdef(mvad[aggMvad$aggIndex, 17:86], weights=aggMvad$aggWeights)
+## Computing Hamming distance between sequence
+diss &lt;- seqdist(mvad.seq, method="HAM")
+
+## KMedoids using PAMonce method (clustering only)
+clust5 &lt;- wcKMedoids(diss, k=5, weights=aggMvad$aggWeights)
+
+clust5.labels &lt;- seqclustname(mvad.seq, clust5$clustering, diss=diss, perc=TRUE)
+seqdplot(mvad.seq, group=clust5.labels)
+</code></pre>
+
+
+</div>

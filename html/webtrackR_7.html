@@ -1,0 +1,57 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_session</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add a session variable</h2>
+
+<h3>Description</h3>
+
+<p><code>add_session()</code> groups visits into "sessions", defining a session to end
+when the difference between two consecutive timestamps exceeds a <code>cutoff</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_session(wt, cutoff)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wt</code></td>
+<td>
+<p>webtrack data object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutoff</code></td>
+<td>
+<p>numeric (seconds). If the difference between two consecutive
+timestamps exceeds this value, a new browsing session is defined.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>webtrack data.frame with the same columns as wt and a new column called session.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data("testdt_tracking")
+wt &lt;- as.wt_dt(testdt_tracking)
+# Setting cutoff to 30 minutes
+wt &lt;- add_session(wt, cutoff = 1800)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

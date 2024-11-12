@@ -1,0 +1,144 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>accuracy</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Evaluate classification accuracy in precision and recall</h2>
+
+<h3>Description</h3>
+
+<p><code>accuracy()</code> counts the number of true positive,
+false positive, true negative, and false negative cases
+for each predicted class and calculates precision, recall and F1 score
+based on these counts.
+<code>summary()</code> calculates micro-average precision and recall, and
+macro-average precision and recall based on the output of
+<code>accuracy()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">accuracy(x, y)
+
+## S3 method for class 'textmodel_wordmap_accuracy'
+summary(object, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>vector of predicted classes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>vector of true classes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>output of <code>accuracy()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>not used.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>accuracy()</code> returns a data.frame with following columns:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>tp</code></td>
+<td>
+<p>the number of true positive cases.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fp</code></td>
+<td>
+<p>the number of false positive cases.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tn</code></td>
+<td>
+<p>the number of true negative cases.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fn</code></td>
+<td>
+<p>the number of false negative cases.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>precision</code></td>
+<td>
+<p><code class="reqn">tp / (tp + fp)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>recall</code></td>
+<td>
+<p><code class="reqn">tp / (tp + fn)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f1</code></td>
+<td>
+<p>the harmonic mean of precision and recall.</p>
+</td>
+</tr>
+</table>
+<p><code>summary()</code> returns a named numeric vector with the following elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>micro-average precision.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>micro-average recall</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>P</code></td>
+<td>
+<p>macro-average precision.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+<p>macro-average recall.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">class_pred &lt;- c('US', 'GB', 'US', 'CN', 'JP', 'FR', 'CN') # prediction
+class_true &lt;- c('US', 'FR', 'US', 'CN', 'KP', 'EG', 'US') # true class
+acc &lt;- accuracy(class_pred, class_true)
+print(acc)
+summary(acc)
+</code></pre>
+
+
+</div>

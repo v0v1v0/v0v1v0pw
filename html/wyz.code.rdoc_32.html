@@ -1,0 +1,146 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ProcessingContext-class</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Processing Context</h2>
+
+<h3>Description</h3>
+
+<p>Environment class ProcessingContext. Defines and eases processing context
+management.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ProcessingContext(extraneous_l = list(), postProcessing_l = list())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>extraneous_l</code></td>
+<td>
+<p>An unconstrained named <em><code>list</code></em>. Each entry will be turned into
+a <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> documentation section. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>postProcessing_l</code></td>
+<td>
+<p>An unconstrained named <em><code>list</code></em>. Each entry will trigger a
+post processing for the related <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> documentation section. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If a post processing function returns <em><code>NULL</code></em>, related section will be
+removed from generated content. See examples below.
+</p>
+<p>Post processing aims to put in action simple transformations, as changing
+letter cases, or applying simple beautifying technics. See <em><b><code>beautify</code></b></em>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <em><code>object</code></em> instance of class <code>ProcessingContext</code>.
+</p>
+
+
+<h3>Information</h3>
+
+
+
+<h4>Environment fields</h4>
+
+
+<table>
+<tr>
+<td style="text-align: left;">
+◆ <em><code>extraneous_l</code></em> </td>
+<td style="text-align: left;"> list</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+◆ <em><code>postProcessing_l</code></em> </td>
+<td style="text-align: left;"> list</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+◆ <em><code>self</code></em> </td>
+<td style="text-align: left;"> environment </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<h4>Environment methods</h4>
+
+<p><br>
+■ <em><code>verifyExtraneous(extraneous_l)</code></em><br>
+■ <em><code>verifyPostProcessing(postProcessing_l)</code></em><br></p>
+
+
+
+<h4>offensive programming - semantic naming</h4>
+
+<p>Class name compliance is <em><code>TRUE</code></em>.
+</p>
+
+
+
+<h4>offensive programming - function return types</h4>
+
+<p>Class owns no function return type instrumentation.
+</p>
+
+
+
+<h4>offensive programming - test case definitions</h4>
+
+<p>Class owns no test case definitions.
+</p>
+
+
+
+<h3>Author(s)</h3>
+
+<p>Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+<p>Maintainer: Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Class <em><b><code>InputContext</code></b></em> class <em><b><code>GenerationContext</code></b></em> class
+and class <em><b><code>ManualPageBuilder</code></b></em>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">pc &lt;- ProcessingContext(
+  extraneous_l = list(
+    'my section' = "a special dedicace to neonira",
+    keyword = 'documentation',
+    concept = 'documentation generation'
+  ),
+  postProcessing_l = list(
+    'my section' = function(content_s) {
+       gsub('neonira', 'NEONIRA', content_s, fixed = TRUE)
+    },
+    author = function(content_s) { NULL } # destroy section
+  )
+)
+</code></pre>
+
+
+</div>

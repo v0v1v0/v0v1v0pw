@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>adhdData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Children's reaction times (milliseconds) to stimuli of different nature, arranged with
+four response columns.</h2>
+
+<h3>Description</h3>
+
+<p>The data (Keselman et al., 2003) represent the reaction times in milliseconds 
+of children with attention-deficit hyperactivity (ADHD) and normal children 
+when they are presented four kinds of inputs: 
+a target alone or an arrow stimuli incongruent, congruent and neutral to the target. 
+According to the authors, the dataset was artificially generated from the summary 
+measures given in the original study by Jonkman et al. (1999), in groups of 20 
+and 10 children to create an unbalanced design.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">adhdData
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 30 rows and 5 variables:
+</p>
+
+<dl>
+<dt>Group</dt>
+<dd>
+<p>whether the child has ADHD or is healty (normal)</p>
+</dd>
+</dl>
+<p>.
+</p>
+<dl>
+<dt>TargetAlone</dt>
+<dd>
+<p>Reaction time (milliseconds) to a target alone.</p>
+</dd>
+<dt>Congruent</dt>
+<dd>
+<p>Reaction time (milliseconds) to a congruent stimulus.</p>
+</dd>
+<dt>Neutral</dt>
+<dd>
+<p>Reaction time (milliseconds) to a neutral stimulus.</p>
+</dd>
+<dt>Incongruent</dt>
+<dd>
+<p>Reaction time (milliseconds) to an incongruent stimulus.</p>
+</dd>
+</dl>
+<h3>Source</h3>
+
+<p>H. J. Keselman, R. R. Wilcox, and L. M. Lix. A generally robust approach to hypothesis testing in
+independent and correlated groups designs. Psychophyisiology, 40:586-596, 2003. (Data displayed in page 593).
+</p>
+
+
+<h3>References</h3>
+
+<p>L. Jonkman, C. Kemner, M. Verbaten, H. van Engeland, J. Kenemans, G. Camfferman, J. Buitelaar, and
+H. Koelega. Perceptual and response interference in children with attention-deficit hyperactivity
+disorder, and the effects of methylphenidate. 36(4):419-429, 1999.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Assuming a multivariate response
+omnibus_LSM_multi &lt;- welchADF.test(adhdData, response = c("TargetAlone", "Congruent",
+  "Neutral", "Incongruent"), between.s = "Group", within.s = "multivariate", contrast = "omnibus")
+# The same using the S3 method for class formula
+omnibus_LSM_multi_form &lt;- welchADF.test(cbind(TargetAlone, Congruent, Neutral, Incongruent)
+~ Group, data = adhdData)
+  
+# Pairwise comparisons of the implicit within-subjects effect present in the multivariate response
+pairwise_LSM_multi &lt;- update(omnibus_LSM_multi, contrast = "all.pairwise", effect = "multivariate")
+summary(omnibus_LSM_multi)
+summary(pairwise_LSM_multi)
+</code></pre>
+
+
+</div>

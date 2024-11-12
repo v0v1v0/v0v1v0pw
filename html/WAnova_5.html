@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>welch_anova.mc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>welch_anova.mc</h2>
+
+<h3>Description</h3>
+
+<p>Monte Carlo simulation to assess residual normality and homoscedasticity
+across multiple groups by generating simulated data based on provided means,
+standard deviations, and sample sizes.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">welch_anova.mc(
+  means,
+  sd,
+  n,
+  n_sim = 1000,
+  sim_func = NULL,
+  alpha = 0.05,
+  adj = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>means</code></td>
+<td>
+<p>Vector of means for each group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd</code></td>
+<td>
+<p>Vector of standard deviations for each group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Vector of sample sizes for each group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_sim</code></td>
+<td>
+<p>Number of simulations to perform. Defaults to 1000.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sim_func</code></td>
+<td>
+<p>Function used for generating random samples. Defaults to rnorm().</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Significance level for normality and homoscedasticity tests. Defaults to 0.05.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adj</code></td>
+<td>
+<p>Logical, if TRUE applies continuity correction for proportions. Defaults to TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of class "simres" containing the proportion of simulations where
+residuals are normally distributed and homoscedastic.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+means &lt;- c(50, 55, 60)
+sds &lt;- c(10, 12, 15)
+n &lt;- c(30, 35, 40)
+result &lt;- welch_anova.mc(means = means, sd = sds, n = n, n_sim = 1000, alpha = 0.05)
+print(result)
+
+
+</code></pre>
+
+
+</div>

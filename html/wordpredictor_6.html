@@ -1,0 +1,295 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>EnvManager</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Allows managing the test environment</h2>
+
+<h3>Description</h3>
+
+<p>This class provides a method for creating directories in the tempdir folder
+for testing purposes. It also provides a method for reading files from the
+inst/extdata folder.
+</p>
+
+
+<h3>Super class</h3>
+
+<p><code>wordpredictor::Base</code> -&gt; <code>EnvManager</code>
+</p>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-EnvManager-new"><code>EnvManager$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-EnvManager-get_data_fn"><code>EnvManager$get_data_fn()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-EnvManager-remove_files"><code>EnvManager$remove_files()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-EnvManager-td_env"><code>EnvManager$td_env()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-EnvManager-cp_env"><code>EnvManager$cp_env()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-EnvManager-setup_env"><code>EnvManager$setup_env()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-EnvManager-clone"><code>EnvManager$clone()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-EnvManager-new"></a>
+
+
+
+<h4>Method <code>new()</code>
+</h4>
+
+<p>It initializes the current object. It simply calls the base class
+constructor.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>EnvManager$new(rp = "../../", ve = 0)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>rp</code></dt>
+<dd>
+<p>The prefix for accessing the package root folder.</p>
+</dd>
+<dt><code>ve</code></dt>
+<dd>
+<p>The level of detail in the information messages.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-EnvManager-get_data_fn"></a>
+
+
+
+<h4>Method <code>get_data_fn()</code>
+</h4>
+
+<p>Checks if the given file exists. If it does not exist,
+then it tries to load the file from the inst/extdata data folder of
+the package. It throws an error if the file was not found. If the
+file exists, then the method simply returns the file name.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>EnvManager$get_data_fn(fn, dfn)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>fn</code></dt>
+<dd>
+<p>The file name.</p>
+</dd>
+<dt><code>dfn</code></dt>
+<dd>
+<p>The name of the default file in the external data folder
+of the package.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The name of the file if it exists, or the full path to the
+default file.
+</p>
+
+
+<hr>
+<a id="method-EnvManager-remove_files"></a>
+
+
+
+<h4>Method <code>remove_files()</code>
+</h4>
+
+<p>Removes all files in the given directory.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>EnvManager$remove_files(dn)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>dn</code></dt>
+<dd>
+<p>The directory name.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-EnvManager-td_env"></a>
+
+
+
+<h4>Method <code>td_env()</code>
+</h4>
+
+<p>Removes the ed folder created by the setup_env method. Also sets
+the R option, "ed" to NULL.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>EnvManager$td_env(rf = F)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>rf</code></dt>
+<dd>
+<p>If the environment folder should be removed.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-EnvManager-cp_env"></a>
+
+
+
+<h4>Method <code>cp_env()</code>
+</h4>
+
+<p>Copies the ed folder created by the setup_env method to
+inst/extdata.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>EnvManager$cp_env()</pre></div>
+
+
+<hr>
+<a id="method-EnvManager-setup_env"></a>
+
+
+
+<h4>Method <code>setup_env()</code>
+</h4>
+
+<p>Copies the given files from test folder to the
+environment folder.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>EnvManager$setup_env(fns = c(), cf = NULL)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>fns</code></dt>
+<dd>
+<p>The list of test files to copy</p>
+</dd>
+<dt><code>cf</code></dt>
+<dd>
+<p>A custom environment folder. It is a path relative to the
+current directory. If not specified, then the tempdir function is
+used to generate the environment folder.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The list of folders that can be used during testing.
+</p>
+
+
+<hr>
+<a id="method-EnvManager-clone"></a>
+
+
+
+<h4>Method <code>clone()</code>
+</h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>EnvManager$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt>
+<dd>
+<p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+</div>

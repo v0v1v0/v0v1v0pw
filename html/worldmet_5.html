@@ -1,0 +1,214 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>importNOAA</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Import Meteorological data from the NOAA Integrated Surface Database (ISD)</h2>
+
+<h3>Description</h3>
+
+<p>This is the main function to import data from the NOAA Integrated Surface
+Database (ISD). The ISD contains detailed surface meteorological data from
+around the world for over 30,000 locations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">importNOAA(
+  code = "037720-99999",
+  year = 2014,
+  hourly = TRUE,
+  n.cores = 1,
+  quiet = FALSE,
+  path = NA
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>code</code></td>
+<td>
+<p>The identifying code as a character string. The code is a
+combination of the USAF and the WBAN unique identifiers. The codes are
+separated by a “-” e.g. <code>code = "037720-99999"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>year</code></td>
+<td>
+<p>The year to import. This can be a vector of years e.g. <code>year = 2000:2005</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hourly</code></td>
+<td>
+<p>Should hourly means be calculated? The default is <code>TRUE</code>. If
+<code>FALSE</code> then the raw data are returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.cores</code></td>
+<td>
+<p>Number of cores to use for parallel processing. Default is 1
+and hence no parallelism.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiet</code></td>
+<td>
+<p>If FALSE, print missing sites / years to the screen.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>If a file path is provided, the data are saved as an rds file at
+the chosen location e.g.  <code>path = "C:/Users/David"</code>. Files are saved by
+year and site.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note the following units for the main variables:
+</p>
+
+<dl>
+<dt>date</dt>
+<dd>
+<p>Date/time in POSIXct format. <strong>Note the time zone is GMT (UTC)
+and may need to be adjusted to merge with other local data. See details
+below.</strong></p>
+</dd>
+<dt>latitude</dt>
+<dd>
+<p>Latitude in decimal degrees (-90 to 90).</p>
+</dd>
+<dt>longitude</dt>
+<dd>
+<p>Longitude in decimal degrees (-180 to 180). Negative numbers
+are west of the Greenwich Meridian.</p>
+</dd>
+<dt>elevation</dt>
+<dd>
+<p>Elevation of site in metres.</p>
+</dd>
+<dt>wd</dt>
+<dd>
+<p>Wind direction in degrees. 90 is from the east.</p>
+</dd>
+<dt>ws</dt>
+<dd>
+<p>Wind speed in m/s.</p>
+</dd>
+<dt>ceil_hgt</dt>
+<dd>
+<p>The height above ground level (AGL) of the lowest cloud or
+obscuring phenomena layer aloft with 5/8 or more summation total sky cover,
+which may be predominantly opaque, or the vertical visibility into a
+surface-based obstruction.</p>
+</dd>
+<dt>visibility</dt>
+<dd>
+<p>The visibility in metres.</p>
+</dd>
+<dt>air_temp</dt>
+<dd>
+<p>Air temperature in degrees Celcius.</p>
+</dd>
+<dt>dew_point</dt>
+<dd>
+<p>The dew point temperature in degrees Celcius.</p>
+</dd>
+<dt>atmos_pres</dt>
+<dd>
+<p>The sea level pressure in millibars.</p>
+</dd>
+<dt>RH</dt>
+<dd>
+<p>The relative humidity (%).</p>
+</dd>
+<dt>cl_1,  ...,  cl_3</dt>
+<dd>
+<p>Cloud cover for different layers in Oktas (1-8).</p>
+</dd>
+<dt>cl</dt>
+<dd>
+<p>Maximum of cl_1 to cl_3 cloud cover in Oktas (1-8).</p>
+</dd>
+<dt>cl_1_height, ..., cl_3_height</dt>
+<dd>
+<p>Height of the cloud base for each later
+in metres.</p>
+</dd>
+<dt>precip_12</dt>
+<dd>
+<p>12-hour precipitation in mm. The sum of this column should
+give the annual precipitation.</p>
+</dd>
+<dt>precip_6</dt>
+<dd>
+<p>6-hour precipitation in mm.</p>
+</dd>
+<dt>precip</dt>
+<dd>
+<p>This value of precipitation spreads the 12-hour total across
+the previous 12 hours.</p>
+</dd>
+<dt>pwc</dt>
+<dd>
+<p>The description of the present weather description (if
+available).</p>
+</dd>
+</dl>
+<p>The data are returned in GMT (UTC). It may be necessary to adjust the time
+zone when combining with other data. For example, if air quality data were
+available for Beijing with time zone set to "Etc/GMT-8" (note the negative
+offset even though Beijing is ahead of GMT. See the <code>openair</code> package and
+manual for more details), then the time zone of the met data can be changed
+to be the same. One way of doing this would be <code>attr(met$date, "tzone") &lt;- "Etc/GMT-8"</code> for a meteorological data frame called <code>met</code>. The two data sets
+could then be merged based on <code>date</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a data frame of surface observations. The data frame is
+consistent for use with the <code>openair</code> package. Note that the data are
+returned in GMT (UTC) time zone format. Users may wish to express the data
+in other time zones, e.g., to merge with air pollution data. The
+lubridate package is useful in this
+respect.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>getMeta()</code> to obtain the codes based on various site search
+approaches.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+## use Beijing airport code (see getMeta example)
+dat &lt;- importNOAA(code = "545110-99999", year = 2010:2011)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,225 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.dwt</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Plot DWT Coefficients
+</h2>
+
+<h3>Description</h3>
+
+<p>Plot DWT wavelet and scaling coefficients.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'dwt'
+plot(x, levels = NULL, draw.boundary = FALSE, type = "stack",
+col.plot = "black", col.boundary = "red", X.xtick.at = NULL, X.ytick.at
+= NULL, Stack.xtick.at = NULL, Stack.ytick.at = NULL, X.xlab = "t",
+y.rlabs = TRUE, plot.X = TRUE, plot.W = TRUE, plot.V = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An object of class <code>dwt</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>levels</code></td>
+<td>
+<p>Number, vector, or list of two vectors indicating range
+of levels to plot. See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>draw.boundary</code></td>
+<td>
+<p>Logical value indicating whether to draw boundary
+coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Type of plot to draw. Currently only "stack" is
+implemented.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.plot</code></td>
+<td>
+<p>Color of wavelet and scaling coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.boundary</code></td>
+<td>
+<p>Color of boundary coefficient lines.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X.xtick.at</code></td>
+<td>
+<p>Vector specifying the extreme tick mark locations
+and the number of intervals between those extreme tick marks on the
+horizontal axis of the plot of the original times series. This
+vector takes the form similar to par("xaxp"), and is defaulted to
+par("xaxp") when <code>X.xtick.at</code> is not specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X.ytick.at</code></td>
+<td>
+<p>Vector specifying the extreme tick mark locations
+and the number of intervals between those extreme tick marks on the
+vertical axis of the plot of the original times series. This vector
+takes the form similar to par("yaxp"), and is defaulted to
+par("yaxp") when <code>X.ytick.at</code> is not specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Stack.xtick.at</code></td>
+<td>
+<p>Vector of form similar to <code>X.xtick.at</code>
+specifying the tick mark locations on the horizontal
+axis of the stacked plot. This is applicable only if <code>plot.X</code>
+is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Stack.ytick.at</code></td>
+<td>
+<p>Vector of form similar to <code>X.ytick.at</code>
+specifying the tick mark locations on the vertical
+axis of the stacked plot. This is applicable only if <code>plot.X</code>
+is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X.xlab</code></td>
+<td>
+<p>String specifying the label of the horizontal axis of
+the plot of the original time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y.rlabs</code></td>
+<td>
+<p>Logical flag indicating whether to draw the vertical
+labels on the right vertical axis of the stacked plot.  These labels
+indicate the number of boundary coefficients to the right of the
+right boundary line, and the level of decomposition of the wavelet
+(or scaling) coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.X</code></td>
+<td>
+<p>Logical flag indicating whether to draw original time
+series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.W</code></td>
+<td>
+<p>Logical flag indicating whether to draw the wavelet
+coefficients in the stacked plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.V</code></td>
+<td>
+<p>Logical flag indicating whether to draw the scaling
+coefficients in the stacked plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional paramters that are acceptable arguments to the
+generic <code>plot</code> function</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>plot.dwt</code> plots the DWT wavelet and scaling coefficients. The
+<code>type</code> parameter species the type of plot, which is currently
+only stack. If the DWT object is defined for multiple time series,
+only the data pertaining to the first time series of the DWT object
+is plotted. Thus, only the wavelet coefficients and scaling
+coefficients of the first time series of the DWT object will be
+plotted.
+</p>
+<p>If a single number is specified for <code>levels</code>, then the wavelet
+coefficients of levels 1 through <code>levels</code> will be plotted.
+Otherwise, a vector or the first element of a list will specify
+which levels of the wavelet coefficients will be plotted.
+Unless specified in the second element of a list, only one level
+of scaling coefficients will be plotted and this level is equal
+to the highest level of the wavelet coefficients plotted.
+</p>
+<p>For each respective axis, the distance between a tick mark on the
+plot of the original time series is equivalent to the distance
+between a tick mark on the stacked plot. Thus, when altering the
+relative spacing of the tick marks on the plot of the original time
+series using <code>X.xtick.at</code> or <code>X.ytick.at</code>, the tick marks
+of the stacked plot are automatically adjusted. If the plot of the
+original time series is not drawn, then the user can alter the
+spacing of the tick marks using <code>Stack.xtick.at</code> and
+<code>Stack.ytick.at</code> for the horizontal and vertical axes,
+respectively.
+</p>
+<p>One of <code>plot.W</code> or <code>plot.V</code> must be TRUE.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Kelvin Ma, kkym@u.washington.edu
+</p>
+
+
+<h3>References</h3>
+
+<p>Percival, D. B. and A. T. Walden (2000) <em>Wavelet Methods for Time
+Series Analysis</em>, Cambridge University Press.  
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>stackplot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">X &lt;- rnorm(2048)
+dwtobj &lt;- dwt(X)
+
+# Plotting wavelet coefficients of levels 1 through 6 and scaling
+# coefficients of level 6.
+plot.dwt(dwtobj, levels = 6)
+
+# Plotting wavelet coefficients of levels 1, 3, 5, and scaling
+# coefficients of levels 4 and 5, and green boundary coefficient lines.
+plot.dwt(dwtobj, levels = list(c(1,3,5),c(4,5)), draw.boundary = TRUE,
+col.boundary = "green")
+
+# Plotting wavelet coefficients of level 1 through 6 and not plotting
+# any scaling coefficients.
+plot.dwt(dwtobj, levels = 6, plot.V = FALSE)
+</code></pre>
+
+
+</div>

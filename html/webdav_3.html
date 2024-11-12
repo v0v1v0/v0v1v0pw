@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>webdav_copy_file</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Copy a resource on the WebDAV server</h2>
+
+<h3>Description</h3>
+
+<p>This function copies a resource from one URI to another on the WebDAV server using the COPY method.
+It validates the provided parameters and handles errors during the copy process.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">webdav_copy_file(
+  base_url,
+  from_path,
+  to_path,
+  username = Sys.getenv("WEBDAV_USERNAME"),
+  password = Sys.getenv("WEBDAV_PASSWORD"),
+  verbose = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>base_url</code></td>
+<td>
+<p>The base URL of the WebDAV server.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from_path</code></td>
+<td>
+<p>The source path of the resource to copy.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to_path</code></td>
+<td>
+<p>The destination path where the resource will be copied.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>username</code></td>
+<td>
+<p>The username for WebDAV authentication. Defaults to the "WEBDAV_USERNAME" environment variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>password</code></td>
+<td>
+<p>The password for WebDAV authentication. Defaults to the "WEBDAV_PASSWORD" environment variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical. If TRUE, prints detailed messages during the copy process.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Logical value indicating whether the resource was copied successfully.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Example usage with a public WebDAV server.
+# Visit test_server$url link to view the results of the operation.
+library(magrittr)
+library(httr2)
+test_server &lt;- "https://www.webdavserver.com/" %&gt;%
+  request() %&gt;%
+  req_retry(max_tries = 3, max_seconds = 4, backoff =  ~ 1) %&gt;%
+  req_perform() %&gt;%
+  try(silent = TRUE)
+
+# Copy a file from one path to another
+if (class(test_server) != "try-error")
+  webdav_copy_file(base_url = test_server$url,
+    from_path = "Project.pdf",
+    to_path = "New_Project.pdf",
+    verbose = TRUE)
+</code></pre>
+
+
+</div>

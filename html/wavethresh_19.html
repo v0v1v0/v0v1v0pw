@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>AvBasis.wst</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Perform basis averaging for (packet-ordered) non-decimated wavelet transform.</h2>
+
+<h3>Description</h3>
+
+<p>Perform basis averaging for (packet-ordered) non-decimated wavelet transform.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wst'
+AvBasis(wst, Ccode=TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wst</code></td>
+<td>
+<p>An object of class <code>wst</code> that contains coefficients of a packet ordered non-decimated wavelet transform (e.g. produced by the <code>wst</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ccode</code></td>
+<td>
+<p>If TRUE then fast compiled C code is used to perform the transform. If FALSE then S code is used. Almost always use the default TRUE option. (It is conceivable that some implementation can not use the C code and so this option permits use of the slower S code).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The packet-ordered non-decimated wavelet transform computed by <code>wst</code> computes the coefficients of an input vector with respect to a library of all shifts of wavelet basis functions at all scales. Here "all shifts" means all integral shifts with respect to the finest scale coefficients, and "all scales" means all dyadic scales from 0 (the coarsest) to J-1 (the finest) where <code>2^J = n</code> where <code>n</code> is the number of data points of the input vector. As such the packet-ordered non-decimated wavelet transform contains a library of all possible shifted wavelet bases.
+</p>
+<p><code>Basis selection</code> It is possible to select a particular basis and invert that particular representation. In WaveThresh a basis is selected by creating a <code>nv</code> (node.vector) class object which identifies the basis. Then the function <code>InvBasis</code> takes the wavelet representation and the node.vector and inverts the representation with respect to the selected basis. The two functions <code>MaNoVe</code> and <code>numtonv</code> create a node.vector: the first by using a <code>Coifman-Wickerhauser</code> minimum entropy best-basis algorithm and the second by basis index. 
+</p>
+<p><b>Basis averaging</b>. Rather than select a basis it is often useful to preserve information from all of the bases. For examples, in curve estimation, after thresholding a wavelet representation the coefficients are coefficients of an estimate of the truth with respect to all of the shifted basis functions. Rather than select <em>one</em> of them we can average over all estimates. This sometimes gives a better curve estimate and can, for examples, get rid of Gibbs effects. See Coifman and Donoho (1995) for more information on how to do curve estimation using the packet ordered non-decimated wavelet transform, thresholding and basis averaging. 
+</p>
+<p>Further it might seem that inverting each wavelet transform and averaging might be a computationally expensive operation: since each wavelet inversion costs order <code class="reqn">n</code> operations and there are n different bases and so you might think that the overall order is <code class="reqn">n^2</code>.
+It turns out that since many of the coarser scale basis functions are duplicated between bases there is redundancy in the non-decimated transform. Coifman and Donoho's TI-denoising algorithm makes use of this redundancy which results in an algorithm which only takes order <code class="reqn">n \log n</code> operations. 
+</p>
+<p>For an examples of denoising using the packet-ordered non-decimated wavelet transform and basis averaging see Johnstone and Silverman, 1997. The WaveThresh implementation of the basis averaging algorithm is to be found in Nason and Silverman, 1995 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector containing the average of the wavelet representation over all the basis functions. The length of the vector is <code>2^nlev</code> where <code>nlev</code> is the number of levels in the input <code>wst</code> object.
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.6.0 Copyright Guy Nason 1995</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>av.basis</code>,
+<code>wst</code>, <code>wst.object</code>, <code>MaNoVe</code>,  <code>numtonv</code>, <code>InvBasis</code>, <code>wavegrow</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Generate some test data
+#
+test.data &lt;- example.1()$y
+#
+# Now take the packet-ordered non-decimated wavelet transform
+#
+tdwst &lt;- wst(test.data)
+#
+# Now "invert" it using basis averaging
+#
+tdwstAB &lt;- AvBasis(tdwst)
+#
+# Let's compare it to the original
+#
+sum( (tdwstAB - test.data)^2)
+#
+# [1] 9.819351e-17 
+#
+# Very small. They're essentially same.
+#
+# See the threshold.wst help page for an
+# an examples of using basis averaging in curve estimation.
+</code></pre>
+
+
+</div>

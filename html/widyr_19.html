@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>widely_kmeans</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cluster items based on k-means across features</h2>
+
+<h3>Description</h3>
+
+<p>Given a tidy table of features describing each item, perform k-means
+clustering using <code>kmeans()</code> and retidy the data into
+one-row-per-cluster.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">widely_kmeans(tbl, item, feature, value, k, fill = 0, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tbl</code></td>
+<td>
+<p>Table</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item</code></td>
+<td>
+<p>Item to cluster (as a bare column name)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>feature</code></td>
+<td>
+<p>Feature column (dimension in clustering)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>Value column</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>Number of clusters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fill</code></td>
+<td>
+<p>What to fill in for missing values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments passed on to <code>kmeans()</code></p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>widely_hclust()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(gapminder)
+library(dplyr)
+
+clusters &lt;- gapminder %&gt;%
+  widely_kmeans(country, year, lifeExp, k = 5)
+
+clusters
+
+clusters %&gt;%
+  count(cluster)
+
+# Examine a few clusters
+clusters %&gt;% filter(cluster == 1)
+clusters %&gt;% filter(cluster == 2)
+
+</code></pre>
+
+
+</div>

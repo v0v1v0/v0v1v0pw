@@ -1,0 +1,64 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>waitress</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Waitress</h2>
+
+<h3>Description</h3>
+
+<p>Programatically show and hide loading bars.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">useWaitress(color = "#697682", percent_color = "#333333")
+
+use_waitress(color = "#697682", percent_color = "#333333")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>color, percent_color</code></td>
+<td>
+<p>Color of waitress and color of percent text shown when
+<code>theme</code> is set to <code>overlay-percent</code>.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>You can pipe the methods with <code>$</code>.
+<code>Waitress$new()</code> and <code>call_waitress()</code> are equivalent.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(shiny)
+
+ui &lt;- fluidPage(
+  useWaitress("red"), # dependencies
+  sliderInput("set", "percentage", 1, 100, step = 5, value = 1)
+)
+
+server &lt;- function(input, output, session){
+ 
+  w &lt;- Waitress$
+   new()$  # call a waitress
+  	start() # start waitress
+	 
+  observeEvent(input$set, {
+    w$set(input$set) # set at percentage
+  })
+}
+
+if(interactive()) shinyApp(ui, server)
+ 
+</code></pre>
+
+
+</div>

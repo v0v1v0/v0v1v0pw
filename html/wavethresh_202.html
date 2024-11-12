@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rsswav</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute mean residual sum of squares for odd prediction of even ordinates and vice versa</h2>
+
+<h3>Description</h3>
+
+<p>Compute mean of residual sum of squares (RSS) for odd prediction of even
+ordinates and vice versa using wavelet shrinkage with a specified threshold.
+This is a subsidiary routine of the <code>WaveletCV</code>
+cross validation function.
+A version implemented in C exists called <code>Crsswav</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rsswav(noisy, value = 1, filter.number = 10, family = "DaubLeAsymm", 
+    thresh.type = "hard", ll = 3)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>noisy</code></td>
+<td>
+<p>A vector of dyadic (power of two) length that contains the noisy data that you wish to compute the averaged RSS for.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>The specified threshold.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.number</code></td>
+<td>
+<p>This selects the smoothness of wavelet that you want to perform wavelet shrinkage by cross-validation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>specifies the family of wavelets that you want to use. The options are "DaubExPhase" and "DaubLeAsymm".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thresh.type</code></td>
+<td>
+<p>this option specifies the thresholding type which can be "hard" or "soft".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ll</code></td>
+<td>
+<p>The primary resolution that you wish to assume. No wavelet coefficients that are on coarser scales than ll will be thresholded.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><b>Note</b>: a faster C based implementation of this function called
+<code>Crsswav</code> is available.
+It takes the same arguments and returns the same values.
+</p>
+<p>Two-fold cross validation can be computed for a wd object using the "cv" policy option in <code>threshold.wd</code>.
+As part of this procedure for each threshold value that the CV optimisation algorithm selects a RSS value must be computed (the CV optimisation algorithm seeks to minimize this RSS value).
+</p>
+<p>The RSS value computed is this. First, the even and odd indexed values are separated. The even values are used to construct an estimate of the odd true values using wavelet shrinkage with the given threshold. The sum of squares between the estimate and the noisy odds is computed. An equivalent calculation is performed by swapping the odds and evens. The two RSS values are then averaged and the average returned. This algorithm is described more fully in Nason, (1996).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>ssq</code></td>
+<td>
+<p>The RSS value that was computed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>The dof value computed on the thresholded wavelet transform of the
+data with the given threshold and thresholding options. (Although this is not really used for anything).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>The value argument that was specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>the <code>thresh.type</code> argument that was specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lev</code></td>
+<td>
+<p>The vector <code>ll:(nlevelsWT(noisy)-1)</code> (i.e. the levels that were thresholded).</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Crsswav</code>,<code>threshold.wd</code>, <code>WaveletCV</code></p>
+
+
+</div>

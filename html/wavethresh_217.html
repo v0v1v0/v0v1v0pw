@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sure</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Computes the minimum of the SURE thresholding function</h2>
+
+<h3>Description</h3>
+
+<p>Computes the minimum of the SURE thresholding function for
+wavelet shrinkage as described in Donoho, D.L. and Johnstone, I.M.
+(1995) Adapting to unknown smoothness via wavelet shrinkage.
+<em>J. Am. Statist. Ass.</em>, <b>90</b>, 1200-1224.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sure(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Vector of (normalized) wavelet coefficients. Coefficients
+should be supplied divided by their standard deviation, or
+some robust measure of scale</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>SURE is a method for unbiasedly estimating the risk of an estimator. Stein (1981) showed that for a nearly arbitrary, nonlinear biased estimator, one can estimate its loss unbiasedly. See the Donoho and Johnstone, 1995 for further references and explanation. This function minimizes formula (11) from that paper.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The absolute value of the wavelet coefficient that minimizes the
+SURE criteria 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>threshold</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Let's create "pretend" vector of wavelet coefficients contaminated with
+# "noise".
+#
+v &lt;- c(0.1, -0.2, 0.3, -0.4, 0.5, 99, 12, 6)
+#
+# Now, what's sure of this?
+#
+sure(v)
+#
+# [1] 0.5
+#
+#
+# I.e. the large significant coefficients are 99, 12, 6 and the noise is
+# anything less than this in abs value. So sure(v) is a good point to threshold
+# at.
+</code></pre>
+
+
+</div>

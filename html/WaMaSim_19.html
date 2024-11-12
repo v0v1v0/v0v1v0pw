@@ -1,0 +1,170 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simulate_network</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Simulate the failures, expansion, rehabilitation, and costs of a network</h2>
+
+<h3>Description</h3>
+
+<p>Simulates failures, expansion, rehabilitation, and costs of a water supply pipe network.
+The simulation is stochastic.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">simulate_network(n.years, expansion, rehabilitation, prob.failure,
+  income = 0, initial.budget = Inf, initial.inventory = NULL,
+  free.expansion = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n.years</code></td>
+<td>
+<p>number of years to simulate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expansion</code></td>
+<td>
+<p>either a scalar describing the number of pipes added
+every year to expand the pipe network, or a vector of length <code>n.years</code>.
+Negative values are not allowed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rehabilitation</code></td>
+<td>
+<p>a (combination of) rehabilitation strategy function(s). See details below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prob.failure</code></td>
+<td>
+<p>a function describing the probability of a pipe failing in the next year
+given its age, number of previous failures, and the age at the last failure (if any).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>income</code></td>
+<td>
+<p>either a scalar describing the annual income, or a vector of length <code>n.years</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initial.budget</code></td>
+<td>
+<p>initial budget</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initial.inventory</code></td>
+<td>
+<p>if it is an integer it specifies the
+number of initial pipes, or alternatively it can be a <code>data.frame</code>
+containing the initial inventory of pipes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>free.expansion</code></td>
+<td>
+<p>if <code>TRUE</code> costs for network expansion are not deducted from the budget.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The rehabilitation is defined by combining different simple replacement strategies.
+See the example for how this can be done using the <code>mystrategy</code> function input.
+If the strategies vary over time, see <code>initiate.network</code> and
+<code>simulate_network.period</code>.
+</p>
+<p>The failure behavior is defined by the function <code>prob.failure</code>.
+It calculates the probability of a pipe failing within the next year based on pipe age,
+pipe age at the last failure, and the number of failures. Note, the model
+makes the assumption that a pipe cannot fail more than once per year.
+</p>
+<p>The costs are calculated as a function of the pipe diameter, assuming all pipes have a
+length of 100 meters.
+</p>
+
+
+<h3>Value</h3>
+
+<p>an updated state list
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Andreas Scheidegger
+</p>
+
+
+<h3>See Also</h3>
+
+<p>For more fine-grained control see <code>initiate.network</code>
+and <code>simulate_network.period</code>. Different replacement strategies
+are implemented: <code>replace.n.highest.risk</code>,
+<code>replace.n.oldest</code>, <code>replace.n.random</code>, <code>replace.older.than</code>,
+<code>replace.more.failures.than</code>, <code>do.nothing</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## -----------
+## define model parameters
+
+## Define the annual probability of a failure
+prob.failure.exp &lt;- function(age, age.last.failure, n.failure) {
+  if(n.failure==0){
+    return(1/30)
+  } else {
+    return(1/10)
+  }
+}
+
+## define a complicated (and probably useless) rehabilitation strategy
+mystrategy &lt;- . %&gt;%
+  replace.n.highest.risk(n=2, prob.failure=prob.failure.exp) %&gt;%
+  replace.more.failures.than(failures=5) %&gt;%
+  replace.older.than(age=70, max.cost=2e6)  %&gt;%
+  replace.n.oldest(n=3) %&gt;%
+  replace.n.random(n=2)
+## This means: every year (if we have enough budget!), replace first the 2 pipes
+## with the highest risk, then all pipes with more than 5 failures,
+## then all pipes older then 70 years (up to costs of 2e6), then the 3
+## oldest pipes remaining, and finally replace 2 randomly selected pipes. 
+
+
+## -----------
+## run the simulation
+
+result &lt;- simulate_network(
+
+    n.years = 100,                   # run it for 100 years
+    expansion = 10,                  # build 10 pipes per year (if money is available)
+    rehabilitation = mystrategy,     # use the strategy defined above
+    prob.failure = prob.failure.exp, # use the probability function defined above
+    income = 1e6,                    # the annual income
+    initial.budget = 1e7,   
+    initial.inventory = 50,          # start the simulation with 50 new pipes
+    free.expansion = FALSE
+     
+     )          
+
+## look at some results
+## str(result)
+## str(result$time.100)
+
+</code></pre>
+
+
+</div>

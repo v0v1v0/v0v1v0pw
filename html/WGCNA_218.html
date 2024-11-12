@@ -1,0 +1,245 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pruneAndMergeConsensusModules</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Iterative pruning and merging of (hierarchical) consensus modules
+</h2>
+
+<h3>Description</h3>
+
+<p>This function prunes genes with low consensus eigengene-based intramodular connectivity (kME) from modules
+and merges modules whose consensus similarity is high. The process is repeated until the modules become
+stable.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pruneAndMergeConsensusModules(
+  multiExpr,
+  multiWeights = NULL,
+  multiExpr.imputed = NULL,
+  labels,
+  unassignedLabel = if (is.numeric(labels)) 0 else "grey",
+  networkOptions,
+  consensusTree,
+
+  # Pruning options
+  minModuleSize,
+  minCoreKMESize = minModuleSize/3,
+  minCoreKME = 0.5, 
+  minKMEtoStay = 0.2,
+
+  # Module eigengene calculation and merging options
+  impute = TRUE,
+  trapErrors = FALSE,
+  calibrateMergingSimilarities = FALSE,
+  mergeCutHeight = 0.15,
+
+  # Behavior
+  iterate = TRUE,
+  collectGarbage = FALSE,
+  getDetails = TRUE,
+  verbose = 1, indent=0)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>multiExpr</code></td>
+<td>
+<p> Expression data in the multi-set format (see <code>checkSets</code>). A vector of
+lists, one per set. Each set must contain a component <code>data</code> that contains the expression data, with
+rows corresponding to samples and columns to genes or probes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multiWeights</code></td>
+<td>
+<p> optional observation weights in the same format (and dimensions) as <code>multiExpr</code>.
+These weights are used for correlation calculations with data in  <code>multiExpr</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multiExpr.imputed</code></td>
+<td>
+<p>If <code>multiExpr</code> contain missing data, this argument can be used to supply the
+expression data with missing data imputed. If not given, the <code>impute.knn</code> function will
+be used to impute the missing data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+
+<p>A vector (numeric, character or a factor) giving module labels for each variable (gene) in multiExpr.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unassignedLabel</code></td>
+<td>
+
+<p>The label (value in <code>labels</code>)
+that represents unassigned genes. Module of this label will
+not enter the module eigengene clustering and will not be merged with other modules.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkOptions</code></td>
+<td>
+
+<p>A single list of class <code>NetworkOptions</code> giving options for network calculation for all of the
+networks, or a <code>multiData</code> structure containing one such list for each input data set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>consensusTree</code></td>
+<td>
+
+<p>A list of class <code>ConsensusTree</code> specifying the consensus calculation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minModuleSize</code></td>
+<td>
+<p>Minimum number of genes in a module. Modules that have fewer genes (after trimming)
+will be removed (i.e., their genes will be given the unassigned label).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minCoreKME</code></td>
+<td>
+<p> a number between 0 and 1. If a detected module does not have at least
+<code>minModuleKMESize</code> genes with consensus eigengene connectivity at least <code>minCoreKME</code>, the module is
+disbanded (its genes are unlabeled).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minCoreKMESize</code></td>
+<td>
+<p> see <code>minCoreKME</code> above. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minKMEtoStay</code></td>
+<td>
+<p> genes whose consensus eigengene connectivity to their module eigengene is lower than
+<code>minKMEtoStay</code> are removed from the module.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>impute</code></td>
+<td>
+<p> logical: should imputation be used for module eigengene calculation? See
+<code>moduleEigengenes</code> for more details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trapErrors</code></td>
+<td>
+<p> logical: should errors in calculations be trapped? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>calibrateMergingSimilarities</code></td>
+<td>
+
+<p>Logical: should module eigengene similarities be calibrated before calculating the consensus? Although
+calibration is in principle desirable, the calibration methods currently available assume large data and do
+not work very well on eigengene similarities.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mergeCutHeight</code></td>
+<td>
+
+<p>Dendrogram cut height for module merging.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iterate</code></td>
+<td>
+
+<p>Logical: should the pruning and merging process be iterated until no changes occur? If <code>FALSE</code>, only one
+iteration will be carried out.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>collectGarbage</code></td>
+<td>
+
+<p>Logical: should garbage be collected after some of the memory-intensive steps?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getDetails</code></td>
+<td>
+
+<p>Logical: should certain intermediate results be returned? These include labels and module merging information
+at each iteration (see return value).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>If input <code>getDetails</code> is <code>FALSE</code>, a vector the resulting module labels. If <code>getDetails</code> is
+<code>TRUE</code>, a list with these components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>The resulting module labels</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>details</code></td>
+<td>
+<p>A list. The first component, named <code>originalLabels</code>, contains a copy of the input labels.
+The following components are named <code>Iteration.1</code>, <code>Iteration.2</code> etc and contain, for each iteration,
+components <code>prunedLabels</code> (the result of pruning in that iteration) and <code>mergeInfo</code> (result of the
+call to <code>hierarchicalMergeCloseModules</code> in that iteration).</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p>The underlying functions <code>pruneConsensusModules</code> and <code>hierarchicalMergeCloseModules</code>.
+</p>
+
+
+</div>

@@ -1,0 +1,143 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_legend</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add legend to a web map</h2>
+
+<h3>Description</h3>
+
+<p>Add a legend to a <a href="https://leafletjs.com/">Leaflet</a> map.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_legend(
+  map,
+  labels,
+  colors,
+  radius,
+  opacity = 0.5,
+  symbol = c("square", "circle"),
+  title = "EXPLANATION",
+  position = "topright"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>map</code></td>
+<td>
+<p>'leaflet'.
+Map widget object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>'character' vector.
+Labels in the legend.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colors</code></td>
+<td>
+<p>'character' vector.
+HTML colors corresponding to <code>labels</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>radius</code></td>
+<td>
+<p>'numeric' number.
+Border radius of symbols in the legend, in pixels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opacity</code></td>
+<td>
+<p>'numeric' number.
+Opacity of symbols in the legend, from 0 to 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>symbol</code></td>
+<td>
+<p>'character' string.
+Symbol type in the legend, either "square" or "circle".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>'character' string.
+Legend title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>position</code></td>
+<td>
+<p>'character' string.
+Position of the button on the web map.
+Possible values are "topleft", "topright", "bottomleft", and "bottomright".</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A new HTML web <code>map</code> with added element, an object of class 'leaflet'.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>J.C. Fisher, U.S. Geological Survey, Idaho Water Science Center
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>make_map</code> function for creating a map widget.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># define marker colors based on whether a city serves as a capital
+colors &lt;- c(
+  "Non-capital" = "green",
+  "Capital" = "red"
+)
+fill_colors &lt;- colors[(us_cities$capital &gt; 0) + 1L] |&gt;
+  as.character()
+
+# print map with city circle markers and a map legend
+make_map(maps = "Topo") |&gt;
+  leaflet::addCircleMarkers(
+    lng = ~lng,
+    lat = ~lat,
+    radius = 6,
+    color = "white",
+    weight = 1,
+    opacity = 1,
+    fillColor = fill_colors,
+    fillOpacity = 1,
+    fill = TRUE,
+    data = us_cities
+  ) |&gt;
+  add_legend(
+    labels = names(colors),
+    colors = colors,
+    radius = 5,
+    opacity = 1,
+    symbol = "circle"
+  )
+</code></pre>
+
+
+</div>

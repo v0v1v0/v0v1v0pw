@@ -1,0 +1,175 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wbt</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Run WhiteboxTools by Tool Name</h2>
+
+<h3>Description</h3>
+
+<p>You are required to specify all required arguments as either paths to files, or R object types that can be associated with a file.
+</p>
+<p><code>wbt_result()</code>: return a combined list of results from either the history of a <code>wbt_result</code> (if present and <code>history=TRUE</code>), or the result of a <code>wbt_result</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wbt(
+  result,
+  tool_name,
+  ...,
+  crs = NULL,
+  verbose_mode = FALSE,
+  command_only = FALSE
+)
+
+## S3 method for class 'wbt_result'
+wbt(
+  result,
+  tool_name,
+  ...,
+  crs = NULL,
+  verbose_mode = FALSE,
+  command_only = FALSE
+)
+
+wbt_result(result, i = NULL, history = TRUE, attribute = "output")
+
+## S3 method for class 'character'
+wbt(
+  result,
+  tool_name,
+  ...,
+  crs = NULL,
+  verbose_mode = FALSE,
+  command_only = FALSE
+)
+
+## S3 method for class ''function''
+wbt(
+  result,
+  tool_name,
+  ...,
+  crs = NULL,
+  verbose_mode = FALSE,
+  command_only = FALSE
+)
+
+## S3 method for class 'missing'
+wbt(
+  result,
+  tool_name,
+  ...,
+  crs = NULL,
+  verbose_mode = FALSE,
+  command_only = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>result</code></td>
+<td>
+<p>an object of class <code>wbt_result</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tool_name</code></td>
+<td>
+<p>character. name of the tool to run. Or a tool/function name (i.e. a symbol) that is non-standard evaluated as a character.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments to tool</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crs</code></td>
+<td>
+<p>character Optional: a WKT Coordinate Reference System string, or other identifier such as EPSG code or PROJ string</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose_mode</code></td>
+<td>
+<p>passed to <code>wbt_run_tool()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>command_only</code></td>
+<td>
+<p>Return command that would be run with <code>system()</code>? Default: <code>FALSE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>i</code></td>
+<td>
+<p>Optional index of result list element to return as result. Default is whole list.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>history</code></td>
+<td>
+<p>Default: <code>TRUE</code> returns a list of all history results</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>attribute</code></td>
+<td>
+<p>Default: <code>"output"</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Supports SpatRaster / RasterLayer input / output. Arguments are transformed from their source class and passed to WhiteboxTools executable as standard character string arguments involving file paths.
+</p>
+<p>To print help for any tool, see <code>wbt_tool_help()</code>
+</p>
+<p><code>tool_name</code> may be specified with or without quotes or <code>wbt_</code> prefix. e.g. <code>"wbt_slope"</code>, <code>wbt_slope</code>, <code>slope</code>, and <code>"slope"</code> are identical.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a list with class <code>"wbt_result"</code> containing elements:
+</p>
+
+<ul>
+<li> <p><code>tool</code> - the tool name
+</p>
+</li>
+<li> <p><code>args</code> - arguments passed to executable
+</p>
+</li>
+<li> <p><code>stdout</code> - console output (result of <code>wbt_run_tool()</code>)
+</p>
+</li>
+<li> <p><code>crs</code> - Coordinate Reference System string (WKT or PROJ)
+</p>
+</li>
+<li> <p><code>result</code> - any 'result' parameters (<code>--output</code>) that can be converted to R objects after run. A list of RasterLayer or character. May be a <code>try-error</code> if arguments are specified incorrectly.
+</p>
+</li>
+<li> <p><code>history</code> - history of 'result' when <code>wbt_result</code> was passed as input, most recent output at end
+</p>
+</li>
+</ul>
+<p>list of result in <code>attribute</code> if <code>"history"</code> is present, otherwise the result in <code>attribute</code>. If <code>i</code> is specified, just the <code>i</code>th element of the list.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wbt_tool_help()</code>
+</p>
+
+
+</div>

@@ -1,0 +1,81 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>worm_evaluate,WormTensor-method</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Evaluates clustering result
+An evaluation result is generated from a WormTensor object.</h2>
+
+<h3>Description</h3>
+
+<p>Evaluates clustering result
+An evaluation result is generated from a WormTensor object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S4 method for signature 'WormTensor'
+worm_evaluate(object, labels = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>WormTensor object with a result of worm_clustering</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>Labels for external evaluation</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>WormTensor object with an evaluation result added
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+    # Pipe Operation
+    worm_download("mSBD", qc = "PASS")$Ds |&gt;
+        as_worm_tensor() |&gt;
+            worm_membership(k = 6) |&gt;
+                worm_clustering() -&gt; object
+     # Internal evaluation
+     worm_evaluate(object) -&gt; object_internal
+
+     # External evaluation by sample labels
+     labels &lt;- list(
+         label1 = sample(3, length(object@clustering), replace = TRUE),
+         label2 = sample(4, length(object@clustering), replace = TRUE),
+         label3 = sample(5, length(object@clustering), replace = TRUE)
+     )
+     worm_evaluate(object, labels) -&gt; object_external
+
+     # External evaluation by worm_download labels
+     Ds_mSBD &lt;- worm_download("mSBD", qc = "PASS")
+     labels &lt;- list(
+         label1 = replace(
+             Ds_mSBD$labels$Class,
+             which(is.na(Ds_mSBD$labels$Class)),
+             "NA"
+         ),
+         label2 = sample(4, length(object@clustering), replace = TRUE),
+         label3 = sample(5, length(object@clustering), replace = TRUE)
+     )
+     worm_evaluate(object, labels) -&gt; object_external_Class
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read_clf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>read CLF-formatted logs</h2>
+
+<h3>Description</h3>
+
+<p>Read a file of request logs stored in the
+<a href="https://en.wikipedia.org/wiki/Common_Log_Format">Common Log Format</a>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read_clf(file, has_header = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>the full path to the CLF-formatted file you want to read.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>has_header</code></td>
+<td>
+<p>whether or not the file has a header row. Set to FALSE by
+default.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>the CLF is a standardised format for web request logs. It consists of the fields:
+</p>
+
+<ul>
+<li>
+<p>ip_address: the IP address of the remote host that made the request. The CLF
+does not (by default) include the de-facto standard X-Forwarded-For header
+</p>
+</li>
+<li>
+<p>remote_user_ident: the <a href="https://tools.ietf.org/html/rfc1413">RFC 1413</a> remote
+user identifier.
+</p>
+</li>
+<li>
+<p>local_user_ident: the identifier the user has authenticated with locally.
+</p>
+</li>
+<li>
+<p>timestamp: the timestamp associated with the request, stored as
+"[08/Apr/2001:17:39:04 -0800]", where "-0800" represents the time offset (minus
+eight hours) of the timestamp from UTC.
+</p>
+</li>
+<li>
+<p>request: the actual user request, containing the HTTP method used, the
+asset requested, and the HTTP Protocol version used.
+</p>
+</li>
+<li>
+<p>status_code: the HTTP status code returned.
+</p>
+</li>
+<li>
+<p>bytes_sent: the number of bytes sent
+</p>
+</li>
+</ul>
+<p>While outdated as a standard, systems using the CLF are still around; the Squid caching
+system, for example, uses the CLF as one of its default log formats (the other,
+the squid "native" format, can be read with <code>read_squid</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>a data.frame consisting of seven fields, as discussed above, with normalised
+timestamps.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read_combined</code> for the /Combined/ Log Format, and
+<code>split_clf</code> for splitting out the "requests" field.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#Read in an example CLF-formatted file provided with the webreadr package.
+data &lt;- read_clf(system.file("extdata/log.clf", package = "webreadr"))
+</code></pre>
+
+
+</div>

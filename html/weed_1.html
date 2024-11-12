@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>geocode</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>GeoCodes text locations using the GeoNames API</h2>
+
+<h3>Description</h3>
+
+<p>Uses the <code>location_word</code> and <code>Country</code> columns of the data frame to make queries
+to the geonames API and geocode the locations in the dataset.
+</p>
+<p>Note:
+</p>
+
+<ol>
+<li>
+<p> The Geonames API (for free accounts) limits you to 1000 queries an hour
+</p>
+</li>
+<li>
+<p> You need a geonames username to make queries. You can learn more about that <a href="https://www.geonames.org/manual.html">here</a>
+</p>
+</li>
+</ol>
+<h3>Usage</h3>
+
+<pre><code class="language-R">geocode(., n_results = 1, unwrap = FALSE, geonames_username)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.</code></td>
+<td>
+<p>a data frame which has been locationized (see <code>weed::split_locations</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_results</code></td>
+<td>
+<p>number of lat/longs to get</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unwrap</code></td>
+<td>
+<p>if true, returns lat1, lat2, lng1, lng2 etc. as different columns, otherwise one lat column and 1 lng column</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geonames_username</code></td>
+<td>
+<p>Username for geonames API. More about getting one is in the note above.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>the same data frame with a lat column/columns and lng column/columns
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">df &lt;- tibble::tribble(
+   ~value,  ~location_word,                    ~Country,
+   "mumbai region, district of seattle, sichuan province",  "mumbai","India",
+   "mumbai region, district of seattle, sichuan province",  "seattle", "USA"
+   )
+geocode(df, n_results = 1, unwrap = TRUE, geonames_username = "rammkripa")
+
+
+</code></pre>
+
+
+</div>

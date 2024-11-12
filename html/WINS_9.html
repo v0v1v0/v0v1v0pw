@@ -1,0 +1,455 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>win.stat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Function to Calculate the Win Statistics
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the win statistics for a mixture type of outcomes including time-to-event outcome, continuous outcome and binary outcome.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">win.stat(data, ep_type, Z_t_trt = NULL, Z_t_con = NULL, iptw.weight = NULL,
+arm.name = c(1,2),priority = c(1,2), alpha = 0.05, digit = 5, tau = 0,
+np_direction = "larger", win.strategy = NULL,pvalue = c("one-sided","two-sided"),
+stratum.weight = c("unstratified","MH-type","wt.stratum1","wt.stratum2","equal"),
+method = c("unadjusted","ipcw","covipcw","iptw"),
+summary.print = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The analysis dataset which contains the following variables:
+</p>
+
+<dl>
+<dt>arm: </dt>
+<dd>
+<p>A vector for the treatment groups. Alternative names for "arm" include "trt", "treat" and "treatment".</p>
+</dd>
+<dt>id: </dt>
+<dd>
+<p>A vector for the patient id.</p>
+</dd>
+<dt>stratum: </dt>
+<dd>
+<p>A vector for the stratum.</p>
+</dd>
+<dt>Delta_j: </dt>
+<dd>
+<p>A vector for the event status of the j-th endpoint if the endpoint is a time-to-event outcome (1=event, 0=censored).</p>
+</dd>
+<dt>Y_j: </dt>
+<dd>
+<p>A vector for the outcome of the j-th endpoint, for time-to-event outcome, Y_j is a vector for the observed time.</p>
+</dd>
+<dt>Start_time: </dt>
+<dd>
+<p>A vector for the time when each of the individuals is first accrued to study.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ep_type</code></td>
+<td>
+<p>A vector for the outcome type for each endpoint.  If scalar, the function will treat all the endpoints as the same type. The types of outcome include:
+</p>
+
+<dl>
+<dt>"tte": </dt>
+<dd>
+<p>Time-to-event outcome, with the default win strategy: the treatment group wins if min(T_trt, C_trt, C_con + tau) &gt; T_con + tau.</p>
+</dd>
+<dt>"continuous": </dt>
+<dd>
+<p>Continuous outcome, with the default win strategy: the treatment group wins if Y_trt &gt; Y_con + tau.</p>
+</dd>
+<dt>"binary": </dt>
+<dd>
+<p>Binary outcome coded as 0/1, with the default win strategy: 1 is the winner over 0.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z_t_trt</code></td>
+<td>
+<p>A matrix of the covariate history in the treatment group, each row is a (p+2) vector: the first two columns are subject id, time, the other p columns are the covariates (vector of length p). The baseline covariates are provided as the observed covariates corresponding to time 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z_t_con</code></td>
+<td>
+<p>A matrix of the covariate history in the control group, each row is a (p+2) vector: the first two columns are subject id, time, the other p columns are the covariates (vector of length p). The baseline covariates are provided as the observed covariates corresponding to time 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iptw.weight</code></td>
+<td>
+<p>The weight assigned to each individual if method = "iptw".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arm.name</code></td>
+<td>
+<p>A vector for the labels of the two experimental arms, default to be c(1,2). The first label is for the treatment group, and the second label is for the control group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>priority</code></td>
+<td>
+<p>Importance order (from the most to the least important). For example, given three endpoints with the importance order as Endpoint 3, Endpoint 2, and Endpoint 1, input priority = c(3,2,1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>The significance level, default to be 0.05.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digit</code></td>
+<td>
+<p>The number of digits for the output, default to be 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>A vector of numerical value for the magnitude of difference to determine win/loss/tie for each endpoint. Tau is applicable for TTE endpoints and continuous endpoints; tau is fixed as 0 for binary endpoints. Default is 0 for all endpoints.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>np_direction</code></td>
+<td>
+<p>A vector of character for the direction to define a better result for each endpoint.
+</p>
+
+<dl>
+<dt>"larger": </dt>
+<dd>
+<p>The treatment group wins if min(T_trt, C_trt, C_con + tau) &gt; T_con + tau, for time-to-event outcomes; "the larger value wins" for continuous outcome, value 1 wins over the value 0 for binary outcome.</p>
+</dd>
+<dt>"smaller": </dt>
+<dd>
+<p>The treatment group wins if min(T_trt, C_trt, C_con - tau) &lt; T_con - tau, for time-to-event outcomes; "the smaller value wins" for continuous outcome, value 0 wins over the value 1 for binary outcome.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>win.strategy</code></td>
+<td>
+<p>The strategy to determine the win status. Default as NULL. If NULL, the default win strategy funtion "win.strategy.default" is called, see win.strategy.default for more details. Users can also define their own "win.strategy" function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pvalue</code></td>
+<td>
+<p>The p-value type: "one-sided" or "two-sided".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stratum.weight</code></td>
+<td>
+<p>The weighting method for each stratum. Default is "unstratified" for unstratified analysis. A stratified analysis is performed if other weight option is specified. Other possible choices for this argument are listed below.
+</p>
+
+<dl>
+<dt>"MH-type": </dt>
+<dd>
+<p>weight the wins with the reciprocal of the stratum size following the Mantel-Haenszel type stratified analysis as described in Dong et al. (2018).</p>
+</dd>
+<dt>"wt.stratum1": </dt>
+<dd>
+<p>weight the win statistics with weight equal to the number of subjects in each stratum divided by the total number of subjects.</p>
+</dd>
+<dt>"wt.stratum2": </dt>
+<dd>
+<p>weight the win statistics with weight equal to the number of subjects with events (of any TTE endpoint) in each stratum divided by the total number of subjects with events (of any TTE endpoint).</p>
+</dd>
+<dt>"equal": </dt>
+<dd>
+<p>set equal weights for all stratum.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>The method to adjust the kernal functions. Possible choices are listed below.
+</p>
+
+<dl>
+<dt>"unadjusted": </dt>
+<dd>
+<p>Without using the IPCW approach to dealing with the censoring.</p>
+</dd>
+<dt>"ipcw": </dt>
+<dd>
+<p>IPCW adjustment for censoring with the Kaplan-Meier estimator.</p>
+</dd>
+<dt>"covipcw": </dt>
+<dd>
+<p>IPCW adjustment for censoring with the time dependent Cox model.</p>
+</dd>
+<dt>"iptw": </dt>
+<dd>
+<p>Inverse probability of treatment weighting (IPTW) method.</p>
+</dd>
+</dl>
+<p>Other methods may be added in future versions.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>summary.print</code></td>
+<td>
+<p>If TRUE, print out a summary of the estimation and inference result for the win statistics; If FALSE, return a list that summarizes the results. Default as TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Argument passed from user defined functions "win.strategy" if there is any. For instructions on this "win.strategy" function, see win.strategy.default for more details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The arguments of user defined "win.strategy" function must at least include the argument "trt_con" and "priority". "priority" is defined the same as stated in the main function "win.stat". The intermediate analysis dataset "trt_con" for the patient pairs (i.e., unmatched pairs, see Pocock et al., 2012) contains the following variables. Each row represents a pair.
+</p>
+
+<dl>
+<dt>stratum: </dt>
+<dd>
+<p>A vector for the stratum number of the unmatched pairs.</p>
+</dd>
+<dt>pid_trt: </dt>
+<dd>
+<p>A vector for the subject id of the individuals from the treatment group within each unmatched pair.</p>
+</dd>
+<dt>pid_con: </dt>
+<dd>
+<p>A vector for the subject id of the individuals from the control group within each unmatched pair.</p>
+</dd>
+<dt>Delta_j_trt: </dt>
+<dd>
+<p>A vector for the event status of the j-th endpoint (1=event, 0=censored) for the individuals from the treatment group in each unmatched pair. If the outcome type for the endpoint is continuous/binary, then the event status is 1 for all.</p>
+</dd>
+<dt>Delta_j_con: </dt>
+<dd>
+<p>A vector for the event status of the j-th endpoint (1=event, 0=censored) for the individuals from the control group in each unmatched pair. If the outcome type for the endpoint is continuous/binary, then the event status is 1 for all.</p>
+</dd>
+<dt>Y_j_trt: </dt>
+<dd>
+<p>A vector for the outcome of the j-th endpoint for the individuals from the treatment group in each unmatched pair. For a time-to-event outcome, it would be a vector of observed time-to-event observations.</p>
+</dd>
+<dt>Y_j_con: </dt>
+<dd>
+<p>A vector for the outcome of the j-th endpoint for the individuals from the control group in each unmatched pair. For a time-to-event outcome, it would be a vector of observed time-to-event observations.</p>
+</dd>
+</dl>
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Win_prop</code></td>
+<td>
+<p>The win proportion of the treatment and the control group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Win_statistic</code></td>
+<td>
+<p>The win statistics including:
+</p>
+
+<dl>
+<dt>Win_Ratio: </dt>
+<dd>
+<p>A list for the ratio of the win proportion between the treatment and the control groups.</p>
+</dd>
+<dt>Net_Benefit: </dt>
+<dd>
+<p>A list for the difference of the win proportion between the treatment and the control groups.</p>
+</dd>
+<dt>Win_Odds: </dt>
+<dd>
+<p>A list for the win odds between the treatment and the control groups.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z_statistic</code></td>
+<td>
+<p>The z-scores including:
+</p>
+
+<dl>
+<dt>zstat_WR: </dt>
+<dd>
+<p>z-score for win ratio.</p>
+</dd>
+<dt>zstat_NB: </dt>
+<dd>
+<p>z-score for net benefit.</p>
+</dd>
+<dt>zstat_WO: </dt>
+<dd>
+<p>z-score for win odds.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pvalue</code></td>
+<td>
+<p>The p-value for the test statistics including:
+</p>
+
+<dl>
+<dt>pvalue_WR: </dt>
+<dd>
+<p>p-value for win ratio.</p>
+</dd>
+<dt>pvalue_NB: </dt>
+<dd>
+<p>p-value for net benefit.</p>
+</dd>
+<dt>pvalue_WO: </dt>
+<dd>
+<p>p-value for win odds.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>summary_ep</code></td>
+<td>
+<p>The win count and win proportion of the treatment and the control group for each endpoint</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+
+<ul>
+<li>
+<p> Bebu, I. and Lachin, J.M., 2016. Large sample inference for a win ratio analysis of a composite outcome based on prioritized components. Biostatistics.
+</p>
+</li>
+<li>
+<p> Buyse, M., 2010. Generalized pairwise comparisons of prioritized outcomes in the two-sample problem. Statistics in medicine.
+</p>
+</li>
+<li>
+<p> Cui, Y., Dong, G., Kuan, P.F. and Huang, B., 2022. Evidence synthesis analysis with prioritized benefit outcomes in oncology clinical trials. Journal of Biopharmaceutical Statistics.
+</p>
+</li>
+<li>
+<p> Dong, G., Li, D., Ballerstedt, S. and Vandemeulebroecke, M., 2016. A generalized analytic solution to the win ratio to analyze a composite endpoint considering the clinical importance order among components. Pharmaceutical statistics.
+</p>
+</li>
+<li>
+<p> Dong, G., Qiu, J., Wang, D. and Vandemeulebroecke, M., 2018. The stratified win ratio. Journal of biopharmaceutical statistics.
+</p>
+</li>
+<li>
+<p> Dong, G., Huang, B., Chang, Y.W., Seifu, Y., Song, J. and Hoaglin, D.C., 2020. The win ratio: Impact of censoring and follow-up time and use with nonproportional hazards. Pharmaceutical statistics.
+</p>
+</li>
+<li>
+<p> Dong, G., Mao, L., Huang, B., Gamalo-Siebers, M., Wang, J., Yu, G. and Hoaglin, D.C., 2020. The inverse-probability-of-censoring weighting (IPCW) adjusted win ratio statistic: an unbiased estimator in the presence of independent censoring. Journal of biopharmaceutical statistics.
+</p>
+</li>
+<li>
+<p> Dong, G., Hoaglin, DC., Qiu, J., Matsouaka, RA., Chang, Y., Wang, J., Vandemeulebroecke, M., 2020. The win ratio: on interpretation and handling of ties. Statistics in Biopharmaceutical Research.
+</p>
+</li>
+<li>
+<p> Dong, G., Huang, B., Wang, D., Verbeeck, J., Wang, J. and Hoaglin, D.C., 2021. Adjusting win statistics for dependent censoring. Pharmaceutical Statistics.
+</p>
+</li>
+<li>
+<p> Dong, G., Huang, B., Verbeeck, J., Cui, Y., Song, J., Gamalo-Siebers, M., Wang, D., Hoaglin, D.C., Seifu, Y., Mutze, T. and Kolassa, J., 2022. Win statistics (win ratio, win odds, and net benefit) can complement one another to show the strength of the treatment effect on time-to-event outcomes. Pharmaceutical Statistics.
+</p>
+</li>
+<li>
+<p> Dong, G., Hoaglin, D.C., Huang, B., Cui, Y., Wang, D., Cheng, Y. and Gamalo-Siebers, M., 2023. The stratified win statistics (win ratio, win odds, and net benefit). Pharmaceutical Statistics.
+</p>
+</li>
+<li>
+<p> Finkelstein, D.M. and Schoenfeld, D.A., 1999. Combining mortality and longitudinal measures in clinical trials. Statistics in medicine.
+</p>
+</li>
+<li>
+<p> Finkelstein, D.M. and Schoenfeld, D.A., 2019. Graphing the Win Ratio and its components over time. Statistics in medicine.
+</p>
+</li>
+<li>
+<p> Luo, X., Tian, H., Mohanty, S. and Tsai, W.Y., 2015. An alternative approach to confidence interval estimation for the win ratio statistic. Biometrics.
+</p>
+</li>
+<li>
+<p> Pocock, S.J., Ariti, C.A., Collier, T.J. and Wang, D., 2012. The win ratio: a new approach to the analysis of composite endpoints in clinical trials based on clinical priorities. European heart journal.
+</p>
+</li>
+<li>
+<p> Wang D, Pocock S., 2016. A win ratio approach to comparing continuous non-normal outcomes in clinical trials. Pharmaceutical Statistics.
+</p>
+</li>
+<li>
+<p> Wang, D., Zheng S., Cui, Y., He, N., Chen, T., Huang, B., 2023. Adjusted win ratio using inverse probability treatment weighting (IPTW) propensity score analysis. Journal of Biopharmaceutical Statistics.
+</p>
+</li>
+<li>
+<p> Zheng S, Wang D, Qiu J, Chen T, Gamalo M., 2023. A win ratio approach for comparing crossing survival curves in clinical trials. Journal of Biopharmaceutical Statistics.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+#### An example with time-to-event outcome.
+head(data_tte)
+head(Z_t_trt)
+
+### CovIPCW adjustment for dependent censoring
+res_tte_covipcw &lt;- win.stat(data = data_tte, ep_type = "tte", arm.name = c("A","B"), tau = 0.1,
+Z_t_trt = Z_t_trt, Z_t_con = Z_t_con, priority = c(1:3), alpha = 0.05, digit = 3,
+method = "covipcw", stratum.weight = "unstratified", pvalue = "two-sided")
+
+#### An example with continuous outcome.
+head(data_continuous)
+
+res_continuous &lt;- win.stat(data = data_continuous, ep_type = "continuous", arm.name = c("A","B"),
+tau = 0, priority = c(1:3), alpha=0.05, digit = 3, stratum.weight = "unstratified",
+pvalue = "two-sided")
+
+#### An example with binary outcome.
+head(data_binary)
+
+res_binary &lt;- win.stat(data = data_binary, ep_type = "binary", arm.name = c("A","B"),
+priority = c(1:3), alpha=0.05, digit = 3, stratum.weight = "unstratified",
+pvalue = "two-sided")
+
+</code></pre>
+
+
+</div>

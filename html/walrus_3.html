@@ -1,0 +1,173 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rdesc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Robust Descriptives</h2>
+
+<h3>Description</h3>
+
+<p>Robust Descriptives
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rdesc(
+  data,
+  vars,
+  splitBy = NULL,
+  mean = TRUE,
+  trim = TRUE,
+  tr = 0.2,
+  win = FALSE,
+  wl = 0.2,
+  mest = FALSE,
+  bend = 1.28,
+  med = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>the data as a data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vars</code></td>
+<td>
+<p>a vector of strings naming the variables in <code>data</code> of
+interest</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>splitBy</code></td>
+<td>
+<p>a string naming the variable in <code>data</code> to split the
+data by</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mean</code></td>
+<td>
+<p><code>TRUE</code> (default) or <code>FALSE</code>, provide a 'normal'
+arithmetic mean</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim</code></td>
+<td>
+<p><code>TRUE</code> (default) or <code>FALSE</code>, provide a trimmed mean</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tr</code></td>
+<td>
+<p>a number between 0 and 0.5 (default: 0.2); the proportion of
+measurements to trim from each end when producing trimmed means</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>win</code></td>
+<td>
+<p><code>TRUE</code> or <code>FALSE</code> (default), provide a 'Winsorized'
+mean</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wl</code></td>
+<td>
+<p>a number between 0 and 0.5 (default: 0.2); the level of
+'winsorizing' when producing winsorized means</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mest</code></td>
+<td>
+<p><code>TRUE</code> or <code>FALSE</code> (default), provide an 'M-estimated'
+value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bend</code></td>
+<td>
+<p>a number (default: 1.28), the bending constant to use when
+using M-estimators</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>med</code></td>
+<td>
+<p><code>TRUE</code> or <code>FALSE</code> (default), provide medians</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A results object containing:
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <code>results$table</code> </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> </td>
+<td style="text-align: left;"> the table of descriptives </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>Tables can be converted to data frames with <code>asDF</code> or <code>as.data.frame</code>. For example:
+</p>
+<p><code>results$table$asDF</code>
+</p>
+<p><code>as.data.frame(results$table)</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data('eurosoccer', package='WRS2')
+
+SpainGermany &lt;- subset(eurosoccer, eurosoccer$League == 'Spain' | eurosoccer$League == 'Germany')
+SpainGermany &lt;- droplevels(SpainGermany)
+
+walrus::rdesc(
+    data = SpainGermany,
+    vars = "GoalsGame",
+    splitBy = "League",
+    med = TRUE)
+
+#
+#  ROBUST DESCRIPTIVES
+#
+#  Robust Descriptives
+#  ----------------------------------------------------------
+#                                                    SE
+#  ----------------------------------------------------------
+#    GoalsGame    Germany    Mean            1.46     0.105
+#                            Trimmed mean    1.45    0.1341
+#                            Median          1.43    0.1599
+#
+#                 Spain      Mean            1.45     0.101
+#                            Trimmed mean    1.33    0.0601
+#                            Median          1.30    0.0766
+#  ----------------------------------------------------------
+#
+
+</code></pre>
+
+
+</div>

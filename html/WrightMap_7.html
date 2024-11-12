@@ -1,0 +1,169 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotCI</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Plotting confidence intervals and DIF
+</h2>
+
+<h3>Description</h3>
+
+<p>The <code>plotCI</code> function is intended for graphing confidence intervals. The <code>difplot</code> function is a wrapper for <code>plotCI</code> specifcally intended for examining Differential Item Functioning from ConQuest output.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotCI(ests, errors, labels = "", zeroline = TRUE, incol = "gray", outcol = "blue"
+, main.title = "Statistical Significance Plot", axes = FALSE, xlab = "", pch = 16, ...)
+## Default S3 method:
+difplot(data, grouptype = NULL, group = NULL, item.names = NULL
+, ylim = c(-1, 1), ylab = NULL, ...)
+## S3 method for class 'CQmodel'
+difplot(data, table.name = NULL, grouptype = NULL
+, group = NULL, ...)
+## S3 method for class 'character'
+difplot(data, equation, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<p><code>plotCI</code> parameters:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>ests</code></td>
+<td>
+<p>vector of point estimates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>errors</code></td>
+<td>
+<p>vector of standard errors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>vector of labels for the items.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zeroline</code></td>
+<td>
+<p>logical indicating whether to draw a line at zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>incol</code></td>
+<td>
+<p>color of intervals containing zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outcol</code></td>
+<td>
+<p>color of intervals not containing zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main.title</code></td>
+<td>
+<p>title of the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axes,xlab,pch</code></td>
+<td>
+<p>parameters passed to <code>plot</code>.</p>
+</td>
+</tr>
+</table>
+<p><code>difplot</code> parameters:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A <code>CQmodel</code> object or the name of a ConQuest show file. Can also be a table of parameters taken from ConQuest output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>table.name</code></td>
+<td>
+<p>The RMP table to use for parameters. Should be an interactions table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grouptype</code></td>
+<td>
+<p>The name of the demographic variable (e.g. “gender”).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group</code></td>
+<td>
+<p>The name of the group to test for DIF (e.g. “male”).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item.names</code></td>
+<td>
+<p>vector of item names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>equation</code></td>
+<td>
+<p>string specifying the model equation, if the Summary of Estimation table was not included in the show file. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylim,ylab</code></td>
+<td>
+<p>more parameters passed to <code>plot</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional parameters to pass to <code>plot</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>plotCI</code> function takes point estimates and standard errors as inputs and plots 95 percent confidence intervals in relation to a zero-line. By default, it colors the intervals gray if they include zero, and blue if they do not. The <code>difplot</code> function is a wrapper for <code>plotCI</code> specifcally intended for examining Differential Item Functioning from ConQuest output and expects tables formatted exactly like ConQuest output to work correctly. For plotting DIF from other statistical packages, it is recommended to use <code>plotCI</code> directly.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Torres Irribarra and Rebecca Freund</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">	#Plotting confidence intervals
+	
+	ests &lt;- rnorm(10,sd = .5)
+	errors &lt;- runif(10,min = .1,max = .5)
+	plotCI(ests,errors,ylim = c(-3,3))
+	
+	#DIF plot:
+	
+	fpath &lt;- system.file("extdata", package="WrightMap")
+
+	# equation must be specified because there is no summary of estimation 
+	# table in this example
+	difplot(file.path(fpath,"ex6a.shw"), equation = "item-gender+item*gender") 
+
+</code></pre>
+
+
+</div>

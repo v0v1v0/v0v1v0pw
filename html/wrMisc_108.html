@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>combineAsN</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Combine Vectors From List And Return Basic Count Statistics</h2>
+
+<h3>Description</h3>
+
+<p>The aim of this function is to choose a fixed number (<code>nCombin</code>) of list-elments from <code>lst</code> and count the number of common values/words.
+Furthermore, one can define levels to fine-tune the types of combinations to examine.
+In case multiple combinations for a given level are possible, some basic summary statistics are provided, too.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">combineAsN(
+  lst,
+  lev = NULL,
+  nCombin = 3,
+  remDouble = TRUE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lst</code></td>
+<td>
+<p>(list of character or integer vectors) main input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lev</code></td>
+<td>
+<p>(character) define groups of <code>lst</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nCombin</code></td>
+<td>
+<p>(integer) number of list-elements to combine from <code>lst</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remDouble</code></td>
+<td>
+<p>(logical) remove intra-duplicates (defaults to <code>TRUE</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note of caution :
+With very long lists and/or high numbers of repeats of given levels, however, the computational effort incerases very much (like it does when using <code>table</code>).
+Thus, when exploring all different combinations of large data-sets may easily result in queries consuming many ressources (RAM and processing time) !
+It is recommended to start testing with test smaller sub-groups.
+</p>
+<p>The main idea of this function is to count frequency of terms when combining different drawings.
+For example, you ask students from different cities which are their preferred hobbies, they may have different preference depending on the city ( defined by <code>lev</code>).
+Now, if you want to make groups of 3 students, possibly with one from each city (A ,B and C), you want to count (/estimate) the frequency of different combinations possible.
+Thus, using this function all combinations of the students from city A with the students from city B and C will be made when counting the number of common hobbies (by <code>nCombin</code> students).
+Then, all counting results will be summarized to the average count for the various categories (which hobbies were seen once, twice or 3 times...),
+sem (standard error of the mean) and CI (95
+</p>
+<p>Of course, the number of potential combinations may quickly get very large. Using the argument <code>remDouble=TRUE</code> you can limit the search to
+either finding all students giving the same answer plus all student giving different answers.
+In this case, when a given level appears multiple times, all possible combinations using one of the respective entries will be be made with the other levels.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns an array with 3 dimensions : i)  ii) the combinations of <code>nCombin</code> list-elements,
+iii) the number of counts (n), sem (standard error of the mean), CI (confidence interval) and sd
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>table</code>,  <code>replicateStructure</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## all list-elements are considered equal
+tm1 &lt;- list(a1=LETTERS[1:17], a2=LETTERS[3:19], a3=LETTERS[6:20], a4=LETTERS[8:22])
+combineAsN(tm1, lev=gl(1,4))[,1,]
+
+## different levels/groups in list-elements
+tm4 &lt;- list(a1=LETTERS[1:15], a2=LETTERS[3:16], a3=LETTERS[6:17], a4=LETTERS[8:19],
+  b1=LETTERS[5:19], b2=LETTERS[7:20], b3=LETTERS[11:24], b4=LETTERS[13:25], c1=LETTERS[17:26],
+  d1=LETTERS[4:12], d2=LETTERS[5:11], d3=LETTERS[6:12], e1=LETTERS[7:10])
+te4 &lt;- combineAsN(tm4, nCombin=4, lev=substr(names(tm4),1,1))
+str(te4)
+te4[,,1]
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>combineRedBasedOnCol</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Combine/reduce redundant lines based on specified column</h2>
+
+<h3>Description</h3>
+
+<p>This function works similar to <code>unique</code>, but it takes a matrix as input and considers one specified column to find unique instances.
+It identifies 'repeated' lines of the input-matrix (or data.frame) 'mat' based on (repeated) elements in/of column with name 'colNa' (or column-number).
+Redundant lines (ie repeated lines) will disappear in output.
+Eg used with extracted annotation where 1 gene has many lines for different GO annotation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">combineRedBasedOnCol(mat, colNa, sep = ",", silent = FALSE, callFrom = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mat</code></td>
+<td>
+<p>input matrix or data.frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colNa</code></td>
+<td>
+<p>character vector (length 1) macting 1 column name (if mult only 1st will be used), in case of mult matches only 1st used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep</code></td>
+<td>
+<p>(character) separator (default=",")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>matrix containing the input matrix without lines considered repeated (unique-like)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>findRepeated</code>, <code>firstOfRepLines</code>, <code>organizeAsListOfRepl</code>, <code>combineRedundLinesInList</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">matr &lt;- matrix(c(letters[1:6],"h","h","f","e",LETTERS[1:5]),ncol=3,
+  dimnames=list(letters[11:15],c("xA","xB","xC")))
+combineRedBasedOnCol(matr,colN="xB")
+combineRedBasedOnCol(rbind(matr[1,],matr),colN="xB")
+</code></pre>
+
+
+</div>

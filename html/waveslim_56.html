@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hosking.sim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate Stationary Gaussian Process Using Hosking's Method</h2>
+
+<h3>Description</h3>
+
+<p>Uses exact time-domain method from Hosking (1984) to generate a simulated
+time series from a specified autocovariance sequence.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">hosking.sim(n, acvs)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Length of series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>acvs</code></td>
+<td>
+<p>Autocovariance sequence of series with which to generate, must
+be of length at least <code>n</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Length <code>n</code> time series from true autocovariance sequence
+<code>acvs</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>B. Whitcher
+</p>
+
+
+<h3>References</h3>
+
+<p>Hosking, J. R. M. (1984) Modeling persistence in hydrological
+time series using fractional differencing, <em>Water Resources Research</em>,
+<b>20</b>, No. 12, 1898-1908.
+</p>
+<p>Percival, D. B. (1992) Simulating Gaussian random processes with specified
+spectra, <em>Computing Science and Statistics</em>, <b>22</b>, 534-538.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+dB &lt;- function(x) 10 * log10(x)
+per &lt;- function (z) {
+  n &lt;- length(z)
+  (Mod(fft(z))^2/(2 * pi * n))[1:(n%/%2 + 1)]
+}
+spp.sdf &lt;- function(freq, delta, omega)
+  abs(2 * (cos(2*pi*freq) - cos(2*pi*omega)))^(-2*delta)
+data(acvs.andel8)
+n &lt;- 1024
+## Not run: 
+z &lt;- hosking.sim(n, acvs.andel8[,2])
+per.z &lt;- 2 * pi * per(z)
+par(mfrow=c(2,1), las=1)
+plot.ts(z, ylab="", main="Realization of a Seasonal Long-Memory Process")
+plot(0:(n/2)/n, dB(per.z), type="l", xlab="Frequency", ylab="dB",
+     main="Periodogram")
+lines(0:(n/2)/n, dB(spp.sdf(0:(n/2)/n, .4, 1/12)), col=2)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

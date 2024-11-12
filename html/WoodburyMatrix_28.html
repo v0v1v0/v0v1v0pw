@@ -1,0 +1,204 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WoodburyMatrix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a Woodbury matrix identity matrix</h2>
+
+<h3>Description</h3>
+
+<p>Creates an implicitly defined matrix representing the equation
+</p>
+<p style="text-align: center;"><code class="reqn">A^{-1} + U B^{-1} V,</code>
+</p>
+
+<p>where <code class="reqn">A, U, B</code> and <code class="reqn">V</code> are n x n, n x p, p x p and p x n matrices,
+respectively. A symmetric special case is also possible with
+</p>
+<p style="text-align: center;"><code class="reqn">A^{-1} + X B^{-1} X',</code>
+</p>
+
+<p>where <code class="reqn">X</code> is n x p and <code class="reqn">A</code> and <code class="reqn">B</code> are additionally symmetric.
+The available methods are described in WoodburyMatrix-class
+and in solve. Multiple B / U / V / X matrices are also supported; see
+below
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WoodburyMatrix(A, B, U, V, X, O, symmetric)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>A</code></td>
+<td>
+<p>Matrix <code class="reqn">A</code> in the definition above.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+<p>Matrix <code class="reqn">B</code> in the definition above, or list of matrices.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>U</code></td>
+<td>
+<p>Matrix <code class="reqn">U</code> in the definition above, or list of matrices.
+Defaults to a diagonal matrix/matrices.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>V</code></td>
+<td>
+<p>Matrix <code class="reqn">V</code> in the definition above, or list of matrices.
+Defaults to a diagonal matrix/matrices.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Matrix <code class="reqn">X</code> in the definition above, or list of matrices.
+Defaults to a diagonal matrix/matrices.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>O</code></td>
+<td>
+<p>Optional, precomputed value of <code class="reqn">O</code>, as defined above. THIS IS
+NOT CHECKED FOR CORRECTNESS, and this argument is only provided for advanced
+users who have precomputed the matrix for other purposes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>symmetric</code></td>
+<td>
+<p>Logical value, whether to create a symmetric or general
+matrix. See Details section for more information.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The benefit of using an implicit representation is that the inverse
+of this matrix can be efficiently calculated via
+</p>
+<p style="text-align: center;"><code class="reqn">A - A U O^{-1} V A</code>
+</p>
+
+<p>where <code class="reqn">O = B + VAU</code>, and its determinant by
+</p>
+<p style="text-align: center;"><code class="reqn">det(O) det(A)^{-1} det(B)^{-1}.</code>
+</p>
+
+<p>These relationships are often called the Woodbury matrix identity and the
+matrix determinant lemma, respectively. If <code class="reqn">A</code> and <code class="reqn">B</code> are sparse or
+otherwise easy to deal with, and/or when <code class="reqn">p &lt; n</code>, manipulating the
+matrices via these relationships rather than forming <code class="reqn">W</code> directly can
+have huge advantageous because it avoids having to create the (typically
+dense) matrix </p>
+<p style="text-align: center;"><code class="reqn">A^{-1} + U B^{-1} V</code>
+</p>
+<p> directly.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>GWoodburyMatrix</code> object for a non-symmetric
+matrix, <code>SWoodburyMatrix</code> for a symmetric matrix.
+</p>
+
+
+<h3>Symmetric form</h3>
+
+<p>Where applicable, it's worth using the symmetric form of the matrix. This
+takes advantage of the symmetry where possible to speed up operations, takes
+less memory, and sometimes has numerical benefits. This function will create
+the symmetric form in the following circumstances:
+</p>
+
+<ul>
+<li> <p><code>symmetry = TRUE</code>; or
+</p>
+</li>
+<li>
+<p> the argument <code>X</code> is provided; or
+</p>
+</li>
+<li> <p><code>A</code> and <code>B</code> are symmetric (according to
+<code>isSymmetric</code>) and the arguments <code>U</code> and <code>V</code> are
+NOT provided.
+</p>
+</li>
+</ul>
+<h3>Multiple B matrices</h3>
+
+<p>A more general form allows for multiple B matrices:
+</p>
+<p style="text-align: center;"><code class="reqn">A^{-1} + \sum_{i = 1}^n U_i B_i^{-1} V_i,</code>
+</p>
+
+<p>and analogously for the symmetric form. You can use this form by providing
+a list of matrices as the <code>B</code> (or <code>U</code>, <code>V</code> or <code>X</code>)
+arguments. Internally, this is implemented by converting to the standard form
+by letting <code>B = bdiag(...the B matrices...)</code>,
+<code>U = cbind(..the U matrices...)</code>, and so on.
+</p>
+<p>The <code>B</code>, <code>U</code>, <code>V</code> and <code>X</code> values are recycled to the
+length of the longest list, so you can, for instance, provide multiple B
+matrices but only one U matrix (and vice-versa).
+</p>
+
+
+<h3>References</h3>
+
+<p>More information on the underlying linear algebra can be found
+in Harville, D. A. (1997) &lt;doi:10.1007/b98818&gt;.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>WoodburyMatrix, solve, instantiate
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(Matrix)
+# Example solving a linear system with general matrices
+A &lt;- Diagonal(100)
+B &lt;- rsparsematrix(100, 100, 0.5)
+W &lt;- WoodburyMatrix(A, B)
+str(solve(W, rnorm(100)))
+
+# Calculating the determinant of a symmetric system
+A &lt;- Diagonal(100)
+B &lt;- rsparsematrix(100, 100, 0.5, symmetric = TRUE)
+W &lt;- WoodburyMatrix(A, B, symmetric = TRUE)
+print(determinant(W))
+
+# Having a lower rank B matrix and an X matrix
+A &lt;- Diagonal(100)
+B &lt;- rsparsematrix(10, 10, 1, symmetric = TRUE)
+X &lt;- rsparsematrix(100, 10, 1)
+W &lt;- WoodburyMatrix(A, B, X = X)
+str(solve(W, rnorm(100)))
+
+# Multiple B matrices
+A &lt;- Diagonal(100)
+B1 &lt;- rsparsematrix(100, 100, 1, symmetric = TRUE)
+B2 &lt;- rsparsematrix(100, 100, 1, symmetric = TRUE)
+W &lt;- WoodburyMatrix(A, B = list(B1, B2))
+str(solve(W, rnorm(100)))
+</code></pre>
+
+
+</div>

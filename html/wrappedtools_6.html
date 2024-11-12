@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ColSeeker</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find numeric index and names of columns based on class(es) and patterns</h2>
+
+<h3>Description</h3>
+
+<p><code>ColSeeker</code> looks up colnames (by default for tibble rawdata)
+based on type and parts of names, using regular expressions.
+Be warned that special characters as e.g. <code>[</code> <code>(</code> need to be escaped or replaced by <code>.</code>
+Exclusion rules may be specified as well.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ColSeeker(
+  data = rawdata,
+  namepattern = ".",
+  varclass = NULL,
+  exclude = NULL,
+  excludeclass = NULL,
+  casesensitive = TRUE,
+  returnclass = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>tibble or data.frame, where columns are to be found; by default rawdata</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>namepattern</code></td>
+<td>
+<p>Vector of pattern to look for.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varclass</code></td>
+<td>
+<p>Vector, only columns of defined class(es) are returned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclude</code></td>
+<td>
+<p>Vector of pattern to exclude from found names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>excludeclass</code></td>
+<td>
+<p>Vector, exclude columns of specified class(es)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>casesensitive</code></td>
+<td>
+<p>Logical if case is respected in matching (default FALSE: a&lt;&gt;A)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnclass</code></td>
+<td>
+<p>Logical if classes should be included in output</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with index, names, backticked names, and count;  optionally the classes as well
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">ColSeeker(data = mtcars, namepattern = c("^c", "g"))
+ColSeeker(data = mtcars, namepattern = c("^c", "g"), exclude = "r")
+assign("rawdata", mtcars)
+ColSeeker(namepattern = c("^c", "g"), varclass="numeric")
+num_int_data &lt;- data.frame(num1=rnorm(10), num2=runif(10), int1=1:10, int2=11:20)
+ColSeeker(num_int_data, varclass="numeric")  # integers are not found
+ColSeeker(num_int_data, varclass=c("numeric","integer")) 
+</code></pre>
+
+
+</div>

@@ -1,0 +1,206 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>keymetrics_scan</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Run a summary of Key Metrics from the Standard Person Query data</h2>
+
+<h3>Description</h3>
+
+<p>Returns a heatmapped table by default, with options to return a table.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">keymetrics_scan(
+  data,
+  hrvar = "Organization",
+  mingroup = 5,
+  metrics = c("Workweek_span", "Collaboration_hours", "After_hours_collaboration_hours",
+    "Meetings", "Meeting_hours", "After_hours_meeting_hours",
+    "Low_quality_meeting_hours", "Meeting_hours_with_manager_1_on_1",
+    "Meeting_hours_with_manager", "Emails_sent", "Email_hours",
+    "After_hours_email_hours", "Generated_workload_email_hours", "Total_focus_hours",
+    "Internal_network_size", "Networking_outside_organization", "External_network_size",
+    "Networking_outside_company"),
+  return = "plot",
+  low = rgb2hex(7, 111, 161),
+  mid = rgb2hex(241, 204, 158),
+  high = rgb2hex(216, 24, 42),
+  textsize = 2
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A Standard Person Query dataset in the form of a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hrvar</code></td>
+<td>
+<p>String containing the name of the HR Variable by which to split
+metrics. Defaults to <code>"Organization"</code>. To run the analysis on the total
+instead of splitting by an HR attribute, supply <code>NULL</code> (without quotes).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mingroup</code></td>
+<td>
+<p>Numeric value setting the privacy threshold / minimum group
+size. Defaults to 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metrics</code></td>
+<td>
+<p>A character vector containing the variable names to calculate
+averages of.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>Character vector specifying what to return, defaults to "plot".
+Valid inputs are "plot" and "table".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>low</code></td>
+<td>
+<p>String specifying colour code to use for low-value metrics.
+Arguments are passed directly to <code>ggplot2::scale_fill_gradient2()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mid</code></td>
+<td>
+<p>String specifying colour code to use for mid-value metrics.
+Arguments are passed directly to <code>ggplot2::scale_fill_gradient2()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>high</code></td>
+<td>
+<p>String specifying colour code to use for high-value metrics.
+Arguments are passed directly to <code>ggplot2::scale_fill_gradient2()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>textsize</code></td>
+<td>
+<p>A numeric value specifying the text size to show in the plot.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a ggplot object by default, when <code>'plot'</code> is passed in <code>return</code>.
+When <code>'table'</code> is passed, a summary table is returned as a data frame.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Visualization: 
+<code>afterhours_dist()</code>,
+<code>afterhours_fizz()</code>,
+<code>afterhours_line()</code>,
+<code>afterhours_rank()</code>,
+<code>afterhours_summary()</code>,
+<code>afterhours_trend()</code>,
+<code>collaboration_area()</code>,
+<code>collaboration_dist()</code>,
+<code>collaboration_fizz()</code>,
+<code>collaboration_line()</code>,
+<code>collaboration_rank()</code>,
+<code>collaboration_sum()</code>,
+<code>collaboration_trend()</code>,
+<code>create_bar()</code>,
+<code>create_bar_asis()</code>,
+<code>create_boxplot()</code>,
+<code>create_bubble()</code>,
+<code>create_dist()</code>,
+<code>create_fizz()</code>,
+<code>create_inc()</code>,
+<code>create_line()</code>,
+<code>create_line_asis()</code>,
+<code>create_period_scatter()</code>,
+<code>create_rank()</code>,
+<code>create_sankey()</code>,
+<code>create_scatter()</code>,
+<code>create_stacked()</code>,
+<code>create_tracking()</code>,
+<code>create_trend()</code>,
+<code>email_dist()</code>,
+<code>email_fizz()</code>,
+<code>email_line()</code>,
+<code>email_rank()</code>,
+<code>email_summary()</code>,
+<code>email_trend()</code>,
+<code>external_dist()</code>,
+<code>external_fizz()</code>,
+<code>external_line()</code>,
+<code>external_network_plot()</code>,
+<code>external_rank()</code>,
+<code>external_sum()</code>,
+<code>hr_trend()</code>,
+<code>hrvar_count()</code>,
+<code>hrvar_trend()</code>,
+<code>internal_network_plot()</code>,
+<code>meeting_dist()</code>,
+<code>meeting_fizz()</code>,
+<code>meeting_line()</code>,
+<code>meeting_quality()</code>,
+<code>meeting_rank()</code>,
+<code>meeting_summary()</code>,
+<code>meeting_trend()</code>,
+<code>meetingtype_dist()</code>,
+<code>meetingtype_dist_ca()</code>,
+<code>meetingtype_dist_mt()</code>,
+<code>meetingtype_summary()</code>,
+<code>mgrcoatt_dist()</code>,
+<code>mgrrel_matrix()</code>,
+<code>one2one_dist()</code>,
+<code>one2one_fizz()</code>,
+<code>one2one_freq()</code>,
+<code>one2one_line()</code>,
+<code>one2one_rank()</code>,
+<code>one2one_sum()</code>,
+<code>one2one_trend()</code>,
+<code>period_change()</code>,
+<code>workloads_dist()</code>,
+<code>workloads_fizz()</code>,
+<code>workloads_line()</code>,
+<code>workloads_rank()</code>,
+<code>workloads_summary()</code>,
+<code>workloads_trend()</code>,
+<code>workpatterns_area()</code>,
+<code>workpatterns_rank()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Heatmap plot is returned by default
+keymetrics_scan(sq_data)
+
+# Heatmap plot with custom colours
+keymetrics_scan(sq_data, low = "purple", high = "yellow")
+
+# Return summary table
+keymetrics_scan(sq_data, hrvar = "LevelDesignation", return = "table")
+
+
+</code></pre>
+
+
+</div>

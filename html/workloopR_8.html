@@ -1,0 +1,345 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read_analyze_wl</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>All-in-one import function for work loop files</h2>
+
+<h3>Description</h3>
+
+<p><code>read_analyze_wl()</code> is an all-in-one function to read in a work loop
+file, select cycles, and compute work and power output.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read_analyze_wl(file_name, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file_name</code></td>
+<td>
+<p>A .ddf file that contains data from a
+single workloop experiment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to be passed to <code>read_ddf()</code>,
+<code>select_cycles()</code>,
+or <code>analyze_workloop()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Please be careful with units! See Warnings below. This function
+combines <code>read_ddf()</code> with <code>select_cycles()</code> and then ultimately
+<code>analyze_workloop()</code> into one handy function.
+</p>
+<p>As detailed in these three functions, possible arguments include: <br><code>cycle_def</code> - used to specify which part of the cycle is understood as
+the beginning and end. There are currently three options: 'lo' for L0-to-L0;
+'p2p' for peak-to-peak; and 't2t' for trough-to-trough <br><code>bworth_order</code> - Filter order for low-pass filtering of <code>Position</code>
+via <code>signal::butter</code> prior to finding peak lengths. Default: 2. <br><code>bworth_freq</code> - Critical frequency (scalar) for low-pass filtering of
+<code>Position</code> via <code>signal::butter</code> prior to finding peak lengths.
+Default: 0.05. <br><code>keep_cycles</code> - Which cycles should be retained. Default: 4:6. <br><code>GR</code> - Gear ratio. Default: 1. <br><code>M</code> - Velocity multiplier used to positivize velocity; should be either
+-1 or 1. Default: -1. <br><code>vel_bf</code> - Critical frequency (scalar) for low-pass filtering of
+velocity via <code>signal::butter</code>. Default: 0.05. <br></p>
+<p>The gear ratio (GR) and velocity multiplier (M) parameters can help correct
+for issues related to the magnitude and sign of data collection. By
+default, they are set to apply no gear ratio adjustment and to positivize
+velocity. Instantaneous velocity is often noisy and the <code>vel_bf</code>
+parameter allows for low-pass filtering of velocity data. See
+<code>signal::butter()</code> and <code>signal::filtfilt()</code> for details of how
+filtering is achieved.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The function returns a <code>list</code> of class <code>analyzed_workloop</code>
+that provides instantaneous velocity, a smoothed velocity, and computes work,
+instantaneous power, and net power from a work loop experiment. All data are
+organized by the cycle number and important metadata are stored as
+Attributes.
+</p>
+<p>Within the <code>list</code>, each entry is labeled by cycle and includes:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Time</code></td>
+<td>
+<p>Time, in sec</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Position</code></td>
+<td>
+<p>Length change of the muscle, corrected for gear ratio, in mm</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Force</code></td>
+<td>
+<p>Force, corrected for gear ratio, in mN</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Stim</code></td>
+<td>
+<p>When stimulation occurs, on a binary scale</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Cycle</code></td>
+<td>
+<p>Cycle ID, as a letter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Inst_velocity</code></td>
+<td>
+<p>Instantaneous velocity, computed from <code>Position</code>
+change, reported in meters/sec</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Filt_velocity</code></td>
+<td>
+<p>Instantaneous velocity, after low-pass filtering, again
+in meter/sec</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Inst_Power</code></td>
+<td>
+<p>Instantaneous power, a product of <code>Force</code> and
+<code>Filt_velocity</code>, reported in J</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Percent_of_Cycle</code></td>
+<td>
+<p>The percent of that particular cycle which has
+elapsed</p>
+</td>
+</tr>
+</table>
+<p>In addition, the following information is stored in the
+<code>analyzed_workloop</code> object's attributes:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>stimulus_frequency</code></td>
+<td>
+<p>Frequency at which stimulus pulses occurred</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cycle_frequency</code></td>
+<td>
+<p>Frequency of oscillations (assuming sine wave
+trajectory)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>total_cycles</code></td>
+<td>
+<p>Total number of oscillatory cycles (assuming sine wave
+trajectory) that the muscle experienced.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cycle_def</code></td>
+<td>
+<p>Specifies what part of the cycle is understood as the
+beginning and end. There are currently three options:
+'lo' for L0-to-L0;
+'p2p' for peak-to-peak; and
+'t2t' for trough-to-trough</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>amplitude</code></td>
+<td>
+<p>Amplitude of length change (assuming sine wave
+trajectory)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>phase</code></td>
+<td>
+<p>Phase of the oscillatory cycle (in percent) at which stimulation
+occurred. Somewhat experimental, please use with caution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>position_inverted</code></td>
+<td>
+<p>Logical; whether position inversion has been
+applied)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>units</code></td>
+<td>
+<p>The units of measurement for each column in the object after
+running this function. See Warning</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sample_frequency</code></td>
+<td>
+<p>Frequency at which samples were collected</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>header</code></td>
+<td>
+<p>Additional information from the header</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>units_table</code></td>
+<td>
+<p>Units from each Channel of the original ddf file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>protocol_table</code></td>
+<td>
+<p>Protocol in tabular format; taken from the original
+ddf file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stim_table</code></td>
+<td>
+<p>Specific info on stimulus protocol; taken from the original
+ddf file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stimulus_pulses</code></td>
+<td>
+<p>Number of sequential pulses within a stimulation
+train</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stimulus_offset</code></td>
+<td>
+<p>Timing offset at which stimulus began</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gear_ratio</code></td>
+<td>
+<p>Gear ratio applied by this function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file_id</code></td>
+<td>
+<p>File name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mtime</code></td>
+<td>
+<p>Time at which file was last modified</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>retained_cycles</code></td>
+<td>
+<p>Which cycles were retained, as numerics</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>summary</code></td>
+<td>
+<p>Simple table showing work (in J) and net power (in W) for each
+cycle</p>
+</td>
+</tr>
+</table>
+<h3>Warning</h3>
+
+<p>Most systems we have encountered record Position data in millimeters
+and Force in millinewtons, and therefore this function assumes data are
+recorded in those units. Through a series of internal conversions, this
+function computes velocity in meters/sec, work in Joules, and power in
+Watts. If your raw data do not originate in millimeters and millinewtons,
+please transform your data accordingly and ignore what you see in the
+attribute <code>units</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Vikram B. Baliga
+</p>
+
+
+<h3>References</h3>
+
+<p>Josephson RK. 1985. Mechanical Power output from Striated Muscle
+during Cyclic Contraction. Journal of Experimental Biology 114: 493-512.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read_ddf</code>,
+<code>select_cycles</code>
+<code>analyze_workloop</code>
+</p>
+<p>Other data analyses: 
+<code>analyze_workloop()</code>,
+<code>isometric_timing()</code>,
+<code>read_analyze_wl_dir()</code>
+</p>
+<p>Other data import functions: 
+<code>as_muscle_stim()</code>,
+<code>get_wl_metadata()</code>,
+<code>read_analyze_wl_dir()</code>,
+<code>read_ddf_dir()</code>,
+<code>read_ddf()</code>
+</p>
+<p>Other workloop functions: 
+<code>analyze_workloop()</code>,
+<code>fix_GR()</code>,
+<code>get_wl_metadata()</code>,
+<code>invert_position()</code>,
+<code>read_analyze_wl_dir()</code>,
+<code>select_cycles()</code>,
+<code>summarize_wl_trials()</code>,
+<code>time_correct()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(workloopR)
+
+# import the workloop.ddf file included in workloopR and analyze with
+# a gear ratio correction of 2 and cycle definition of peak-to-peak
+wl_dat &lt;- read_analyze_wl(system.file("extdata", "workloop.ddf",
+                                      package = 'workloopR'),
+                          phase_from_peak = TRUE,
+                          GR = 2, cycle_def = "p2p")
+
+
+</code></pre>
+
+
+</div>

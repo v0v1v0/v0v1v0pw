@@ -1,0 +1,285 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>vioplotW</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Violin-plots version W</h2>
+
+<h3>Description</h3>
+
+<p>This function allows generating <a href="https://en.wikipedia.org/wiki/Violin_plot">Violin plots</a>) using a variety of input formats and offers additional options for colors.
+Main input may be multiple vectors, a matrix or list of multiple data-elements (entries may be of variable length),
+individual colors for different sets of data or color-gradients can be specified, and the display of n per set of data was integtated
+(based on an inspiration from the discussion 'Removing-NAs-from-dataframe-for-use-in-Vioplot' on the forum Nabble).
+It is also possible to plot pairwise half-violins for easier pairwise-comparisons (using <code>halfViolin="pairwise"</code>).
+Many arguments are kept similar to <a href="https://CRAN.R-project.org/package=vioplot">vioplot</a> (here, the package <code>vioplot</code> is not required/used).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">vioplotW(
+  x,
+  ...,
+  finiteOnly = TRUE,
+  removeEmpty = FALSE,
+  halfViolin = FALSE,
+  boxCol = "def",
+  hh = NULL,
+  xlim = NULL,
+  ylim = NULL,
+  nameSer = NULL,
+  cexNameSer = NULL,
+  horizontal = FALSE,
+  col = "rainbow",
+  border = "black",
+  xlab = NULL,
+  ylab = NULL,
+  cexLab = NULL,
+  cexAxis = NULL,
+  lty = 1,
+  pointCol = NULL,
+  cexPt = NULL,
+  tit = NULL,
+  las = 1,
+  lwd = 1,
+  rectCol = "black",
+  at = 0,
+  add = FALSE,
+  wex = NULL,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(matrix, list or data.frame) data to plot, or first series of data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>(numeric) additional sets of data to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>finiteOnly</code></td>
+<td>
+<p>(logical) eliminate non-finite elements to avoid potential errors (eg when encountering <code>NA</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>removeEmpty</code></td>
+<td>
+<p>(logical) omit empty series (or less than 4 finite numeric entries) of data from plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>halfViolin</code></td>
+<td>
+<p>(logical or character) decide with <code>TRUE</code> or <code>FALSE</code> if full or only half of violins should be plotted, if "pairwise" always 2 data-sets will be plotted back-to-back</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boxCol</code></td>
+<td>
+<p>(character) decide if boxplot should be adde inside the violin, use "def" for default transparent grey</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hh</code></td>
+<td>
+<p>(numeric, length &lt;4) smoothing parameter (standard deviation to kernel function, if omited anormal optimal smoothing parameter is used); equivalent to argument <code>h</code> in package  <a href="https://CRAN.R-project.org/package=vioplot">vioplot</a> ; see also <code>sm.density</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim</code></td>
+<td>
+<p>(<code>NULL</code> or numeric, length=2) custom limit on x-axis, see also <code>par</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylim</code></td>
+<td>
+<p>(<code>NULL</code> or numeric, length=2) custom limit on y-axis, see also <code>par</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nameSer</code></td>
+<td>
+<p>(character) custom label for data-sets or columns (length must match number of data-sets)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexNameSer</code></td>
+<td>
+<p>(numeric) size of individual data-series labels as cex-expansion factor (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>horizontal</code></td>
+<td>
+<p>(logical) orientation of plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>(character or integer) custom colors or gradients like 'rainbow', 'grayscale', 'heat.colors', 'topo.colors', 'Spectral' or 'Paired',  or you may use colors made by the package <a href="https://CRAN.R-project.org/package=colorRamps">colorRamps</a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>border</code></td>
+<td>
+<p>(character) custom color for figure border</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>(character) custom x-axis label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>(character) custom y-axis label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexLab</code></td>
+<td>
+<p>(numeric) size of axis labels as cex-expansion factor (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexAxis</code></td>
+<td>
+<p>(numeric) size of numeric y-axis labels as cex-expansion factor (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lty</code></td>
+<td>
+<p>(integer) line-type for linear regression line (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pointCol</code></td>
+<td>
+<p>(character or numeric) display of median: color (defauly white)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexPt</code></td>
+<td>
+<p>(numeric) display of median : size of point as cex-expansion factor (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tit</code></td>
+<td>
+<p>(character) custom title to figure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>las</code></td>
+<td>
+<p>(integer) orientation of axis labels (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd</code></td>
+<td>
+<p>(integer) width of line(s) (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rectCol</code></td>
+<td>
+<p>(character) color of rectangle</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>at</code></td>
+<td>
+<p>(numeric) custom locoation of data-series names, ie the points at which tick-marks are to be drawn, will be passed to <code>axis</code>, it's length ust match the number of data-sets</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add</code></td>
+<td>
+<p>(logical) add to existing plot if <code>TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wex</code></td>
+<td>
+<p>(integer) relative expansion factor of the violin</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The (relative) width of the density-profiles ('Violins') may be manually adjusted using the parameter <code>wex</code> which applieds to all profiles drawn.
+Please note that different n (eg for different columns) will not be shown, so far.
+</p>
+<p>Note : Arguments have to be given with full names, lazy evaluation of arguments will not work properly with this function (since '...' is used to capture additional data-sets).
+Note : <a href="https://CRAN.R-project.org/package=vioplot">vioplot</a> offers better options for plotting formulas
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function plots a figure (to the current graphical device)
+</p>
+
+
+<h3>See Also</h3>
+
+<p>the package <a href="https://CRAN.R-project.org/package=vioplot">vioplot</a>, <code>sm</code> is used for the density estimation
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2013)
+dat6 &lt;- matrix(round(rnorm(300) +3, 1), ncol=6,
+	 dimnames=list(paste0("li",1:50), letters[19:24]))
+vioplotW(dat6)
+## variable number of elements (each n is displayed)
+dat6b &lt;- apply(dat6, 2, function(x) x[which(x &lt; 5)])
+dat6b[[4]] &lt;- dat6b[[4]][dat6b[[4]] &lt; 4]
+vioplotW(dat6b, col="Spectral")
+vioplotW(dat6b, col="Spectral" ,halfViolin="pairwise", horizontal=TRUE)
+vioplotW(dat6b, col="Spectral", halfViolin="pairwise", horizontal=FALSE)
+</code></pre>
+
+
+</div>

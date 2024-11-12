@@ -1,0 +1,146 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>as.weightit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a <code>weightit</code> object manually</h2>
+
+<h3>Description</h3>
+
+<p>This function allows users to get the benefits of a <code>weightit</code> object
+when using weights not estimated with <code>weightit()</code> or <code>weightitMSM()</code>. These
+benefits include diagnostics, plots, and direct compatibility with
+<span class="pkg">cobalt</span> for assessing balance.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">as.weightit(x, ...)
+
+## S3 method for class 'weightit.fit'
+as.weightit(x, covs = NULL, ...)
+
+## Default S3 method:
+as.weightit(
+  x,
+  treat,
+  covs = NULL,
+  estimand = NULL,
+  s.weights = NULL,
+  ps = NULL,
+  ...
+)
+
+as.weightitMSM(x, ...)
+
+## Default S3 method:
+as.weightitMSM(
+  x,
+  treat.list,
+  covs.list = NULL,
+  estimand = NULL,
+  s.weights = NULL,
+  ps.list = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>required; a <code>numeric</code> vector of weights, one for each
+unit, or a <code>weightit.fit</code> object from <code>weightit.fit()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments. These must be named. They will be included
+in the output object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>covs</code></td>
+<td>
+<p>an optional <code>data.frame</code> of covariates. For using
+<span class="pkg">WeightIt</span> functions, this is not necessary, but for use with
+<span class="pkg">cobalt</span> it is. Note that when using with a <code>weightit.fit</code> object, this should not be the matrix supplied to the <code>covs</code> argument of <code>weightit.fit()</code> unless there are no factor/character variables in it. Ideally this is the original, unprocessed covariate data frame with factor variables included.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>treat</code></td>
+<td>
+<p>a vector of treatment statuses, one for each unit. Required when <code>x</code> is a vector of weights.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimand</code></td>
+<td>
+<p>an optional <code>character</code> of length 1 giving the
+estimand. The text is not checked.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s.weights</code></td>
+<td>
+<p>an optional <code>numeric</code> vector of sampling weights, one
+for each unit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ps</code></td>
+<td>
+<p>an optional <code>numeric</code> vector of propensity scores, one for
+each unit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>treat.list</code></td>
+<td>
+<p>a list of treatment statuses at each time point.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>covs.list</code></td>
+<td>
+<p>an optional list of <code>data.frame</code>s of covariates of
+covariates at each time point. For using <span class="pkg">WeightIt</span> functions, this is
+not necessary, but for use with <span class="pkg">cobalt</span> it is.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ps.list</code></td>
+<td>
+<p>an optional list of <code>numeric</code> vectors of propensity
+scores at each time point.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class <code>weightit</code> (for <code>as.weightit()</code>) or <code>weightitMSM</code> (for <code>as.weightitMSM()</code>).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+treat &lt;- rbinom(500, 1, .3)
+weights &lt;- rchisq(500, df = 2)
+
+W &lt;- as.weightit(weights, treat = treat, estimand = "ATE")
+summary(W)
+
+# See ?weightit.fit for using as.weightit() with a
+# weightit.fit object.
+
+</code></pre>
+
+
+</div>

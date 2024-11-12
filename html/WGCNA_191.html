@@ -1,0 +1,217 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pickSoftThreshold</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Analysis of scale free topology for soft-thresholding </h2>
+
+<h3>Description</h3>
+
+<p>Analysis of scale free topology for multiple soft thresholding powers. The aim is to help the user pick
+an appropriate soft-thresholding power for network construction.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pickSoftThreshold(
+  data, 
+  dataIsExpr = TRUE,
+  weights = NULL,
+  RsquaredCut = 0.85, 
+  powerVector = c(seq(1, 10, by = 1), seq(12, 20, by = 2)), 
+  removeFirst = FALSE, nBreaks = 10, blockSize = NULL, 
+  corFnc = cor, corOptions = list(use = 'p'), 
+  networkType = "unsigned",
+  moreNetworkConcepts = FALSE,
+  gcInterval = NULL,
+  verbose = 0, indent = 0)
+
+pickSoftThreshold.fromSimilarity(
+    similarity,
+    RsquaredCut = 0.85, 
+    powerVector = c(seq(1, 10, by = 1), seq(12, 20, by = 2)),
+    removeFirst = FALSE, nBreaks = 10, blockSize = 1000,
+    moreNetworkConcepts=FALSE, 
+    verbose = 0, indent = 0)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p> expression data in a matrix or data frame. Rows correspond to samples and columns to
+genes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dataIsExpr</code></td>
+<td>
+<p> logical: should the data be interpreted as expression (or other numeric) data, or as a
+similarity matrix of network nodes? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>optional observation weights for <code>data</code> to be used in correlation calculation.
+A matrix of the same dimensions as <code>datExpr</code>, containing non-negative weights. Only used with Pearson
+correlation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>similarity</code></td>
+<td>
+<p> similarity matrix: a symmetric matrix with entries between 0 and 1 and unit diagonal. The only
+transformation applied to <code>similarity</code> is raising it to a power. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>RsquaredCut</code></td>
+<td>
+<p> desired minimum scale free topology fitting index <code class="reqn">R^2</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>powerVector</code></td>
+<td>
+<p> a vector of soft thresholding powers for which the scale free topology fit indices
+are to be calculated. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>removeFirst</code></td>
+<td>
+<p> should the first bin be removed from the connectivity histogram? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nBreaks</code></td>
+<td>
+<p> number of bins in connectivity histograms </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blockSize</code></td>
+<td>
+<p> block size into which the calculation of connectivity should be broken up. If not given,
+a suitable value will be calculated using function <code>blockSize</code> and printed if <code>verbose&gt;0</code>. If R runs
+into memory problems, decrease this value. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corFnc</code></td>
+<td>
+<p>the correlation function to be used in adjacency calculation. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corOptions</code></td>
+<td>
+<p> a list giving further options to the correlation function specified in <code>corFnc</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkType</code></td>
+<td>
+<p> network type. Allowed values are (unique abbreviations of) <code>"unsigned"</code>,
+<code>"signed"</code>, <code>"signed hybrid"</code>. See <code>adjacency</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>moreNetworkConcepts</code></td>
+<td>
+<p>logical: should additional network concepts be calculated? If <code>TRUE</code>, the
+function will calculate how the network density, the network heterogeneity, and the network centralization
+depend on the power. For the definition of these additional network concepts, see Horvath and Dong (2008).
+PloS Comp Biol.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gcInterval</code></td>
+<td>
+<p>a number specifying in interval (in terms of individual genes) in which garbage
+collection will be performed. The actual interval will never be less than <code>blockSize</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function calculates weighted networks either by
+interpreting <code>data</code> directly as similarity, or first transforming it to similarity of the type
+specified by <code>networkType</code>.
+The weighted networks are obtained by raising the similarity to the powers given in <code>powerVector</code>. 
+For each power the scale free topology fit index is calculated
+and returned along with other information on connectivity.
+</p>
+<p>On systems with multiple cores or processors, 
+the function pickSoftThreshold takes advantage of parallel processing if the function 
+<code>enableWGCNAThreads</code> has been called to allow parallel processing and set up the parallel
+calculation back-end.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>powerEstimate</code></td>
+<td>
+<p> estimate of an appropriate soft-thresholding power: the lowest power for which
+the scale free topology fit <code class="reqn">R^2</code> exceeds <code>RsquaredCut</code>. If <code class="reqn">R^2</code> is below <code>RsquaredCut</code> 
+for all powers, <code>NA</code> is returned. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitIndices</code></td>
+<td>
+<p> a data frame containing the fit indices for scale free topology. The columns
+contain the soft-thresholding power, adjusted <code class="reqn">R^2</code> for the linear fit, the linear coefficient, adjusted
+<code class="reqn">R^2</code> for a more complicated fit models, mean connectivity, median connectivity and maximum
+connectivity. If input <code>moreNetworkConcepts</code> is <code>TRUE</code>, 3 additional columns containing network
+density, centralization, and heterogeneity.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p> Steve Horvath and Peter Langfelder </p>
+
+
+<h3>References</h3>
+
+<p> Bin Zhang and Steve Horvath (2005) "A General Framework for Weighted Gene Co-Expression
+Network Analysis", Statistical Applications in Genetics and Molecular Biology: Vol. 4: No. 1, Article 17
+</p>
+<p>Horvath S, Dong J (2008) Geometric Interpretation of Gene Coexpression Network Analysis. PLoS Comput Biol
+4(8): e1000117 
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>adjacency</code>, <code>softConnectivity</code> </p>
+
+
+</div>

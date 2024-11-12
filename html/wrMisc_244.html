@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>singleLineAnova</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>2-factorial Anova on single line of data</h2>
+
+<h3>Description</h3>
+
+<p>This function runs 2-factorial Anova on a single line of data (using <code>aov</code> from package <code>stats</code>) 
+using a model with two factors (without factor-interaction) and extracts the correpsonding p-value.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">singleLineAnova(
+  dat,
+  fac1,
+  fac2,
+  inclInteraction = TRUE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>numeric vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fac1</code></td>
+<td>
+<p>(character or factor) vector describing grouping elements of dat for first factor, must be of same langth as fac2</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fac2</code></td>
+<td>
+<p>(character or factor) vector describing grouping elements of dat for second factor, must be of same langth as fac1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inclInteraction</code></td>
+<td>
+<p>(logical) decide if factor-interactions (eg synergy) should be included to model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns the (uncorrected) p for factor 'Pr(&gt;F)' (see <code>aov</code>)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>aov</code>, <code>anova</code>; for repeated tests using the  package <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a> including <code>lmFit</code> and <code>eBayes</code> see <code>test2factLimma</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2012); dat &lt;- round(runif(8),1)
+singleLineAnova(dat, gl(2,4),rep(1:2,4))
+</code></pre>
+
+
+</div>

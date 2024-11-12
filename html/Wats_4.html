@@ -1,0 +1,59 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>augment_cycle_data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculates variables necessary for WATS Plots</h2>
+
+<h3>Description</h3>
+
+<p>Calculates variables necessary for WATS Plots.  This the first of two functions
+that needs to be called to produce WATS Plots.  <code>annotate_data()</code> is the second.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">augment_year_data_with_month_resolution(ds_linear, date_name)
+augment_year_data_with_second_resolution(ds_linear, date_name)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ds_linear</code></td>
+<td>
+<p>The data.frame to containing the detailed data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date_name</code></td>
+<td>
+<p>The variable name in <code>ds_linear</code> containing the date or datetime value.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a tibble::tibble with additional variables:
+<code>cycle_tally</code>, <code>proportion_through_cycle</code>, <code>proportion_id</code>, and <code>terminal_point_in_cycle</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(Wats)
+ds_linear &lt;-
+  Wats::county_month_birth_rate_2005_version |&gt;
+  dplyr::filter(county_name == "oklahoma") |&gt;
+  augment_year_data_with_month_resolution(date_name = "date")
+
+head(ds_linear)
+
+</code></pre>
+
+
+</div>

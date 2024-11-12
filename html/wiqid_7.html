@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Bayesian binomial analysis</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Bayesian analysis of binomial data
+</h2>
+
+<h3>Description</h3>
+
+<p>Draws random values from the posterior for a binomial likelihood and beta prior. <code>Bbinom</code> is deprecated and will be removed in the next version; use <code>Bbinomial</code> instead.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Bbinom(...)
+Bbinomial(y, n, priors=NULL, draws=100000, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>the number of successes
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+
+<p>the number of trials
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>priors</code></td>
+<td>
+
+<p>an optional list with elements specifying the priors for the mode and concentration of the beta prior distribution; see Details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>draws</code></td>
+<td>
+
+<p>the number of MCMC draws to be returned.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>other arguments to pass to the function.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function generates a vector of random draws from the posterior distribution of the probability of success. It uses conjugacy to determine the parameters of the posterior beta distribution, and draws independent values from this.
+</p>
+<p>A prior can be specified with the <code>priors</code> argument. A beta prior is used, specified by mode, <code>mode</code>, and concentration, <code>conc</code>.
+</p>
+<p>When <code>priors = NULL</code> (the default), a uniform prior corresponding to beta(1, 1) is used.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an object of class <code>mcmcOutput</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Generate a sample from a binomial distribution, maybe the number of sites
+#   where a species was detected:
+n &lt;- 10  # number of trials (sites visited)
+( y &lt;- rbinom(1, n, 0.75) ) # number of successes (sites where species detected)
+Bbinomial(y, n)  # with uniform prior
+Bbinomial(y, n, priors=list(mode=0.4, conc=5))  # with informative prior
+</code></pre>
+
+
+</div>

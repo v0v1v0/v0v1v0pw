@@ -1,0 +1,146 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>exponNormalize</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Normalize by adjusting exponent</h2>
+
+<h3>Description</h3>
+
+<p>This function normalizes 'dat' by optimizing exponent function (ie dat ^exp) to fit best to 'ref' (default: average of each line of 'dat').
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">exponNormalize(
+  dat,
+  useExpon,
+  dynExp = TRUE,
+  nStep = 20,
+  startExp = 1,
+  simMeas = "cor",
+  refDat = NULL,
+  refGrp = NULL,
+  refLines = NULL,
+  rSquare = FALSE,
+  silent = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>matrix or data.frame of numeric data to be normalized</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useExpon</code></td>
+<td>
+<p>(numeric vector or matrix) exponent values to be tested</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dynExp</code></td>
+<td>
+<p>(logical) require 'useExpon' as 2 values (matrix), will gradually increase exponent from 1st to 2nd; may be matrix or data.frame for dynamic, 
+in this case 1st line for exp for lowest data, 2nd line for highest</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nStep</code></td>
+<td>
+<p>(integer) number of exponent variations (steps) when testing range from-to</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>startExp</code></td>
+<td>
+<p>(numeric)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simMeas</code></td>
+<td>
+<p>(character) similarity metric to be used (so far only "cor"), if rSquare=TRRUE, the r-squared will be returned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refDat</code></td>
+<td>
+<p>(matrix or data.frame) if null average of each line from 'dat' will be used as reference in similarity measure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refGrp</code></td>
+<td>
+<p>(factor) designing which col of 'ref' should be used with which col of 'dat' (length equal to number of cols in 'dat').
+Note: 'refGrp' not yet coded optimally to extract numeric part of character vector, protential problems when all lines or cols of dat are NA</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refLines</code></td>
+<td>
+<p>(NULL or integer) optional subset of lines to be considered (only) when determining normalization factors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rSquare</code></td>
+<td>
+<p>(logical) if <code>TRUE</code>, add r-squared</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This functuion returns a matrix of normalized data
+</p>
+
+
+<h3>See Also</h3>
+
+<p>more eveolved than <code>normalizeThis</code> with arugment set to 'exponent'
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2016); dat1 &lt;- matrix(c(runif(200)+rep(1:10,20)),nc=10)
+head(rowGrpCV(dat1,gr=gl(4,3,labels=LETTERS[1:4])[2:11]))
+set.seed(2016); dat1 &lt;- c(0.1,0.2,0.3,0.5)*rep(c(1,10),each=4)
+dat1 &lt;- matrix(round(c(sqrt(dat1),dat1^1.5,3*dat1+runif(length(dat1))),2),nc=3)
+dat2a &lt;- exponNormalize(dat1[,1],useExpon=2,nSte=1,refD=dat1[,3])
+layout(matrix(1:2,nc=2))
+plot(dat1[,1],dat1[,3],type="b",main="init",ylab="ref") 
+plot(dat2a$datNor[,1],dat1[,3],type="b",main="norm",ylab="ref")
+dat2b &lt;- exponNormalize(dat1[,1],useExpon=c(1.7,2.3),nSte=5,refD=dat1[,3])
+plot(dat1[,1],dat1[,3],type="b",main="init",ylab="ref")
+plot(dat2b$datNor[,1],dat1[,3],type="b",main="norm",ylab="ref")
+
+dat2c &lt;- exponNormalize(dat1[,-3],useExpon=matrix(c(1.7,2.3,0.6,0.8),nc=2),nSte=5,refD=dat1[,3]);
+plot(dat1[,1],dat1[,3],type="b",main="init",ylab="ref ")
+plot(dat2c$datNor[,1],dat1[,3],type="b",main="norm 1",ylab="ref")
+plot(dat1[,2],dat1[,3],type="b",main="init",ylab="ref")
+plot(dat2c$datNor[,2],dat1[,3],type="b",main="norm 2",ylab="ref"); 
+</code></pre>
+
+
+</div>

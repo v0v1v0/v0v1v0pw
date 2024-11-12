@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>johnson_method</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimation of Failure Probabilities using Johnson's Method</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#soft-deprecated"><img src="../help/figures/lifecycle-soft-deprecated.svg" alt="[Soft-deprecated]"></a>
+</p>
+<p><code>johnson_method()</code> is no longer under active development, switching to
+estimate_cdf is recommended.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">johnson_method(x, status, id = NULL, method = c("benard", "invbeta"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector which consists of lifetime data. Lifetime
+data could be every characteristic influencing the reliability of a product,
+e.g. operating time (days/months in service), mileage (km, miles), load
+cycles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>A vector of binary data (0 or 1) indicating whether a unit is
+a right censored observation (= 0) or a failure (= 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>A vector for the identification of every unit. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Method for the estimation of the cdf. Can be <code>"benard"</code> (default)
+or <code>"invbeta"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This non-parametric approach is used to estimate the failure probabilities in
+terms of uncensored or (multiple) right censored data. Compared to complete
+data the correction is done by calculating adjusted ranks which takes
+non-defective units into account.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A tibble containing the following columns:
+</p>
+
+<ul>
+<li> <p><code>id</code> : Identification for every unit.
+</p>
+</li>
+<li> <p><code>x</code> : Lifetime characteristic.
+</p>
+</li>
+<li> <p><code>status</code> : Binary data (0 or 1) indicating whether a unit is a right
+censored observation (= 0) or a failure (= 1).
+</p>
+</li>
+<li> <p><code>rank</code> : Adjusted ranks, <code>NA</code> if <code>status = 0</code>.
+</p>
+</li>
+<li> <p><code>prob</code> : Estimated failure probabilities, <code>NA</code> if <code>status = 0</code>.
+</p>
+</li>
+<li> <p><code>cdf_estimation_method</code> : Specified method for the estimation of failure
+probabilities (always 'johnson').
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Vectors:
+obs   &lt;- seq(10000, 100000, 10000)
+state &lt;- c(0, 1, 1, 0, 0, 0, 1, 0, 1, 0)
+uic   &lt;- c("3435", "1203", "958X", "XX71", "abcd", "tz46",
+           "fl29", "AX23", "Uy12", "kl1a")
+
+# Example 1 - Johnson method for intact and failed units:
+tbl_john &lt;- johnson_method(
+  x = obs,
+  status = state,
+  id = uic
+)
+
+# Example 2 - Johnson's method works also if only defective units are considered:
+tbl_john_2 &lt;- johnson_method(
+  x = obs,
+  status = rep(1, length(obs))
+)
+
+</code></pre>
+
+
+</div>

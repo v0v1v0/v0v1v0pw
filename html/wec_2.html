@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>contr.wec</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Function calculates contrasts for a factor variable based on weighted effect coding.</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates contrasts for a factor variable based on weighted effect coding. In weighted effect coding the estimates from a first order regression model show the deviations per group from the sample mean. This is especially useful when a researcher has no directional hypotheses and uses a sample from a population in which the number of observations per group is different.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">contr.wec(x, omitted)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Factor variable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>omitted</code></td>
+<td>
+<p>Label of the factor label that should be taken as the omitted category</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a contrast matrix based on weighted effect coding.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Rense Nieuwenhuis, Manfred te Grotenhuis, Ben Pelzer, Alexander Schmidt, Ruben Konig, Rob Eisinga</p>
+
+
+<h3>References</h3>
+
+<p>Grotenhuis, M. Te, Pelzer, B., Schmidt-Catran, A., Nieuwenhuis, R., Konig, R., and Eisinga, R. (2016). When size matters: advantages of weighted effect coding in observational studies. <em>International Journal of Public Health</em>, online access: http://link.springer.com/article/10.1007/s00038-016-0901-1
+</p>
+<p>Grotenhuis, M. Te, Pelzer, B., Schmidt-Catran, A., Nieuwenhuis, R., Konig, R., and Eisinga, R. (2016). Weighted effect coded interactions: a novel moderation regression analysis for observational studies. <em>International Journal of Public Health</em>, online access: http://link.springer.com/article/10.1007/s00038-016-0902-0
+</p>
+<p>Sweeney, Robert E. and Ulveling, Edwin F. (1972) A Transformation for Simplifying the Interpretation of Coefficients of Binary Variables in Regression Analysis. <em>The American Statistician</em>, 26(5): 30-32.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wec.interact</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(BMI)
+
+
+# Without controls
+BMI$educ.wec.lowest &lt;- BMI$educ.wec.highest &lt;- BMI$educ
+
+contrasts(BMI$educ.wec.lowest) &lt;- contr.wec(BMI$education, omitted="lowest")
+contrasts(BMI$educ.wec.highest) &lt;- contr.wec(BMI$education, omitted="highest")
+
+model.wec.lowest &lt;- lm(BMI ~ educ.wec.lowest, data=BMI)
+model.wec.highest &lt;- lm(BMI ~ educ.wec.highest, data=BMI)
+summary(model.wec.lowest)
+summary(model.wec.highest)
+
+# With Controls
+BMI$sex.wec.female &lt;- BMI$sex.wec.male &lt;- BMI$sex
+contrasts(BMI$sex.wec.female) &lt;- contr.wec(BMI$sex, omitted="female")
+contrasts(BMI$sex.wec.male) &lt;- contr.wec(BMI$sex, omitted="male")
+
+BMI$year.wec.2000 &lt;- BMI$year.wec.2011 &lt;- BMI$year
+contrasts(BMI$year.wec.2000) &lt;- contr.wec(BMI$year, omitted="2000")
+contrasts(BMI$year.wec.2011) &lt;- contr.wec(BMI$year, omitted="2011")
+
+model.wec.lowest.controls &lt;- lm(BMI ~ educ.wec.lowest +
+  sex.wec.female + log_age + year.wec.2000,
+  data=BMI)
+model.wec.highest.controls &lt;- lm(BMI ~ educ.wec.highest +
+  sex.wec.male + log_age + year.wec.2011,
+  data=BMI)
+summary(model.wec.lowest.controls)
+summary(model.wec.highest.controls)
+</code></pre>
+
+
+</div>

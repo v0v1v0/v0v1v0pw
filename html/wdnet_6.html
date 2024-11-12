@@ -1,0 +1,240 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>centrality</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Centrality measures</h2>
+
+<h3>Description</h3>
+
+<p>Computes the centrality measures of the nodes in a weighted and directed
+network.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">centrality(
+  netwk,
+  adj,
+  edgelist,
+  edgeweight,
+  directed = TRUE,
+  measure = c("degree", "closeness", "wpr"),
+  degree.control = list(alpha = 1, mode = "out"),
+  closeness.control = list(alpha = 1, mode = "out", method = "harmonic", distance =
+    FALSE),
+  wpr.control = list(gamma = 0.85, theta = 1, prior.info = NULL)
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>netwk</code></td>
+<td>
+<p>A <code>wdnet</code> object that represents the network. If
+<code>NULL</code>, the function will compute the coefficient using either
+<code>edgelist</code> and <code>edgeweight</code>, or <code>adj</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adj</code></td>
+<td>
+<p>An adjacency matrix of a weighted and directed network.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edgelist</code></td>
+<td>
+<p>A two-column matrix representing edges of a directed
+network.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edgeweight</code></td>
+<td>
+<p>A vector representing the weight of edges.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>directed</code></td>
+<td>
+<p>Logical. Indicates whether the edges in <code>edgelist</code> or
+<code>adj</code> are directed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>measure</code></td>
+<td>
+<p>Which measure to use: "degree" (degree-based centrality),
+"closeness" (closeness centrality), or "wpr" (weighted PageRank
+centrality)?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>degree.control</code></td>
+<td>
+<p>A list of parameters passed to the degree centrality
+measure:
+</p>
+
+<ul>
+<li>
+<p> 'alpha' A tuning parameter. The value of alpha must be
+nonnegative. By convention, alpha takes a value from 0 to 1 (default).
+</p>
+</li>
+<li>
+<p> 'mode' Which mode to compute: "out" (default) or "in"?
+For undirected networks, this setting is irrelevant.</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>closeness.control</code></td>
+<td>
+<p>A list of parameters passed to the closeness
+centrality measure:
+</p>
+
+<ul>
+<li>
+<p> 'alpha' A tuning parameter. The value of alpha must be
+nonnegative. By convention, alpha takes a value from 0 to
+1 (default).
+</p>
+</li>
+<li>
+<p> 'mode' Which mode to compute: "out" (default) or "in"?
+For undirected networks, this setting is irrelevant.
+</p>
+</li>
+<li>
+<p> 'method' Which method to use: "harmonic" (default) or
+"standard"?
+</p>
+</li>
+<li>
+<p> 'distance' Whether to consider the entries in the adjacency
+matrix as distances or strong connections. The default setting is
+<code>FALSE</code>.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wpr.control</code></td>
+<td>
+<p>A list of parameters passed to the weighted PageRank
+centrality measure:
+</p>
+
+<ul>
+<li>
+<p> 'gamma' The damping factor; it takes 0.85 (default) if not
+given.
+</p>
+</li>
+<li>
+<p> 'theta' A tuning parameter leveraging node degree and
+strength; theta = 0 does not consider edge weight; theta = 1 (default)
+fully considers edge weight.
+</p>
+</li>
+<li>
+<p> 'prior.info' Vertex-specific prior information for restarting when
+arriving at a sink. When it is not given (<code>NULL</code>), a random restart
+is implemented.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of node names and associated centrality measures
+</p>
+
+
+<h3>Note</h3>
+
+<p>The degree-based centrality measure is an extension of function
+<code>strength</code> in package <code>igraph</code> and an alternative of function
+<code>degree_w</code> in package <code>tnet</code>.
+</p>
+<p>The closeness centrality measure is an extension of function
+<code>closeness</code> in package <code>igraph</code> and function <code>closeness_w</code>
+in package <code>tnet</code>. The method of computing distances between vertices
+is the <em>Dijkstra's algorithm</em>.
+</p>
+<p>The weighted PageRank centrality measure is an extension of function
+<code>page_rank</code> in package <code>igraph</code>.
+</p>
+
+
+<h3>References</h3>
+
+
+<ul>
+<li>
+<p> Dijkstra, E.W. (1959). A note on two problems in connexion with
+graphs. <em>Numerische Mathematik</em>, 1, 269–271.
+</p>
+</li>
+<li>
+<p> Newman, M.E.J. (2003). The structure and function of complex
+networks. <em>SIAM review</em>, 45(2), 167–256.
+</p>
+</li>
+<li>
+<p> Opsahl, T., Agneessens, F., Skvoretz, J. (2010). Node centrality
+in weighted networks: Generalizing degree and shortest paths.
+<em>Social Networks</em>, 32, 245–251.
+</p>
+</li>
+<li>
+<p> Zhang, P., Wang, T. and Yan, J. (2022) PageRank centrality and algorithms for
+weighted, directed networks with applications to World Input-Output Tables.
+<em>Physica A: Statistical Mechanics and its Applications</em>, 586, 126438.
+</p>
+</li>
+<li>
+<p> Zhang, P., Zhao, J. and Yan, J. (2020+) Centrality measures of
+networks with application to world input-output tables
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Generate a network according to the Erd\"{o}s-Renyi model of order 20
+## and parameter p = 0.3
+edge_ER &lt;- rbinom(400, 1, 0.3)
+weight_ER &lt;- sapply(edge_ER, function(x) x * sample(3, 1))
+adj_ER &lt;- matrix(weight_ER, 20, 20)
+mydegree &lt;- centrality(
+  adj = adj_ER,
+  measure = "degree", degree.control =
+    list(alpha = 0.8, mode = "in")
+)
+myclose &lt;- centrality(
+  adj = adj_ER,
+  measure = "closeness", closeness.control =
+    list(alpha = 0.8, mode = "out", method = "harmonic", distance = FALSE)
+)
+mywpr &lt;- centrality(
+  adj = adj_ER,
+  measure = "wpr", wpr.control =
+    list(gamma = 0.85, theta = 0.75)
+)
+
+</code></pre>
+
+
+</div>

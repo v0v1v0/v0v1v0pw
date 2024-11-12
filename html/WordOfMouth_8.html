@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>computeRoundDemand</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Computes the expected demand per round</h2>
+
+<h3>Description</h3>
+
+<p>Computes the expected demand for a given Word-of-Mouth campaign at a given price and a given round or a given round and all previous rounds
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">computeRoundDemand(campaign, price, round, previousRounds = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>campaign</code></td>
+<td>
+<p>Word-of-Mouth campaign as instance of class <code>WoMCampaign</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>price</code></td>
+<td>
+<p>Price as number in [0; 1] where 0 is the minimal and 1 is the maximal price.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>round</code></td>
+<td>
+<p>Round at which or until which the demand per round will be computed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>previousRounds</code></td>
+<td>
+<p>Should the demand of all previous rounds be returned or not. Default is TRUE.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Expected demand in number of persons. Note that the first value in the demand vector is the number of initial consumers 
+when previousRounds is TRUE. The number of initial consumers is (1-p)*seedingSize.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Michael Scholz <a href="mailto:michael.scholz@th-deg.de">michael.scholz@th-deg.de</a>
+</p>
+<p>Thomas Woehner <a href="mailto:Thomas.Woehner@eah-jena.de">Thomas.Woehner@eah-jena.de</a>
+</p>
+<p>Ralf Peters <a href="mailto:ralf.peters@wiwi.uni-halle.de">ralf.peters@wiwi.uni-halle.de</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>computeDemand</code> <code>computeProfit</code> <code>computeConsumerSurplus</code> <code>computeOptimalPrice</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+network &lt;- new("WoMNetwork", size = 1000, avgConnections = 5)
+campaign &lt;- new("WoMCampaign", network = network, seedingSize = 10, forwardProbability = 0.2)
+demand &lt;- computeRoundDemand(campaign, price = 0.5, round = 3)
+print(demand)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,165 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wpp.indicator</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Accessing a WPP Indicator
+</h2>
+
+<h3>Description</h3>
+
+<p>An interface for accessing a WPP indicator, where datasets with observed and predicted data are merged. The resulting data frame is in a "melted" format.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wpp.indicator(what, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>what</code></td>
+<td>
+<p>Name of indicator. Possible values are:
+</p>
+
+<dl>
+<dt>fert</dt>
+<dd>
+<p>Total fertililty rate. Merges datasets <code>tfr</code> and <code>tfrprojMed</code>.</p>
+</dd> 
+<dt>leF</dt>
+<dd>
+<p>Female life expectancy. Merges datasets <code>e0F</code> and <code>e0Fproj</code>.</p>
+</dd>
+<dt>leM</dt>
+<dd>
+<p>Male life expectancy. Merges datasets <code>e0M</code> and <code>e0Mproj</code>.</p>
+</dd>
+<dt>tpop</dt>
+<dd>
+<p>Total population. Uses datasets with age- and sex-specific population counts and agregates over sexes and ages.</p>
+</dd>
+<dt>tpopF</dt>
+<dd>
+<p>Total female population. Uses datasets <code>popF</code> and <code>popFprojMed</code> and aggregates over ages.</p>
+</dd>
+<dt>tpopM</dt>
+<dd>
+<p>Total male population. Uses datasets <code>popM</code> and <code>popMprojMed</code> and aggregates over ages.</p>
+</dd>
+<dt>mig</dt>
+<dd>
+<p>Total net migration. For <span class="pkg">wpp2019</span> and <span class="pkg">wpp2015</span>, the dataset <code>migration</code> is used. For <span class="pkg">wpp2012</span> and <span class="pkg">wpp2010</span> it aggregates datasets <code>migrationF</code> and <code>migrationM</code> over ages.</p>
+</dd>
+<dt>migrate</dt>
+<dd>
+<p>Annual migration rate per thousand population. The denominator is approximated with the average population (<code class="reqn">(P_{t}+P_{t-1})/2</code>).</p>
+</dd> 
+<dt>popagesex</dt>
+<dd>
+<p>Population by sex and age. Uses datasets <code>popM</code> and <code>popMprojMed</code>. It requires two arguments in ..., namely <code>sexm=c("F", "M")</code> and <br><code>agem=c("0-4", "5-9", ..., "95-99", "100+")</code>. The function aggregates population counts over the given sex and age groups.</p>
+</dd>
+<dt>mortagesex</dt>
+<dd>
+<p>Mortality by sex and age. Uses datasets <code>mxF</code> and <code>mxM</code>. It requires two atguments in ..., namely <code>sex</code> which is either "F" or "M", and <code>age</code> which is one of ("0", "1", "5", "10", "15", "20", ... "95", "100+").</p>
+</dd>
+<dt>fertage</dt>
+<dd>
+<p>Age-specific fertility rate. Uses datasets <code>tfr</code> and <code>tfrprojMed</code> which are merged together and dataset <code>percentASFR</code> to derive age-specific rates. It requires one argument in ..., namely <code>age</code> which is one of ("15-19", "20-24", ..., "45-49").</p>
+</dd>
+<dt>pfertage</dt>
+<dd>
+<p>Percent age-specific fertility. Corresponds to the dataset  <code>percentASFR</code>. Argument <code>agem</code> as defined above giving one or more age categories is required.</p>
+</dd>
+<dt>sexratio</dt>
+<dd>
+<p>Sex ratio at birth. Corresponds to the dataset <code>sexRatio</code>.</p>
+</dd>
+<dt>medage</dt>
+<dd>
+<p>Median age.</p>
+</dd>
+<dt>meanagechbear</dt>
+<dd>
+<p>Mean age at childbearing.</p>
+</dd>
+<dt>meanageinchbearage</dt>
+<dd>
+<p>Mean age of women in childbearing ages.</p>
+</dd>
+<dt>tdratio</dt>
+<dd>
+<p>Total dependency ratio. Ratio of population of age 0 to 14 and 65+ to population of age 15-64.</p>
+</dd>
+<dt>chdratio</dt>
+<dd>
+<p>Child dependency ratio. Ratio of population of age 0 to 14 to population of age 15-64.</p>
+</dd>
+<dt>oadratio</dt>
+<dd>
+<p>Old-age dependency ratio. Ratio of population of age 65+ to population of age 15-64.</p>
+</dd>
+<dt>psratio</dt>
+<dd>
+<p>Potential support ratio. Inverse of old-age dependency ratio.</p>
+</dd>
+<dt>popgrowth</dt>
+<dd>
+<p>Average annual population growth (<code class="reqn">log(P_t / P_{t-1})/5</code>).</p>
+</dd>
+<dt>fert.ci, leF.ci, leM.ci, tpop.ci, popagesex.ci</dt>
+<dd>
+<p>Lower or upper bound of the corresponding indicator. Requires argument <code>which.pi</code> which is one of “80”, “95”, “half.child”, and an argument <code>bound</code> which is
+either “low” or “high”. Arguments <code>sexm</code> and <code>agem</code> (as defined above, but of length one) are required for popagesex.ci.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments passed to the underlying functions as described above.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Data frame with columns <code>charcode</code> (alpha-2 ISO 3166 country code), <code>Year</code>, and <code>value</code>.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Hana Sevcikova
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wpp.by.country</code>, <code>wpp.by.year</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">	tfr &lt;- wpp.indicator("fert")
+	## Not run: 
+	# Histogram of TFR 
+	print(qplot(value, data=tfr) + facet_wrap(~ Year))
+## End(Not run)
+	## Not run: 
+	mxM01 &lt;- wpp.indicator("mortagesex", sex="M", age="0")
+	# Plot map
+	plot(gvisGeoMap(tfr, locationvar='charcode', numvar='value'))
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,73 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_title</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download and add the "title" of a URL</h2>
+
+<h3>Description</h3>
+
+<p>Gets the title of a URL by accessing the web address online
+and adds the title as a new column. See details for the meaning of "title".
+You need an internet connection to run this function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_title(wt, lang = "en-US,en-GB,en")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wt</code></td>
+<td>
+<p>webtrack data object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lang</code></td>
+<td>
+<p>character (a language tag). Language accepted by the request.
+Defaults to <code>"en-US,en-GB,en"</code>. Note that you are likely to still obtain titles
+different from the ones seen originally by the user, because the language
+also depend on the user's IP and device settings.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The title of a website (the text within the <code style="white-space: pre;">⁠&lt;title&gt;⁠</code> tag
+of a web site's <code style="white-space: pre;">⁠&lt;head&gt;⁠</code>) #' is the text that is shown on the "tab"
+when looking at the website in a browser. It can contain useful information
+about a URL's content and can be used, for example, for classification purposes.
+Note that it may take a while to run this function for a large number of URLs.
+</p>
+
+
+<h3>Value</h3>
+
+<p>webtrack data.frame with the same columns as wt and a new column
+called <code>"title"</code>, which will be <code>NA</code> if the title cannot be retrieved.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data("testdt_tracking")
+wt &lt;- as.wt_dt(testdt_tracking)[1:2]
+# Get titles with `lang` set to default English
+wt_titles &lt;- add_title(wt)
+# Get titles with `lang` set to German
+wt_titles &lt;- add_title(wt, lang = "de")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

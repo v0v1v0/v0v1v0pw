@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_query_results</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Perform a query using the <a href="https://www.mediawiki.org/wiki/Special:MyLanguage/API:Main_page">MediaWiki Action API</a>
+</h2>
+
+<h3>Description</h3>
+
+<p><code>next_result()</code> sends exactly one request to the server.
+</p>
+<p><code>next_batch()</code> requests results from the server until data is complete the
+latest batch of pages in the result.
+</p>
+<p><code>retrieve_all()</code> keeps requesting data until all the pages from the query
+have been returned.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">next_result(x)
+
+next_batch(x)
+
+retrieve_all(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The query. Either a wiki_action_request or a query_tbl.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>It is rare that a query can be fulfilled in a single request to the
+server. There are two ways a query can be incomplete. All queries return a
+list of pages as their result. The result may be incomplete because not all
+the data for each page has been returned. In this case the <em>batch</em> is
+incomplete. Or the data may be complete for all pages, but there are more
+pages available on the server. In this case the query can be <em>continued</em>.
+Thus the three functions for <code>next_result()</code>, <code>next_batch()</code> and
+<code>retrieve_all()</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A query_tbl containing results of the query. If <code>x</code> is a
+query_tbl, then the function will return a new data with the new data
+appended to it. If <code>x</code> is a wiki_action_request, then the returned
+query_tbl will contain the necessary data to supply future calls to
+<code>next_result()</code>, <code>next_batch()</code> or <code>retrieve_all()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Try out a request using next_result(), then retrieve the rest of the
+# results. The clllimt limits the first request to 40 results.
+preview &lt;- wiki_action_request() %&gt;%
+  query_by_title("Steve Wozniak") %&gt;%
+  query_page_properties("categories", cllimit = 40) %&gt;%
+  gracefully(next_result)
+preview
+
+all_results &lt;- preview %&gt;%
+  gracefully(retrieve_all)
+all_results
+
+# tidyr is useful for list-columns.
+if (tibble::is_tibble(all_results)) {
+  all_results %&gt;%
+    tidyr::unnest(cols=c(categories), names_sep = "_")
+}
+
+</code></pre>
+
+
+</div>

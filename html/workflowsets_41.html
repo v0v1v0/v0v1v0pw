@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>option_add</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add and edit options saved in a workflow set</h2>
+
+<h3>Description</h3>
+
+<p>The <code>option</code> column controls options for the functions that are used to
+<em>evaluate</em> the workflow set, such as <code>tune::fit_resamples()</code> or
+<code>tune::tune_grid()</code>. Examples of common options to set for these functions
+include <code>param_info</code> and <code>grid</code>.
+</p>
+<p>These functions are helpful for manipulating the information in the <code>option</code>
+column.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">option_add(x, ..., id = NULL, strict = FALSE)
+
+option_remove(x, ...)
+
+option_add_parameters(x, id = NULL, strict = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A workflow set outputted by <code>workflow_set()</code> or <code>workflow_map()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments to pass to the <code style="white-space: pre;">⁠tune_*()⁠</code> functions (e.g.
+<code>tune::tune_grid()</code>) or <code>tune::fit_resamples()</code>. For <code>option_remove()</code> this
+can be a series of unquoted option names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>A character string of one or more values from the <code>wflow_id</code>
+column that indicates which options to update. By default, all workflows
+are updated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strict</code></td>
+<td>
+<p>A logical; should execution stop if existing options are being
+replaced?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>option_add()</code> is used to update all of the options in a workflow set.
+</p>
+<p><code>option_remove()</code> will eliminate specific options across rows.
+</p>
+<p><code>option_add_parameters()</code> adds a parameter object to the <code>option</code> column
+(if parameters are being tuned).
+</p>
+<p>Note that executing a function on the workflow set, such as <code>tune_grid()</code>,
+will add any options given to that function to the <code>option</code> column.
+</p>
+<p>These functions do <em>not</em> control options for the individual workflows, such as
+the recipe blueprint. When creating a workflow manually, use
+<code>workflows::add_model()</code> or <code>workflows::add_recipe()</code> to specify
+extra options. To alter these in a workflow set, use
+<code>update_workflow_model()</code> or <code>update_workflow_recipe()</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An updated workflow set.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(tune)
+
+two_class_set
+
+two_class_set %&gt;%
+  option_add(grid = 10)
+
+two_class_set %&gt;%
+  option_add(grid = 10) %&gt;%
+  option_add(grid = 50, id = "none_cart")
+
+two_class_set %&gt;%
+  option_add_parameters()
+</code></pre>
+
+
+</div>

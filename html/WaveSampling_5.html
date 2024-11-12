@@ -1,0 +1,179 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wave</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Weakly associated vectors sampling</h2>
+
+<h3>Description</h3>
+
+<p>Select a spread sample from inclusion probabilities using the weakly associated vectors sampling method.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wave(
+  X,
+  pik,
+  bound = 1,
+  tore = FALSE,
+  shift = FALSE,
+  toreBound = -1,
+  comment = FALSE,
+  fixedSize = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>matrix representing the spatial coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pik</code></td>
+<td>
+<p>vector of the inclusion probabilities. The length should be equal to N.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bound</code></td>
+<td>
+<p>a scalar representing the bound to reach. See Details. Default is 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tore</code></td>
+<td>
+<p>an optional logical value, if we are considering the distance on a tore. See Details. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shift</code></td>
+<td>
+<p>an optional logical value, if you would use a shift perturbation. See Details. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>toreBound</code></td>
+<td>
+<p>a numeric value that specify the size of the grid. Default is -1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>comment</code></td>
+<td>
+<p>an optional logical value, indicating some informations during the execution. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixedSize</code></td>
+<td>
+<p>an optional logical value, if you would impose a fixed sample size. Default is <code>TRUE</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The main idea is derived from the cube method (Devill and Tillé, 2004). At each step, the inclusion probabilities vector <code>pik</code>
+is randomly modified. This modification is carried out in a direction that best preserves the spreading of the sample.
+</p>
+<p>A stratification matrix <code class="reqn">\bf A</code> is computed from the spatial weights matrix calculated from the function <code>wpik</code>.
+Depending if <code class="reqn">\bf A</code> is full rank or not, the vector giving the direction is not selected in the same way.
+</p>
+<p>If matrix <code class="reqn">\bf A</code> is not full rank, a vector that is contained in the right null space is selected:
+</p>
+<p style="text-align: center;"><code class="reqn"> Null(\bf A) = \{ \bf x \in R^N | \bf A\bf x = \bf 0  \}. </code>
+</p>
+
+<p>If matrix <code class="reqn">\bf A</code> is full rank, we find <code class="reqn">\bf v</code>, <code class="reqn">\bf u</code> the singular vectors associated to the 
+smallest singular value <code class="reqn">\sigma </code> of <code class="reqn">\bf A</code> such that
+</p>
+<p style="text-align: center;"><code class="reqn"> \bf A\bf v = \sigma \bf u,~~~~ \bf A^\top \bf u = \sigma \bf v.</code>
+</p>
+
+<p>Vector <code class="reqn"> \bf v </code> is then centered to ensure fixed sample size. At each step, inclusion probabilities is modified and at least on component is set to 0 or 1. Matrix <code class="reqn">\bf A </code> is updated 
+from the new inclusion probabilities. The whole procedure it repeated until it remains only one component that is not equal to 0 or 1.
+</p>
+<p>For more informations on the options <code>tore</code> and <code>toreBound</code>, see <code>distUnitk</code>. If <code>tore</code> is set up <code>TRUE</code> and <code>toreBound</code> not specified the <code>toreBound</code> is equal to 
+</p>
+<p style="text-align: center;"><code class="reqn">N^{1/p}</code>
+</p>
+
+<p>where <code class="reqn">p</code> is equal to the number of column of the matrix <code>X</code>.
+</p>
+<p>For more informations on the option <code>shift</code>, see <code>wpik</code>.
+</p>
+<p>If <code>fixedSize</code> is equal <code>TRUE</code>, the weakest associated vector is centered at each step of the algorithm. This ensures that the size of the selected sample is equal to the sum of the inclusion probabilities.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of size <code class="reqn">N</code> with elements equal 0 or 1. The value 1 indicates that the unit is selected while the value 0 is for non-chosen unit.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Raphaël Jauslin <a href="mailto:raphael.jauslin@unine.ch">raphael.jauslin@unine.ch</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Deville, J. C. and Tillé, Y. (2004). Efficient balanced sampling: the cube method. Biometrika, 91(4), 893-912
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wpik</code>, <code>distUnitk</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+#------------
+# Example 2D
+#------------
+
+N &lt;- 50
+n &lt;- 15
+pik &lt;- rep(n/N,N)
+X &lt;- as.matrix(cbind(runif(N),runif(N)))
+s &lt;- wave(X,pik)
+
+#------------
+# Example 2D grid 
+#------------
+
+N &lt;- 36 # 6 x 6 grid
+n &lt;- 12 # number of unit selected
+x &lt;- seq(1,sqrt(N),1)
+X &lt;- as.matrix(cbind(rep(x,times = sqrt(N)),rep(x,each = sqrt(N))))
+pik &lt;- rep(n/N,N)
+s &lt;- wave(X,pik, tore = TRUE,shift = FALSE)
+
+#------------
+# Example 1D
+#------------
+
+N &lt;- 100
+n &lt;- 10
+X &lt;- as.matrix(seq(1,N,1))
+pik &lt;- rep(n/N,N)
+s &lt;- wave(X,pik,tore = TRUE,shift =FALSE,comment = TRUE)
+
+
+</code></pre>
+
+
+</div>

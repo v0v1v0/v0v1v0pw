@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rpa_control_newedge</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Control new edges in each step. Defined for <code>rpanet</code>.</h2>
+
+<h3>Description</h3>
+
+<p>Control new edges in each step. Defined for <code>rpanet</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rpa_control_newedge(
+  sampler = NULL,
+  snode.replace = TRUE,
+  tnode.replace = TRUE,
+  node.replace = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>sampler</code></td>
+<td>
+<p>A function used for sampling the number of new edges to be
+added at each step. If <code>NULL</code>, one new edge will be added at each
+step. If a function is provided, it must accept a single argument,
+<code>n</code>, and return a vector of length <code>n</code> that represents the
+sampled number of new edges.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>snode.replace</code></td>
+<td>
+<p>Logical. Determines whether the source nodes in the same
+step should be sampled with replacement. Defined for directed networks.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tnode.replace</code></td>
+<td>
+<p>Logical. Determines whether the target nodes in the same
+step should be sampled with replacement. Defined for directed networks.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>node.replace</code></td>
+<td>
+<p>Logical. Determines whether the nodes in the same step
+should be sampled with replacement. Defined for undirected networks. If
+FALSE, self-loops will not be allowed under beta scenario.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of class <code>rpacontrol</code> with components <code>sampler</code>,
+<code>snode.replace</code>, <code>tnode.replace</code> and <code>node.replace</code> with
+meanings as explained under 'Arguments'.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">my_rpois &lt;- function(n) rpois(n, lambda = 2) + 1
+control &lt;- rpa_control_newedge(
+  sampler = my_rpois,
+  node.replace = FALSE
+)
+</code></pre>
+
+
+</div>

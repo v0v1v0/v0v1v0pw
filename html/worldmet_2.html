@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>exportADMS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Export a meteorological data frame in ADMS format</h2>
+
+<h3>Description</h3>
+
+<p>Writes a text file in the ADMS format to a location of the user's choosing,
+with optional interpolation of missing values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">exportADMS(dat, out = "./ADMS_met.MET", interp = FALSE, maxgap = 2)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>A data frame imported by <code>importNOAA()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>out</code></td>
+<td>
+<p>A file name for the ADMS file. The file is written to the working
+directory by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interp</code></td>
+<td>
+<p>Should interpolation of missing values be undertaken? If <code>TRUE</code>
+linear interpolation is carried out for gaps of up to and including
+<code>maxgap</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxgap</code></td>
+<td>
+<p>The maximum gap in hours that should be interpolated where
+there are missing data when <code>interp = TRUE.</code> Data with gaps more than
+<code>maxgap</code> are left as missing.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>exportADMS()</code> returns the input <code>dat</code> invisibly.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## import some data then export it
+dat &lt;- importNOAA(year = 2012)
+exportADMS(dat, out = "~/adms_met.MET")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,190 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cumFrqPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cumulative (or sorted) frequency plot (takes columns of 'dat' as separate series)</h2>
+
+<h3>Description</h3>
+
+<p>Display data as sorted or cumulative frequency plot. This type of plot represents an alternative to plotting data as histograms.
+Histograms are very universal and which are very intuitive. However,fine-tuning the bandwith (ie width of the bars) may be very delicate, 
+fine resultion details may often remain hidden. 
+One of the advanges of directly displaying all data-points is that subtile differences may be revealed easier, compared to calssical histograms. 
+Furthermore, the plot prensented her offeres more options to display multiple series of data simultaneaously. 
+Thus, this type of plot may be useful to compare eg results of data normalization.
+Of course, with very large data-sets (eg &gt; 3000 values) this gain of 'details' will be less important (compared to histograms) and will penalize speed.
+In such cases the argument <code>thisResol</code> will get useful as it allows to reduce the resultion and introduce binning.
+Alternatively for very large data-sets one may looking into density-plots or vioplots (eg <code>vioplotW</code>).
+The argument <code>CVlimit</code> allows optionally excluding extreme values. 
+If numeric (&amp; &gt; 2 columns), its value will be used <code>exclExtrValues</code> to identify series with column-median &gt; 'CVlimit'.
+Of course, exclusion of extreme values should be done with great care, important features of the data may get lost.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cumFrqPlot(
+  dat,
+  cumSum = FALSE,
+  exclCol = NULL,
+  colNames = NULL,
+  displColNa = TRUE,
+  tit = NULL,
+  xLim = NULL,
+  yLim = NULL,
+  xLab = NULL,
+  yLab = NULL,
+  col = NULL,
+  CVlimit = NULL,
+  thisResol = NULL,
+  supTxtAdj = 0,
+  supTxtYOffs = 0,
+  useLog = "",
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(matrix or data.frame) data to plot/inspect</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cumSum</code></td>
+<td>
+<p>(logical) for either plotting cumulates Sums (then <code>thisResol</code> for number of breaks) or (if <code>=FALSE</code>) simply sorted values -&gt; max resolution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclCol</code></td>
+<td>
+<p>(integer) columlns to exclude</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colNames</code></td>
+<td>
+<p>(character) for alternative column/series names in display, as long as <code>displColNa=TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>displColNa</code></td>
+<td>
+<p>(logical) display column-names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tit</code></td>
+<td>
+<p>(character) custom title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xLim</code></td>
+<td>
+<p>(numeric) custom limit for x-axis (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yLim</code></td>
+<td>
+<p>(numeric) custom limit for y-axis (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xLab</code></td>
+<td>
+<p>(character) custom x-axis label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yLab</code></td>
+<td>
+<p>(character) custom y-axis label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>(integer or character) custom colors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CVlimit</code></td>
+<td>
+<p>(numeric) for the tag 'outlier column' (uses <code>exclExtrValues</code>)  identify &amp; mark column with median row-CV &gt; <code>CVlimit</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thisResol</code></td>
+<td>
+<p>(integer) resolution <code>res</code> for binning large data-sets</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>supTxtAdj</code></td>
+<td>
+<p>(numeric) parameter <code>adj</code> for supplemetal text</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>supTxtYOffs</code></td>
+<td>
+<p>(numeric) supplemental offset for text on y axis</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useLog</code></td>
+<td>
+<p>(character) default="", otherwise for setting axis in log-scale "x", "y" or "xy"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additonal messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function plots to the current garphical device
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>layout</code>, <code>exclExtrValues</code> for decision of potential outliers; <code>hist</code>, <code>vioplotW</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2017); dat0 &lt;- matrix(rnorm(500), ncol=5, dimnames=list(NULL,1:5))
+cumFrqPlot(dat0, tit="Sorted values")
+cumFrqPlot(dat0, cumSum=TRUE, tit="Sum of sorted values")
+</code></pre>
+
+
+</div>

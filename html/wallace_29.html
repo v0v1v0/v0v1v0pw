@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>poccs_thinOccs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>poocs_thinOccs Thin occurrences</h2>
+
+<h3>Description</h3>
+
+<p>The function thins the observed occurrences by a user provided
+distance.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">poccs_thinOccs(occs, thinDist, logger = NULL, spN = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>occs</code></td>
+<td>
+<p>data frame of cleaned occurrences obtained from component occs:
+Obtain occurrence data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thinDist</code></td>
+<td>
+<p>distance in kilometers to be used for thinning. Number must be
+positive.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+<p>Stores all notification messages to be displayed in the Log
+Window of Wallace GUI. Insert the logger reactive list here for running
+in shiny, otherwise leave the default NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spN</code></td>
+<td>
+<p>data frame of cleaned occurrences obtained from component occs:
+Obtain occurrence data. Used to obtain species name for logger messages.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is called by the component poccs: process occurrence data to
+thin the occurrence data to a user specified distance. Providing an output
+with preserved columns appropriate for further analyses and a maximized
+number of occurrences that are separated by at least the provided distance.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Output is a data frame of thinned occurences (all occurences at a
+distance &gt;thinDist) with the same columns as occs
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jamie Kass &lt;jamie.m.kass@gmail.com&gt;
+</p>
+<p>Gonzalo E. Pinilla-Buitrago &lt;gepinillab@gmail.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>thin</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">occs &lt;- read.csv(system.file("extdata/Bassaricyon_neblina.csv",
+                             package = "wallace"))
+occs$occID &lt;- 1:nrow(occs)
+out.thin &lt;- poccs_thinOccs(occs = occs, thinDist = 30)
+
+
+</code></pre>
+
+
+</div>

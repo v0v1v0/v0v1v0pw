@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Occupancy Multi-Season</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Multi-season occupancy estimation
+</h2>
+
+<h3>Description</h3>
+
+<p>Functions to estimate occupancy from detection/non-detection data for multiple seasons. <code>occMS</code> is the general purpose function; it allows for site-, season- and survey-level covariates, but it is slow. <code>occMScovSite</code> excludes survey-level covariates, but is fast. <code>occMStime</code> and <code>occMS0</code> are simpler and faster.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">occMS0(DH, occsPerSeason, ci=0.95, verify=TRUE, ...)
+
+occMStime(DH, occsPerSeason, model=NULL, data=NULL, ci=0.95, verify=TRUE, ...)
+
+occMS(DH, occsPerSeason, model=NULL, data=NULL, ci=0.95, verify=TRUE, ...)
+             
+occMScovSite(DH, occsPerSeason, model=NULL, data=NULL, ci=0.95, verify=TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>DH</code></td>
+<td>
+
+<p>a 1/0/NA matrix (or data frame) of detection histories, sites x occasions. Rows with all NAs are silently removed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>occsPerSeason</code></td>
+<td>
+
+<p>the number of survey occasions per season; either a scalar if the number of surveys is constant, or a vector with one element for each season.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+
+<p>a list of formulae symbolically defining a linear predictor for each parameter in terms of covariates. The default corresponds to an intercept-only model.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>a data frame containing the variables in the model: one row for each season or between-season period for <code>occMStime</code> and one for each site for <code>occMScovSite</code>. Each survey covariate has one column for each occasion, and the column name must end with the occasion number (without leading zeros); eg, <code>Cov1, Cov2, ..., Cov15</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci</code></td>
+<td>
+
+<p>the confidence interval to use.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verify</code></td>
+<td>
+
+<p>if TRUE, the data provided will be checked.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>other arguments passed to <code>nlm</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>occMS0</code> implements a simple multi-season model with one parameter each for initial occupancy, colonisation, local extinction, and probability of detection, ie. a <code>psi1(.) gamma(.) epsilon(.) p(.)</code> model.
+</p>
+<p><code>occMStime</code> allows for between-season differences in colonisation, local extinction, and probability of detection, either with covariates given in <code>data</code> or the in-built covariates <code>.interval</code> (for colonisation or extinction, or <code>.season</code> (for detection).
+</p>
+<p><code>occMScovSite</code> allows for between-season differences in colonisation, local extinction, and probability of detection with the in-built covariate <code>.season</code> and for between-site differences with covariates defined in <code>data</code>.
+</p>
+<p><code>occMS</code> allows for survey-level covariates in addition to the above, and separate covariates for between-season colonisation and local extinction.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an object of class <code>wiqid</code>, see wiqid-class for details.
+</p>
+
+
+<h3>Benchmarks</h3>
+
+<p>Output has been checked against output from PRESENCE (Hines 2006) v.5.5 for the <code>GrandSkinks</code> data set. Real values are mostly the same to 4 decimal places, though there is occasionally a discrepancy of 0.0001. AICs are the same.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith
+</p>
+
+
+<h3>References</h3>
+
+<p>MacKenzie, D I; J D Nichols; G B Lachman; S Droege; J A Royle; C A Langtimm. 2002. Estimating site occupancy rates when detection probabilities are less than one. <em>Ecology</em> 83:2248-2255.
+</p>
+<p>MacKenzie, D I; J D Nichols; A J Royle; K H Pollock; L L Bailey; J E Hines 2006. <em>Occupancy Estimation and Modeling : Inferring Patterns and Dynamics of Species Occurrence</em>. Elsevier Publishing.
+</p>
+<p>Hines, J. E. (2006). PRESENCE - Software to estimate patch occupancy and related parameters. SGS-PWRC. http://www.mbr-pwrc.usgs.gov/software/presence.html.
+</p>
+<p>MacKenzie, D I; J D Nichols; J E Hines; et al 2003. Estimating site occupancy, colonization, and local extinction when a species is imperfectly detected.  <em>Ecology</em> 84, 2200-2207.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(GrandSkinks)
+DH &lt;- GrandSkinks[, 1:15]
+
+occMS0(DH, 3)
+
+occMStime(DH, 3, model=list(gamma ~ .interval, epsilon~1, p~.season))
+occMScovSite(DH, 3,
+   model=list(psi1~habitat, gamma ~ .interval, epsilon~habitat, p~.season),
+   data=GrandSkinks)
+
+</code></pre>
+
+
+</div>

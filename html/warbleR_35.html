@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>is_extended_selection_table</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Class 'extended_selection_table': selection table containing wave objects</h2>
+
+<h3>Description</h3>
+
+<p>Class for selections of signals in sound files and corresponding wave objects
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">is_extended_selection_table(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>R object</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>An object of class <code>extended_selection_table</code> created by <code>selection_table</code> is a list with the following elements:
+</p>
+
+<ul>
+<li> <p><code>selections</code>: data frame containing the frequency/time coordinates of the selections, sound file names, and any  additional information
+</p>
+</li>
+<li> <p><code>check.resutls</code>: results of the checks on data consistency using check_sels
+</p>
+</li>
+<li> <p><code>wave.objects</code>: list of wave objects corresponding to each selection
+</p>
+</li>
+<li> <p><code>by.song</code>: a list with 1) a logical argument defining if the 'extended_selection_table' was created 'by song'
+and 2) the name of the song column (see <code>selection_table</code>)
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A logical argument indicating whether the object class is 'extended_selection_table'
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>selection_table</code>, <code>selection_table</code>
+Check if object is of class "extended_selection_table"
+</p>
+<p><code>is_extended_selection_table</code> Check if the object belongs to the class "extended_selection_table"
+</p>
+<p><code>selection_table</code>; <code>is_selection_table</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">{
+  data(list = c("Phae.long1", "Phae.long2", "Phae.long3", "Phae.long4", "lbh_selec_table"))
+
+  is_extended_selection_table(lbh_selec_table)
+
+  writeWave(Phae.long1, file.path(tempdir(), "Phae.long1.wav"))
+  writeWave(Phae.long2, file.path(tempdir(), "Phae.long2.wav"))
+  writeWave(Phae.long3, file.path(tempdir(), "Phae.long3.wav"))
+  writeWave(Phae.long4, file.path(tempdir(), "Phae.long4.wav"))
+
+  st &lt;- selection_table(lbh_selec_table,
+    extended = TRUE,
+    path = tempdir()
+  )
+
+  is_extended_selection_table(st)
+
+  class(st)
+}
+</code></pre>
+
+
+</div>

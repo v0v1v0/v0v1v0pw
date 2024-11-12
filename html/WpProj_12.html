@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot,WPR2-method</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot Function for <code class="reqn">W_p R^2</code> Objects</h2>
+
+<h3>Description</h3>
+
+<p>Plot Function for <code class="reqn">W_p R^2</code> Objects
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S4 method for signature 'WPR2'
+plot(
+  x,
+  xlim = NULL,
+  ylim = NULL,
+  linesize = 0.5,
+  pointsize = 1.5,
+  facet.group = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code class="reqn">W_p R^2</code> object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim</code></td>
+<td>
+<p>x-axis limits</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylim</code></td>
+<td>
+<p>y-axis limits</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>linesize</code></td>
+<td>
+<p>Linesize for geom_line</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pointsize</code></td>
+<td>
+<p>Point size for geom_point</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>facet.group</code></td>
+<td>
+<p>Group to do facet_grid by</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Currently not used</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a <code>ggplot2::ggplot()</code> object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">n &lt;- 128
+p &lt;- 10
+s &lt;- 99
+x &lt;- matrix( stats::rnorm( p * n ), nrow = n, ncol = p )
+beta &lt;- (1:10)/10
+y &lt;- x %*% beta + stats::rnorm(n)
+post_beta &lt;- matrix(beta, nrow=p, ncol=s) + stats::rnorm(p*s, 0, 0.1)
+post_mu &lt;- x %*% post_beta
+
+fit &lt;-  WpProj(X=x, eta=post_mu, power = 2.0,
+               options = list(penalty = "lasso")
+)
+obj &lt;- WPR2(predictions = post_mu, projected_model = fit)
+p &lt;- plot(obj)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,81 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>at.wd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>a trous (AT) based additive decompostion using Daubechies family wavelet</h2>
+
+<h3>Description</h3>
+
+<p>a trous (AT) based additive decompostion using Daubechies family wavelet
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">at.wd(x, wf, J, boundary = "periodic")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The input time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wf</code></td>
+<td>
+<p>Name of the wavelet filter to use in the decomposition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>Specifies the depth of the decomposition. This must be a number less than or equal to log(length(x),2).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>Character string specifying the boundary condition. If boundary=="periodic" the default, then the vector you decompose is assumed to be periodic on its defined interval, if boundary=="reflection", the vector beyond its boundaries is assumed to be a symmetric reflection of itself.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A matrix of decomposed sub-time series.
+</p>
+
+
+<h3>References</h3>
+
+<p>Nason, G. P. (1996). Wavelet shrinkage using cross-validation. Journal of the Royal Statistical Society: Series B (Methodological), 58(2), 463-479.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(obs.mon)
+
+n &lt;- nrow(obs.mon)
+v &lt;- 1
+J &lt;- floor(log(n / (2 * v - 1)) / log(2)) # (Kaiser, 1994)
+
+names &lt;- colnames(obs.mon)
+at.atm &lt;- vector("list", ncol(obs.mon))
+for (i in seq_len(ncol(obs.mon))) {
+  tmp &lt;- as.numeric(scale(obs.mon[, i], scale = FALSE))
+  at.atm &lt;- do.call(cbind, at.wd(tmp, wf = "haar", J = J, boundary = "periodic"))
+
+  plot.ts(cbind(obs.mon[1:n, i], at.atm[1:n, 1:9]), main = names[i])
+  print(sum(abs(scale(obs.mon[1:n, i], scale = FALSE) - rowSums(at.atm[1:n, ]))))
+}
+</code></pre>
+
+
+</div>

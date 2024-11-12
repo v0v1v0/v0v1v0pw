@@ -1,0 +1,181 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.wiqid</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Predict method for objects of class 'wiqid'
+</h2>
+
+<h3>Description</h3>
+
+<p>Obtains predictions, with estimates, standard errors and confidence intervals, from a fitted model object of class <code>wiqid</code>, as produced by frequentist estimation functions in the <span class="pkg">wiqid</span> package. Not all functions produce objects that enable predictions to be made; see Details. Please treat this as a 'beta' version and check output carefully.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wiqid'
+predict(object, newdata, parameter, ci, type=c("link", "response"), ...) 
+    
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+
+<p>an object of class <code>wiqid</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+
+<p>a data frame with columns for each of the covariates in the model. Unused columns are ignored. Missing values are not allowed. See Details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameter</code></td>
+<td>
+
+<p>character; the name of the parameter to predict; this will appear on the left hand side of one of the formulae in the model.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci</code></td>
+<td>
+
+<p>the confidence interval to use; the default is to use <code>object$ci</code> or, if that is <code>NULL</code>, 0.95.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+
+<p>the type of prediction required. The default is on the scale of the linear predictors; the alternative "response" is on the scale of the response variable. Thus if the parameter is a probability, the default predictions are on the logit or probit scale and <code>type = "response"</code> gives the predicted probabilities. May be abbreviated.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>further arguments for other methods.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Most <span class="pkg">wiqid</span> functions have models with multiple submodels, corresponding to the formulae in the <code>model</code> argument. Check <code>object$formulae</code> for a list of the available submodels.
+</p>
+<p>The argument <code>newdata</code> is required (even for intercept-only models), and must be a data frame with named columns for each of the covariates in the submodel. For factors, the levels must be (a subset of) the levels in the original data; check <code>object$xlev</code> for possible levels.
+</p>
+<p><code>predict</code> is not yet implemented for the following functions:
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+  <code>occSStime</code> and <code>occSScovSite</code> </td>
+<td style="text-align: left;"> : use <code>occSS</code> instead.</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>occMStime</code> and <code>occMScovSite</code> </td>
+<td style="text-align: left;"> : use <code>occMS</code> instead.</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>closedCap*</code> functions </td>
+<td style="text-align: left;"> : these models have no covariates.</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+  <code>surv*</code> functions </td>
+<td style="text-align: left;"> : these have no covariates.</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a matrix with four columns (estimate, SE, lower and upper confidence limits) and a row for each row in <code>newdata</code>. If <code>newdata</code> has row names, these will be used for the output. Note that for an intercept-only submodel, all rows will have identical values. Attributes give information on the link used and the confidence level.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Generate some simulated occupancy data for 300 sites:
+set.seed(2017)
+original.data &lt;- data.frame(
+  elev = runif(300, 0, 1000),
+  forType = factor(sample(c("dry", "swamp", "mangrove"), size=300, replace=TRUE, prob=3:1)))
+modMat &lt;- model.matrix( ~ elev + forType, data = original.data)
+psiCoef &lt;- c(3, -0.003, -3, -1) # declines with 'elev'; highest for 'dry', lowest 'mangrove'
+psi &lt;- plogis(modMat %*% psiCoef)
+hist(psi, breaks=20)
+z &lt;- rbinom(300, 1, psi)
+mean(z)  # true realized occupancy
+# detection history for 3 replicates, constant p = 0.6:
+DH &lt;- matrix(rbinom(300*3, 1, 0.6*z), nrow=300)
+# fit models
+m0 &lt;- occSS(DH)
+mE &lt;- occSS(DH, psi ~ elev, data = original.data)
+mEF &lt;- occSS(DH, psi ~ elev + forType, data = original.data)
+
+# now try predictions:
+newdata &lt;- expand.grid(elev=c(200, 500, 800), forType=c("dry", "swamp"))
+predict(mEF, newdata, "psi")
+cbind(newdata, predict(mEF, newdata, "psi", type='res'))
+cbind(newdata, predict(mE, newdata, "psi", type='res'))
+cbind(newdata, predict(m0, newdata, "psi", type='res'))
+
+# do a nice plot
+xx &lt;- seq(0, 1000, length=51)
+plotdata &lt;- expand.grid(elev=xx, forType=c("dry", "swamp", "mangrove"))
+toPlot &lt;- predict(mEF, plotdata, "psi", type='res')
+plot(xx, rep(0.5, 51), type='n', las=1, ylim=range(toPlot),
+  xlab="Elevation", ylab="Occupancy probability")
+ciCols &lt;- adjustcolor(c('lightgreen', 'skyblue', 'pink'), 0.5)
+estCols &lt;- c('darkgreen', 'blue', 'red')
+for(i in 1:3) {
+  this1 &lt;- toPlot[plotdata$forType == levels(plotdata$forType)[i], ]
+  polygon(c(xx, rev(xx)), c(this1[, 3], rev(this1[, 4])), col=ciCols[i])
+  lines(xx, this1[, 1], col=estCols[i])
+}
+legend('topright', levels(plotdata$forType), lty=1, col=estCols, bty='n')
+
+# Add a survey-level covariate: observer ID with different detection probabilities
+observer &lt;- c(sample(1:2, size=300, replace=TRUE),  # A and B on first survey occasion
+              sample(1:3, size=300, replace=TRUE),  # A, B and C for second
+              sample(2:3, size=300, replace=TRUE))  # only B and C for third
+obsID &lt;- matrix(LETTERS[observer], nrow=300)
+colnames(obsID) &lt;- c("obs1", "obs2", "obs3")
+original.data &lt;- cbind(original.data, as.data.frame(obsID))
+str(original.data)
+p &lt;- c(0.4, 0.6, 0.8)[observer]
+DH &lt;- matrix(rbinom(300*3, 1, p*z), nrow=300)
+mEFO &lt;- occSS(DH, list(psi ~ elev + forType, p ~ obs), data = original.data)
+# Check the categorical covariate names and levels:
+mEFO$xlev
+predict(mEFO, data.frame(obs=c("A", "B", "C")), "p")
+predict(mEFO, data.frame(obs=c("A", "B", "C")), "p", type="resp")
+
+</code></pre>
+
+
+</div>

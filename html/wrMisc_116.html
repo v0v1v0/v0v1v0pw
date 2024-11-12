@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>completeArrLst</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Complete list of arrays for same dimensions</h2>
+
+<h3>Description</h3>
+
+<p>This functions aims to inspect repeating structues of data given as list of arrays and will try to complete 
+arrays with fewer lines or columns (as this may appear eg with the very last set of high-thourput sceening data 
+if fewer measures remain in the last set). Thus, the dimensions of the arrays are compared and 
+cases with fewer (lost) columns (eg fewer experimental replicates) will be adjust/complete  by adding column(s) of NA.
+Used eg when at reading mircotiterplate data the last set is not complete.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">completeArrLst(arrLst, silent = FALSE, callFrom = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>arrLst</code></td>
+<td>
+<p>(list) list of arrays (typically 1st and 2nd dim for specific genes/objects, 3rd for different measures associated with)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>list of arrays, now with same dimension of arrays
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>organizeAsListOfRepl</code>, <code>extr1chan</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">arr1 &lt;- array(1:24,dim=c(4,3,2),dimnames=list(c(LETTERS[1:4]),
+  paste("col",1:3,sep=""),c("ch1","ch2")))
+arr3 &lt;- array(81:96,dim=c(4,2,2),dimnames=list(c(LETTERS[1:4]),
+  paste("col",1:2,sep=""),c("ch1","ch2")))
+arrL3 &lt;- list(pl1=arr1,pl3=arr3)
+completeArrLst(arrL3)
+</code></pre>
+
+
+</div>

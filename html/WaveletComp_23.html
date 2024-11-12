@@ -1,0 +1,640 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wc.phasediff.image</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Image plot of phase differences of periodic components for two time
+series
+</h2>
+
+<h3>Description</h3>
+
+<p>This function plots the phase difference image of two time series, which is 
+provided by an object of class <code>"analyze.coherency"</code>.  
+The vertical axis shows the Fourier periods. The horizontal axis shows time step counts, but can 
+be easily transformed into a calendar axis if dates are provided in either row names or a variable 
+named <code>"date"</code> in the data frame at hand. Both axes can be relabeled.
+In particular, an option is given to individualize the period and/or time axis 
+by specifying tick marks and labels.
+</p>
+<p>The color levels are defined according to equidistant breakpoints
+(covering the interval from <code>-pi</code> to <code>+pi</code>), with the number of levels
+as a further parameter. In addition, there is an option to adopt
+an individual color palette.
+</p>
+<p>If the default palette is retained, colors indicate the following. Green:
+phase differences close to zero, which means that the two time
+series are in phase at the respective period. Yellowgreen: in
+phase, series 1 leading. Turquoise: in phase, series 2 leading.
+Red: phase differences are close to <code>+pi</code>, out of phase, series
+2 leading. Blue: phase differences are close to <code>-pi</code>, out of
+phase, series 1 leading.
+</p>
+<p>Further plot design options concern: plot of the cone of
+influence, plot of contour lines to border areas of significance
+with respect to cross-wavelet power or wavelet coherence at a
+given significance level.
+</p>
+<p>Finally, there is an option to insert and format a color legend (a
+right-hand vertical color bar) and to set the plot title.  For
+further processing of the plot, graphical parameters of plot
+regions are provided as output.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wc.phasediff.image(WC, use.sAngle = FALSE, 
+   plot.coi = TRUE, 
+   plot.contour = TRUE, which.contour = "wp", 
+   siglvl = 0.1, col.contour = "white",
+   n.levels = 100, 
+   color.palette = "rainbow(n.levels, start = 0, end = .7)", 
+   useRaster = TRUE, max.contour.segments = 250000,
+   plot.legend = TRUE,
+   legend.params = list(width = 1.2, shrink = 0.9, mar = 5.1, 
+                        n.ticks = 6, 
+                        pi.style = TRUE, 
+                        label.digits = 1, label.format = "f", 
+                        lab = NULL, lab.line = 3),
+   label.time.axis = TRUE, 
+   show.date = FALSE, date.format = NULL, date.tz = NULL,
+   timelab = NULL, timetck = 0.02, timetcl = 0.5,
+   spec.time.axis = list(at = NULL, labels = TRUE, 
+                         las = 1, hadj = NA, padj = NA),
+   label.period.axis = TRUE, 
+   periodlab = NULL, periodtck = 0.02, periodtcl = 0.5,
+   spec.period.axis = list(at = NULL, labels = TRUE, 
+                           las = 1, hadj = NA, padj = NA),
+   main = NULL,
+   lwd = 2, lwd.axis = 1,
+   graphics.reset = TRUE,
+   verbose = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>WC</code></td>
+<td>
+<p>an object of class <code>"analyze.coherency"</code></p>
+</td>
+</tr></table>
+<table><tr style="vertical-align: top;">
+<td><code>use.sAngle</code></td>
+<td>
+<p>Use smoothed version of phase difference? Logical. 
+</p>
+<p>Default: <code>FALSE</code>.</p>
+</td>
+</tr></table>
+<table><tr style="vertical-align: top;">
+<td><code>plot.coi</code></td>
+<td>
+<p>Plot cone of influence? Logical. Default: <code>TRUE</code></p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>plot.contour</code></td>
+<td>
+<p>Plot contour lines to border the area of cross-wavelet power (or wavelet coherence, 
+depending on <code>which.contour</code>) significance? Logical.
+</p>
+<p>Default: <code>TRUE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>which.contour</code></td>
+<td>
+<p>Contour lines of which spectrum should be plotted?
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+                                </td>
+<td style="text-align: left;"> <code>"wp"</code> </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> cross-wavelet power </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                                </td>
+<td style="text-align: left;"> <code>"wc"</code> </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> wavelet coherence 
+                                </td>
+</tr>
+</table>
+<p>Default: <code>"wp"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>siglvl</code></td>
+<td>
+<p>level of cross-wavelet power (or wavelet coherence, depending on <code>which.contour</code>) 
+significance to be applied to the plot of contour lines. 
+</p>
+<p>Default: <code>0.1</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.contour</code></td>
+<td>
+<p>color of contour lines. Default: <code>"white"</code>.</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>n.levels</code></td>
+<td>
+<p>Number of color levels. Default: <code>100</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color.palette</code></td>
+<td>
+<p>Definition of color levels. (The color palette will be assigned to levels in reverse order!)
+</p>
+<p>Default: <code>"rainbow(n.levels, start = 0, end = .7)"</code>.
+</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>useRaster</code></td>
+<td>
+<p>Use a bitmap raster instead of polygons to plot the image? Logical. 
+</p>
+<p>Default: <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.contour.segments</code></td>
+<td>
+<p>limit on the number of segments in a single contour line, positive integer. 
+</p>
+<p>Default: <code>250000</code> (<code>options(...)</code> default settings: <code>25000</code>).</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>plot.legend</code></td>
+<td>
+<p>Plot color legend (a vertical bar of colors and breakpoints)? Logical. 
+</p>
+<p>Default: <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend.params</code></td>
+<td>
+<p>a list of parameters for the plot of the color legend; parameter values can be set selectively 
+(style in parts adopted from <code>image.plot</code> in the R package <code>fields</code> by Douglas Nychka):
+</p>
+
+<ul>
+<li>
+<p>[<code>width</code>:] width of legend bar. <br> 
+Default: <code>1.2</code>. 
+</p>
+</li>
+<li>
+<p>[<code>shrink</code>:] a vertical shrinkage factor. <br>
+Default: <code>0.9</code>. 
+</p>
+</li>
+<li>
+<p>[<code>mar</code>:] right margin of legend bar. <br>
+Default: <code>5.1</code>. 
+</p>
+</li>
+<li>
+<p>[<code>n.ticks</code>:] number of ticks for labels. <br> 
+Default: <code>6</code>. 
+</p>
+</li>
+<li>
+<p>[<code>pi.style</code>:] style of labels, logical: if <code>TRUE</code>, the symbol <code>"pi"</code> is used to label the legend bar; otherwise, labels are numerals. <br>
+Default: <code>TRUE</code>. 
+</p>
+</li>
+<li>
+<p>[<code>label.digits</code>:] number of digits of (numerical factors of) labels. <br>
+Default: <code>1</code> if <code>pi.style</code> is <code>TRUE</code>, else <code>2</code>. 
+</p>
+</li>
+<li>
+<p>[<code>label.format</code>:] format of labels. <br>
+Default: <code>"f"</code>. 
+</p>
+</li>
+<li>
+<p>[<code>lab</code>:] axis label. <br>
+Default: <code>NULL</code>. 
+</p>
+</li>
+<li>
+<p>[<code>lab.line</code>:] line (in user coordinate units) where to put the axis label. <br>
+Default: <code>3</code>.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>label.time.axis</code></td>
+<td>
+<p>Label the time axis? Logical. 
+</p>
+<p>Default: <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show.date</code></td>
+<td>
+<p>Show calendar dates? (Effective only if dates are available as row names or by variable 
+<code>date</code> in the data frame which is analyzed.) Logical. 
+</p>
+<p>Default: <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>date.format</code></td>
+<td>
+<p>the format of calendar date given as a character string, e.g. <code>"%Y-%m-%d"</code>, or equivalently <code>"%F"</code>; 
+see <code>strptime</code> for a list of implemented date conversion specifications. Explicit information given here will overturn any specification 
+stored in <code>WC</code>. If unspecified, date formatting is attempted according to <code>as.Date</code>. 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date.tz</code></td>
+<td>
+<p>a character string specifying the time zone of calendar date; see <code>strptime</code>. Explicit information given here will overturn 
+any specification stored in <code>WC</code>. If unspecified, <code>""</code> (the local time zone) is used. 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>timelab</code></td>
+<td>
+<p>Time axis label. 
+</p>
+<p>Default: <code>"index"</code>; in case of a calendar axis: <code>"calendar date"</code>.</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>timetck</code></td>
+<td>
+<p>length of tick marks on the time axis as a fraction of the smaller of the width or height of the plotting region; see <code>par</code>.  
+If <code>timetck &gt;= 0.5</code>, <code>timetck</code> is interpreted as a fraction of the length of the time axis, so if <code>timetck = 1</code> 
+(and <code>timetcl = NULL</code>), vertical grid lines will be drawn. <br>
+Setting <code>timetck = NA</code> is to use <code>timetcl = -0.5</code> (which is the R default setting of <code>tck</code> and <code>tcl</code>).
+</p>
+<p>Default here: <code>0.02</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timetcl</code></td>
+<td>
+<p>length of tick marks on the time axis as a fraction of the height of a line of text; see <code>par</code>. 
+With <code>timetcl = -0.5</code> (which is the R default setting of <code>tcl</code>), ticks will be drawn outward. 
+</p>
+<p>Default here: <code>0.5</code>.</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>spec.time.axis</code></td>
+<td>
+<p>a list of tick mark and label specifications for individualized time axis labeling 
+(only effective if <code>label.time.axis = TRUE</code>):
+</p>
+
+<ul>
+<li>
+<p>[<code>at</code>:] locations of tick marks (when <code>NULL</code>, default plotting will be applied).
+Valid tick marks can be provided as numerical values or as dates. Dates are used only in the case <code>show.date = TRUE</code>, however, 
+and date formats should conform to <code>as.Date</code> or the format given in <code>date.format</code>. <br>
+Default: <code>NULL</code>. 
+</p>
+</li>
+<li>
+<p>[<code>labels</code>:] either a logical value specifying whether annotations at the tick marks are the tick marks themselves, 
+or any vector of labels. If <code>labels</code> is non-logical, <code>at</code> should be of same length. <br>
+Default: <code>TRUE</code>. 
+</p>
+</li>
+<li>
+<p>[<code>las</code>:] the style of axis labels, see <code>par</code>. <br>
+Default: <code>1</code> (always horizontal). 
+</p>
+</li>
+<li>
+<p>[<code>hadj</code>:] adjustment of labels horizontal to the reading direction, see <code>axis</code>. <br>
+Default: <code>NA</code> (centering is used). 
+</p>
+</li>
+<li>
+<p>[<code>padj</code>:] adjustment of labels perpendicular to the reading direction (this can be a vector of adjustments for each label), 
+see <code>axis</code>. <br>
+Default: <code>NA</code> (centering is used).                           
+</p>
+</li>
+</ul>
+<p>Mismatches will result in a reset to default plotting.                               
+</p>
+</td>
+</tr></table>
+<table><tr style="vertical-align: top;">
+<td><code>label.period.axis</code></td>
+<td>
+<p>Label the (Fourier) period axis? Logical. 
+</p>
+<p>Default: <code>TRUE</code>.</p>
+</td>
+</tr></table>
+<table><tr style="vertical-align: top;">
+<td><code>periodlab</code></td>
+<td>
+<p>(Fourier) period axis label. 
+</p>
+<p>Default: <code>"period"</code>.</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>periodtck</code></td>
+<td>
+<p>length of tick marks on the period axis as a fraction of the smaller of the width or height 
+of the plotting region; see <code>par</code>. If <code>periodtck &gt;= 0.5</code>, <code>periodtck</code> is interpreted as a fraction
+of the length of the period axis, so if <code>periodtck = 1</code> (and <code>periodtcl = NULL</code>), horizontal grid lines will be drawn. <br>
+Setting <code>periodtck = NA</code> is to use <code>periodtcl = -0.5</code> (which is the R default setting of <code>tck</code> and <code>tcl</code>).
+</p>
+<p>Default here: <code>0.02</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>periodtcl</code></td>
+<td>
+<p>length of tick marks on the period axis as a fraction of the height of a line of text; see <code>par</code>. 
+With <code>periodtcl = -0.5</code> (which is the R default setting of <code>tcl</code>) ticks will be drawn outward. 
+</p>
+<p>Default here: <code>0.5</code>.</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>spec.period.axis</code></td>
+<td>
+<p>a list of tick mark and label specifications for individualized period axis labeling 
+(only effective if <code>label.period.axis = TRUE</code>):
+</p>
+
+<ul>
+<li>
+<p>[<code>at</code>:] locations of tick marks (when <code>NULL</code>, default plotting will be applied). Valid tick marks can be provided as 
+numerical and positive values only. <br>
+Default: <code>NULL</code>.        
+</p>
+</li>
+<li>
+<p>[<code>labels</code>:] either a logical value specifying whether annotations at the tick marks are the tick marks themselves, 
+or any vector of labels. If <code>labels</code> is non-logical, <code>at</code> should be of same length. <br>
+Default: <code>TRUE</code>. 
+</p>
+</li>
+<li>
+<p>[<code>las</code>:] the style of axis labels, see <code>par</code>. <br>
+Default: <code>1</code> (always horizontal). 
+</p>
+</li>
+<li>
+<p>[<code>hadj</code>:] adjustment of labels horizontal to the reading direction, see <code>axis</code>. <br>
+Default: <code>NA</code> (centering is used). 
+</p>
+</li>
+<li>
+<p>[<code>padj</code>:] adjustment of labels perpendicular to the reading direction (this can be a vector of adjustments for each label), 
+see <code>axis</code>. <br>
+Default: <code>NA</code> (centering is used).                           
+</p>
+</li>
+</ul>
+<p>Mismatches will result in a reset to default plotting.                               
+</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>an overall title for the plot. 
+</p>
+<p>Default: <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd</code></td>
+<td>
+<p>line width of contour lines and ridge. 
+</p>
+<p>Default: <code>2</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd.axis</code></td>
+<td>
+<p>line width of axes (image and legend bar). 
+</p>
+<p>Default: <code>1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>graphics.reset</code></td>
+<td>
+<p>Reset graphical parameters? Logical. 
+</p>
+<p>Default: <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Print verbose output on the screen? Logical. 
+</p>
+<p>Default: <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of class <code>graphical parameters</code> with the following elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>op</code></td>
+<td>
+<p>original graphical parameters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>image.plt</code></td>
+<td>
+<p>image plot region</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend.plt</code></td>
+<td>
+<p>legend plot region</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Angi Roesch and Harald Schmidbauer</p>
+
+
+<h3>References</h3>
+
+<p>Aguiar-Conraria L., and Soares M.J., 2011. 
+Business cycle synchronization and the Euro: A wavelet analysis. 
+Journal of Macroeconomics 33 (3), 477–489.
+</p>
+<p>Aguiar-Conraria L., and Soares M.J., 2011. 
+The Continuous Wavelet Transform: A Primer. 
+NIPE Working Paper Series 16/2011.
+</p>
+<p>Cazelles B., Chavez M., Berteaux, D., Menard F., Vik J.O., Jenouvrier S., and Stenseth N.C., 2008.
+Wavelet analysis of ecological time series.
+Oecologia 156, 287–304.
+</p>
+<p>Liu P.C., 1994. 
+Wavelet spectrum analysis and ocean wind waves. 
+In: Foufoula-Georgiou E., and Kumar P., (eds.), Wavelets in Geophysics, Academic Press, San Diego, 151–166.
+</p>
+<p>Torrence C., and Compo G.P., 1998. 
+A practical guide to wavelet analysis.
+Bulletin of the American Meteorological Society 79 (1), 61–78.
+</p>
+<p>Veleda D., Montagne R., and Araujo M., 2012. 
+Cross-Wavelet Bias Corrected by Normalizing Scales. 
+Journal of Atmospheric and Oceanic Technology 29, 1401–1408.
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code>analyze.coherency</code>, <code>wc.image</code>, <code>wc.avg</code>, <code>wc.sel.phases</code>, <code>wt.image</code>, <code>wt.avg</code>, <code>wt.sel.phases</code>, <code>wt.phase.image</code>, <code>reconstruct</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## The following example is modified from Veleda et al., 2012:
+
+series.length &lt;- 3*128*24
+x1 &lt;- periodic.series(start.period = 1*24, length = series.length)
+x2 &lt;- periodic.series(start.period = 2*24, length = series.length)
+x3a &lt;- periodic.series(start.period = 4*24, length = series.length)
+x3b &lt;- periodic.series(start.period = 4*24, length = series.length,
+                       phase = 24)
+x4 &lt;- periodic.series(start.period = 8*24, length = series.length)
+x5 &lt;- periodic.series(start.period = 16*24, length = series.length)
+x6 &lt;- periodic.series(start.period = 32*24, length = series.length)
+x7 &lt;- periodic.series(start.period = 64*24, length = series.length)
+x8 &lt;- periodic.series(start.period = 128*24, length = series.length)
+
+x &lt;- x1 + x2 + x3a + x4 + 3*x5 + x6 + x7 + x8 + rnorm(series.length)
+y &lt;- x1 + x2 + x3b + x4 - 3*x5 + x6 + 3*x7 + x8 + rnorm(series.length)
+
+matplot(data.frame(x, y), type = "l", lty = 1, xaxs = "i", col = 1:2, 
+ xlab = "index", ylab = "",
+ main = "hourly series with periods of 1, 2, 4, 8, 16, 32, 64, 128 days", 
+ sub = "(different phases at periods 4 and 16)")
+legend("topright", legend = c("x","y"), col = 1:2, lty = 1)
+
+## The following dates refer to the local time zone 
+## (possibly allowing for daylight saving time):      
+my.date &lt;- seq(as.POSIXct("2014-10-14 00:00:00", format = "%F %T"), 
+               by = "hour", 
+               length.out = series.length)     
+my.data &lt;- data.frame(date = my.date, x = x, y = y)
+
+## Computation of cross-wavelet power and wavelet coherence, x over y:
+## a natural choice of 'dt' in the case of hourly data is 'dt = 1/24',
+## resulting in one time unit equaling one day. 
+## This is also the time unit in which periods are measured.
+my.wc &lt;- analyze.coherency(my.data, c("x","y"), 
+                           loess.span = 0, 
+                           dt = 1/24, dj = 1/20, 
+                           window.size.t = 1, window.size.s = 1/2, 
+                           lowerPeriod = 1/4,
+                           make.pval = TRUE, n.sim = 10)
+
+## Plot of cross-wavelet power spectrum, 
+## with color breakpoints according to quantiles:
+wc.image(my.wc, 
+   main = "cross-wavelet power spectrum, x over y",
+   legend.params = list(lab = "cross-wavelet power levels (quantiles)"),
+   periodlab = "period (days)")
+
+## Default plot of phase differences 
+## (with contour lines referring to cross-wavelet power)
+wc.phasediff.image(my.wc, which.contour = "wp", 
+   main = "image of phase differences, x over y",
+   periodlab = "period (days)")
+      
+## With time elapsed in days 
+## (starting from 0 and proceeding in steps of 50 days) 
+## instead of the (default) time index:
+index.ticks  &lt;- seq(1, series.length, by = 50*24)
+index.labels &lt;- (index.ticks-1)/24      
+wc.phasediff.image(my.wc, which.contour = "wp", 
+   main = "image of phase differences, x over y",
+   periodlab = "period (days)",
+   timelab = "time elapsed (days)",
+   spec.time.axis = list(at = index.ticks, labels = index.labels))
+
+## The same plot, but with (automatically produced) calendar axis:  
+wc.phasediff.image(my.wc, which.contour = "wp", 
+   main = "image of phase differences, x over y",
+   periodlab = "period (days)",
+   show.date = TRUE, date.format = "%F %T")
+     
+## For further axis plotting options:
+## Please see the examples in our guide booklet,
+## URL http://www.hs-stat.com/projects/WaveletComp/WaveletComp_guided_tour.pdf. 
+
+## Plot of phase difference with numerals as labels of the color legend bar: 
+wc.phasediff.image(my.wc, 
+   legend.params=list(pi.style = FALSE, label.digits = 2))
+   
+
+## End(Not run)
+</code></pre>
+
+
+</div>

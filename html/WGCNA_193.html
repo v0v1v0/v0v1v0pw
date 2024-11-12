@@ -1,0 +1,206 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotClusterTreeSamples</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Annotated clustering dendrogram of microarray samples </h2>
+
+<h3>Description</h3>
+
+<p>This function plots an annotated clustering dendorgram of microarray samples.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotClusterTreeSamples(
+  datExpr, 
+  y = NULL, 
+  traitLabels = NULL, 
+  yLabels = NULL,
+  main = if (is.null(y)) "Sample dendrogram" else 
+                         "Sample dendrogram and trait indicator", 
+  setLayout = TRUE, autoColorHeight = TRUE, colorHeight = 0.3,
+  dendroLabels = NULL, 
+  addGuide = FALSE, guideAll = TRUE, 
+  guideCount = NULL, guideHang = 0.2, 
+  cex.traitLabels = 0.8, 
+  cex.dendroLabels = 0.9, 
+  marAll = c(1, 5, 3, 1), 
+  saveMar = TRUE, 
+  abHeight = NULL, abCol = "red", 
+  ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datExpr</code></td>
+<td>
+<p>  a data frame containing expression data, with rows corresponding to samples and
+columns to genes. Missing values are allowed and will be ignored. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p> microarray sample trait. Either a vector with one entry per sample, or a matrix in which each
+column corresponds to a (different) trait and each row to a sample. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>traitLabels</code></td>
+<td>
+<p> labels to be printed next to the color rows depicting sample traits. Defaults to
+column names of <code>y</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yLabels</code></td>
+<td>
+<p>Optional labels to identify colors in the row identifying the sample classes.
+If given, must be of the same dimensions as <code>y</code>. Each label that occurs will be displayed
+once.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p> title for the plot. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>setLayout</code></td>
+<td>
+<p> logical: should the plotting device be partitioned into a standard layout? 
+If <code>FALSE</code>, the user is responsible for partitioning. The function expects two regions of the same
+width, the first one immediately above the second one. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>autoColorHeight</code></td>
+<td>
+<p> logical: should the height of the color area below the dendrogram be
+automatically adjusted for the number of traits? Only effective if <code>setLayout</code> is <code>TRUE</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorHeight</code></td>
+<td>
+<p> Specifies the height of the color area under dendrogram as a fraction of the
+height of the dendrogram area. Only effective when <code>autoColorHeight</code> above is <code>FALSE</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dendroLabels</code></td>
+<td>
+<p> dendrogram labels. Set to <code>FALSE</code> to disable dendrogram labels altogether;
+set to <code>NULL</code> to use row labels of <code>datExpr</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addGuide</code></td>
+<td>
+<p> logical: should vertical "guide lines" be added to the dendrogram plot? The lines make
+it easier to identify color codes with individual samples. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>guideAll</code></td>
+<td>
+<p> logical: add a guide line for every sample? Only effective for <code>addGuide</code> set
+<code>TRUE</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>guideCount</code></td>
+<td>
+<p> number of guide lines to be plotted. Only effective when <code>addGuide</code> is
+<code>TRUE</code> and <code>guideAll</code> is <code>FALSE</code>.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>guideHang</code></td>
+<td>
+<p> fraction of the dendrogram height to leave between the top end of the guide line and
+the dendrogram merge height. If the guide lines overlap with dendrogram labels, increase <code>guideHang</code>
+to leave more space for the labels. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.traitLabels</code></td>
+<td>
+<p> character expansion factor for trait labels. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.dendroLabels</code></td>
+<td>
+<p> character expansion factor for dendrogram (sample) labels. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>marAll</code></td>
+<td>
+<p> a 4-element vector giving the bottom, left, top and right margins around the combined
+plot. Note that this is not the same as setting the margins via a call to <code>par</code>, because the
+bottom margin of the dendrogram and the top margin of the color underneath are always zero. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>saveMar</code></td>
+<td>
+<p> logical: save margins setting before starting the plot and restore on exit? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abHeight</code></td>
+<td>
+<p> optional specification of the height for a horizontal line in the dendrogram, see
+<code>abline</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abCol</code></td>
+<td>
+<p> color for plotting the horizontal line. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p> other graphical parameters to <code>plot.hclust</code>. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function generates an average linkage hierarchical clustering dendrogram (see
+<code>hclust</code>) of samples from the given expression data, using Eclidean distance of
+samples. The dendrogram is plotted together with color annotation for the samples. 
+</p>
+<p>The trait <code>y</code> must be numeric. If <code>y</code> is integer, the colors will correspond to values. If
+<code>y</code> is continouos, it will be dichotomized to two classes, below and above median.
+</p>
+
+
+<h3>Value</h3>
+
+<p>None.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Steve Horvath and Peter Langfelder</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>dist</code>, <code>hclust</code>, <code>plotDendroAndColors</code> </p>
+
+
+</div>

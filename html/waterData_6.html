@@ -1,0 +1,195 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>importDVs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Imports daily USGS hydrologic times series data</h2>
+
+<h3>Description</h3>
+
+<p>Function to import daily hydrologic time series 
+data given a USGS streamgage identification number.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">importDVs(staid, code = "00060", stat = "00003", sdate = "1851-01-01",
+  edate = as.Date(Sys.Date(), format = "%Y-%m-%d"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>staid</code></td>
+<td>
+<p>is the USGS site identification number,
+usually eight digits long, but can be longer.  Users may search for 
+surface-water sites and obtain station identification numbers using the 
+USGS Site Web Service, 
+<a href="https://waterservices.usgs.gov/rest/Site-Service.html">https://waterservices.usgs.gov/rest/Site-Service.html</a> (USGS, 2017e); 
+using the National Water Information System: Mapper, 
+<a href="https://maps.waterdata.usgs.gov/mapper/index.html">https://maps.waterdata.usgs.gov/mapper/index.html</a> (U.S. Geological Survey, 2017a); 
+or using the National Water Information System: Web Interface to daily 
+surface-water data, 
+<a href="https://waterdata.usgs.gov/nwis/dv/?referred_module=sw">https://waterdata.usgs.gov/nwis/dv/?referred_module=sw</a> 
+(U.S. Geological Survey, 2012f).  The site identification number needs to 
+be entered as a character, that is in quotes, because many USGS 
+streamgage numbers begin with zero and the leading zero is necessary.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>code</code></td>
+<td>
+<p>is the USGS parameter code, a 5-digit number 
+used in the USGS computerized data system, National Water 
+Information System (NWIS), to uniquely identify a specific hydrologic 
+property or constituent.  A list of paramater codes is available at 
+<a href="https://nwis.waterdata.usgs.gov/usa/nwis/pmcodes">https://nwis.waterdata.usgs.gov/usa/nwis/pmcodes</a> (U.S. Geological Survey, 2017b).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stat</code></td>
+<td>
+<p>is the USGS statistics code, a 5-digit number 
+used in the USGS computerized data system, National Water 
+Information System (NWIS), to uniquely identify specific statistics, such
+as daily mean, daily maximum, and daily minimum.  The default,  
+00003,  is the mean daily value.  A list of statistics codes is available at 
+<a href="https://nwis.waterdata.usgs.gov/nwis/help/?read_file=stat&amp;format=table">https://nwis.waterdata.usgs.gov/nwis/help/?read_file=stat&amp;format=table</a> 
+(U.S. Geological Survey, 2017c).
+Not all statistics are available at every gage.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sdate</code></td>
+<td>
+<p>is the start date of the time series, in the format 
+yyyy-mm-dd, optional.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edate</code></td>
+<td>
+<p>is the end date of the time series, in the format yyyy-mm-dd, 
+optional.</p>
+</td>
+</tr>
+</table>
+<h3>Format</h3>
+
+<p>The returned data frame has the following columns <br></p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+Name </td>
+<td style="text-align: left;"> Type </td>
+<td style="text-align: left;"> Description </td>
+</tr>
+<tr>
+<td style="text-align: left;"> 
+staid </td>
+<td style="text-align: left;"> factor </td>
+<td style="text-align: left;"> USGS station identification number </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+val </td>
+<td style="text-align: left;"> numeric </td>
+<td style="text-align: left;"> The value of the hydrologic variable </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+dates </td>
+<td style="text-align: left;"> Date </td>
+<td style="text-align: left;"> Date of daily value </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+qualcode </td>
+<td style="text-align: left;"> factor </td>
+<td style="text-align: left;"> Qualification code
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function will import data from a WaterML2 service (current USGS 
+hydrological data standard).  It will retrieve daily streamflow and 
+continuous water-quality data from the USGS Daily Values Site Web 
+Service <a href="https://waterservices.usgs.gov/rest/DV-Service.html">https://waterservices.usgs.gov/rest/DV-Service.html</a>
+(U.S. Geological Survey, 2017d).
+</p>
+
+
+<h3>Value</h3>
+
+<p>a data frame containing daily streamflow or other hydrologic data 
+for the site specified during the dates specified (inclusive).  The USGS 
+parameter code, code, and the statistics code, stat, are attributes of the
+data frame.
+</p>
+
+
+<h3>References</h3>
+
+<p>U.S. Geological Survey, 2017a, National Water Information System: Mapper, 
+accessed January 3, 2017, at 
+<a href="https://maps.waterdata.usgs.gov/mapper/index.html">https://maps.waterdata.usgs.gov/mapper/index.html</a>.
+</p>
+<p>U.S. Geological Survey, 2017b, Parameter code definition, 
+National Water Information System: Web Interface, accessed January 3, 
+2017, at <a href="https://nwis.waterdata.usgs.gov/usa/nwis/pmcodes">https://nwis.waterdata.usgs.gov/usa/nwis/pmcodes</a>.
+</p>
+<p>U.S. Geological Survey, 2017c, Stat codes (stat_cd), 
+National Water Information System: Web Interface, accessed January 3, 
+2017, at 
+<a href="https://nwis.waterdata.usgs.gov/nwis/help/?read_file=stat&amp;format=table">https://nwis.waterdata.usgs.gov/nwis/help/?read_file=stat&amp;format=table</a>.
+</p>
+<p>U.S. Geological Survey, 2017d, USGS daily values site web service: 
+REST Web Services, accessed January 3, 2017, at 
+<a href="https://waterservices.usgs.gov/rest/DV-Service.html">https://waterservices.usgs.gov/rest/DV-Service.html</a>.
+</p>
+<p>U.S. Geological Survey, 2017e, USGS site web service: 
+REST Web Services, accessed January 3, 2017, at 
+<a href="https://waterservices.usgs.gov/rest/Site-Service.html">https://waterservices.usgs.gov/rest/Site-Service.html</a>.
+</p>
+<p>U.S. Geological Survey, 2017f, USGS surface-water daily data for the Nation: 
+National Water Information System: Web Interface, accessed January 3, 
+2017, at <a href="http://waterdata.usgs.gov/nwis/dv/?referred_module=sw">http://waterdata.usgs.gov/nwis/dv/?referred_module=sw</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"> ## Not run: 
+# import mean daily streamflow for Red River of the North at Fargo, ND
+q05054000 &lt;- importDVs("05054000", sdate="2000-01-01", edate="2010-12-31")
+head(q05054000)
+# additional examples of how to this function follow
+# import mean daily gage height for Red River of the North at Grand Forks, ND
+gh05082500 &lt;- importDVs("05082500", code="00065", sdate="2000-01-01", edate="2010-12-31")
+# import mean daily specific conductance for Red River of the North at Grand Forks, ND
+sc05082500&lt;- importDVs("05082500", code="00095", sdate="2000-01-01", edate="2010-12-31")
+# import mean daily water temperature for Red River of the North at Fargo, ND
+temp05054000&lt;- importDVs("05054000", code="00010", sdate="2000-01-01", edate="2010-12-31")
+# import median daily pH for Red River of the North at Fargo, ND
+pH05054000&lt;- importDVs("05054000", code="00400", stat="00008", 
+sdate="2000-01-01", edate="2010-12-31")
+# examine the attributes of the data frame to show that the parameter code 
+# and statistics code are saved with the data frame
+attributes(pH05054000)[c("code","stat")]
+# import mean daily oxygen for Red River of the North at Fargo, ND
+do05054000 &lt;- importDVs("05054000", code="00300", sdate="2000-01-01", edate="2010-12-31")
+# import mean daily turbidity for Red River of the North at Fargo, ND
+turb05054000 &lt;- importDVs("05054000", code="63680", sdate="2000-01-01", edate="2010-12-31")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

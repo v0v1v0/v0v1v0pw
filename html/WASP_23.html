@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>knn</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Modified k-nearest neighbour conditional bootstrap or regression function estimation with extrapolation</h2>
+
+<h3>Description</h3>
+
+<p>Modified k-nearest neighbour conditional bootstrap or regression function estimation with extrapolation
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">knn(
+  x,
+  z,
+  zout,
+  k = 0,
+  pw,
+  reg = TRUE,
+  nensemble = 100,
+  tailcorrection = TRUE,
+  tailprob = 0.25,
+  tailfac = 0.2,
+  extrap = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A vector of response.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>A matrix of existing predictors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zout</code></td>
+<td>
+<p>A matrix of predictor values the response is to be estimated at.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>The number of nearest neighbours used. The default value is 0, indicating Lall and Sharma default is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pw</code></td>
+<td>
+<p>A vector of partial weights of the same length of z.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reg</code></td>
+<td>
+<p>A logical operator to inform whether a conditional expectation should be output or not nensemble, Used if reg=F and represents the number of realisations that are generated Value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nensemble</code></td>
+<td>
+<p>An integer the specifies the number of ensembles used. The default is 100.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tailcorrection</code></td>
+<td>
+<p>A logical value, T (default) or F, that denotes whether a reduced value of k (number of nearest neighbours) should be used in the tails of any conditioning plane. Whether one is in the tails or not is determined based on the nearest neighbour response value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tailprob</code></td>
+<td>
+<p>A scalar that denotes the p-value of the cdf (on either extreme) the tailcorrection takes effect. The default value is 0.25.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tailfac</code></td>
+<td>
+<p>A scalar that specifies the lowest fraction of the default k that can be used in the tails. Depending on the how extreme one is in the tails, the actual k decreases linearly from k (for a p-value greater than tailprob) to tailfac*k proportional to the actual p-value of the nearest neighbour response, divided by tailprob. The default value is 0.2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>extrap</code></td>
+<td>
+<p>A logical value, T (default) or F, that denotes whether a kernel extraplation method is used to predict x.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A matrix of responses having same rows as zout if reg=T, or having nensemble columns is reg=F.
+</p>
+
+
+<h3>References</h3>
+
+<p>Sharma, A., Tarboton, D.G. and Lall, U., 1997. Streamflow simulation: A nonparametric approach. Water resources research, 33(2), pp.291-308.
+</p>
+<p>Sharma, A. and O'Neill, R., 2002. A nonparametric approach for representing interannual dependence in monthly streamflow sequences. Water resources research, 38(7), pp.5-1.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# AR9 model   x(i)=0.3*x(i-1)-0.6*x(i-4)-0.5*x(i-9)+eps
+data.ar9 &lt;- data.gen.ar9(500)
+x &lt;- data.ar9$x # response
+z &lt;- data.ar9$dp # possible predictors
+
+zout &lt;- ts(data.gen.ar9(500, ndim = ncol(z))$dp) # new input
+
+xhat1 &lt;- xhat2 &lt;- x
+xhat1 &lt;- knn(x, z, zout, k = 5, reg = TRUE, extrap = FALSE) # without extrapolation
+xhat2 &lt;- knn(x, z, zout, k = 5, reg = TRUE, extrap = TRUE) # with extrapolation
+
+ts.plot(ts(x), ts(xhat1), ts(xhat2), col = c("black", "red", "blue"),
+ylim = c(-5, 5), lwd = c(2, 2, 1))
+
+</code></pre>
+
+
+</div>

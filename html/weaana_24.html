@@ -1,0 +1,67 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>thermalTimeHourly</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate thermal time using the hourly temperature (non daily temperature)</h2>
+
+<h3>Description</h3>
+
+<p>Calculate thermal time using the hourly temperature (non daily temperature)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">thermalTimeHourly(timestamp, temperature, x_temp, y_temp)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>timestamp</code></td>
+<td>
+<p>The timestamp of weather records</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>temperature</code></td>
+<td>
+<p>The temperature</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x_temp</code></td>
+<td>
+<p>The cardinal temperatures</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y_temp</code></td>
+<td>
+<p>The effective thermal time</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data frame with daily thermal time
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">met_file &lt;- system.file("extdata/WeatherHourly.csv", package = "weaana")
+hourly &lt;- read.csv(met_file, as.is = TRUE) 
+
+hourly$timestamp &lt;- as.POSIXct(hourly$timestamp, format = "%Y-%m-%dT%H:%M:%SZ")
+x_temp &lt;- c(0, 20, 35)
+y_temp &lt;- c(0, 20, 0)
+thermalTimeHourly(hourly$timestamp, hourly$temperature, x_temp, y_temp)
+</code></pre>
+
+
+</div>

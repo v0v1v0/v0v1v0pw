@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pc_synonyms</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Search synonyms in pubchem</h2>
+
+<h3>Description</h3>
+
+<p>Search synonyms using PUG-REST,
+see <a href="https://pubchem.ncbi.nlm.nih.gov/">https://pubchem.ncbi.nlm.nih.gov/</a>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pc_synonyms(
+  query,
+  from = c("name", "cid", "sid", "aid", "smiles", "inchi", "inchikey"),
+  match = c("all", "first", "ask", "na"),
+  verbose = getOption("verbose"),
+  arg = NULL,
+  choices = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>character; search term.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>character; type of input, can be one of "name" (default), "cid",
+"sid", "aid", "smiles", "inchi", "inchikey"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>match</code></td>
+<td>
+<p>character; How should multiple hits be handled? <code>"all"</code>
+returns all matches, <code>"first"</code> returns only the first result,
+<code>"ask"</code> enters an interactive mode and the user is asked for input,
+<code>"na"</code> returns <code>NA</code> if multiple hits are found.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical; should a verbose output be printed on the console?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arg</code></td>
+<td>
+<p>character; optional arguments like "name_type=word" to match
+individual words.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>choices</code></td>
+<td>
+<p>deprecated.  Use the <code>match</code> argument instead.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>currently unused</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a named list.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Please respect the Terms and Conditions of the National Library of
+Medicine, <a href="https://www.nlm.nih.gov/databases/download.html">https://www.nlm.nih.gov/databases/download.html</a> the data
+usage policies of National Center for Biotechnology Information,
+<a href="https://www.ncbi.nlm.nih.gov/home/about/policies/">https://www.ncbi.nlm.nih.gov/home/about/policies/</a>,
+<a href="https://pubchem.ncbi.nlm.nih.gov/docs/programmatic-access">https://pubchem.ncbi.nlm.nih.gov/docs/programmatic-access</a>, and the data
+usage policies of the indicidual data sources
+<a href="https://pubchem.ncbi.nlm.nih.gov/sources/">https://pubchem.ncbi.nlm.nih.gov/sources/</a>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Wang, Y., J. Xiao, T. O. Suzek, et al. 2009 PubChem: A Public
+Information System for
+Analyzing Bioactivities of Small Molecules. Nucleic Acids Research 37:
+623–633.
+</p>
+<p>Kim, Sunghwan, Paul A. Thiessen, Evan E. Bolton, et al. 2016
+PubChem Substance and Compound Databases. Nucleic Acids Research 44(D1):
+D1202–D1213.
+</p>
+<p>Kim, S., Thiessen, P. A., Bolton, E. E., &amp; Bryant, S. H. (2015).
+PUG-SOAP and PUG-REST: web services for programmatic access to chemical
+information in PubChem. Nucleic acids research, gkv396.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+pc_synonyms("Aspirin")
+pc_synonyms(c("Aspirin", "Triclosan"))
+pc_synonyms(5564, from = "cid")
+pc_synonyms(c("Aspirin", "Triclosan"), match = "ask")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

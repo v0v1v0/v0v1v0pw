@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cbindNR</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>cbind to non-redundant</h2>
+
+<h3>Description</h3>
+
+<p><code>cbindNR</code> combines all matrixes given as arguments to non-redundant column names (by ADDING the number of 'duplicated' columns !). 
+Thus, this function works similar to <code>cbind</code>, but allows combining multiple matrix-objects containing redundant column-names.
+Of course, all input-matrixes must have the same number of rows !
+By default, the output gets sorted by column-names.
+Note, due to the use of '...' arguments must be given by their full argument-names, lazy evaluation might not recognize properly argument names.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cbindNR(
+  ...,
+  convertDFtoMatr = TRUE,
+  sortOutput = TRUE,
+  summarizeAs = "sum",
+  silent = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>all matrixes to get combined in cbind way</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>convertDFtoMatr</code></td>
+<td>
+<p>(logical) decide if output should be converted to matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sortOutput</code></td>
+<td>
+<p>(logical) optional sorting by column-names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>summarizeAs</code></td>
+<td>
+<p>(character) decide of combined values should get summed (default, 'sum') or averaged ('mean')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a matrix or data.frame (as cbind would return)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>cbind</code>, <code>nonAmbiguousNum</code>, <code>firstOfRepLines</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">ma1 &lt;- matrix(1:6, ncol=3, dimnames=list(1:2,LETTERS[3:1]))
+ma2 &lt;- matrix(11:16, ncol=3, dimnames=list(1:2,LETTERS[3:5]))
+cbindNR(ma1, ma2)
+cbindNR(ma1, ma2, summarizeAs="mean")
+</code></pre>
+
+
+</div>

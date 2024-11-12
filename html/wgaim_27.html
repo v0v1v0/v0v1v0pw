@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>tr.wgaim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Display diagnostic information about the QTL detected.</h2>
+
+<h3>Description</h3>
+
+<p>Displays diagnostic infomation about QTL detection and
+significance for the sequence of models generated in a <code>wgaim</code>
+analysis.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wgaim'
+tr(object, iter = 1:length(object$QTL$effects),
+      lik.out = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>an object of class <code>"wgaim"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iter</code></td>
+<td>
+<p>a vector of integers specifying what rows of the p-value matrix to display</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lik.out</code></td>
+<td>
+<p>logical value. If <code>TRUE</code> then diagnostic information
+about the testing of the genetic variance is given for all iterations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to <code>print.default</code> for displaying
+of information</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>By default the printing of the objects occur with arguments <code>quote = FALSE</code>
+and <code>right = TRUE</code>. Users should avoid using these arguments.
+</p>
+
+
+<h3>Value</h3>
+
+<p>For the selected QTL, a probability value matrix is displayed
+with rows specified by <code>iter</code>. If <code>lik.out =
+TRUE</code> then a matrix with rows consisting of the likelihood with
+additive genetic variance, the likelihood without additive genetic
+variance (NULL model), the test statistic and the p-value for the statistic.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Julian Taylor</p>
+
+
+<h3>References</h3>
+
+<p>Verbyla, A. P &amp; Taylor, J. D, Verbyla, K. L (2012). RWGAIM: An efficient high
+dimensional random whole genome average (QTL) interval mapping approach.
+<em>Genetics Research</em>. <b>94</b>, 291-306.
+</p>
+<p>Julian Taylor, Arunas Vebyla (2011). R Package wgaim: QTL Analysis in
+Bi-Parental Populations Using Linear Mixed Models. <em>Journal of
+Statistical Software</em>, <b>40</b>(7), 1-18. URL <a href="https://www.jstatsoft.org/v40/i07/">https://www.jstatsoft.org/v40/i07/</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wgaim</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+# read in data
+
+data(phenoRxK, package = "wgaim")
+data(genoRxK, package = "wgaim")
+
+# subset linkage map and convert to "interval" object
+
+genoRxK &lt;- subset(genoRxK, chr = c("1A", "2D1", "2D2", "3B"))
+genoRxK &lt;- cross2int(genoRxK, impute = "Martinez", id = "Genotype")
+
+# base model
+
+rkyld.asf &lt;- asreml(yld ~ lrow, random = ~ Genotype + Range,
+                   residual = ~ ar1(Range):ar1(Row), data = phenoRxK)
+
+# find QTL
+
+rkyld.qtl &lt;- wgaim(rkyld.asf, intervalObj = genoRxK, merge.by = "Genotype",
+                   trace = "trace.txt", na.action = na.method(x = "include"))
+
+# diagnostic check
+
+tr(rkyld.qtl, digits = 4)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

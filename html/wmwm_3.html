@@ -1,0 +1,213 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wmwm.test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Wilcoxon-Mann-Whitney Test in the Presence of
+Arbitrarily Missing Data</h2>
+
+<h3>Description</h3>
+
+<p>Performs the two-sample Wilcoxon-Mann-Whitney test in the presence
+of missing data, which controls the Type I error regardless of the values of
+missing data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wmwm.test(X, Y, alternative = c("two.sided", "less", "greater"),
+ties = NULL, lower.boundary = -Inf, upper.boundary = Inf,
+exact = NULL, correct = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X, Y</code></td>
+<td>
+<p>numeric vectors of data values with potential missing data.
+Inf and -Inf values will be omitted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alternative</code></td>
+<td>
+<p>a character string specifying the alternative hypothesis,
+must be one of "two.sided" (default), "greater" or "less".
+You can specify just the initial letter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ties</code></td>
+<td>
+<p>a logical indicating whether samples could be tied.
+</p>
+
+<ul>
+<li>
+<p> If observed samples contain tied samples, ties defaults to TRUE.
+</p>
+</li>
+<li>
+<p> If observed samples do not contain tied samples, ties defaults to FALSE.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower.boundary</code></td>
+<td>
+<p>(when ties is TRUE) a number specifying the
+lower bound of the data set, must be smaller or equal than
+the minimum of all observed data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upper.boundary</code></td>
+<td>
+<p>(when ties is TRUE) a number specifying the
+upper bound of the data set, must be larger or equal than
+the maximum of all observed data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exact</code></td>
+<td>
+<p>a logical indicating whether the bounds should be of an
+exact p-value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>correct</code></td>
+<td>
+<p>a logical indicating whether the bounds should be of
+a p-value applying continuity correction in the normal approximation.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>wmwm.test()</code> performs the two-sample hypothesis test method
+proposed in (Zeng et al., 2024) for univariate data
+when not all data are observed.
+Bounds of the Wilcoxon-Mann-Whitney test statistic and its p-value
+will be computed in the presence of missing data.
+The p-value of the test method proposed in (Zeng et al., 2024) is then
+returned as the maximum possible p-value of the Wilcoxon-Mann-Whitney test.
+</p>
+<p>By default (if <code>exact</code> is not specified), this function returns
+bounds of an exact p-value if the length of <code>X</code> and <code>Y</code> are both
+smaller than 50, and there are no tied observations.
+Otherwise, bounds of a p-value calculated using normal approximation
+with continuity correction will be returned.
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>p.value</code></td>
+<td>
+<p>the p-value for the test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bounds.statistic</code></td>
+<td>
+<p>bounds of the value of the Wilcoxon-Mann-Whitney
+test statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bounds.pvalue</code></td>
+<td>
+<p>bounds of the p-value of the Wilcoxon-Mann-Whitney
+test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alternative</code></td>
+<td>
+<p>a character string describing the alternative hypothesis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ties.method</code></td>
+<td>
+<p>a character string describing whether samples are
+considered tied.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>description.bounds</code></td>
+<td>
+<p>a character string describing the bounds of the p-value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data.name</code></td>
+<td>
+<p>a character string giving the names of the data.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+
+<ul>
+<li>
+<p> Zeng Y, Adams NM, Bodenham DA. On two-sample testing for data with
+arbitrarily missing values. arXiv preprint arXiv:2403.15327. 2024 Mar 22.
+</p>
+</li>
+<li>
+<p> Mann, Henry B., and Donald R. Whitney. "On a test of whether one
+of two random variables is stochastically larger than the other."
+The Annals of Mathematical Statistics (1947): 50-60.
+</p>
+</li>
+<li>
+<p> Lehmann, Erich Leo, and Howard J. D'Abrera. Nonparametrics:
+statistical methods based on ranks. Holden-day, 1975.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>stats::wilcox.test()</code> when data are fully observed.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#### Assume all samples are distinct.
+X &lt;- c(6.2, 3.5, NA, 7.6, 9.2)
+Y &lt;- c(0.2, 1.3, -0.5, -1.7)
+
+## By default, when the sample sizes of both X and Y are smaller than 50,
+## exact distribution will be used.
+wmwm.test(X, Y, ties = FALSE, alternative = 'two.sided')
+
+## using normality approximation with continuity correction:
+wmwm.test(X, Y, ties = FALSE, alternative = 'two.sided', exact = FALSE, correct = TRUE)
+
+#### Assume samples can be tied.
+X &lt;- c(6, 9, NA, 7, 9)
+Y &lt;- c(0, 1, 0, -1)
+
+## When the samples can be tied, normality approximation will be used.
+## By default, lower.boundary = -Inf, upper.boundary = Inf.
+wmwm.test(X, Y, ties = TRUE, alternative = 'two.sided')
+
+## specifying lower.boundary and upper.boundary:
+wmwm.test(X, Y, ties = TRUE, alternative = 'two.sided', lower.boundary = -1, upper.boundary = 9)
+</code></pre>
+
+
+</div>

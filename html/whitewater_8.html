@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ww_monthUSGS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Month-Only Stats (USGS)</h2>
+
+<h3>Description</h3>
+
+<p>This function uses the results of the ww_dvUSGS object to
+generate mean, maximum, median, standard deviation and coefficient of variation for month only.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ww_monthUSGS(procDV, sites = NULL, parallel = FALSE, verbose = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>procDV</code></td>
+<td>
+<p>A previously created ww_dvUSGS object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sites</code></td>
+<td>
+<p>A <code>character</code> vector with NWIS site numbers (optional).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p><code>logical</code> indicating whether to use future_map().</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p><code>logical</code> for printing information. TRUE (default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments to pass on to future_map and ww_dvUSGS.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>tibble</code> filtered by month and added meta-data.
+</p>
+
+
+<h3>Note</h3>
+
+<p>If a previously created ww_dvUSGS object is not used then the user needs to
+provide a <code>sites</code> vector. This will run ww_dvUSGS in the background.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+library(whitewater)
+yaak_river_dv &lt;- ww_dvUSGS('12304500',
+parameter_cd = '00060',
+wy_month = 10)
+
+yaak_river_month &lt;- ww_monthUSGS(yaak_river_dv)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

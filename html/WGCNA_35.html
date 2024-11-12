@@ -1,0 +1,939 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>blockwiseConsensusModules</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find consensus modules across several datasets.</h2>
+
+<h3>Description</h3>
+
+<p>Perform network construction and consensus module detection across several datasets.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">blockwiseConsensusModules(
+     multiExpr, 
+
+     # Data checking options
+
+     checkMissingData = TRUE,
+
+     # Blocking options
+
+     blocks = NULL, 
+     maxBlockSize = 5000, 
+     blockSizePenaltyPower = 5,
+     nPreclusteringCenters = NULL,
+     randomSeed = 54321,
+
+     # TOM precalculation arguments, if available
+
+     individualTOMInfo = NULL,
+     useIndivTOMSubset = NULL,
+
+     # Network construction arguments: correlation options
+
+     corType = "pearson",
+     maxPOutliers = 1,
+     quickCor = 0,
+     pearsonFallback = "individual", 
+     cosineCorrelation = FALSE,
+
+     # Adjacency function options
+
+     power = 6, 
+     networkType = "unsigned", 
+     checkPower = TRUE,
+     replaceMissingAdjacencies = FALSE,
+
+     # Topological overlap options
+
+     TOMType = "unsigned",
+     TOMDenom = "min",
+     suppressNegativeTOM = FALSE,
+
+     # Save individual TOMs?
+
+     saveIndividualTOMs = TRUE,
+     individualTOMFileNames = "individualTOM-Set%s-Block%b.RData",
+
+     # Consensus calculation options: network calibration
+
+     networkCalibration = c("single quantile", "full quantile", "none"),
+
+     # Simple quantile calibration options
+
+     calibrationQuantile = 0.95,
+     sampleForCalibration = TRUE, sampleForCalibrationFactor = 1000,
+     getNetworkCalibrationSamples = FALSE,
+
+     # Consensus definition
+
+     consensusQuantile = 0,
+     useMean = FALSE,
+     setWeights = NULL,
+
+     # Saving the consensus TOM
+
+     saveConsensusTOMs = FALSE,
+     consensusTOMFilePattern = "consensusTOM-block.%b.RData",
+
+     # Internal handling of TOMs
+
+     useDiskCache = TRUE, chunkSize = NULL,
+     cacheBase = ".blockConsModsCache",
+     cacheDir = ".",
+
+     # Alternative consensus TOM input from a previous calculation 
+
+     consensusTOMInfo = NULL,
+
+     # Basic tree cut options 
+
+     # Basic tree cut options 
+
+     deepSplit = 2, 
+     detectCutHeight = 0.995, minModuleSize = 20,
+     checkMinModuleSize = TRUE,
+
+     # Advanced tree cut opyions
+
+     maxCoreScatter = NULL, minGap = NULL,
+     maxAbsCoreScatter = NULL, minAbsGap = NULL,
+     minSplitHeight = NULL, minAbsSplitHeight = NULL,
+     useBranchEigennodeDissim = FALSE,
+     minBranchEigennodeDissim = mergeCutHeight,
+     stabilityLabels = NULL,
+     minStabilityDissim = NULL,
+
+     pamStage = TRUE,  pamRespectsDendro = TRUE,
+
+     # Gene reassignment and trimming from a module, and module "significance" criteria
+
+     reassignThresholdPS = 1e-4,
+     trimmingConsensusQuantile = consensusQuantile,
+     minCoreKME = 0.5, minCoreKMESize = minModuleSize/3,
+     minKMEtoStay = 0.2,
+
+     # Module eigengene calculation options
+
+     impute = TRUE,
+     trapErrors = FALSE,
+
+     #Module merging options
+
+     equalizeQuantilesForModuleMerging = FALSE,
+     quantileSummaryForModuleMerging = "mean",
+     mergeCutHeight = 0.15, 
+     mergeConsensusQuantile = consensusQuantile,
+
+     # Output options
+
+     numericLabels = FALSE,
+
+     # General options
+
+     nThreads = 0,
+     verbose = 2, indent = 0, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>multiExpr</code></td>
+<td>
+<p> expression data in the multi-set format (see <code>checkSets</code>). A vector of
+lists, one per set. Each set must contain a component <code>data</code> that contains the expression data, with
+rows corresponding to samples and columns to genes or probes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checkMissingData</code></td>
+<td>
+<p>logical: should data be checked for excessive numbers of missing entries in
+genes and samples, and for genes with zero variance? See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blocks</code></td>
+<td>
+<p> optional specification of blocks in which hierarchical clustering and module detection
+should be performed. If given, must be a numeric vector with one entry per gene
+of <code>multiExpr</code> giving the number of the block to which the corresponding gene belongs. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxBlockSize</code></td>
+<td>
+<p> integer giving maximum block size for module detection. Ignored if <code>blocks</code>
+above is non-NULL. Otherwise, if the number of genes in <code>datExpr</code> exceeds <code>maxBlockSize</code>, genes
+will be pre-clustered into blocks whose size should not exceed <code>maxBlockSize</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blockSizePenaltyPower</code></td>
+<td>
+<p>number specifying how strongly blocks should be penalized for exceeding the
+maximum size. Set to a lrge number or <code>Inf</code> if not exceeding maximum block size is very important.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nPreclusteringCenters</code></td>
+<td>
+<p>number of centers to be used in the preclustering. Defaults to smaller of
+<code>nGenes/20</code> and <code>100*nGenes/maxBlockSize</code>, where <code>nGenes</code> is the nunber of genes (variables) in
+<code>multiExpr</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>randomSeed</code></td>
+<td>
+<p> integer to be used as seed for the random number generator before the function
+starts. If a current seed exists, it is saved and restored upon exit. If <code>NULL</code> is given, the
+function will not save and restore the seed. </p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>individualTOMInfo</code></td>
+<td>
+<p> Optional data for TOM matrices in individual data sets. This object is returned by
+the function <code>blockwiseIndividualTOMs</code>. If not given, appropriate topological overlaps will be
+calculated using the network contruction options below. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useIndivTOMSubset</code></td>
+<td>
+<p> If <code>individualTOMInfo</code> is given, this argument allows to only select a subset
+of the individual set networks contained in <code>individualTOMInfo</code>. It should be a numeric vector giving the
+indices of the individual sets to be used. Note that this argument is NOT applied to <code>multiExpr</code>. </p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>corType</code></td>
+<td>
+<p> character string specifying the correlation to be used. Allowed values are (unique
+abbreviations of) <code>"pearson"</code> and <code>"bicor"</code>, corresponding to Pearson and bidweight
+midcorrelation, respectively. Missing values are handled using the <code>pariwise.complete.obs</code> option. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxPOutliers</code></td>
+<td>
+<p> only used for <code>corType=="bicor"</code>. Specifies the maximum percentile of data 
+that can be considered outliers on either 
+side of the median separately. For each side of the median, if
+higher percentile than <code>maxPOutliers</code> is considered an outlier by the weight function based on
+<code>9*mad(x)</code>, the width of the weight function is increased such that the percentile of outliers on
+that side of the median equals <code>maxPOutliers</code>. Using <code>maxPOutliers=1</code> will effectively disable
+all weight function broadening; using <code>maxPOutliers=0</code> will give results that are quite similar (but
+not equal to) Pearson correlation. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quickCor</code></td>
+<td>
+<p> real number between 0 and 1 that controls the handling of missing data in the
+calculation of correlations. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pearsonFallback</code></td>
+<td>
+<p>Specifies whether the bicor calculation, if used, should revert to Pearson when
+median absolute deviation (mad) is zero. Recongnized values are (abbreviations of)
+<code>"none", "individual", "all"</code>. If set to
+<code>"none"</code>, zero mad will result in <code>NA</code> for the corresponding correlation.
+If set to <code>"individual"</code>, Pearson calculation will be used only for columns that have zero mad.
+If set to <code>"all"</code>, the presence of a single zero mad will cause the whole variable to be treated in
+Pearson correlation manner (as if the corresponding <code>robust</code> option was set to <code>FALSE</code>). Has no
+effect for Pearson correlation. See <code>bicor</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cosineCorrelation</code></td>
+<td>
+<p>logical: should the cosine version of the correlation calculation be used? The 
+cosine calculation differs from the standard one in that it does not subtract the mean. </p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p> soft-thresholding power for network construction. Either a single number or a vector of the same length as
+the number of sets, with one power for each set. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkType</code></td>
+<td>
+<p> network type. Allowed values are (unique abbreviations of) <code>"unsigned"</code>,
+<code>"signed"</code>, <code>"signed hybrid"</code>. See <code>adjacency</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checkPower</code></td>
+<td>
+<p> logical: should basic sanity check be performed on the supplied <code>power</code>? If
+you would like to experiment with unusual powers, set the argument to <code>FALSE</code> and proceed with
+caution. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>replaceMissingAdjacencies</code></td>
+<td>
+<p>logical: should missing values in the calculation of adjacency be replaced
+by 0?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>TOMType</code></td>
+<td>
+<p> one of <code>"none"</code>, <code>"unsigned"</code>, <code>"signed"</code>, <code>"signed Nowick"</code>, 
+<code>"unsigned 2"</code>, <code>"signed 2"</code> and <code>"signed Nowick 2"</code>. If <code>"none"</code>, adjacency
+will be used for clustering. See <code>TOMsimilarityFromExpr</code> for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>TOMDenom</code></td>
+<td>
+<p> a character string specifying the TOM variant to be used. Recognized values are 
+<code>"min"</code> giving the standard TOM described in Zhang and Horvath (2005), and <code>"mean"</code> in which 
+the <code>min</code> function in the denominator is replaced by <code>mean</code>. The <code>"mean"</code> may produce 
+better results but at this time should be considered experimental.</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>suppressNegativeTOM</code></td>
+<td>
+<p>Logical: should the result be set to zero when negative? Negative TOM values can occur when
+<code>TOMType</code> is <code>"signed Nowick"</code>.</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>saveIndividualTOMs</code></td>
+<td>
+<p>logical: should individual TOMs be saved to disk for later use? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>individualTOMFileNames</code></td>
+<td>
+<p>character string giving the file names to save individual TOMs into. The
+following tags should be used to make the file names unique for each set and block: <code>%s</code> will be
+replaced by the set number; <code>%N</code> will be replaced by the set name (taken from <code>names(multiExpr)</code>)
+if it exists, otherwise by set number; <code>%b</code> will be replaced by the block number. If the file names turn
+out to be non-unique, an error will be generated.</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>networkCalibration</code></td>
+<td>
+<p>network calibration method. One of "single quantile", "full quantile", "none"
+(or a unique abbreviation of one of them).</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>calibrationQuantile</code></td>
+<td>
+<p> if <code>networkCalibration</code> is <code>"single quantile"</code>, 
+topological overlaps (or adjacencies if
+TOMs are not computed) will be scaled such that their <code>calibrationQuantile</code> quantiles will agree. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sampleForCalibration</code></td>
+<td>
+<p> if <code>TRUE</code>, calibration quantiles will be determined from a sample of network
+similarities. Note that using all data can double the memory footprint of the function and the function
+may fail. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sampleForCalibrationFactor</code></td>
+<td>
+<p> determines the number of samples for calibration: the number is
+<code>1/calibrationQuantile * sampleForCalibrationFactor</code>. Should be set well above 1 to ensure accuracy of the
+sampled quantile. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getNetworkCalibrationSamples</code></td>
+<td>
+<p> logical: should samples used for TOM calibration be saved for future analysis?
+This option is only available when <code>sampleForCalibration</code> is <code>TRUE</code>. </p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>consensusQuantile</code></td>
+<td>
+<p> quantile at which consensus is to be defined. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useMean</code></td>
+<td>
+<p>logical: should the consensus be determined from a (possibly weighted) mean across the
+data sets rather than a quantile?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>setWeights</code></td>
+<td>
+<p>Optional vector (one component per input set) of weights to be used for weighted mean
+consensus. Only used when <code>useMean</code> above is <code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>saveConsensusTOMs</code></td>
+<td>
+<p> logical: should the consensus topological overlap matrices for each block be saved
+and returned?  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>consensusTOMFilePattern</code></td>
+<td>
+<p> character string containing the file namefiles containing the
+consensus topological overlaps. The tag <code>%b</code> will be replaced by the block number. If the resulting file
+names are non-unique (for example, because the user gives a file name without a <code>%b</code> tag), an error
+will be generated.
+These files are standard R data files and can be loaded using the <code>load</code>
+function. </p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>useDiskCache</code></td>
+<td>
+<p> should calculated network similarities in individual sets be temporarilly saved
+to disk? Saving to disk is somewhat slower than keeping all data in memory, but for large blocks and/or
+many sets the memory footprint may be too big. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chunkSize</code></td>
+<td>
+<p> network similarities are saved in smaller chunks of size <code>chunkSize</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cacheBase</code></td>
+<td>
+<p> character string containing the desired name for the cache files. The actual file
+names will consists of <code>cacheBase</code> and a suffix to make the file names unique. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cacheDir</code></td>
+<td>
+<p> character string containing the desired path for the cache files.</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>consensusTOMInfo</code></td>
+<td>
+<p>optional list summarizing consensus TOM, output of <code>consensusTOM</code>. It
+contains information about pre-calculated consensus TOM. Supplying this argument replaces TOM calculation,
+so none of the individual or consensus TOM calculation arguments are taken into account.</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>deepSplit</code></td>
+<td>
+<p> integer value between 0 and 4. Provides a simplified control over how sensitive
+module detection should be to module splitting, with 0 least and 4 most sensitive. See
+<code>cutreeDynamic</code> for more details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detectCutHeight</code></td>
+<td>
+<p> dendrogram cut height for module detection. See
+<code>cutreeDynamic</code> for more details.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minModuleSize</code></td>
+<td>
+<p> minimum module size for module detection. See
+<code>cutreeDynamic</code> for more details.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checkMinModuleSize</code></td>
+<td>
+<p> logical: should sanity checks be performed on <code>minModuleSize</code>?</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>maxCoreScatter</code></td>
+<td>
+<p> maximum scatter of the core for a branch to be a cluster, given as the fraction
+of <code>cutHeight</code> relative to the 5th percentile of joining heights. See
+<code>cutreeDynamic</code> for more details.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minGap</code></td>
+<td>
+<p> minimum cluster gap given as the fraction of the difference between <code>cutHeight</code> and
+the 5th percentile of joining heights. See <code>cutreeDynamic</code> for more details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxAbsCoreScatter</code></td>
+<td>
+<p> maximum scatter of the core for a branch to be a cluster given as absolute
+heights. If given, overrides <code>maxCoreScatter</code>. See <code>cutreeDynamic</code> for more details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minAbsGap</code></td>
+<td>
+<p> minimum cluster gap given as absolute height difference. If given, overrides
+<code>minGap</code>. See <code>cutreeDynamic</code> for more details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minSplitHeight</code></td>
+<td>
+<p>Minimum split height given as the fraction of the difference between
+<code>cutHeight</code> and the 5th percentile of joining heights. Branches merging below this height will
+automatically be merged. Defaults to zero but is used only if <code>minAbsSplitHeight</code> below is
+<code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minAbsSplitHeight</code></td>
+<td>
+<p>Minimum split height given as an absolute height.
+Branches merging below this height will automatically be merged. If not given (default), will be determined
+from <code>minSplitHeight</code> above.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useBranchEigennodeDissim</code></td>
+<td>
+<p>Logical: should branch eigennode (eigengene) dissimilarity be considered
+when merging branches in Dynamic Tree Cut?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minBranchEigennodeDissim</code></td>
+<td>
+<p>Minimum consensus branch eigennode (eigengene) dissimilarity for
+branches to be considerd separate. The branch eigennode dissimilarity in individual sets
+is simly 1-correlation of the
+eigennodes; the consensus is defined as quantile with probability <code>consensusQuantile</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stabilityLabels</code></td>
+<td>
+<p>Optional matrix of cluster labels that are to be used for calculating branch
+dissimilarity based on split stability. The number of rows must equal the number of genes in
+<code>multiExpr</code>; the number of columns (clusterings) is arbitrary. See
+<code>branchSplitFromStabilityLabels</code> for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minStabilityDissim</code></td>
+<td>
+<p>Minimum stability dissimilarity criterion for two branches to be considered
+separate. Should be a number between 0 (essentially no dissimilarity required) and 1 (perfect dissimilarity
+or distinguishability based on <code>stabilityLabels</code>). See 
+<code>branchSplitFromStabilityLabels</code> for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pamStage</code></td>
+<td>
+<p> logical.  If TRUE, the second (PAM-like) stage of module detection will be performed.
+See <code>cutreeDynamic</code> for more details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pamRespectsDendro</code></td>
+<td>
+<p>Logical, only used when <code>pamStage</code> is <code>TRUE</code>.
+If <code>TRUE</code>, the PAM stage will
+respect the dendrogram in the sense an object can be PAM-assigned only to clusters that lie below it on
+the branch that the object is merged into.
+See <code>cutreeDynamic</code> for more details. </p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>reassignThresholdPS</code></td>
+<td>
+<p> per-set p-value ratio threshold for reassigning genes between modules. 
+See Details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trimmingConsensusQuantile</code></td>
+<td>
+<p>a number between 0 and 1 specifying the consensus quantile used for kME
+calculation that determines module trimming according to the arguments below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minCoreKME</code></td>
+<td>
+<p> a number between 0 and 1. If a detected module does not have at least
+<code>minModuleKMESize</code> genes with eigengene connectivity at least <code>minCoreKME</code>, the module is
+disbanded (its genes are unlabeled and returned to the pool of genes waiting for mofule detection). </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minCoreKMESize</code></td>
+<td>
+<p> see <code>minCoreKME</code> above. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minKMEtoStay</code></td>
+<td>
+<p> genes whose eigengene connectivity to their module eigengene is lower than
+<code>minKMEtoStay</code> are removed from the module.</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>impute</code></td>
+<td>
+<p> logical: should imputation be used for module eigengene calculation? See
+<code>moduleEigengenes</code> for more details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trapErrors</code></td>
+<td>
+<p> logical: should errors in calculations be trapped? </p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>equalizeQuantilesForModuleMerging</code></td>
+<td>
+<p>Logical: equalize quantiles of the module eigengene networks
+before module merging? If <code>TRUE</code>, the quantiles of the eigengene correlation matrices (interpreted as a
+single vectors of non-redundant components) will be equalized across the input data sets. Note that
+although this seems like a reasonable option, it should be considered experimental and not necessarily
+recommended.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quantileSummaryForModuleMerging</code></td>
+<td>
+<p>One of <code>"mean"</code> or <code>"median"</code>. 
+If quantile equalization of the module eigengene networks is
+performed, the resulting "normal" quantiles will be given by this function of the corresponding quantiles
+across the input data sets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mergeCutHeight</code></td>
+<td>
+<p> dendrogram cut height for module merging. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mergeConsensusQuantile</code></td>
+<td>
+<p>consensus quantile for module merging. See <code>mergeCloseModules</code> for
+details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>numericLabels</code></td>
+<td>
+<p> logical: should the returned modules be labeled by colors (<code>FALSE</code>), or by
+numbers (<code>TRUE</code>)? </p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>nThreads</code></td>
+<td>
+<p> non-negative integer specifying the number of parallel threads to be used by certain
+parts of correlation calculations. This option only has an effect on systems on which a POSIX thread
+library is available (which currently includes Linux and Mac OSX, but excludes Windows).
+If zero, the number of online processors will be used if it can be determined dynamically, otherwise
+correlation calculations will use 2 threads. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments. At present these can include <code>reproduceBranchEigennodeQuantileError</code> that
+instructs the function to reproduce a bug in branch eigennode dissimilarity calculations for purposes if
+reproducing old reults. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function starts by optionally filtering out samples that have too many missing entries and genes
+that have either too many missing entries or zero variance in at least one set. Genes that are filtered
+out are left unassigned by the module detection. Returned eigengenes will contain <code>NA</code> in entries
+corresponding to filtered-out samples. 
+</p>
+<p>If <code>blocks</code> is not given and
+the number of genes exceeds <code>maxBlockSize</code>, genes are pre-clustered into blocks using the function
+<code>consensusProjectiveKMeans</code>; otherwise all genes are treated in a single block. 
+</p>
+<p>For each block of genes, the network is constructed and (if requested) topological overlap is calculated
+in each set. To minimize memory usage, calculated topological overlaps are optionally saved to disk in
+chunks until they are needed again for the calculation of the consensus network topological overlap. 
+</p>
+<p>Before calculation of the consensus Topological Overlap, individual TOMs are optionally calibrated.
+Calibration methods include single quantile scaling and full quantile normalization. 
+</p>
+<p>Single quantile
+scaling raises individual TOM in sets 2,3,... to a power such that the quantiles given by 
+<code>calibrationQuantile</code> agree with the quantile in set 1. Since the high TOMs are usually the most important
+for module identification, the value of <code>calibrationQuantile</code> is close to (but not equal) 1. To speed up
+quantile calculation, the quantiles can be determined on a randomly-chosen component subset of the TOM matrices.
+</p>
+<p>Full quantile normalization, implemented in <code>normalize.quantiles</code>, adjusts the
+TOM matrices such that all quantiles equal each other (and equal to the quantiles of the component-wise 
+average of the individual TOM matrices). 
+</p>
+<p>Note that network calibration is performed separately in each block, i.e., the normalizing transformation
+may differ between blocks. This is necessary to avoid manipulating a full TOM in memory.
+</p>
+<p>The consensus TOM is calculated as the component-wise <code>consensusQuantile</code> quantile of the individual
+(set) TOMs; that is, for each gene pair (TOM entry), the <code>consensusQuantile</code> quantile across all input
+sets. Alternatively, one can also use (weighted) component-wise mean across all imput data sets.
+If requested, the consensus topological overlaps are saved to disk for later use.
+</p>
+<p>Genes are then clustered using average linkage hierarchical clustering and modules are identified in the
+resulting dendrogram by the Dynamic Hybrid tree cut. Found modules are trimmed of genes whose
+consensus module membership kME (that is, correlation with module eigengene) 
+is less than <code>minKMEtoStay</code>.
+Modules in which
+fewer than <code>minCoreKMESize</code> genes have consensus KME higher than <code>minCoreKME</code>
+are disbanded, i.e., their constituent genes are pronounced
+unassigned. 
+</p>
+<p>After all blocks have been processed, the function checks whether there are genes whose KME in the module
+they assigned is lower than KME to another module. If p-values of the higher correlations are smaller
+than those of the native module by the factor <code>reassignThresholdPS</code> (in every set), 
+the gene is re-assigned to the closer module. 
+</p>
+<p>In the last step, modules whose eigengenes are highly correlated are merged. This is achieved by
+clustering module eigengenes using the dissimilarity given by one minus their correlation, 
+cutting the dendrogram at the height <code>mergeCutHeight</code> and merging all modules on each branch. The
+process is iterated until no modules are merged. See <code>mergeCloseModules</code> for more details on
+module merging.
+</p>
+<p>The argument <code>quick</code> specifies the precision of handling of missing data in the correlation 
+calculations. Zero will cause all  
+calculations to be executed precisely, which may be significantly slower than calculations without
+missing data. Progressively higher values will speed up the
+calculations but introduce progressively larger errors. Without missing data, all column means and
+variances can be pre-calculated before the covariances are calculated. When missing data are present,
+exact calculations require the column means and variances to be calculated for each covariance. The
+approximate calculation uses the pre-calculated mean and variance and simply ignores missing data in the
+covariance calculation. If the number of missing data is high, the pre-calculated means and variances may
+be very different from the actual ones, thus potentially introducing large errors. 
+The <code>quick</code> value times the
+number of rows specifies the maximum difference in the
+number of missing entries for mean and variance calculations on the one hand and covariance on the other
+hand that will be tolerated before a recalculation is triggered. The hope is that if only a few missing
+data are treated approximately, the error introduced will be small but the potential speedup can be
+significant.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>colors</code></td>
+<td>
+<p> module assignment of all input genes. A vector containing either character strings with
+module colors (if input <code>numericLabels</code> was unset) or numeric module labels (if <code>numericLabels</code>
+was set to <code>TRUE</code>). The color "grey" and the numeric label 0 are reserved for unassigned genes.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unmergedColors </code></td>
+<td>
+<p> module colors or numeric labels before the module merging step. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multiMEs</code></td>
+<td>
+<p> module eigengenes corresponding to the modules returned in <code>colors</code>, in multi-set
+format. A vector of lists, one per set, containing eigengenes, proportion of variance explained and other
+information. See <code>multiSetMEs</code> for a detailed description. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>goodSamples</code></td>
+<td>
+<p> a list, with one component per input set. Each component is 
+a logical vector with one entry per sample from the corresponding set. The entry indicates whether 
+the sample in the set passed basic quality control criteria. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>goodGenes</code></td>
+<td>
+<p>a logical vector with one entry per input gene indicating whether the gene passed
+basic quality control criteria in all sets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dendrograms</code></td>
+<td>
+<p>a list with one component for each block of genes. Each component is the
+hierarchical clustering dendrogram obtained by clustering the consensus gene dissimilarity in the
+corresponding block. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>TOMFiles</code></td>
+<td>
+<p> if <code>saveConsensusTOMs==TRUE</code>, 
+a vector of character strings, one string per block, giving the file names of files
+(relative to current directory) in which blockwise  topological overlaps were saved. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blockGenes</code></td>
+<td>
+<p>a list with one component for each block of genes. Each component is a vector giving
+the indices (relative to the input <code>multiExpr</code>) of genes in the corresponding block. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blocks</code></td>
+<td>
+<p>if input <code>blocks</code> was given, its copy; otherwise a vector of length equal number of
+genes giving the block label for each gene. Note that block labels are not necessarilly sorted in the
+order in which the blocks were processed (since we do not require this for the input <code>blocks</code>). See
+<code>blockOrder</code> below. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blockOrder</code></td>
+<td>
+<p> a vector giving the order in which blocks were processed and in which
+<code>blockGenes</code> above is returned. For example, <code>blockOrder[1]</code> contains the label of the
+first-processed block. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>originCount</code></td>
+<td>
+<p>A vector of length <code>nSets</code> that
+contains, for each set, the number of (calibrated) elements that were less than or equal the consensus for that element.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkCalibrationSamples</code></td>
+<td>
+<p>if the input <code>getNetworkCalibrationSamples</code> is <code>TRUE</code>, this component is a
+list with one component per block. Each component is again a list with two components:
+<code>sampleIndex</code> contains indices of the distance structure in which TOM is stored that were sampled,
+and <code>TOMSamples</code> is a matrix whose rows correspond to TOM samples and columns to individual set.
+Hence, <code>networkCalibrationSamples[[blockNo]]$TOMSamples[index, setNo]</code> contains the TOM entry that
+corresponds to element <code>networkCalibrationSamples[[blockNo]]$sampleIndex[index]</code> of the TOM distance
+structure in block <code>blockNo</code> and set <code>setNo</code>. (For details on the distance structure, see
+<code>dist</code>.)</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+ 
+<p>If the input datasets have large numbers of genes, consider carefully the <code>maxBlockSize</code> as it
+significantly affects the memory footprint (and whether the function will fail with a memory allocation
+error). From a theoretical point of view it is advantageous to use blocks as large as possible; on the
+other hand, using smaller blocks is substantially faster and often the only way to work with large
+numbers of genes. As a rough guide, it is unlikely a standard desktop
+computer with 4GB memory or less will be able to work with blocks larger than 7000 genes. 
+</p>
+
+
+
+
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder</p>
+
+
+<h3>References</h3>
+
+<p> Langfelder P, Horvath S (2007) Eigengene networks for studying the relationships between
+co-expression modules. BMC Systems Biology 2007, 1:54 </p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code>goodSamplesGenesMS</code> for basic quality control and filtering; 
+</p>
+<p><code>adjacency</code>, <code>TOMsimilarity</code> for network construction;
+</p>
+<p><code>hclust</code> for hierarchical clustering;
+</p>
+<p><code>cutreeDynamic</code> for adaptive branch cutting in hierarchical clustering
+dendrograms; 
+</p>
+<p><code>mergeCloseModules</code> for merging of close modules.
+</p>
+
+
+</div>

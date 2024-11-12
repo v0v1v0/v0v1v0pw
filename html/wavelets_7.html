@@ -1,0 +1,143 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>extend.series</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Extend a Time Series
+</h2>
+
+<h3>Description</h3>
+
+<p>Extends a univariate or multivariate time series beyond its original
+length.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">extend.series(X, method="reflection", length="double", n, j)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>A univariate or multivariate time series. Numeric vectors,
+matrices and data frames are accepted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>A character string indicating which extension method to
+use. Possible values are <code>"periodic"</code>, <code>"reflection"</code>,
+<code>"zero"</code>, <code>"mean"</code>, and <code>"reflection.inverse"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>length</code></td>
+<td>
+<p>A character string indicating how to determine the
+length of the extended series. Possible values are
+<code>"aribitrary"</code>, <code>"powerof2"</code>, and <code>"double"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>An integer value specifying the length of the extended
+series. This argument is only relevant when <code>length =
+      "arbitrary"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>j</code></td>
+<td>
+<p>An integer value specifying the power of two of which the
+length of the extended series should be a multiple. This argument is
+only relevant for <code>length = "powerof2"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The original time series, <code>X</code>, is extended to a new length
+as determined by <code>length</code>: if <code>length = "arbitrary"</code>, a value
+for the argument <code>n</code> must be specified in order to extend the
+series to length <code>n</code>; if <code>length = "powerof2"</code> the series
+will be extended to the nearst multiple of <code class="reqn">2^j</code>, where <code>j</code>
+must be specified as an argument to the function;  if <code>length =
+  "double"</code> the series will be extended to twice its original length.
+</p>
+<p>Once the length of the extended series is determined, the actual
+extension is performed using one of five methods: if <code>method =
+  "periodic"</code> a periodic extension is made by concatenating the series
+with itself (without changing the order of the values); if
+<code>method = "reflection"</code> an extension is made by concatenating
+the series with a reflection (reverse ordering) of itself; if
+<code>method = "zero"</code> the series is padded with zeros; if
+<code>method = "mean"</code> the series is padded with its mean; if
+<code>method = "reflection.inverse"</code> an extension is made by
+concatenating the series with a reflection (reverse ordering) of
+itself that is further reflected of the horizontal axis <code class="reqn">y = x_N</code>
+where <code class="reqn">x_N</code> is the last value of the observed series.
+</p>
+<p>In the case that the series is extended beyond twice it's original
+length, the <code>"periodic"</code> and <code>"reflection"</code> methods are
+repetetively applied so that every subseries of length <code class="reqn">N</code> (the
+length of the original series) is either a periodic or reflected
+extension of any other <code class="reqn">N</code> adjacent values. Similarly, the
+<code>"reflection.inverse"</code> method is repetetively applied so that
+every <code class="reqn">2N</code> values are a periodic extension of any adjacent
+<code class="reqn">2N</code> values.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The extended time series, in its original class.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Eric Aldrich. ealdrich@gmail.com.</p>
+
+
+<h3>References</h3>
+
+<p>Percival, D. B. and A. T. Walden (2000) <em>Wavelet Methods for Time
+Series Analysis</em>, Cambridge University Press.</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dwt</code>,
+<code>modwt</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># obtain the two series listed in Percival and Walden (2000), page 42
+X1 &lt;- c(.2,-.4,-.6,-.5,-.8,-.4,-.9,0,-.2,.1,-.1,.1,.7,.9,0,.3)
+X2 &lt;- c(.2,-.4,-.6,-.5,-.8,-.4,-.9,0,-.2,.1,-.1,.1,-.7,.9,0,.3)
+
+# combine them and extend using reflection method
+newX &lt;- cbind(X1,X2)
+newX.ext1 &lt;- extend.series(newX, length="arbitrary", n=64)
+plot.ts(newX.ext1)
+
+# apply another extension method
+newX.ext2 &lt;- extend.series(newX, method="reflection.inverse",
+                           length="powerof2", j=6)
+plot.ts(newX.ext2) 
+</code></pre>
+
+
+</div>

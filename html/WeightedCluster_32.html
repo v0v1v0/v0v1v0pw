@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wcClusterQuality</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cluster quality statistics</h2>
+
+<h3>Description</h3>
+
+<p>Compute several quality statistics of a given clustering solution.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wcClusterQuality(diss, clustering, weights = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>diss</code></td>
+<td>
+<p>A dissimilarity matrix or a dist object (see <code>dist</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clustering</code></td>
+<td>
+<p>Factor. A vector of clustering membership.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>optional numerical vector containing weights.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Compute several quality statistics of a given clustering solution. See value for details.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with two elements <code>stats</code> and <code>ASW</code>:
+</p>
+
+<dl>
+<dt><code>stats</code></dt>
+<dd>
+<p>with the following statistics:</p>
+</dd>
+</dl>
+<dl>
+<dt>PBC</dt>
+<dd>
+<p>Point Biserial Correlation. Correlation between the given distance matrice and a distance which equal to zero for individuals in the same cluster and one otherwise.</p>
+</dd>
+<dt>HG</dt>
+<dd>
+<p>Hubert's Gamma. Same as previous but using Kendall's Gamma coefficient.</p>
+</dd>
+<dt>HGSD</dt>
+<dd>
+<p>Hubert's Gamma (Somers'D). Same as previous but using Somers' D coefficient.</p>
+</dd>
+<dt>ASW</dt>
+<dd>
+<p>Average Silhouette width (observation).</p>
+</dd>
+<dt>ASWw</dt>
+<dd>
+<p>Average Silhouette width (weighted).</p>
+</dd>
+<dt>CH</dt>
+<dd>
+<p>Calinski-Harabasz index (Pseudo F statistics computed from distances).</p>
+</dd>
+<dt>R2</dt>
+<dd>
+<p>Share of the discrepancy explained by the clustering solution.</p>
+</dd>
+<dt>CHsq</dt>
+<dd>
+<p>Calinski-Harabasz index (Pseudo F statistics computed from <em>squared</em> distances).</p>
+</dd>
+<dt>R2sq</dt>
+<dd>
+<p>Share of the discrepancy explained by the clustering solution (computed using <em>squared</em> distances).</p>
+</dd>
+<dt>HC</dt>
+<dd>
+<p>Hubert's C coefficient.</p>
+</dd>
+</dl>
+<dl>
+<dt>
+<code>ASW</code>:</dt>
+<dd>
+<p>The Average Silhouette Width of each cluster, one column for each ASW measure.</p>
+</dd>
+</dl>
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(mvad)
+## Aggregating state sequence
+aggMvad &lt;- wcAggregateCases(mvad[, 17:86], weights=mvad$weight)
+
+## Creating state sequence object
+mvad.seq &lt;- seqdef(mvad[aggMvad$aggIndex, 17:86], weights=aggMvad$aggWeights)
+## Computing Hamming distance between sequence
+diss &lt;- seqdist(mvad.seq, method="HAM")
+
+## KMedoids using PAMonce method (clustering only)
+clust5 &lt;- wcKMedoids(diss, k=5, weights=aggMvad$aggWeights, cluster.only=TRUE)
+
+## Compute the silhouette of each observation
+qual &lt;- wcClusterQuality(diss, clust5, weights=aggMvad$aggWeights)
+
+print(qual)
+
+</code></pre>
+
+
+</div>

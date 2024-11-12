@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict_bands</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract confidence and prediction bands</h2>
+
+<h3>Description</h3>
+
+<p>It extracts confidence and prediction bands from the <code>nls</code> model. It is used only for data cleaning.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">predict_bands(
+  .data,
+  time_column = "t",
+  vo2_column = "VO2",
+  cleaning_level = 0.95,
+  cleaning_baseline_fit = c("linear", "exponential")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.data</code></td>
+<td>
+<p>The nornalized data retrieved from <code>normalize_transitions()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time_column</code></td>
+<td>
+<p>The name (quoted) of the column containing the time. Depending on the language of your system, this column might not be "t". Therefore, you may specify it here.  Default to "t".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vo2_column</code></td>
+<td>
+<p>The name (quoted) of the column containing the absolute oxygen uptake (VO2) data. Default to 'VO2'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cleaning_level</code></td>
+<td>
+<p>A numeric scalar between 0 and 1 giving the confidence level for the intervals to be calculated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cleaning_baseline_fit</code></td>
+<td>
+<p>A character indicating what kind of fit to perform for each baseline. Either 'linear' or 'exponential'.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a tibble containing the following columns:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The provided time data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>The provided VO2 data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.fitted</code></td>
+<td>
+<p>The predicted response for that observation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.resid</code></td>
+<td>
+<p>The residual for a particular point.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwr_conf</code></td>
+<td>
+<p>Lower limit of the confidence band.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upr_conf</code></td>
+<td>
+<p>Upper limit of the confidence band.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwr_pred</code></td>
+<td>
+<p>Lower limit of the prediction band.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upr_pred</code></td>
+<td>
+<p>Upper limit of the prediction band.</p>
+</td>
+</tr>
+</table>
+</div>

@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>PairPenalty</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Returns the Jensen wake penalty factor for a pair of turbines.</h2>
+
+<h3>Description</h3>
+
+<p>As seen from a turbine in the wind farm, computes the wake penalty factor for another turbine in that farm.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">PairPenalty(x1, y1, x2, y2, Dirs, SDs)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x1</code></td>
+<td>
+
+<p>must be a single value. Provide the <code>x</code> location of the first turbine.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y1</code></td>
+<td>
+
+<p>must be a single value. Provide the <code>y</code> location of the first turbine.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x2</code></td>
+<td>
+
+<p>must be a single value. Provide the <code>x</code> location of the second turbine.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y2</code></td>
+<td>
+
+<p>must be a single value. Provide the <code>y</code> location of the second turbine.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Dirs</code></td>
+<td>
+
+<p>a matrix containing average yearly wind directions. Usually, the third element of the list object <code>FarmData</code> will be used as this matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SDs</code></td>
+<td>
+
+<p>a matrix containing average yearly wind direction standard deviations. Usually, the fourth element of the list object <code>FarmData</code> will be used as this matrix.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>First, this function uses <code>GetAngle</code> to compute the angle between the two points provided, as seen from point 2's point of view. It then obtains the wind direction at point 2 using <code>GetDirInfo</code>. After that, the distance between the two points is computed. With it, the wake cone is computed using <code>JensenAngle</code> to check whether point 2 is in point 1's wake using <code>JensenTrapezoid</code>. If that is the case, <code>JensenFactor</code> is used to compute the penalty factor.<br>
+Note that the penalty is the deduction to wind speed. It applies to wind power by its third power, so the user is responsible to take it to its cube himself. <code>Profit</code> does that automatically internally.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>PairPenalty</code> returns a single number between 0 and 1. If point 2 is not in the wake of point 1, the function returns 1.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Carsten Croonenbroeck
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Use <code>JensenFactor</code> to see how this function operates. See <code>FarmVars</code> for the data object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">Dirs &lt;- FarmData[[3]][e$FarmVars$StartPoint:e$FarmVars$EndPoint,
+e$FarmVars$StartPoint:e$FarmVars$EndPoint]
+SDs &lt;- FarmData[[4]][e$FarmVars$StartPoint:e$FarmVars$EndPoint,
+e$FarmVars$StartPoint:e$FarmVars$EndPoint]
+PairPenalty(0.9, 0.8, 0.6, 0.9, Dirs, SDs)
+## Weak wake penalty
+PairPenalty(0.1, 0.1, 0.6, 0.9, Dirs, SDs)
+## No wake penalty
+</code></pre>
+
+
+</div>

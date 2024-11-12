@@ -1,0 +1,197 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WACSvalid</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Performs validations of WACS simulations</h2>
+
+<h3>Description</h3>
+
+<p>The validation is based on different types of 
+statistics computed on  WACS data, WACS parameters and WACS simulations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WACSvalid(
+  what = "Sim",
+  wacsdata = NULL,
+  wacspar = NULL,
+  wacssimul = NULL,
+  varname = NULL,
+  varname2 = NULL,
+  base = 0,
+  above = TRUE,
+  months = 1:12
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>what</code></td>
+<td>
+<p>Type of validation. Possible choices are:
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+<span class="env">="Sim"</span> </td>
+<td style="text-align: left;"> Compares a simulation run to data </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<span class="env">="Rain"</span>
+</td>
+<td style="text-align: left;"> qq-plots of rainfall, per season </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<span class="env">="MeanSd"</span>
+</td>
+<td style="text-align: left;"> Compares monthly mean and standard deviations </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<span class="env">="BiVar"</span>
+</td>
+<td style="text-align: left;"> Compares monthly variate correlations </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<span class="env">="CorTemp"</span>
+</td>
+<td style="text-align: left;"> Compares monthly temporal correlations </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<span class="env">="SumBase"</span>
+</td>
+<td style="text-align: left;"> Compares sums above a threshold </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<span class="env">="Persistence"</span>
+</td>
+<td style="text-align: left;"> Compares persistence of a variable above (or below) a threshold </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wacsdata</code></td>
+<td>
+<p>WACS data obtained when calling WACSdata</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wacspar</code></td>
+<td>
+<p>WACS parameters estimated when calling WACSestim</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wacssimul</code></td>
+<td>
+<p>WACS simulation obtained when calling WACSsimul</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varname</code></td>
+<td>
+<p>Variable on which the validation is performed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varname2</code></td>
+<td>
+<p>Second variable on which validation is performed (only needed if <code>what=BiVar</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>base</code></td>
+<td>
+<p>Threshold used for "SumBase" and "Persistence"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>above</code></td>
+<td>
+<p>Boolean value used for "Persistence": 
+TRUE if data is considered above threshold; 
+FALSE otherwise</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>months</code></td>
+<td>
+<p>Months to which the analysis should be restricted (only for "SumBase" and "Persistence")</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing all information needed for plots; contains also the type of validation, as a class
+</p>
+
+
+<h3>Note</h3>
+
+<p>If <code>what=sim</code>, data and simulations are displayed as a function of the day of the year, from 1 to 365. 
+Smoothed versions of daily average and daily envelopes (defined by average +/- 2. standard deviations) are also displayed. 
+</p>
+<p>If <code>what=rain</code>, qq-plots and superimposition of histograms and models of rain are produced for each season.
+</p>
+<p>If <code>what=MeanSd</code>, boxplots of monthly means and monthly standard deviations are compared. 
+The median value of the monthly mean, resp. monthly standard deviation, of the data are displayed 
+on top of the boxplots computed on the simulations.
+</p>
+<p>#' If <code>what=BiVar</code>, boxplots of monthly correlations coefficients between <code>varname</code> and <code>varname2</code>
+are compared. The median value of the correlation coefficient computed on the data is displayed 
+on top of the boxplots computed on the simulations.
+</p>
+<p>If <code>what=CorTemp</code>, boxplots of monthly 1-day auto correlation are compared. The median value of the 
+auto-correlation coefficient computed on the data is displayed 
+on top of the boxplots computed on the simulations.
+</p>
+<p>If <code>what=SumBase</code>, boxplots of the sum of the variable <code>varname</code> above a given threshold, <code>base</code>,
+is computed during the months provided in the variable <code>months</code>.
+</p>
+<p>If <code>what=Persistence</code>, histograms of consecutive days of the variable <code>varname</code> above (or below) a given
+threshold,  <code>base</code>, are compared. If <code>above=TRUE</code>, consecutive days above the threshold are computed, 
+whereas days below the threshold are computed if <code>above=FALSE</code>. Months can be selected 
+with the variable <code>months</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+  ## Simple example
+  data(ClimateSeries)
+  ThisData = WACSdata(ClimateSeries)
+  ThisPar  = WACSestim(ThisData)
+  ThisSim  = WACSsimul(ThisPar, from="1995-01-01", to="2012-12-31")
+  Val1 = WACSvalid(what="Sim",wacsdata = ThisData, 
+                   wacspar = ThisPar, wacssimul = ThisSim, varname="tmin")
+  Val2 = WACSvalid(what="MeanSd",wacsdata = ThisData, 
+                   wacssimul = ThisSim, varname="RG")
+  Val3 = WACSvalid(what="SumBase", wacsdata = ThisData,  
+                   wacssimul = ThisSim, varname="tmoy", base=5, month=2:5)
+  Val4 = WACSvalid(what="Persistence",wacsdata = ThisData,  
+                   wacssimul = ThisSim, varname="tmin", base=0, above=FALSE)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

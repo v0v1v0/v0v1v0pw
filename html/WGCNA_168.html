@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>nearestNeighborConnectivity</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Connectivity to a constant number of nearest neighbors </h2>
+
+<h3>Description</h3>
+
+<p>Given expression data and basic network parameters, the function calculates connectivity of each gene
+to a given number of nearest neighbors.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">nearestNeighborConnectivity(datExpr, 
+         nNeighbors = 50, power = 6, type = "unsigned", 
+         corFnc = "cor", corOptions = "use = 'p'", 
+         blockSize = 1000,
+         sampleLinks = NULL, nLinks = 5000, setSeed = 38457,
+         verbose = 1, indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datExpr</code></td>
+<td>
+<p> a data frame containing expression data, with rows corresponding to samples and columns
+to genes. Missing values are allowed and will be ignored. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nNeighbors</code></td>
+<td>
+<p> number of nearest neighbors to use. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p> soft thresholding power for network construction. Should be a number greater than 1. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p> a character string encoding network type. Recognized values are (unique abbreviations of) 
+<code>"unsigned"</code>, <code>"signed"</code>, and <code>"signed hybrid"</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corFnc</code></td>
+<td>
+<p> character string containing the name of the function to calculate correlation. Suggested
+functions include <code>"cor"</code> and <code>"bicor"</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corOptions</code></td>
+<td>
+<p> further argument to the correlation function. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blockSize</code></td>
+<td>
+<p> correlation calculations will be split into square blocks of this size, to prevent
+running out of memory for large gene sets.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sampleLinks</code></td>
+<td>
+<p> logical: should network connections be sampled (<code>TRUE</code>) or should all
+connections be used systematically (<code>FALSE</code>)? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nLinks</code></td>
+<td>
+<p> number of links to be sampled. Should be set such that <code>nLinks * nNeighbors</code> be
+several times larger than the number of genes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>setSeed</code></td>
+<td>
+<p> seed to be used for sampling, for repeatability. If a seed already exists, it is saved
+before the sampling starts and restored upon exit. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer controlling the level of verbosity. 0 means silent.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> integer controlling indentation of output. Each unit above 0 adds two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Connectivity of gene <code>i</code> is the sum of adjacency strengths between gene <code>i</code> 
+and other genes; in
+this case we take the <code>nNeighbors</code> nodes with the highest connection strength to gene <code>i</code>. The
+adjacency strengths are calculated by correlating the given expression data using the function supplied
+in <code>corFNC</code> and transforming them into adjacency according to the given network <code>type</code> and
+<code>power</code>. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector with one component for each gene containing the nearest neighbor connectivity. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder </p>
+
+
+<h3>See Also</h3>
+
+ <p><code>adjacency</code>, <code>softConnectivity</code> </p>
+
+
+</div>

@@ -1,0 +1,146 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>standardScreeningNumericTrait</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Standard screening for numeric traits
+</h2>
+
+<h3>Description</h3>
+
+<p>Standard screening for numeric traits based on Pearson correlation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">standardScreeningNumericTrait(datExpr, yNumeric, corFnc = cor,
+                              corOptions = list(use = 'p'),
+                              alternative = c("two.sided", "less", "greater"),
+                              qValues = TRUE,
+                              areaUnderROC = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datExpr</code></td>
+<td>
+
+<p>data frame containing expression data (or more generally variables to be screened), with rows corresponding
+to samples and columns to genes (variables)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yNumeric</code></td>
+<td>
+
+<p>a numeric vector giving the trait measurements for each sample
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corFnc</code></td>
+<td>
+<p> correlation function. 
+Defaults to Pearson correlation but can also be <code>bicor</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corOptions</code></td>
+<td>
+<p> list specifying additional arguments to be passed to the correlation function given
+by <code>corFnc</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alternative</code></td>
+<td>
+<p>alternative hypothesis for the correlation test</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValues</code></td>
+<td>
+<p> logical: should q-values be calculated?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>areaUnderROC</code></td>
+<td>
+<p> logical: should are under the receiver-operating curve be calculated?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function calculates the correlations, associated p-values, area under the ROC, and q-values
+</p>
+
+
+<h3>Value</h3>
+
+<p>Data frame with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>ID </code></td>
+<td>
+<p>Gene (or variable) identifiers copied from <code>colnames(datExpr)</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cor</code></td>
+<td>
+<p>correlations of all genes with the trait</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+<p>Fisher Z statistics corresponding to the correlations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pvalueStudent </code></td>
+<td>
+<p>Student p-values of the correlations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qvalueStudent </code></td>
+<td>
+<p>(if input <code>qValues==TRUE</code>) q-values of the correlations calculated from the p-values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>AreaUnderROC </code></td>
+<td>
+<p>(if input <code>areaUnderROC==TRUE</code>) area under the ROC</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nPresentSamples</code></td>
+<td>
+<p>number of samples present for the calculation of each association. </p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Steve Horvath
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>standardScreeningBinaryTrait</code>, <code>standardScreeningCensoredTime</code>
+</p>
+
+
+</div>

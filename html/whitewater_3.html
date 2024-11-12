@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wwOptions</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Options</h2>
+
+<h3>Description</h3>
+
+<p>Options
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wwOptions(
+  date_range = "pfn",
+  period = 11,
+  dates = NULL,
+  site_status = "all",
+  floor_iv = "1 hour",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>date_range</code></td>
+<td>
+<p>A <code>character</code>. Indicating how to call the API. 'pfn' = Period from now,
+'date_range' = a date range, "recent" = the most recent value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>period</code></td>
+<td>
+<p>A <code>numeric</code>. Return all values from a period from now (only if 'pfn' is used).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dates</code></td>
+<td>
+<p>A <code>vector</code>. Return all values within an absolute date range (start and end dates).
+Only if 'date_range' is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>site_status</code></td>
+<td>
+<p>A <code>character</code> indicating site status. Example, 'all' = both active and inactive,
+'active' = only active sites, 'inactive' = only inactive sites.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>floor_iv</code></td>
+<td>
+<p>A <code>character</code> on how to floor the instantaneous values, '1 hour' (default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other options used for options.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with API options.
+</p>
+
+
+<h3>Note</h3>
+
+<p>A site is considered active if; it has collected time-series (automated) data within the last 183 days (6 months) or
+it has collected discrete (manually collected) data within 397 days (13 months).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+library(whitewater)
+yaak_river_dv &lt;- ww_dvUSGS('12304500',
+parameter_cd = '00060',
+wy_month = 10)
+
+yaak_river_iv &lt;- ww_floorIVUSGS(yaak_river_dv)
+
+#change floor method
+
+yaak_river_iv &lt;- ww_floorIVUSGS(yaak_river_dv,
+                                options = wwOptions(floor_iv = '6-hour'))
+
+#change number of days
+
+yaak_river_iv &lt;- ww_floorIVUSGS(yaak_river_dv,
+                                options = wwOptions(floor_iv = '2-hour',
+                                                    period = 365))
+
+# get by date range
+
+
+yaak_river_wy &lt;- ww_floorIVUSGS(yaak_river_dv,
+                                options = wwOptions(date_range = 'date_range',
+                                                    dates = c('2022-03-01', '2022-05-11')))
+
+
+# site status as 'active'
+
+yaak_river_wy &lt;- ww_floorIVUSGS(yaak_river_dv,
+                                options = wwOptions(site_status = 'active',
+                                                    date_range = 'date_range',
+                                                    dates = c('2022-03-01', '2022-05-11')))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

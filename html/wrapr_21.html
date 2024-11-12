@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>apply_right</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>S3 dispatch on class of pipe_right_argument.</h2>
+
+<h3>Description</h3>
+
+<p>Triggered if right hand side of pipe stage was a name that does not resolve to a function.
+For formal documentation please see <a href="https://github.com/WinVector/wrapr/blob/master/extras/wrapr_pipe.pdf">https://github.com/WinVector/wrapr/blob/master/extras/wrapr_pipe.pdf</a>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">apply_right(
+  pipe_left_arg,
+  pipe_right_arg,
+  pipe_environment,
+  left_arg_name,
+  pipe_string,
+  right_arg_name
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>pipe_left_arg</code></td>
+<td>
+<p>left argument</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pipe_right_arg</code></td>
+<td>
+<p>right argument</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pipe_environment</code></td>
+<td>
+<p>environment to evaluate in</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>left_arg_name</code></td>
+<td>
+<p>name, if not NULL name of left argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pipe_string</code></td>
+<td>
+<p>character, name of pipe operator.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>right_arg_name</code></td>
+<td>
+<p>name, if not NULL name of right argument.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>result
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>apply_left</code>, <code>apply_right_S4</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# simulate a function pointer
+apply_right.list &lt;- function(pipe_left_arg,
+                             pipe_right_arg,
+                             pipe_environment,
+                             left_arg_name,
+                             pipe_string,
+                             right_arg_name) {
+  pipe_right_arg$f(pipe_left_arg)
+}
+
+f &lt;- list(f=sin)
+2 %.&gt;% f
+f$f &lt;- cos
+2 %.&gt;% f
+
+</code></pre>
+
+
+</div>

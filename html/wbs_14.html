@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sbs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Change-point detection via standard Binary Segmentation</h2>
+
+<h3>Description</h3>
+
+<p>The function applies the Binary Segmentation algorithm to identify potential locations of the change-points in the mean of the input vector <code>x</code>. 
+The object returned by this routine can be further passed to the <code>changepoints</code> function, 
+which finds the final estimate of the change-points based on thresholding.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sbs(x, ...)
+
+## Default S3 method:
+sbs(x, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a numeric vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>not in use</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>an object of class "sbs", which contains the following fields
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>the vector provided</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>the length of <code>x</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res</code></td>
+<td>
+<p>a 6-column matrix with results, where 's' and 'e' denote start-
+end points of the intervals in which change-points candidates 'cpt' have been found;
+column 'CUSUM' contains corresponding value of CUSUM statistic; 'min.th' is the smallest 
+threshold value for which given change-point candidate would be not added to the set of estimated 
+change-points; the last column is the scale at which the change-point has been found</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- rnorm(300) + c(rep(1,50),rep(0,250))
+s &lt;- sbs(x)
+s.cpt &lt;- changepoints(s)
+s.cpt
+th &lt;- c(s.cpt$th,0.7*s.cpt$th) 
+s.cpt &lt;- changepoints(s,th=th)
+s.cpt
+</code></pre>
+
+
+</div>

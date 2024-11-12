@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Whclust</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Hierarchical Clustering with observational weights
+</h2>
+
+<h3>Description</h3>
+
+<p>This function produces the hierarchical tree for observations with weights, by agglomerative hierarchical clustering based on Ward's method considering observational weights.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Whclust(x,w)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>A data matrix (of class matrix, data.frame, or data.table) containing only entries of class numeric.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+
+<p>Vector of length nrow(x) of weights for each observation in the dataset. Must be of class numeric or integer. If NULL, the default value is a vector of 1 with length nrow(x), i.e., weights equal 1 for all observations.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Agglomerative hierarchical clustering based on Ward's method considering observational weights are used to generate the hierarchical tree. Based on the Ward method, the distance between two clusters is the increase of sum of squares after merging them, which is the merging cost of combining two clusters. This function computes the merging costs for each pair of clusters for a data set with observational weights. During the process of agglomerative hierarchical clustering, the sums of squares are calculated with observational weights, and the pair of clusters with minimal distance is merged at each step.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <em>hclust</em> which describes the tree produced by the clustering process. It's the same class of object as outputs from function <code>hclust</code> in the package <code>stats</code>. See details in <code>hclust</code>. There are <code>print</code>, <code>plot</code>, and <code>cutree</code> methods for <code>hclust</code> objects.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Javier Cabrera, Yajie Duan, Ge Cheng
+</p>
+
+
+<h3>References</h3>
+
+<p>Cherasia, K. E., Cabrera, J., Fernholz, L. T., &amp; Fernholz, R. (2022). Data Nuggets in Supervised Learning. <em>In Robust and Multivariate Statistical Methods: Festschrift in Honor of David E. Tyler</em> (pp. 429-449). Cham: Springer International Publishing.
+</p>
+<p>Beavers, T., Cheng, G., Duan, Y., Cabrera, J., Lubomirski, M., Amaratunga, D., Teigler, J. (2023). Data Nuggets: A Method for Reducing Big Data While Preserving Data Structure (Submitted for Publication)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>hclust</code>, <code>distw</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+    require(cluster)
+      t1 = Sys.time()
+
+    # The Ruspini data set from the package "cluster""
+    x = as.matrix(ruspini)
+
+    # assign random weights to observations
+    w = sample(1:20,nrow(x),replace = TRUE)
+
+    # hierarchical clustering with observational weights
+    h = Whclust(x,w)
+
+    #print the hclust object
+    print(h)
+
+    #plot the hierarchical tree
+    plot(h)
+
+    #cut the hierarchical tree to get 4 clusters
+    k4 = cutree(h,4)
+    table(k4)
+
+    #plot the clustering result
+    plot(x,cex = log(w),pch = 16,col = k4)
+      t2 = Sys.time()
+
+</code></pre>
+
+
+</div>

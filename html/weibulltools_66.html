@@ -1,0 +1,187 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_prob</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Probability Plotting Method for Univariate Lifetime Distributions</h2>
+
+<h3>Description</h3>
+
+<p>This function is used to apply the graphical technique of probability
+plotting. It is either applied to the output of estimate_cdf
+(<code>plot_prob.wt_cdf_estimation</code>) or to the output of a mixture model from
+mixmod_regression / mixmod_em (<code>plot_prob.wt_model</code>). Note that in the
+latter case no distribution has to be specified because it is inferred from
+the model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_prob(x, ...)
+
+## S3 method for class 'wt_cdf_estimation'
+plot_prob(
+  x,
+  distribution = c("weibull", "lognormal", "loglogistic", "sev", "normal", "logistic",
+    "exponential"),
+  title_main = "Probability Plot",
+  title_x = "Characteristic",
+  title_y = "Unreliability",
+  title_trace = "Sample",
+  plot_method = c("plotly", "ggplot2"),
+  ...
+)
+
+## S3 method for class 'wt_model'
+plot_prob(
+  x,
+  title_main = "Probability Plot",
+  title_x = "Characteristic",
+  title_y = "Unreliability",
+  title_trace = "Sample",
+  plot_method = c("plotly", "ggplot2"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A tibble with class <code>wt_cdf_estimation</code> returned by estimate_cdf
+or a list with class <code>wt_model</code> returned by rank_regression, ml_estimation,
+mixmod_regression or mixmod_em.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the random variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_main</code></td>
+<td>
+<p>A character string which is assigned to the main title.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_x</code></td>
+<td>
+<p>A character string which is assigned to the title of the x axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_y</code></td>
+<td>
+<p>A character string which is assigned to the title of the y axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_trace</code></td>
+<td>
+<p>A character string which is assigned to the legend trace.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_method</code></td>
+<td>
+<p>Package, which is used for generating the plot output.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If <code>x</code> was split by mixmod_em, estimate_cdf with method <code>"johnson"</code> is
+applied to subgroup-specific data. The calculated plotting positions are
+shaped according to the determined split in mixmod_em.
+</p>
+<p>In mixmod_regression a maximum of three subgroups can be determined and thus
+being plotted. The intention of this function is to give the user a hint for
+the existence of a mixture model. An in-depth analysis should be done afterwards.
+</p>
+<p>For <code>plot_method == "plotly"</code> the marker label for x and y are determined by
+the first word provided in the argument <code>title_x</code> and <code>title_y</code> respectively,
+i.e. if <code>title_x = "Mileage in km"</code> the x label of the marker is "Mileage".
+The name of the legend entry is a combination of the <code>title_trace</code> and the
+number of determined subgroups (if any). If <code>title_trace = "Group"</code> and the
+data has been split in two groups, the legend entries are "Group: 1" and
+"Group: 2".
+</p>
+
+
+<h3>Value</h3>
+
+<p>A plot object containing the probability plot.
+</p>
+
+
+<h3>References</h3>
+
+<p>Meeker, William Q; Escobar, Luis A., Statistical methods for
+reliability data, New York: Wiley series in probability and statistics, 1998
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Reliability data:
+data &lt;- reliability_data(
+  alloy,
+  x = cycles,
+  status = status
+)
+
+# Probability estimation:
+prob_tbl &lt;- estimate_cdf(
+  data,
+  methods = c("johnson", "kaplan")
+)
+
+# Example 1 - Probability Plot Weibull:
+plot_weibull &lt;- plot_prob(prob_tbl)
+
+# Example 2 - Probability Plot Lognormal:
+plot_lognormal &lt;- plot_prob(
+  x = prob_tbl,
+  distribution = "lognormal"
+)
+
+## Mixture identification
+# Reliability data:
+data_mix &lt;- reliability_data(
+  voltage,
+  x = hours,
+  status = status
+)
+
+prob_mix &lt;- estimate_cdf(
+  data_mix,
+  methods = c("johnson", "kaplan")
+)
+
+# Example 3 - Mixture identification using mixmod_regression:
+mix_mod_rr &lt;- mixmod_regression(prob_mix)
+
+plot_mix_mod_rr &lt;- plot_prob(x = mix_mod_rr)
+
+# Example 4 - Mixture identification using mixmod_em:
+mix_mod_em &lt;- mixmod_em(data_mix)
+
+plot_mix_mod_em &lt;- plot_prob(x = mix_mod_em)
+
+</code></pre>
+
+
+</div>

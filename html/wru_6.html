@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>census_geo_api</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Census Data download function.</h2>
+
+<h3>Description</h3>
+
+<p><code>census_geo_api</code> retrieves U.S. Census geographic data for a given state.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">census_geo_api(
+  key = Sys.getenv("CENSUS_API_KEY"),
+  state,
+  geo = c("tract", "block", "block_group", "county", "place", "zcta"),
+  age = FALSE,
+  sex = FALSE,
+  year = c("2020", "2010"),
+  retry = 3,
+  save_temp = NULL,
+  counties = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>A character string containing a valid Census API key,
+which can be requested from the
+<a href="https://api.census.gov/data/key_signup.html">U.S. Census API key signup page</a>.
+</p>
+<p>By default, attempts to find a census key stored in an
+environment variable named <code>CENSUS_API_KEY</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>state</code></td>
+<td>
+<p>A required character object specifying which state to extract Census data for,
+e.g., <code>"NJ"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geo</code></td>
+<td>
+<p>A character object specifying what aggregation level to use.
+Use <code>"block"</code>, <code>"block_group"</code>, <code>"county"</code>, <code>"place"</code>, <code>"tract"</code>, or <code>"zcta"</code>.
+Default is <code>"tract"</code>. Warning: extracting block-level data takes very long.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>age</code></td>
+<td>
+<p>A <code>TRUE</code>/<code>FALSE</code> object indicating whether to condition on
+age or not. If <code>FALSE</code> (default), function will return Pr(Geolocation | Race).
+If <code>TRUE</code>, function will return Pr(Geolocation, Age | Race).
+If <code><var>sex</var></code> is also <code>TRUE</code>, function will return Pr(Geolocation, Age, Sex | Race).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sex</code></td>
+<td>
+<p>A <code>TRUE</code>/<code>FALSE</code> object indicating whether to condition on
+sex or not. If <code>FALSE</code> (default), function will return Pr(Geolocation | Race).
+If <code>TRUE</code>, function will return Pr(Geolocation, Sex | Race).
+If <code><var>age</var></code> is also <code>TRUE</code>, function will return Pr(Geolocation, Age, Sex | Race).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>year</code></td>
+<td>
+<p>A character object specifying the year of U.S. Census data to be downloaded.
+Use <code>"2010"</code>, or <code>"2020"</code>. Default is <code>"2020"</code>.
+Warning: 2020 U.S. Census data is downloaded only when <code><var>age</var></code> and
+<code><var>sex</var></code> are both <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>retry</code></td>
+<td>
+<p>The number of retries at the census website if network interruption occurs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>save_temp</code></td>
+<td>
+<p>File indicating where to save the temporary outputs.
+Defaults to NULL. If specified, the function will look for an .RData file
+with the same format as the expected output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>counties</code></td>
+<td>
+<p>A vector of counties contained in your data. If <code>NULL</code>, all counties are pulled.
+Useful for smaller predictions where only a few counties are considered. Must be zero padded.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function allows users to download U.S. Census geographic data (2010 or 2020),
+at either the county, tract, block, or place level, for a particular state.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Output will be an object of class <code>list</code>, indexed by state names. It will
+consist of the original user-input data with additional columns of Census geographic data.
+</p>
+
+
+<h3>References</h3>
+
+<p>Relies on <code>get_census_api()</code>, <code>get_census_api_2()</code>, and <code>vec_to_chunk()</code> functions authored by Nicholas Nagle,
+available <a href="https://rstudio-pubs-static.s3.amazonaws.com/19337_2e7f827190514c569ea136db788ce850.html">here</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: census_geo_api(states = c("NJ", "DE"), geo = "block")
+## Not run: census_geo_api(states = "FL", geo = "tract", age = TRUE, sex = TRUE)
+## Not run: census_geo_api(states = "MA", geo = "place", age = FALSE, sex = FALSE,
+ year = "2020")
+## End(Not run)
+
+</code></pre>
+
+
+</div>

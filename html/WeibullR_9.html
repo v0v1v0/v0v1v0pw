@@ -1,0 +1,66 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hrbu</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Hirose and Ross beta unbias factors for Weibull MLE</h2>
+
+<h3>Description</h3>
+
+<p><code>hrbu</code> generates the reduction factor based on the mean bias of the weibull MLE beta parameter(roughly C4^6) for complete failure
+samples, modestly increased correction as number of suspensions increases.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R"> hrbu(Qx, Qs=NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Qx</code></td>
+<td>
+<p>The quantity of actual failures</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Qs</code></td>
+<td>
+<p>An optional quantity of suspensions</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This, as many references, discuss the bias reduction in terms of mean.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A factor to be multiplied to the MLE Beta account for known bias.
+</p>
+
+
+<h3>References</h3>
+
+<p>Hirose, H. (1999) "Bias Correction for the Maximum Likelihood Estimation in Two-parameter Weibull Distribution" IEEE Transactions on Dielectrics and Electrical Insulation, Vol. 6, No.1
+Ross, R. (1996) "Bias and Standard Deviation Due to Weibull Parameter Estimation for Small Data Sets" IEEE Transactions on Dielectrics and Electrical Insulation, Vol. 3, No.1
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">failures&lt;-c(90,96,30,49,82)
+suspensions&lt;-c(100,45,10)
+MLEfit&lt;-mlefit(mleframe(failures,suspensions))
+MLE_Unbiased&lt;-c(MLEfit[1],MLEfit[2]*hrbu(length(failures),length(suspensions)))
+</code></pre>
+
+
+</div>

@@ -1,0 +1,141 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>irregwd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Irregular wavelet transform (decomposition).</h2>
+
+<h3>Description</h3>
+
+<p>This function performs the irregular wavelet transform as described in the paper by Kovac and Silverman. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">irregwd(gd, filter.number=2, family="DaubExPhase", bc="periodic", verbose=FALSE)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>gd</code></td>
+<td>
+<p>A grid structure which is the output of the <code>makegrid</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.number</code></td>
+<td>
+<p>This selects the smoothness of wavelet that you want to use in the decomposition. By default this is 2, the Daubechies extremal phase orthonormal compactly supported wavelet with 2 vanishing moments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>specifies the family of wavelets that you want to use. Two popular options are "DaubExPhase" and "DaubLeAsymm" but see the help for <code>filter.select</code> for more possibilities.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bc</code></td>
+<td>
+<p>specifies the boundary handling. If <code>bc="periodic"</code> the default, then the function you decompose is assumed to be periodic on it's interval of definition, if <code>bc="symmetric"</code> then the function beyond its boundaries is assumed to be a symmetric reflection of the function in the boundary. The symmetric option was the implicit default in releases prior to 2.2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Controls the printing of "informative" messages whilst the computations progress. Such messages are generally annoying so it is turned off by default.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If one has irregularly spaced one-dimensional regression data (t,y), say. Then the function <code>makegrid</code> interpolates this to a regular grid and then the standard wavelet transform is used to transform the interpolated data. However, unlike the standard wavelet denoising set-up the interpolated data, y, values are correlated. Hence the wavelet coefficients of the interpolated will be correlated (even after using an orthogonal transform). Hence, in particular, the variance of each wavelet coefficient may well be different and so this routine also computes those variances using a fast algorithm (related to the two-dimensional wavelet transform). 
+</p>
+<p>When thresholding with <code>threshold.irregwd</code> the threshold function makes use of the information about the variance of each coefficient to modify the variance locally on a coefficient by coefficient basis. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>irregwd</code> which is a list with the following components. 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>C</code></td>
+<td>
+<p>Vector of sets of successively smoothed versions of the interpolated data (see description of equivalent component of <code>wd.object</code> for further information.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>D</code></td>
+<td>
+<p>Vector of sets of wavelet coefficients of the interpolated data at different resolution levels. (see description of equivalent component of <code>wd.object</code> for further information.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c</code></td>
+<td>
+<p>Vector that aids in calculation of variances of wavelet coefficients (used by <code>threshold.irregwd</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlevelsWT</code></td>
+<td>
+<p>The number of resolution levels. This depends on the length of the data vector. If <code>length(data)=2^m</code>, then there will be m resolution levels. This means there will be m levels of wavelet coefficients (indexed 0,1,2,...,(m-1)), and m+1 levels of smoothed data (indexed 0,1,2,...,m).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fl.dbase</code></td>
+<td>
+<p>There is more information stored in the C and D than is described above. In the decomposition “extra” coefficients are generated that help take care of the boundary effects, this database lists where these start and finish, so the "true" data can be extracted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>A list containing information about the filter type: Contains the string "wavelet" or "station" depending on which type of transform was performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bc</code></td>
+<td>
+<p>How the boundaries were handled.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date</code></td>
+<td>
+<p>The date the transform was performed.</p>
+</td>
+</tr>
+</table>
+<h3>RELESASE</h3>
+
+<p>3.9.4 Code Copyright Arne Kovac 1997
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Arne Kovac</p>
+
+
+<h3>See Also</h3>
+
+<p><code>makegrid</code>, <code>wd</code>, <code>wr.wd</code>, <code>accessC</code>, <code>accessc</code>, <code>accessD</code>, <code>putD</code>, <code>putC</code>, <code>filter.select</code>, <code>plot.irregwd</code>, <code>threshold.irregwd</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# See full examples at the end of the help for makegrid. 
+#
+</code></pre>
+
+
+</div>

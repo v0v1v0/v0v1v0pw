@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mwr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Multiple discrete wavelet transform (reconstruction). </h2>
+
+<h3>Description</h3>
+
+<p>This function performs the reconstruction stage of Mallat's pyramid algorithm adapted for multiple wavelets (see Xia et al.(1996)), i.e. the discrete inverse <em>multiple</em> wavelet transform. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mwr(mwd, prefilter.type = mwd$prefilter, verbose = FALSE, start.level = 0,
+	returnC = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mwd</code></td>
+<td>
+<p>A multiple wavelet decomposition object as returned by <code>mwd</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prefilter.type</code></td>
+<td>
+<p>Usually best not to change this (i.e. not to use a different prefilter on the reconstruction to the one used on decomposition).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Controls the printing of "informative" messages whilst the computations progress. Such messages are generally annoying so it is turned off by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start.level</code></td>
+<td>
+<p>The level you wish to start reconstruction at. The is usually the first (level 0).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnC</code></td>
+<td>
+<p>If this is FALSE then a vector of the same length as the argument data supplied to the function <code>mwd</code> that constructed the supplied <code>mwd.object</code>. is returned, Ie. the reconstructed data. If true then the last level (highest resolution) C coefficients are returned in matrix form. This matrix has not been postprocessed. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The code implements Mallat's pyramid algorithm adapted for multiple wavelet decompositions (Xia et al. 1996). In the reconstruction the quadrature mirror filters G and H are supplied with C0 and D0, D1, ... D(J-1) (the wavelet coefficients) and rebuild C1,..., CJ. 
+</p>
+<p>The matrix CJ is postprocessed which returns the full reconstruction 
+</p>
+<p>If <code>mwd.object</code> was obtained directly from <code>mwd</code> then the original function can be reconstructued exactly. Usually, the <code>mwd.object</code> has been modified in some way, for examples, some coefficients set to zero by <code>threshold</code>. Mwr then reconstructs the function with that set of wavelet coefficients. 
+</p>
+<p>See also Downie and Silverman, 1998 
+</p>
+
+
+<h3>Value</h3>
+
+<p>Either a vector containing the final reconstruction or a matrix containing unpostprocessed coefficients. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.9.6 (Although Copyright Tim Downie 1996)</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Tim Downie</p>
+
+
+<h3>See Also</h3>
+
+<p><code>accessC.mwd</code>, <code>accessD.mwd</code>, <code>draw.mwd</code>, <code>mfirst.last</code>, <code>mfilter.select</code>, <code>mwd</code>, <code>mwd.object</code>, <code>plot.mwd</code>, <code>print.mwd</code>, <code>putC.mwd</code>, <code>putD.mwd</code>, <code>summary.mwd</code>, <code>threshold.mwd</code>, <code>wd</code>, <code>wr.mwd</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Decompose and then exactly reconstruct test.data
+#
+test.data &lt;- rnorm(128)
+tdecomp &lt;- mwd(test.data)
+trecons &lt;- mwr(tdecomp)
+#
+# Look at accuracy of reconstruction
+max(abs(trecons - test.data))
+#[1] 2.266631e-12
+#
+# See also the examples of using \code{\link{wr}} or mwr in
+# the \code{examples} section of
+# the help for \code{\link{threshold.mwd}}.
+</code></pre>
+
+
+</div>

@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>query_by_</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Query the <a href="https://www.mediawiki.org/wiki/API:Main_page">MediaWiki Action API</a> using a vector of
+Wikipedia pages</h2>
+
+<h3>Description</h3>
+
+<p>These functions help you to build a query for the <a href="https://www.mediawiki.org/wiki/API:Main_page">MediaWiki Action API</a> if you already have a set
+of pages that you wish to investigate. These functions can be combined with
+query_page_properties to choose which properties to return for the passed
+pages.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">query_by_title(.req, title)
+
+query_by_pageid(.req, pageid)
+
+query_by_revid(.req, revid)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.req</code></td>
+<td>
+<p>A wiki_action_request query to modify</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>A character vector of page titles</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pageid</code></td>
+<td>
+<p>A character or numeric vector of page ids</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>revid</code></td>
+<td>
+<p>A character or numeric vector of revision ids</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If you don't already know which pages you wish to examine, you can build a
+query to find pages that meet certain criteria using query_list_pages or
+query_generate_pages.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A request object of type <code>pages/query/action_api/httr2_request</code>. To
+perform the query, pass the object to next_batch or retrieve_all
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>gracefully()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Retrieve the categories for Charles Harpur's Wikipedia page
+ resp &lt;- wiki_action_request() %&gt;%
+  query_by_title("Charles Harpur") %&gt;%
+  query_page_properties("categories") %&gt;%
+  gracefully(next_batch)
+</code></pre>
+
+
+</div>

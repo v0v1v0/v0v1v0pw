@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sinterp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Dot substitution string interpolation.</h2>
+
+<h3>Description</h3>
+
+<p>String interpolation using <code>bquote</code>-stype .() notation. Pure R, no C/C++ code called.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sinterp(
+  str,
+  ...,
+  envir = parent.frame(),
+  enclos = parent.frame(),
+  match_pattern = "\\.\\((([^()]+)|(\\([^()]*\\)))+\\)",
+  removal_patterns = c("^\\.\\(", "\\)$")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>str</code></td>
+<td>
+<p>charater string(s) to be substituted into</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>force later arguments to bind by name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>envir</code></td>
+<td>
+<p>environemnt to look for values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>enclos</code></td>
+<td>
+<p>enclosing evaluation environment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>match_pattern</code></td>
+<td>
+<p>regexp to find substitution targets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>removal_patterns</code></td>
+<td>
+<p>regexps to remove markers from substitution targets.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See also
+<a href="https://CRAN.R-project.org/package=R.utils">https://CRAN.R-project.org/package=R.utils</a>,
+<a href="https://CRAN.R-project.org/package=rprintf">https://CRAN.R-project.org/package=rprintf</a>,
+and <a href="https://CRAN.R-project.org/package=glue">https://CRAN.R-project.org/package=glue</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>modified strings
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>strsplit_capture</code>, <code>si</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+x &lt;- 7
+sinterp("x is .(x), x+1 is .(x+1)\n.(x) is odd is .(x%%2 == 1)")
+
+# Because matching is done by a regular expression we
+# can not use arbitrary depths of nested parenthesis inside
+# the interpolation region.  The default regexp allows
+# one level of nesting (and one can use {} in place
+# of parens in many places).
+sinterp("sin(x*(x+1)) is .(sin(x*{x+1}))")
+
+# We can also change the delimiters,
+# in this case to !! through the first whitespace.
+sinterp(c("x is !!x , x+1 is !!x+1 \n!!x  is odd is !!x%%2==1"),
+        match_pattern = '!![^[:space:]]+[[:space:]]?',
+        removal_patterns = c("^!!", "[[:space:]]?$"))
+
+</code></pre>
+
+
+</div>

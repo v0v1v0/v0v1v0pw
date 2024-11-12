@@ -1,0 +1,209 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>W2L1</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>2-Wasserstein distance linear projections with an <code class="reqn">L_1</code> penalty</h2>
+
+<h3>Description</h3>
+
+<p>2-Wasserstein distance linear projections with an <code class="reqn">L_1</code> penalty
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">W2L1(
+  X,
+  Y = NULL,
+  theta = NULL,
+  penalty = c("lasso", "ols", "mcp", "elastic.net", "selection.lasso", "scad", "mcp.net",
+    "scad.net", "grp.lasso", "grp.lasso.net", "grp.mcp", "grp.scad", "grp.mcp.net",
+    "grp.scad.net", "sparse.grp.lasso"),
+  method = c("projection", "selection.variable", "location.scale", "scale"),
+  transport.method = transport_options(),
+  epsilon = 0.05,
+  OTmaxit = 100,
+  model.size = NULL,
+  lambda = numeric(0),
+  nlambda = 100L,
+  lambda.min.ratio = NULL,
+  alpha = 1,
+  gamma = 1,
+  tau = 0.5,
+  groups = numeric(0),
+  scale.factor = numeric(0),
+  penalty.factor = NULL,
+  group.weights = NULL,
+  maxit = 500L,
+  tol = 1e-07,
+  irls.maxit = 100L,
+  irls.tol = 0.001,
+  infimum.maxit = NULL,
+  display.progress = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>An n x p matrix of covariates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>An n x s matrix of predictions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>optional parameter matrix for selection methods. Should be p x s.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>penalty</code></td>
+<td>
+<p>Form of penalty. One of "lasso", "ols", "mcp", "elastic.net","selection.lasso", "scad", "mcp.net", "scad.net", "grp.lasso", "grp.lasso.net", "grp.mcp","grp.scad", "grp.mcp.net", "grp.scad.net", "sparse.grp.lasso"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>"selection.variable" or "projection</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transport.method</code></td>
+<td>
+<p>Method for calculating the Wasserstein distance. One of "exact", "sinkhorn", "greenkhorn","hilbert"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>epsilon</code></td>
+<td>
+<p>Penalty parameter for Sinkhorn and Greenkhorn and  optimal transport</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>OTmaxit</code></td>
+<td>
+<p>Maximum iterations for the optimal transport iterations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model.size</code></td>
+<td>
+<p>The maximum number of desired covariates. Defaults to the number of covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>Penalty parameter for lasso regression. See oem.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlambda</code></td>
+<td>
+<p>Number of lambda values. See oem.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda.min.ratio</code></td>
+<td>
+<p>Minimum lambda ratio for self selected lambda. See oem.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>elastic net mixing. See oem.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma</code></td>
+<td>
+<p>tuning parameters for SCAD and MCP. See oem.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>mixing parameter for sparse group lasso. See oem.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groups</code></td>
+<td>
+<p>A vector of grouping values. See oem.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.factor</code></td>
+<td>
+<p>Value to standardize the covariates by. Typically, is the standard deviation. Should have length 1 or length same as the number of covariates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>penalty.factor</code></td>
+<td>
+<p>Penalty factor for OEM. See oem.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group.weights</code></td>
+<td>
+<p>Weights for group lasso. See oem.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxit</code></td>
+<td>
+<p>Max iteration for OEM. See oem.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>Tolerance for OEM. See oem.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>irls.maxit</code></td>
+<td>
+<p>IRLS max iterations for OEM. See oem.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>irls.tol</code></td>
+<td>
+<p>IRLS tolerance for OEM. See oem.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>infimum.maxit</code></td>
+<td>
+<p>Maximum number of iterations alternating optimization and Wasserstein distance calculation. Irrelevant for projection method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>display.progress</code></td>
+<td>
+<p>Display intermediate progress?</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Object of class <code>WpProj</code>
+</p>
+
+
+</div>

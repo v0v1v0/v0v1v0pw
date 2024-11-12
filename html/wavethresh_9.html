@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>accessD.mwd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get wavelet coefficients from multiple wavelet structure (mwd).</h2>
+
+<h3>Description</h3>
+
+<p>The wavelet coefficients from a multiple wavelet decomposition structure, <code>mwd.object</code>, (e.g. returned from <code>mwd</code>) are packed into a single matrix in that structure. This function extracts the coefficients corresponding to a particular resolution level.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'mwd'
+accessD(mwd, level, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mwd</code></td>
+<td>
+<p>Multiple wavelet decomposition structure from which you wish to extract the expansion coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>The level that you wish to extract. If the "original" data has <code>mwd$filter$npsi*2^m</code> data points (<code>mwd$filter$npsi</code> being the multiplicity of the multiple wavelets) then there are m possible levels that you could want to access, indexed by 0,1,...,(m-1) </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>mwd</code> function produces a <code>multiple wavelet decomposition object</code> .
+</p>
+<p>The need for this function is a consequence of the pyramidal structure of
+<code>Mallats algorithm</code> and the memory efficiency gain achieved by storing
+the pyramid as a linear matrix.
+AccessD obtains information about where the coefficients appear from the
+fl.dbase component of <code>mwd</code>,
+in particular the array <code>fl.dbase$first.last.d</code> which gives a complete
+specification of index numbers and offsets for <code>mwd$D</code>. 
+</p>
+<p>Note that this function and <code>accessC</code> only work on objects of class <code>mwd</code> to <em>extract</em> coefficients. You have to use
+<code>putD.mwd</code> to insert wavelet coefficients into a <code>mwd</code> object. 
+</p>
+<p>See Downie and Silverman, 1998. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix with <code>mwd$filter$npsi</code> rows containing the extracted coefficients.
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Tim Downie 1995-6</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>accessD.mwd</code>, <code>draw.mwd</code>, <code>mfirst.last</code>, <code>mfilter.select</code>, <code>mwd</code>, <code>mwd.object</code>, <code>plot.mwd</code>, <code>print.mwd</code>, <code>putC.mwd</code>, <code>putD.mwd</code>, <code>summary.mwd</code>, <code>threshold.mwd</code>, <code>wd</code>, <code>wr.mwd</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Get the 3rd level of smoothed data from a decomposition
+#
+data(ipd)
+accessD.mwd(mwd(ipd), level=3)
+</code></pre>
+
+
+</div>

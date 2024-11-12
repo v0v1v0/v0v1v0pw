@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_census_api</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Census API function.</h2>
+
+<h3>Description</h3>
+
+<p><code>get_census_api</code> obtains U.S. Census data via the public API.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_census_api(
+  data_url,
+  key = Sys.getenv("CENSUS_API_KEY"),
+  var.names,
+  region,
+  retry = 0
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data_url</code></td>
+<td>
+<p>URL root of the API,
+e.g., <code>"https://api.census.gov/data/2020/dec/pl"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>A character string containing a valid Census API key,
+which can be requested from the
+<a href="https://api.census.gov/data/key_signup.html">U.S. Census API key signup page</a>.
+</p>
+<p>By default, attempts to find a census key stored in an
+environment variable named <code>CENSUS_API_KEY</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var.names</code></td>
+<td>
+<p>A character vector of variables to get,
+e.g., <code>c("P2_005N", "P2_006N", "P2_007N", "P2_008N")</code>.
+If there are more than 50 variables, then function will automatically
+split variables into separate queries.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>region</code></td>
+<td>
+<p>Character object specifying which region to obtain data for.
+Must contain "for" and possibly "in",
+e.g., <code>"for=block:1213&amp;in=state:47+county:015+tract:*"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>retry</code></td>
+<td>
+<p>The number of retries at the census website if network interruption occurs.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function obtains U.S. Census data via the public API. User
+can specify the variables and region(s) for which to obtain data.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If successful, output will be an object of class <code>data.frame</code>.
+If unsuccessful, function prints the URL query that caused the error.
+</p>
+
+
+<h3>References</h3>
+
+<p>Based on code authored by Nicholas Nagle, which is available
+<a href="https://rstudio-pubs-static.s3.amazonaws.com/19337_2e7f827190514c569ea136db788ce850.html">here</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+get_census_api(
+  data_url = "https://api.census.gov/data/2020/dec/pl",
+  var.names = c("P2_005N", "P2_006N", "P2_007N", "P2_008N"), region = "for=county:*&amp;in=state:34"
+)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

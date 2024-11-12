@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>BAYES.THR</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Bayesian wavelet thresholding.</h2>
+
+<h3>Description</h3>
+
+<p>This function carries out Bayesian wavelet thresholding of noisy data, using the BayesThresh method of Abramovich, Sapatinas, &amp; Silverman (1998). 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">BAYES.THR(data, alpha = 0.5, beta = 1, filter.number = 8, family =
+"DaubLeAsymm", bc = "periodic", dev = var, j0 = 5, plotfn = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A vector of length a power of two, containing noisy data to be thresholded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha, beta</code></td>
+<td>
+<p>Hyperparameters which determine the priors placed on the wavelet coefficients. Both alpha and beta take positive values; see Abramovich, Sapatinas, &amp; Silverman (1998) or Chipman &amp; Wolfson (1999) for more details on selecting <code>alpha</code> and <code>beta</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.number</code></td>
+<td>
+<p>This selects the smoothness of wavelet that you want to use in the decomposition. By default this is 10, the Daubechies least-asymmetric orthonormal compactly supported wavelet with 10 vanishing moments. 
+</p>
+<p>For the “wavelets on the interval” (<code>bc="interval"</code>) transform the filter number ranges from 1 to 8. See the table of filter coefficients indexed after the reference to Cohen, Daubechies and Vial, (1993).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>Specifies the family of wavelets that you want to use. Two popular options are "DaubExPhase" and "DaubLeAsymm" but see the help for filter.select for more possibilities. 
+</p>
+<p>This argument is ignored for the “wavelets on the interval” transform (<code>bc="interval"</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bc</code></td>
+<td>
+<p>Specifies the boundary handling. If <code>bc="periodic"</code> the default, then the function you decompose is assumed to be periodic on it's interval of definition, if <code>bc="symmetric"</code> then the function beyond its boundaries is assumed to be a symmetric reflection of the function in the boundary. The symmetric option was the implicit default in releases prior to 2.2. If<code>bc=="interval"</code> then the “wavelets on the interval algorithm” due to Cohen, Daubechies and Vial is used. (The <code>WaveThresh</code> implementation of the “wavelets on the interval transform” was coded by Piotr Fryzlewicz, Department of Mathematics, Wroclaw University of Technology, Poland; this code was largely based on code written by Markus Monnerjahn, RHRK, Universitat Kaiserslautern; integration into <code>WaveThresh</code> by <code>GPN</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dev</code></td>
+<td>
+<p>This argument supplies the function to be used to compute the spread of the absolute values coefficients. The function supplied must return a value of spread on the variance scale (i.e. not standard deviation) such as the <code>var()</code> function. A popular, useful and robust alternative is the <code>madmad</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>j0</code></td>
+<td>
+<p>The primary resolution level. While BayesThresh thresholds at all resolution levels, j0 is used in assessing the universal threshold which is used in the empirical Bayes estimation of hyperparameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotfn</code></td>
+<td>
+<p>If TRUE, BAYES.THR draws the noisy data and the thresholded function estimate.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A mixture prior consisting of a zero-mean normal distribution and a point mass at zero is placed on each wavelet coefficient. The empirical coefficients are then calculated and the priors updated to give posterior distributions for each coefficient. The thresholded value of each coefficient is the median of that coefficient's posterior distribution. See Abramovich, Sapatinas, &amp; Silverman (1998) for more details of the procedure; the help page for <code>threshold.wd</code> has more information about wavelet thresholding in general. 
+</p>
+<p>The function <code>wave.band</code> uses the same priors to compute posterior credible intervals for the regression function, using the method described by Barber, Nason, &amp; Silverman (2001). 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector containing the thresholded estimate of the function from which the data was drawn. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>3.9.5
+Code by Fanis Sapatinas/Felix Abramovich
+Documentation by Stuart Barber 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>threshold.wd</code>, <code>wd</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Generate some noisy test data and plot it.
+#
+blocks.data &lt;- DJ.EX(n=512, noisy=TRUE)$blocks
+#
+# Now try BAYES.THR with the default parameters.
+#
+blocks.thr &lt;- BAYES.THR(blocks.data, plotfn=TRUE)
+#
+# The default wavelet is Daubechies' least asymmetric wavelet 
+# with 8 vanishing moments; quite a smooth wavelet. Since the 
+# flat sections are still rather noisy, try Haar wavelets:
+# 
+blocks.thr &lt;- BAYES.THR(blocks.data, plotfn=TRUE, filter.number=1,
+        family = "DaubExPhase") 
+#
+# To show the importance of a sensible prior, consider alpha = 4, 
+# beta = 1 (which implies a smoother prior than the default). 
+#
+blocks.thr &lt;- BAYES.THR(blocks.data, plotfn=TRUE, filter.number=1,
+        family = "DaubExPhase", alpha=4, beta=1)
+#
+# Here, the extreme values of the function are being smoothed towards zero.
+#
+</code></pre>
+
+
+</div>

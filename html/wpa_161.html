@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>remove_outliers</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Remove outliers from a person query across time</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+</p>
+<p>This function takes in a selected metric and uses z-score (number of standard
+deviations) to identify and remove outlier weeks for individuals across time.
+There are applications in this for removing weeks with abnormally low
+collaboration activity, e.g. holidays. Retains metrics with z &gt; -2.
+</p>
+<p>Function is based on <code>identify_outlier()</code>, but implements a more elaborate
+approach as the outliers are identified and removed <strong>with respect to each
+individual</strong>, as opposed to the group. Note that <code>remove_outliers()</code> has a
+longer runtime compared to <code>identify_outlier()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">remove_outliers(data, metric = "Collaboration_hours")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A Standard Person Query dataset in the form of a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metric</code></td>
+<td>
+<p>Character string containing the name of the metric,
+e.g. "Collaboration_hours"</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For mature functions to remove common outliers, please see the following:
+</p>
+
+<ul>
+<li> <p><code>identify_holidayweeks()</code>
+</p>
+</li>
+<li> <p><code>identify_nkw()</code>
+</p>
+</li>
+<li> <p><code>identify_inactiveweeks</code>
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>Returns a new data frame, "cleaned_data" with all metrics,
+having removed the person-weeks that are below 2 standard
+deviations of each individual's collaboration activity.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mark Powers <a href="mailto:mark.powers@microsoft.com">mark.powers@microsoft.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Data Validation: 
+<code>check_query()</code>,
+<code>extract_hr()</code>,
+<code>flag_ch_ratio()</code>,
+<code>flag_em_ratio()</code>,
+<code>flag_extreme()</code>,
+<code>flag_outlooktime()</code>,
+<code>hr_trend()</code>,
+<code>hrvar_count()</code>,
+<code>hrvar_count_all()</code>,
+<code>hrvar_trend()</code>,
+<code>identify_churn()</code>,
+<code>identify_holidayweeks()</code>,
+<code>identify_inactiveweeks()</code>,
+<code>identify_nkw()</code>,
+<code>identify_outlier()</code>,
+<code>identify_privacythreshold()</code>,
+<code>identify_query()</code>,
+<code>identify_shifts()</code>,
+<code>identify_shifts_wp()</code>,
+<code>identify_tenure()</code>,
+<code>standardise_pq()</code>,
+<code>subject_validate()</code>,
+<code>subject_validate_report()</code>,
+<code>track_HR_change()</code>,
+<code>validation_report()</code>
+</p>
+
+
+</div>

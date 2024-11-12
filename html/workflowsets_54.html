@@ -1,0 +1,227 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>workflow_set</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate a set of workflow objects from preprocessing and model objects</h2>
+
+<h3>Description</h3>
+
+<p>Often a data practitioner needs to consider a large number of possible
+modeling approaches for a task at hand, especially for new data sets
+and/or when there is little knowledge about what modeling strategy
+will work best. Workflow sets provide an expressive interface for
+investigating multiple models or feature engineering strategies in such
+a situation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">workflow_set(preproc, models, cross = TRUE, case_weights = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>preproc</code></td>
+<td>
+<p>A list (preferably named) with preprocessing objects:
+formulas, recipes, or <code>workflows::workflow_variables()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>models</code></td>
+<td>
+<p>A list (preferably named) of <code>parsnip</code> model specifications.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cross</code></td>
+<td>
+<p>A logical: should all combinations of the preprocessors and
+models be used to create the workflows? If <code>FALSE</code>, the length of <code>preproc</code>
+and <code>models</code> should be equal.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>case_weights</code></td>
+<td>
+<p>A single unquoted column name specifying the case
+weights for the models. This must be a classed case weights column, as
+determined by <code>hardhat::is_case_weights()</code>. See the "Case weights" section
+below for more information.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The preprocessors that can be combined with the model objects can be one or
+more of:
+</p>
+
+<ul>
+<li>
+<p> A traditional R formula.
+</p>
+</li>
+<li>
+<p> A recipe definition (un-prepared) via <code>recipes::recipe()</code>.
+</p>
+</li>
+<li>
+<p> A selectors object created by <code>workflows::workflow_variables()</code>.
+</p>
+</li>
+</ul>
+<p>Since <code>preproc</code> is a named list column, any combination of these can be
+used in that argument (i.e., <code>preproc</code> can be mixed types).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A tibble with extra class 'workflow_set'. A new set includes four
+columns (but others can be added):
+</p>
+
+<ul>
+<li> <p><code>wflow_id</code> contains character strings for the preprocessor/workflow
+combination. These can be changed but must be unique.
+</p>
+</li>
+<li> <p><code>info</code> is a list column with tibbles containing more specific information,
+including any comments added using <code>comment_add()</code>. This tibble also
+contains the workflow object (which can be easily retrieved using
+<code>extract_workflow()</code>).
+</p>
+</li>
+<li> <p><code>option</code> is a list column that will include a list of optional arguments
+passed to the functions from the <code>tune</code> package. They can be added
+manually via <code>option_add()</code> or automatically when options are passed to
+<code>workflow_map()</code>.
+</p>
+</li>
+<li> <p><code>result</code> is a list column that will contain any objects produced when
+<code>workflow_map()</code> is used.
+</p>
+</li>
+</ul>
+<h3>Case weights</h3>
+
+<p>The <code>case_weights</code> argument can be passed as a single unquoted column name
+identifying the data column giving model case weights. For each workflow
+in the workflow set using an engine that supports case weights, the case
+weights will be added with <code>workflows::add_case_weights()</code>. <code>workflow_set()</code>
+will warn if any of the workflows specify an engine that does not support
+case weights—and ignore the case weights argument for those workflows—but
+will not fail.
+</p>
+<p>Read more about case weights in the tidymodels at <code>?parsnip::case_weights</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The package supplies two pre-generated workflow sets, <code>two_class_set</code>
+and <code>chi_features_set</code>, and associated sets of model fits
+<code>two_class_res</code> and <code>chi_features_res</code>.
+</p>
+<p>The <code style="white-space: pre;">⁠two_class_*⁠</code> objects are based on a binary classification problem
+using the <code>two_class_dat</code> data from the modeldata package. The six
+models utilize either a bare formula or a basic recipe utilizing
+<code>recipes::step_YeoJohnson()</code> as a preprocessor, and a decision tree,
+logistic regression, or MARS model specification. See <code>?two_class_set</code>
+for source code.
+</p>
+<p>The <code style="white-space: pre;">⁠chi_features_*⁠</code> objects are based on a regression problem using the
+<code>Chicago</code> data from the modeldata package. Each of the three models
+utilize a linear regression model specification, with three different
+recipes of varying complexity. The objects are meant to approximate the
+sequence of models built in Section 1.3 of Kuhn and Johnson (2019). See
+<code>?chi_features_set</code> for source code.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>workflow_map()</code>, <code>comment_add()</code>, <code>option_add()</code>,
+<code>as_workflow_set()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(workflowsets)
+library(workflows)
+library(modeldata)
+library(recipes)
+library(parsnip)
+library(dplyr)
+library(rsample)
+library(tune)
+library(yardstick)
+
+# ------------------------------------------------------------------------------
+
+data(cells)
+cells &lt;- cells %&gt;% dplyr::select(-case)
+
+set.seed(1)
+val_set &lt;- validation_split(cells)
+
+# ------------------------------------------------------------------------------
+
+basic_recipe &lt;-
+  recipe(class ~ ., data = cells) %&gt;%
+  step_YeoJohnson(all_predictors()) %&gt;%
+  step_normalize(all_predictors())
+
+pca_recipe &lt;-
+  basic_recipe %&gt;%
+  step_pca(all_predictors(), num_comp = tune())
+
+ss_recipe &lt;-
+  basic_recipe %&gt;%
+  step_spatialsign(all_predictors())
+
+# ------------------------------------------------------------------------------
+
+knn_mod &lt;-
+  nearest_neighbor(neighbors = tune(), weight_func = tune()) %&gt;%
+  set_engine("kknn") %&gt;%
+  set_mode("classification")
+
+lr_mod &lt;-
+  logistic_reg() %&gt;%
+  set_engine("glm")
+
+# ------------------------------------------------------------------------------
+
+preproc &lt;- list(none = basic_recipe, pca = pca_recipe, sp_sign = ss_recipe)
+models &lt;- list(knn = knn_mod, logistic = lr_mod)
+
+cell_set &lt;- workflow_set(preproc, models, cross = TRUE)
+cell_set
+
+# ------------------------------------------------------------------------------
+# Using variables and formulas
+
+# Select predictors by their names
+channels &lt;- paste0("ch_", 1:4)
+preproc &lt;- purrr::map(channels, ~ workflow_variables(class, c(contains(!!.x))))
+names(preproc) &lt;- channels
+preproc$everything &lt;- class ~ .
+preproc
+
+cell_set_by_group &lt;- workflow_set(preproc, models["logistic"])
+cell_set_by_group
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>GenW</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate (inverse) discrete wavelet transform matrix.</h2>
+
+<h3>Description</h3>
+
+<p>This function generates a matrix that can perform the discrete wavelet transform (useful for understanding the DWT but use the fast algorithm coded in <code>wd</code> for general use). The function returns the matrix for the inverse transform. Since the matrix is orthogonal transpose the matrix to obtain the forward transform matrix. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">GenW(n=8, filter.number=10, family="DaubLeAsymm", bc="periodic")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The order of the DWT matrix will be n times n. n should be a power of two.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.number</code></td>
+<td>
+<p>This selects the smoothness of wavelet that you want to use in the decomposition. By default this is 10, the Daubechies least-asymmetric orthonormal compactly supported wavelet with 10 vanishing moments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>specifies the family of wavelets that you want to use. The options are "DaubExPhase" and "DaubLeAsymm".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bc</code></td>
+<td>
+<p>boundary conditions to use. This can be <code>periodic</code> or <code>symmetric</code> depending on whether you want the returned matrix to assume periodic or symmetric end-reflection boundary conditions.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The discrete wavelet transform is usually computed using the fast pyramid algorithm of Mallat. However, the transform can be written in a matrix form and this is useful for understanding what the fast transform does. One wouldn't normally use the matrix for performing the transform but use the fast transform function <code>wd</code> instead. 
+</p>
+<p>The matrix returned by this function represents the inverse DWT. Since the matrix (and transform) is orthogonal one can obtain the matrix representation of the forward transform simply by transposing the matrix using the <code>t</code> function in S-Plus. 
+</p>
+<p>The returned matrix is organised as follows. The first column always corresponds to the linear combination corresponding to the scaling function coefficient (so the column is constant. The next <code>n/2</code> columns correspond to the finest scale wavelet coefficients; the next <code>n/4</code> columns to the next finest scale and so on until the last column which corresponds to the coarsest scale wavelet coefficients. 
+</p>
+<p>The matrix is computed by performing successive fast DWTs on unit vectors. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix of order <code>n</code> that contains the inverse discrete wavelet transform. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.2 Copyright Guy Nason 1998 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wd</code>, <code>wr</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Generate the wavelet transform matrix corresponding to the Haar wavelet
+# transform of order 8
+#
+haarmat &lt;- GenW(8, filter.number=1, family="DaubExPhase")
+#
+# Let's look at this matrix
+#
+#haarmat
+#          [,1]       [,2]       [,3]       [,4]       [,5] [,6] [,7]       [,8] 
+#[1,] 0.3535534  0.7071068  0.0000000  0.0000000  0.0000000  0.5  0.0  0.3535534
+#[2,] 0.3535534 -0.7071068  0.0000000  0.0000000  0.0000000  0.5  0.0  0.3535534
+#[3,] 0.3535534  0.0000000  0.7071068  0.0000000  0.0000000 -0.5  0.0  0.3535534
+#[4,] 0.3535534  0.0000000 -0.7071068  0.0000000  0.0000000 -0.5  0.0  0.3535534
+#[5,] 0.3535534  0.0000000  0.0000000  0.7071068  0.0000000  0.0  0.5 -0.3535534
+#[6,] 0.3535534  0.0000000  0.0000000 -0.7071068  0.0000000  0.0  0.5 -0.3535534
+#[7,] 0.3535534  0.0000000  0.0000000  0.0000000  0.7071068  0.0 -0.5 -0.3535534
+#[8,] 0.3535534  0.0000000  0.0000000  0.0000000 -0.7071068  0.0 -0.5 -0.3535534
+#
+# As noted above the first column is the l.c. corresponding to the scaling
+# function coefficient and then the l.c.s corresponding to the wavelet
+# coefficients from the finest to the coarsest.
+#
+# The above matrix represented the inverse DWT. Let's compute the forward
+# transform matrix representation:
+#
+#t(haarmat)
+#          [,1]       [,2]       [,3]       [,4]       [,5]       [,6]       [,7]       [,8] 
+#[1,] 0.3535534  0.3535534  0.3535534  0.3535534  0.3535534  0.3535534  0.3535534  0.3535534
+#[2,] 0.7071068 -0.7071068  0.0000000  0.0000000  0.0000000  0.0000000  0.0000000  0.0000000
+#[3,] 0.0000000  0.0000000  0.7071068 -0.7071068  0.0000000  0.0000000  0.0000000  0.0000000
+#[4,] 0.0000000  0.0000000  0.0000000  0.0000000  0.7071068 -0.7071068  0.0000000  0.0000000
+#[5,] 0.0000000  0.0000000  0.0000000  0.0000000  0.0000000  0.0000000  0.7071068 -0.7071068
+#[6,] 0.5000000  0.5000000 -0.5000000 -0.5000000  0.0000000  0.0000000  0.0000000  0.0000000
+#[7,] 0.0000000  0.0000000  0.0000000  0.0000000  0.5000000  0.5000000 -0.5000000 -0.5000000
+#[8,] 0.3535534  0.3535534  0.3535534  0.3535534 -0.3535534 -0.3535534 -0.3535534 -0.3535534
+#
+#
+</code></pre>
+
+
+</div>

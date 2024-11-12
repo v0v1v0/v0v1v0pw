@@ -1,0 +1,221 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wblr.conf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add Confidence Interval Bounds to <code>wblr</code> Objects</h2>
+
+<h3>Description</h3>
+
+<p>This function adds confidence calculations to the last fit entity in a <code>wblr</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wblr.conf(x,...)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Object of class <code>"wblr"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Options for calculating confidence, and for plotting the results.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function adds confidence calculations to the last fit entity in a
+<code>wblr</code> object and adds the result to the object alongside any pre-existing
+confidence calculations.<br></p>
+<p>Certain confidence calculations pertain to specific fit methods. The pivotal.rr confidence method
+can only apply to a rank regression fit, while a likelihood ratio calculation can only be
+performed on an mle fit.<br></p>
+<p>Option arguments suitable for passing into wblr.conf:
+</p>
+
+<dl>
+<dt><code>method.conf</code></dt>
+<dd>
+<p>A character string describing the techniques used for calculating confidence interval bounds.
+Implemented methods are "pivotal-rr" (default), "bbb", "fm" "fmbounds", and "lrb".
+Methods must conform to the method.fit in the wblr.fit call immediately preceding the wblr.conf call.
+Method "pivotal-rr" requires a rank regression fit method. Methods "fm", "fmbounds, and "lrb" require a mle based fit.
+</p>
+</dd>
+<dt><code>dq</code></dt>
+<dd>
+<p>A named series of quantiles at which confidence interval bounds will be calculated.
+</p>
+
+<ul>
+<li>
+<p><code>"abrem"</code> 
+Default. This is the original default by Jurgen Symynck for predecessor package abrem
+it produces evenly spaced points across the y limits of a weibull canvas
+attempting to hold a constant number of points (see <code>num_dq</code> below).
+
+</p>
+</li>
+<li>
+<p><code>"minitab"</code> 
+Quantiles matching Minitab(TM) unchangeable defaults (27 values).
+
+</p>
+</li>
+<li>
+<p><code>"supersmith"</code> 
+Quantiles for comparison with SuperSMITH(TM) (limit of 15 values)
+
+</p>
+</li>
+<li>
+<p><code>"user"</code> 
+Provides for a user defined series of quantiles. (see <code>user_dq</code> below).
+
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>num_dq</code></dt>
+<dd>
+<p>The number of points used for the <code>"abrem"</code> dq determination.
+</p>
+</dd>
+<dt><code>user_dq</code></dt>
+<dd>
+<p>A vector of quantiles set by user. Default <code>c(seq(.01,.09,by=.01),seq(.10,.90,by=.10),seq(.91,.99, by=.01))</code>.
+</p>
+</dd>
+<dt><code>ci</code></dt>
+<dd>
+<p>The double-sided confidence interval, also chi sq confidence level for likelihood ratio.
+Must be in a range &lt;1 &amp;&amp; &gt;0, default is <code>0.9</code>.
+</p>
+</dd>
+<dt><code>blife.pts</code></dt>
+<dd>
+<p>The probability points at which to report Blife on legend.
+</p>
+</dd>
+<dt>Specific controls for pivotal analysis only</dt>
+<dd>
+
+<ul>
+<li>
+<p><code>seed</code>
+The RNG seed integer such that results are duplicated between runs, default is <code>1234</code>.
+
+</p>
+</li>
+<li>
+<p><code>S</code>
+The number of samples to be run during pivotal analysis, default is <code>1e4</code>.
+
+</p>
+</li>
+</ul>
+</dd>
+<dt>Specific controls for likelihood ratio contour and bounds only</dt>
+<dd>
+
+<ul>
+<li>
+<p><code>dof</code>
+The degrees of freedom, <code>dof=1</code> (default) for confidence interval, <code>dof=2</code> for comparison.
+
+</p>
+</li>
+<li>
+<p><code>ptDensity</code>
+The number of points calculated to form the contour outline, default is <code>120</code>.
+
+</p>
+</li>
+</ul>
+</dd>
+</dl>
+<p>Additionally, graphical control options for the confidence interval bounds can be passed in with the following options:
+</p>
+ 
+<ul>
+<li>
+<p><code>col</code> Color defaults to <code>"black"</code>.
+
+</p>
+</li>
+<li>
+<p><code>lty</code> Line type, defaults to <code>"solid"</code>.
+
+</p>
+</li>
+<li>
+<p><code>lwd</code> Line width defaults to <code>2</code>.
+
+</p>
+</li>
+</ul>
+<p>Subsequent calls to <code>wblr.fit</code> and <code>wblr.conf</code> will inherit these options.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The function returns its argument <code>x</code>, extended with the confidence
+calculations and any optional graphical and calculation arguments
+as passed to the function.
+</p>
+
+
+<h3>References</h3>
+
+<p>William Q. Meeker and Luis A. Escobar, (1998) "Statistical Methods for Reliability Data", Wiley-Interscience, New York
+</p>
+<p>Robert B. Abernethy, (2008) "The New Weibull Handbook, Fifth Edition" 
+</p>
+<p>John I. McCool, (2012) "Using the Weibull Distribution: Reliability, Modeling and Inference"
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## full dataset ##
+da1 &lt;- wblr(runif(10,100,1e4),label="Complete data")
+da1 &lt;- wblr.fit(da1)
+da1 &lt;- wblr.conf(da1,method.conf="pivotal-rr",col="red")
+da1 &lt;- wblr.conf(da1,method.conf="bbb",col="orange")
+da1 &lt;- wblr.fit(da1, method.fit="mle")
+da1 &lt;- wblr.conf(da1,method.conf="lrb",col="yellow3")
+
+## plot datasets ##
+## Not run: 
+plot(da1,main="Comparison between different bound types.")
+
+## End(Not run)
+
+## with right-censored data
+da2 &lt;- runif(8,100,1e4)
+da2 &lt;- wblr(fail=da2,susp=rep(max(da2),2),label="Type II right-censored data")
+da2 &lt;- wblr.fit(da2)
+da2 &lt;- wblr.conf(da2,method.conf="pivotal-rr",col="blue1")
+da2 &lt;- wblr.conf(da2,method.conf="bbb",col="steelblue")
+da2 &lt;- wblr.fit(da2, method.fit="mle")
+da2 &lt;- wblr.conf(da2,method.conf="lrb",col="cyan3")
+## Not run: 
+plot(da2,main="Comparison between different bound types with right-censored data.")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

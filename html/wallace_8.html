@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>envs_userEnvs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>envs_userEnvs</h2>
+
+<h3>Description</h3>
+
+<p>Load user provided rasters
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">envs_userEnvs(rasPath, rasName, doBrick = FALSE, logger = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>rasPath</code></td>
+<td>
+<p>character. Path to rasters, must be the full path including
+file name and extension</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rasName</code></td>
+<td>
+<p>character. Vector of raster names to be assigned to
+loaded rasters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doBrick</code></td>
+<td>
+<p>logical. Converts downloaded rasters to brick for faster
+processing</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+<p>Stores all notification messages to be displayed in the Log
+Window of Wallace GUI. Insert the logger reactive list here for running in
+shiny, otherwise leave the default NULL</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is called by the module envs to load user provided raster
+variables for use in further analyses. It returns either a rasterStack or
+rasterBrick of loaded variables with appropriate names for further analyses.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A rasterStack or a rasterBrick (if doBrick = TRUE) of user
+provided rasters
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jamie Kass &lt;jamie.m.kass@gmail.com &gt;
+</p>
+<p>Gonzalo E. Pinilla-Buitrago &lt;gepinillab@gmail.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+pathRast &lt;- list.files(system.file("extdata/wc", package = "wallace"),
+                       pattern = ".tif$", full.names = TRUE)
+nameRast &lt;- list.files(system.file("extdata/wc", package = "wallace"),
+                       pattern = ".tif$", full.names = FALSE)
+userEnvs &lt;- envs_userEnvs(rasPath = pathRast, rasName = nameRast)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

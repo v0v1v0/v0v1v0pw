@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>combine.WPR2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>A Function to Combine <code class="reqn">W_p R ^2</code> Objects</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+Will combine <code class="reqn">W_p R ^2</code> objects into a single object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">combine.WPR2(...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>List of <code class="reqn">W_p R^2</code> objects</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A vector of <code class="reqn">W_p R^2</code> objects
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>WPR2()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (rlang::is_installed("stats")) {
+n &lt;- 128
+p &lt;- 10
+s &lt;- 99
+x &lt;- matrix( stats::rnorm( p * n ), nrow = n, ncol = p )
+beta &lt;- (1:10)/10
+y &lt;- x %*% beta + stats::rnorm(n)
+post_beta &lt;- matrix(beta, nrow=p, ncol=s) + stats::rnorm(p*s, 0, 0.1)
+post_mu &lt;- x %*% post_beta
+
+
+fit1 &lt;-  WpProj(X=x, eta=post_mu, theta = post_beta,
+               power = 2.0, method = "binary program")
+fit2 &lt;-  WpProj(X=x, eta=post_mu, power = 2.0,
+               options = list(penalty = "lasso")
+)
+
+
+
+out1 &lt;- WPR2(predictions = post_mu, projected_model = fit1)
+out2 &lt;- WPR2(predictions = post_mu, projected_model = fit2)
+
+combine &lt;- combine.WPR2(out1, out2)
+}
+</code></pre>
+
+
+</div>

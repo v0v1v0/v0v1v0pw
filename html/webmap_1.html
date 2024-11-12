@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_cluster_button</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add cluster control button to a web map</h2>
+
+<h3>Description</h3>
+
+<p>Add a button to a <a href="https://leafletjs.com/">Leaflet</a> map to toggle marker clusters on and off.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_cluster_button(map, cluster_id, position = "topleft")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>map</code></td>
+<td>
+<p>'leaflet'.
+Map widget object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cluster_id</code></td>
+<td>
+<p>'character' string.
+Identification for the marker cluster layer.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>position</code></td>
+<td>
+<p>'character' string.
+Position of the button on the web map.
+Possible values are "topleft", "topright", "bottomleft", and "bottomright".</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A new HTML web <code>map</code> with added element, an object of class 'leaflet'.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>J.C. Fisher, U.S. Geological Survey, Idaho Water Science Center
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>make_map</code> function for creating a map widget.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">make_map(maps = "Topo") |&gt;
+  leaflet::addMarkers(
+    lng = ~lng,
+    lat = ~lat,
+    label = ~name,
+    popup = ~name,
+    clusterOptions = leaflet::markerClusterOptions(
+      showCoverageOnHover = FALSE
+    ),
+    clusterId = "cluster",
+    group = "marker",
+    data = us_cities
+  ) |&gt;
+  add_cluster_button(cluster_id = "cluster")
+</code></pre>
+
+
+</div>

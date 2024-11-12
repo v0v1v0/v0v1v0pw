@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>checkFilePath</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check If File Is Available For Reading</h2>
+
+<h3>Description</h3>
+
+<p>This function allows tesing if a given file-name corresponds to an existing file (eg for reading lateron).
+Indications to the path and file-extensions may be given separately. If no files do match .gz compressed versions may be searced, too.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">checkFilePath(
+  fileName,
+  path,
+  expectExt = "",
+  mode = "byFile",
+  compressedOption = NULL,
+  strictExtension = NULL,
+  stopIfNothing = NULL,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fileName</code></td>
+<td>
+<p>(character) name of file to be tested; may also include an absolute or relative path; 
+if <code>NULL</code> and <code>path</code> as well as <code>expectExt</code> will take 1st file in given path and proper extension</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>(character, length=1) optional separate entry for path of <code>fileName</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expectExt</code></td>
+<td>
+<p>(character) file extension (will not be considered if <code>""</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>(character) further details     if function should give error or warning if no files found
+integrates previous argument <code>compressedOption</code> to also look for look for .gz compressed files; 
+<code>strictExtension</code> to decide if extension (<code>expectExt</code>) - if given - should be considered obligatory;
+<code>stopIfNothing</code> to stop with error if no files found</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>compressedOption</code></td>
+<td>
+<p>deprected  (logical) also look for .gz compressed files</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strictExtension</code></td>
+<td>
+<p>deprected  (logical) decide if extesion (<code>expectExt</code>) - if given - should be considered obligatory</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stopIfNothing</code></td>
+<td>
+<p>deprected, please use argument <code>mode</code> instead !</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When the filename given by the user exists but it's file-extension is not matching <code>expectExt</code> 
+the argument <code>strictExtension</code> allows to decide if the filename will still be returned or not.
+</p>
+<p>When <code>expectExt</code> is given, initial search will look for perfect matches. 
+However, if nothing is found and <code>strictExtension=FALSE</code>, a more relaxed and non-case-sensitive search will be performed.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a character vector with verified path and file-name(s), returns <code>NULL</code> if nothing
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>file.exists</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">(RhomeFi &lt;- list.files(R.home()))
+file.exists(file.path(R.home(), "bin"))
+checkFilePath(c("xxx","unins000"), R.home(), expectExt="dat")
+</code></pre>
+
+
+</div>

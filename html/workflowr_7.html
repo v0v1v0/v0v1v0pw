@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wflow_git_config</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Configure Git settings</h2>
+
+<h3>Description</h3>
+
+<p><code>wflow_git_config</code> configures the global Git settings on the current
+machine. This is a convenience function to run Git commands from the R
+console instead of the Terminal. The same functionality can be achieved by
+running <code>git config</code> in the Terminal.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wflow_git_config(user.name = NULL, user.email = NULL, ..., overwrite = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>user.name</code></td>
+<td>
+<p>character (default: NULL). Git user name. Git assigns an
+author when committing (i.e. saving) changes. If you have never used Git
+before on your computer, make sure to set this.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>user.email</code></td>
+<td>
+<p>character (default: NULL). Git user email. Git assigns an
+email when committing (i.e. saving) changes. If you have never used Git
+before on your computer, make sure to set this.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arbitrary Git settings, e.g. <code>core.editor = "nano"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overwrite</code></td>
+<td>
+<p>logical (default: FALSE). Overwrite existing Git global
+settings.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The main purpose of <code>wflow_git_config</code> is to set the user.name and
+user.email to use with Git commits. Note that these do not need to match the
+name and email you used to register your online account with a Git hosting
+service (e.g. GitHub or GitLab). However, it can also handle arbitrary Git
+settings (see examples below).
+</p>
+<p>There are two main limitations of <code>wflow_git_config</code> for the sake of
+simplicity. First, <code>wflow_git_config</code> only affects the global Git
+settings that apply to all Git repositories on the local machine and is
+unable to configure settings for one specific Git repository. Second,
+<code>wflow_git_config</code> can only add or change the user.name and user.email
+settings, but not delete them. To perform either of these actions, please use
+<code>git config</code> in the Terminal.
+</p>
+<p>Under the hood, <code>wflow_git_config</code> is a wrapper for
+<code>config</code> from the package git2r.
+</p>
+<p>To learn more about how to configure Git, see the Software Carpentry lesson
+<a href="https://swcarpentry.github.io/git-novice/02-setup.html">Setting Up Git</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>wflow_git_config</code>, which is a list with the
+following elements:
+</p>
+
+<ul>
+<li> <p><b>user.name</b>: The current global Git user.name
+</p>
+</li>
+<li> <p><b>user.email</b>: The current global Git user.email
+</p>
+</li>
+<li> <p><b>all_settings</b>: A list of all current global Git settings
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+# View current Git settings
+wflow_git_config()
+# Set user.name and user.email
+wflow_git_config(user.name = "A Name", user.email = "email@domain")
+# Set core.editor (the text editor that Git opens to write commit messages)
+wflow_git_config(core.editor = "nano")
+
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

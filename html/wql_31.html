@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotTsAnom</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Anomaly plot of time series</h2>
+
+<h3>Description</h3>
+
+<p>Series are illustrated by vertical lines extending from individual data
+values to the long-term mean. The axes are not scaled in any way. Anomaly
+plots are useful for visualizing shifts in time series levels.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotTsAnom(x, xlab = NULL, ylab = NULL, strip.labels = colnames(x), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>matrix or vector time series</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>optional x-axis label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>optional y-axis label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strip.labels</code></td>
+<td>
+<p>labels for individual time series plots</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional options</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Options are passed to the underlying <code>facet_wrap</code> function in
+<span class="pkg">ggplot2</span>. The main ones of interest are <code>ncol</code> for setting the
+number of plotting columns and <code>scales = "free_y"</code> for allowing the y
+scales of the different plots to be independent.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A plot and corresponding object of class “ggplot”.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alan Jassby, James Cloern
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>plotTs</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Spring bloom size for 6 stations in SF Bay
+bloom &lt;- aggregate(sfbayChla[, 1:6], 1, meanSub, sub=3:5)
+plotTsAnom(bloom, ylab = 'Chl-a', strip.labels = paste('Station',
+  substring(colnames(bloom), 2, 3)), ncol = 2, scales = "free_y")
+
+</code></pre>
+
+
+</div>

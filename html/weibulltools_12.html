@@ -1,0 +1,133 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dist_delay.default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Parameter Estimation of a Delay Distribution</h2>
+
+<h3>Description</h3>
+
+<p>This function models a delay (in days) random variable (e.g. in logistic,
+registration, report) using a supposed continuous distribution. First, the
+element-wise differences in days of both vectors <code>date_1</code> and <code>date_2</code> are
+calculated and then the parameter(s) of the assumed
+distribution is (are) estimated with maximum likelihood. See 'Details' for
+more information.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+dist_delay(..., date_1, date_2, distribution = c("lognormal", "exponential"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date_1</code></td>
+<td>
+<p>A vector of class <code>character</code> or <code>Date</code>, in the format "yyyy-mm-dd",
+representing the earlier of the two dates belonging to a particular delay.
+Use <code>NA</code> for missing elements.
+</p>
+<p>If more than one delay is to be considered, use a list where the first element
+is the earlier date of the first delay, the second element is the earlier date
+of the second delay, and so forth (see 'Examples').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date_2</code></td>
+<td>
+<p>A vector of class <code>character</code> or <code>Date</code> in the format "yyyy-mm-dd".
+<code>date_2</code> is the counterpart of <code>date_1</code> and is used the same as <code>date_1</code>, just with
+the later date(s) of the particular delay(s). Use <code>NA</code> for missing elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the respective delay.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The distribution parameter(s) is (are) determined on the basis of complete
+cases, i.e. there is no <code>NA</code> in one of the related vector elements
+<code>c(date_1[i], date_2[i])</code>. Time differences less than or equal to zero are
+not considered as well.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with class <code>wt_delay_estimation</code> which contains:
+</p>
+
+<ul>
+<li> <p><code>coefficients</code> : A named vector of estimated parameter(s).
+</p>
+</li>
+<li> <p><code>delay</code> : A numeric vector of element-wise computed differences in days.
+</p>
+</li>
+<li> <p><code>distribution</code> : Specified distribution.
+</p>
+</li>
+</ul>
+<p>If more than one delay was considered, the resulting output is a list with class
+<code>wt_delay_estimation_list</code>. In this case each list element has class
+<code>wt_delay_estimation</code> and the items listed above, are included.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>dist_delay
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Example 1 - Delay in registration:
+params_delay_regist  &lt;- dist_delay(
+  date_1 = field_data$production_date,
+  date_2 = field_data$registration_date,
+  distribution = "lognormal"
+)
+
+# Example 2 - Delay in report:
+params_delay_report  &lt;- dist_delay(
+  date_1 = field_data$repair_date,
+  date_2 = field_data$report_date,
+  distribution = "exponential"
+)
+
+# Example 3 - Delays in registration and report with same distribution:
+params_delays  &lt;- dist_delay(
+  date_1 = list(field_data$production_date, field_data$repair_date),
+  date_2 = list(field_data$registration_date, field_data$report_date),
+  distribution = "lognormal"
+)
+
+# Example 4 - Delays in registration and report with different distributions:
+params_delays_2  &lt;- dist_delay(
+  date_1 = list(field_data$production_date, field_data$repair_date),
+  date_2 = list(field_data$registration_date, field_data$report_date),
+  distribution = c("lognormal", "exponential")
+)
+
+</code></pre>
+
+
+</div>

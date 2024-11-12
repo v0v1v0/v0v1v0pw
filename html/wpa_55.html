@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>create_rank_combine</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create combination pairs of HR variables and run 'create_rank()'</h2>
+
+<h3>Description</h3>
+
+<p>Create pairwise combinations of HR variables and compute an
+average of a specified advanced insights metric.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">create_rank_combine(data, hrvar = extract_hr(data), metric, mingroup = 5)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A Standard Person Query dataset in the form of a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hrvar</code></td>
+<td>
+<p>String containing the name of the HR Variable by which to split
+metrics. Defaults to <code>"Organization"</code>. To run the analysis on the total
+instead of splitting by an HR attribute, supply <code>NULL</code> (without quotes).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metric</code></td>
+<td>
+<p>Character string containing the name of the metric,
+e.g. "Collaboration_hours"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mingroup</code></td>
+<td>
+<p>Numeric value setting the privacy threshold / minimum group
+size. Defaults to 5.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is called when the <code>mode</code> argument in <code>create_rank()</code> is
+specified as <code>"combine"</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Data frame containing the following variables:
+</p>
+
+<ul>
+<li> <p><code>hrvar</code>: placeholder column that denotes the output as <code>"Combined"</code>.
+</p>
+</li>
+<li> <p><code>group</code>: pairwise combinations of HR attributes with the HR attribute
+in square brackets followed by the value of the HR attribute.
+</p>
+</li>
+<li>
+<p> Name of the metric (as passed to <code>metric</code>)
+</p>
+</li>
+<li> <p><code>n</code>
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Use a small sample for faster runtime
+sq_data_small &lt;- dplyr::slice_sample(sq_data, prop = 0.1)
+
+create_rank_combine(
+  data = sq_data_small,
+  metric = "Email_hours"
+)
+
+</code></pre>
+
+
+</div>

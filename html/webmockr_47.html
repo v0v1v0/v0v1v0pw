@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>webmockr_configure</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>webmockr configuration</h2>
+
+<h3>Description</h3>
+
+<p>webmockr configuration
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">webmockr_configure(
+  allow_net_connect = FALSE,
+  allow_localhost = FALSE,
+  allow = NULL,
+  show_stubbing_instructions = TRUE
+)
+
+webmockr_configure_reset()
+
+webmockr_configuration()
+
+webmockr_allow_net_connect()
+
+webmockr_disable_net_connect(allow = NULL)
+
+webmockr_net_connect_allowed(uri = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>allow_net_connect</code></td>
+<td>
+<p>(logical) Default: <code>FALSE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allow_localhost</code></td>
+<td>
+<p>(logical) Default: <code>FALSE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allow</code></td>
+<td>
+<p>(character) one or more URI/URL to allow (and by extension
+all others are not allowed)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>show_stubbing_instructions</code></td>
+<td>
+<p>(logical) Default: <code>TRUE</code>. If <code>FALSE</code>,
+stubbing instructions are not shown</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uri</code></td>
+<td>
+<p>(character) a URI/URL as a character string - to determine
+whether or not it is allowed</p>
+</td>
+</tr>
+</table>
+<h3>webmockr_allow_net_connect</h3>
+
+<p>If there are stubs found for a request, even if net connections are
+allowed (by running <code>webmockr_allow_net_connect()</code>) the stubbed
+response will be returned. If no stub is found, and net connections
+are allowed, then a real HTTP request can be made.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+webmockr_configure()
+webmockr_configure(
+ allow_localhost = TRUE
+)
+webmockr_configuration()
+webmockr_configure_reset()
+
+webmockr_allow_net_connect()
+webmockr_net_connect_allowed()
+
+# disable net connect for any URIs
+webmockr_disable_net_connect()
+### gives NULL with no URI passed
+webmockr_net_connect_allowed()
+# disable net connect EXCEPT FOR given URIs
+webmockr_disable_net_connect(allow = "google.com")
+### is a specific URI allowed?
+webmockr_net_connect_allowed("google.com")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

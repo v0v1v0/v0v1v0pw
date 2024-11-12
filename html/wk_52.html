@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>grd_subset</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Subset grid objects</h2>
+
+<h3>Description</h3>
+
+<p>The <code>grd_subset()</code> method handles the subsetting of a <code>grd()</code>
+in x-y space. Ordering of indices is not considered and logical
+indies are recycled silently along dimensions. The result of
+a <code>grd_subset()</code> is always a <code>grd()</code> of the same type whose
+relationship to x-y space has not changed.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">grd_subset(grid, i = NULL, j = NULL, ...)
+
+grd_crop(grid, bbox, ..., step = 1L, snap = NULL)
+
+grd_extend(grid, bbox, ..., step = 1L, snap = NULL)
+
+## S3 method for class 'wk_grd_rct'
+grd_crop(grid, bbox, ..., step = 1L, snap = NULL)
+
+## S3 method for class 'wk_grd_xy'
+grd_crop(grid, bbox, ..., step = 1L, snap = NULL)
+
+## S3 method for class 'wk_grd_rct'
+grd_extend(grid, bbox, ..., step = 1L, snap = NULL)
+
+## S3 method for class 'wk_grd_xy'
+grd_extend(grid, bbox, ..., step = 1L, snap = NULL)
+
+grd_data_subset(grid_data, i = NULL, j = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>grid</code></td>
+<td>
+<p>A <code>grd_xy()</code>, <code>grd_rct()</code>, or other object
+implementing <code style="white-space: pre;">⁠grd_*()⁠</code> methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>i, j</code></td>
+<td>
+<p>1-based index values. <code>i</code> indices correspond to decreasing
+<code>y</code> values; <code>j</code> indices correspond to increasing <code>x</code> values.
+Values outside the range <code>1:nrow|ncol(data)</code> will be censored to
+<code>NA</code> including 0 and negative values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Passed to subset methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bbox</code></td>
+<td>
+<p>An <code>rct()</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>step</code></td>
+<td>
+<p>The difference between adjascent indices in the output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>snap</code></td>
+<td>
+<p>A function that transforms real-valued indices to integer
+indices (e.g., <code>floor()</code>, <code>ceiling()</code>, or <code>round()</code>).
+For <code>grd_cell_range()</code>, a <code>list()</code> with exactly two elements to be called
+for the minimum and maximum index values, respectively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grid_data</code></td>
+<td>
+<p>The <code>data</code> member of a <code>grd()</code>. This is typically an
+array but can also be an S3 object with an array-like subset method.
+The native raster is special-cased as its
+subset method requires non-standard handling.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A modified <code>grid</code> whose cell centres have not changed location
+as a result of the subset.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">grid &lt;- grd_rct(volcano)
+grd_subset(grid, 1:20, 1:30)
+grd_crop(grid, rct(-10, -10, 10, 10))
+grd_extend(grid, rct(-10, -10, 10, 10))
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>compgrot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute empirical shift for time ordered non-decimated transforms.</h2>
+
+<h3>Description</h3>
+
+<p>Computes the empirical shift required for time-ordered non-decimated transform coefficients to bring them into time order.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">compgrot(J, filter.number, family)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>The <code>number of levels</code> in the non-decimated transform where coefficients are to be time-aligned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.number</code></td>
+<td>
+<p>The wavelet filter number to be used, see <code>filter.select</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>The wavelet family, see <code>filter.select</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Time-ordered non-decimated transform coefficients when raw are not in exact time alignment due to the phase of the underlying wavelet. This function returns the shifts that are necessary to apply to each resolution level in the transform to bring back each set of time-ordered coefficients into time alignment. Note that the shifts returned are approximate shifts which work for any Daubechies wavelet. More accurate shifts can be computed using detailed knowledge of the particular wavelet used. 
+</p>
+<p>Each shift is "to the left". I.e. higher indexed coefficients should take the place of lower-indexed coefficients. Periodic boundaries are assumed. 
+</p>
+<p>This realignment is mentioned in Walden and Contreras Cristan, (1997) and Nason, Sapatinas and Sawczenko, (1998). 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector containing the shifts that need to be applied to each scale level to return them to the correct time alignment.
+</p>
+<p>There are <code>J</code> entries in the vector. The first entry corresponds to the shift required for the finest level coefficients (i.e. level <code>J-1</code>) and the last entry corresponds to the coarsest level (i.e. level 0). Entry <code>j</code> corresponds to the shift required for scale level <code>J-j</code>. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.6 Copyright Guy Nason 1997 </p>
+
+
+<h3>Note</h3>
+
+<p>GROT was the shop started by Reginald Perrin. Unfortunately, GROT stands for "Guy ROTation". </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wst</code>, <code>wst.object</code>, <code>wpst</code>, <code>wpst.object</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Let's see how the resolution levels have to be shifted 
+#
+compgrot(4, filter.number=10, family="DaubExPhase")
+#[1]  2  6 15 31
+#
+# In other words. Scale level 3 needs to be shifted two units.
+# Scale level 2 needs to be shifted 6 units
+# Scale level 1 needs to be shifted 15 units
+# Scale level 0 needs to be shifted 31 units.
+</code></pre>
+
+
+</div>

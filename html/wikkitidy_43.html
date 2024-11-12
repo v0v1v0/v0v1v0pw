@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>new_prop_query</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Constructor for the property query type</h2>
+
+<h3>Description</h3>
+
+<p>The intended use for this query is to set the 'titles', 'pageids' or 'revids'
+parameter, and enforce that only one of these is set. All <a href="https://www.mediawiki.org/wiki/API:Properties">property modules API</a> in the Action API require
+this parameter to be set, or they require a
+<code>generator</code> parameter to be set instead. The
+<code>prop/query</code> type is an abstract type representing the three possible kinds
+of property query that do not rely on a generator (see below on the return
+value). A complication is that a <code>prop/query</code> can <em>itself</em> be used as the
+basis for a generator.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">new_prop_query(.req, by, pages, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.req</code></td>
+<td>
+<p>A <code>query/action_api/httr2_request</code> object,
+or a <code>prop</code> query object as returned by this function. This parameter is
+covariant on the type, so you can also pass all subtypes of <code>prop</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>by</code></td>
+<td>
+<p>The type of page. Allowed values are: pageids, titles, revids</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pages</code></td>
+<td>
+<p>A string, the pages to query by, corresponding to the 'by'
+parameter. Multiple values should be separated with "|"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>&lt;<code>dynamic-dots</code>&gt; Further parameters to the
+query</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A properly qualified <code>prop/query</code> object. There are six
+possibilities:
+</p>
+
+<ul>
+<li> <p><code>titles/prop/query</code>
+</p>
+</li>
+<li> <p><code>pageids/prop/query</code>
+</p>
+</li>
+<li> <p><code>revids/prop/query</code>
+</p>
+</li>
+<li> <p><code>generator/titles/prop/query</code>
+</p>
+</li>
+<li> <p><code>generator/pageids/prop/query</code>
+</p>
+</li>
+<li> <p><code>generator/revids/prop/query</code>
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Build a query on a set of pageids
+# 963273 and 1159171 are Kate Bush albums
+bush_albums_query &lt;- wiki_action_request() %&gt;%
+  new_prop_query("pageids", "963273|1159171")
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>MLIC.gee</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+MLIC and MLICC for Weighted GEE
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the MLIC (missing longitudinal information
+criterion) for selection of mean model, and the MLICC (missing longitudinal information correlation
+criterion) for selection of working correlation structure, based on the expected quadratic loss and the WGEE.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">MLIC.gee(object,object_full)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+
+<p>a fitted model object of class <code>"wgee"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>object_full</code></td>
+<td>
+
+<p>a fitted model object of class <code>"wgee"</code>: the largest candidate model under consideration to be fitted. 
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Return a data frame of MLIC, MLICC and Wquad_loss.
+</p>
+
+
+<h3>Note</h3>
+
+<p>MLIC and MLICC model selection criterion for longitudinal data criterion with dropouts or monotone missingness under the assumption of MAR.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Cong Xu, Zheng Li and Ming Wang
+</p>
+
+
+<h3>References</h3>
+
+<p>Robins, J.M., Rotnitzky, A. and Zhao, L.P., 1995. Analysis of semiparametric regression models for repeated outcomes in the presence of missing data. <em>Journal of the American Statistical Association</em>, 90(429), pp.106-121.
+</p>
+<p>Shen, C.W. and Chen, Y.H., 2012. Model selection for generalized estimating equations accommodating dropout missingness. <em>Biometrics</em>, 68(4), pp.1046-1054.
+</p>
+<p>Shen, C.W. and Chen, Y.H., 2013. Model selection of generalized estimating equations with multiply imputed longitudinal data. <em>Biometrical Journal</em>, 55(6), pp.899-911.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wgee</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(imps)
+fit1 &lt;- wgee (Y ~ Drug+Sex+Time,data=imps,id=imps$ID,family="binomial",
+             corstr="exchangeable",scale=NULL,mismodel= R ~ Drug+Time)
+
+fit_f &lt;- wgee (Y ~ Drug+Sex+Time+Time*Sex+Time*Drug,data=imps,id=imps$ID, family="binomial",
+              corstr="exchangeable",scale=NULL,mismodel= R ~ Drug+Time)
+###not run#####
+##MLIC.gee(fit1,fit_f)
+
+</code></pre>
+
+
+</div>

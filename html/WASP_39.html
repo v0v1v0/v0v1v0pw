@@ -1,0 +1,158 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>stepwise.VT</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate stepwise high order VT in calibration</h2>
+
+<h3>Description</h3>
+
+<p>Calculate stepwise high order VT in calibration
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">stepwise.VT(
+  data,
+  alpha = 0.1,
+  nvarmax = 4,
+  mode = c("MRA", "MODWT", "AT"),
+  wf,
+  J,
+  method = "dwt",
+  pad = "zero",
+  boundary = "periodic",
+  cov.opt = "auto",
+  flag = "biased",
+  detrend = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A list of data, including response and predictors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>The significance level used to judge whether the sample estimate is significant. A default alpha value is 0.1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nvarmax</code></td>
+<td>
+<p>The maximum number of variables to be selected.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>A mode of variance transformation, i.e., MRA, MODWT, or AT</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wf</code></td>
+<td>
+<p>Wavelet family</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>Specifies the depth of the decomposition. This must be a number less than or equal to log(length(x),2).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Either "dwt" or "modwt" of MRA.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pad</code></td>
+<td>
+<p>The method used for extend data to dyadic size. Use "per", "zero", or "sym".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>Character string specifying the boundary condition. If boundary=="periodic" the default, then the vector you decompose is assumed to be periodic on its defined interval, if boundary=="reflection", the vector beyond its boundaries is assumed to be a symmetric reflection of itself.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cov.opt</code></td>
+<td>
+<p>Options of Covariance matrix sign. Use "pos", "neg", or "auto".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flag</code></td>
+<td>
+<p>Biased or Unbiased variance transformation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detrend</code></td>
+<td>
+<p>Detrend the input time series or just center, default (F).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of 2 elements: the column numbers of the meaningful predictors (cpy), and partial informational correlation (cpyPIC).
+</p>
+
+
+<h3>References</h3>
+
+<p>Sharma, A., Mehrotra, R., 2014. An information theoretic alternative to model a natural system using observational information alone. Water Resources Research, 50(1): 650-660.
+</p>
+<p>Jiang, Z., Sharma, A., &amp; Johnson, F. (2021). Variable transformations in the spectral domain – Implications for hydrologic forecasting. Journal of Hydrology, 126816.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">### Real-world example
+data("rain.mon")
+data("obs.mon")
+mode &lt;- switch(1,
+  "MRA",
+  "MODWT",
+  "AT"
+)
+wf &lt;- "d4"
+station.id &lt;- 5 # station to investigate
+#SPI.12 &lt;- SPEI::spi(rain.mon, scale = 12)$fitted
+SPI.12 &lt;- SPI.calc(window(rain.mon, start=c(1949,1), end=c(2009,12)),sc=12)
+lab.names &lt;- colnames(obs.mon)
+# plot.ts(SPI.12[,1:10])
+
+x &lt;- window(SPI.12[, station.id], start = c(1950, 1), end = c(1979, 12))
+dp &lt;- window(obs.mon[, lab.names], start = c(1950, 1), end = c(1979, 12))
+
+data &lt;- list(x = x, dp = matrix(dp, ncol = ncol(dp)))
+
+dwt &lt;- stepwise.VT(data, mode = mode, wf = wf, flag = "biased")
+
+### plot transformed predictor before and after
+cpy &lt;- dwt$cpy
+op &lt;- par(mfrow = c(length(cpy), 1), mar = c(2, 3, 2, 1))
+for (i in seq_along(cpy)) {
+  ts.plot(cbind(dwt$dp[, i], dwt$dp.n[, i]), xlab = "NA", col = 1:2)
+}
+par(op)
+</code></pre>
+
+
+</div>

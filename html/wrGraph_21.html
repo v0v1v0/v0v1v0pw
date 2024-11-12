@@ -1,0 +1,190 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotLinReg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot linear regression and confidence interval of regression</h2>
+
+<h3>Description</h3>
+
+<p>This function provides help to display a series of bivariate points given in 'dat' (multiple data formats possible), to model a linear regression and plot the results.
+Furthermore, a confidence interval to the regression may be added to the plot, regression parameters get be displayed.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotLinReg(
+  dat,
+  indepVarLst = NULL,
+  dependVar = NULL,
+  cusTxt = NULL,
+  regrLty = 1,
+  regrLwd = 1,
+  regrCol = 1,
+  confInt = 0.95,
+  confCol = NULL,
+  xLab = NULL,
+  yLab = NULL,
+  xLim = NULL,
+  yLim = NULL,
+  tit = NULL,
+  nSignif = 3,
+  col = 1,
+  pch = 1,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(numeric, data.frame or list) main data to plot/inspect. If numeric 'dat' will be used as dependent variable (y-data)
+together with numeric 'indepVarLst' (independent variable); if list, then list-elments <code>indepVarLst</code> and <code>dependVar</code> will be used; if matrix, the the 1st and 2nd colum will be used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indepVarLst</code></td>
+<td>
+<p>(character) if 'dat' is list, this designes the list element with the explanatory or independent variable (ie the variable used for explaining, typically x-data)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dependVar</code></td>
+<td>
+<p>(character) if 'dat' is list, this designes the list element with dependent variable (ie the variable to be explained, typically y-data) to test</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cusTxt</code></td>
+<td>
+<p>(character) optional custom text to display in subtitle (instead of p-value to H0: slope.regression=0)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>regrLty</code></td>
+<td>
+<p>(integer) line type for regression</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>regrLwd</code></td>
+<td>
+<p>(integer) line width for regression</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>regrCol</code></td>
+<td>
+<p>(integer) color of regression-line</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>confInt</code></td>
+<td>
+<p>(numeric, between 0 and 1) the probabiity alpha for the regression interval, if <code>NULL</code> no confidence intervall will be plotted/calculated</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>confCol</code></td>
+<td>
+<p>(character) (background) color for confidence-interval</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xLab</code></td>
+<td>
+<p>(character) optional custom x-label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yLab</code></td>
+<td>
+<p>(character) optional custom y-label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xLim</code></td>
+<td>
+<p>(numeric) custom limit for x-axis (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yLim</code></td>
+<td>
+<p>(numeric) custom limit for y-axis (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tit</code></td>
+<td>
+<p>(character) optional title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nSignif</code></td>
+<td>
+<p>(integer) number of significant digits for regression parameters in subtitle of plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>(integer or character) custom color for points (choose <code>NULL</code> for not plotting the actual data)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pch</code></td>
+<td>
+<p>(integer or character) type of symbol for points (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This functions simply plots (to the current graphical devce); an invisible list containing $data, $linRegr, $confInterval (if calculated) may be returned, too
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>exclExtrValues</code> for decision of potential outliers; <code>hist</code>, <code>vioplotW</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2020); dat1 &lt;- rep(1:6,each=2) +runif(12,0,1)
+plotLinReg(dat1, gl(6,2))
+## extract elements out of list :
+li2 &lt;- list(aa=gl(5,2), bb=dat1[1:10])
+plotLinReg(li2, indepVarLst="aa", dependVar="bb")
+</code></pre>
+
+
+</div>

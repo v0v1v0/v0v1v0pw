@@ -1,0 +1,141 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wavPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Wavelet plots</h2>
+
+<h3>Description</h3>
+
+<p>This function plots a function of two variables (usually times and
+scales). It is suitable for plotting windowed scalograms, windowed scalogram
+differences, wavelet coherences and windowed scale indices.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wavPlot(Z,
+               X = NULL,
+               Y = NULL,
+               Ylog = FALSE,
+               Yrev = TRUE,
+               zlim = NULL,
+               coi = NULL,
+               rdist = NULL,
+               sig95 = NULL,
+               sig05 = NULL,
+               Xname = "X",
+               Yname = "Y",
+               Zname = "Z")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+<p>A matrix with the images of the function to be plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>A vector with x-coordinates (times).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>A vector with y-coordinates (scales).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ylog</code></td>
+<td>
+<p>Logical. Considers logarithmic scale for the y-axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Yrev</code></td>
+<td>
+<p>Logical. Considers reverse the y-axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zlim</code></td>
+<td>
+<p>A vector of length 2 with the limits for the z-axis (the color bar).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coi</code></td>
+<td>
+<p>A vector of size <code>length(X)</code> with the y-coordinates of the frontier of
+the cone of influence.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rdist</code></td>
+<td>
+<p>Numeric. Only for WSD plots, margin in the y-axis where appear border
+effects.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sig95</code></td>
+<td>
+<p>Logical matrix with the same size as Z. TRUE if the corresponding point in
+Z is inside the significance at 95%.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sig05</code></td>
+<td>
+<p>Logical matrix with the same size as Z. TRUE if the corresponding point in
+Z is inside the significance at 5%.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Xname</code></td>
+<td>
+<p>A string with the name of the x-axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Yname</code></td>
+<td>
+<p>A string with the name of the y-axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Zname</code></td>
+<td>
+<p>A string with the name of the function.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+nt &lt;- 1500
+time &lt;- 1:nt
+sd_noise &lt;-  0.2 #% In Bolós et al. 2017 Figure 1, sd_noise = 1.
+signal1 &lt;- rnorm(n = nt, mean = 0, sd = sd_noise) + sin(time / 10)
+signal2 &lt;- rnorm(n = nt, mean = 0, sd = sd_noise) + sin(time / 10)
+signal2[500:1000] = signal2[500:1000] + sin((500:1000) / 2)
+## Not run: 
+wsd &lt;- wsd(signal1 = signal1, signal2 = signal2, mc_nrand = 10, makefigure = FALSE)
+wavPlot(Z = -log2(wsd$wsd), X = wsd$t, Y = wsd$scales, Ylog = TRUE, coi = wsd$coi,
+        rdist = wsd$rdist, sig95 = wsd$signif95, sig05 = wsd$signif05, Xname = "Time",
+        Yname = "Scale", Zname = "-log2(WSD)")
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

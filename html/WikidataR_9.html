@@ -1,0 +1,139 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>disambiguate_QIDs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Disambiguate QIDs</h2>
+
+<h3>Description</h3>
+
+<p>Interactive function that presents alternative possible QID matches for a list of text
+strings and provides options for choosing between alternatives, rejecting all presented alternatives,
+or creating new items. Useful in cases where a list of text strings may have either missing wikidata items
+or multiple alternative potential matches that need to be manually disambuguated. Can also used on
+lists of lists (see examples). For long lists of items, the process can be stopped partway through and
+the returned vector will indicate where the process was stopped.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">disambiguate_QIDs(
+  list,
+  variablename = "variables",
+  variableinfo = NULL,
+  filter_property = NULL,
+  filter_variable = NULL,
+  filter_firsthit = FALSE,
+  limit = 10
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>list</code></td>
+<td>
+<p>a list or vector of text strings to find potential QID matches to.
+Can also be a list of lists (see examples)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variablename</code></td>
+<td>
+<p>type of items in the list that are being disambiguated (used in messages)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variableinfo</code></td>
+<td>
+<p>additional information about items that are being disambiguated (used in messages)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter_property</code></td>
+<td>
+<p>property to filter on (e.g. "P31" to filter on "instance of")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter_variable</code></td>
+<td>
+<p>values of that property to use to filter out (e.g. "Q571" to filter out books)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter_firsthit</code></td>
+<td>
+<p>apply filter to the first match presented or only if alternatives requested?
+(default = FALSE, note: true is slower if filter not needed on most matches)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit</code></td>
+<td>
+<p>number of alternative possible wikidata items to present if multiple potential matches</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a vector of:
+</p>
+
+<dl>
+<dt>QID</dt>
+<dd>
+<p>Selected QID (for when an appropriate Wikidata match exists)</p>
+</dd>
+<dt>CREATE</dt>
+<dd>
+<p>Mark that a new Wikidata item should be created (for when no appropriate Wikidata match yet exists)</p>
+</dd>
+<dt>NA</dt>
+<dd>
+<p>Mark that no Wikidata item is needed</p>
+</dd>
+<dt>STOP</dt>
+<dd>
+<p>Mark that the process was halted at this point (so that output can be used as input to the function later)</p>
+</dd>
+</dl>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+#Disambiguating possible QID matches for these music genres
+#Results should be:
+# "Q22731" as the first match
+# "Q147538" as the first match
+# "Q3947" as the second alternative match
+disambiguate_QIDs(list=c("Rock","Pop","House"),
+                 variablename="music genre")
+
+#Disambiguating possible QID matches for these three words, but not the music genres
+#This will take longer as the filtering step is slower
+#Results should be:
+# "Q22731" (the material) as the first match
+# "Q147538" (the soft drink) as the second alternative match
+# "Q3947" (the building) as the first match
+disambiguate_QIDs(list=c("Rock","Pop","House"),
+                 filter_property="instance of",
+                 filter_variable="music genre",
+                 filter_firsthit=TRUE,
+                 variablename="concept, not the music genre")
+
+#Disambiguating possible QID matches for the multiple expertise of
+#these three people as list of lists
+disambiguate_QIDs(list=list(alice=list("physics","chemistry","maths"),
+                           barry=list("history"),
+                           clair=list("law","genetics","ethics")),
+                 variablename="expertise")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

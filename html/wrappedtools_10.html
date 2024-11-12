@@ -1,0 +1,130 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>compare_n_qualvars</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Comparison for columns of factors for more than 2 groups with post-hoc</h2>
+
+<h3>Description</h3>
+
+<p>Comparison for columns of factors for more than 2 groups with post-hoc
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">compare_n_qualvars(
+  data,
+  dep_vars,
+  indep_var,
+  round_p = 3,
+  round_desc = 2,
+  pretext = FALSE,
+  mark = FALSE,
+  singleline = FALSE,
+  spacer = " ",
+  linebreak = "\n",
+  prettynum = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>name of data set (tibble/data.frame) to analyze.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dep_vars</code></td>
+<td>
+<p>vector of column names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indep_var</code></td>
+<td>
+<p>name of grouping variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>round_p</code></td>
+<td>
+<p>level for rounding p-value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>round_desc</code></td>
+<td>
+<p>number of significant digits for rounding of descriptive stats</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pretext</code></td>
+<td>
+<p>for function formatP</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mark</code></td>
+<td>
+<p>for function formatP</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>singleline</code></td>
+<td>
+<p>Put all group levels in  a single line?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spacer</code></td>
+<td>
+<p>Text element to indent levels, defaults to " ".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>linebreak</code></td>
+<td>
+<p>place holder for newline.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prettynum</code></td>
+<td>
+<p>Apply prettyNum to results?</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tibble with variable names, descriptive statistics, and p-value of fisher.test
+and pairwise_fisher_test, number of rows is number of dep_vars.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Separate lines for each factor level:
+compare_n_qualvars(
+  data = mtcars, dep_vars = c("am", "cyl", "carb"), indep_var = "gear",
+  spacer = " "
+)
+# All levels in one row but with linebreaks:
+compare_n_qualvars(
+  data = mtcars, dep_vars = c("am", "cyl", "carb"), indep_var = "gear",
+  singleline = TRUE
+)
+# All levels in one row, separateted by ";":
+compare_n_qualvars(
+  data = mtcars, dep_vars = c("am", "cyl", "carb"), indep_var = "gear",
+  singleline = TRUE, linebreak = "; "
+)
+</code></pre>
+
+
+</div>

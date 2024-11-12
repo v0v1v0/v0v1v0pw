@@ -1,0 +1,214 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mcs_delay</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Adjustment of Operating Times by Delays using a Monte Carlo Approach</h2>
+
+<h3>Description</h3>
+
+<p>In general, the amount of available information about units in the field is very
+different. During the warranty period, there are only a few cases with complete
+data (mainly <em>failed units</em>) but lots of cases with incomplete data (usually
+<em>censored units</em>). As a result, the operating time of units with incomplete
+information is often inaccurate and must be adjusted by delays.
+</p>
+<p>This function reduces the operating times of incomplete observations by simulated
+delays (in days). A unit is considered as incomplete if the later of the
+related dates is unknown. See 'Details' for some practical examples.
+</p>
+<p>Random delay numbers are drawn from the distribution determined by complete cases
+(described in 'Details' of dist_delay).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mcs_delay(...)
+
+## S3 method for class 'wt_mcs_delay_data'
+mcs_delay(..., x, distribution = c("lognormal", "exponential"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>tibble</code> with class <code>wt_mcs_delay_data</code> returned by mcs_delay_data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the respective delay.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In field data analysis time-dependent characteristics (e.g. <em>time in service</em>)
+are often imprecisely recorded. These inaccuracies are caused by unconsidered delays.
+</p>
+<p>For a better understanding of the MCS application in the context of field data,
+two cases are described below.
+</p>
+
+<ul>
+<li> <p><strong>Delay in registration</strong>: It is common that a supplier, which provides
+parts to the manufacturing industry does not know when the unit, in which
+its parts are installed, were put in service (due to unknown registration or
+sales date (<code>date_2</code>)). Without taking the described delay into account, the
+time in service of the failed units would be the difference between the
+repair date and the production date (<code>date_1</code>) and for intact units the
+difference between the present date and the production date. But the real
+operating times are (much) shorter, since the stress on the components have
+not started until the whole systems were put in service. Hence, units with
+incomplete data (missing <code>date_2</code>) must be reduced by the delays.
+</p>
+</li>
+<li> <p><strong>Delay in report</strong>:: Authorized repairers often do not immediately
+notify the manufacturer or OEM of repairs that were made during the warranty
+period, but instead pass the information about these repairs in collected
+forms e.g. weekly, monthly or quarterly. The resulting time difference between
+the reporting (<code>date_2</code>) of the repair in the guarantee database and the
+actual repair date (<code>date_1</code>), which is often assumed to be the failure
+date, is called the reporting delay. For a given date where the analysis
+is made there could be units which had a failure but the failure isn't
+reported and therefore they are treated as censored units. In order to take
+this into account and according to the principle of equal opportunities, the
+lifetime of units with missing report date (<code>date_2[i] = NA</code>) is reduced by
+simulated reporting delays.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A list with class <code>wt_mcs_delay</code> containing the following elements:
+</p>
+
+<ul>
+<li> <p><code>data</code> : A <code>tibble</code> returned by mcs_delay_data where two modifications
+has been made:
+</p>
+
+<ul>
+<li>
+<p> If the column <code>status</code> exists, the <code>tibble</code> has additional classes
+<code>wt_mcs_data</code> and <code>wt_reliability_data</code>. Otherwise, the <code>tibble</code> only has
+the additional class <code>wt_mcs_data</code> (which is not supported by estimate_cdf).
+</p>
+</li>
+<li>
+<p> The column <code>time</code> is renamed to <code>x</code> (to be in accordance with
+reliability_data) and contains the adjusted operating times for incomplete
+observations and input operating times for the complete observations.
+</p>
+</li>
+</ul>
+</li>
+<li> <p><code>sim_data</code> : A <code>tibble</code> with column <code>sim_delay</code> that holds the simulated
+delay-specific numbers for incomplete cases and <code>0</code> for complete cases.
+If more than one delay was considered multiple columns with names <code>sim_delay_1</code>,
+<code>sim_delay_2</code>, ..., <code>sim_delay_i</code> and corresponding delay-specific random
+numbers are presented.
+</p>
+</li>
+<li> <p><code>model_estimation</code> : A list returned by dist_delay.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Verband der Automobilindustrie e.V. (VDA); Qualitätsmanagement in
+der Automobilindustrie. Zuverlässigkeitssicherung bei Automobilherstellern
+und Lieferanten. Zuverlässigkeits-Methoden und -Hilfsmittel.; 4th Edition, 2016,
+ISSN:0943-9412
+</p>
+
+
+<h3>See Also</h3>
+
+<p>dist_delay for the determination of a parametric delay distribution
+and estimate_cdf for the estimation of failure probabilities.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># MCS data preparation:
+## Data for delay in registration:
+mcs_tbl_1 &lt;- mcs_delay_data(
+  field_data,
+  date_1 = production_date,
+  date_2 = registration_date,
+  time = dis,
+  status = status,
+  id = vin
+)
+
+## Data for delay in report:
+mcs_tbl_2 &lt;- mcs_delay_data(
+  field_data,
+  date_1 = repair_date,
+  date_2 = report_date,
+  time = dis,
+  status = status,
+  id = vin
+)
+
+## Data for both delays:
+mcs_tbl_both &lt;- mcs_delay_data(
+  field_data,
+  date_1 = c(production_date, repair_date),
+  date_2 = c(registration_date, report_date),
+  time = dis,
+  status = status,
+  id = vin
+)
+
+# Example 1 - MCS for delay in registration:
+mcs_regist &lt;- mcs_delay(
+  x = mcs_tbl_1,
+  distribution = "lognormal"
+)
+
+# Example 2 - MCS for delay in report:
+mcs_report &lt;- mcs_delay(
+  x = mcs_tbl_2,
+  distribution = "exponential"
+)
+
+# Example 3 - Reproducibility of random numbers:
+set.seed(1234)
+mcs_report_reproduce &lt;- mcs_delay(
+  x = mcs_tbl_2,
+  distribution = "exponential"
+)
+
+# Example 4 - MCS for delays in registration and report with same distribution:
+mcs_delays &lt;- mcs_delay(
+  x = mcs_tbl_both,
+  distribution = "lognormal"
+)
+
+# Example 5 - MCS for delays in registration and report with different distributions:
+## Assuming lognormal registration and exponential reporting delays.
+mcs_delays_2 &lt;- mcs_delay(
+  x = mcs_tbl_both,
+  distribution = c("lognormal", "exponential")
+)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>shift.2d</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Circularly Shift Matrices from a 2D MODWT</h2>
+
+<h3>Description</h3>
+
+<p>Compute phase shifts for wavelet sub-matrices based on the “center of
+energy” argument of Hess-Nielsen and Wickerhauser (1996).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">shift.2d(z, inverse = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>Two-dimensional MODWT object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inverse</code></td>
+<td>
+<p>Boolean value on whether to perform the forward or inverse
+operation.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The "center of energy" technique of Wickerhauser and Hess-Nielsen (1996) is
+employed to find circular shifts for the wavelet sub-matrices such that the
+coefficients are aligned with the original series.  This corresponds to
+applying a (near) linear-phase filtering operation.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Two-dimensional MODWT object with circularly shifted coefficients.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>B. Whitcher
+</p>
+
+
+<h3>References</h3>
+
+<p>Hess-Nielsen, N. and M. V. Wickerhauser (1996) Wavelets and
+time-frequency analysis, <em>Proceedings of the IEEE</em>, <b>84</b>, No. 4,
+523-540.
+</p>
+<p>Percival, D. B. and A. T. Walden (2000) <em>Wavelet Methods for Time
+Series Analysis</em>, Cambridge University Press.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>phase.shift</code>, <code>modwt.2d</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+n &lt;- 512
+G1 &lt;- G2 &lt;- dnorm(seq(-n/4, n/4, length=n))
+G &lt;- 100 * zapsmall(outer(G1, G2))
+G &lt;- modwt.2d(G, wf="la8", J=6)
+k &lt;- 50
+xr &lt;- yr &lt;- trunc(n/2) + (-k:k)
+par(mfrow=c(3,3), mar=c(1,1,2,1), pty="s")
+for (j in names(G)[1:9]) {
+  image(G[[j]][xr,yr], col=rainbow(64), axes=FALSE, main=j)
+}
+Gs &lt;- shift.2d(G)
+for (j in names(G)[1:9]) {
+  image(Gs[[j]][xr,yr], col=rainbow(64), axes=FALSE, main=j)
+}
+
+</code></pre>
+
+
+</div>

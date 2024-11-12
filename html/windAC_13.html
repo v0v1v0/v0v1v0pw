@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getProportionAreaSearched</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create proportion of area searched table from spatial data</h2>
+
+<h3>Description</h3>
+
+<p>Calculate proportion of area searched around wind turbine based on turbine location data and polygons of search area.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getProportionAreaSearched(
+  turbinePoints,
+  turbineName,
+  turbinePlots,
+  turbineMastRadius,
+  maxDistance
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>turbinePoints</code></td>
+<td>
+<p>Spatial points object with with data frame indicating turbine names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>turbineName</code></td>
+<td>
+<p>Character, indicating the variable name for the turbine names in <code>turbinePoints</code> and plot names in <code>turbinePlots</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>turbinePlots</code></td>
+<td>
+<p>Spatial polygon objects indicating the search area around the turbine points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>turbineMastRadius</code></td>
+<td>
+<p>Integer of length 1. radius of the turbine mast</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxDistance</code></td>
+<td>
+<p>Integer, indicating how far from the turbine that searches occurred</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>sf</code> package is used to calculate overlapping areas between the searched area <code>turbinePlots</code> and one unit annulus around the <code>turbinePoints</code>. The annuli increase out to a distance of <code>maxDistance</code>.
+</p>
+<p>Caution, the function does some basic checks on the spatial objects but it is assumed that the points and polygons do not have any boundary, geometry, or other issues.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Data frame of proportion of area searched for each annulus around each turbine point. <code>distanceFromTurbine</code> column represents outer radius of each annulus.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+data(turbineSpatial)
+
+propSearch &lt;- getProportionAreaSearched(turbinePoints=turbineSpatial$turbinePoints,
+turbineName='turbName',turbinePlots=turbineSpatial$turbinePlots,
+ turbineMastRadius=2,maxDistance=10)
+
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,73 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>lnQ_sim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Simulate a discharge time series</h2>
+
+<h3>Description</h3>
+
+<p>Simulate a discharge time series by modelling the statistical properties of an existing daily time series
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">lnQ_sim(dat_in, comps = FALSE, seed = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input <code>data.frame</code> that must include discharge and decimal time columns, see example dataset <code>daydat</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>comps</code></td>
+<td>
+<p>logical indicating if components of the simulated time series are returned, see value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>optional numeric value for random generation seed</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Daily flow data are simulated as the additive combination of a stationary seasonal component and serially-correlated errors estimated from the observed data.  The stationary seasonal component is based on a seasonal regression of discharge over time.  The residuals from this regression are used to estimate the error distribution using an ARIMA model.  Parameters of the ARIMA model are chosen using stepwise estimation for nonseasonal univariate time series with the <code>auto.arima</code> function.  Random errors from a standard normal distribution for the length of the original time series are generated using the model estimates with the <code>arima.sim</code> function.  Finally, the errors are multiplied by the standard deviation of the original residuals and added to the seasonal component to create a simulated, daily log-flow time series.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The original data frame with an additional column of simulated data named <code>lnQ_sim</code> if <code>comps = FALSE</code>.  Otherwise, a two-element list is returned where the first element is 1) a list with the linear seasonal model fit to the observed time series and ARIMA model fit to the seasonal residuals, and 2) a data frame with the original data, the fit from the seasonal linear model (<code>seas_fit</code>), residuals from observed flow and seasonal fit (<code>seas_res</code>), standard deviation of seasonal residuals (<code>sd_seas</code>), simulated errors from the ARIMA model (<code>errs</code>), and simulated discharge time series (<code>sim_out</code>).  Note that <code>sim_out</code> vector is converted to the same range as the input flow record.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>daydat</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## example data
+data(daydat)
+
+## simulate
+lnQ_sim(daydat)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wmf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Computes the wavelet mean field from a matrix of spatiotemporal data. Also the
+creator function for the <code>wmf</code> class.</h2>
+
+<h3>Description</h3>
+
+<p>Computes the wavelet mean field from a matrix of spatiotemporal data. Also the
+creator function for the <code>wmf</code> class. The <code>wmf</code> class inherits from the 
+<code>tts</code> class, which inherits from the <code>list</code> class.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wmf(dat, times, scale.min = 2, scale.max.input = NULL, sigma = 1.05, f0 = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>A locations (rows) x time (columns) matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>times</code></td>
+<td>
+<p>A vector of time step values (e.g., years), spacing 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.min</code></td>
+<td>
+<p>The smallest scale of fluctuation that will be examined. At least 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.max.input</code></td>
+<td>
+<p>The largest scale of fluctuation that will be examined. Note that if this is set too high relative to the length of the timeseries it will be truncated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>The ratio of each time scale examined relative to the next timescale. Greater than 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f0</code></td>
+<td>
+<p>The ratio of the period of fluctuation to the width of the envelope</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>wmf</code> returns an object of class <code>wmf</code>. Slots are:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>A matrix of complex numbers containing the wavelet mean field, of dimensions <code>length(times)</code> 
+by the number of timescales. Entries not considered reliable (longer timescales, near the edges of the time span) 
+are set to NA.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>times</code></td>
+<td>
+<p>The time steps specified (e.g., years)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timescales</code></td>
+<td>
+<p>The timescales (1/frequency) computed for the wavelet transforms</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>The data matrix (locations by time) from which the wmf was computed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wtopt</code></td>
+<td>
+<p>The inputted wavelet transform options scale.min, scale.max.input, sigma, f0 in a list</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Jonathan Walter, <a href="mailto:jaw3es@virginia.edu">jaw3es@virginia.edu</a>; Lawrence Sheppard, <a href="mailto:lwsheppard@ku.edu">lwsheppard@ku.edu</a>; 
+Daniel Reuman, <a href="mailto:reuman@ku.edu">reuman@ku.edu</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Sheppard, L.W., et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid pests. 
+Nature Climate Change. DOI: 10.1038/nclimate2881
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wmf_methods</code>, <code>tts</code>, <code>wpmf</code>, <code>plotmag</code>,
+<code>browseVignettes("wsyn")</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">times&lt;-1:30 #generate time steps
+#generate fake count data for 20 locations
+dat&lt;-matrix(rpois(20*length(times),20),nrow=20,ncol=length(times)) 
+dat&lt;-cleandat(dat=dat,times=times,clev=2)$cdat #detrend and demean
+wmf&lt;-wmf(dat,times)
+
+</code></pre>
+
+
+</div>

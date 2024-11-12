@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>interpretResults</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Interpret Results</h2>
+
+<h3>Description</h3>
+
+<p>Interpret results of <em><code>function</code></em>
+<em><b><code>ManualPageBuilder</code></b></em></p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">interpretResults(manualPageGenerationResults_l)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>manualPageGenerationResults_l</code></td>
+<td>
+<p>A <em><code>list</code></em> resulting from
+<em><b><code>ManualPageBuilder</code></b></em> function.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>This function checks for presence of content that should be present in a well
+formated and documented function manual page. It provides hints. You could follow
+those hints to produce great documentation.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Provides output that allows to know which sections has been generated and which
+sections are missing or probably missing.
+</p>
+
+
+<h3>Good practice</h3>
+
+<p>When producing a manual page using <em><b><code>ManualPageBuilder</code></b></em>,
+keeping the result in a <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> variable allows you to interpret this
+result at any time in the future. This is helpful when working incrementally
+to produce a fully automated generation scheme for a given manual page.
+See examples below.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+<p>Maintainer: Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">ic &lt;- InputContext(NULL, 'append', packageName_s_1 = 'wyz.code.rdoc')
+
+res &lt;- produceManualPage(ic)
+# WARNING: File /tmp/RtmpYIampA/append.Rd
+# checkRd: (5) /tmp/RtmpYIampA/append.Rd:0-19: Must have a \description
+
+interpretResults(res)
+# filename is /tmp/RtmpYIampA/append.Rd [OVERWRITTEN]
+# generated 8 sections: name, alias, title, usage, arguments, author, keyword, encoding
+# missing 3 sections: description, value, examples
+# probably missing 1 section: details
+</code></pre>
+
+
+</div>

@@ -1,0 +1,74 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>coef.WCE</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Obtain estimated coefficients from <code>WCE</code> object</h2>
+
+<h3>Description</h3>
+
+<p>This function extracts the estimated coefficients from a WCE object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'WCE'
+coef(object, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A <code>WCE</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Optional; other parameters to be passed through to <code>coef</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function returns a list with one element if the WCE object was fitted without covariates and two if the WCE object was fitted with covariates. The first element is a matrix of estimated coefficients for the artificial D variables (see Sylvestre and Abrahamowicz, 2009). Each row of the matrix corresponds to a model with the number of knots specified in <code>WCE</code>. The second element of the list is a matrix of estimated covariate coefficients. Similarly, each row of the matrix corresponds to a model with the number of knots specified in <code>WCE</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>WCEest Matrix of estimated coefficients of the artificial D variables.
+</p>
+<p>covariates Matrix of estimated coefficients of the covariates (optional).
+</p>
+
+
+<h3>References</h3>
+
+<p>Sylvestre, M. P., &amp; Abrahamowicz, M. (2009). Flexible modeling of the cumulative effects of time-dependent exposures on the hazard. Statistics in medicine, 28(27), 3437-3453.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>WCE</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wce &lt;- WCE(data=drugdata, analysis="Cox", nknots=1, cutoff = 90, constrained = "R",
+id = "Id", event = "Event", start = "Start", stop = "Stop", expos = "dose",
+covariates = c("age", "sex"))
+coef(wce)
+
+</code></pre>
+
+
+</div>

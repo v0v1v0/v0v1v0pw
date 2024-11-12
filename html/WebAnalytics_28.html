@@ -1,0 +1,153 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotParallelismRateImpactOnResponse</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot response time against degree of parallelism</h2>
+
+<h3>Description</h3>
+
+<p>Generates a plot of the effect of overall parallelism on response time possibly limited to a single URL in the overall background, the URL whose time is calculated, and by http response type and status.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotParallelismRateImpactOnResponse(b, 
+      intervalLength = 600, 
+			excludeURLOverall="", 
+			includeURLOverall="",
+			excludeResponse="",
+			includeResponse="", 
+			excludeStatus="",
+			includeStatus="",
+			percentileCutoff = 1,
+			title="Degree of Parallelism and Response Time", 
+			subtitle="")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+
+<p>a transaction data frame  
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intervalLength</code></td>
+<td>
+
+<p>length of the intervals (in seconds) that parallelism is calculated over
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>excludeURLOverall</code></td>
+<td>
+
+<p>a URL to be deleted from the dataset
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>includeURLOverall</code></td>
+<td>
+
+<p>the URL to be included from the dataset
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>excludeResponse</code></td>
+<td>
+
+<p>a URL to be excluded from the response time calculation
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>includeResponse</code></td>
+<td>
+
+<p>the URL to be used for the response time calculation
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>excludeStatus</code></td>
+<td>
+
+<p>a status to be excluded from the response time calculation, for example success statuses could be excluded.  Possible status values are: 'Success', 'Redirect', 'Client Error' or 'Server Error'
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>includeStatus</code></td>
+<td>
+
+<p>a status to filter URLs by, for example, only include success responses in the response time calculation 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percentileCutoff</code></td>
+<td>
+
+<p>exclude values above the specified quantile, intended for use in excluding outlier events that would distort the elapsed time calculation 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+
+<p>the plot title
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subtitle</code></td>
+<td>
+
+<p>the plot subtitle
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns an R base graphics plot.  This function is intended to be wrapped in a call to <code>plotSave</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Greg Hunt &lt;greg@firmansyah.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+logFileName = logFileNamesGetLast(dataDirectory=datd, 
+  directoryNames=c(".", "."), 
+  fileNamePattern="*[.]log")[[1]]
+
+cols = logFileFieldsGetIIS(logFileName)
+
+logdf = logFileRead(logFileName, columnList=cols, 
+            logTimeZone = "", timeFormat = "")
+plotParallelismRateImpactOnResponse(logdf,
+            includeStatus="Success",
+            excludeResponse="Static Content Requests",
+            percentileCutoff=0.95)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>orderMEs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Put close eigenvectors next to each other</h2>
+
+<h3>Description</h3>
+
+<p>Reorder given (eigen-)vectors such that similar ones (as measured by correlation) are next to each
+other.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">orderMEs(MEs, greyLast = TRUE, 
+         greyName = paste(moduleColor.getMEprefix(), "grey", sep=""), 
+         orderBy = 1, order = NULL, 
+         useSets = NULL,  verbose = 0, indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>MEs</code></td>
+<td>
+<p>Module eigengenes in a multi-set format (see <code>checkSets</code>). A vector of lists,
+with each list corresponding to one dataset and the module eigengenes in the component <code>data</code>,
+that is <code>MEs[[set]]$data[sample, module]</code> is the expression of the eigengene of module <code>module</code>
+in sample
+<code>sample</code> in dataset <code>set</code>. The number of samples can be different between the sets, but the
+modules must be the same. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>greyLast</code></td>
+<td>
+<p>Normally the color grey is reserved for unassigned genes; hence the grey module is not
+a proper module and it is conventional to put it last. If this is not desired, set the parameter to
+<code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>greyName</code></td>
+<td>
+<p>Name of the grey module eigengene.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>orderBy</code></td>
+<td>
+<p>Specifies the set by which the eigengenes are to be ordered (in all other sets as well).
+Defaults to the first set in <code>useSets</code> (or the first set, if <code>useSets</code> is not given).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>order</code></td>
+<td>
+<p>Allows the user to specify a custom ordering.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useSets</code></td>
+<td>
+<p>Allows the user to specify for which sets the eigengene ordering is to be performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Controls verbostity of printed progress messages. 0 means silent, nonzero verbose.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p>A single non-negative integer controling indentation of printed messages. 0 means no
+indentation, each unit above zero adds two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Ordering module eigengenes is useful for plotting purposes. For this function the order can be
+specified explicitly, or a set can be given in which the correlations of the eigengenes will determine
+the order. For the latter, a hierarchical dendrogram is calculated and the order given by the dendrogram is
+used for the eigengenes in all other sets.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of lists of the same type as <code>MEs</code> containing the re-ordered eigengenes.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder, <a href="mailto:Peter.Langfelder@gmail.com">Peter.Langfelder@gmail.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>moduleEigengenes</code>, <code>multiSetMEs</code>, <code>consensusOrderMEs</code></p>
+
+
+</div>

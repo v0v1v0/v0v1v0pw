@@ -1,0 +1,153 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wqs.est</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Weighted Quantile Sum Regression</h2>
+
+<h3>Description</h3>
+
+<p>This function fits a weighted quantile sum regression model.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wqs.est(y.train, x.train, z.train = NULL, y.valid = y.train, x.valid = x.train, 
+z.valid = z.train, n.quantiles = 4, B = 100, b1.pos = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y.train</code></td>
+<td>
+<p>vector of the continuous explanatory variable from training data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x.train</code></td>
+<td>
+<p>matrix of explanatory variables (to be combined into an index) from training data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z.train</code></td>
+<td>
+<p>vector or matrix of covariates from training data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y.valid</code></td>
+<td>
+<p>vector of the continuous explanatory variable from validation data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x.valid</code></td>
+<td>
+<p>matrix of explanatory variables (to be combined into an index) from validation data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z.valid</code></td>
+<td>
+<p>vector or matrix of covariates from validation data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.quantiles</code></td>
+<td>
+<p>number of quantiles to be used (needs to be between 2 and 10)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+<p>number of bootstrap samples to be used in estimation (needs to be greater than 1)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b1.pos</code></td>
+<td>
+<p>TRUE if the index is expected to be positively related to the outcome</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with the following items:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>q.train</code></td>
+<td>
+<p>matrix of quantiles for training data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q.valid</code></td>
+<td>
+<p>matrix of quantiles for validation data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wts.matrix</code></td>
+<td>
+<p>matrix of estimated weights; each row corresponds to a bootstrap sample</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>final estimated weights used in calculating the WQS index</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>WQS</code></td>
+<td>
+<p>weighted quantile sum estimate based on calculated weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fit</code></td>
+<td>
+<p>WQS model fit to validation data</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Jenna Czarnota, David Wheeler</p>
+
+
+<h3>References</h3>
+
+<p>Carrico C, Gennings C, Wheeler D, Factor-Litvak P. Characterization of a
+weighted quantile sum regression for highly correlated data in a risk analysis
+setting. J Biol Agricul Environ Stat. 2014:1-21. ISSN: 1085-7117. DOI: 10.1007/
+s13253-014-0180-3. http://dx.doi.org/10.1007/s13253-014-0180-3.
+</p>
+<p>Czarnota J, Gennings C, Colt JS, De Roos AJ, Cerhan JR, Severson RK, Hartge P, 
+Ward MH, Wheeler D. 2015. Analysis of environmental chemical mixtures and 
+non-Hodgkin lymphoma risk in the NCI-SEER NHL study. 
+Environmental Health Perspectives, DOI:10.1289/ehp.1408630.
+</p>
+<p>Czarnota J, Gennings C, Wheeler D. 2015. Assessment of weighted quantile sum 
+regression for modeling chemical mixtures and cancer risk. Cancer Informatics, 
+2015:14(S2) 159-171 DOI: 10.4137/CIN.S17295
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(WQSdata)
+y.train &lt;- WQSdata[,'y']
+x.train &lt;- WQSdata[,-10]
+output &lt;- wqs.est(y.train, x.train, B = 10)
+</code></pre>
+
+
+</div>

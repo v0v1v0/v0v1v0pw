@@ -1,0 +1,285 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>solvewtsc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>SOLVING THE WEIGHTED SCORES EQUATIONS WITH INPUTS OF THE WEIGHT MATRICES AND THE DATA</h2>
+
+<h3>Description</h3>
+
+<p>Solving the weighted scores equations with inputs of the weight matrices
+and the data.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">solvewtsc(start,WtScMat,xdat,ydat,id,tvec,margmodel,link)
+solvewtsc.ord(start,WtScMat,xdat,ydat,id,tvec,link)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p>A starting value of the vector of regression
+and not regression parameters. The CL1 estimates of regression and not regression parameters 
+is a good starting value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>WtScMat</code></td>
+<td>
+<p>A list containing the following components.
+omega: The array with the <code class="reqn">\Omega_i,\,i=1,\ldots,n</code> matrices;
+delta: The array with the <code class="reqn">\Delta_i,\,i=1,\ldots,n</code> matrices;
+X: The array with the <code class="reqn">X_i,\,i=1,\ldots,n</code> matrices.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xdat</code></td>
+<td>
+<p><code class="reqn">(\mathbf{x}_1 ,  \mathbf{x}_2 , \ldots ,
+  \mathbf{x}_n )^\top</code>, where the matrix <code class="reqn">\mathbf{x}_i,\,i=1,\ldots,n</code> for a given unit will
+depend on the  times of observation for that unit (<code class="reqn">j_i</code>) and will have
+number of rows <code class="reqn">j_i</code>, each row corresponding to one of the <code class="reqn">j_i</code> elements
+of <code class="reqn">y_i</code> and <code class="reqn">p</code> columns where <code class="reqn">p</code> is the number of covariates including
+the unit first column  to account for the intercept (except for ordinal regression where there is no intercept). This xdat matrix is
+of dimension <code class="reqn">(N\times p),</code> where <code class="reqn">N =\sum_{i=1}^n j_i</code> is the total
+number of observations from all units.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ydat</code></td>
+<td>
+<p><code class="reqn">(y_1 , y_2 , \ldots , y_n  )^\top</code>, where
+the response data vectors <code class="reqn">y_i,\,i=1,\ldots,n</code>
+are of possibly different lengths for different units.  In particular,
+we now have that <code class="reqn">y_i</code> is (<code class="reqn">j_i \times 1</code>), where <code class="reqn">j_i</code> is the   number of
+observations on unit <code class="reqn">i</code>. The total number of observations   from all units
+is <code class="reqn">N =\sum_{i=1}^n j_i</code>. The ydat are the collection of data   vectors
+<code class="reqn">y_i, i = 1,\ldots,n</code> one from each unit which summarize all the data
+together in a single, long vector of length <code class="reqn">N</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>An index for individuals or clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tvec</code></td>
+<td>
+<p>A vector with the time indicator of individuals or clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>margmodel</code></td>
+<td>
+
+<p>Indicates the marginal model.
+Choices are “poisson” for Poisson, “bernoulli” for Bernoulli, 
+and  “nb1” , “nb2” for the NB1 and NB2 parametrization 
+of negative binomial in Cameron and Trivedi (1998).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+<p>The link function. 
+Choices are “log” for the log link function, “logit” for 
+the logit link function, and “probit” for 
+the probit link function. 
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Obtain robust estimates <code class="reqn">{\hat a}</code> of the univariate parameters
+solving the weighted scores equation,
+<code class="reqn">
+  g_1= g_1(a)=\sum_{i=1}^n X_i^T\, W_{i,\rm working}^{-1}\, s_i( a)=0,
+</code>
+where <code class="reqn"> W_{i,\rm working}^{-1}=\Delta_i\Omega_{i,\rm working}^{-1}=
+\Delta_i({\tilde a})\Omega_i({\tilde a},{\tilde R})^{-1}</code> is based on
+the covariance matrix of <code class="reqn">s_i(a)</code> computed from the
+fitted discretized MVN model with estimated parameters <code class="reqn">{\tilde a}, {\tilde
+R}</code>.  A reliable non-linear system solver is used.
+</p>
+<p>Note that <code>solvewtsc.ord</code> is a variant of the code for ordinal (probit and logistic) regression.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>root</code></td>
+<td>
+<p>The weighted scores estimates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f.root</code></td>
+<td>
+<p>The value of the wtsc function evaluated at the root.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iter</code></td>
+<td>
+<p>The number of iterations used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estim.precis</code></td>
+<td>
+<p>The estimated precision for root.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Aristidis K. Nikoloulopoulos <a href="mailto:A.Nikoloulopoulos@uea.ac.uk">A.Nikoloulopoulos@uea.ac.uk</a><br>
+Harry Joe <a href="mailto:harry.joe@ubc.ca">harry.joe@ubc.ca</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Nikoloulopoulos, A.K., Joe, H. and Chaganty, N.R. (2011)
+Weighted scores method for regression models with dependent data.
+<em>Biostatistics</em>, <b>12</b>, 653–665. doi: <a href="https://doi.org/10.1093/biostatistics/kxr005">10.1093/biostatistics/kxr005</a>.
+</p>
+<p>Nikoloulopoulos, A.K. (2016)
+Correlation structure and variable selection in generalized estimating equations via composite likelihood information criteria.
+<em>Statistics in Medicine</em>, <b>35</b>, 2377–2390. doi: <a href="https://doi.org/10.1002/sim.6871">10.1002/sim.6871</a>.
+</p>
+<p>Nikoloulopoulos, A.K. (2017)
+Weighted scores method for longitudinal  ordinal data.
+<em>Arxiv e-prints</em>, &lt;arXiv:1510.07376&gt;. <a href="https://arxiv.org/abs/1510.07376">https://arxiv.org/abs/1510.07376</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wtsc</code>,
+<code>weightMat</code>,
+<code>godambe</code>,
+<code>wtsc.wrapper</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">################################################################################
+#                           NB2 regression 
+################################################################################
+################################################################################
+#                      read and set up the data set
+################################################################################
+data(childvisit)
+# covariates
+season1&lt;-childvisit$q
+season1[season1&gt;1]&lt;-0
+xdat&lt;-cbind(1,childvisit$sex,childvisit$age,childvisit$m,season1)
+# response
+ydat&lt;-childvisit$hosp
+#id
+id&lt;-childvisit$id
+#time
+tvec&lt;-childvisit$q
+################################################################################
+#                      select the marginal model
+################################################################################
+margmodel="nb2"
+################################################################################
+#                      select the  correlation structure
+################################################################################
+corstr="exch"
+################################################################################
+#                      perform CL1 estimation
+################################################################################
+i.est&lt;-iee(xdat,ydat,margmodel)
+cat("\niest: IEE estimates\n")
+print(c(i.est$reg,i.est$gam))
+est.rho&lt;-cl1(b=i.est$reg,gam=i.est$gam,xdat,ydat,id,tvec,margmodel,corstr,link)
+cat("\nest.rho: CL1 estimates\n")
+print(est.rho$e)
+################################################################################
+#                      obtain the fixed weight matrices
+################################################################################
+WtScMat&lt;-weightMat(b=i.est$reg,gam=i.est$gam,rh=est.rho$e,
+xdat,ydat,id,tvec,margmodel,corstr)
+################################################################################
+#                      obtain the weighted scores estimates
+################################################################################
+# solve the nonlinear system of equations
+ws&lt;-solvewtsc(start=c(i.est$reg,i.est$gam),WtScMat,xdat,ydat,id,
+tvec,margmodel,link)
+cat("ws=parameter estimates\n")
+print(ws$r)
+################################################################################
+#                         Ordinal regression 
+################################################################################
+################################################################################
+#                      read and set up data set
+################################################################################
+
+data(arthritis)
+nn=nrow(arthritis)
+bas2&lt;-bas3&lt;-bas4&lt;-bas5&lt;-rep(0,nn)
+bas2[arthritis$b==2]&lt;-1
+bas3[arthritis$b==3]&lt;-1
+bas4[arthritis$b==4]&lt;-1
+bas5[arthritis$b==5]&lt;-1
+t2&lt;-t3&lt;-rep(0,nn)
+t2[arthritis$ti==3]&lt;-1
+t3[arthritis$ti==5]&lt;-1
+xdat=cbind(t2,t3,arthritis$trt,bas2,bas3,bas4,bas5,arthritis$age) 
+ydat=arthritis$y
+id&lt;-arthritis$id
+#time
+tvec&lt;-arthritis$time
+################################################################################
+#                      select the link
+################################################################################
+link="probit"
+################################################################################
+#                      select the  correlation structure
+################################################################################
+corstr="exch"
+################################################################################
+#                      perform CL1 estimation
+################################################################################
+i.est&lt;-iee.ord(xdat,ydat,link)
+cat("\niest: IEE estimates\n")
+print(c(i.est$reg,i.est$gam))
+est.rho&lt;-cl1.ord(b=i.est$reg,gam=i.est$gam,xdat,ydat,id,tvec,corstr,link)
+cat("\nest.rho: CL1 estimates\n")
+print(est.rho$e)
+################################################################################
+#                      obtain the fixed weight matrices
+################################################################################
+WtScMat&lt;-weightMat.ord(b=i.est$reg,gam=i.est$gam,rh=est.rho$e,xdat,ydat,id,
+tvec,corstr,link)
+################################################################################
+#                      obtain the weighted scores estimates
+################################################################################
+# solve the nonlinear system of equations
+ws&lt;-solvewtsc.ord(start=c(i.est$reg,i.est$gam),WtScMat,xdat,ydat,id,
+tvec,link)
+cat("ws=parameter estimates\n")
+print(ws$r)
+
+</code></pre>
+
+
+</div>

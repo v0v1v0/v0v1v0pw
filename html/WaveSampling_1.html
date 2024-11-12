@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>distUnitk</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Squared Euclidean distances of the unit k.</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the squared Euclidean distance from unit <code class="reqn">k</code> to the other units.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">distUnitk(X, k, tore, toreBound)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>matrix representing the spatial coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>the unit index to be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tore</code></td>
+<td>
+<p>an optional logical value, if we are considering the distance on a tore. See Details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>toreBound</code></td>
+<td>
+<p>an optional numeric value that specify the length of the tore.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Let <code class="reqn">\mathbf{x}_k,\mathbf{x}_l</code> be the spatial coordinates of the unit <code class="reqn">k,l \in U</code>. The classical euclidean distance is given by
+</p>
+<p style="text-align: center;"><code class="reqn">d^2(k,l) = (\mathbf{x}_k - \mathbf{x}_l)^\top (\mathbf{x}_k - \mathbf{x}_l). </code>
+</p>
+
+<p>When the points are distributed on a <code class="reqn">N_1 \times N_2</code> regular grid of <code class="reqn">R^2</code>.
+It is possible to consider the units like they were placed on a tore. It can be illustrated by Pac-Man passing through the wall to get away from ghosts. Specifically,
+we could consider two units on the same column (resp. row) that are on the opposite have a small distance,
+</p>
+<p style="text-align: center;"><code class="reqn"> d^2_T(k,l) = min( (x_{k_1} - x_{l_1})^2,
+                      (x_{k_1} + N_1 - x_{l_1})^2,
+                      (x_{k_1} - N_1 - x_{l_1})^2) +</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn"> min( (x_{k_2} - x_{l_2})^2,
+                      (x_{k_2} + N_2 - x_{l_2})^2,
+                      (x_{k_2} - N_2 - x_{l_2})^2).</code>
+</p>
+
+<p>The option <code>toreBound</code> specify the length of the tore in the case of <code class="reqn">N_1 = N_2 = N</code>. 
+It is omitted if the <code>tore</code> option is equal to <code>FALSE</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a vector of length <code class="reqn">N</code> that contains the distances from the unit <code class="reqn">k</code> to all other units.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Raphaël Jauslin <a href="mailto:raphael.jauslin@unine.ch">raphael.jauslin@unine.ch</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wpik</code>, <code>wave</code> and <code>dist</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  N &lt;- 5
+  x &lt;- seq(1,N,1)
+  X &lt;- as.matrix(expand.grid(x,x))
+  distUnitk(X,k = 2,tore = TRUE,toreBound = 5)
+  distUnitk(X,k = 2,tore = FALSE,toreBound = -1)
+</code></pre>
+
+
+</div>

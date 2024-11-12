@@ -1,0 +1,143 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.imwd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Draw a picture of the 2D wavelet coefficients using image</h2>
+
+<h3>Description</h3>
+
+<p>This function images 2D the absolute values discrete wavelet transform coefficients arising from a <code>imwd.object</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'imwd'
+plot(x, scaling = "by.level", co.type = "abs",
+	package = "R", plot.type = "mallat", arrangement = c(3, 3),
+	transform = FALSE, tfunction = sqrt, ...)
+## S3 method for class 'imwdc'
+plot(x, verbose=FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The 2D imwd object you wish to depict</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scaling</code></td>
+<td>
+<p>How coefficient scaling is performed. The options
+are <code>by.level</code> to scale the coefficients independently
+by level, anything else causes coefficients to be scaled
+globally</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>co.type</code></td>
+<td>
+<p>Can be <code>"abs"</code> for the absolute values of the
+coefficients to be plotted, can be <code>"mabs"</code> for the
+negative absolute values or <code>"none"</code> for none of this.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>package</code></td>
+<td>
+<p>Can be <code>"R"</code> for the R package, or <code>"S"</code>.
+The latter does less interesting things and results in a simpler
+plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.type</code></td>
+<td>
+<p>If this argument is <code>"mallat"</code> the coefficients
+at different scales and orientations are packed into one image
+and plotted, a format originating from Mallat's early papers on this.
+The other possibility is <code>"cols"</code> which plots each combination
+of scale and direction on a separate plot. This latter format is
+useful for examining coefficients, especially at the coarser scales.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arrangement</code></td>
+<td>
+<p>If <code>plot.type="cols"</code> then this argument
+specifies how many rows and columns there are in the plot
+array.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transform</code></td>
+<td>
+<p>If FALSE then the coefficients are plotted as they
+are (subject to the <code>co.type</code> argument above), if TRUE
+then the transform function supplied by <code>tfunction</code> is
+applied to the coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tfunction</code></td>
+<td>
+<p>If <code>transform=TRUE</code> then this function gets applied
+to transform the coefficients before plotting</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Print out informative messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Supply other arguments to the call to the <code>image</code> function.
+This is very useful to, e.g., can the colours, or other aspects of
+the image</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Description says all
+</p>
+
+
+<h3>Value</h3>
+
+<p>If the <code>package="S"</code> argument is set then a matrix is returned
+containing the image that would have been plotted (and this only works
+if the <code>plot.type="mallat"</code> argument is set also.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>imwd</code>, <code>imwd.object</code>, <code>threshold.imwd</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(lennon)
+lwd &lt;- imwd(lennon)
+## Not run: plot(lwd)
+## Not run: plot(lwd, col=grey(seq(from=0, to=1, length=100)), transform=TRUE)
+</code></pre>
+
+
+</div>

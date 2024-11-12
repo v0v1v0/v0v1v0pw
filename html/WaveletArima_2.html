@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WaveletFittingarma</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Wavelet-ARIMA hybrid model for forecasting</h2>
+
+<h3>Description</h3>
+
+<p>Fits the time series data by using hybrid Wavelet-ARIMA algorithm.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WaveletFittingarma(
+  ts,
+  filter = "haar",
+  Waveletlevels,
+  boundary = "periodic",
+  FastFlag = TRUE,
+  MaxARParam,
+  MaxMAParam,
+  NForecast
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ts</code></td>
+<td>
+<p>univariate time series</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>Wavelet filter use in the decomposition</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Waveletlevels</code></td>
+<td>
+<p>The level of wavelet decomposition</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>The boundary condition of wavelet decomposition</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>FastFlag</code></td>
+<td>
+<p>The FastFlag condition of wavelet decomposition: True or False</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MaxARParam</code></td>
+<td>
+<p>The maximum AR order for auto.arima</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MaxMAParam</code></td>
+<td>
+<p>The maximum MA order for auto.arima</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NForecast</code></td>
+<td>
+<p>The forecast horizon: A positive integer</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+
+<ul>
+<li>
+<p> Finalforecast - Forecasted value
+</p>
+</li>
+<li>
+<p> FinalPrediction - Predicted value of train data
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+
+<ul>
+<li>
+<p> Aminghafari, M. and Poggi, J.M. 2012. Nonstationary time series forecasting using wavelets and kernel smoothing. Communications in Statistics-Theory and Methods, 41(3),485-499.
+</p>
+</li>
+<li>
+<p> Paul, R.K. A and Anjoy, P. 2018. Modeling fractionally integrated maximum temperature series in India in presence of structural break. Theory and Applied Climatology 134, 241–249.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">N &lt;- 100
+PHI &lt;- 0.2
+THETA &lt;- 0.1
+SD &lt;- 1
+M &lt;- 0
+D &lt;- 0.2
+Seed &lt;- 123
+set.seed(Seed)
+Sim.Series &lt;- fracdiff::fracdiff.sim(n = N,ar=c(PHI),ma=c(THETA),d=D,rand.gen =rnorm,sd=SD,mu=M)
+simts &lt;- as.ts(Sim.Series$series)
+WaveletForecast&lt;-WaveletFittingarma(ts=simts,filter ='la8',Waveletlevels=floor(log(length(simts))),
+MaxARParam=5,MaxMAParam=5,NForecast=5)
+</code></pre>
+
+
+</div>

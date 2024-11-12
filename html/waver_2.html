@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fetch_len_multi</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate the fetch length for multiple points</h2>
+
+<h3>Description</h3>
+
+<p><code>fetch_len_multi</code> provides two methods to efficiently compute fetch length
+for multiple points.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fetch_len_multi(
+  pts,
+  bearings,
+  shoreline,
+  dmax,
+  spread = 0,
+  method = "btree",
+  projected = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>pts</code></td>
+<td>
+<p>Simple features (sf or sfc) object containing point data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bearings</code></td>
+<td>
+<p>Vector of bearings, in degrees.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shoreline</code></td>
+<td>
+<p>Simple feature (sf or sfc) object representing the
+shoreline, in either line or polygon format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dmax</code></td>
+<td>
+<p>Maximum value of fetch length, returned if there is no land
+within a distance of <code>dmax</code> from a given bearing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spread</code></td>
+<td>
+<p>Vector of relative bearings (in degrees) for which
+to calculate fetch around each main bearing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Whether to use the "btree" (default) or "clip" method.
+See below for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>projected</code></td>
+<td>
+<p>Deprecated argument, kept for backwards compatibility.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>With <code>method = "btree"</code> (default), the fetch calculation for each point only uses
+the geometries within the <code>shoreline</code> layer that intersect with a rectangular
+buffer of size <code>dmax</code> around that point. (The name is based on a previous version
+of the function that implemented this method using the <code>gBinarySTRtreeQuery</code> function
+from the rgeos package.)
+</p>
+<p>With <code>method = "clip"</code>, the <code>shoreline</code> is clipped to its intersection
+with a polygon formed by the union of all the individual points' rectangular buffers.
+</p>
+<p>In both cases, <code>fetch_len</code> is then applied to each point,
+using only the necessary portion of the shoreline.
+</p>
+<p>Generally, the "clip" method will produce the biggest time savings when
+points are clustered within distances less than <code>dmax</code> (so their
+clipping rectangles overlap), whereas the "btree" method will be more
+efficient when the shoreline is composed of multiple geometrical objects
+and points are distant from each other.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix of fetch lengths, with one row by point in <code>pts</code> and
+one column by bearing in <code>bearings</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>fetch_len</code> for details on the fetch length computation.
+</p>
+
+
+</div>

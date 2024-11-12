@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>with_cts</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Auto-translate identifiers and search databases</h2>
+
+<h3>Description</h3>
+
+<p>Supply a query of any type (e.g. SMILES, CAS, name, InChI, etc.) along with
+any webchem function that has <code>query</code> and <code>from</code> arguments.  If the
+function doesn't accept the type of query you've supplied, this will try to
+automatically translate it using CTS and run the query.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">with_cts(query, from, .f, .verbose = getOption("verbose"), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>character; the search term</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>character; the format or type of query.  Commonly accepted values
+are "name", "cas", "inchi", and "inchikey"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.f</code></td>
+<td>
+<p>character; the (quoted) name of a webchem function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.verbose</code></td>
+<td>
+<p>logical; print a message when translating query?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments passed to the function specified with <code>.f</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>returns results from <code>.f</code>
+</p>
+
+
+<h3>Note</h3>
+
+<p>During the translation step, only the first hit from CTS is used.
+Therefore, using this function to translate on the fly is not foolproof and
+care should be taken to verify the results.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+with_cts("XDDAORKBJWWYJS-UHFFFAOYSA-N", from = "inchikey", .f = "get_etoxid")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

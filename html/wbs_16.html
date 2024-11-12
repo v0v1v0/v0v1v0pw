@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ssic.penalty</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Strengthened Schwarz Information Criterion penalty term</h2>
+
+<h3>Description</h3>
+
+<p>The function evaluates the penalty term for the strengthened Schwarz Information Criterion proposed in P. Fryzlewicz (2014). This routine is typically not called directly by the user; its name can be passed as an argument to <code>changepoints</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ssic.penalty(n, cpt, alpha = 1.01, ssic.type = c("log", "power"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>the number of observations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cpt</code></td>
+<td>
+<p>a vector with localisations of change-points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>a scalar greater than one</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ssic.type</code></td>
+<td>
+<p>a string ("log" or "power")</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>the penalty term <code class="reqn">k(\log(n))^{alpha}</code> for <code>ssic.penalty="log"</code> or <code class="reqn">k n^{alpha}</code> for <code>ssic.penalty="power"</code>, where <code class="reqn">k</code> denotes the number of elements in <code>cpt</code>
+</p>
+
+
+<h3>References</h3>
+
+<p>P. Fryzlewicz (2014), Wild Binary Segmentation for multiple change-point detection. Annals of Statistics, to appear. (<a href="http://stats.lse.ac.uk/fryzlewicz/wbs/wbs.pdf">http://stats.lse.ac.uk/fryzlewicz/wbs/wbs.pdf</a>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- rnorm(300) + c(rep(1,50),rep(0,250))
+w &lt;- wbs(x)
+w.cpt &lt;- changepoints(w,penalty="ssic.penalty")
+w.cpt$cpt.ic
+</code></pre>
+
+
+</div>

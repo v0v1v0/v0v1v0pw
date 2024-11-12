@@ -1,0 +1,57 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wk_trans_explicit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Transform using explicit coordinate values</h2>
+
+<h3>Description</h3>
+
+<p>A wk_trans implementation that replaces coordinate values
+using a vector of pre-calculated coordinates. This is used to perform generic
+transforms using R functions and system calls that are impossible or impractical
+to implement at the C level.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wk_trans_explicit(value, use_z = NA, use_m = NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>An <code>xy()</code>, <code>xyz()</code>, <code>xym()</code>, or <code>xyzm()</code> of coordinates
+used to replace values in the input. Use <code>NA</code> to keep the existing
+value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use_z, use_m</code></td>
+<td>
+<p>Used to declare the output type. Use <code>TRUE</code> to
+ensure the output has that dimension, <code>FALSE</code> to ensure it does not,
+and <code>NA</code> to leave the dimension unchanged.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>wk_coords()</code> which has a replacement version  "<code style="white-space: pre;">⁠wk_coords&lt;-⁠</code>"
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">trans &lt;- wk_trans_explicit(xy(1:5, 1:5))
+wk_transform(rep(xy(0, 0), 5), trans)
+</code></pre>
+
+
+</div>

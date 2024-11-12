@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>inflections</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Count number of inflections in a frequency contour</h2>
+
+<h3>Description</h3>
+
+<p><code>inflections</code> counts the number of inflections in a frequency contour (or any time series)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">inflections(X = NULL, parallel = 1, pb = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>data frame with the columns for "sound.files" (sound file name), "selec" (unique identifier for each selection) and columns for each of the frequency values of the contours. No other columns should be included.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Numeric. Controls whether parallel computing is applied.
+It specifies the number of cores to be used. Default is 1 (i.e. no parallel computing).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Logical argument to control progress bar and messages. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function counts the number of inflections in a frequency contour.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with 3 columns: "sound.files", "selec" and "infls" (number of inflections).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>freq_ts</code>, <code>track_freq_contour</code>,  <code>gaps</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">{
+# get warbleR sound file examples
+data(list = c("Phae.long1", "Phae.long2", "Phae.long3", "Phae.long4", "lbh_selec_table"))
+writeWave(Phae.long1, file.path(tempdir(), "Phae.long1.wav"))
+writeWave(Phae.long2, file.path(tempdir(), "Phae.long2.wav"))
+writeWave(Phae.long3, file.path(tempdir(), "Phae.long3.wav"))
+writeWave(Phae.long4, file.path(tempdir(), "Phae.long4.wav"))
+
+# measure frequency contours
+dom.freq.ts &lt;- freq_ts(X = lbh_selec_table, path = tempdir())
+
+# get number of inflections
+inflections(X = dom.freq.ts)
+}
+
+</code></pre>
+
+
+</div>

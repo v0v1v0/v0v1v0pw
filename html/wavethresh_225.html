@@ -1,0 +1,352 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>threshold.wd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Threshold (DWT) wavelet decomposition object</h2>
+
+<h3>Description</h3>
+
+<p>This function provides various ways to threshold a <code>wd</code> class object. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wd'
+threshold(wd, levels = 3:(nlevelsWT(wd) - 1), type = "soft", policy = "sure",
+        by.level = FALSE, value = 0, dev = madmad, boundary = FALSE, verbose = FALSE,
+        return.threshold = FALSE, force.sure = FALSE, cvtol = 0.01,
+	cvmaxits=500, Q = 0.05, OP1alpha = 0.05, 
+        alpha = 0.5, beta = 1, C1 = NA, C2 = NA, C1.start = 100,
+	al.check=TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wd</code></td>
+<td>
+<p>The DWT wavelet decomposition object that you wish to threshold.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>levels</code></td>
+<td>
+<p>a vector of integers which determines which scale levels are thresholded in the decomposition. Each integer in the vector must refer to a valid level in the <code>wd</code> object supplied. This is usually any integer from 0 to <code>nlevelsWT</code>(wd)-1 inclusive. Only the levels in this vector contribute to the computation of the threshold and its application.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>determines the type of thresholding this can be "hard" or "soft".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>policy</code></td>
+<td>
+<p>selects the technique by which the threshold value is selected. Each policy corresponds to a method in the literature. At present the different policies are: "<code>universal</code>", "<code>LSuniversal</code>", "<code>sure</code>", "<code>BayesThresh</code>", "<code>cv</code>", "<code>fdr</code>", "<code>op1</code>", "<code>op2</code>", "<code>manual</code>", "<code>mannum</code>" and "<code>probability</code>". The policies are described in detail below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>by.level</code></td>
+<td>
+<p>If FALSE then a global threshold is computed on and applied to all scale levels defined in <code>levels</code>. If TRUE a threshold is computed and applied separately to each scale level.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>This argument conveys the user supplied threshold. If the <code>policy="manual"</code> then <code>value</code> is the actual threshold value; if the <code>policy="mannum"</code> then <code>value</code> conveys the total number of ordered coefficients kept (from the largest); if <code>policy="probability"</code> then <code>value</code> conveys the the user supplied quantile level.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dev</code></td>
+<td>
+<p>this argument supplies the function to be used to compute the spread of the absolute values coefficients. The function supplied must return a value of spread on the variance scale (i.e. not standard deviation) such as the <code>var()</code> function. A popular, useful and robust alternative is the <code>madmad</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>If this argument is TRUE then the boundary bookeeping values are included for thresholding, otherwise they are not.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>if TRUE then the function prints out informative messages as it progresses.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return.threshold</code></td>
+<td>
+<p>If this option is TRUE then the actual <em>value</em> of the threshold is returned. If this option is FALSE then a thresholded version of the input is returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>force.sure</code></td>
+<td>
+<p>If TRUE then the <code>sure</code> threshold is computed on a vector even when that vector is very sparse. If FALSE then the normal SUREshrink procedure is followed whereby the universal threshold is used for sparse vectors of coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cvtol</code></td>
+<td>
+<p>Parameter for the cross-validation <code>"cv"</code> policy.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cvmaxits</code></td>
+<td>
+<p>Maximum number of iterations allowed for the cross-validation <code>"cv"</code> policy.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Q</code></td>
+<td>
+<p>Parameter for the false discovery rate <code>"fdr"</code> policy.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>OP1alpha</code></td>
+<td>
+<p>Parameter for Ogden and Parzen's first "<code>op1</code>" and <code>"op2"</code> policies.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Parameter for BayesThresh <code>"BayesThresh"</code> policy.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p>Parameter for BayesThresh <code>"BayesThresh"</code> policy.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>C1</code></td>
+<td>
+<p>Parameter for BayesThresh <code>"BayesThresh"</code> policy.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>C2</code></td>
+<td>
+<p>Parameter for BayesThresh <code>"BayesThresh"</code> policy.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>C1.start</code></td>
+<td>
+<p>Parameter for BayesThresh <code>"BayesThresh"</code> policy.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>al.check</code></td>
+<td>
+<p>If TRUE then the function checks that the levels are
+in ascending order. If they are not then this can be an
+indication that the default level arguments are not appropriate
+for this data set (<code>wd</code> object). However, a strange order
+might be appropriate for some reason if deliberately set, so setting
+this argument equal to FALSE turns off the check and warning.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function thresholds or shrinks wavelet coefficients stored in a <code>wd</code> object and returns the coefficients in a modified <code>wd</code> object. See the seminal papers by Donoho and Johnstone for explanations about thresholding. For a gentle introduction to wavelet thresholding (or shrinkage as it is sometimes called) see Nason and Silverman, 1994. For more details on each technique see the descriptions of each method below 
+</p>
+<p>The basic idea of thresholding is very simple. In a signal plus noise model the wavelet transform of signal is very sparse, the wavelet transform of noise is not (in particular, if the noise is iid Gaussian then so if the noise contained in the wavelet coefficients). Thus since the signal gets concentrated in the wavelet coefficients and the noise remains "spread" out it is "easy" to separate the signal from noise by keeping large coefficients (which correspond to signal) and delete the small ones (which correspond to noise). However, one has to have some idea of the noise level (computed using the dev option in threshold functions). If the noise level is very large then it is possible, as usual, that no signal "sticks up" above the noise. 
+</p>
+<p>There are many components to a successful thresholding procedure. Some components have a larger effect than others but the effect is not the same in all practical data situations. Here we give some rough practical guidance, although <em>you must refer to the papers below when using a particular technique.</em> <b>You cannot expect to get excellent performance on all signals unless you fully understand the rationale and limitations of each method below.</b> I am not in favour of the "black-box" approach. The thresholding functions of WaveThresh3 are not a black box: experience and judgement are required! 
+</p>
+<p>Some issues to watch for: 
+</p>
+
+<dl>
+<dt>levels</dt>
+<dd>
+<p>The default of <code>levels = 3:(wd$nlevelsWT - 1)</code> for the <code>levels</code> option most certainly does not work globally for all data problems and situations. The level at which thresholding begins (i.e. the given threshold and finer scale wavelets) is called the <em>primary resolution</em> and is unique to a particular problem. In some ways choice of the primary resolution is very similar to choosing the bandwidth in kernel regression albeit on a logarithmic scale. See Hall and Patil, (1995) and Hall and Nason (1997) for more information. For each data problem you need to work out which is the best primary resolution. This can be done by gaining experience at what works best, or using prior knowledge. It is possible to "automatically" choose a "best" primary resolution using cross-validation (but not in WaveThresh). 
+</p>
+<p>Secondly the levels argument computes and applies the threshold at the levels specified in the <code>levels</code> argument. It does this for all the levels specified. Sometimes, in wavelet shrinkage, the threshold is computed using only the finest scale coefficients (or more precisely the estimate of the overall noise level). If you want your threshold variance estimate only to use the finest scale coefficients (e.g. with universal thresholding) then you will have to apply the <code>threshold.wd</code> function twice. Once (with levels set equal to <code>nlevelsWT</code>(wd)-1 and with <code>return.threshold=TRUE</code> to return the threshold computed on the finest scale and then apply the threshold function with the manual option supplying the value of the previously computed threshold as the value options.
+</p>
+<p>Thirdly, if you apply wavelet shrinkage to a small data set then you need to ensure you've chosen the <code>levels</code> argument appropriately. For example,
+if your original data was of length 8, then the associated <code>wd</code>
+wavelet decomposition object will only have levels 0, 1 and 2. So, the default
+argument for levels (starting at 3 and higher) will almost certainly
+be wrong. The code now warns for these situations.
+</p>
+</dd> 
+<dt>by.level</dt>
+<dd>
+<p>for a <code>wd</code> object which has come from data with noise that is correlated then you should have a threshold computed for each resolution level. See the paper by Johnstone and Silverman, 1997.</p>
+</dd> 
+</dl>
+<h3>Value</h3>
+
+<p>An object of class <code>wd</code>. This object contains the thresholded wavelet coefficients. Note that if the <code>return.threshold</code> option is set to TRUE then the threshold values will be returned rather than the thresholded object. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.6 Copyright Guy Nason and others 1997 </p>
+
+
+<h3>Note</h3>
+
+<p>POLICIES 
+This section gives a brief description of the different thresholding policies available. For further details see <em>the associated papers</em>. If there is no paper available then a small description is provided here. More than one policy may be good for problem, so experiment! They are arranged here in alphabetical order: 
+</p>
+
+<dl>
+<dt>BayesThresh</dt>
+<dd>
+<p>See Abramovich, Silverman and Sapatinas, (1998). Contributed by Felix Abramovich and Fanis Sapatinas.</p>
+</dd>
+<dt>cv</dt>
+<dd>
+<p>See Nason, 1996.</p>
+</dd>
+<dt>fdr</dt>
+<dd>
+<p>See Abramovich and Benjamini, 1996. Contributed by Felix Abramovich.</p>
+</dd>
+<dt>LSuniversal</dt>
+<dd>
+<p>See Nason, von Sachs and Kroisandt, 1998. This is used for smoothing of a wavelet periodogram and shouldn't be used generally.</p>
+</dd>
+<dt>manual</dt>
+<dd>
+<p>specify a user supplied threshold using <code>value</code> to pass the value of the threshold. The <code>value</code> argument should be a vector. If it is of length 1 then it is replicated to be the same length as the <code>levels</code> vector, otherwise it is repeated as many times as is necessary to be the <code>levels</code> vector's length. In this way, different thresholds can be supplied for different levels. Note that the <code>by.level</code> option has no effect with this policy.</p>
+</dd>
+<dt>mannum</dt>
+<dd>
+<p>You decided how many of the largest (in absolute value) coefficients that you want to keep and supply this number in value.</p>
+</dd>
+<dt>op1</dt>
+<dd>
+<p>See Ogden and Parzen, 1996. Contributed by Todd Ogden.</p>
+</dd>
+<dt>op2</dt>
+<dd>
+<p>See Ogden and Parzen, 1996. Contributed by Todd Ogden.</p>
+</dd>
+<dt>probability</dt>
+<dd>
+<p>The <code>probability</code> policy works as follows. All coefficients that are smaller than the valueth quantile of the coefficients are set to zero. If <code>by.level</code> is false, then the quantile is computed for all coefficients in the levels specified by the "levels" vector; if <code>by.level</code> is true, then each level's quantile is estimated separately. The probability policy is pretty stupid - do not use it.</p>
+</dd>
+<dt>sure</dt>
+<dd>
+<p>See Donoho and Johnstone, 1994.</p>
+</dd>
+<dt>universal</dt>
+<dd>
+<p>See Donoho and Johnstone, 1995.</p>
+</dd> 
+</dl>
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>References</h3>
+
+<p>Various code segments detailed above were kindly donated by Felix Abramovich, Theofanis Sapatinas and Todd Ogden. </p>
+
+
+<h3>See Also</h3>
+
+<p><code>wd</code>, <code>wd.object</code>, <code>wr</code>, <code>wr.wd</code>, <code>threshold</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Generate some test data
+#
+test.data &lt;- example.1()$y
+## Not run: ts.plot(test.data)
+#
+# Generate some noisy data
+#
+ynoise &lt;- test.data + rnorm(512, sd=0.1)
+#
+# Plot it
+#
+## Not run: ts.plot(ynoise)
+#
+# Now take the discrete wavelet transform
+# N.b. I have no idea if the default wavelets here are appropriate for
+# this particular examples. 
+#
+ynwd &lt;- wd(ynoise)
+## Not run: plot(ynwd)
+#
+# Now do thresholding. We'll use a universal policy, 
+# and madmad deviance estimate on the finest
+# coefficients and return the threshold. We'll also get it to be verbose
+# so we can watch the process.
+#
+ynwdT1 &lt;- threshold(ynwd, policy="universal", dev=madmad,
+		levels= nlevelsWT(ynwd)-1, return.threshold=TRUE,
+	verbose=TRUE)
+# threshold.wd:
+# Argument checking
+# Universal policy...All levels at once
+# Global threshold is:  0.328410967430135 
+#
+# Why is this the threshold? Well in this case n=512 so sqrt(2*log(n)),
+# the universal threshold,
+# is equal to 3.53223. Since the noise is about 0.1 (because that's what
+# we generated it to be) the threshold is about 0.353.
+#
+# Now let's apply this threshold to all levels in the noisy wavelet object
+#
+ynwdT1obj &lt;- threshold(ynwd, policy="manual", value=ynwdT1,
+	levels=0:(nlevelsWT(ynwd)-1))
+#
+# And let's plot it
+#
+## Not run: plot(ynwdT1obj)
+#
+# You'll see that a lot of coefficients have been set to zero, or shrunk.
+#
+# Let's try a Bayesian examples this time!
+#
+ynwdT2obj &lt;- threshold(ynwd, policy="BayesThresh")
+#
+# And plot the coefficients
+#
+## Not run: plot(ynwdT2obj)
+#
+# Let us now see what the actual estimates look like
+#
+ywr1 &lt;- wr(ynwdT1obj)
+ywr2 &lt;- wr(ynwdT2obj)
+#
+# Here's the estimate using universal thresholding
+#
+## Not run: ts.plot(ywr1)
+#
+# Here's the estimate using BayesThresh 
+#
+## Not run: ts.plot(ywr2)
+</code></pre>
+
+
+</div>

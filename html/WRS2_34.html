@@ -1,0 +1,133 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>onesampb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>One-sample percentile bootstrap</h2>
+
+<h3>Description</h3>
+
+<p>Tests whether a robust location measure (median, Huber Psi) differs from a null value and reports a 95% confidence interval based on percentile bootstrap.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">onesampb(x, est = "onestep", nboot = 2000, nv = 0, alpha = 0.05, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>a numeric vector.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>est</code></td>
+<td>
+
+<p>robust estimator to be used (<code>"onestep"</code>, <code>"mom"</code>, or <code>"median"</code>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nboot</code></td>
+<td>
+
+<p>number of bootstrap samples.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nv</code></td>
+<td>
+
+<p>value under H0.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+
+<p>alpha level.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>currently ignored.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns an object of class <code>"onesampb"</code> containing:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>ci</code></td>
+<td>
+<p>95% confidence interval</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimate</code></td>
+<td>
+<p>robust location sample estimate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value</code></td>
+<td>
+<p>p-value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>number of effective observations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>function call</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Wilcox, R. (2017). Introduction to Robust Estimation and Hypothesis Testing (4th ed.). Elsevier.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>t1way</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(123)
+x &lt;- rnorm(30)
+onesampb(x, nboot = 100)    ## H0: Psi = 0
+
+set.seed(123)
+x &lt;- rlnorm(30)
+onesampb(x, est = "median", nv = 1)   ## H0: median = 1
+</code></pre>
+
+
+</div>

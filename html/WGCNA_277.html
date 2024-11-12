@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Inline display of progress</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Inline display of progress </h2>
+
+<h3>Description</h3>
+
+<p>These functions provide an inline display of pregress. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">initProgInd(leadStr = "..", trailStr = "", quiet = !interactive())
+updateProgInd(newFrac, progInd, quiet = !interactive())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>leadStr</code></td>
+<td>
+<p> character string that will be printed before the actual progress number. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trailStr</code></td>
+<td>
+<p> character string that will be printed after the actual progress number. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quiet</code></td>
+<td>
+<p> can be used to silence the indicator for non-interactive sessions whose output is
+typically redirected to a file. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newFrac</code></td>
+<td>
+<p> new fraction of progress to be displayed. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>progInd</code></td>
+<td>
+<p> an object of class <code>progressIndicator</code> that encodes previously printed message. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A progress indicator is a simple inline display of progress intended to satisfy impatient users during
+lengthy operations. The function <code>initProgInd</code> initializes a progress indicator (at zero);
+<code>updateProgInd</code> updates it to a specified fraction. 
+</p>
+<p>Note that excessive use of <code>updateProgInd</code> may lead to a performance penalty (see examples). 
+</p>
+
+
+<h3>Value</h3>
+
+<p>Both functions return an object of class <code>progressIndicator</code> that holds information on the last
+printed value and should be used for subsequent updates of the indicator. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder </p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">max = 10;
+prog = initProgInd("Counting: ", "done");
+for (c in 1:max)
+{
+  Sys.sleep(0.10);
+  prog = updateProgInd(c/max, prog);
+}
+printFlush("");
+
+printFlush("Example 2:");
+prog = initProgInd();
+for (c in 1:max)
+{
+  Sys.sleep(0.10);
+  prog = updateProgInd(c/max, prog);
+}
+printFlush("");
+
+## Example of a significant slowdown:
+
+## Without progress indicator:
+
+system.time( {a = 0; for (i in 1:10000) a = a+i; } )
+
+## With progress indicator, some 50 times slower:
+
+system.time( 
+  {
+    prog = initProgInd("Counting: ", "done");
+    a = 0; 
+    for (i in 1:10000) 
+    {
+      a = a+i; 
+      prog = updateProgInd(i/10000, prog);
+    }
+  }   
+)
+</code></pre>
+
+
+</div>

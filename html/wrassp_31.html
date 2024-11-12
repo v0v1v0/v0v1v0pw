@@ -1,0 +1,223 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mhsF0</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>mhsF0</h2>
+
+<h3>Description</h3>
+
+<p>mhsF0 function adapted from libassp
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mhsF0(
+  listOfFiles = NULL,
+  optLogFilePath = NULL,
+  beginTime = 0,
+  centerTime = FALSE,
+  endTime = 0,
+  windowShift = 5,
+  gender = "u",
+  maxF = 600,
+  minF = 50,
+  minAmp = 50,
+  minAC1 = 0.25,
+  minRMS = 18,
+  maxZCR = 3000,
+  minProb = 0.52,
+  plainSpectrum = FALSE,
+  toFile = TRUE,
+  explicitExt = NULL,
+  outputDirectory = NULL,
+  forceToLog = useWrasspLogger,
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>listOfFiles</code></td>
+<td>
+<p>vector of file paths to be processed by function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>optLogFilePath</code></td>
+<td>
+<p>path to option log file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beginTime</code></td>
+<td>
+<p>= &lt;time&gt;: set begin of analysis interval to &lt;time&gt; seconds (default = 0: begin of file)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>centerTime</code></td>
+<td>
+<p>= &lt;time&gt;:  set single-frame analysis with the analysis 
+window centred at &lt;time&gt; seconds; overrules beginTime, endTime and windowShift options</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>endTime</code></td>
+<td>
+<p>= &lt;time&gt;: set end of analysis interval to &lt;time&gt; seconds (default = 0: end of file)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>windowShift</code></td>
+<td>
+<p>= &lt;dur&gt;: set analysis window shift to &lt;dur&gt; ms (default: 5.0)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gender</code></td>
+<td>
+<p>= &lt;code&gt;  set gender-specific pitch ranges; &lt;code&gt; may be:
+"f[emale]" (80.0 - 600.0 Hz)
+"m[ale]" (50.0 - 375.0 Hz)
+"u[nknown]" (default; 50.0 - 600.0 Hz)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxF</code></td>
+<td>
+<p>= &lt;freq&gt;: set maximum pitch value to &lt;freq&gt; Hz (default: 500.0)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minF</code></td>
+<td>
+<p>= &lt;freq&gt;:  set minimum pitch value to &lt;freq&gt; Hz (default: 50.0  minimum: 25.0)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minAmp</code></td>
+<td>
+<p>= &lt;amp&gt;:  minimum signal amplitude (default: 50)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minAC1</code></td>
+<td>
+<p>= &lt;freq&gt;: minimum 1st correlation coefficient (default: 0.250)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minRMS</code></td>
+<td>
+<p>= &lt;num&gt;:  minimum RMS amplitude in dB (default: 18.0)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxZCR</code></td>
+<td>
+<p>= &lt;freq&gt;: maximum zero crossing rate in Hz (default: 3000)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minProb</code></td>
+<td>
+<p>= &lt;num&gt;: minimum quality value of F0 fit (default: 0.520)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plainSpectrum</code></td>
+<td>
+<p>use plain rather than masked power spectrum</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>toFile</code></td>
+<td>
+<p>write results to file (default extension is .pit)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>explicitExt</code></td>
+<td>
+<p>set if you wish to override the default extension</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outputDirectory</code></td>
+<td>
+<p>directory in which output files are stored. Defaults to NULL, i.e.
+the directory of the input files</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>forceToLog</code></td>
+<td>
+<p>is set by the global package variable useWrasspLogger. This is set
+to FALSE by default and should be set to TRUE is logging is desired.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>display infos &amp; show progress bar</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Pitch analysis of the speech signal in &lt;listOfFile&gt; using
+Michel's/Modified Harmonic Sieve algorithm.
+Analysis results will be written to a file with the
+base name of the input file and extension '.pit'.
+Default output is in SSFF binary format (track 'pitch').
+</p>
+
+
+<h3>Value</h3>
+
+<p>nrOfProcessedFiles or if only one file to process return AsspDataObj of that file
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Raphael Winkelmann
+</p>
+<p>Lasse Bombien
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ksvF0</code> for an tracking the fundamental frequency
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># get path to audio file
+path2wav &lt;- list.files(system.file("extdata", package = "wrassp"), 
+                       pattern = glob2rx("*.wav"), 
+                       full.names = TRUE)[1]
+
+# calculate fundamental frequency contour
+res &lt;- mhsF0(path2wav, toFile=FALSE)
+
+# plot fundamental frequency contour
+plot(seq(0,numRecs.AsspDataObj(res) - 1) / rate.AsspDataObj(res) +
+       attr(res, 'startTime'),
+     res$pitch, 
+     type='l', 
+     xlab='time (s)', 
+     ylab='F0 frequency (Hz)')
+
+</code></pre>
+
+
+</div>

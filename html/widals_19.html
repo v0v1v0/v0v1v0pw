@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Hst.sumup</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Create Covariance Matrix
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the covariance matrix of all model covariates
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Hst.sumup(Hst.ls, Hs = NULL, Ht = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Hst.ls</code></td>
+<td>
+
+<p>Space-time covariates.  A list of length <code class="reqn">\tau</code>, each element containing a <code class="reqn">n</code> x <code class="reqn">p_st</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hs</code></td>
+<td>
+
+<p>Spacial covariates.  An <code class="reqn">n</code> x <code class="reqn">p_s</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ht</code></td>
+<td>
+
+<p>Temporal covariates.  An <code class="reqn">\tau</code> x <code class="reqn">p_t</code> numeric matrix.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Important: The order of the arguments in this function is NOT the same as in the returned covariance matrix.  The order in the covariance matrix is the same as in other functions in this package:  <code>Hs</code>, <code>Ht</code>, <code>Hst.ls</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code class="reqn">(p_s+p_t+p_st)</code> x <code class="reqn">(p_s+p_t+p_st)</code> numeric, symmetrix, non-negative definite matrix.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">	
+tau &lt;- 20
+n &lt;- 10
+Ht &lt;- cbind(sin(1:tau), cos(1:tau))
+
+Hs &lt;- cbind(rnorm(10), rnorm(n, 5, 49))
+
+Hst.ls &lt;- list()
+for(tt in 1:tau) {
+Hst.ls[[tt]] &lt;- cbind(rnorm(n, 1, 0.1), rnorm(n, -200, 21))
+}
+
+
+Hst.sumup(Hst.ls, Hs, Ht)
+
+
+
+########### standardize all covariates
+
+x1 &lt;- stnd.Hst.ls(Hst.ls, NULL)$sHst.ls
+x2 &lt;- stnd.Hs(Hs, NULL, FALSE)$sHs
+x3 &lt;- stnd.Ht(Ht, n)
+
+
+Hst.sumup(x1, x2, x3)
+
+
+
+## The function is currently defined as
+function (Hst.ls, Hs = NULL, Ht = NULL) 
+{
+    tau &lt;- length(Hst.ls)
+    if(tau &lt; 1) { tau &lt;- nrow(Ht) }
+    if(is.null(tau)) { tau &lt;- 10 ; cat("tau assumed to be 10.", "\n") }
+    n &lt;- nrow(Hst.ls[[1]])
+    if(is.null(n)) { n &lt;- nrow(Hs) }
+    big.sum &lt;- 0
+    for (i in 1:tau) {
+        if (!is.null(Ht)) {
+            Ht.mx &lt;- matrix(Ht[i, ], n, ncol(Ht), byrow = TRUE)
+        }
+        else {
+            Ht.mx &lt;- NULL
+        }
+        big.sum &lt;- big.sum + crossprod(cbind(Hs, Ht.mx, Hst.ls[[i]]))
+    }
+    return(big.sum)
+  }
+</code></pre>
+
+
+</div>

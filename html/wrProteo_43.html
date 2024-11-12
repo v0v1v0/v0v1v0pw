@@ -1,0 +1,148 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>readSampleMetaData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read Sample Meta-data from Quantification-Software And/Or Sdrf And Align To Experimental Data</h2>
+
+<h3>Description</h3>
+
+<p>Sample/experimental annotation meta-data form <a href="https://www.maxquant.org/">MaxQuant</a>, ProteomeDiscoverer, FragPipe, Proline or similar, can be read using this function and relevant information extracted.
+Furthermore, annotation in <a href="https://github.com/bigbio/proteomics-sample-metadata">sdrf-format</a> can be added (the order of sdrf will be adjated automatically, if possible).
+This functions returns a list with grouping of samples into replicates and additional information gathered.
+Input files compressed as .gz can be read as well.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">readSampleMetaData(
+  quantMeth,
+  sdrf = NULL,
+  suplAnnotFile = NULL,
+  path = ".",
+  abund = NULL,
+  groupPref = list(lowNumberOfGroups = TRUE, sampleNames = NULL, gr = NULL),
+  chUnit = TRUE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>quantMeth</code></td>
+<td>
+<p>(character, length=1) quantification method used; 2-letter abbreviations like 'MQ','PD','PL','FP' etc may be used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sdrf</code></td>
+<td>
+<p>(character, list or data.frame) optional extraction and adding of experimenal meta-data:
+if character, this may be the ID at ProteomeExchange or a similarly formatted local file. <code>sdrf</code> will get priority over <code>suplAnnotFile</code>, if provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suplAnnotFile</code></td>
+<td>
+<p>(logical or character) optional reading of supplemental files produced by MaxQuant; if <code>gr</code> is provided, it gets priority for grouping of replicates
+if <code>TRUE</code> in case of <code>method=='MQ'</code> (MaxQuant) default to files 'summary.txt' (needed to match information of <code>sdrf</code>) and 'parameters.txt' which can be found in the same folder as the main quantitation results;
+if <code>character</code> the respective file-names (relative ro absolute path), 1st is expected to correspond to 'summary.txt' (tabulated text, the samples as given to MaxQuant) and 2nd to 'parameters.txt' (tabulated text, all parameters given to MaxQuant)
+in case of <code>method=='PL'</code> (Proline), this argument should contain the initial file-name (for the identification and quantification data) in the first position</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>(character) optional path of file(s) to be read</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abund</code></td>
+<td>
+<p>(matrix or data.frame) experimental quantitation data; only column-names will be used for aligning order of annotated samples</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groupPref</code></td>
+<td>
+<p>(list) additional parameters for interpreting meta-data to identify structure of groups (replicates);
+May contain <code>lowNumberOfGroups=FALSE</code> for automatically choosing a rather elevated number of groups if possible (defaults to low number of groups, ie higher number of samples per group).
+A vector of custom sample-names may be provided via <code>sampleNames=...</code> (must be of correct length);
+if contains <code>sampleNames="sdrf"</code> sample-names will be used from trimmed file-names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chUnit</code></td>
+<td>
+<p>(logical or character) optional adjustig of group-labels from sample meta-data in case multipl different unit-prefixes are used to single common prefix 
+(eg adjust '100pMol' and '1nMol' to '100pMol' and '1000pMol') for better downstream analysis. This option will call <code>adjustUnitPrefix</code> and <code>checkUnitPrefix</code> from package <code>wrMisc</code>
+If <code>character</code> exatecly this/these unit-names will be searched in sample-names and checked if multiple different decimal prefixes are used; 
+if <code>TRUE</code> the default set of unit-names ('Mol','mol', 'days','day','m','sec','s','h') will be checked in the sample-names for different decimal prefixes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages if <code>TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When initally reading/importing quantitation data, typically very little is known about the setup of different samples in the underlying experiment.
+The overall aim is to read and mine the corresponding sample-annotation documeneted by the quantitation-software and/or from n sdrf repository and to attach it to the experimental data.
+This way, in subsequent steps of analysis (eg PCA, statictical tests) the user does not have to bother stuying the experimental setup to figure out which
+samples should be considered as relicate of whom.
+</p>
+<p>Sample annotation meta-data can be obtained from two sources :
+a) form additional files produced (and exported) by the initial quantitation software (so far MaxQuant and ProteomeDiscoverer have een implemeneted) or
+b) from the universal sdrf-format (from Pride or user-supplied).
+Both types can be imported and checked in the same run, if valid sdrf-information is found this will be given priority.
+For more information about the sdrf format please see <a href="https://github.com/bigbio/proteomics-sample-metadata">sdrf on github</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a list with <code>$level</code> (grouping of samples given as integer), and <code>$meth</code> (method by which grouping as determined).
+If valid <code>sdrf</code> was given, the resultant list contains in addition <code>$sdrfDat</code> (data.frame of annotation).
+Alternatively it may contain a <code>$sdrfExport</code> if sufficient information has been gathered (so far only for MaxQuant) for a draft sdrf for export (that should be revised and completed by the user).
+If software annotation has been found it will be shown in <code>$annotBySoft</code>.
+If all entries are invalid or entries do not pass the tests, this functions returns an empty <code>list</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>this function is used internally by <code>readMaxQuantFile</code>,<code>/link{readProteomeDiscovererFile}</code> etc; uses <code>readSdrf</code> for reading sdrf-files, <code>replicateStructure</code> for mining annotation columns
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">sdrf001819Setup &lt;- readSampleMetaData(quantMeth=NA, sdrf="PXD001819")
+str(sdrf001819Setup)
+
+</code></pre>
+
+
+</div>

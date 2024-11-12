@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dwt.forward</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Discrete Wavelet Transform and Maximal Overlap Discrete Wavelet
+Tranform Forward and Backward Pyramid Algorithm
+</h2>
+
+<h3>Description</h3>
+
+<p>Implementation of DWT and MODWT forward and backward pyramid
+algorithms.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dwt.forward(V, filter)
+dwt.backward(W, V, filter)
+modwt.forward(V, filter, j)
+modwt.backward(W, V, filter, j)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p>A vector of wavelet coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>V</code></td>
+<td>
+<p>A vector of scaling coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>A <code>wt.filter</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>j</code></td>
+<td>
+<p>The level of wavelet and scaling coefficients to compute (for
+forward algorithm) or the level of wavelet and scaling coefficient
+inputs (for inverse algorithm).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>An implementation of the DWT and MODWT forward and backward
+pyramid algorithms using pseudocode written by Percival and Walden 
+(2000), pp. 100-101, 177-178. These functions are intended primarily
+as helper functions for the <code>dwt</code>, <code>modwt</code>, <code>idwt</code> and
+<code>imodwt</code> functions.</p>
+
+
+<h3>Value</h3>
+
+<p><code>dwt.forward</code> and <code>modwt.forward</code> return a list of two
+elements containing vectors of wavelet and scaling coefficients for
+the subsequent level of analysis. <code>dwt.backward</code> and
+<code>modwt.backward</code> return a vector of scaling coefficients for the
+previous level of analysis.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Eric Aldrich. ealdrich@gmail.com.</p>
+
+
+<h3>References</h3>
+
+<p>Percival, D. B. and A. T. Walden (2000) <em>Wavelet Methods for Time
+Series Analysis</em>, Cambridge University Press.</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dwt</code>,
+<code>modwt</code>,
+<code>wt.filter</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># obtain the two series listed in Percival and Walden (2000), page 42
+X1 &lt;- c(.2,-.4,-.6,-.5,-.8,-.4,-.9,0,-.2,.1,-.1,.1,.7,.9,0,.3)
+X2 &lt;- c(.2,-.4,-.6,-.5,-.8,-.4,-.9,0,-.2,.1,-.1,.1,-.7,.9,0,.3)
+
+# compute the LA8 wavelet filter for both DWT and MODWT
+la8.dwt &lt;- wt.filter()
+la8.modwt &lt;- wt.filter(modwt=TRUE)
+
+# compute the DWT and MODWT level one wavelet and scaling coefficients
+wt.dwt &lt;- dwt.forward(X1, la8.dwt)
+wt.modwt &lt;- modwt.forward(X2, la8.modwt, 1)
+
+# compute the original series with the level one coefficients
+newX.dwt &lt;- dwt.backward(wt.dwt$W, wt.dwt$V, la8.dwt)
+newX.modwt &lt;- modwt.backward(wt.modwt$W, wt.modwt$V, la8.modwt, 1)
+</code></pre>
+
+
+</div>

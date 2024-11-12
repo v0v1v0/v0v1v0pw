@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>arma_to_wv</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>ARMA process to WV</h2>
+
+<h3>Description</h3>
+
+<p>This function computes the Haar Wavelet Variance of an ARMA process
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">arma_to_wv(ar, ma, sigma2, tau)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ar</code></td>
+<td>
+<p>A <code>vec</code> containing the coefficients of the AR process</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ma</code></td>
+<td>
+<p>A <code>vec</code> containing the coefficients of the MA process</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma2</code></td>
+<td>
+<p>A <code>double</code> containing the residual variance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>A <code>vec</code> containing the scales e.g. <code class="reqn">2^{\tau}</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function is a generic implementation that requires a stationary theoretical autocorrelation function (ACF)
+and the ability to transform an ARMA(<code class="reqn">p</code>,<code class="reqn">q</code>) process into an MA(<code class="reqn">\infty</code>) (e.g. infinite MA process).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>vec</code> containing the wavelet variance of the ARMA process.
+</p>
+
+
+<h3>Process Haar Wavelet Variance Formula</h3>
+
+<p>The Autoregressive Order <code class="reqn">p</code> and Moving Average Order <code class="reqn">q</code> (ARMA(<code class="reqn">p</code>,<code class="reqn">q</code>)) process has a Haar Wavelet Variance given by:
+</p>
+<p style="text-align: center;"><code class="reqn">\frac{{{\tau _j}\left[ {1 - \rho \left( {\frac{{{\tau _j}}}{2}} \right)} \right] + 2\sum\limits_{i = 1}^{\frac{{{\tau _j}}}{2} - 1} {i\left[ {2\rho \left( {\frac{{{\tau _j}}}{2} - i} \right) - \rho \left( i \right) - \rho \left( {{\tau _j} - i} \right)} \right]} }}{{\tau _j^2}}\sigma _X^2</code>
+</p>
+
+<p>where <code class="reqn">\sigma _X^2</code> is given by the variance of the ARMA process. 
+Furthermore, this assumes that stationarity has been achieved as it directly
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ARMAtoMA_cpp</code>, <code>ARMAacf_cpp</code>, and <code>arma11_to_wv</code>
+</p>
+
+
+</div>

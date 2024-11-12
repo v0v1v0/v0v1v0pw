@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>unload.Hst.ls</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Convert a Space-Time Covariate into Data
+</h2>
+
+<h3>Description</h3>
+
+<p>Convert a spacio-temporal covariate into contemporaneous data
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">unload.Hst.ls(Hst.ls, which.col, rgr.lags)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Hst.ls</code></td>
+<td>
+
+<p>Space-time covariates.  A list of length <code class="reqn">\tau</code>, each element should be a <code class="reqn">n</code> x <code class="reqn">p_st</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>which.col</code></td>
+<td>
+
+<p>Which column of <code>Hst.ls[[i]]</code> to insert into the <code class="reqn">i</code>th row of <code>Z</code>.  A scalar positive integer. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rgr.lags</code></td>
+<td>
+
+<p>Temporal lagging of <code>Z</code>.  A scalar integer.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A numeric <code class="reqn">\tau</code> x <code class="reqn">n</code> matrix.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>load.Hst.ls.Z</code>, <code>load.Hst.ls.2Zs</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">	
+###### here's an itty-bitty example
+
+tau &lt;- 7
+n &lt;- 5
+
+Hst.ls &lt;- list()
+for(i in 1:tau) { Hst.ls[[i]] &lt;- matrix(rnorm(n*4), nrow=n) }
+
+Zh &lt;- unload.Hst.ls(Hst.ls, 1, 0)
+
+
+## The function is currently defined as
+function (Hst.ls, which.col, rgr.lags) 
+{
+    n &lt;- nrow(Hst.ls[[1]])
+    tau &lt;- length(Hst.ls)
+    Z.out &lt;- matrix(NA, tau, n)
+    min.ndx &lt;- max(1, -min(rgr.lags) + 1)
+    max.ndx &lt;- min(tau, tau - max(rgr.lags))
+    for (i in min.ndx:max.ndx) {
+        Z.out[i - rgr.lags, ] &lt;- Hst.ls[[i]][, which.col]
+    }
+    return(Z.out)
+  }
+</code></pre>
+
+
+</div>

@@ -1,0 +1,336 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.walsGLM</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Methods for walsGLM, walsGLMmatrix, walsNB and walsNBmatrix Objects</h2>
+
+<h3>Description</h3>
+
+<p>Methods for extracting information from fitted model-averaging objects of
+classes <code>"walsGLM"</code>, <code>"walsGLMmatrix"</code>, <code>"walsNB"</code> and
+<code>"walsNBmatrix"</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'walsGLM'
+predict(
+  object,
+  newdata,
+  type = c("response", "link", "variance", "prob", "density", "logDens"),
+  at = NULL,
+  na.action = na.pass,
+  log = FALSE,
+  ...
+)
+
+## S3 method for class 'walsGLMmatrix'
+predict(
+  object,
+  newX1,
+  newX2,
+  newY = NULL,
+  type = c("response", "link", "variance", "prob", "density", "logDens"),
+  at = NULL,
+  log = FALSE,
+  ...
+)
+
+## S3 method for class 'walsGLM'
+residuals(object, type = c("deviance", "pearson", "response"), ...)
+
+## S3 method for class 'walsGLM'
+print(x, digits = max(3, getOption("digits") - 3), ...)
+
+## S3 method for class 'walsGLM'
+summary(object, ...)
+
+## S3 method for class 'summary.walsGLM'
+print(x, digits = max(3, getOption("digits") - 3), ...)
+
+## S3 method for class 'walsGLM'
+logLik(object, ...)
+
+## S3 method for class 'walsNB'
+summary(object, ...)
+
+## S3 method for class 'summary.walsNB'
+print(x, digits = max(3, getOption("digits") - 3), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object, x</code></td>
+<td>
+<p>An object of class <code>"walsGLM"</code>, <code>"walsGLMmatrix"</code>,
+<code>"walsNB"</code>, <code>"walsNBmatrix"</code>, <code>"summary.walsGLM"</code> or
+<code>"summary.walsNB"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>Optionally, a data frame in which to look for variables with
+which to predict. If omitted, the original observations are used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Character specifying the type of prediction, residual or model
+part to be returned. For details see below.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>at</code></td>
+<td>
+<p>Optional. Only available if a family of class <code>"familyWALScount"</code>
+was used for fitting. If <code>type = "prob"</code>, a numeric vector at which
+the probabilities are evaluated. By default <code>0:max(y)</code> is used
+where <code>y</code> is the original observed response.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.action</code></td>
+<td>
+<p>Function determining what should be done with missing values
+in <code>newdata</code>. The default is to predict <code>NA</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>, then returns the log-density. If
+<code>FALSE</code> (default), then returns density. Only relevant if
+<code>type = "density"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newX1</code></td>
+<td>
+<p>Focus regressors matrix to be used for the prediction.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newX2</code></td>
+<td>
+<p>Auxiliary regressors matrix to be used for the prediction.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newY</code></td>
+<td>
+<p>Response vector to be used in predictions. Only relevant when
+<code>type = "prob"</code>, <code>type = "density"</code> or <code>type = "logDens"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>The number of significant digits to display.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>As the <code>"-matrix"</code> classes <code>"walsGLMmatrix"</code> and <code>"walsNBmatrix"</code>
+inherit from the "non-matrix" classes, i.e. <code>"walsGLM"</code> and <code>"walsNB"</code>,
+respectively, the following text will treat them as equivalent because
+they inherit all methods but <code>predict</code> from their "non-matrix" versions.
+Thus, when <code>"walsGLM"</code> or <code>"walsNB"</code> are mentioned, we also refer to
+their <code>"-matrix"</code> versions, except when explicitly stated. Moreover,
+note that <code>"walsNB"</code> and <code>"walsNBmatrix"</code> inherit most methods from
+<code>"walsGLM"</code> and <code>"walsGLMmatrix"</code>.
+</p>
+<p>A set of standard extractor functions for fitted model objects is available
+for objects of class <code>"walsGLM"</code> and <code>"walsNB"</code>, including methods to
+the generic functions <code>print</code> and <code>summary</code>
+which print the model-averaged estimation of the coefficients along with some
+further information.
+</p>
+<p>The <code>summary</code> methods returns an object of
+class <code>"summary.walsGLM"</code> for objects of class <code>"walsGLM"</code> and an
+object of class <code>"summary.walsNB"</code> for objects of class <code>"walsNB"</code>.
+They contain the relevant summary statistics which can then be printed using
+the associated <code>print()</code> methods.
+Inspired by De Luca and Magnus (2011), the summary statistics
+also show <code>Kappa</code> which is an indicator for the numerical stability of
+the method, i.e. it shows the square root of the condition number of the
+matrix <code class="reqn">\bar{\Xi} = \bar{\Delta}_{2} \bar{X}_{2}^{\top} \bar{M}_{1}
+\bar{X}_{2} \bar{\Delta}_{2}</code>. The summary further shows the deviance and
+provides information on the prior and family used.
+</p>
+<p>A <code>logLik</code> method is provided that returns the log-likelihood
+given the family used and the model-averaged estimates of the coefficients.
+</p>
+<p><code>"walsGLM"</code> inherits from <code>"wals"</code>, while <code>"walsNB"</code> inherits from
+both, <code>"walsGLM"</code> and <code>"wals"</code>. Thus, see <code>predict.wals</code>
+for more methods.
+</p>
+<p>The <code>predict</code> and <code>residuals</code> methods,
+especially the different types of predictions/residuals controlled by
+<code>type</code>, are inspired by the corresponding methods in <code>countreg</code>
+version 0.2-1 (2023-06-13) (Zeileis and Kleiber 2023; Zeileis et al. 2008), see
+e.g. <code>predict.hurdle()</code> from <code>countreg</code>, and <code>stats</code>
+version 4.3.1 (2023-06-16) (R Core Team 2023), see e.g.
+<code>residuals.glm</code>. The <code>summary()</code>, <code>print.summary()</code>,
+<code>print()</code> and <code>logLik()</code> methods are also inspired by the corresponding
+methods for objects of class <code>"glm"</code> in <code>stats</code>, see
+e.g. <code>print.summary.glm</code>.
+</p>
+<p><code>coef</code> and <code>vcov</code> are inherited from
+<code>"wals"</code> (see <code>predict.wals</code> for more), except for
+objects of class <code>"walsNB"</code> (see <code>vcov.walsNB</code>).
+The <code>type</code> argument specifies which part of the coefficient
+vector/covariance matrix of the estimates should be returned.
+For <code>type = "all"</code>, they return the complete vector/matrix.
+For <code>type = "focus"</code> and <code>type = "aux"</code> they return only the part
+corresponding to the focus and auxiliary regressors, respectively.
+Additionally, the user can choose whether to return the
+estimated coefficients/covariance matrix for the original regressors <code class="reqn">X</code>
+(<code class="reqn">\beta</code> coefficients) or of the transformed regressors <code class="reqn">Z</code>
+(<code class="reqn">\gamma</code> coefficients).
+</p>
+<p>The extractors <code>terms</code> and <code>model.matrix</code>
+are also inherited from <code>"wals"</code>. They only allow <code>type = "focus"</code>
+and <code>type = "aux"</code> and extract the corresponding component of the model.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>predict.walsGLM()</code> and <code>predict.walsGLMmatrix()</code> return
+different types of predictions depending on the argument <code>type</code>:
+</p>
+
+<ul>
+<li> <p><code>type = "response"</code>: vector. Predicted mean
+</p>
+</li>
+<li> <p><code>type = "link"</code>: vector. Predicted linear link
+</p>
+</li>
+<li> <p><code>type = "variance"</code>: vector. Predicted variance
+</p>
+</li>
+<li> <p><code>type = "prob"</code>: matrix. Only available if a family of class
+<code>"familyWALScount"</code> was used for fitting or for objects of
+class <code>"walsNB"</code> or <code>"walsNBmatrix"</code>. Returns the probability at
+counts specified by <code>at</code>.
+</p>
+</li>
+<li> <p><code>type = "density"</code>: vector. Predicted density
+</p>
+</li>
+<li> <p><code>type = "logDens"</code>: vector. For convenience, returns predicted log-density.
+Equivalent to setting <code>type = "density"</code> and <code>log = TRUE</code>.
+</p>
+</li>
+</ul>
+<p>If <code>type = "prob"</code>, <code>type = "density"</code> or <code>type = "logDens"</code>,
+then <code>newdata</code> must contain the response or <code>newY</code> must be
+specified depending on the class of the object.
+</p>
+<p><code>residuals.walsGLM()</code> returns different types of residuals
+depending on the argument <code>type</code>:
+</p>
+
+<ul>
+<li> <p><code>type = "deviance"</code>: deviance residuals
+</p>
+</li>
+<li> <p><code>type = "pearson"</code>: Pearson residuals (raw residuals scaled by
+square root of variance function)
+</p>
+</li>
+<li> <p><code>type = "response"</code>: raw residuals (observed - fitted)
+</p>
+</li>
+</ul>
+<p><code>print.walsGLM()</code> invisibly returns its input argument <code>x</code>,
+i.e. an object of object of class <code>"walsGLM"</code>.
+</p>
+<p><code>summary.walsGLM()</code> returns an object of class
+<code>"summary.walsGLM"</code> which contains the necessary fields for printing the
+summary in <code>print.summary.walsGLM()</code>.
+</p>
+<p><code>print.summary.walsGLM()</code> invisibly returns its input argument
+<code>x</code>, i.e. an object of object of class <code>"summary.walsGLM"</code>.
+</p>
+<p><code>logLik.walsGLM()</code> returns the log-likelihood of the fitted
+model.
+</p>
+<p><code>summary.walsNB()</code> returns an object of class
+<code>"summary.walsNB"</code> which contains the necessary fields for printing the
+summary in <code>print.summary.walsNB()</code>.
+</p>
+<p><code>print.summary.walsNB()</code> invisibly returns its input argument
+<code>x</code>, i.e. an object of object of class <code>"summary.walsNB"</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>De Luca G, Magnus JR (2011).
+“Bayesian model averaging and weighted-average least squares: Equivariance, stability, and numerical issues.”
+<em>The Stata Journal</em>, <b>11</b>(4), 518–544.
+<a href="https://doi.org/10.1177/1536867X1201100402">doi:10.1177/1536867X1201100402</a>.<br><br> R Core Team (2023).
+<em>R: A Language and Environment for Statistical Computing</em>.
+R Foundation for Statistical Computing, Vienna, Austria.
+<a href="https://www.R-project.org/">https://www.R-project.org/</a>.<br><br> Zeileis A, Kleiber C (2023).
+<em>countreg: Count Data Regression</em>.
+R package version 0.2-1, <a href="https://r-forge.r-project.org/projects/countreg/">https://r-forge.r-project.org/projects/countreg/</a>.<br><br> Zeileis A, Kleiber C, Jackman S (2008).
+“Regression Models for Count Data in R.”
+<em>Journal of Statistical Software</em>, <b>27</b>(8), 1–25.
+<a href="https://doi.org/10.18637/jss.v027.i08">doi:10.18637/jss.v027.i08</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>walsGLM, walsNB, predict.wals.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Example for walsGLM objects
+data("HMDA", package = "AER")
+fitBinomial &lt;- walsGLM(deny ~ pirat + hirat + lvrat + chist + mhist + phist |
+                        selfemp + afam, family = binomialWALS(), data = HMDA,
+                       prior = weibull())
+summary(fitBinomial)
+vcov(fitBinomial, type = "focus")
+logLik(fitBinomial)
+predict(fitBinomial, newdata = HMDA[1:10,], type = "response")
+familyWALS(fitBinomial)
+
+## Example for walsNB objects
+data("NMES1988", package = "AER")
+
+fWals &lt;- (visits ~ chronic + age + I((age^2)/10) + insurance + medicaid |
+           adl + gender + married + income + school + afam + employed)
+fitNB &lt;- walsNB(fWals, data = NMES1988, link = "log", prior = weibull(),
+                method = "fullSVD")
+summary(fitNB)
+coef(fitNB, type = "aux")
+residuals(fitNB, type = "pearson")
+predict(fitNB, newdata = NMES1988[1:10,], type = "prob")
+terms(fitNB, type = "aux")
+
+</code></pre>
+
+
+</div>

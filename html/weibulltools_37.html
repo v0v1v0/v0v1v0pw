@@ -1,0 +1,156 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mcs_delay_report</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Adjustment of Operating Times by Delays in Report using a Monte Carlo Approach</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#soft-deprecated"><img src="../help/figures/lifecycle-soft-deprecated.svg" alt="[Soft-deprecated]"></a>
+</p>
+<p><code>mcs_delay_report()</code> is no longer under active development, switching to
+mcs_delay is recommended.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mcs_delay_report(
+  date_repair,
+  date_report,
+  time,
+  status,
+  distribution = "lognormal",
+  details = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>date_repair</code></td>
+<td>
+<p>a vector of class <code>character</code> or <code>Date</code>, in the
+format "yyyy-mm-dd", indicating the date of repair of a failed unit.
+Use <code>NA</code> for missing elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date_report</code></td>
+<td>
+<p>a vector of class <code>character</code> or <code>Date</code>, in the
+format "yyyy-mm-dd", indicating the date of report of a failed unit.
+Use <code>NA</code> for missing elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>A numeric vector of operating times.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>A vector of binary data (0 or 1) indicating whether unit <em>i</em> is
+a right censored observation (= 0) or a failure (= 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the random variable. Only
+<code>"lognormal"</code>is implemented.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>details</code></td>
+<td>
+<p>A logical. If <code>FALSE</code> the output consists of a vector with
+corrected operating times for the censored units and the input operating
+times for the failed units. If <code>TRUE</code> the output consists of a detailed
+list, i.e the same vector as described before, simulated random numbers and
+estimated distribution parameters.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The delay in report describes the time between the occurrence of a damage and
+the registration in the warranty database. For a given date where the analysis
+is made there could be units which had a failure but are not registered in the
+database and therefore treated as censored units. To overcome this problem
+this function uses a Monte Carlo approach for simulating the operating
+times of (multiple) right censored observations, taking account of reporting
+delays. The simulation is based on the distribution of operating times that were
+calculated from complete data, i.e. failed items (see dist_delay_report).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector of corrected operating times for the censored units
+and the input operating times for the failed units if <code>details = FALSE</code>.
+If <code>details = TRUE</code> the output is a list which consists of the following
+elements:
+</p>
+
+<ul>
+<li> <p><code>time</code> : Numeric vector of corrected operating times for the censored
+observations and input operating times for failed units.
+</p>
+</li>
+<li> <p><code>x_sim</code> : Simulated random numbers of specified distribution with
+estimated parameters. The length of <code>x_sim</code> is equal to the number of
+censored observations.
+</p>
+</li>
+<li> <p><code>coefficients</code> : Estimated coefficients of supposed distribution.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">date_of_repair &lt;- c(NA, "2014-09-15", "2015-07-04", "2015-04-10", NA,
+                   NA, "2015-04-24", NA, "2015-04-25", "2015-04-24",
+                    "2015-06-12", NA, "2015-05-04", NA, NA,
+                    "2015-05-22", NA, "2015-09-17", NA, "2015-08-15",
+                    "2015-11-26", NA, NA)
+
+date_of_report &lt;- c(NA, "2014-10-09", "2015-08-28", "2015-04-15", NA,
+                    NA, "2015-05-16", NA, "2015-05-28", "2015-05-15",
+                    "2015-07-11", NA, "2015-08-14", NA, NA,
+                    "2015-06-05", NA, "2015-10-17", NA, "2015-08-21",
+                    "2015-12-02", NA, NA)
+
+op_time &lt;- rep(1000, length(date_of_repair))
+status &lt;- c(0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0)
+
+# Example 1 - Simplified vector output:
+x_corrected &lt;- mcs_delay_report(
+  date_repair = date_of_repair,
+  date_report = date_of_report,
+  time = op_time,
+  status = status,
+  distribution = "lognormal",
+  details = FALSE
+)
+
+# Example 2 - Detailed list output:
+list_detail &lt;- mcs_delay_report(
+  date_repair = date_of_repair,
+  date_report = date_of_report,
+  time = op_time,
+  status = status,
+  distribution = "lognormal",
+  details = TRUE
+)
+
+</code></pre>
+
+
+</div>

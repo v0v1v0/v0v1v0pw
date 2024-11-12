@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>samp_sim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Sample a daily time series at a set frequency</h2>
+
+<h3>Description</h3>
+
+<p>Sample a daily water quality time series at a set monthly frequency
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">samp_sim(
+  dat_in,
+  unit = "month",
+  irregular = TRUE,
+  missper = 0,
+  blck = 1,
+  blckper = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input <code>data.frame</code> that is returned from <code>lnres_sim</code> or <code>all_sims</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unit</code></td>
+<td>
+<p>chr string indicating sampling unit, must be year, quarter, month, week, or yday for equivalent lubridate function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>irregular</code></td>
+<td>
+<p>logical indicating if monthly sampling is done randomly within each <code>unit</code>, otherwise the first value is returned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>missper</code></td>
+<td>
+<p>numeric from 0-1 indicating percentage of observations used for test dataset</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blck</code></td>
+<td>
+<p>numeric indicating block size for resampling test dataset, see details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blckper</code></td>
+<td>
+<p>logical indicating if the value passed to <code>blck</code> is a proportion of <code>missper</code>, i.e., blocks are to be sized as a percentage of the total size of the missing data</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is intended for sampling a simulated daily time series of water quality that is returned by <code>lnres_sim</code> or <code>all_sims</code>.
+</p>
+<p>The <code>missper</code> argument is used to create a test dataset as a proportion of all observations in the sub-sampled output dataset.  The test dataset is created with random block sampling appropriate for time series.  Block sampling of the output dataset occurs until the number of unique observations is equal to the percentage defined by <code>missper</code>.  Overlap of blocks are not doubly considered towards the observation counts to satisfy <code>missper</code>, i.e., sets of continuous observations longer than <code>blck</code> can be returned because of sampling overlap.  Setting <code>blck = 1</code> and <code>blockper = FALSE</code> is completely random sampling for missing data.  Values for <code>blck</code> must be 1 or greater if <code>blockper = FALSE</code> and 1 or less if <code>blckper = T</code>.  If <code>blck = 1</code> and <code>blckper = T</code>, the missing data will be one continuous block.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Original data frame with rows subset based on number of desired monthly samples.  If <code>missper &gt; 0</code>, a list is returned where the first element is the index values for the test dataset and the second is the complete subsampled dataset.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>lnres_sim</code>, <code>all_sims</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## example data
+data(daydat)
+
+## simulate
+tosamp &lt;- all_sims(daydat)
+
+## sample
+samp_sim(tosamp)
+
+## sample and create test dataset
+# test dataset is 30% size of monthly subsample using block sampling with size = 4
+samp_sim(tosamp, missper = 0.3, blck = 4)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

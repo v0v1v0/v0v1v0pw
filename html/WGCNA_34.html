@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>blockSize</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Attempt to calculate an appropriate block size to maximize efficiency of block-wise calcualtions.
+</h2>
+
+<h3>Description</h3>
+
+<p>The function uses a rather primitive way to estimate available memory and use it to suggest a block size
+appropriate for the many block-by-block calculations in this package. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">blockSize(
+   matrixSize, 
+   rectangularBlocks = TRUE, 
+   maxMemoryAllocation = NULL, 
+   overheadFactor = 3);
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>matrixSize</code></td>
+<td>
+<p>the relevant dimension (usually the number of columns) 
+of the matrix that is to be operated on block-by-block.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rectangularBlocks</code></td>
+<td>
+<p>logical indicating whether the bocks of data are rectangular (of size
+<code>blockSize</code> times <code>matrixSize</code>) or square (of size <code>blockSize</code> times <code>blockSize</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxMemoryAllocation</code></td>
+<td>
+<p>maximum desired memory allocation, in bytes. Should not exceed 2GB or total
+installed RAM (whichever is greater) on 32-bit systems, while on 64-bit systems it should not exceed the
+total installed RAM. If not supplied, the available memory will be estimated internally.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overheadFactor</code></td>
+<td>
+<p>overhead factor for the memory use by R. Recommended values are between 2 (for
+simple calculations) and 4 or more for complicated calculations where intermediate results (for which R must
+also allocate memory) take up a lot of space.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Multiple functions within the WGCNA package use a divide-and-conquer (also known as block-by-block, or
+block-wise) approach to handling large data sets.
+This function is meant to assist in choosing a suitable block size, given the size of the data and the
+available memory.
+</p>
+<p>If the entire expected result fits
+into the allowed memory (after taking into account the expected overhead), the returned block size will
+equal the input <code>matrixSize</code>.
+</p>
+<p>The internal estimation of available memory works by returning the size of largest successfully allocated
+block of memory. It is hoped that this will lead to reasonable results but some operating systems may
+actually allocate more than is available. It is therefore preferable that the user specifies the available
+memory by hand.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A single integer giving the suggested block size, or <code>matrixSize</code> if the entire calculation is
+expected to fit into memory in one piece.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Suitable blocks for handling 30,000 genes within 2GB (=2^31 bytes) of memory
+blockSize(30000, rectangularBlocks = TRUE, maxMemoryAllocation = 2^31)
+</code></pre>
+
+
+</div>

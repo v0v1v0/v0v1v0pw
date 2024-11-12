@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Entropy</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generalized entropy index</h2>
+
+<h3>Description</h3>
+
+<p>Computes generalized entropy index of a given variable taking into account weights.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Entropy(X, W = rep(1, length(X)), power = 0.5, zeroes = "include")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>is a data vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p>is a vector of weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>is a entropy parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zeroes</code></td>
+<td>
+<p>defines what to do with zeroes in the data vector. Possible options are "remove" and "include". See Details for more.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Entropy coefficient with respect to parameter <code class="reqn">\alpha</code> is equal to Theil_L(X,W)  whenever <code class="reqn">\alpha=0</code>,
+is equal to Theil_T(X,W) whenever <code class="reqn">\alpha=1</code>, and whenever <code class="reqn">\alpha \in (0,1)</code> we have
+</p>
+<p style="text-align: center;"><code class="reqn">GE(\alpha) = \frac{1}{\alpha(\alpha-1)W}\sum_{i=1}^{n}w_{i}\left(\left(\frac{x_{i}}{\mu}\right)^\alpha-1\right)</code>
+</p>
+
+<p>where <code class="reqn">W</code> is a sum of weights and <code class="reqn">\mu</code> is the arithmetic mean of <code class="reqn">x_{1},...,x_{n}</code>.
+Entropy coefficient is not well-defined for data vector with zero values whenever parameter is zero or one.
+In such case, entropy index coincides with the definition of Theil L index and Theil T index, respectively, and entropy index is calculated with corresponding Theil function.
+Theil L always removes zeroes. Theil T enables two ways to deal with zeroes by parameter zeroes.
+Option "remove" discard these X's and corresponding weights. Works for power&gt;0.
+Option "include" puts <code class="reqn">0\log{0=}0</code> due to limiting property of <code class="reqn">p\log{p}</code> in zero preserving zero value in dataset. It is valid only for Theil T index, that is power=0.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The value of generalized entropy index
+</p>
+
+
+<h3>References</h3>
+
+<p>Shorrocks A. F.: (1980) The Class of Additively Decomposable Inequality Measures. Econometrica
+</p>
+<p>Pielou E.C.: (1966) The measurement of diversity in different types of biological collections. Journal of Theoretical Biology
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Compare weighted and unweighted result
+X=1:10
+W=1:10
+Entropy(X)
+Entropy(X,W)
+
+data(Tourism)
+# Generalized entropy index for Total expenditure with sample weights
+X=Tourism$Total_expenditure
+W=Tourism$Sample_weight
+Entropy(X,W)
+
+
+</code></pre>
+
+
+</div>

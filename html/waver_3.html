@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wave_energy</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate the wave energy flux</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the wave energy flux (power per meter of wave crest) given
+either (1) the significant wave height and peak period or (2) the wind speed
+at 10m, fetch length and (optionally) water depth.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wave_energy(height = NA, period = NA, wind = NA, fetch = NA, depth = NA)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>height</code></td>
+<td>
+<p>Significant wave height, in meters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>period</code></td>
+<td>
+<p>Peak wave period, in seconds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wind</code></td>
+<td>
+<p>Wind speed at 10m, in m/s.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fetch</code></td>
+<td>
+<p>Fetch length, in meters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>depth</code></td>
+<td>
+<p>Water depth, in meters.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Given the significant height (<em>H</em>) and peak period (<em>T</em>),
+the wave energy flux is calculated as: </p>
+<p style="text-align: center;"><code class="reqn">\frac{\rho g^2}{64 \pi} H^2 T</code>
+</p>
+<p>,
+where <code class="reqn">\rho</code> is the density of water (998 kg/m^3) and <em>g</em> is the
+acceleration of gravity (9.81 m/s^2).
+</p>
+<p>If both <code>height</code> and <code>period</code> are missing, they are estimated from
+on the wind speed at 10m (<code class="reqn">U_{10}</code>) and the fetch length (<em>F</em>) as
+described in Resio et al. (2003):
+</p>
+<p style="text-align: center;"><code class="reqn">{U_f}^2 = 0.001 (1.1 + 0.035 U_{10}) {U_{10}}^2</code>
+</p>
+<p> (friction velocity)
+</p>
+<p style="text-align: center;"><code class="reqn">\frac{g H}{{U_f}^2} = \min (0.0413 \sqrt{\frac{g F}{{U_f}^2}}, 211.5)</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">\frac{g T}{U_f} = \min (0.651 (\frac{g F}{{U_f}^2})^{1/3}, 239.8)</code>
+</p>
+
+<p>If the depth (<em>d</em>) is specified, it imposes a limit on the peak period:
+</p>
+<p style="text-align: center;"><code class="reqn">T_{max} = 9.78 \sqrt{\frac{d}{g}}</code>
+</p>
+<p> (in seconds)
+</p>
+
+
+<h3>Value</h3>
+
+<p>Wave energy flux, in kW/m.
+</p>
+
+
+<h3>References</h3>
+
+<p>Resio, D.T., Bratos, S.M., and Thompson, E.F. (2003). Meteorology
+and Wave Climate, Chapter II-2. Coastal Engineering Manual.
+US Army Corps of Engineers, Washington DC, 72pp.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"> # With height and period arguments
+ wave_energy(8, 1)
+
+ # With wind, fetch and depth arguments (must be named)
+ wave_energy(wind = 12, fetch = 15000, depth = 10)
+</code></pre>
+
+
+</div>

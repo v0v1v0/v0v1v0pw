@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>tobias_parser</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>TOBIAS TFBS table to clarion parser</h2>
+
+<h3>Description</h3>
+
+<p>Click <a href="https://github.molgen.mpg.de/loosolab/TOBIAS">here</a> for more information about TOBIAS.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">tobias_parser(
+  input,
+  output,
+  filter_columns = NULL,
+  filter_pattern = NULL,
+  config = system.file("extdata", "tobias_config.json", package = "wilson"),
+  omit_NA = FALSE,
+  condition_names = NULL,
+  condition_pattern = "_bound$",
+  in_field_delimiter = ",",
+  dec = ".",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>input</code></td>
+<td>
+<p>Path to input table</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output</code></td>
+<td>
+<p>Output path.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter_columns</code></td>
+<td>
+<p>Either a vector of columnnames or a file containing one columnname per row.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter_pattern</code></td>
+<td>
+<p>Keep columns matching the given pattern. Uses parameter filter_columns for matching if set. In the case of no matches a warning will be issued and all columns will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>config</code></td>
+<td>
+<p>Json file containing metadata information for all columns. Will use first occurence for duplicate column names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>omit_NA</code></td>
+<td>
+<p>Logical whether all rows containing NA should be removed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>condition_names</code></td>
+<td>
+<p>Vector of condition names. Default = NULL. Used to classify columns not provided in config.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>condition_pattern</code></td>
+<td>
+<p>Used to identify condition names by matching and removing given pattern with <code>grep</code>. Ignored when condition_names is set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>in_field_delimiter</code></td>
+<td>
+<p>Delimiter for multi value fields. Default = ','.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dec</code></td>
+<td>
+<p>Decimal separator. Used in file reading and writing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Used as header information.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>During conversion the parser will try to use the given config (if provided) to create the <a href="https://github.molgen.mpg.de/loosolab/wilson-apps/wiki/Local-usage:Input-format/">Clarion</a> metadata. In the case of insufficient config information it will try to approximate by referencing condition names issuing warnings in the process.
+</p>
+<p>As the format requires an unique id the parser will create one if necessary.
+</p>
+<p>Factor grouping (metadata factor columns) is currently not implemented!
+</p>
+
+
+</div>

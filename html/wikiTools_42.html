@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>w_SearchByInstanceof</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get entities which are instance of a Wikidata entity</h2>
+
+<h3>Description</h3>
+
+<p>Get all Wikidata entities which are instance of one o more Wikidata entities
+like films, cities, etc. If parameter <code>langsorder</code>=”, then no labels or
+descriptions of the entities are returned, otherwise the function returns
+them in the language order indicated in <code>langsorder</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">w_SearchByInstanceof(instanceof, langsorder = "", nlimit = 2500, debug = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>instanceof</code></td>
+<td>
+<p>Wikidata entity of which the entities searched for are an
+example or member of it (class). For example, if instanceof="Q229390" return
+Wikidata entities of class Q229390 (3D films). More than one entities can be
+included in the <code>instanceof</code> parameter, with '|' or '&amp;' separator:
+</p>
+
+<ul>
+<li>
+<p> if '|' (instanceof='Q229390|Q202866') then the OR operator is used.
+</p>
+</li>
+<li>
+<p> if '&amp;' (instanceof='Q229390|Q202866') then the AND operator is used.
+Note that '|' and '&amp;' cannot be present at the same time.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>langsorder</code></td>
+<td>
+<p>Order of languages in which the information will be
+returned, separated with '|'. If no information is given in the first
+language, next is used. If langsorder==”, then labels or descriptions are
+not returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlimit</code></td>
+<td>
+<p>If the number of entities in the database or authorities'
+catalog exceeds this number, then query are made in chunks. The value can
+increase if langorder=”. Please, reduce the default value if error is raised.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>For debugging purposes (default FALSE). If debug='info'
+information about chunked queries is shown. If debug='query' also the query
+launched is shown. If debug='count' the function only returns the number of
+entities.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data-frame. Index of the data-frame is also set to the list of entities found.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Angel Zazo, Department of Computer Science and Automatics, University of Salamanca
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+w &lt;- w_SearchByInstanceof('Q229390|Q25110269', langsorder = 'es|en')
+w &lt;- w_SearchByInstanceof('Q229390&amp;Q25110269', langsorder = 'es|en')
+
+## End(Not run)
+</code></pre>
+
+
+</div>

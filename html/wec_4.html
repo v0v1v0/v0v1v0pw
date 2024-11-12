@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wec.interact</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Function to create an interaction between two variables based on weighted effect coding.</h2>
+
+<h3>Description</h3>
+
+<p>This function facilitates the estimation of an interaction between two factor variables that are based on weighted effect coding. To that end, it creates a third variable that, together with the two original factor variables, forms the complete interaction. In interaction models, weighted effect coding displays the extra effect on top of the main effects found in a model without the interaction effect(s).</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wec.interact(x1, x2, output.contrasts)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x1</code></td>
+<td>
+<p>Factor variable (with contrasts based on weighted effect coding)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x2</code></td>
+<td>
+<p>Factor variable (with contrasts based on weighted effect coding) <em>or</em> interval or ratio variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>output.contrasts</code></td>
+<td>
+<p>Specifies whether the contrast matrix of the interaction should be returned. Defaults to FALSE, returning the model matrix. Option currently only implemented for interactions between one weighted effect coded and one interval or ratio variable.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a model matrix or contrast matrix for the interaction terms of (a.) two weighted effect coded variables, or (b.) one weighted effect coded and one interval or ratio variable.</p>
+
+
+<h3>Note</h3>
+
+<p>It should be noted that the procedure of applying weighted effect coding with interactions differs from the convential way to apply contrasts in R. This is becasue the contrast matrix of the interaction differs from the multiplication of the contrast matrix/matrices of the interacted variables.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Rense Nieuwenhuis, Manfred te Grotenhuis, Ben Pelzer, Alexander Schmidt, Ruben Konig, Rob Eisinga</p>
+
+
+<h3>References</h3>
+
+<p>Grotenhuis, M. Te, Pelzer, B., Schmidt-Catran, A., Nieuwenhuis, R., Konig, R., and Eisinga, R. (2016). When size matters: advantages of weighted effect coding in observational studies. <em>International Journal of Public Health</em>, online access:http://link.springer.com/article/10.1007/s00038-016-0901-1
+</p>
+<p>Grotenhuis, M. Te, Pelzer, B., Schmidt-Catran, A., Nieuwenhuis, R., Konig, R., and Eisinga, R. (2016). Weighted effect coded interactions: a novel moderation regression analysis for observational studies. <em>International Journal of Public Health</em>, online access: http://link.springer.com/article/10.1007/s00038-016-0902-0
+</p>
+<p>Sweeney, Robert E. and Ulveling, Edwin F. (1972) A Transformation for Simplifying the Interpretation of Coefficients of Binary Variables in Regression Analysis. <em>The American Statistician</em>, 26(5): 30-32.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>contr.wec</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(BMI)
+
+# Interaction two weighted effect coded categorical variables
+BMI$childless.wec.yes &lt;- BMI$childless.wec.no &lt;- BMI$childless
+contrasts(BMI$childless.wec.yes) &lt;- contr.wec(BMI$childless, omitted="yes")
+contrasts(BMI$childless.wec.no) &lt;- contr.wec(BMI$childless, omitted="no")
+
+BMI$age.wec.young &lt;- BMI$age.wec.older &lt;- BMI$age
+contrasts(BMI$age.wec.young) &lt;- contr.wec(BMI$age_categorical, omitted="Young (18-30)")
+contrasts(BMI$age.wec.older) &lt;- contr.wec(BMI$age_categorical, omitted="Older (60-70)")
+
+model3a &lt;- lm(BMI ~ childless.wec.yes + age.wec.young, data=BMI)
+model3b &lt;- lm(BMI ~ childless.wec.no + age.wec.older, data=BMI)
+summary(model3a)
+summary(model3b)
+
+
+# Interaction
+BMI$interact_c &lt;- wec.interact(BMI$childless.wec.yes, BMI$age.wec.young)
+BMI$interact_d &lt;- wec.interact(BMI$childless.wec.yes, BMI$age.wec.older)
+BMI$interact_e &lt;- wec.interact(BMI$childless.wec.no, BMI$age.wec.young)
+BMI$interact_f &lt;- wec.interact(BMI$childless.wec.no, BMI$age.wec.older)
+
+model3c &lt;- lm(BMI ~ childless.wec.yes + age.wec.young + interact_c, data=BMI)
+model3d &lt;- lm(BMI ~ childless.wec.yes + age.wec.older + interact_d, data=BMI)
+model3e &lt;- lm(BMI ~ childless.wec.no + age.wec.young + interact_e, data=BMI)
+model3f &lt;- lm(BMI ~ childless.wec.no + age.wec.older + interact_f, data=BMI)
+
+summary(model3c)
+summary(model3d)
+summary(model3e)
+summary(model3f)
+
+
+# Interaction weighted effect coded categorical variable and ratio/interval variable
+
+data(PUMS)
+
+
+PUMS$race.wec &lt;- factor(PUMS$race)
+contrasts(PUMS$race.wec) &lt;- contr.wec(PUMS$race.wec, "White")
+contrasts(PUMS$race.wec)
+
+m.wec &lt;- lm(wage ~ race.wec, data=PUMS)
+summary(m.wec)
+
+PUMS$race.educint &lt;- wec.interact(PUMS$race.wec, PUMS$education.int)
+m.wec.educ &lt;- lm(wage ~ race.wec + education.int + race.educint, data=PUMS)
+summary(m.wec.educ)
+
+</code></pre>
+
+
+</div>

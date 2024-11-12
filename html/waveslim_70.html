@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>modwt.2d</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Two-Dimensional Maximal Overlap Discrete Wavelet Transform</h2>
+
+<h3>Description</h3>
+
+<p>Performs a separable two-dimensional maximal overlap discrete wavelet
+transform (MODWT) on a matrix of arbitrary dimensions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">modwt.2d(x, wf, J = 4, boundary = "periodic")
+
+imodwt.2d(y)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>input matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wf</code></td>
+<td>
+<p>name of the wavelet filter to use in the decomposition</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>depth of the decomposition</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>only <code>"periodic"</code> is currently implemented</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>an object of class <code>dwt.2d</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See references.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List structure containing the <code class="reqn">3J+1</code> sub-matrices from the
+decomposition.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>B. Whitcher
+</p>
+
+
+<h3>References</h3>
+
+<p>Liang, J. and T. W. Parks (1994) A two-dimensional translation
+invariant wavelet representation and its applications, <em>Proceedings
+ICIP-94</em>, Vol. 1, 66-70.
+</p>
+<p>Liang, J. and T. W. Parks (1994) Image coding using translation invariant
+wavelet transforms with symmetric extensions, <em>IEEE Transactions on
+Image Processing</em>, <b>7</b>, No. 5, 762-769.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dwt.2d</code>, <code>shift.2d</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Xbox image
+data(xbox)
+xbox.modwt &lt;- modwt.2d(xbox, "haar", 2)
+## Level 1 decomposition
+par(mfrow=c(2,2), pty="s")
+image(xbox.modwt$LH1, col=rainbow(128), axes=FALSE, main="LH1")
+image(xbox.modwt$HH1, col=rainbow(128), axes=FALSE, main="HH1")
+frame()
+image(xbox.modwt$HL1, col=rainbow(128), axes=FALSE, main="HL1")
+## Level 2 decomposition
+par(mfrow=c(2,2), pty="s")
+image(xbox.modwt$LH2, col=rainbow(128), axes=FALSE, main="LH2")
+image(xbox.modwt$HH2, col=rainbow(128), axes=FALSE, main="HH2")
+image(xbox.modwt$LL2, col=rainbow(128), axes=FALSE, main="LL2")
+image(xbox.modwt$HL2, col=rainbow(128), axes=FALSE, main="HL2")
+sum((xbox - imodwt.2d(xbox.modwt))^2)
+
+data(dau)
+par(mfrow=c(1,1), pty="s")
+image(dau, col=rainbow(128), axes=FALSE, main="Ingrid Daubechies")
+sum(dau^2)
+dau.modwt &lt;- modwt.2d(dau, "d4", 2)
+## Level 1 decomposition
+par(mfrow=c(2,2), pty="s")
+image(dau.modwt$LH1, col=rainbow(128), axes=FALSE, main="LH1")
+image(dau.modwt$HH1, col=rainbow(128), axes=FALSE, main="HH1")
+frame()
+image(dau.modwt$HL1, col=rainbow(128), axes=FALSE, main="HL1")
+## Level 2 decomposition
+par(mfrow=c(2,2), pty="s")
+image(dau.modwt$LH2, col=rainbow(128), axes=FALSE, main="LH2")
+image(dau.modwt$HH2, col=rainbow(128), axes=FALSE, main="HH2")
+image(dau.modwt$LL2, col=rainbow(128), axes=FALSE, main="LL2")
+image(dau.modwt$HL2, col=rainbow(128), axes=FALSE, main="HL2")
+sum((dau - imodwt.2d(dau.modwt))^2)
+
+</code></pre>
+
+
+</div>

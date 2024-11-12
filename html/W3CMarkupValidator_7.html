@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>w3c_markup_validate_db</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Collections of W3C Markup Validation Results</h2>
+
+<h3>Description</h3>
+
+<p>Create and manipulate collections of W3C markup validation results.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">w3c_markup_validate_db(x, names = NULL)
+
+w3c_markup_validate_files(files, baseurl = w3c_markup_validate_baseurl(),
+                          opts = list())                    
+w3c_markup_validate_uris(uris, baseurl = w3c_markup_validate_baseurl(),
+                         opts = list())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a list of <code>w3c_markup_validate</code> results.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>names</code></td>
+<td>
+<p>a character vector of names for the elements in
+<code>x</code>, or <code>NULL</code> (default), indicating to use the names of
+<code>x</code> or to auto-generate names if these are <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>a character vector giving the names of files to validate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uris</code></td>
+<td>
+<p>a character vector giving <abbr><span class="acronym">URI</span></abbr>s to validate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>baseurl</code></td>
+<td>
+<p>a character string giving the <abbr><span class="acronym">URL</span></abbr> of the W3C Markup
+Validation service to employ.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opts</code></td>
+<td>
+<p>see <code>w3c_markup_validate</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>w3c_markup_validate_db()</code> creates a db (data base) of
+<code>w3c_markup_validate</code> results as a list of these results
+with class <code>"w3c_markup_validate_db"</code>.  This class has methods
+for <code>print</code> and <code>c</code> for compactly summarizing
+and combining results, an <code>inspect</code> method for inspecting
+details, and an <code>as.data.frame</code> method for collapsing the
+errors and warnings into a “flat” data frame useful for further
+analyses.
+</p>
+<p><code>w3c_markup_validate_files()</code> and
+<code>w3c_markup_validate_uris()</code> validate the markup in the given
+files or URIs, with results combined into such results db objects.
+For files or URIs for which validation failed (which can happen for
+example when these contain characters invalid in SGML), the
+corresponding error condition objects are gathered into the
+<code>"failures"</code> attribute of the results db returned.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>w3c_markup_validate_baseurl</code> for getting and setting the
+<abbr><span class="acronym">URL</span></abbr> of the validation service.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Test files provided with this package:
+dir &lt;- system.file("examples", package = "W3CMarkupValidator")
+files &lt;- Sys.glob(file.path(dir, "*.html"))
+if(!grepl("^http://validator.w3.org",
+          w3c_markup_validate_baseurl())) {
+    ## Validate.
+    results &lt;- w3c_markup_validate_files(files)
+    results
+    ## In case of failures, inspect the error messages:
+    lapply(attr(results, "failures"), conditionMessage)
+    ## Inspect validation results:
+    inspect(results)
+    inspect(results, full = TRUE)
+    ## Turn results into a data frame:
+    df &lt;- as.data.frame(results)
+    ## Tabulate error messages:
+    table(substring(df$message, 1L, 60L))
+    ## Inspect a particular set of error messages:
+    df[df$message == "element \"font\" undefined", ]
+    ## (Note that explanations are in HTML ...)
+    ## Conveniently view the full records (modulo HTML markup):
+    write.dcf(df)
+}
+</code></pre>
+
+
+</div>

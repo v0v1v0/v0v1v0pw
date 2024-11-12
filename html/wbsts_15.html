@@ -1,0 +1,75 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>tau.fun</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Universal thresholds
+</h2>
+
+<h3>Description</h3>
+
+<p>The function returns <code class="reqn">C^{(i)}</code>. <code class="reqn">C^{(i)}</code> tends to increase as we move to coarser scales due to
+the increasing dependence in the wavelet periodogram sequences. Since the method applies to non-dyadic structures it is reasonable to propose a general rule that will apply in most cases. To accomplish this the <code class="reqn">C^{(i)}</code> are obtained for <code class="reqn">T=50,100,...,6000</code>. Then, for each scale <code class="reqn">i</code> the following regression is fitted 
+</p>
+<p><code class="reqn">C^{(i)}=c_0^{(i)}+c_1^{(i)} T+ c_2^{(i)} \frac{1}{T} + c_3^{(i)} T^2 +\varepsilon.</code>
+</p>
+<p>The adjusted <code class="reqn">R^2</code> was above 90% for all the scales. Having estimated the values for <code class="reqn">\hat{c}_0^{(i)}, \hat{c}_1^{(i)}, \hat{c}_2^{(i)}, \hat{c}_3^{(i)}</code> the values can be retrieved for any sample size <code class="reqn">T</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">tau.fun(y)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>A time series
+</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Thresholds for every wavelet scale
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>K. Korkas and P. Fryzlewicz
+</p>
+
+
+<h3>References</h3>
+
+<p>P. Fryzlewicz (2014), Wild Binary Segmentation for multiple change-point detection. Annals of
+Statistics, 42, 2243-2281. (http://stats.lse.ac.uk/fryzlewicz/wbs/wbs.pdf)
+</p>
+<p>K. Korkas and P. Fryzlewicz (2017), Multiple change-point detection for non-stationary time series using Wild Binary Segmentation. Statistica Sinica, 27, 287-311. (http://stats.lse.ac.uk/fryzlewicz/WBS_LSW/WBS_LSW.pdf)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"> 
+##not run##
+#cps=c(400,470)
+#set.seed(101)
+#y=sim.pw.ar(N =2000,sd_u = 1,b.slope=c(0.4,-0.6,0.5),br.loc=cps)[[2]]
+#tau.fun(y) is the default value for C_i
+##Binary segmentation
+#wbs.lsw(y,M=1)$cp.aft
+##Wild binary segmentation
+#wbs.lsw(y,M=3500)$cp.aft
+
+</code></pre>
+
+
+</div>

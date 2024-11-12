@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>tpwd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Tensor product 2D wavelet transform</h2>
+
+<h3>Description</h3>
+
+<p>Performs the tensor product 2D wavelet transform. This is a
+related, but different, 2D wavelet transform compared to
+<code>imwd</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">tpwd(image, filter.number = 10, family = "DaubLeAsymm", verbose = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>image</code></td>
+<td>
+<p>The image  you wish to subject to the tensor product WT</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.number</code></td>
+<td>
+<p>The smoothness of wavelet, see <code>filter.select</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>The wavelet family you wish to use</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Whether or not you wish to print out informative messages</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The transform works by first taking the regular 1D wavelet
+transform across all columns in the image and storing these coefficients
+line by line back into the image. Then to this new image we apply
+the regular 1D wavelet transform across all rows in the image.
+</p>
+<p>Hence, the top-left coefficient is the smoothed version both horizontally
+and vertically. The left-most row contains the image smoothed horiztonally,
+but then detail picked up amongst the horizontal smooths vertically.
+</p>
+<p>Suggested by Rainer von Sachs.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>tpwd</code></td>
+<td>
+<p>A matrix with the same dimensions as the input <code>image</code>,
+but containing the tensor product wavelet transform coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.number</code></td>
+<td>
+<p>The filter number used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>The wavelet family used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>The type of transform used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bc</code></td>
+<td>
+<p>The boundary conditions used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date</code></td>
+<td>
+<p>When the transform occurred</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>imwd</code>,<code>tpwr</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(lennon)
+ltpwd &lt;- tpwd(lennon)
+## Not run: image(log(abs(ltpwd$tpwd)), col=grey(seq(from=0, to=1, length=100)))
+</code></pre>
+
+
+</div>

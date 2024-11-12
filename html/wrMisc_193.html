@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>nonredDataFrame</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Filter for unique elements</h2>
+
+<h3>Description</h3>
+
+<p><code>nonredDataFrame</code>  filters 'x' (list of char-vectors or char-vector) for elements unique (to 'ref' or if NULL to all 'x') and of character length. 
+May be used for different 'accession' for same pep sequence (same 'peptide_id').
+Note : made for treating data.frames, may be slightly slower than matrix equivalent
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">nonredDataFrame(
+  dataFr,
+  useCol = c(pepID = "peptide_id", protID = "accession", seq = "sequence", mod =
+    "modifications"),
+  sepCollapse = "//",
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dataFr</code></td>
+<td>
+<p>(data.frame) main inpput</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useCol</code></td>
+<td>
+<p>(character,length=2) comlumn names of 'dataFr' to use : 1st value designates where redundant values should be gathered; 2nd value designes column of which information should be concatenated</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sepCollapse</code></td>
+<td>
+<p>(character) conatenation symbol</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a data.frame of filtered (fewer lines) with additional 2 columns 'nSamePep' (number of redundant entries) and 'concID' (concatenated content)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>combineRedBasedOnCol</code>, <code>correctToUnique</code>, <code>unique</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">df1 &lt;- data.frame(cbind(xA=letters[1:5], xB=c("h","h","f","e","f"), xC=LETTERS[1:5])) 
+nonredDataFrame(df1, useCol=c("xB","xC")) 
+</code></pre>
+
+
+</div>

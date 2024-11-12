@@ -1,0 +1,162 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WPSA</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>p-Wasserstein distance projections using simulated annealing</h2>
+
+<h3>Description</h3>
+
+<p>p-Wasserstein distance projections using simulated annealing
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WPSA(
+  X,
+  Y = NULL,
+  theta,
+  power = 2,
+  force = NULL,
+  model.size = 3,
+  nvars = NULL,
+  maxit = 1,
+  temps = 1000,
+  max.time = 3600,
+  const = NULL,
+  proposal = proposal.fun,
+  options = list(method = c("selection.variable", "scale", "projection"),
+    transport.method = transport_options(), energy.distribution = "boltzman",
+    cooling.schedule = "Geman-Geman", proposal.method = "covariance", epsilon = 0.05,
+    OTmaxit = 100),
+  display.progress = FALSE,
+  parallel = NULL,
+  calc.theta = TRUE,
+  xtx = NULL,
+  xty = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Covariate vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>Predictions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theta</code></td>
+<td>
+<p>Optional matrix of parameters for generating predictions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>Power of the Wasserstein distance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>force</code></td>
+<td>
+<p>Any covariates to force into the model?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model.size</code></td>
+<td>
+<p>Maximum number of coefficients</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nvars</code></td>
+<td>
+<p>The number of variables to explore. Should be an integer vector of model sizes. Default is NULL which will explore all models from 1 to <code>model.size</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxit</code></td>
+<td>
+<p>Maximum number of iterations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>temps</code></td>
+<td>
+<p>Number of temperatures</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.time</code></td>
+<td>
+<p>Maximum time in seconds to run</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>const</code></td>
+<td>
+<p>Maximum value for simulated annealing distance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>proposal</code></td>
+<td>
+<p>Proposal function. There is a default method but can provide your own with parameters <code>xty</code>, <code>cur</code>, <code>idx</code>, <code>force</code>, <code>d</code>, <code>method</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>options</code></td>
+<td>
+<p>Options for simulated annealing</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>display.progress</code></td>
+<td>
+<p>Whether to display solver progress. TRUE or FALSE. Default is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>A <code>foreach::foreach()</code> backend</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>calc.theta</code></td>
+<td>
+<p>Should the model save the linear coefficients? TRUE or FALSE. Default is TRUE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xtx</code></td>
+<td>
+<p>precomputed crossproduct <code>crossprod(X,X)</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xty</code></td>
+<td>
+<p>precomputed <code>crossprod(X, Y)</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class <code>WpProj</code>
+</p>
+
+
+</div>

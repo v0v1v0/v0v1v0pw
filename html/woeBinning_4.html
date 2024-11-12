@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>woe.binning.plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Visualization of Binning</h2>
+
+<h3>Description</h3>
+
+<p><code>woe.binning.plot</code> visualizes the binning solution generated and saved via the <code>woe.binning</code>
+or <code>woe.tree.binning</code> function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">woe.binning.plot(binning, multiple.plots, plot.range)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>binning</code></td>
+<td>
+<p>Binning information generated from the <code>woe.binning</code> or <code>woe.tree.binning</code> function.
+Contains names of the input predictor variables and the
+corresponding binning, WOE and IV information, which is used to
+generate the WOE and IV plots.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multiple.plots</code></td>
+<td>
+<p>In case the binning solution contains several predictor variables they will
+be visualized via multiple plots (max. four WOE plots per graph window).
+Use <em>multiple.plots=FALSE</em> to avoid this and to display single plots in
+separate windows.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.range</code></td>
+<td>
+<p>Range of variables that should be plotted in quotes. For example “1:10”
+will generate WOE plots and one IV plot for the ten variables with the
+highest IV values, “11:20” for the next ten variables and so on.
+Just omit this parameter to visualize all binned variables (default).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For each predictor variable <code>woe.binning.plot</code> generates a weight of evidence
+(WOE) plot. In case of multiple predictors an additional plot with variables ranked
+via the information value (IV) will be displayed.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Load German credit data
+data(germancredit)
+df &lt;- germancredit
+
+# Bin all variables of the data frame (apart from the target variable)
+# with default parameter settings
+binning &lt;- woe.binning(df, 'creditability', df)
+
+# Plot all binned variables as multiple plots
+woe.binning.plot(binning)
+
+# Plot only the first four binned variables with the highest IV value
+# as multiple plots
+woe.binning.plot(binning, plot.range='1:4')
+
+# Plot the binned variables in single plots
+woe.binning.plot(binning, multiple.plots=FALSE)
+
+</code></pre>
+
+
+</div>

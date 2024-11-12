@@ -1,0 +1,150 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>glm_weightit-methods</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Methods for <code>glm_weightit()</code> objects</h2>
+
+<h3>Description</h3>
+
+<p>This page documents methods for objects returned by <code>glm_weightit()</code>, <code>lm_weightit()</code>, <code>ordinal_weightit()</code>, <code>multinom_weightit()</code>, and <code>coxph_weightit()</code>. <code>predict()</code> methods are described at <code>predict.glm_weightit()</code> and <code>anova()</code> methods are described at <code>anova.glm_weightit()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'glm_weightit'
+summary(object, ci = FALSE, level = 0.95, transform = NULL, vcov = NULL, ...)
+
+## S3 method for class 'multinom_weightit'
+summary(object, ci = FALSE, level = 0.95, transform = NULL, vcov = NULL, ...)
+
+## S3 method for class 'ordinal_weightit'
+summary(
+  object,
+  ci = FALSE,
+  level = 0.95,
+  transform = NULL,
+  thresholds = TRUE,
+  vcov = NULL,
+  ...
+)
+
+## S3 method for class 'coxph_weightit'
+summary(object, ci = FALSE, level = 0.95, transform = NULL, vcov = NULL, ...)
+
+## S3 method for class 'glm_weightit'
+print(x, digits = max(3L, getOption("digits") - 3L), ...)
+
+## S3 method for class 'glm_weightit'
+vcov(object, complete = TRUE, vcov = NULL, ...)
+
+## S3 method for class 'glm_weightit'
+update(object, formula. = NULL, ..., evaluate = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object, x</code></td>
+<td>
+<p>an output from one of the above modeling functions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci</code></td>
+<td>
+<p><code>logical</code>; whether to display Wald confidence intervals for estimated coefficients. Default is <code>FALSE</code>. (Note: this argument can also be supplied as <code>conf.int</code>.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>when <code>ci = TRUE</code>, the desired confidence level.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transform</code></td>
+<td>
+<p>the function used to transform the coefficients, e.g., <code>exp</code> (which can also be supplied as a string, e.g., <code>"exp"</code>); passed to <code>match.fun()</code> before being used on the coefficients. When <code>ci = TRUE</code>, this is also applied to the confidence interval bounds. If specified, the standard error will be omitted from the output. Default is no transformation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vcov</code></td>
+<td>
+<p>either a string indicating the method used to compute the variance of the estimated parameters for <code>object</code>, a function used to extract the variance, or the variance matrix itself. Default is to use the variance matrix already present in <code>object</code>. If a string or function, arguments passed to <code>...</code> are supplied to the method or function. (Note: for <code>vcov()</code>, can also be supplied as <code>type</code>.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>for <code>vcov()</code> or <code>summary()</code> or <code>confint()</code> with <code>vcov</code> supplied, other arguments used to compute the variance matrix depending on the method supplied to <code>vcov</code>, e.g., <code>cluster</code>, <code>R</code>, or <code>fwb.args</code>. For <code>update()</code>, additional arguments to the call or arguments with changed values. See <code>glm_weightit()</code> for details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thresholds</code></td>
+<td>
+<p><code>logical</code>; whether to include thresholds in the <code>summary()</code> output for <code>ordinal_weightit</code> objects. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>the number of <em>significant</em> digits to be
+passed to <code>format(coef(x), .)</code> when
+<code>print()</code>ing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>complete</code></td>
+<td>
+<p><code>logical</code>; whether the full variance-covariance matrix should be returned also in case of an over-determined system where some coefficients are undefined and <code>coef(.)</code> contains <code>NA</code>s correspondingly. When <code>complete = TRUE</code>, <code>vcov()</code> is compatible with <code>coef()</code> also in this singular case.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula.</code></td>
+<td>
+<p>changes to the model formula, passed to the <code>new</code> argument of <code>update.formula()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>evaluate</code></td>
+<td>
+<p>whether to evaluate the call (<code>TRUE</code>, the default) or just return it.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>vcov()</code> by default extracts the parameter covariance matrix already computed by the fitting function, and <code>summary()</code> and <code>confint()</code> uses this covariance matrix to compute standard errors and Wald confidence intervals (internally calling <code>confint.lm()</code>), respectively. Supplying arguments to <code>vcov</code> or <code>...</code> will compute a new covariance matrix. If <code>cluster</code> was supplied to the original fitting function, it will be incorporated into any newly computed covariance matrix unless <code>cluster = NULL</code> is specified in <code>vcov()</code>, <code>summary()</code>, or <code>confint()</code>. For other arguments (e.g., <code>R</code> and <code>fwb.args</code>), the defaults are those used by <code>glm_weightit()</code>. Note that for <code>vcov = "BS"</code> and <code>vcov = "FWB"</code> (and <code>vcov = "const"</code> for <code>multinom_weightit</code> or <code>ordinal_weightit</code> objects), the environment for the fitting function is used, so any changes to that environment may affect calculation. It is always safer to simply recompute the fitted object with a new covariance matrix than to modify it with the <code>vcov</code> argument, but it can be quicker to just request a new covariance matrix when refitting the model is slow.
+</p>
+<p><code>update()</code> updates a fitted model object with new arguments, e.g., a new model formula, dataset, or variance matrix. When only arguments that control the computation of the variance are supplied, only the variance will be recalculated (i.e., the parameters will not be re-estimated). When <code>data</code> is supplied, <code>weightit</code> is not supplied, and a <code>weightit</code> object was originally passed to the model fitting function, the <code>weightit</code> object will be re-fit with the new dataset before the model is refit using the new weights and new data. That is, calling <code>update(obj, data = d)</code> is equivalent to calling <code>update(obj, data = d, weightit = update(obj$weightit, data = d))</code> when a <code>weightit</code> object was supplied to the model fitting function.
+</p>
+<p>The <code>estfun()</code> method for <code>multinom_weightit</code> and <code>ordinal_weightit</code> objects (which is used by function in the <span class="pkg">sandwich</span> package to compute coefficient covariance matrices) simply extracts the <code>gradient</code> component of the object. For <code>glm_weightit</code> and <code>coxph_weightit</code> objects, the <code>glm</code> and <code>coxph</code> methods are dispatched instead.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>summary()</code> returns a <code>summary.glm_weightit()</code> object, which has its own <code>print()</code> method. For <code>coxph_weightit()</code> objects, the <code>print()</code> and <code>summary()</code> methods are more like those for <code>glm</code> objects than for <code>coxph</code> objects.
+</p>
+<p>Otherwise, all methods return the same type of object as their generics.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>glm_weightit()</code> for the page documenting <code>glm_weightit()</code>, <code>lm_weightit()</code>, <code>ordinal_weightit()</code>, <code>multinom_weightit()</code>, and <code>coxph_weightit()</code>. <code>summary.glm()</code>, <code>vcov()</code>, <code>confint()</code> for the relevant methods pages. <code>predict.glm_weightit()</code> for computing predictions from the models. <code>anova.glm_weightit()</code> for comparing models using a Wald test.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## See more examples at ?glm_weightit
+</code></pre>
+
+
+</div>

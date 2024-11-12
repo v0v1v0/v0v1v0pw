@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getDatesInWindow</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get dates in window</h2>
+
+<h3>Description</h3>
+
+<p>Find grouping of dates around each Julian day of year (1-366) based on the window you set.
+The start and end years for this function should include at least one leap year
+(i.e., the record should be at least 4-years in length), or else the function will
+return non-existing dates (February 29th during non-leap years).<br><br>
+Setting leapflag to true will set February 29th as NA for non-leap years.<br><br>
+Setting leapflag to false will remove February 29th for non-leap years (recommended).<br><br>
+The 'wwidth' variable is the semi-bandwidth that sets the window size to search
+for adjacent days. Given a value of 'wwidth', the window size will be
+2*wwidth + 1. For example a 'wwidth' of 7 would give a window size of
+2*7+1 = 15.<br><br>
+Other applications of this function might include a daily bias correction approach
+where it is necessary to find N adjacent days for each day of year in order to train
+the bias correction algorithm.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getDatesInWindow(syr, eyr, wwidth, leapflag = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>syr</code></td>
+<td>
+<p>Start year.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eyr</code></td>
+<td>
+<p>End year.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wwidth</code></td>
+<td>
+<p>Window set for finding surrounding days (semi-bandwidth).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>leapflag</code></td>
+<td>
+<p>Set index for leap years (default = F).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a matrix with 366 rows (one for each Julian day of year, including leap days)
+and nCols; where nCols = (2 x wwidth + 1) x (eyr - syr + 1). Each row is specific to a certain
+Julian day (e.g., day 1) and contains the preceding and antecedent dates around that Julian day
+based on the window length you set. The dates will be fetched for each year in the range you set
+between the start and ending years (inclusive of the start and end years). Matrix values are either dates
+formatted as 'yyyymmdd' or NA values.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"> getDatesInWindow(syr = 2000, eyr = 2005, wwidth = 3, leapflag = FALSE)
+
+</code></pre>
+
+
+</div>

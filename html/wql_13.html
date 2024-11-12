@@ -1,0 +1,211 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mannKen</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Mann-Kendall trend test and the Sen slope</h2>
+
+<h3>Description</h3>
+
+<p>Applies Kendall's tau test for the significance of a monotonic time series
+trend (Mann 1945). Also calculates the Sen slope as an estimate of this
+trend.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mannKen(
+  x,
+  plot = FALSE,
+  type = c("slope", "relative"),
+  order = FALSE,
+  pval = 0.05,
+  pchs = c(19, 21),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector, matrix or data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>Should the trends be plotted when x is a matrix or data frame?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Type of trend to be plotted, actual or relative</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>order</code></td>
+<td>
+<p>Should the plotted trends be ordered by size?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pval</code></td>
+<td>
+<p>p-value for significance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pchs</code></td>
+<td>
+<p>Plot symbols for significant and not significant trend
+estimates, respectively</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments to pass to plotting function</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The Sen slope (alternately, Theil or Theil-Sen slope)—the median slope
+joining all pairs of observations—is expressed by quantity per unit time.
+The fraction of missing slopes involving the first and last fifths of the
+data are provided so that the appropriateness of the slope estimate can be
+assessed and results flagged. Schertz et al. [1991] discuss this and related
+decisions about missing data. Other results are used for further analysis by
+other functions. Serial correlation is ignored, so the interval between
+points should be long enough to avoid strong serial correlation.
+</p>
+<p>For the relative slope, the slope joining each pair of observations is
+divided by the first of the pair before the overall median is taken. The
+relative slope makes sense only as long as the measurement scale is
+non-negative (not, e.g., temperature on the Celsius scale). Comparing
+relative slopes is useful when the variables in <code>x</code> have different
+units.
+</p>
+<p>If <code>plot = TRUE</code>, then either the Sen slope (<code>type = "slope"</code>) or
+the relative Sen slope (<code>type = "relative"</code>) are plotted. The plot
+symbols indicate, respectively, that the trend is significant or not
+significant. The plot can be customized by passing any arguments used by
+<code>dotchart</code> such as <code>xlab</code> or <code>xlim</code>, as well as
+graphical parameters described in <code>par</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of the following if <code>x</code> is a vector:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>sen.slope</code></td>
+<td>
+<p>Sen slope</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sen.slope.rel</code></td>
+<td>
+<p>Relative Sen slope</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value</code></td>
+<td>
+<p>Significance of slope</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>S</code></td>
+<td>
+<p>Kendall's S</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varS</code></td>
+<td>
+<p>Variance of S</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>miss</code></td>
+<td>
+<p>Fraction of missing slopes connecting
+first and last fifths of <code>x</code></p>
+</td>
+</tr>
+</table>
+<p> or a matrix with corresponding columns if
+<code>x</code> is a matrix or data frame.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Approximate p-values with corrections for ties and continuity are used
+if <code class="reqn">n &gt; 10</code> or if there are any ties. Otherwise, exact p-values based on
+Table B8 of Helsel and Hirsch (2002) are used. In the latter case, <code class="reqn">p =
+0.0001</code> should be interpreted as <code class="reqn">p &lt; 0.0002</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alan Jassby, James Cloern
+</p>
+
+
+<h3>References</h3>
+
+<p>Mann, H.B. (1945) Nonparametric tests against trend.
+<em>Econometrica</em> <b>13,</b> 245–259.
+</p>
+<p>Helsel, D.R. and Hirsch, R.M. (2002) <em>Statistical methods in water
+resources.</em> Techniques of Water Resources Investigations, Book 4, chapter
+A3. U.S. Geological Survey. 522 pages.
+doi: <a href="https://doi.org/10.3133/twri04A3">10.3133/twri04A3</a>
+</p>
+<p>Schertz, T.L., Alexander, R.B., and Ohe, D.J. (1991) <em>The computer
+program EStimate TREND (ESTREND), a system for the detection of trends in
+water-quality data.</em> Water-Resources Investigations Report 91-4040, U.S.
+Geological Survey.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>seaKen</code>, <code>seasonTrend</code>,
+<code>tsSub</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+tsp(Nile)  # an annual time series
+mannKen(Nile)
+
+y &lt;- sfbayChla
+y1 &lt;- interpTs(y, gap=1)  # interpolate single-month gaps only
+y2 &lt;- aggregate(y1, 1, mean, na.rm=FALSE)
+mannKen(y2)
+mannKen(y2, plot=TRUE) # missing data means missing trend estimates
+mannKen(y2, plot=TRUE, xlim = c(0.1, 0.25))
+mannKen(y2, plot=TRUE, type='relative', order = TRUE, pval = .001,
+  xlab = "Relative trend")
+legend("topleft", legend = "p &lt; 0.001", pch = 19, bty="n")
+
+</code></pre>
+
+
+</div>

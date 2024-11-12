@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>xfer_mess</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>xfer_mess generate MESS map for transferred raster</h2>
+
+<h3>Description</h3>
+
+<p>This function generates a MESS map for the new variables for
+transferring based on variables and points used for modeling in previous
+components.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">xfer_mess(occs, bg, bgMsk, xferExtRas, logger = NULL, spN = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>occs</code></td>
+<td>
+<p>a data frame of occurrences used for modeling and values of
+environmental variables for each point.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bg</code></td>
+<td>
+<p>a data frame of points used as background for modeling and values
+of environmental variables for each point.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bgMsk</code></td>
+<td>
+<p>a rasterBrick or rasterStack of environmental variables used
+for modeling. They must be cropped and masked to extent used in model
+training.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xferExtRas</code></td>
+<td>
+<p>a rasterStack or rasterBrick of environmental variables
+to be used for transferring.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+<p>Stores all notification messages to be displayed in the Log
+Window of Wallace GUI. Insert the logger reactive list here for running
+in shiny, otherwise leave the default NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spN</code></td>
+<td>
+<p>character. Used to obtain species name for logger messages</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This functions allows for the creation of a MESS map for the new provided
+variables for transferring. These variables are either user uploaded or
+selected from WorldClim database. MESS map is based on occurrence and
+background points used for generating the model and the environmental values
+at those points.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jamie Kass &lt;jamie.m.kass@gmail.com&gt;
+</p>
+<p>Gonzalo E. Pinilla-Buitrago &lt;gepinillab@gmail.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>mess</code>, <code>xfer_time</code>
+<code>xfer_userEnvs</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+envs &lt;- envs_userEnvs(rasPath = list.files(system.file("extdata/wc",
+                                           package = "wallace"),
+                      pattern = ".tif$", full.names = TRUE),
+                      rasName = list.files(system.file("extdata/wc",
+                                           package = "wallace"),
+                      pattern = ".tif$", full.names = FALSE))
+# load model
+m &lt;- readRDS(system.file("extdata/model.RDS",
+                         package = "wallace"))
+occsEnvs &lt;- m@occs
+bgEnvs &lt;- m@bg
+envsFut &lt;- list.files(path = system.file('extdata/wc/future',
+                                         package = "wallace"),
+                      full.names = TRUE)
+envsFut &lt;- raster::stack(envsFut)
+## run function
+xferMess &lt;- xfer_mess(occs = occsEnvs, bg = bgEnvs, bgMsk = envs,
+                      xferExtRas = envsFut)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,203 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>prepare.data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Initial Preparations of Bitext before the Word Alignment and the Evaluation of Word Alignment Quality
+</h2>
+
+<h3>Description</h3>
+
+<p>For a given Sentence-Aligned Parallel Corpus, it prepars sentence pairs as an input for <code>align.ibm1</code> and <code>evaluation</code> functions in this package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">prepare.data(file.sorc, file.trgt, n = -1L, 
+             encode.sorc = 'unknown' , encode.trgt = 'unknown', 
+             min.len = 5, max.len = 40, remove.pt = TRUE, word.align = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file.sorc</code></td>
+<td>
+
+<p>the name of source language file.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file.trgt</code></td>
+<td>
+
+<p>the name of target language file.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+
+<p>the number of sentences to be read.If  -1, it considers all sentences.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>encode.sorc</code></td>
+<td>
+
+<p>encoding to be assumed for the source language. If the value is "latin1" or "UTF-8" it is used to mark character strings as known to be in Latin-1 or UTF-8. For more details please see <code>scan</code> function.	 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>encode.trgt</code></td>
+<td>
+
+<p>encoding to be assumed for the target language. If the value is "latin1" or "UTF-8" it is used to mark character strings as known to be in Latin-1 or UTF-8. For more details please see <code>scan</code> function.	 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.len</code></td>
+<td>
+
+<p>a minimum length of sentences.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.len</code></td>
+<td>
+
+<p>a maximum length of sentences.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remove.pt</code></td>
+<td>
+
+<p>logical. If ‘<span class="samp">⁠TRUE⁠</span>’, it removes all punctuation marks.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>word.align</code></td>
+<td>
+
+<p>logical. If ‘<span class="samp">⁠FALSE⁠</span>’, it divides each sentence into its words. Results can be used in <code>align.symmet</code>, <code>cross.table</code>, <code>align.test</code> and <code>evaluation</code> functions. 
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>It balances between source and target language as much as possible. For example, it removes extra blank sentences and equalization sentence pairs. Also, using <code>nfirst2lower</code> function, it converts the first letter of each sentence into lowercase. Moreover, it removes  short and long sentences.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list.
+</p>
+<p>if  <code>word_align = TRUE</code>
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>len1</code></td>
+<td>
+<p>An integer.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aa</code></td>
+<td>
+<p>A matrix (n*2), where ‘<span class="samp">⁠n⁠</span>’ is the number of remained sentence pairs after preprocessing.</p>
+</td>
+</tr>
+</table>
+<p>otherwise,
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>initial </code></td>
+<td>
+<p>An integer.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>used </code></td>
+<td>
+<p>An integer.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>source.tok </code></td>
+<td>
+<p>A list of words for each the source sentence.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target.tok </code></td>
+<td>
+<p>A list of words for each the target sentence.</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>Note that if there is a few proper nouns in the parallel corpus, we suggest you to set <code>all=TRUE</code> to convert all text into lowercase.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Neda Daneshgar and Majid Sarmad.
+</p>
+
+
+<h3>References</h3>
+
+<p>Koehn P. (2010), "Statistical Machine Translation.",
+Cambridge University, New York.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>evaluation</code>, <code>nfirst2lower</code>, <code>align.ibm1</code>, <code>scan</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Since the extraction of  bg-en.tgz in Europarl corpus is time consuming, 
+# so the aforementioned unzip files have been temporarily exported to 
+# http://www.um.ac.ir/~sarmad/... .
+## Not run: 
+
+aa1 = prepare.data ('http://www.um.ac.ir/~sarmad/word.a/euro.bg',
+                   'http://www.um.ac.ir/~sarmad/word.a/euro.en', 
+                    n = 20, encode.sorc = 'UTF-8')
+ 
+aa2 = prepare.data ('http://www.um.ac.ir/~sarmad/word.a/euro.bg',
+                   'http://www.um.ac.ir/~sarmad/word.a/euro.en', 
+                    n = 20, encode.sorc = 'UTF-8', word.align = FALSE)
+                   
+aa3 = prepare.data ('http://www.um.ac.ir/~sarmad/word.a/euro.bg',
+                   'http://www.um.ac.ir/~sarmad/word.a/euro.en', 
+                    n = 20, encode.sorc = 'UTF-8', remove.pt = FALSE)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

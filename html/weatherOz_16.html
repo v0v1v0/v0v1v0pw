@@ -1,0 +1,359 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_dpird_extremes</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get DPIRD Extreme Weather Event Summaries</h2>
+
+<h3>Description</h3>
+
+<p>Fetch nicely formatted individual extreme weather summaries from the
+<abbr><span class="acronym">DPIRD</span></abbr> Weather 2.0 <abbr><span class="acronym">API</span></abbr>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_dpird_extremes(
+  station_code,
+  values = "all",
+  api_key = get_key(service = "DPIRD")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>station_code</code></td>
+<td>
+<p>A <code>character</code> string or <code>factor</code> from
+<code>get_stations_metadata()</code> of the <abbr><span class="acronym">BOM</span></abbr> station code for the station
+of interest.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>A <code>character</code> string with the type of extreme weather to
+return.  See <strong>Available Values</strong> for a full list of valid values.
+Defaults to <code>all</code>, returning the full list of values unless otherwise
+specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_key</code></td>
+<td>
+<p>A <code>character</code> string containing your <abbr><span class="acronym">API</span></abbr> key from
+<abbr><span class="acronym">DPIRD</span></abbr>, <a href="https://www.agric.wa.gov.au/web-apis">https://www.agric.wa.gov.au/web-apis</a>, for the
+<abbr><span class="acronym">DPIRD</span></abbr> Weather 2.0 <abbr><span class="acronym">API</span></abbr>.  Defaults to automatically
+detecting your key from your local .Renviron, .Rprofile or similar.
+Alternatively, you may directly provide your key as a string here.  If
+nothing is provided, you will be prompted on how to set up your <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> session
+so that it is auto-detected.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a <code>data.table::data.table()</code> of one row with <code>station_code</code>,
+<code>station_name</code>, <code>latitude</code>, <code>longitude</code>, <code>date_time</code> of the query and the
+extreme weather information according to the value(s) selected.
+</p>
+
+
+<h3>Available Values</h3>
+
+
+<ul>
+<li>
+<p> all (which will return all of the following values),
+</p>
+</li>
+<li>
+<p> erosionCondition,
+</p>
+</li>
+<li>
+<p> erosionConditionLast7Days,
+</p>
+</li>
+<li>
+<p> erosionConditionLast7DaysDays,
+</p>
+</li>
+<li>
+<p> erosionConditionLast7DaysMinutes,
+</p>
+</li>
+<li>
+<p> erosionConditionLast14Days,
+</p>
+</li>
+<li>
+<p> erosionConditionLast14DaysDays,
+</p>
+</li>
+<li>
+<p> erosionConditionLast14DaysMinutes,
+</p>
+</li>
+<li>
+<p> erosionConditionMonthToDate,
+</p>
+</li>
+<li>
+<p> erosionConditionMonthToDateDays,
+</p>
+</li>
+<li>
+<p> erosionConditionMonthToDateMinutes,
+</p>
+</li>
+<li>
+<p> erosionConditionMonthToDateStartTime,
+</p>
+</li>
+<li>
+<p> erosionConditionSince12AM,
+</p>
+</li>
+<li>
+<p> erosionConditionSince12AMMinutes,
+</p>
+</li>
+<li>
+<p> erosionConditionSince12AMStartTime,
+</p>
+</li>
+<li>
+<p> erosionConditionYearToDate,
+</p>
+</li>
+<li>
+<p> erosionConditionYearToDateDays,
+</p>
+</li>
+<li>
+<p> erosionConditionYearToDateMinutes,
+</p>
+</li>
+<li>
+<p> erosionConditionYearToDateStartTime,
+</p>
+</li>
+<li>
+<p> frostCondition,
+</p>
+</li>
+<li>
+<p> frostConditionLast7Days,
+</p>
+</li>
+<li>
+<p> frostConditionLast7DaysDays,
+</p>
+</li>
+<li>
+<p> frostConditionLast7DaysMinutes,
+</p>
+</li>
+<li>
+<p> frostConditionLast14Days,
+</p>
+</li>
+<li>
+<p> frostConditionLast14DaysDays,
+</p>
+</li>
+<li>
+<p> frostConditionLast14DaysMinutes,
+</p>
+</li>
+<li>
+<p> frostConditionMonthToDate,
+</p>
+</li>
+<li>
+<p> frostConditionMonthToDateDays,
+</p>
+</li>
+<li>
+<p> frostConditionMonthToDateMinutes,
+</p>
+</li>
+<li>
+<p> frostConditionMonthToDateStartTime,
+</p>
+</li>
+<li>
+<p> frostConditionSince9AM,
+</p>
+</li>
+<li>
+<p> frostConditionSince9AMMinutes,
+</p>
+</li>
+<li>
+<p> frostConditionSince9AMStartTime,
+</p>
+</li>
+<li>
+<p> frostConditionTo9AM,
+</p>
+</li>
+<li>
+<p> frostConditionTo9AMMinutes,
+</p>
+</li>
+<li>
+<p> frostConditionTo9AMStartTime,
+</p>
+</li>
+<li>
+<p> frostConditionYearToDate,
+</p>
+</li>
+<li>
+<p> frostConditionYearToDate,
+</p>
+</li>
+<li>
+<p> frostConditionYearToDateMinutes,
+</p>
+</li>
+<li>
+<p> frostConditionYearToDateStartTime,
+</p>
+</li>
+<li>
+<p> heatCondition,
+</p>
+</li>
+<li>
+<p> heatConditionLast7Days,
+</p>
+</li>
+<li>
+<p> heatConditionLast7DaysDays,
+</p>
+</li>
+<li>
+<p> heatConditionLast7DaysMinutes,
+</p>
+</li>
+<li>
+<p> heatConditionLast14Days,
+</p>
+</li>
+<li>
+<p> heatConditionLast14DaysDays,
+</p>
+</li>
+<li>
+<p> heatConditionLast14DaysMinutes,
+</p>
+</li>
+<li>
+<p> heatConditionMonthToDate,
+</p>
+</li>
+<li>
+<p> heatConditionMonthToDateDays,
+</p>
+</li>
+<li>
+<p> heatConditionMonthToDateMinutes,
+</p>
+</li>
+<li>
+<p> heatConditionMonthToDateStartTime,
+</p>
+</li>
+<li>
+<p> heatConditionSince12AM,
+</p>
+</li>
+<li>
+<p> heatConditionSince12AMMinutes,
+</p>
+</li>
+<li>
+<p> heatConditionSince12AMStartTime,
+</p>
+</li>
+<li>
+<p> heatConditionYearToDate,
+</p>
+</li>
+<li>
+<p> heatConditionYearToDateDays,
+</p>
+</li>
+<li>
+<p> heatConditionYearToDateMinutes, and
+</p>
+</li>
+<li>
+<p> heatConditionYearToDateStartTime
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Rodrigo Pires, <a href="mailto:rodrigo.pires@dpird.wa.gov.au">rodrigo.pires@dpird.wa.gov.au</a>, and Adam
+Sparks, <a href="mailto:adamhsparks@gmail.com">adamhsparks@gmail.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other DPIRD: 
+<code>dpird_extreme_weather_values</code>,
+<code>dpird_minute_values</code>,
+<code>dpird_summary_values</code>,
+<code>find_nearby_stations()</code>,
+<code>find_stations_in()</code>,
+<code>get_dpird_apsim()</code>,
+<code>get_dpird_availability()</code>,
+<code>get_dpird_minute()</code>,
+<code>get_dpird_summaries()</code>,
+<code>get_stations_metadata()</code>
+</p>
+<p>Other data fetching: 
+<code>get_ag_bulletin()</code>,
+<code>get_coastal_forecast()</code>,
+<code>get_data_drill()</code>,
+<code>get_data_drill_apsim()</code>,
+<code>get_dpird_apsim()</code>,
+<code>get_dpird_minute()</code>,
+<code>get_dpird_summaries()</code>,
+<code>get_patched_point()</code>,
+<code>get_patched_point_apsim()</code>,
+<code>get_precis_forecast()</code>,
+<code>get_radar_imagery()</code>,
+<code>get_satellite_imagery()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Query Bonnie Rock station for wind erosion and heat extreme events
+# Note that you need to supply your own API key
+
+xtreme &lt;- get_dpird_extremes(
+  station_code = "BR",
+  values = c("erosionCondition",
+           "heatCondition"),
+  api_key = "your_api_key"
+)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

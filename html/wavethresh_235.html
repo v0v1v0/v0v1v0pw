@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>TOthreshda1</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Data analytic wavelet thresholding routine</h2>
+
+<h3>Description</h3>
+
+<p>This function might be better called using the regular
+<code>threshold</code> function using the <code>op1</code> policy.
+</p>
+<p>Corresponds to the wavelet thresholding routine developed by
+Ogden and Parzen (1994) Data dependent wavelet thresholding in nonparametric
+regression with change-point applications. <em>Tech Rep 176</em>,
+University of South Carolina, Department of Statistics.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">TOthreshda1(ywd, alpha = 0.05, verbose = FALSE, return.threshold = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ywd</code></td>
+<td>
+<p>The <code>wd.object</code> that you wish to threshold.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>The smoothing parameter which is a p-value </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Whether messages get printed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return.threshold</code></td>
+<td>
+<p>If TRUE then the threshold value gets returned
+rather than the actual thresholded object</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The TOthreshda1 method operates by testing the max of each set of squared       
+wavelet coefficients to see if it behaves as the nth order statistic of   
+a set of independent chi^2(1) r.v.'s.  If not, it is removed, and the    
+max of the remaining subset is tested, continuing in this fashion until   
+the max of the subset is judged not to be significant.  
+</p>
+<p>In this situation, the level of the hypothesis tests, alpha, has default  
+value 0.05.  Note that the choice of alpha controls the smoothness of     
+the resulting wavelet estimator – in general, a relatively large alpha   
+makes it easier to include coefficients, resulting in a more wiggly       
+estimate; a smaller alpha will make it more difficult to include          
+coefficients, yielding smoother estimates.         
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns the threshold value if <code>return.threshold==TRUE</code> otherwise
+returns the shrunk set of wavelet coefficients.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Todd Ogden</p>
+
+
+<h3>See Also</h3>
+
+<p><code>threshold</code>,<code>TOthreshda2</code>, <code>wd</code></p>
+
+
+</div>

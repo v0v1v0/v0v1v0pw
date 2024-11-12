@@ -1,0 +1,148 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ROCPlotPair</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compare two ROC plots.</h2>
+
+<h3>Description</h3>
+
+<p>Plot two receiver operating characteristic curves from the same data.frame.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ROCPlotPair(
+  frame,
+  xvar1,
+  xvar2,
+  truthVar,
+  truthTarget,
+  title,
+  ...,
+  estimate_sig = FALSE,
+  returnScores = FALSE,
+  nrep = 100,
+  parallelCluster = NULL,
+  palette = "Dark2"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frame</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar1</code></td>
+<td>
+<p>name of the first independent (input or model) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar2</code></td>
+<td>
+<p>name of the second independent (input or model) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truthVar</code></td>
+<td>
+<p>name of the dependent (output or result to be modeled) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truthTarget</code></td>
+<td>
+<p>value we consider to be positive</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimate_sig</code></td>
+<td>
+<p>logical, if TRUE estimate and display significance of difference from AUC 0.5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnScores</code></td>
+<td>
+<p>logical if TRUE return detailed permutedScores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nrep</code></td>
+<td>
+<p>number of permutation repetitions to estimate p values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallelCluster</code></td>
+<td>
+<p>(optional) a cluster object created by package parallel or package snow.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>palette</code></td>
+<td>
+<p>name of a brewer palette (NULL for ggplot2 default coloring)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The use case for this function is to compare the performance of two
+models when applied to a data set, where the predictions from both models
+are columns of the same data frame.
+</p>
+<p>If <code>palette</code> is NULL, plot colors will be chosen from the default ggplot2 palette. Setting <code>palette</code> to NULL
+allows the user to choose a non-Brewer palette, for example with <code>scale_color_manual</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ROCPlot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+set.seed(34903490)
+x1 = rnorm(50)
+x2 = rnorm(length(x1))
+y = 0.2*x2^2 + 0.5*x2 + x1 + rnorm(length(x1))
+frm = data.frame(x1=x1,x2=x2,yC=y&gt;=as.numeric(quantile(y,probs=0.8)))
+# WVPlots::ROCPlot(frm, "x1", "yC", TRUE, title="Example ROC plot")
+# WVPlots::ROCPlot(frm, "x2", "yC", TRUE, title="Example ROC plot")
+WVPlots::ROCPlotPair(frm, "x1", "x2", "yC", TRUE,
+   title="Example ROC pair plot", estimate_sig = TRUE)
+
+</code></pre>
+
+
+</div>

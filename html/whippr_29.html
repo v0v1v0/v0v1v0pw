@@ -1,0 +1,388 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>vo2_kinetics</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>VO2 kinetics</h2>
+
+<h3>Description</h3>
+
+<p>It performs the whole process of the VO2 kinetics data analysis, which includes:
+data cleaning (<code>detect_outliers()</code>); outliers removal, interpolation, ensemble-averaging transitions and bin-avering final dataset (<code>process_data()</code>),
+and modelling VO2 kinetics (<code>perform_kinetics()</code>). This function is a general function that will call these separate functions.
+You can also call each one of them separately if you want.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">vo2_kinetics(
+  .data,
+  intensity_domain = c("moderate", "heavy", "severe"),
+  vo2_column = "VO2",
+  protocol_n_transitions,
+  protocol_baseline_length,
+  protocol_transition_length,
+  cleaning_level = 0.95,
+  cleaning_baseline_fit,
+  fit_level = 0.95,
+  fit_bin_average,
+  fit_phase_1_length,
+  fit_baseline_length,
+  fit_transition_length,
+  verbose = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.data</code></td>
+<td>
+<p>Data retrieved from <code>read_data()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intensity_domain</code></td>
+<td>
+<p>The exercise-intensity domain that the test was performed. Either <em>moderate</em>, <em>heavy</em>, or <em>severe</em>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vo2_column</code></td>
+<td>
+<p>The name (quoted) of the column containing the absolute oxygen uptake (VO2) data. Default to <code>"VO2"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>protocol_n_transitions</code></td>
+<td>
+<p>Number of transitions performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>protocol_baseline_length</code></td>
+<td>
+<p>The length of the baseline (in seconds).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>protocol_transition_length</code></td>
+<td>
+<p>The length of the transition (in seconds).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cleaning_level</code></td>
+<td>
+<p>A numeric scalar between 0 and 1 giving the confidence level for the intervals to be calculated during the data cleaning process. Breaths lying outside the prediction bands will be excluded. Default to <code>0.95</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cleaning_baseline_fit</code></td>
+<td>
+<p>A vector of the same length as the number in <code>protocol_n_transitions</code>, indicating what kind of fit to perform for each baseline. Either <em>linear</em> or <em>exponential</em>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fit_level</code></td>
+<td>
+<p>A numeric scalar between 0 and 1 giving the confidence level for the parameter estimates in the final VO2 kinetics fit. Default to <code>0.95</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fit_bin_average</code></td>
+<td>
+<p>The bin average to be performed for the final fit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fit_phase_1_length</code></td>
+<td>
+<p>The length of the phase I that you wish to exclude from the final exponential fit, in seconds. See  <code style="white-space: pre;">⁠VO2 kinetics⁠</code> section for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fit_baseline_length</code></td>
+<td>
+<p>The length the baseline to perform the final linear fit, in seconds. See <code style="white-space: pre;">⁠VO2 kinetics⁠</code> section for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fit_transition_length</code></td>
+<td>
+<p>The length of the transition to perform the final exponential fit, in seconds. See <code style="white-space: pre;">⁠VO2 kinetics⁠</code> section for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>A boolean indicating whether messages should be printed in the console. Default to <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to <code>perform_kinetics()</code> when fitting VO2 kinetics in the heavy- or severe-intensity domains. See <code>?perform_kinetics</code> for more details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function is a wrapper of smaller functions and has important arguments:
+</p>
+
+<ul>
+<li> <p><strong>protocol_</strong> = sets arguments related to the protocol used.
+</p>
+</li>
+<li> <p><strong>cleaning_</strong> = sets arguments related to data cleaning.
+</p>
+</li>
+<li> <p><strong>fit_</strong> = sets arguments related to VO2 kinetics fitting.
+</p>
+</li>
+</ul>
+<p>The function works like the following sequence:
+</p>
+<p><strong><code>vo2_kinetics( )</code></strong>:
+</p>
+
+<ul>
+<li> <p><code>detect_outliers( )</code> = separates the data into the number of transitions indicated,
+and fits each baseline and transition phase indiviudally, retrieving the predictions bands for the level indicated.
+Then it recognizes breaths lying outside the prediciton bands and flag them as outliers.
+</p>
+</li>
+<li> <p><code>plot_outliers( )</code> = plots each transition identifying outliers.
+</p>
+</li>
+<li> <p><code>process_data( )</code> = It removes the outliers detected through <code>detect_outliers()</code>, interpolates each transition,
+ensemble-averages all the transitions into one, performs a bin-average, and normalizes the time column
+(time zero will indicate the end of baseline and the start of the transition phase).
+</p>
+</li>
+<li> <p><code>perform_kinetics( )</code> = performs the VO2 kinetics fitting based on the <strong>fit_</strong> parameters given.
+It also calculates the residuals, and plots the final fit as well as residuals for model diagnostics.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>a tibble containing one row and the nested columns:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>data_outliers</code></td>
+<td>
+<p>The raw data containing additional columns that identify breaths as outliers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_outliers</code></td>
+<td>
+<p>A <code>patchwork</code> object to display outliers from every transition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data_processed</code></td>
+<td>
+<p>The processed data (time-aligned, ensembled-averaged, and bin-averaged).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data_fitted</code></td>
+<td>
+<p>The data containing the time and VO2 columns, as well as the fitted data and its residuals for each data point.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>A <code>nls</code> object. The model used in the VO2 kinetics fitting.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model_summary</code></td>
+<td>
+<p>The tidied summary of the <code>model</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model_residuals</code></td>
+<td>
+<p>The residuals of the <code>model</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_model</code></td>
+<td>
+<p>The final plot of the fitted <code>model</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_residuals</code></td>
+<td>
+<p>The residuals plot for the <code>model</code> diagnostics.</p>
+</td>
+</tr>
+</table>
+<h3>VO2 kinetics</h3>
+
+<p>VO2 kinetics, described as the rate of adjustment of the oxidative energy system to an
+instantaneous increase in the energy demand, is exponential in nature, and it is described by the
+oxygen uptake (VO2) time-constant (<code class="reqn">\tau</code>VO2) (Murias, Spencer and Paterson (2014); Poole and Jones (2011)).
+</p>
+<p>VO2 kinetics analysis provides understanding of the mechanisms that regulate the rate at which oxidative
+phosphorylation adapts to step changes in exercise intensities and ATP requirement. This is usually accomplished
+by performing step transitions from a baseline intensity to a higher work rate in either the <strong>moderate-</strong>, <strong>heavy-</strong>, or
+<strong>severe-intensity domain</strong> (Murias et al., 2011).
+</p>
+<p>Three distinct phases may be observed in the VO2 response during on-transient exercise:
+</p>
+<p><strong>Phase I</strong>: also termed as the cardiodynamic phase, it represents the circulatory transit delay
+on the VO2 response as a result of the increase in the pulmonary blood flow that does not reflect the increase
+in oxygen extraction in the active muscles. The time-window of the Phase I is determined in the <strong><code>fit_phase_1_length</code></strong> argument, which will be internally passed into the <code>perform_kinetics()</code> function.
+</p>
+<p><strong>Phase II</strong>: also termed as the primary component, represents the exponential increase in VO2
+related to the continued increase in pulmonary and muscle blood flow. The Phase II is described by the time-constant parameter (<code class="reqn">\tau</code>)
+in the mono-exponential model (see below), and it is defined as the duration of time (in seconds) for the VO2 response
+to increase to 63% of the required steady-state.
+</p>
+<p><strong>Phase III</strong>: represents the steady-state phase of the VO2 response
+during moderate-intensity exercise.
+</p>
+
+
+<h4>Moderate-intensity domain</h4>
+
+<p>The on-transient response from baseline to a transition within the <strong>moderate-intensity domain</strong>
+is analyzed using a <strong>mono-exponential model</strong>:
+</p>
+<p style="text-align: center;"><code class="reqn">VO_{2\left(t\right)}=baseline+amplitude\cdot\left(1-e^{^{-\frac{\left(t-TD\right)}{tau}}}\right)</code>
+</p>
+
+<p>where:
+</p>
+
+<ul>
+<li> <p><code>VO2(t)</code> = the oxygen uptake at any given time.
+</p>
+</li>
+<li> <p><code>baseline</code> = the oxygen uptake associated with the baseline phase.
+</p>
+</li>
+<li> <p><code>amplitude</code> = the steady-state increase increase in oxygen uptake above <code>baseline</code>.
+</p>
+</li>
+<li> <p><code>TD</code> = the time delay.
+</p>
+</li>
+<li> <p><code class="reqn">\tau</code> = the time constant defined as the duration of time for the oxygen uptake to increase to 63% of the steady-state increase.
+</p>
+</li>
+</ul>
+<p>The baseline value in the mono-exponential model is a <strong>fixed</strong> value and pre-determined
+as the mean of the VO2 response (i.e., linear model with the slope set as zero) during the baseline phase.
+The time window of the baseline period is determined in the <strong><code>fit_baseline_length</code></strong> argument, which will be internally passed into the <code>perform_kinetics()</code> function.
+</p>
+<p>Diverse exercise protocols exist to determine VO2 kinetics in the moderate-intensity domain.
+Usually, the protocol consists of multiple transitions (typically 3 or 4) from a baseline exercise-intensity to an exercise-intensity
+below the gas exchange threshold (typically the power output associated with 90% of the gas exchange threshold). Bbaseline and
+transition phases are usually performed for 6 minutes each. The reason that 6 minutes is done for each phase is to give enough time for both
+to reach a steady-state response:
+</p>
+<p>For example, for each multiple of the time-constant (<code class="reqn">\tau</code>), VO2 increases by 63% of the
+difference between the previous <code class="reqn">\tau</code> and the required steady-state.
+This means:
+</p>
+
+<ul>
+<li> <p><code>1</code> <code class="reqn">\tau</code> <code style="white-space: pre;">⁠= 63%⁠</code> <code class="reqn">\Delta</code>.
+</p>
+</li>
+<li> <p><code>2</code> <code class="reqn">\tau</code> <code style="white-space: pre;">⁠= 86%⁠</code> <code class="reqn">\Delta</code> <code style="white-space: pre;">⁠[100% - 63% = 37%; (37% x 63%) + 63% = 86%]⁠</code>.
+</p>
+</li>
+<li> <p><code>3</code> <code class="reqn">\tau</code> <code style="white-space: pre;">⁠= 95%⁠</code> <code class="reqn">\Delta</code> <code style="white-space: pre;">⁠[100% - 86% = 14%; (14% x 63%) + 86% = 95%]⁠</code>.
+</p>
+</li>
+<li> <p><code>4</code> <code class="reqn">\tau</code> <code style="white-space: pre;">⁠= 98%⁠</code> <code class="reqn">\Delta</code> <code style="white-space: pre;">⁠[100% - 95% = 5%; (5% x 63%) + 95% = 98%]⁠</code>.
+</p>
+</li>
+</ul>
+<p>In practical terms, let's imagine that a given participant has a <strong><code class="reqn">\tau</code> = 60 seconds</strong>. This means that this person
+would need <strong>240 seconds</strong> (<code style="white-space: pre;">⁠4 x 60⁠</code>) to reach <strong>steady-state</strong> (98% of the response) in the <strong>moderate-intensity domain</strong>. This would leave other
+120 seconds (2 minutes) of transition, so the protocol of performing 6-min transitions makes sure enough time is given.
+</p>
+<p>Now let's imagine that another person has a <strong><code class="reqn">\tau</code> = 20 seconds</strong>. This means that this person
+would need <strong>80 seconds</strong> (<code style="white-space: pre;">⁠4 x 20⁠</code>) to reach <strong>steady-state</strong> (98% of the response) in the <strong>moderate-intensity domain</strong>.
+</p>
+<p>Given that there is enough time to reach a VO2 steady-state response with 6 minutes of transition, that means that for the final fit
+(when the transitions were cleaned, ensembled-averaged, and bin-averaged) there is no need to include the whole 6 minutes of the transition.
+This strategy avoids superfluous sections of the steady‐state data, thus maximizing the quality of the fit during the exercise on‐transient (Bell et al., 2001).
+This may be specified through the <strong><code>fit_transition_length</code></strong> argument, which will be internally passed into the <code>perform_kinetics()</code> function.
+</p>
+<p>As for bin-averages in the final fit, usually the data are averaged into 5-s or 10-s bins, 5-s being the most common (Keir et al., 2014).
+This may be specified through the <strong><code>fit_bin_average</code></strong> argument, which will be internally passed into the <code>process_data()</code> function.
+</p>
+
+
+
+<h4>Heavy- and severe-intensity domains</h4>
+
+<p>TODO
+</p>
+
+
+
+<h3>References</h3>
+
+<p>Bell, C., Paterson, D. H., Kowalchuk, J. M., Padilla, J., &amp; Cunningham, D. A. (2001). A comparison of modelling techniques used to characterise oxygen uptake kinetics during the on-transient of exercise. Experimental Physiology, 86(5), 667-676.
+</p>
+<p>Keir, D. A., Murias, J. M., Paterson, D. H., &amp; Kowalchuk, J. M. (2014). Breath‐by‐breath pulmonary O2 uptake kinetics: effect of data processing on confidence in estimating model parameters. Experimental physiology, 99(11), 1511-1522.
+</p>
+<p>Murias, J. M., Spencer, M. D., &amp; Paterson, D. H. (2014). The critical role of O2 provision in the dynamic adjustment of oxidative phosphorylation. Exercise and sport sciences reviews, 42(1), 4-11.
+</p>
+<p>Murias, J. M., Spencer, M. D., Kowalchuk, J. M., &amp; Paterson, D. H. (2011). Influence of phase I duration on phase II VO2 kinetics parameter estimates in older and young adults. American Journal of Physiology-regulatory, integrative and comparative physiology, 301(1), R218-R224.
+</p>
+<p>Poole, D. C., &amp; Jones, A. M. (2011). Oxygen uptake kinetics. Comprehensive Physiology, 2(2), 933-996.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+## get file path from example data
+path_example &lt;- system.file("example_cosmed.xlsx", package = "whippr")
+
+## read data
+df &lt;- read_data(path = path_example, metabolic_cart = "cosmed", time_column = "t")
+
+## VO2 kinetics analysis
+results_kinetics &lt;- vo2_kinetics(
+  .data = df,
+  intensity_domain = "moderate",
+  vo2_column = "VO2",
+  protocol_n_transitions = 3,
+  protocol_baseline_length = 360,
+  protocol_transition_length = 360,
+  cleaning_level = 0.95,
+  cleaning_baseline_fit = c("linear", "exponential", "exponential"),
+  fit_level = 0.95,
+  fit_bin_average = 5,
+  fit_phase_1_length = 20,
+  fit_baseline_length = 120,
+  fit_transition_length = 240,
+  verbose = TRUE
+)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

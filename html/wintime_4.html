@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>EWTR</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Expected win time against reference</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the control group state space probabilities using a Markov model (recommended) or a Kaplan-Meier model. This function uses these
+probabilities to compare each participant's clinical state to a distribution of control group states.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">EWTR(
+  n,
+  m,
+  nunique,
+  maxfollow,
+  untimes,
+  Time,
+  Delta,
+  dist,
+  markov_ind,
+  cov,
+  trt
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The total number of trial participants.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>The number of events in the hierarchy.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nunique</code></td>
+<td>
+<p>The number of unique control group event times (returned from wintime::markov() or wintime::km()).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxfollow</code></td>
+<td>
+<p>The max control group follow up time (days) (returned from wintime::markov() or wintime::km()).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>untimes</code></td>
+<td>
+<p>A vector containing unique control group event times (days) (returned from wintime::markov() or wintime::km()).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Time</code></td>
+<td>
+<p>A m x n matrix of event times (days). Rows should represent events and columns should represent participants. Rows should be
+in increasing order of clinical severity.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Delta</code></td>
+<td>
+<p>A m x n matrix of event indicators Rows should represent events and columns should represent participants. Rows should be
+in increasing order of clinical severity.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist</code></td>
+<td>
+<p>A matrix of control group state probabilities (returned from wintime::markov() or wintime::km()).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>markov_ind</code></td>
+<td>
+<p>An indicator of the model type used (1 for Markov, 0 for Kaplan-Meier).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cov</code></td>
+<td>
+<p>A n x p matrix of covariate values, where p is the number of covariates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trt</code></td>
+<td>
+<p>A vector of length n containing treatment arm indicators (1 for treatment, 0 for control).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing: The estimated treatment effect from the linear regression model, the variance, and the Z-statistic.
+</p>
+
+
+</div>

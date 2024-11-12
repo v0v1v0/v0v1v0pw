@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>compress.default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Do "zero" run-length encoding compression of a vector of numbers. </h2>
+
+<h3>Description</h3>
+
+<p>Efficiently compress a vector containing many zeroes. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+compress(v, verbose=FALSE,...)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>v</code></td>
+<td>
+<p>The vector that you wish to compress. This compression function is efficient at compressing vectors with many zeroes, but is not a <em>general</em> compression routine.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>If<code>TRUE</code> then this routine prints out the degree of compression achieved. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Images are large objects. Thresholded 2d wavelet objects (<code>imwd</code>) are also large, but many of their elements are zero. compress.default takes a vector, decides whether compression is necessary and if it is makes an object of class <code>compressed</code> containing the nonzero elements and their position in the original vector. 
+</p>
+<p>The decision whether to compress the vector or not depends on two things, first the number of non-zero elements in the vector (r, say), and second the length of the vector (n, say). Since the position and value of the non-zero elements is stored we will need to store 2r values for the non-zero elements. So compression takes place if <code>2r &lt; n</code>. 
+</p>
+<p>This function is the default method for the generic function <code>compress</code>. It can be invoked by calling compress for an object of the appropriate class, or directly by calling compress.default regardless of the class of the object. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class compressed if <code>compression</code> took place, otherwise a an object of class <code>uncompressed</code>. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.5.3 Copyright Guy Nason 1994 </p>
+
+
+<h3>Note</h3>
+
+<p>Sometimes the compressed object can be larger than the original. This usually only happens for small objects, so it doesn't really matter. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>compress</code>,  <code>imwd</code>, <code>threshold.imwd</code>,
+<code>uncompress</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Compress a vector with lots of zeroes
+#
+compress(c(rep(0,100),99))
+#$position:
+#[1] 101
+#
+#$values:
+#[1] 99
+#
+#$original.length:
+#[1] 101
+#
+#attr(, "class"):
+#[1] "compressed"
+#
+# Try to compress a vector with not many zeroes
+#
+compress(1:10)
+#$vector:
+#[1]  1 2  3  4  5  6  7  8  9 10
+#
+#attr(, "class"):
+#[1] "uncompressed"
+#
+#
+</code></pre>
+
+
+</div>

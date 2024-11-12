@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>imwr.imwdc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Inverse two-dimensional discrete wavelet transform. </h2>
+
+<h3>Description</h3>
+
+<p>Inverse two-dimensional discrete wavelet transform. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'imwdc'
+imwr(imwd, verbose=FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>imwd</code></td>
+<td>
+<p>An object of class <code>imwdc</code>. This type of object is returned by <code>threshold.imwd</code> and is a <code>compress.imwd</code> compressed version of an <code>imwd</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>If this argument is true then informative messages are printed detailing the computations to be performed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments to supply to the <code>imwr</code> function which is called after uncompressing the imwdc object.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function merely uncompresses the supplied <code>imwdc.object</code> and passes the resultant <code>imwd</code> object to the <code>imwr.imwd</code> function.
+</p>
+<p>This function is a method for the generic function <code>imwr</code> for class <code>imwdc.object</code>. It can be invoked by calling <code>imwr</code> for an object of the appropriate class, or directly by calling imwr.imwdc regardless of the class of the object. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix, of dimension determined by the original data set supplied to the initial decomposition (more precisely, determined by the <code>nlevelsWT</code> component of the <code>imwdc.object</code>). This matrix is the highest resolution level of the reconstruction. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.5.3 Copyright Guy Nason 1994 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>compress.imwd</code>, <code>imwd</code>, <code>imwd.object</code>, <code>imwr</code>. 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Do a decomposition, thresholding, then exact reconstruction
+# Look at the error
+#
+
+test.image &lt;- matrix(rnorm(32*32), nrow=32)
+
+# Test image is just some sort of  square matrix whose side length
+# is a power of two.
+#
+max( abs(imwr(threshold(imwd(test.image))) - test.image))
+# [1] 62.34
+#
+# The answer is not zero (see contrasting examples in the help page for
+# imwr.imwd because we have thresholded the
+# 2D wavelet transform here).
+</code></pre>
+
+
+</div>

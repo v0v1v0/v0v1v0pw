@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wcep</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Analysis of weighted composite endpoints</h2>
+
+<h3>Description</h3>
+
+<p>Analyze given data frame and return Kaplan-Meier survival probabilities together with the specified confidence interval.
+<code>wcep</code> modifies Kaplan-Meier curve by taking into account severity weights of different event. Alternative methods are Anderson Gill model and win ratio of composite outcomes.The function takes event dataset and user-specified severity weights  to generate a modified Kaplan-Meier curve and comparison statistics based on the weighted composite endpoint method.  The user supplies the event data set, the weights, and the factor to split on . The package will generate the weighted survival curve, confidence interval and test the differences between the two groups.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wcep(x, EW, alpha = 0.05, split = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>This data frame usually has 3 columns. The first column specifies patient ID,
+which is a character or numeric vector, the second column is a factor with character values
+of event types. The third column is a numeric vector of event times. If split = TRUE,
+then the forth column is a character vector of split groups of at most two groups,
+like gender.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>EW</code></td>
+<td>
+<p>This data frame has two columns. The first column
+specifies a character vector of event types. The second column specify weights.
+The naming of event types in x and EW should be exactly similar.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>A numeric value between 0-1 which specifies the confidence level,
+if it is not specified, by default is 0.05.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>split</code></td>
+<td>
+<p>A logical value of T or F which allows to compare two groups.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Bakal J., Westerhout C. M., Armstrong P. W. (2015) Impact of weighted composite
+compared to traditional composite endpoints for the design of randomized
+controlled trails. <var>Statistical Methods in Medicine Research</var>. <b>24</b>(6) 980-988.
+</p>
+<p>Nabipoor M., Westerhout C. M., Rathwell S., Bakal J. (2023) The empirical
+estimate of the survival and variance using a weighted composite endpoint,
+<var>BMC Medical Research Methodology</var>. <b>23</b>(35).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Majid Nabipoor: nabipoor@ualberta.ca,
+Cynthia Westerhout: cindy.westerhout@ualberta.ca,
+Jeffrey Bakal: jbakal@ualberta.ca
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>coxph</code> for Anderson Gill model
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(toyexample)
+#event weights
+EW &lt;- data.frame(event = c('CHF','DTH','SHK','REMI'), weight = c(0.3,1,0.5,0.2))
+res1 &lt;- wcep(toyexample, EW)
+str(res1)
+res1$survival_probabilities
+plot(res1)
+#comparing two genders
+res2 &lt;- wcep(toyexample, EW, split=TRUE)
+plot(res2)
+#wilcox and t test
+res2$Wilcoxontest
+res2$t_test
+</code></pre>
+
+
+</div>

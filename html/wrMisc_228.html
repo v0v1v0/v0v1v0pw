@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rnormW</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Normal random number generation with close fit to expected mean and sd</h2>
+
+<h3>Description</h3>
+
+<p>This function allows creating a vector of random values similar to <code>rnorm</code>, but resulting value get recorrected to fit to expected mean and sd.
+When the number of random values to generate is low, the mean and sd of the resultant values may deviate from the expected mean and sd when using the standard <code>rnorm</code> function.
+In such cases the function <code>rnormW</code> helps getting much closer to the expected mean and sd.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rnormW(
+  n,
+  mean = 0,
+  sd = 1,
+  seed = NULL,
+  digits = 8,
+  silent = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>(integer, length=1)  number of observations. If <code>length(n) &gt; 1</code>, the length is taken to be the number required.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mean</code></td>
+<td>
+<p>(numeric, length=1) expected mean</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd</code></td>
+<td>
+<p>(numeric, length=1) expected sd</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>(integer, length=1) seed for generating random numbers</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>(integer, length=1 or <code>NULL</code>) number of significant digits for output, set to <code>NULL</code> to get all digits</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For making result reproducible, a seed for generating random numbers can be set via the argument <code>seed</code>.
+However, with <code>n=2</code> the resulting values are 'fixed' since no random component is possible at n &lt;3.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a numeric vector of random values
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Normal</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x1 &lt;- (11:16)[-5]
+mean(x1); sd(x1)
+## the standard way
+ra1 &lt;- rnorm(n=length(x1), mean=mean(x1), sd=sd(x1))
+## typically the random values deviate (slightly) from expected mean and sd
+mean(ra1) -mean(x1) 
+sd(ra1) -sd(x1)
+## random numbers with close fit to expected mean and sd :
+ra2 &lt;- rnormW(length(x1), mean(x1), sd(x1))
+mean(ra2) -mean(x1) 
+sd(ra2) -sd(x1)          # much closer to expected value
+</code></pre>
+
+
+</div>

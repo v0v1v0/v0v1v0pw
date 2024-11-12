@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ikeogu.2017</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Example vis-NIRS and reference dataset</h2>
+
+<h3>Description</h3>
+
+<p>The 'ikeogu.2017' data set contains raw vis-NIRS scans, total
+carotenoid content, and cassava root dry matter content (using the oven
+method) from the 2017 PLOS One paper by Ikeogu et al. This dataset contains
+a subset of the original scans and reference values from the supplementary
+files of the paper.
+'ikeogu.2017' is a 'data.frame' that contains the following columns:
+</p>
+
+<ul>
+<li>
+<p> study.name = Name of the study as described in Ikeogu et al. (2017).
+</p>
+</li>
+<li>
+<p> sample.id = Unique identifier for each individual root sample
+</p>
+</li>
+<li>
+<p> DMC.oven = Cassava root dry matter content, the percentage of dry
+weight relative to fresh weight of a sample after oven drying.
+</p>
+</li>
+<li>
+<p> TCC = Total carotenoid content (<code class="reqn">\mu g/g</code>, unknown whether on a
+fresh or dry weight basis) as measured by
+high performance liquid chromatography
+</p>
+</li>
+<li>
+<p> X350:X2500 = spectral reflectance measured with the QualitySpec Trek:
+S-10016 vis-NIR spectrometer.
+Each cell represents the mean of 150 scans on a single root at a single wavelength.
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">ikeogu.2017
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>An object of class <code>tbl_df</code> (inherits from <code>tbl</code>, <code>data.frame</code>) with 175 rows and 2155 columns.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Original authors: Ikeogu, U.N., F. Davrieux, D. Dufour, H. Ceballos,
+C.N. Egesi, and J. Jannink. Reformatted by Jenna Hershberger.
+</p>
+
+
+<h3>References</h3>
+
+<p>Ikeogu, U.N., F. Davrieux, D. Dufour, H. Ceballos, C.N. Egesi, et
+al. 2017. Rapid analyses of dry matter content and carotenoids in fresh
+cassava roots using a portable visible and near infrared spectrometer
+(Vis/NIRS). PLOS One 12(12): 1–17. doi: 10.1371/journal.pone.0188918.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(magrittr)
+library(ggplot2)
+data(ikeogu.2017)
+ikeogu.2017[1:10, 1:10]
+ikeogu.2017 %&gt;%
+  dplyr::select(-starts_with("X")) %&gt;%
+  dplyr::group_by(study.name) %&gt;%
+  tidyr::gather(trait, value, c(DMC.oven:TCC), na.rm = TRUE) %&gt;%
+  ggplot2::ggplot(aes(x = study.name, y = value, fill = study.name)) +
+  facet_wrap(~trait, scales = "free_y", nrow = 2) +
+  geom_boxplot()
+</code></pre>
+
+
+</div>

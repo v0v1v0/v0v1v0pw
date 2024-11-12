@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dwt.2d</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Two-Dimensional Discrete Wavelet Transform</h2>
+
+<h3>Description</h3>
+
+<p>Performs a separable two-dimensional discrete wavelet transform (DWT) on a
+matrix of dyadic dimensions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dwt.2d(x, wf, J = 4, boundary = "periodic")
+
+idwt.2d(y)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>input matrix (image)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wf</code></td>
+<td>
+<p>name of the wavelet filter to use in the decomposition</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>depth of the decomposition, must be a number less than or equal to
+log(minM,N,2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>only <code>"periodic"</code> is currently implemented</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>an object of class <code>dwt.2d</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See references.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List structure containing the <code class="reqn">3J+1</code> sub-matrices from the
+decomposition.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>B. Whitcher
+</p>
+
+
+<h3>References</h3>
+
+<p>Mallat, S. (1998) <em>A Wavelet Tour of Signal Processing</em>,
+Academic Press.
+</p>
+<p>Vetterli, M. and J. Kovacevic (1995) <em>Wavelets and Subband Coding</em>,
+Prentice Hall.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>modwt.2d</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Xbox image
+data(xbox)
+xbox.dwt &lt;- dwt.2d(xbox, "haar", 3)
+par(mfrow=c(1,1), pty="s")
+plot.dwt.2d(xbox.dwt)
+par(mfrow=c(2,2), pty="s")
+image(1:dim(xbox)[1], 1:dim(xbox)[2], xbox, xlab="", ylab="",
+      main="Original Image")
+image(1:dim(xbox)[1], 1:dim(xbox)[2], idwt.2d(xbox.dwt), xlab="", ylab="",
+      main="Wavelet Reconstruction")
+image(1:dim(xbox)[1], 1:dim(xbox)[2], xbox - idwt.2d(xbox.dwt),
+      xlab="", ylab="", main="Difference")
+
+## Daubechies image
+data(dau)
+par(mfrow=c(1,1), pty="s")
+image(dau, col=rainbow(128))
+sum(dau^2)
+dau.dwt &lt;- dwt.2d(dau, "d4", 3)
+plot.dwt.2d(dau.dwt)
+sum(plot.dwt.2d(dau.dwt, plot=FALSE)^2)
+
+</code></pre>
+
+
+</div>

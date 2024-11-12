@@ -1,0 +1,160 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getMeta</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find a ISD site code and other meta data</h2>
+
+<h3>Description</h3>
+
+<p>Get information on meteorological sites
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getMeta(
+  site = "heathrow",
+  lat = NA,
+  lon = NA,
+  country = NA,
+  state = NA,
+  n = 10,
+  end.year = "current",
+  provider = c("OpenStreetMap", "Esri.WorldImagery"),
+  plot = TRUE,
+  returnMap = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>site</code></td>
+<td>
+<p>A site name search string e.g. <code>site = "heathrow"</code>. The search
+strings and be partial and can be upper or lower case e.g. <code>site = "HEATHR"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lat</code></td>
+<td>
+<p>A latitude in decimal degrees to search. Takes the values -90 to
+90.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lon</code></td>
+<td>
+<p>A longitude in decimal degrees to search. Takes values -180 to
+180. Negative numbers are west of the Greenwich meridian.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>country</code></td>
+<td>
+<p>The country code. This is a two letter code. For a full
+listing see <a href="https://www1.ncdc.noaa.gov/pub/data/noaa/isd-history.csv">https://www1.ncdc.noaa.gov/pub/data/noaa/isd-history.csv</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>state</code></td>
+<td>
+<p>The state code. This is a two letter code.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The number of nearest sites to search based on <code>latitude</code> and
+<code>longitude</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end.year</code></td>
+<td>
+<p>To help filter sites based on how recent the available data
+are. <code>end.year</code> can be "current", "any" or a numeric year such as 2016, or
+a range of years e.g. 1990:2016 (which would select any site that had an
+end date in that range. <strong>By default only sites that have some data for the
+current year are returned</strong>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>provider</code></td>
+<td>
+<p>By default a map will be created in which readers may toggle
+between a vector base map and a satellite/aerial image. <code>provider</code> allows
+users to override this default; see
+<a href="http://leaflet-extras.github.io/leaflet-providers/preview/">http://leaflet-extras.github.io/leaflet-providers/preview/</a> for a list
+of all base maps that can be used. If multiple base maps are provided, they
+can be toggled between using a "layer control" interface.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>If <code>TRUE</code> will plot sites on an interactive leaflet map.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnMap</code></td>
+<td>
+<p>Should the leaflet map be returned instead of the meta data?
+Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is primarily used to find a site code that can be used to
+access data using <code>importNOAA()</code>. Sites searches of approximately 30,000
+sites can be carried out based on the site name and based on the nearest
+locations based on user-supplied latitude and longitude.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame is returned with all available meta data, mostly
+importantly including a <code>code</code> that can be supplied to <code>importNOAA()</code>. If
+latitude and longitude searches are made an approximate distance, <code>dist</code> in
+km is also returned.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Carslaw
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>getMetaLive()</code> to download the all meta data to allow re-use and
+direct querying.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+## search for sites with name beijing
+getMeta(site = "beijing")
+
+## End(Not run)
+
+## Not run: 
+## search for near a specified lat/lon - near Beijing airport
+## returns 'n' nearest by default
+getMeta(lat = 40, lon = 116.9)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gracefully</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Gracefully request a resource from Wikipedia</h2>
+
+<h3>Description</h3>
+
+<p>The main purpose of this function is to enable examples using live resources
+in the documentation. Examples must not throw errors, according to CRAN
+policy. If you wrap a requesting method in <code>gracefully</code>, then any
+errors of type <code>httr2_http</code> will be caught and no error will be thrown.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">gracefully(request_object, request_method)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>request_object</code></td>
+<td>
+<p>A <code>httr2_request</code> object describing a query to a
+Wikimedia Action API</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>request_method</code></td>
+<td>
+<p>The desired function for performing the request,
+typically one of those in get_query_results</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The output of <code>request_method</code> called on <code>request_object</code>, if the
+request was successful. Otherwise a <code>httr2_response</code> object with details
+of the failed request.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# This fails without throwing an error
+req &lt;- httr2::request(httr2::example_url()) |&gt;
+  httr2::req_url_path("/status/404")
+
+resp &lt;- gracefully(req, httr2::req_perform)
+
+print(resp)
+
+# This request succeeds
+req &lt;- httr2::request(httr2::example_url())
+
+resp &lt;- gracefully(req, httr2::req_perform)
+
+print(resp)
+
+</code></pre>
+
+
+</div>

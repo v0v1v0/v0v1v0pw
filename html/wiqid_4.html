@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>allCombinations</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Create formulae for all combinations of covariates
+</h2>
+
+<h3>Description</h3>
+
+<p>Create formulae for all combinations of covariates, currently main effects only.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">allCombinations(response = "", covars, formulae = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>response</code></td>
+<td>
+
+<p>a character vector of length 1 specifying the response variable.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>covars</code></td>
+<td>
+
+<p>a character vector specifying the covariates/predictors.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formulae</code></td>
+<td>
+
+<p>if TRUE, only the formulae are returned; otherwise a TRUE/FALSE matrix is returned, with the formulae as row names.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>If <code>formulae = TRUE</code>, returns a character vector with elements corresponding to the formulae for all possible combinations of main effects.
+</p>
+<p>Otherwise, returns a TRUE/FALSE matrix indicating which covariates are included in each model with the model formulae as the row names.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">longNames &lt;- colnames(swiss)
+# these would produce formulae too long for the console.
+names(swiss) &lt;- abbreviate(longNames)
+vars &lt;- colnames(swiss)
+vars
+
+# Get the formulae for all combinations of covars:
+formulae &lt;- allCombinations(vars[1], vars[-1])
+formulae[1:10]
+
+# Run all the models with 'lm', put results into a list:
+# lms &lt;- lapply(formulae, lm, data=swiss) # This works, but the call is a mess!
+lms &lt;- vector('list', 32)
+for(i in 1:32)
+  lms[[i]] &lt;- lm(formulae[i], data=swiss)
+names(lms) &lt;- formulae
+
+# Extract AICs and look at top model:
+AICs &lt;- sapply(lms, AIC)
+head(sort(AICs))
+lms[[which.min(AICs)]]
+
+# Do a nice table of results:
+DeltaAIC &lt;- AICs - min(AICs)
+AICllh &lt;- exp(-DeltaAIC/2)
+AICwt &lt;- AICllh / sum(AICllh)
+order &lt;- order(AICs)
+head(round(cbind(AIC=AICs, DeltaAIC, AICllh, AICwt)[order, ], 3))
+
+# Get AIC weights for each of the covars:
+is.in &lt;- allCombinations(vars[1], vars[-1], form=FALSE)
+head(is.in)   # shows which covars are in each model
+covarWts &lt;- AICwt %*% is.in
+round(sort(covarWts[1, ], dec=TRUE), 3)
+  # the [1, ] is needed because %*% returns a 1-row matrix; 'sort' will coerce
+  #   that to a vector but strips out the names in the process.
+</code></pre>
+
+
+</div>

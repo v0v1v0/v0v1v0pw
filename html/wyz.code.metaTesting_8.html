@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>generateData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Generate Data </h2>
+
+<h3>Description</h3>
+
+<p> Function to generate data. </p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">generateData(function_f_1,
+             argumentsTypeRestrictions_l = list(),
+             replacementContext_l = setGenerationContext(),
+             ellipsisReplacementContext_l = setGenerationContext(),
+             defaultArgumentsContext_l = setDefaultArgumentsGenerationContext(),
+             functionName_s_1 = deparse(substitute(function_f_1))
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>function_f_1</code></td>
+<td>
+<p> a single <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> <em><code>function</code></em>, offensive programming ready,
+therefore using semantic argument names </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>argumentsTypeRestrictions_l</code></td>
+<td>
+<p> a named <em><code>list</code></em>. Each name must match
+a function argument name. Each content must be a vector of strings, each of them
+matching a <code>retrieveDataFactory()$getKnownSuffixes()</code> known suffix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>replacementContext_l</code></td>
+<td>
+<p> a generation context <em><code>object</code></em>, as defined by
+<b><em><code>setGenerationContext</code></em></b> function, applicable to standard
+arguments of the function, if any.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ellipsisReplacementContext_l</code></td>
+<td>
+<p> an ellipsis replacement context <em><code>object</code></em>,
+as defined by
+<em><b><code>setGenerationContext</code></b></em> function, applicable to ...
+arguments of the function.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>defaultArgumentsContext_l</code></td>
+<td>
+
+<p>a default argument context <em><code>object</code></em>, as defined by
+<em><b><code>setDefaultArgumentsGenerationContext</code></b></em> function,
+applicable to default arguments of the function.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>functionName_s_1</code></td>
+<td>
+<p> A character <em><code>vector</code></em> of length 1,
+holding the function name. Particularly useful in <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> scripts. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Generate a driven aleatory set of data to be used as argument in a call to <em><code>function</code></em>
+<code>fun_f_1</code>. Generation is driven by the <code>argumentsTypeRestrictions_l</code> argument.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <em><code>object</code></em> with following names
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+<b><code>generation</code></b> </td>
+<td style="text-align: left;"> argument name generation </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<b>codedata</b> </td>
+<td style="text-align: left;"> the generated data </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<b><code>context</code></b> </td>
+<td style="text-align: left;"> data type generation context </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<b><code>n</code></b> </td>
+<td style="text-align: left;"> number of first level data generations </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>Refer to <b><em>coderetrieveDataFactory</em></b> and to
+<b><em><code>testFunction</code></em></b>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># typical example
+op_sum &lt;- opwf(sum, c('...', 'removeNA_b_1'))
+op_sum_atr &lt;- list('...' = c('i', 'd', 'c'))
+ec &lt;- setGenerationContext(0, TRUE, FALSE)
+gd &lt;- generateData(op_sum, op_sum_atr, ec, erc$hetero_vector[[1]], dac$none)
+</code></pre>
+
+
+</div>

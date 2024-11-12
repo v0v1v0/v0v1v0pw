@@ -1,0 +1,174 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>show_trndseason</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot rates of change based on seasonal metrics</h2>
+
+<h3>Description</h3>
+
+<p>Plot rates of change based on seasonal metrics
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">show_trndseason(
+  mod,
+  metfun = mean,
+  doystr = 1,
+  doyend = 364,
+  type = c("log10", "approx"),
+  justify = c("left", "right", "center"),
+  win = 5,
+  ylab,
+  nsim = 10000,
+  yromit = NULL,
+  useave = FALSE,
+  base_size = 11,
+  nms = NULL,
+  fils = NULL,
+  cols = NULL,
+  xlim = NULL,
+  ylim = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mod</code></td>
+<td>
+<p>input model object as returned by <code>anlz_gam</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metfun</code></td>
+<td>
+<p>function input for metric to calculate, e.g., <code>mean</code>, <code>var</code>, <code>max</code>, etc</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doystr</code></td>
+<td>
+<p>numeric indicating start Julian day for extracting averages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doyend</code></td>
+<td>
+<p>numeric indicating ending Julian day for extracting averages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>chr string indicating if log slopes are shown (if applicable)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>justify</code></td>
+<td>
+<p>chr string indicating the justification for the trend window</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>win</code></td>
+<td>
+<p>numeric indicating number of years to use for the trend window, see details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>chr string for y-axis label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsim</code></td>
+<td>
+<p>numeric indicating number of random draws for simulating uncertainty</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yromit</code></td>
+<td>
+<p>optional numeric vector for years to omit from the output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useave</code></td>
+<td>
+<p>logical indicating if <code>anlz_avgseason</code> is used for the seasonal metric calculation, see details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>base_size</code></td>
+<td>
+<p>numeric indicating base font size, passed to <code>theme_bw</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nms</code></td>
+<td>
+<p>optional character vector for trend names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fils</code></td>
+<td>
+<p>optional character vector for the fill of interior point colors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cols</code></td>
+<td>
+<p>optional character vector for confidence interval colors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim</code></td>
+<td>
+<p>optional numeric vector of length two for x-axis limits</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylim</code></td>
+<td>
+<p>optional numeric vector of length two for y-axis limits</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to <code>metfun</code>, e.g., <code>na.rm = TRUE</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>ggplot</code> object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(dplyr)
+
+# data to model
+tomod &lt;- rawdat %&gt;%
+  filter(station %in% 34) %&gt;%
+  filter(param %in% 'chl') %&gt;% 
+  filter(yr &gt; 2015)
+
+mod &lt;- anlz_gam(tomod, trans = 'log10')
+show_trndseason(mod, doystr = 90, doyend = 180, justify = 'left', win = 4,
+     ylab = 'Slope Chlorophyll-a (ug/L/yr)')
+</code></pre>
+
+
+</div>

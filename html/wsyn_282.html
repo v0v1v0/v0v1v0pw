@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>surrog</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Creates surrogate time series, either Fourier surrogates or amplitude adjusted 
+Fourier surrogates</h2>
+
+<h3>Description</h3>
+
+<p>For significance testing wavelet coherence and other purposes
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">surrog(dat, nsurrogs, surrtype, syncpres)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>A locations x time matrix of observations (for multiple-time series input), or a single vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsurrogs</code></td>
+<td>
+<p>The number of surrogates to produce</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>surrtype</code></td>
+<td>
+<p>Either "fft" (for Fourier surrogates) or "aaft" (for amplitude adjusted Fourier surrogates). 
+Fourier surrogates are appropriate for time series with normal marginals; otherwise consider aaft surrogates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>syncpres</code></td>
+<td>
+<p>Logical. TRUE for "synchrony preserving" surrogates (same phase randomizations used for all time 
+series). FALSE leads to independent phase randomizations for all time series.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Fourier surrogates are somewhat faster than <code>aaft</code> surrogates, and may be much faster when 
+some of the time series in the data have ties. Prenormalization (e.g., using <code>cleandat</code>) can 
+make it possible to use <code>fft</code> surrogates.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>surrog</code> returns a list of nsurrogs surrogate datasets
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jonathan Walter, <a href="mailto:jaw3es@virginia.edu">jaw3es@virginia.edu</a>; Lawrence Sheppard, <a href="mailto:lwsheppard@ku.edu">lwsheppard@ku.edu</a>; 
+Daniel Reuman, <a href="mailto:reuman@ku.edu">reuman@ku.edu</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Sheppard, LW, et al. (2016) Changes in large-scale climate alter spatial synchrony of aphid pests. Nature Climate 
+Change. DOI: 10.1038/nclimate2881
+</p>
+<p>Schreiber, T and Schmitz, A (2000) Surrogate time series. Physica D 142, 346-382.
+</p>
+<p>Prichard, D and Theiler, J (1994) Generating surrogate data for time series with several simultaneously measured 
+variables. Physical Review Letters 73, 951-954.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wpmf</code>, <code>coh</code>, <code>wlmtest</code>, <code>synmat</code>,
+<code>browseVignettes("wsyn")</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">times&lt;-1:100
+dat&lt;-sin(2*pi*times/10)
+nsurrogs&lt;-10
+surrtype&lt;-"fft"
+syncpres&lt;-TRUE
+res&lt;-surrog(dat,nsurrogs,surrtype,syncpres)
+
+</code></pre>
+
+
+</div>

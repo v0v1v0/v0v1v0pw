@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>miceData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Number of visits and time spent in different tunnels of laboratory mice</h2>
+
+<h3>Description</h3>
+
+<p>Wild strain house mice were, at birth, cross fostered onto house mouse (Mus), 
+deer mouse (Peromyscus) or rat (Rattus) nursing mothers. Ten days after weaning, 
+each subject was tested in an apparatus that allowed it to enter four different tunnels: 
+one scented with clean pine shavings, and the other three tunnels with shavings 
+bearing the scent of Mus, Peromyscus, or Rattus respectively. 
+Three variables were measured for each tunnel: the number of visits to the 
+tunnel during a twenty minute test, the time spent by each subject
+in each of the four tunnels and the latency to first visit of each tunnel.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">miceData
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 144 rows and 6 variables:
+</p>
+
+<dl>
+<dt>Subject</dt>
+<dd>
+<p>an ID that identifies the mouse to which the measurements of the row correspond.</p>
+</dd>
+<dt>nurs</dt>
+<dd>
+<p>type of nursing mother this mouse had at birth.</p>
+</dd>
+<dt>tunnel</dt>
+<dd>
+<p>type of tunnel to which the measurements of this row correspond.</p>
+</dd>
+<dt>visits</dt>
+<dd>
+<p>number of visits to the aforementioned tunnel.</p>
+</dd>
+<dt>time</dt>
+<dd>
+<p>total time spent by the mouse at this tunnel.</p>
+</dd>
+<dt>latency</dt>
+<dd>
+<p>seconds passed before the mouse first visited this tunnel.</p>
+</dd>
+</dl>
+<h3>Source</h3>
+
+<p><a href="http://core.ecu.edu/psyc/wuenschk/SPSS/TUNNEL4b.sav">http://core.ecu.edu/psyc/wuenschk/SPSS/TUNNEL4b.sav</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>K. L.Wuensch. Fostering house mice onto rats and deer mice: Effects on response to species odors.
+Animal Learning &amp; Behavior, 20(3):253 - 258, 1992
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">omnibus_LSM &lt;- welchADF.test(miceData, response = c("visits", "time", "latency"),
+  between.s = "nurs", within.s = "tunnel", subject = "Subject", contrast = "omnibus")
+# Formula interface, using cbind() to specify a multivariate response.
+omnibus_LSM_formula &lt;- welchADF.test(
+  cbind(visits, time, latency) ~ nurs*tunnel + (tunnel|Subject), data = miceData) 
+pairwise_LSM_nurs &lt;- welchADF.test(miceData, response = c("visits", "time",
+  "latency"), between.s = "nurs", within.s = "tunnel", subject = "Subject",
+  effect = "nurs", contrast = "all.pairwise")
+pairwise_LSM_tunnel &lt;- update(pairwise_LSM_nurs, effect = "tunnel")
+## Not run: 
+  pairwise_nurs_trimmed_boot &lt;- update(pairwise_LSM_nurs, trimming = TRUE, bootstrap = TRUE)
+  pairwise_tunnel_trimmed_boot &lt;- update(pairwise_nurs_trimmed_boot, effect = "tunnel")
+  summary(pairwise_nurs_trimmed_boot)
+
+## End(Not run)
+summary(omnibus_LSM)
+summary(pairwise_LSM_nurs)
+summary(pairwise_LSM_tunnel)
+</code></pre>
+
+
+</div>

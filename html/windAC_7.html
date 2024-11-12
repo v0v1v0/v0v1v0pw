@@ -1,0 +1,120 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>estWD</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Weighted Distribution Estimation</h2>
+
+<h3>Description</h3>
+
+<p>Maximum likelihood estimatation of a weighted probability density function is completed. is done on a weighted distribution.
+The weighted distribution is a typical probability density distribution multiplied by a weight function. The weight function can be used to truncate the distribution by returning zero beyond some threshold value.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">estWD(fatDist, weightFun, distribution, ...)
+
+weightedDistribution(fatDist, weightFun, distribution, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fatDist</code></td>
+<td>
+<p>Vector of fatality distanes from the turbine.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weightFun</code></td>
+<td>
+<p>R function that is multipled by the probability distribution, see details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Character indicating the distribution for <code>weightedDistribution</code> or vector for <code>estWD</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to <code>weightFun</code> or <code>optim</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function <code>estWD</code> is a convient wrapper function to <code>weightedDistribution</code>, for fitting multiple distributions.
+</p>
+<p>The weight function should return a (relative) probability of detection at every distance.
+Typically this is the proportion of area searched.
+The function <code>weightFun</code> is set up to take a table of proportion of area searched and return values in a function format.
+</p>
+<p>Let <code class="reqn">h(x)</code> be the weight function (<code>weightFun</code>), <code class="reqn">f(x|\theta)</code> be a probability density function (specified by <code>distribution</code>, <code class="reqn">x</code> be the vector of carcass distances from the turbine (<code>fatDist</code>), and <code class="reqn">\theta</code> be the parameter vector to be estimated.
+The weighted distribution is
+</p>
+<p style="text-align: center;"><code class="reqn">f_{d}(x|\theta) = \frac{h(x)f(x|\theta)}{\int h(y)f(y|\theta)dy}</code>
+</p>
+
+<p>The likelihood that is maximized is
+</p>
+<p style="text-align: center;"><code class="reqn">L_{d}(\theta|\underbar{x}) = \prod_{i=1}^{n}\frac{h(x_i)f(x_i|\theta)}{\int h(y)f(y|\theta)dy}</code>
+</p>
+
+
+
+<h3>Value</h3>
+
+<p>Data frame of the parameter estimates with fit statistics.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>calcAC</code>
+</p>
+<p><code>weightFun</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## load the data
+data(carcassDistance)
+data(proportionAreaSearched)
+
+###############################################
+## fit for fall carcasses found on road and pad (RP)
+distanceFallRP &lt;- subset(carcassDistance,plotType=='RP'&amp;season=='fall',
+select=distanceFromTurbine,drop=TRUE)
+
+
+fallRPFit &lt;- estWD(fatDist=distanceFallRP,weightFun=weightFun,
+distribution=c('norm','gamma','weibull'),propTable=proportionAreaSearched,type='RP',
+typeCol='plotType',distanceCol='distanceFromTurbine',propCol='proportionAreaSearched',
+maxDistance=100)
+
+
+###############################################
+## fit for fall carcasses found on full plots
+distanceFallFP &lt;- subset(carcassDistance,plotType=='FULL'&amp;season=='fall',
+select=distanceFromTurbine,drop=TRUE)
+
+
+fallFPFit &lt;- estWD(fatDist=distanceFallFP,weightFun=weightFun,
+distribution=c('norm','gamma','weibull'),propTable=proportionAreaSearched,type='FULL',
+typeCol='plotType',distanceCol='distanceFromTurbine',propCol='proportionAreaSearched',
+maxDistance=100)
+
+
+</code></pre>
+
+
+</div>

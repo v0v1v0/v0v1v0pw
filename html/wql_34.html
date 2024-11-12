@@ -1,0 +1,197 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>seaKen</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Seasonal and Regional Kendall trend test</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the Seasonal or Regional Kendall test of trend significance,
+including an estimate of the Sen slope.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">seaKen(
+  x,
+  plot = FALSE,
+  type = c("slope", "relative"),
+  order = FALSE,
+  pval = 0.05,
+  mval = 0.5,
+  pchs = c(19, 21),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector, matrix or data frame made up of seasonal time
+series</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>Should the trends be plotted when x is a matrix or data frame?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Type of trend to be plotted, actual or relative to series median</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>order</code></td>
+<td>
+<p>Should the plotted trends be ordered by size?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pval</code></td>
+<td>
+<p>p-value for significance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mval</code></td>
+<td>
+<p>Minimum fraction of seasons needed with non-missing slope
+estimates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pchs</code></td>
+<td>
+<p>Plot symbols for significant and not significant trend
+estimates, respectively</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments to pass to plotting function</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The Seasonal Kendall test (Hirsch et al. 1982) is based on the Mann-Kendall
+tests for the individual seasons (see <code>mannKen</code> for additional
+details). <em>p</em>-values provided here are not corrected for serial
+correlation among seasons.
+</p>
+<p>If <code>plot = TRUE</code>, then either the Sen slope in units per year
+(<code>type = "slope"</code>) or the relative slope in fraction per year
+(<code>type = "relative"</code>) is plotted. The relative slope is defined
+identically to the Sen slope except that each slope is divided by the first
+of the two values that describe the slope. Plotting the relative slope is
+useful when the variables in <code>x</code> are always positive and have different
+units.
+</p>
+<p>The plot symbols indicate, respectively, that the trend is statistically
+significant or not. The plot can be customized by passing any arguments used
+by <code>dotchart</code> such as <code>xlab</code>, as well as graphical
+parameters described in <code>par</code>.
+</p>
+<p>If <code>mval</code> or more of the seasonal slope estimates are missing, then
+that trend is considered to be missing. The seasonal slope estimate
+(<code>mannKen</code>), in turn, is missing if half or more of the possible
+comparisons between the first and last 20% of the years are missing.
+</p>
+<p>The function can be used in conjunction with <code>mts2ts</code> to calculate a
+Regional Kendall test of significance for annualized data, along with a
+regional estimate of trend (Helsel and Frans 2006). See the examples below.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of the following if <code>x</code> is a vector: <code>seaKen</code>
+returns a list with the following members: </p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>sen.slope </code></td>
+<td>
+<p>Sen slope</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sen.slope.pct</code></td>
+<td>
+<p>Sen slope as percent of mean</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value</code></td>
+<td>
+<p>significance of slope</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>miss</code></td>
+<td>
+<p>for each season, the
+fraction missing of slopes connecting first and last 20% of the years</p>
+</td>
+</tr>
+</table>
+<p> or a
+matrix with corresponding columns if <code>x</code> is a matrix or data frame.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alan Jassby, James Cloern
+</p>
+
+
+<h3>References</h3>
+
+<p>Helsel, D.R. and Frans, L. (2006) Regional Kendall test for
+trend. <em>Environmental Science and Technology</em> <b>40(13),</b> 4066-4073.
+</p>
+<p>Hirsch, R.M., Slack, J.R., and Smith, R.A. (1982) Techniques of trend
+analysis for monthly water quality data. <em>Water Resources Research</em>
+<b>18,</b> 107-121.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>mannKen</code>, <code>mts2ts</code>,
+<code>trendHomog</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Seasonal Kendall test:
+chl &lt;- sfbayChla # monthly chlorophyll at 16 stations in San Francisco Bay
+seaKen(sfbayChla[, 's27']) # results for a single series at station 27
+seaKen(sfbayChla) # results for all stations
+seaKen(sfbayChla, plot=TRUE, type="relative", order=TRUE)
+
+# Regional Kendall test:
+# Use mts2ts to change 16 series into a single series with 16 "seasons"
+seaKen(mts2ts(chl))  # too many missing data
+# better when just Feb-Apr, spring bloom period,
+# but last 4 stations still missing too much.
+seaKen(mts2ts(chl, seas = 2:4)) 
+seaKen(mts2ts(chl[, 1:12], 2:4)) # more reliable result
+
+</code></pre>
+
+
+</div>

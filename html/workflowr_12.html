@@ -1,0 +1,150 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wflow_open</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Open R Markdown analysis file(s)</h2>
+
+<h3>Description</h3>
+
+<p><code>wflow_open</code> opens R Markdown files in RStudio and sets the working
+directory to the knit directory (see Details). If a file does not exist, a
+minimal one is created.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wflow_open(files, change_wd = TRUE, edit_in_rstudio = TRUE, project = ".")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>character. R Markdown file(s) to open. Files must have the
+extension Rmd or rmd. Supports file
+<a href="https://en.wikipedia.org/wiki/Glob_(programming)">globbing</a>. Set
+<code>project = NULL</code> to create an R Markdown file outside of the R
+Markdown directory of a workflowr project.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>change_wd</code></td>
+<td>
+<p>logical (default: TRUE). Change the working directory to the
+knit directory. If <code>project = NULL</code>, the working directory is
+<b>not</b> changed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edit_in_rstudio</code></td>
+<td>
+<p>logical (default: TRUE). Open the file(s) in the
+RStudio editor.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>character (or NULL). By default the function assumes the
+current working directory is within the project. If this is not true,
+you'll need to provide the path to the project directory. Set <code>project
+= NULL</code> if running this command to create a file for a non-workflowr
+project.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>wflow_open</code> is a convenience function to make it easier to begin
+working, especially when starting a new analysis. First, it creates a new
+file if necessary and tries to make educated guesses about metadata like the
+title, author, and date. Second, it sets the working directory to the knit
+directory. The knit directory is where the code in the R Markdown files is
+executed, and may be defined via the field <code>knit_root_dir</code> in the file
+<code>_workflowr.yml</code> (see <code>wflow_html</code> for all the details). If
+this field is not defined, then the knit directory is the R Markdown
+directory. Third, it opens the file(s) in RStudio if applicable. The latter
+two side effects can be turned off if desired.
+</p>
+<p>If you would like to create an R Markdown file with <code>wflow_open</code> for an
+analysis that is not part of a workflowr project, set <code>project = NULL</code>.
+Otherwise <code>wflow_open</code> will throw an error. Note that the working
+directory is <b>not</b> changed when <code>project = NULL</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>wflow_open</code>, which is a list with the
+following elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>The input argument <code>files</code> as absolute paths.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>change_wd</code></td>
+<td>
+<p>The input argument <code>change_wd</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edit_in_rstudio</code></td>
+<td>
+<p>The input argument <code>edit_in_rstudio</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>knit_root_dir</code></td>
+<td>
+<p>The knit directory (see <code>wflow_html</code> for
+details). This is <code>NULL</code> if <code>project</code> was set to <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>previous_wd</code></td>
+<td>
+<p>The working directory in which <code>wflow_open</code> was
+executed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>new_wd</code></td>
+<td>
+<p>The working directory that <code>wflow_open</code> changed to. The
+value is <code>NULL</code> if the working directory was not changed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>files_new</code></td>
+<td>
+<p>The subset of the input argument <code>files</code> that were
+newly created. Paths are absolute.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+wflow_open("analysis/model-data.Rmd")
+# Multiple files
+wflow_open(c("analysis/model-data.Rmd", "analysis/another-analysis.Rmd"))
+# Open all R Markdown files
+wflow_open("analysis/*Rmd")
+# Create an R Markdown file in a non-worklowr project
+wflow_open("model-data.Rmd", project = NULL)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

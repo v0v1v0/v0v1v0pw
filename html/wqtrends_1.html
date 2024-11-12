@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>anlz_avgseason</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract period (seasonal) averages from fitted GAM</h2>
+
+<h3>Description</h3>
+
+<p>Extract period (seasonal) averages from fitted GAM
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">anlz_avgseason(mod, doystr = 1, doyend = 364, yromit = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mod</code></td>
+<td>
+<p>input model object as returned by <code>anlz_gam</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doystr</code></td>
+<td>
+<p>numeric indicating start Julian day for extracting averages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doyend</code></td>
+<td>
+<p>numeric indicating ending Julian day for extracting averages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yromit</code></td>
+<td>
+<p>optional numeric vector for years to omit from the output</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data frame of period averages
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(dplyr)
+
+# data to model
+tomod &lt;- rawdat %&gt;%
+  filter(station %in% 34) %&gt;%
+  filter(param %in% 'chl') %&gt;% 
+  filter(yr &gt; 2015)
+
+mod &lt;- anlz_gam(tomod, trans = 'log10')
+anlz_avgseason(mod, doystr = 90, doyend = 180)
+</code></pre>
+
+
+</div>

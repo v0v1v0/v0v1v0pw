@@ -1,0 +1,246 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fgkm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Feature Group Weighting K-Means for Subspace clustering
+</h2>
+
+<h3>Description</h3>
+
+<p>Perform an feature group weighting subspace k-means.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  fgkm(x, centers, groups, lambda, eta, maxiter=100, delta=0.000001,
+       maxrestart=10,seed=-1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>numeric matrix of observations and features.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>centers</code></td>
+<td>
+<p>target number of clusters or the initial centers for
+clustering.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groups</code></td>
+<td>
+<p>a string give the group information, formatted as
+<code>"0,1,2,4;3,5;6,7,8"</code> or <code>"0-2,4;3,5;6-8"</code>, where
+<code>";"</code> defines a group; or a vector of length of features, each
+element of the vector indicates the group of the feature. For
+example, <code>c(1,1,1,2,1,2,3,3,3)</code> is the same as
+<code>"0-2,4;3,5;6-8"</code>, or even<br><code>c("a","a","a","b","a","b","c","c","c")</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda</code></td>
+<td>
+<p>parameter of feature weight distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eta</code></td>
+<td>
+<p>parameter of group weight distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta</code></td>
+<td>
+<p>maximum change allowed between iterations for convergence.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxiter</code></td>
+<td>
+<p>maximum number of iterations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxrestart</code></td>
+<td>
+<p>maximum number of restarts. Default is 10 so that we
+stand a good chance of getting a full set of clusters. Normally, any
+empty clusters that result are removed from the result, and so we may
+obtain fewer than k clusters if we don't allow restarts(i.e.,
+maxrestart=0). If &lt; 0, then there is no limit on the number of
+restarts and we are much likely to get a full set of k clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>random seed. If it was set below 0, then a randomly
+generated number will be assigned.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The feature group weighting k-means clustering algorithm is a
+extension to ewkm, which itself is a soft subspace clustering
+method.
+</p>
+<p>The algorithm weights subspaces in both feature groups and individual
+features.
+</p>
+<p>Always check the number of iterations, the number of restarts, and the
+total number of iterations as they give a good indication of whether
+the algorithm converged.
+</p>
+<p>As with any distance based algorithm, be sure to rescale your numeric
+data so that large values do not bias the clustering. A quick
+rescaling method to use is <code>scale</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Return an object of class "kmeans" and "fgkm", compatible with other
+function that work with kmeans objects, such as the 'print'
+method. The object is a list with the following components in addition
+to the components of the kmeans object:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>cluster</code></td>
+<td>
+<p>A vector of integer (from 1:k) indicating the cluster
+to which each point is allocated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>centers</code></td>
+<td>
+<p>A matrix of cluster centers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>featureWeight</code></td>
+<td>
+<p>A matrix of weights recording the relative
+importance of each feature for each cluster.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groupWeight</code></td>
+<td>
+<p>A matrix of group weights recording the relative
+importance of each feature group for each cluster.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iterations</code></td>
+<td>
+<p>This report on the number of iterations before
+termination. Check this to see whether the maxiters was reached. If so
+then teh algorithm may not be converging, and thus the resulting
+clustering may not be particularly good.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>restarts</code></td>
+<td>
+<p>The number of times the clustering restarted because
+of a disappearing cluster resulting from one or more k-means having no
+observations associated with it. An number here greater than zero
+indicates that the algorithm is not converging on a clustering for the
+given k. It is recommended that k be reduced.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>totalIterations</code></td>
+<td>
+<p>The total number of iterations over all
+restarts.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>totolCost</code></td>
+<td>
+<p>The total cost calculated in the cost function.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Longfei Xiao <a href="mailto:lf.xiao@siat.ac.cn">lf.xiao@siat.ac.cn</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Xiaojun Chen, Yunming Ye, Xiaofei Xu and Joshua Zhexue Huang (2012). A
+Feature Group Weighting Method for Subspace Clustering of
+High-Dimensional Data. Pattern Recognition, 45(1), 434–446.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>kmeans</code>
+<code>ewkm</code>
+<code>twkm</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# The data fgkm.sample has 600 objects and 50 dimensions.
+# Scale the data before clustering
+x &lt;- scale(fgkm.sample)
+
+# Group information is formated as below.
+# Each group is separated by ';'.
+strGroup &lt;- "0-9;10-19;20-49"
+groups &lt;- c(rep(0, 10), rep(1, 10), rep(2, 30))
+
+# Use the fgkm algorithm.
+myfgkm &lt;- fgkm(x, 3, strGroup, 3, 1, seed=19)
+myfgkm2 &lt;- fgkm(x, 3, groups, 3, 1, seed=19)
+all.equal(myfgkm, myfgkm2)
+
+# You can print the clustering result now.
+myfgkm$cluster
+myfgkm$featureWeight
+myfgkm$groupWeight
+myfgkm$iterations
+myfgkm$restarts
+myfgkm$totiters
+myfgkm$totss
+
+# Use a cluster validation method from package 'fpc'.
+
+# real.cluster is the real class label of the data 'fgkm.sample'.
+real.cluster &lt;- rep(1:3, each=200)
+
+# cluster.stats() computes several distance based statistics.
+kmstats &lt;- cluster.stats(d=dist(x), as.integer(myfgkm$cluster), real.cluster)
+
+# corrected Rand index
+kmstats$corrected.rand
+
+# variation of information (VI) index
+kmstats$vi
+
+</code></pre>
+
+
+</div>

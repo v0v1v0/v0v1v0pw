@@ -1,0 +1,306 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>glm_weightit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fitting Weighted Generalized Linear Models</h2>
+
+<h3>Description</h3>
+
+<p><code>glm_weightit()</code> is used to fit generalized linear models with a covariance matrix that accounts for estimation of weights, if supplied. <code>lm_weightit()</code> is a wrapper for <code>glm_weightit()</code> with the Gaussian family and identity link (i.e., a linear model). <code>ordinal_weightit()</code> fits proportional odds ordinal regression models. <code>multinom_weightit()</code> fits multinomial logistic regression models. <code>coxph_weightit()</code> fits a Cox proportional hazards model and is a wrapper for <code>survival::coxph()</code>. By default, these functions use M-estimation to construct a robust covariance matrix using the estimating equations for the weighting model and the outcome model when available.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">glm_weightit(
+  formula,
+  data,
+  family = gaussian,
+  weightit = NULL,
+  vcov = NULL,
+  cluster,
+  R = 500,
+  offset,
+  start = NULL,
+  etastart,
+  mustart,
+  control = list(...),
+  x = FALSE,
+  y = TRUE,
+  contrasts = NULL,
+  fwb.args = list(),
+  br = FALSE,
+  ...
+)
+
+ordinal_weightit(
+  formula,
+  data,
+  link = "logit",
+  weightit = NULL,
+  vcov = NULL,
+  cluster,
+  R = 500,
+  offset,
+  start = NULL,
+  control = list(...),
+  x = FALSE,
+  y = TRUE,
+  contrasts = NULL,
+  fwb.args = list(),
+  ...
+)
+
+multinom_weightit(
+  formula,
+  data,
+  link = "logit",
+  weightit = NULL,
+  vcov = NULL,
+  cluster,
+  R = 500,
+  offset,
+  start = NULL,
+  control = list(...),
+  x = FALSE,
+  y = TRUE,
+  contrasts = NULL,
+  fwb.args = list(),
+  ...
+)
+
+coxph_weightit(
+  formula,
+  data,
+  weightit = NULL,
+  vcov = NULL,
+  cluster,
+  R = 500,
+  x = FALSE,
+  y = TRUE,
+  fwb.args = list(),
+  ...
+)
+
+lm_weightit(
+  formula,
+  data,
+  weightit = NULL,
+  vcov = NULL,
+  cluster,
+  R = 500,
+  offset,
+  start = NULL,
+  etastart,
+  mustart,
+  control = list(...),
+  x = FALSE,
+  y = TRUE,
+  contrasts = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>formula</code></td>
+<td>
+<p>an object of class "formula" (or one that can be coerced to that class): a symbolic description of the model to be fitted. For <code>coxph_weightit()</code>, see <code>survival::coxph()</code> for how this should be specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a data frame containing the variables in the model. If not found in data, the variables are taken from <code>environment(formula)</code>, typically the environment from which the function is called.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>a description of the error distribution and link function to be used in the model. This can be a character string naming a family function, a family function or the result of a call to a family function. See family for details of family functions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weightit</code></td>
+<td>
+<p>a <code>weightit</code> or <code>weightitMSM</code> object; the output of a call to <code>weightit()</code> or <code>weightitMSM()</code>. If not supplied, an unweighted model will be fit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vcov</code></td>
+<td>
+<p>string; the method used to compute the variance of the estimated parameters. Allowable options include <code>"asympt"</code>, which uses the asymptotically correct M-estimation-based method that accounts for estimation of the weights when available; <code>"const"</code>, which uses the usual maximum likelihood estimates (only available when <code>weightit</code> is not supplied); <code>"HC0"</code>, which computes the robust sandwich variance treating weights (if supplied) as fixed; <code>"BS"</code>, which uses the traditional bootstrap (including re-estimation of the weights, if supplied); <code>"FWB"</code>, which uses the fractional weighted bootstrap as implemented in <code>fwb::fwb()</code> (including re-estimation of the weights, if supplied); and <code>"none"</code> to omit calculation of a variance matrix. If <code>NULL</code> (the default), will use <code>"asympt"</code> if <code>weightit</code> is supplied and M-estimation is available and <code>"HC0"</code> otherwise. See the <code>vcov_type</code> component of the outcome object to see which was used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cluster</code></td>
+<td>
+<p>optional; for computing a cluster-robust variance matrix, a variable indicating the clustering of observations, a list (or data frame) thereof, or a one-sided formula specifying which variable(s) from the fitted model should be used. Note the cluster-robust variance matrix uses a correction for small samples, as is done in <code>sandwich::vcovCL()</code> by default. Cluster-robust variance calculations are available only when <code>vcov</code> is <code>"asympt"</code>, <code>"HC0"</code>, <code>"BS"</code>, or <code>"FWB"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+<p>the number of bootstrap replications when <code>vcov</code> is <code>"BS"</code> or <code>"FWB"</code>. Default is 500. Ignored otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>offset</code></td>
+<td>
+<p>optional; a numeric vector containing the model offset. See <code>offset()</code>. An offset can also be preset in the model formula.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p>optional starting values for the coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>etastart, mustart</code></td>
+<td>
+<p>optional starting values for the linear predictor and vector of means. Passed to <code>glm()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>a list of parameters for controlling the fitting process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x, y</code></td>
+<td>
+<p>logical values indicating whether the response vector and model matrix used in the fitting process should be returned as components of the returned value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>contrasts</code></td>
+<td>
+<p>an optional list defining contrasts for factor variables. See <code>model.matrix()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fwb.args</code></td>
+<td>
+<p>an optional list of further arguments to supply to <code>fwb::fwb()</code> when <code>vcov = "FWB"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>br</code></td>
+<td>
+<p><code>logical</code>; whether to use bias-reduced regression as implemented by <code>brglm2::brglmFit()</code>. If <code>TRUE</code>, arguments passed to <code>control</code> or ... will be passed to <code>brglm2::brglmControl()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments to be used to form the default control argument if it is not supplied directly.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+<p>for <code>plor_weightit()</code> and <code>multinom_weightit()</code>, a string corresponding to the desired link function. For <code>ordinal_weightit()</code>, any allowed by <code>binomial()</code> are accepted; for <code>multinom_weightit()</code>, only <code>"logit"</code> is allowed. Default is <code>"logit"</code> for ordinal or multinomial logistic regression, respectively.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>glm_weightit()</code> is essentially a wrapper for <code>glm()</code> that optionally computes a coefficient variance matrix that can be adjusted to account for estimation of the weights if a <code>weightit</code> or <code>weightitMSM</code> object is supplied to the <code>weightit</code> argument. When no argument is supplied to <code>weightit</code> or there is no <code>"Mparts"</code> attribute in the supplied object, the default variance matrix returned will be the "HC0" sandwich variance matrix, which is robust to misspecification of the outcome family (including heteroscedasticity). Otherwise, the default variance matrix uses M-estimation to additionally adjust for estimation of the weights. When possible, this often yields smaller (and more accurate) standard errors. See the individual methods pages to see whether and when an <code>"Mparts"</code> attribute is included in the supplied object. To request that a variance matrix be computed that doesn't account for estimation of the weights even when a compatible <code>weightit</code> object is supplied, set <code>vcov = "HC0"</code>, which treats the weights as fixed.
+</p>
+<p>Bootstrapping can also be used to compute the coefficient variance matrix; when <code>vcov = "BS"</code> or <code>vcov = "FWB"</code>, which implement the traditional resampling-based and fractional weighted bootstrap, respectively, the entire process of estimating the weights and fitting the outcome model is repeated in bootstrap samples (if a <code>weightit</code> object is supplied). This accounts for estimation of the weights and can be used with any weighting method. It is important to set a seed using <code>set.seed()</code> to ensure replicability of the results. The fractional weighted bootstrap is more reliable but requires the weighting method to accept sampling weights (which most do, and you'll get an error if it doesn't). Setting <code>vcov = "FWB"</code> and supplying <code>fwb.args = list(wtype = "multinom")</code> also performs the resampling-based bootstrap but with the additional features <span class="pkg">fwb</span> provides (e.g., a progress bar and parallelization) at the expense of needing to have <span class="pkg">fwb</span> installed.
+</p>
+<p><code>multinom_weightit()</code> implements multinomial logistic regression using a custom function in <span class="pkg">WeightIt</span>. This implementation is less robust to failures than other multinomial logistic regression solvers and should be used with caution. Estimation of coefficients should align with that from <code>mlogit::mlogit()</code> and <code>mclogit::mblogit()</code>.
+</p>
+<p><code>ordinal_weightit()</code> implements proportional odds ordinal regression using a custom function in <span class="pkg">WeightIt</span>. Estimation of coefficients should align with that from <code>MASS::polr()</code>.
+</p>
+<p><code>coxph_weightit()</code> is a wrapper for <code>survival::coxph()</code> to fit weighted survival models. It differs from <code>coxph()</code> in that the <code>cluster</code> argument (if used) should be specified as a one-sided formula (which can include multiple clustering variables) and uses a small sample correction for cluster variance estimates when specified. Currently, M-estimation is not supported, so bootstrapping (i.e., <code>vcov = "BS"</code> or <code>"FWB"</code>) is the only way to correctly adjust for estimation of the weights. By default, the robust variance is estimated treating weights as fixed, which is the same variance returned when <code>robust = TRUE</code> in <code>coxph()</code>.
+</p>
+<p>Functions in the <span class="pkg">sandwich</span> package can be to compute standard errors after fitting, regardless of how <code>vcov</code> was specified, though these will ignore estimation of the weights, if any. When no adjustment is done for estimation of the weights (i.e., because no <code>weightit</code> argument was supplied or there was no <code>"Mparts"</code> component in the supplied object), the default variance matrix produced by <code>glm_weightit()</code> should align with that from <code style="white-space: pre;">⁠sandwich::vcovHC(. type = "HC0")⁠</code> or <code>sandwich::vcovCL(., type = "HC0", cluster = cluster)</code> when <code>cluster</code> is supplied. Not all types are available for all models.
+</p>
+
+
+<h3>Value</h3>
+
+<p>For <code>lm_weightit()</code> and <code>glm_weightit()</code>, a <code>glm_weightit</code> object, which inherits from <code>glm</code>. For <code>ordinal_weightit()</code> and <code>multinom_weightit()</code>, an <code>ordinal_weightit</code> or <code>multinom_weightit</code>, respectively. For <code>coxph_weightit()</code>, a <code>coxph_weightit</code> object, which inherits from <code>coxph</code>. See <code>survival::coxph()</code> for details.
+</p>
+<p>Unless <code>vcov = "none"</code>, the <code>vcov</code> component contains the covariance matrix adjusted for the estimation of the weights if requested and a compatible <code>weightit</code> object was supplied. The <code>vcov_type</code> component contains the type of variance matrix requested. If <code>cluster</code> is supplied, it will be stored in the <code>"cluster"</code> attribute of the output object, even if not used.
+</p>
+<p>The <code>model</code> component of the output object (also the <code>model.frame()</code> output) will include two extra columns when <code>weightit</code> is supplied: <code>(weights)</code> containing the weights used in the model (the product of the estimated weights and the sampling weights, if any) and <code>(s.weights)</code> containing the sampling weights, which will be 1 if <code>s.weights</code> is not supplied in the original <code>weightit()</code> call.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>lm()</code> and <code>glm()</code> for fitting generalized linear models without adjusting standard errors for estimation of the weights. <code>survival::coxph()</code> for fitting Cox proportional hazards models without adjusting standard errors for estimation of the weights.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data("lalonde", package = "cobalt")
+
+# Logistic regression ATT weights
+w.out &lt;- weightit(treat ~ age + educ + married + re74,
+                  data = lalonde, method = "glm",
+                  estimand = "ATT")
+
+# Linear regression outcome model that adjusts
+# for estimation of weights
+fit1 &lt;- lm_weightit(re78 ~ treat, data = lalonde,
+                    weightit = w.out)
+
+summary(fit1)
+
+# Linear regression outcome model that treats weights
+# as fixed
+fit2 &lt;- lm_weightit(re78 ~ treat, data = lalonde,
+                    weightit = w.out, vcov = "HC0")
+
+summary(fit2)
+
+# example code
+
+# Linear regression outcome model that bootstraps
+# estimation of weights and outcome model fitting
+# using fractional weighted bootstrap with "Mammen"
+# weights
+set.seed(123)
+fit3 &lt;- lm_weightit(re78 ~ treat, data = lalonde,
+                    weightit = w.out,
+                    vcov = "FWB",
+                    R = 50, #should use way more
+                    fwb.args = list(wtype = "mammen"))
+
+summary(fit3)
+
+# Multinomial logistic regression outcome model
+# that adjusts for estimation of weights
+lalonde$re78_3 &lt;- factor(findInterval(lalonde$re78,
+                                      c(0, 5e3, 1e4)))
+
+fit4 &lt;- multinom_weightit(re78_3 ~ treat,
+                          data = lalonde,
+                          weightit = w.out)
+
+summary(fit4)
+
+# Ordinal probit regression that adjusts for estimation
+# of weights
+fit5 &lt;- ordinal_weightit(ordered(re78_3) ~ treat,
+                         data = lalonde,
+                         link = "probit",
+                         weightit = w.out)
+
+summary(fit5)
+</code></pre>
+
+
+</div>

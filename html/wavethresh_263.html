@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wr.wd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Wavelet reconstruction for wd class objects (inverse discrete wavelet transform). </h2>
+
+<h3>Description</h3>
+
+<p>This function performs the reconstruction stage of Mallat's pyramid algorithm (Mallat 1989), i.e. the discrete inverse wavelet transform. The actual transform is performed by some C code, this is dynamically linked into S (if your machine can do this). 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wd'
+wr(wd, start.level = 0, verbose = FALSE, bc = wd$bc,
+	return.object = FALSE, filter.number = wd$filter$filter.number,
+	family = wd$filter$family, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wd</code></td>
+<td>
+<p>A wavelet decomposition object as returned by <code>wd</code>, and described in the help for that function and the help for <code>wd.object</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start.level</code></td>
+<td>
+<p>The level you wish to start reconstruction at. The is usually the first (level 0). This argument is ignored for a wd object computed using the “wavelets on the interval” transform (i.e. using the <code>bc="interval"</code> option of <code>wd</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Controls the printing of "informative" messages whilst the computations progress. Such messages are generally annoying so it is turned off by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bc</code></td>
+<td>
+<p>The boundary conditions used. Usually these are determined by those used to create the supplied wd object, but you sometimes change them with possibly silly results.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.number</code></td>
+<td>
+<p>The filter number of the wavelet used to do the reconstruction. Again, as for bc, you should probably leave this argument alone. Ignored if the bvc component of the <code>wd</code> object is "<code>interval</code>".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>The type of wavelet used to do the reconstruction. You can change this argument from the default but it is probably NOT wise. Ignored if the bvc component of the <code>wd</code> object is "<code>interval</code>".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return.object</code></td>
+<td>
+<p>If this is F then the top level of the reconstruction is returned (this is the reconstructed function at the highest resolution). Otherwise if it is T the whole wd reconstructed object is returned. Ignored if the <code>bvc</code> component of the <code>wd</code> object is "<code>interval</code>".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The code implements Mallat's inverse pyramid algorithm. In the reconstruction the quadrature mirror filters G and H are supplied with c0 and d0, d1, ... d(m- 1) (the wavelet coefficients) and rebuild c1,..., cm. 
+</p>
+<p>If the <code>bc</code> component of the <code>wd</code> object is "<code>interval</code>" then the <code>wr.int</code> function which implements the inverse “wavelet on the interval” transform due to Cohen, Daubechies and Vial, 1993 is used instead. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>Either a vector containing the top level reconstruction or an object of class wd containing the results of the reconstruction, details to be found in help for <code>wd.object</code>. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3 Copyright Guy Nason 1994
+Integration of “wavelets on the interval” code by Piotr Fryzlewicz and Markus Monnerjahn was at Version 3.9.6, 1999. </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wd</code>, <code>wr.int</code>, <code>accessC</code>, <code>accessD</code>, <code>filter.select</code>, <code>plot.wd</code>, <code>threshold</code> 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Take the wd object generated in the examples to wd (called wds)
+#
+# Invert this wd object
+#
+#yans &lt;- wr(wds)
+#
+# Compare it to the original, called y
+#
+#sum((yans-y)^2)
+#[1] 9.805676e-017
+#
+# A very small number
+#
+</code></pre>
+
+
+</div>

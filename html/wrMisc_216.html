@@ -1,0 +1,68 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>reduceTable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Reduce table by aggregating smaller groups</h2>
+
+<h3>Description</h3>
+
+<p><code>reduceTable</code> treats/reduces results from <code>table</code> to 'nGrp' groups, 
+optional indiv resolution of 'separFirst' (numeric or NULL). 
+Mainly made for reducing the number of classes for betters plots with <code>pie</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">reduceTable(tab, separFirst = 4, nGrp = 15)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tab</code></td>
+<td>
+<p>output of <code>table</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>separFirst</code></td>
+<td>
+<p>(integer or NULL) optinal separartion of n 'separFirst' groups (value &lt;2 or NULL 
+will priviledge more uniform size of groups, higher values will cause small inital and larger tailing groups)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nGrp</code></td>
+<td>
+<p>(integer) number of groups expected</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a numeric vector with number of counts and class-borders as names (like table).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>table</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2018); dat &lt;- sample(11:60,200,repl=TRUE)
+pie(table(dat))
+pie(reduceTable(table(dat), sep=NULL))
+pie(reduceTable(table(dat), sep=NULL), init.angle=90,
+  clockwise=TRUE, col=rainbow(20)[1:15], cex=0.8)
+</code></pre>
+
+
+</div>

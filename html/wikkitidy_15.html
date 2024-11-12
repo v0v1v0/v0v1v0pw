@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_diff</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Search for insertions, deletions or relocations of text between two versions
+of a Wikipedia page</h2>
+
+<h3>Description</h3>
+
+<p>Any two revisions of a Wikipedia page can be compared using the 'diff' tool.
+The tool compares the 'from' revision to the 'to' revision, looking for
+insertions, deletions or relocations of text. This operation can be performed
+in any order, across any span of revisions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_diff(from, to, language = "en", simplify = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>Vector of revision ids</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to</code></td>
+<td>
+<p>Vector of revision ids</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>Vector of two-letter language codes (will be recycled if
+length==1)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simplify</code></td>
+<td>
+<p>logical: should R simplify the result (see return)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The return value depends on the <code>simplify</code> parameter.
+</p>
+
+<ul>
+<li>
+<p> If <code>simplify</code> == TRUE: A list of tibble::tbl_df objects the same
+length as <code>from</code> and <code>to</code>. Most of the response data is stripped away,
+leaving just the textual differences between the revisions, their location,
+type and 'highlightRanges' if the textual differences are complicated.
+</p>
+</li>
+<li>
+<p> If <code>simplify</code> == FALSE: A list the same length as <code>from</code> and <code>to</code>
+containing the full <a href="https://www.mediawiki.org/wiki/API:REST_API/Reference#Response_schema_3">wikidiff2 response</a>
+for each pair of revisions. This response includes additional data for
+displaying diffs onscreen.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Compare revision 847170467 to 851733941 on English Wikipedia
+get_diff(847170467, 851733941)
+
+# The function is vectorised, so you can compare multiple pairs of revisions
+# in a single call
+# See diffs for the last two revisions of the Main Page
+revisions &lt;- wiki_action_request() %&gt;%
+  query_by_title("Main Page") %&gt;%
+  query_page_properties(
+    "revisions",
+    rvlimit = 2, rvprop = "ids", rvdir = "older"
+  ) %&gt;%
+  gracefully(next_result)
+
+if (tibble::is_tibble(revisions)) {
+  revisions &lt;- revisions %&gt;%
+    tidyr::unnest(cols = c(revisions)) %&gt;%
+    dplyr::mutate(diffs = get_diff(from = parentid, to = revid))
+
+  print(revisions)
+}
+
+</code></pre>
+
+
+</div>

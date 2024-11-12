@@ -1,0 +1,132 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>image_to_wave</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert images into wave objects</h2>
+
+<h3>Description</h3>
+
+<p><code>image_to_wave</code> converts images in 'png' format into wave objects using the inverse Fourier transformation
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">image_to_wave(
+  file,
+  duration = 1,
+  samp.rate = 44.1,
+  bit.depth = 16,
+  flim = c(0, samp.rate/2),
+  plot = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>Character with the name of image file to be converted. File must be in 'png' format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>duration</code></td>
+<td>
+<p>duration of the output wave object (in s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>samp.rate</code></td>
+<td>
+<p>Numeric vector of length 1 indicating the sampling rate of the output wave object (in kHz). Default is 44.1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bit.depth</code></td>
+<td>
+<p>Numeric vector of length 1 with the dynamic interval (i.e. bit depth) for output files. Default is 16.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flim</code></td>
+<td>
+<p>Numeric vector of length 2 indicating the highest and lowest
+frequency limits (kHz) in which the image would be located. Default is <code>c(0, samp.rate / 2)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>Logical argument to control if image is plotted after being imported into R.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function converts images in 'png' format into wave objects using the inverse Fourier transformation.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A single wave object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+### create image with text to use in the spectrogram
+# remove margins of plot
+par(mar = rep(0, 4))
+
+# empty plot
+plot(0, type = "n", axes = FALSE, ann = FALSE, xlim = c(0, 1), ylim = c(0, 1))
+
+# text to include
+text &lt;- " warbleR "
+
+# add text
+text(x = 0.5, y = 0.5, labels = text, cex = 11, font = 1)
+
+# save image in temporary directory
+dev2bitmap(file.path(tempdir(), "temp-img.png"), type = "pngmono", res = 30)
+
+# read it
+wv &lt;- image_to_wave(file = file.path(tempdir(), "temp-img.png"), plot = TRUE, flim = c(1, 12))
+
+# output wave object
+# wv
+
+## plot it
+# reset margins
+par(mar = c(5, 4, 4, 2) + 0.1)
+
+# plot spectrogram
+# spectro(wave = wv, scale = FALSE, collevels = seq(-30, 0, 5),
+# palette = reverse.terrain.colors, ovlp = 90, grid = FALSE, flim = c(2, 11))
+
+
+</code></pre>
+
+
+</div>

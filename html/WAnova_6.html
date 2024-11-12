@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>welch_anova.test</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>welch_anova.test</h2>
+
+<h3>Description</h3>
+
+<p>Welch's one-way ANOVA with fixed effects (between subjects analysis)
+from summary statistics with unequal (unknown) variances.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">welch_anova.test(levels, n, means, sd, effsize = "AnL")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>levels</code></td>
+<td>
+<p>Vector with level names of the independent variable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Vector with sample size for each level</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>means</code></td>
+<td>
+<p>Vector with sample mean for each level</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd</code></td>
+<td>
+<p>Vector with sample standard deviation for each level</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>effsize</code></td>
+<td>
+<p>Options "AnL" (standard), "Kirk", "CaN" (see below)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of class "wAnova" that contains the F-value, df-between, df-within,
+p-value and effect size omega-squared that can later be converted to a
+table-styled summary using summary()
+</p>
+<p>The adjusted omega squared estimator of the effect size is either calculated by the formula
+of of Albers and Lakens, Kirk or Caroll and Nordholm (Further notes see README file)
+</p>
+<p>Albers, C., &amp; Lakens, D. (2018). When power analyses based on pilot data are biased: Inaccurate effect size estimators and follow-up bias. Journal of Experimental Social Psychology, 74, 187–195.
+Kirk, R. E. (1996). Practical significance: A concept whose time has come. Educational and Psychological Measurement, 56(5), 746-759.
+Carroll, R. M., &amp; Nordholm, L. A. (1975). Sampling characteristics of Kelley's epsilon and Hays' omega Educational and Psychological Measurement, 35(3), 541-554.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+probe_data &lt;- data.frame(
+  group = c("probe_a", "probe_b", "probe_c"),
+  size = c(10, 9, 8),
+  mean = c(43.00000, 33.44444, 35.75000),
+  sd = c(4.027682, 9.302031, 16.298554)
+)
+result &lt;- welch_anova.test(
+  levels = probe_data$group,
+  n = probe_data$size,
+  means = probe_data$mean,
+  sd = probe_data$sd,
+  effsize = "Kirk"
+)
+summary(result)
+
+
+</code></pre>
+
+
+</div>

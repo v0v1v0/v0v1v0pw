@@ -1,0 +1,375 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wflow_start</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Start a new workflowr project</h2>
+
+<h3>Description</h3>
+
+<p><code>wflow_start</code> creates a directory with the essential files for
+a workflowr project. The default behavior is to add these files to
+a new directory, but it is also possible to populate an existing
+directory. By default, the working directory is changed to the
+workflowr project directory.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wflow_start(
+  directory,
+  name = NULL,
+  git = TRUE,
+  existing = FALSE,
+  overwrite = FALSE,
+  change_wd = TRUE,
+  disable_remote = FALSE,
+  dry_run = FALSE,
+  user.name = NULL,
+  user.email = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>directory</code></td>
+<td>
+<p>character. The directory where the workflowr
+project files will be added, e.g., "~/my-wflow-project". When
+<code>existing = FALSE</code>, the directory will be created.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>character (default: <code>NULL</code>). The name of the
+project, e.g. "My Workflowr Project". When <code>name = NULL</code>, the
+project name is automatically determined based on
+<code>directory</code>. For example, if <code>directory =
+"~/projects/my-wflow-project"</code>, then <code>name</code> is set to
+<code>"my-wflow-project"</code>. The project name is displayed on the
+website's navigation bar and in the <code>README.md</code> file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>git</code></td>
+<td>
+<p>logical (default: <code>TRUE</code>). Should the workflowr files be
+committed with Git? If <code>git = TRUE</code> and no existing Git repository is
+detected, <code>wflow_start</code> will initialize the repository and make an
+initial commit. If a Git repository already exists in the chosen directory,
+<code>wflow_start</code> will commit any newly created or modified files to the
+existing repository (also need to set <code>existing = TRUE</code>). If <code>git
+= FALSE</code>, <code>wflow_start</code> will not perform any Git commands.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>existing</code></td>
+<td>
+<p>logical (default: <code>FALSE</code>). Indicate whether
+<code>directory</code> already exists. This argument is added to prevent
+accidental creation of files in an existing directory; setting
+<code>existing = FALSE</code> prevents files from being created if the
+specified directory already exists.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overwrite</code></td>
+<td>
+<p>logical (default: <code>FALSE</code>). Similar to
+<code>existing</code>, this argument prevents files from accidentally
+being overwritten when <code>overwrite = FALSE</code>. When
+<code>overwrite = TRUE</code>, any existing file in <code>directory</code> that
+has the same name as a workflowr file will be replaced by the
+workflowr file. When <code>git = TRUE</code>, all the standard workflowr
+files will be added and committed (regardless of whether they were
+overwritten or still contain the original content).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>change_wd</code></td>
+<td>
+<p>logical (default: <code>TRUE</code>). Change the working
+directory to the <code>directory</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>disable_remote</code></td>
+<td>
+<p>logical (default: <code>FALSE</code>). Create a Git
+<a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks">pre-push
+hook</a> that prevents pushing to a remote Git repository (i.e. using
+<code>wflow_git_push</code>). This is useful for extremely confidential
+projects that cannot be shared via an online Git hosting service (e.g.
+GitHub or GitLab). The hook is saved in the file
+<code>.git/hooks/pre-push</code>. If you change your mind and want to push the
+repository, you can delete that file. Note that this option is only
+available if <code>git = TRUE</code>. Note that this is currently only supported
+for Linux and macOS.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dry_run</code></td>
+<td>
+<p>logical (default: <code>FALSE</code>). When <code>dry_run
+= TRUE</code>, the actions are previewed without executing them.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>user.name</code></td>
+<td>
+<p>character (default: <code>NULL</code>). The user name
+used by Git to sign commits, e.g., "Ada Lovelace". This setting
+only applies to the workflowr project being created. To specify the
+global setting for the Git user name, use
+<code>wflow_git_config</code> instead. When <code>user.name =
+NULL</code>, no user name is recorded for the project, and the global
+setting will be used. This setting can be modified later
+by running <code>git config --local</code> in the Terminal.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>user.email</code></td>
+<td>
+<p>character (default: <code>NULL</code>). The email
+address used by Git to sign commits, e.g.,
+"ada.lovelace@ox.ac.uk". This setting only applies to the workflowr
+project being created. To specify the global setting for the Git
+email address, use <code>wflow_git_config</code> instead. When
+<code>user.name = NULL</code>, no email address is recorded for the
+project, and the global setting will be used. This setting can be
+modified later by running <code>git config --local</code> in the Terminal.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is recommended function to set up the file infrastructure for
+a workflowr project. If you are using RStudio, you can also create
+a new workflowr project as an "RStudio Project Template". Go to
+"File" -&gt; "New Project..." then select "workflowr project" from the
+list of project types. In the future, you can return to your
+project by choosing menu option "Open Project..." and selecting the
+<code>.Rproj</code> file located at the root of the workflowr project
+directory. In RStudio, opening this file will change the working
+directory to the appropriate location, set the file navigator to
+the workflowr project directory, and configure the Git pane.
+</p>
+<p><code>wflow_start</code> populates the chosen directory with the
+following files:
+</p>
+<pre>|--- .gitignore
+|--- .Rprofile
+|--- _workflowr.yml
+|--- analysis/
+|   |--- about.Rmd
+|   |--- index.Rmd
+|   |--- license.Rmd
+|   |--- _site.yml
+|--- code/
+|   |--- README.md
+|--- data/
+|   |--- README.md
+|--- docs/
+|--- &lt;directory&gt;.Rproj
+|--- output/
+|   |--- README.md
+|--- README.md
+</pre>
+<p>The two <b>required</b> subdirectories are <code>analysis/</code> and
+<code>docs/</code>. These directories should never be removed from the
+workflowr project.
+</p>
+<p><code>analysis/</code> contains all the source R Markdown files that
+implement the analyses for your project. It contains a special R
+Markdown file, <code>index.Rmd</code>, that typically does not include R
+code, and is will be used to generate <code>index.html</code>, the
+homepage for the project website.  Additionally, this directory
+contains the important configuration file <code>_site.yml</code>. The
+website theme, navigation bar, and other properties can be
+controlled through this file (for more details see the
+documentation on
+<a href="https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html">R
+Markdown websites</a>). Do not delete <code>index.Rmd</code> or
+<code>_site.yml</code>.
+</p>
+<p><code>docs/</code> will contain all the webpages generated from the R
+Markdown files in <code>analysis/</code>. Any figures generated by
+rendering the R Markdown files are also stored here. Each figure is
+saved according to the following convention:
+<code>docs/figure/&lt;Rmd-filename&gt;/&lt;chunk-name&gt;-#.png</code>, where
+<code>#</code> corresponds to which of the plots the chunk generated (one
+chunk can produce several plots).
+</p>
+<p><code>_workflowr.yml</code> is an additional configuration file used only
+by workflowr. It is used to apply the workflowr reproducibility
+checks consistently across all R Markdown files. The most important
+setting is <code>knit_root_dir</code> which determines the directory
+where the scripts in <code>analysis/</code> are executed. The default is
+to run code from the project root (<em>i.e.,</em> <code>"."</code>). To
+execute the code from <code>analysis/</code>, for example, change the
+setting to <code>knit_root_dir: "analysis"</code>. See
+<code>wflow_html</code> for more details.
+</p>
+<p>Another required file is the RStudio project file (ending in
+<code>.Rproj</code>). <em>Do not delete this file even if you do not
+use RStudio; among other essential tasks, it is used to determine
+the project root directory.</em>
+</p>
+<p>The <b>optional</b> directories are <code>data/</code>, <code>code/</code>, and
+<code>output/</code>. These directories are suggestions for organizing
+your workflowr project and can be removed if you do not find them
+relevant to your project.
+</p>
+<p><code>data/</code> should be used to store "raw" (unprocessed) data
+files.
+</p>
+<p><code>code/</code> should be used to store additional code that might not
+be appropriate to include in R Markdown files (e.g., code to
+preprocess the data, long-running scripts, or functions that are
+used in multiple R Markdown files).
+</p>
+<p><code>output/</code> should be used to store processed data files and
+other outputs generated from the code and analyses. For example,
+scripts in <code>code/</code> that pre-process raw data files from
+<code>data/</code> should save the processed data files in
+<code>output/</code>.
+</p>
+<p>All these subdirectories except for <code>docs/</code> include a README
+file summarizing the contents of the subdirectory, and can be
+modified as desired, for example, to document the files stored in
+each directory.
+</p>
+<p><code>.Rprofile</code> is an optional file in the root directory of the
+workflowr project containing R code that is executed whenever the
+<code>.Rproj</code> file is loaded in RStudio, or whenever R is started
+up inside the project root directory. This file includes the line
+of code <code>library("workflowr")</code> to ensure that the workflowr
+package is loaded.
+</p>
+<p>Finally, <code>.gitignore</code> is an optional file that indicates to
+Git which files should be ignored—that is, files that are never
+committed to the repository. Some suggested files to ignore such as
+<code>.Rhistory</code> and <code>.Rdata</code> are listed here.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>wflow_start</code>, which is a list with the
+following elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>directory</code></td>
+<td>
+<p>The input argument <code>directory</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>The input argument <code>name</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>git</code></td>
+<td>
+<p>The input argument <code>git</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>existing</code></td>
+<td>
+<p>The input argument <code>existing</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overwrite</code></td>
+<td>
+<p>The input argument <code>overwrite</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>change_wd</code></td>
+<td>
+<p>The input argument <code>change_wd</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>disable_remote</code></td>
+<td>
+<p>The input argument <code>disable_remote</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dry_run</code></td>
+<td>
+<p>The input argument <code>dry_run</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>user.name</code></td>
+<td>
+<p>The input argument <code>user.name</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>user.email</code></td>
+<td>
+<p>The input argument <code>user.email</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>commit</code></td>
+<td>
+<p>The object returned by
+git2r::<code>commit</code>, or <code>NULL</code> if <code>git =
+   FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>Do not delete the file <code>.Rproj</code> even if you do not use
+RStudio; workflowr will not work correctly unless this file is
+there.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>vignette("wflow-01-getting-started")
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+wflow_start("path/to/new-project")
+
+# Provide a custom name for the project.
+wflow_start("path/to/new-project", name = "My Project")
+
+# Preview what wflow_start would do
+wflow_start("path/to/new-project", dry_run = TRUE)
+
+# Add workflowr files to an existing project.
+wflow_start("path/to/current-project", existing = TRUE)
+
+# Add workflowr files to an existing project, but do not automatically
+# commit them.
+wflow_start("path/to/current-project", git = FALSE, existing = TRUE)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

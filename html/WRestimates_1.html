@@ -1,0 +1,159 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wr.ci</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Confidence Interval (CI) for Win Ratio</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the confidence interval for a win ratio.
+</p>
+<p style="text-align: center;"><code class="reqn">CI = exp((ln(WR) +/- Z\sqrt{var})</code>
+</p>
+
+<p>Where;
+</p>
+<p><code class="reqn">ln(WR)</code> = Natural log of the true or assumed win ratio.
+</p>
+<p><code class="reqn">Z</code> = Z-score from normal distribution.
+</p>
+<p><code class="reqn">\sqrt{var}</code> = Standard deviation of the natural log of the win ratio.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wr.ci(WR = 1, Z = 1.96, var.ln.WR, N, sigma.sqr, k, p.tie)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>WR</code></td>
+<td>
+<p>Win ratio; Default: <code>WR</code> = 1 for an assumed true win ratio where H<sub>0</sub> is assumed true.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+<p>Z-score from normal distribution; Default: <code>Z</code> = 1.96 for a 95% CI.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var.ln.WR</code></td>
+<td>
+<p>Variance of the natural log (<code class="reqn">ln</code>) of the win ratio.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>Sample size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma.sqr</code></td>
+<td>
+<p>Population variance of the natural log (<code class="reqn">ln</code>) of the win ratio.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>The proportion of subjects allocated to one group i.e. the proportion of patients allocated to treatment.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.tie</code></td>
+<td>
+<p>The proportion of ties.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>wr.ci</code> returns an object of class "<code>list</code>" containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>ci</code></td>
+<td>
+<p>The confidence interval of a win ratio.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>WR</code></td>
+<td>
+<p>The win ratio.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+<p>Z-score from normal distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var.ln.WR</code></td>
+<td>
+<p>Variance of the natural log (<code class="reqn">ln</code>) of the win ratio.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>Sample size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma.sqr</code></td>
+<td>
+<p>Population variance of the natural log (<code class="reqn">ln</code>) of the win ratio.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>The proportion of subjects allocated to one group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.tie</code></td>
+<td>
+<p>The proportion of ties.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Autumn O'Donnell <a href="mailto:autumn.research@gmail.com">autumn.research@gmail.com</a></p>
+
+
+<h3>References</h3>
+
+<p>Yu, R. X. and Ganju, J. (2022). Sample size formula for a win ratio endpoint. <em>Statistics in medicine</em>, <em>41</em>(6), 950-963. doi:10.1002/sim.9297.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wr.sigma.sqr</code>; <code>wr.var</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## N = 100 patients, 1:1 allocation, one-sided alpha = 2.5%, power = 90%
+## (beta = 10%), a small proportion of ties p.tie = 0.1, and 50% more wins
+## on treatment than control.
+
+### Calculation 95% CI
+wr.ci(N = 100, WR = 1.5, k = 0.5, p.tie = 0.1)
+</code></pre>
+
+
+</div>

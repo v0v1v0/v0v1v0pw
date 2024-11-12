@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>xfer_userExtent</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>xfer_userExtent: user provided extent of transfer</h2>
+
+<h3>Description</h3>
+
+<p>This function generates an area of transfer according to a user
+provided polygon and buffer.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">xfer_userExtent(bgShp_path, bgShp_name, userBgBuf, logger = NULL, spN = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>bgShp_path</code></td>
+<td>
+<p>path to the user provided shapefile or csv with
+vertex coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bgShp_name</code></td>
+<td>
+<p>name of the user provided shapefile or csv with
+vertex coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>userBgBuf</code></td>
+<td>
+<p>numeric. Buffer to be used in creating the background
+extent must be &gt;= 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+<p>Stores all notification messages to be displayed in the Log
+Window of Wallace GUI. Insert the logger reactive list here for running
+in shiny, otherwise leave the default NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spN</code></td>
+<td>
+<p>data frame of cleaned occurrences obtained from component
+occs: Obtain occurrence data. Used to obtain species name for logger
+messages.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is used in the transfer component. Here, the user provides
+either a shapefile or a csv with vertex coordinates with the desired shape
+for the extent of transfer, the user may include a buffer to the given
+polygon. The function returns a SpatialPolygons object of the desired
+extent (+ buffer).
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a SpatialPolygons object with the user
+provided shape (+ a buffer is userBgBuf &gt;0).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jamie Kass &lt;jamie.m.kass@gmail.com&gt;
+</p>
+<p>Gonzalo E. Pinilla-Buitrago &lt;gepinillab@gmail.com&gt;
+</p>
+<p>Andrea Paz &lt;paz.andreita@gmail.com&gt;
+</p>
+<p>Bethany A. Johnson &lt;bjohnso005@citymail.cuny.edu&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>penvs_drawBgExtent</code>, <code>penvs_bgExtent</code>,
+<code>penvs_bgMask</code> , <code>penvs_bgSample</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">pathShp &lt;- list.files(system.file("extdata/shp", package = "wallace"),
+                      full.names = TRUE)
+nameShp &lt;- list.files(system.file("extdata/shp", package = "wallace"),
+                      full.names = FALSE)
+xferUser &lt;- xfer_userExtent(bgShp_path = pathShp, bgShp_name = nameShp,
+                            userBgBuf = 1)
+</code></pre>
+
+
+</div>

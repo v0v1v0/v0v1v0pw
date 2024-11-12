@@ -1,0 +1,136 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>semiorthogonalize</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Internal function: Semiorthogonal-type transformation of X2 to Z2</h2>
+
+<h3>Description</h3>
+
+<p>Uses the matrix Z2s (called <code class="reqn">\bar{\Xi}</code> in eq. (9) of
+De Luca et al. (2018)) to transform <code class="reqn">\bar{X}_2</code> to
+<code class="reqn">\bar{Z}_2</code>, i.e. to perform <code class="reqn">\bar{Z}_2 = \bar{X}_2 \bar{\Delta}_2 \bar{\Xi}^{-1/2}</code>.
+For WALS in the linear regression model, the variables do not have a "bar".
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">semiorthogonalize(Z2s, X2, Delta2, SVD = TRUE, postmult = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Z2s</code></td>
+<td>
+<p>Matrix for which we take negative square root in
+<code class="reqn">X2 * Delta2 * Z2s^{1/2}</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X2</code></td>
+<td>
+<p>Design matrix of auxiliary regressors to be transformed to Z2</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Delta2</code></td>
+<td>
+<p>Scaling matrix such that diagonal of
+<code class="reqn">\bar{\Delta}_2 \bar{X}_2^{\top} \bar{M}_1 \bar{X}_2 \Delta_{2}</code> is one
+(ignored scaling by <code class="reqn">n</code> because not needed in code).
+See De Luca et al. (2018)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SVD</code></td>
+<td>
+<p>If <code>TRUE</code>, uses <code>svd</code> to compute eigendecomposition
+of <code>Z2s</code>, otherwise uses <code>eigen</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>postmult</code></td>
+<td>
+<p>If <code>TRUE</code>, then it uses
+<code class="reqn">Z2s^{-1/2} = T \Lambda^{-1/2} T^{\top}</code>, where <code class="reqn">T</code> contains
+the eigenvectors of <code class="reqn">Z2s</code> in its columns and <code class="reqn">\Lambda</code> the corresponding
+eigenvalues. If <code>FALSE</code> it uses <code class="reqn">Z2s^{-1/2} = T \Lambda^{-1/2}</code>.</p>
+</td>
+</tr>
+</table>
+<h3>On the "semiorthogonal-type" transformation</h3>
+
+<p>For WALS GLM (and WALS in the linear regression model),
+the transformation is semiorthogonal (ignored scaling by <code class="reqn">n</code> for clarity
+and because it is not needed in the code)
+in the sense that <code class="reqn">\bar{M}_{1} \bar{Z}_{2}</code> is semiorthogonal since
+</p>
+<p style="text-align: center;"><code class="reqn">\bar{Z}_{2}^{\top} \bar{M}_1 \bar{Z}_{2} =
+(\bar{Z}_{2}^{\top} \bar{M}_1) (\bar{M}_{1} \bar{Z}_{2}) = I_{k_2},</code>
+</p>
+
+<p>where <code class="reqn">\bar{M}_1</code> is an idempotent matrix.
+</p>
+<p>For WALS in the NB2 regression model, <code class="reqn">\bar{M}_{1} \bar{Z}_{2}</code> is not
+semiorthogonal anymore due to the rank-1 perturbation in <code class="reqn">\bar{M}_1</code> which
+causes <code class="reqn">\bar{M}_1</code> to not be idempotent anymore, see
+the section "Transformed model" in Huynh (2024a).
+</p>
+
+
+<h3>On the use of <code>postmult = TRUE</code>
+</h3>
+
+<p>The transformation of the auxiliary regressors <code class="reqn">Z_2</code> for linear WALS in
+eq. (12) of Magnus and De Luca (2016) differs from the
+transformation for WALS GLM (and WALS NB) in eq. (9) of
+De Luca et al. (2018):
+</p>
+<p>In Magnus and De Luca (2016) the transformed auxiliary
+regressors are
+</p>
+<p style="text-align: center;"><code class="reqn">Z_{2} = X_2 \Delta_2 T \Lambda^{-1/2},</code>
+</p>
+
+<p>where <code class="reqn">T</code> contains the eigenvectors of
+<code class="reqn">\Xi = \Delta_2 X_{2}^{\top} M_{1} X_{2} \Delta_2</code> in the columns and
+<code class="reqn">\Lambda</code> the respective eigenvalues. This definition is used when
+<code>postmult = FALSE</code>.
+</p>
+<p>In contrast, De Luca et al. (2018) defines
+</p>
+<p style="text-align: center;"><code class="reqn">Z_2 = X_2 \Delta_2 T \Lambda^{-1/2} T^{\top},</code>
+</p>
+
+<p>where we ignored scaling by <code class="reqn">n</code> and the notation with "bar" for easier
+comparison. This definition is used when <code>postmult = TRUE</code> and is
+strongly preferred for <code>walsGLM</code> and <code>walsNB</code>.
+</p>
+<p>See Huynh (2024b) for more details.
+</p>
+
+
+<h3>References</h3>
+
+<p>De Luca G, Magnus JR, Peracchi F (2018).
+“Weighted-average least squares estimation of generalized linear models.”
+<em>Journal of Econometrics</em>, <b>204</b>(1), 1–17.
+<a href="https://doi.org/10.1016/j.jeconom.2017.12.007">doi:10.1016/j.jeconom.2017.12.007</a>.<br><br> Huynh K (2024a).
+“Weighted-Average Least Squares for Negative Binomial Regression.”
+arXiv 2404.11324, arXiv.org E-Print Archive.
+<a href="https://doi.org/10.48550/arXiv.2404.11324">doi:10.48550/arXiv.2404.11324</a>.<br><br> Huynh K (2024b).
+“WALS: Weighted-Average Least Squares Model Averaging in R.”
+University of Basel.
+Mimeo.<br><br> Magnus JR, De Luca G (2016).
+“Weighted-average least squares (WALS): A survey.”
+<em>Journal of Economic Surveys</em>, <b>30</b>(1), 117-148.
+<a href="https://doi.org/10.1111/joes.12094">doi:10.1111/joes.12094</a>.
+</p>
+
+
+</div>

@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Battig</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Battig - Montague Categorized Word Norms
+</h2>
+
+<h3>Description</h3>
+
+<p>This dataset comprises a ranked list of
+5231 words listed in 56 taxonomic categories
+by people who were asked to list as many exemplars of a given
+category ("a precious stone", "a unit of time", "a fruit", "a color", etc.).
+Participants had 30s to generate as many responses to each category as possible, 
+after which time the next category name was presented.
+</p>
+<p>Included in this dataset are all words from the Battig and Montague (1969)
+norms listed with <code>freq &gt; 1</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(Battig)</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 5231 observations on the following 9 variables.
+</p>
+
+<dl>
+<dt><code>word</code></dt>
+<dd>
+<p>a character vector</p>
+</dd>
+<dt><code>catnum</code></dt>
+<dd>
+<p>category number, a factor</p>
+</dd>
+<dt><code>catname</code></dt>
+<dd>
+<p>category name, a factor</p>
+</dd>
+<dt><code>syl</code></dt>
+<dd>
+<p>number of syllables</p>
+</dd>
+<dt><code>letters</code></dt>
+<dd>
+<p>number of letters</p>
+</dd>
+<dt><code>freq</code></dt>
+<dd>
+<p>Frequency of response</p>
+</dd>
+<dt><code>frequency</code></dt>
+<dd>
+<p>Kucera-Francis word frequency</p>
+</dd>
+<dt><code>rank</code></dt>
+<dd>
+<p>rank of <code>freq</code> within the category</p>
+</dd>
+<dt><code>rfreq</code></dt>
+<dd>
+<p>rated frequency</p>
+</dd>
+</dl>
+<h3>Details</h3>
+
+<p>In our original dataset, words were truncated at 18 characters, so some 
+are incomplete.
+</p>
+
+
+<h3>Source</h3>
+
+<p>Battig, W.F.  &amp; Montague, W.E. (1968).
+Category norms for verbal items in 56 categories: A replication and extension of the Connecticut norms using 
+University of Maryland and Illinois students (Tech. Rep.)
+University of Colorado, Boulder, CO (1968)
+</p>
+<p>Battig, W.F.  &amp; Montague, W.E. (1969).
+Category norms for verbal items in 56 categories: A replication and extension of the Connecticut norms.
+<em>Journal of Experimental Psychology</em>, 80 (1969), pp. 1-46
+</p>
+
+
+<h3>References</h3>
+
+<p>Joelson, J. M. &amp; Hermann, D. J., Properties of categories in semantic
+|       memory, <em>Amer Journal of Psychology</em>, 1978, 91, 101-114.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(Battig)
+## maybe str(Battig) ; plot(Battig) ...
+
+# select items from several categories
+cats &lt;- c("fish", "bird", "flower", "tree")
+for (c in cats) {
+	cat("\nCategory:", c, "\n")	
+	print(pickList(subset(Battig, catname==c), nitems=5))
+}
+
+# or, using sapply():
+sapply(cats, function(c) pickList(subset(Battig, catname==c), nitems=5), simplify=FALSE)
+</code></pre>
+
+
+</div>

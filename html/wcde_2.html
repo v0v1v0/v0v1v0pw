@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>edu_group_sum</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Education group sums</h2>
+
+<h3>Description</h3>
+
+<p>Cleans <code>epop</code> data, downloaded using the <code>wcde()</code> function, for summations of population by 4, 6 or 8 education groups.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">edu_group_sum(
+  d = NULL,
+  n = 4,
+  strip_totals = TRUE,
+  factor_convert = TRUE,
+  year_edu_start = 2020
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>d</code></td>
+<td>
+<p>Data frame downloaded from the</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Number of education groups (from 4, 6 or 8)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strip_totals</code></td>
+<td>
+<p>Remove total sums in <code>epop</code> column. Will not strip education totals if <code>year &lt; year_edu_start</code> and <code>n = 8</code> as past data on population size by 8 education groups is unavailable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>factor_convert</code></td>
+<td>
+<p>Convert columns that are character strings to factors, with levels based on order of appearance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>year_edu_start</code></td>
+<td>
+<p>Year in which education splits are available for given groupings - in some versions past data is not available for some education groupings. Set to 2020 by default.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Strips the <code>epop</code> data set to relevant rows for the <code>n</code> education groups.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A tibble with the data selected.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(tidyverse)
+past_epop %&gt;%
+  filter(year == 2020) %&gt;%
+  edu_group_sum()
+</code></pre>
+
+
+</div>

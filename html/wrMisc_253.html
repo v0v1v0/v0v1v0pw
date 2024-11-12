@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>tableToPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Print matrix-content as plot</h2>
+
+<h3>Description</h3>
+
+<p>This function prints all columns of matrix in plotting region for easier inclusion to reports (default values are set to work for output as A4-sized pdf).
+It was made for integrating listings of text to graphical output to devices like <code>png</code>, <code>jpeg</code> or <code>pdf</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">tableToPlot(
+  matr,
+  colPos = c(0.05, 0.35, 0.41, 0.56),
+  useCex = 0.7,
+  useAdj = c(0, 1, 1, 0),
+  titOffS = 0,
+  useCol = 1,
+  silent = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>matr</code></td>
+<td>
+<p>(matrix) main (character) matrix to display</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colPos</code></td>
+<td>
+<p>(numeric) postion of columns on x-scale (from 0 to 1)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useCex</code></td>
+<td>
+<p>(numeric) cex expension factor forsiez of text (may be different for each column)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useAdj</code></td>
+<td>
+<p>(numeric) left/cneter/right alignment for text (may be different for each column)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>titOffS</code></td>
+<td>
+<p>(numeric) offset for title line (ralive to 'colPos')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useCol</code></td>
+<td>
+<p>color specification for text (may be different for each column)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function was initially designed for listings with small/medium 1st col (eg couner or index), 2nd &amp; 3rd col small and long 3rd col (like file paths).
+Obviously, the final number of lines one can pack and still read correctly into the graphical output depends on the size of the device 
+(on a pdf of size A4 one can pack up to apr. 11O lines). 
+Of ourse, <code>Sweave</code>, combined with LaTeX, provides a powerful alternative for wrapping text to pdf-output (and further combining text and graphics).
+Note: The final result on pdf devices may vary depending on screen-size (ie with of current device), the parameters 'colPos' and 'titOffS' may need some refinements.
+Note: In view of typical page/figure layouts like A4, the plotting region will be split to avoid too wide spacing between rows with less than 30 rows.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns NULL (no R-object returned), print 'plot' in current device only
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Sweave</code> for more flexible framework
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## as example let's make a listing of file-names and associated parameters in current directory
+mat &lt;- dir()
+mat &lt;- cbind(no=1:length(mat),fileName=mat,mode=file.mode(mat),
+  si=round(file.size(mat)/1024),path=getwd())
+## Now, we wrap all text into a figure (which could be saved as jpg, pdf etc)
+tableToPlot(mat[,-1],colPos=c(0.01,0.4,0.46,0.6),titOffS=c(0.05,-0.03,-0.01,0.06))
+tableToPlot(mat,colPos=c(0,0.16,0.36,0.42,0.75),useAdj=0.5,titOffS=c(-0.01,0,-0.01,0,-0.1)) 
+</code></pre>
+
+
+</div>

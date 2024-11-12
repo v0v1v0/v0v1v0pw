@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>paginted</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Looks up product information</h2>
+
+<h3>Description</h3>
+
+<p><code>lookup</code> gives access to item price and availability in
+real-time.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">paginted(key = auth_cache$KEY, lsPublisherId = NULL, category = NULL,
+  brand = NULL, specialOffer = NULL, list_output = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>key</code></td>
+<td>
+<p>Your API access key.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lsPublisherId</code></td>
+<td>
+<p>Your LinkShare Publisher Id.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>category</code></td>
+<td>
+<p>Category id of the desired category. This should match the
+id field from <code>taxonomy</code> function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>brand</code></td>
+<td>
+<p>Brand name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>specialOffer</code></td>
+<td>
+<p>Special offers like (rollback, clearance, specialBuy).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>list_output</code></td>
+<td>
+<p>Indicator for list output.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>An API key will be required to run this function and can be acquired by
+creating an account on the following website
+<a href="https://developer.walmartlabs.com/member">https://developer.walmartlabs.com/member</a>.
+</p>
+<p>For more information refer to the original documentation
+<a href="https://developer.walmartlabs.com/docs/read/Home">https://developer.walmartlabs.com/docs/read/Home</a>.
+</p>
+<p>Response formats are described at the url
+<a href="https://developer.walmartlabs.com/docs/read/Item_Field_Description">https://developer.walmartlabs.com/docs/read/Item_Field_Description</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A tibble with 16 columns. First 15 is the items in base response
+format, followed by a column containing the URL path for the next page.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+key &lt;- "************************"
+
+paginted(key = key, brand = "Apple")
+
+paginted(key = key, category = 3944)
+
+paginted(key = key, category = 3944, specialOffer = "rollback")
+
+paginted(key = key, brand = "Apple", list_output = TRUE)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

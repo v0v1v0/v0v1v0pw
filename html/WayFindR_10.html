@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gpml-data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>GPML GraphingR Data</h2>
+
+<h3>Description</h3>
+
+<p>Our standard colors, line types (for edges), and shapes (for nodes)
+to display graph features from WikiPathways GPML files.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(edgeColors)
+data(edgeTypes)
+data(nodeColors)
+data(nodeShapes)
+
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>There are four different objects.
+</p>
+
+<dl>
+<dt><code>edgeColors</code></dt>
+<dd>
+<p>A named character vector defining the
+colors used to display 17 different kinds of edges.</p>
+</dd>
+<dt><code>edgeTypes</code></dt>
+<dd>
+<p>A named character vector defining the
+line types (solid, dashed, etc.) used to display 17 different
+kinds of edges.</p>
+</dd>
+<dt><code>nodeColors</code></dt>
+<dd>
+<p>A named character vector defining the
+colors used to display 16 different kinds of nodes.</p>
+</dd>
+<dt><code>nodeShapes</code></dt>
+<dd>
+<p>A named character vector defining the
+symbols used to display 16 different kinds of nodes.</p>
+</dd>
+</dl>
+<h3>Author(s)</h3>
+
+<p>Kevin R. Coombes <a href="mailto:krc@silicovore.com">krc@silicovore.com</a>,
+Polina Bombina <a href="mailto:pbombina@augusta.edu">pbombina@augusta.edu</a>
+</p>
+
+
+<h3>Source</h3>
+
+<p>We downloaded the complete set of 889 human (Homo sapiens) pathways
+from WikiPathways, in GPML format, at the end of March 2024. We wrote
+and ran perl scripts to iterate over this set of pathways and extract
+all the node types and all the edge types used anywhere in the set. We
+added a handful of node types (Undefined, Shape, Label, EDGE) in order
+to enable almost all of the pathways to be converted into mathematical
+graphs. We then defined colors and shapes to be used to distinguish
+different types in plots.
+</p>
+<p>The situation with edges was slightly more complicated. The pathway
+editor (PathVisio; https://pathvisio.org/) typically used to create
+pathways in WikiPathways supports two different biologically
+meaningful vocabularies for edges: Molecular Interaction Maps (MIM;
+https://discover.nci.nih.gov/mim/formal_mim_spec.pdf) and System
+Biology Graphical Notation (SBGN; https://sbgn.github.io/), along with
+a very simple descrption as "Arrows" or "TBars". To make things more
+consistent, we converted both the SBGN and simple systems to match the
+MIM specification. We then defined colors and edge types so we could
+distinguish different edge types in plots.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(edgeColors)
+data(edgeTypes)
+data(nodeColors)
+data(nodeShapes)
+if (require(Polychrome)) {
+  swatch(edgeColors)
+  swatch(nodeColors)
+}
+plot(0,0, type = "n", xlab="", ylab = "")
+legend("center", legend = names(edgeColors),  lwd = 3,
+       col = edgeColors,  lty = edgeTypes)
+num &lt;- c(rectangle = 15, circle = 16)
+plot(0,0, type = "n", xlab="", ylab = "")
+legend("center", legend = names(nodeColors),  cex = 1.5,
+       col = nodeColors,  pch = num[nodeShapes])
+</code></pre>
+
+
+</div>

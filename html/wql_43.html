@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ts2df</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert time series to data frame</h2>
+
+<h3>Description</h3>
+
+<p>Convert monthly time series vector to a year <code>x</code> month data frame for
+several possible subsequent analyses. Leading and trailing empty rows are
+removed.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ts2df(x, mon1 = 1, addYr = FALSE, omit = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>monthly time series vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mon1</code></td>
+<td>
+<p>starting month number, i.e., first column of the data frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addYr</code></td>
+<td>
+<p>rows are normally labelled with the year of the starting month,
+but <code>addYr = TRUE</code> will add 1 to this year number</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>omit</code></td>
+<td>
+<p>if <code>TRUE</code>, then rows with any <code>NA</code> will be removed.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Our main use of <code>ts2df</code> is to convert a single monthly time series into
+a year <code>x</code> month data frame for EOF analysis of interannual
+variability.
+</p>
+<p><code>monthCor</code> finds the month-to-month correlations in a monthly time
+series <code>x</code>. It is useful for deciding where to start the 12-month
+period for an <code>EOF</code> analysis (<code>mon1</code> in <code>ts2df</code>), namely, at
+a time of low serial correlation in <code>x</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>n x 12</code> data frame, where <code>n</code> is the number of years.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alan Jassby, James Cloern
+</p>
+
+
+<h3>References</h3>
+
+<p>Craddock, J. (1965) A meteorological application of principal
+component analysis. <em>Statistician</em> <b>15,</b> 143–156.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>eof</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# San Francisco Bay station 27 chlorophyll has the lowest serial 
+# correlation in Oct-Nov, with Sep-Oct a close second
+chl27 &lt;- sfbayChla[, 's27']
+monthCor(chl27)
+
+# Convert to a data frame with October, the first month of the 
+# local "water year", in the first column
+tsp(chl27)
+chl27 &lt;- round(chl27, 1)
+ts2df(chl27, mon1 = 10, addYr = TRUE)
+ts2df(chl27, mon1 = 10, addYr = TRUE, omit = TRUE)
+
+</code></pre>
+
+
+</div>

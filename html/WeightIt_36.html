@@ -1,0 +1,188 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.glm_weightit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Predictions for <code>glm_weightit</code> objects</h2>
+
+<h3>Description</h3>
+
+<p><code>predict()</code> generates predictions for models fit using <code>glm_weightit()</code>, <code>ordinal_weightit()</code>, <code>multinom_weightit()</code>, or <code>coxph_weightit()</code>. This page only details the <code>predict()</code> methods after using <code>glm_weightit()</code>, <code>ordinal_weightit()</code>, or <code>multinom_weightit()</code>. See <code>survival::predict.coxph()</code> for predictions when fitting Cox proportional hazards models using <code>coxph_weightit()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'glm_weightit'
+predict(object, newdata = NULL, type = "response", na.action = na.pass, ...)
+
+## S3 method for class 'ordinal_weightit'
+predict(
+  object,
+  newdata = NULL,
+  type = "response",
+  na.action = na.pass,
+  values = NULL,
+  ...
+)
+
+## S3 method for class 'multinom_weightit'
+predict(
+  object,
+  newdata = NULL,
+  type = "response",
+  na.action = na.pass,
+  values = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>a <code>glm_weightit</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>optionally, a data frame in which to look for variables with which to predict. If omitted, the fitted values applied to the original dataset are used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>the type of prediction desired. Allowable options include <code>"response"</code>, predictions on the scale of the original response variable (also <code>"probs"</code>); <code>"link"</code>, predictions on the scale of the linear predictor (also <code>"lp"</code>); <code>"class"</code>, the modal predicted category for ordinal and multinomial models; and <code>"mean"</code>, the expected value of the outcome for ordinal and multinomial models. See Details for more information. The default is <code>"response"</code> for all models, which differs from <code>stats::predict.glm()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.action</code></td>
+<td>
+<p>function determining what should be done with missing values in <code>newdata</code>. The default is to predict <code>NA</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>when <code>type = "mean"</code>, the numeric values each level corresponds to. Should be supplied as a named vector with outcome levels as the names. If <code>NULL</code> and the outcome levels can be converted to numeric, those will be used. See Details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For generalized linear models other than ordinal and multinomial models, see <code>stats::predict.glm()</code> for more information on how predictions are computed and which arguments can be specified. Note that standard errors cannot be computed for the predictions using <code>predict.glm_weightit()</code>.
+</p>
+<p>For ordinal and multinomial models, setting <code>type = "mean"</code> computes the expected value of the outcome for each unit; this corresponds to the sum of the values supplied in <code>values</code> weighted by the predicted probability of those values. If <code>values</code> is omitted, <code>predict()</code> will attempt to convert the outcome levels to numeric values, and if this cannot be done, an error will be thrown. <code>values</code> should be specified as a named vector, e.g., <code>values = c(one = 1, two = 2, three = 3)</code>, where <code>"one"</code>, <code>"two"</code>, and <code>"three"</code> are the original outcome levels and 1, 2, and 3 are the numeric values they correspond to. This method only makes sense to use if the outcome levels meaningfully correspond to numeric values.
+</p>
+<p>For ordinal models, setting <code>type = "link"</code> (also <code>"lp"</code>) computes the linear predictor without including the thresholds. This can be interpreted as the prediction of the latent variable underlying the ordinal response. This cannot be used with multinomial models.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A numeric vector containing the desired predictions, except for the following circumstances when an ordinal or multinomial model was fit:
+</p>
+
+<ul>
+<li>
+<p> when <code>type = "response"</code>, a numeric matrix with a row for each unit and a column for each level of the outcome with the predicted probability of the corresponding outcome in the cells
+</p>
+</li>
+<li>
+<p> when <code>type = "class"</code>, a factor with the model predicted class for each unit; for ordinal models, this will be an ordered factor.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>stats::predict.glm()</code> for predictions from generalized linear models. <code>glm_weightit()</code> for the fitting function. <code>survival::predict.coxph()</code> for predictions from Cox proportional hazards models.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("lalonde", package = "cobalt")
+
+# Logistic regression model
+fit1 &lt;- glm_weightit(
+  re78 &gt; 0 ~ treat * (age + educ + race + married +
+                        re74 + re75),
+  data = lalonde, family = binomial, vcov = "none")
+
+summary(predict(fit1))
+
+# G-computation using predicted probabilities
+p0 &lt;- predict(fit1, type = "response",
+              newdata = transform(lalonde,
+                                  treat = 0))
+
+p1 &lt;- predict(fit1, type = "response",
+              newdata = transform(lalonde,
+                                  treat = 1))
+
+mean(p1) - mean(p0)
+
+# Multinomial logistic regression model
+lalonde$re78_3 &lt;- factor(findInterval(lalonde$re78,
+                                      c(0, 5e3, 1e4)),
+                         labels = c("low", "med", "high"))
+
+fit2 &lt;- multinom_weightit(
+  re78_3 ~ treat * (age + educ + race + married +
+                      re74 + re75),
+  data = lalonde, vcov = "none")
+
+# Predicted probabilities
+head(predict(fit2))
+
+# Class assignment accuracy
+mean(predict(fit2, type = "class") == lalonde$re78_3)
+
+# G-computation using expected value of the outcome
+values &lt;- c("low" = 2500,
+            "med" = 7500,
+            "high" = 12500)
+
+p0 &lt;- predict(fit2, type = "mean", values = values,
+              newdata = transform(lalonde,
+                                  treat = 0))
+
+p1 &lt;- predict(fit2, type = "mean", values = values,
+              newdata = transform(lalonde,
+                                  treat = 1))
+
+mean(p1) - mean(p0)
+
+# Ordinal logistic regression
+fit3 &lt;- ordinal_weightit(
+  re78 ~ treat * (age + educ + race + married +
+                    re74 + re75),
+  data = lalonde, vcov = "none")
+
+# G-computation using expected value of the outcome;
+# using original outcome values
+p0 &lt;- predict(fit3, type = "mean",
+              newdata = transform(lalonde,
+                                  treat = 0))
+
+p1 &lt;- predict(fit3, type = "mean",
+              newdata = transform(lalonde,
+                                  treat = 1))
+
+mean(p1) - mean(p0)
+
+</code></pre>
+
+
+</div>

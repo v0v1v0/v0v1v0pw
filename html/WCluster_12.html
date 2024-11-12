@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wss</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Sums of squares of residuals for observations with weights
+</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates sums of squares of residuals with respect to mean for observations with weights.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wss(x,w = rep(1,nrow(x)))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>A data matrix (data frame, data table, matrix, etc.) containing only entries of class numeric.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+
+<p>Vector of length nrow(x) of weights for each observation in the dataset. Must be of class numeric or integer. If NULL, the default value is a vector of 1 with length nrow(x), i.e., weights equal 1 for all observations.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In this function, for a dataset with observational weights, the weighted mean for the dataset is calculated first. Based on it, the weighted sum of squares of residuals with respect to the weighted mean is calculated with observational weights. This could be used to calculate weighted within-cluster sum of squares for one cluster of data with observational weights.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a length-one numeric vector.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Javier Cabrera, Yajie Duan, Ge Cheng
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+    require(cluster)
+    # The Ruspini data set from the package "cluster""
+    x = as.matrix(ruspini)
+
+    # assign random weights to observations
+    w = sample(1:10,nrow(x),replace = TRUE)
+
+    wss(x,w)
+
+    </code></pre>
+
+
+</div>

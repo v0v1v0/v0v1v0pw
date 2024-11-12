@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>svdLSplus</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Internal function: Uses SVD components to compute final estimate via
+Sherman-Morrison-Woodbury formula.</h2>
+
+<h3>Description</h3>
+
+<p>Solves the equation system in walsNB via Sherman-Morrison-Woodbury formula
+for the unrestricted estimator <code class="reqn">\hat{\gamma}_{u}</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">svdLSplus(U, V, singularVals, y, ell, geB)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>U</code></td>
+<td>
+<p>Left singular vectors of <code class="reqn">\bar{Z}</code> or <code class="reqn">\bar{Z}_{1}</code>
+from <code>svd</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>V</code></td>
+<td>
+<p>Right singular vectors of <code class="reqn">\bar{Z}</code> or <code class="reqn">\bar{Z}_{1}</code>
+from <code>svd</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>singularVals</code></td>
+<td>
+<p>Singular values of <code class="reqn">\bar{Z}</code> or <code class="reqn">\bar{Z}_{1}</code>
+from <code>svd</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>"Pseudo"-response, see details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ell</code></td>
+<td>
+<p>Vector <code class="reqn">\bar{\ell}</code> from section
+"Simplification for computing <code class="reqn">\tilde{\gamma}_{u}</code>"
+Huynh (2024b)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geB</code></td>
+<td>
+<p>Scalar <code class="reqn">\bar{g} \bar{\epsilon} / (1 + B)</code>. See section
+"Simplification for computing <code class="reqn">\tilde{\gamma}_{u}</code>"
+Huynh (2024b) for definition of
+<code class="reqn">\bar{g}</code>, <code class="reqn">\bar{\epsilon}</code> and <code class="reqn">B</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function can be reused for the computation of the fully restricted
+estimator <code class="reqn">\tilde{\gamma}_{1r}</code> and the model averaged estimator
+<code class="reqn">\hat{\gamma}_{1}</code>.
+</p>
+<p>For <code class="reqn">\tilde{\gamma}_{1r}</code> and <code class="reqn">\hat{\gamma}_{1}</code> use
+<code>U</code>, <code>V</code> and <code>singularVals</code> from SVD of <code class="reqn">\bar{Z}_{1}</code>.
+</p>
+<p>For <code class="reqn">\hat{\gamma}_{u}</code> and <code class="reqn">\tilde{\gamma}_{1r}</code> use same
+pseudo-response <code class="reqn">\bar{y_{0}} - \bar{t} \bar{\epsilon} \bar{\Psi}^{-1/2} \bar{q}</code>
+in argument <code>y</code>.
+</p>
+<p>For <code class="reqn">\hat{\gamma}_{1}</code> use pseudo-response
+<code class="reqn">\bar{y_{0}} - \bar{t} \bar{\epsilon} \bar{\Psi}^{-1/2} \bar{q} -
+(\bar{Z}_{2} + \bar{g} \bar{\epsilon} \bar{\Psi}^{-1/2} \bar{q} \bar{q}^{\top}
+Z_{2}) \hat{\gamma}_{2}</code>.
+</p>
+<p>See section "Note on function svdLSplus from WALS"
+in Huynh (2024b).
+</p>
+
+
+<h3>References</h3>
+
+<p>Huynh K (2024b).
+“WALS: Weighted-Average Least Squares Model Averaging in R.”
+University of Basel.
+Mimeo.
+</p>
+
+
+</div>

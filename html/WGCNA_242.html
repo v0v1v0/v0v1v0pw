@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>selectFewestConsensusMissing</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Select columns with the lowest consensus number of missing data
+</h2>
+
+<h3>Description</h3>
+
+<p>Given a <code>multiData</code> structure, this function calculates the consensus number of present
+(non-missing) data
+for each variable (column) across the data sets, forms the consensus and for each group selects variables
+whose consensus proportion of present data is at least <code>selectFewestMissing</code> (see usage below).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">selectFewestConsensusMissing(
+    mdx, 
+    colID, 
+    group, 
+    minProportionPresent = 1, 
+    consensusQuantile = 0, 
+    verbose = 0,
+    ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mdx</code></td>
+<td>
+
+<p>A <code>multiData</code> structure. All sets must have the same columns.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colID</code></td>
+<td>
+<p> Character vector of column identifiers.  This must include all the column names from
+<code>mdx</code>, but can include other values as well. Its entries must be unique (no duplicates) and no
+missing values are permitted. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group</code></td>
+<td>
+
+<p>Character vector whose components contain the group label (e.g. a character string) for
+each entry of <code>colID</code>. This vector must be of the same length as the vector <code>colID</code>. In gene
+expression applications, this vector could contain the gene symbol (or a co-expression module label).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minProportionPresent</code></td>
+<td>
+<p>A numeric value between 0 and 1 (logical values will be coerced to numeric). 
+Denotes the minimum consensus 
+fraction of present data in each column that will result in the column being retained.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>consensusQuantile</code></td>
+<td>
+<p>A number between 0 and 1 giving the quantile probability for consensus calculation.
+0 means the minimum value (true consensus) will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+
+<p>Level of verbosity; 0 means silent, larger values will cause progress messages to be printed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments that should be considered undocumented and subject to change.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A 'consensus' of a vector (say 'x') is simply defined as the quantile with probability
+<code>consensusQuantile</code> of the vector x. This function calculates, for each variable in <code>mdx</code>, its
+proportion of present (i.e., non-NA and non-NaN) 
+values in each of the data sets in <code>mdx</code>, and forms the consensus. Only
+variables whose consensus proportion of present data is at least <code>selectFewestMissing</code> are retained.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A logical vector with one element per variable in <code>mdx</code>, giving <code>TRUE</code> for the retained
+variables.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jeremy Miller and Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>multiData</code>
+</p>
+
+
+</div>

@@ -1,0 +1,165 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>.plotQuantDistr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generic plotting of density distribution for quantitation import-functions</h2>
+
+<h3>Description</h3>
+
+<p>This (low-level) function allows (generic) plotting of density distribution for quantitation import-functions
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">.plotQuantDistr(
+  abund,
+  quant,
+  custLay = NULL,
+  normalizeMeth = NULL,
+  softNa = NULL,
+  refLi = NULL,
+  refLiIni = NULL,
+  notLogAbund = NA,
+  figMarg = c(3.5, 3.5, 3, 1),
+  tit = NULL,
+  las = NULL,
+  cexAxis = 0.8,
+  nameSer = NULL,
+  cexNameSer = NULL,
+  silent = FALSE,
+  callFrom = NULL,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>abund</code></td>
+<td>
+<p>(matrix or data.frame) abundance data, will be plottes as distribution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quant</code></td>
+<td>
+<p>(matrix or data.frame) optional additional abundance data, to plot 2nd distribution, eg of normalized data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>custLay</code></td>
+<td>
+<p>(matrix) describing sammple-setup, typically produced by</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalizeMeth</code></td>
+<td>
+<p>(character, length=1) name of normalization method (will be displayed in title of figure)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>softNa</code></td>
+<td>
+<p>(character, length=1) name of quantitation-software (typically 2-letter abbreviation, eg 'MQ')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refLi</code></td>
+<td>
+<p>(integer) to display number reference lines</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refLiIni</code></td>
+<td>
+<p>(integer) to display initial number reference lines</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>notLogAbund</code></td>
+<td>
+<p>(logical) set to <code>TRUE</code> if <code>abund</code> is linear but should be plotted as log2</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>figMarg</code></td>
+<td>
+<p>(numeric, length=4) custom figure margins (will be passed to <code>par</code>), defaults to c(3.5, 3.5, 3, 1)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tit</code></td>
+<td>
+<p>(character) custom title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>las</code></td>
+<td>
+<p>(integer) indicate orientation of text in axes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexAxis</code></td>
+<td>
+<p>(numeric) size of numeric axis labels as cex-expansion factor (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nameSer</code></td>
+<td>
+<p>(character) custom label for data-sets or columns (length must match number of data-sets)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexNameSer</code></td>
+<td>
+<p>(numeric) size of individual data-series labels as cex-expansion factor (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns logical value (if data were valid for plotting) and produces a density dustribution figure (if data were found valid)
+</p>
+
+
+<h3>See Also</h3>
+
+<p>used in <code>readProtDiscovererFile</code>,  <code>readMaxQuantFile</code>, <code>readProlineFile</code>, <code>readFragpipeFile</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2018);  datT8 &lt;- matrix(round(rnorm(800) +3,1), nc=8, dimnames=list(paste(
+  "li",1:100,sep=""), paste(rep(LETTERS[1:3],c(3,3,2)),letters[18:25],sep="")))
+.plotQuantDistr(datT8, quant=NULL, refLi=NULL, tit="Synthetic Data Distribution")                                
+</code></pre>
+
+
+</div>

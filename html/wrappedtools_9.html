@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>compare_n_numvars</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Comparison for columns of Gaussian or ordinal measures for n groups</h2>
+
+<h3>Description</h3>
+
+<p>Some names were changed in August 2022, to reflect the update of the function to handle ordinal data using non-parametric equivalents.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">compare_n_numvars(
+  .data = rawdata,
+  dep_vars,
+  indep_var,
+  gaussian,
+  round_desc = 2,
+  range = FALSE,
+  rangesep = " ",
+  pretext = FALSE,
+  mark = FALSE,
+  round_p = 3,
+  add_n = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.data</code></td>
+<td>
+<p>name of dataset (tibble/data.frame) to analyze, defaults to rawdata.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dep_vars</code></td>
+<td>
+<p>vector of column names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indep_var</code></td>
+<td>
+<p>name of grouping variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gaussian</code></td>
+<td>
+<p>Logical specifying normal or ordinal indep_var (and chooses comparison tests accordingly)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>round_desc</code></td>
+<td>
+<p>number of significant digits for rounding of descriptive stats.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>range</code></td>
+<td>
+<p>include min/max?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rangesep</code></td>
+<td>
+<p>text between statistics and range or other elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pretext, mark</code></td>
+<td>
+<p>for function formatP.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>round_p</code></td>
+<td>
+<p>level for rounding p-value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add_n</code></td>
+<td>
+<p>add n to descriptive statistics?</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list with elements "results": tibble with descriptive statistics,
+p-value from ANOVA/Kruskal-Wallis test, p-values for pairwise comparisons, significance
+indicators, and descriptives pasted with significance.
+"raw": nested list with output from all underlying analyses.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Usually,only the result table is relevant:
+compare_n_numvars(
+  .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
+  indep_var = "cyl",
+  gaussian = TRUE
+ )$results
+# For a report, result columns may be filtered as needed:
+compare_n_numvars(
+  .data = mtcars, dep_vars = c("wt", "mpg", "hp"),
+  indep_var = "cyl",
+  gaussian = FALSE
+)$results |&gt;
+  dplyr::select(Variable, `cyl 4 fn`:`cyl 8 fn`, multivar_p)
+</code></pre>
+
+
+</div>

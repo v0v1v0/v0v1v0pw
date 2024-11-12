@@ -1,0 +1,178 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_variables</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add variables to a workflow</h2>
+
+<h3>Description</h3>
+
+
+<ul>
+<li> <p><code>add_variables()</code> specifies the terms of the model through the usage of
+tidyselect::select_helpers for the <code>outcomes</code> and <code>predictors</code>.
+</p>
+</li>
+<li> <p><code>remove_variables()</code> removes the variables. Additionally, if the model
+has already been fit, then the fit is removed.
+</p>
+</li>
+<li> <p><code>update_variables()</code> first removes the variables, then replaces the
+previous variables with the new ones. Any model that has already been
+fit based on the original variables will need to be refit.
+</p>
+</li>
+<li> <p><code>workflow_variables()</code> bundles <code>outcomes</code> and <code>predictors</code> into a single
+variables object, which can be supplied to <code>add_variables()</code>.
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_variables(x, outcomes, predictors, ..., blueprint = NULL, variables = NULL)
+
+remove_variables(x)
+
+update_variables(
+  x,
+  outcomes,
+  predictors,
+  ...,
+  blueprint = NULL,
+  variables = NULL
+)
+
+workflow_variables(outcomes, predictors)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A workflow</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outcomes, predictors</code></td>
+<td>
+<p>Tidyselect expressions specifying the terms
+of the model. <code>outcomes</code> is evaluated first, and then all outcome columns
+are removed from the data before <code>predictors</code> is evaluated.
+See tidyselect::select_helpers for the full range of possible ways to
+specify terms.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blueprint</code></td>
+<td>
+<p>A hardhat blueprint used for fine tuning the preprocessing.
+</p>
+<p>If <code>NULL</code>, <code>hardhat::default_xy_blueprint()</code> is used.
+</p>
+<p>Note that preprocessing done here is separate from preprocessing that
+might be done by the underlying model.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variables</code></td>
+<td>
+<p>An alternative specification of <code>outcomes</code> and <code>predictors</code>,
+useful for supplying variables programmatically.
+</p>
+
+<ul>
+<li>
+<p> If <code>NULL</code>, this argument is unused, and <code>outcomes</code> and <code>predictors</code> are
+used to specify the variables.
+</p>
+</li>
+<li>
+<p> Otherwise, this must be the result of calling <code>workflow_variables()</code> to
+create a standalone variables object. In this case, <code>outcomes</code> and
+<code>predictors</code> are completely ignored.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>To fit a workflow, exactly one of <code>add_formula()</code>, <code>add_recipe()</code>, or
+<code>add_variables()</code> <em>must</em> be specified.
+</p>
+
+
+<h3>Value</h3>
+
+
+<ul>
+<li> <p><code>add_variables()</code> returns <code>x</code> with a new variables preprocessor.
+</p>
+</li>
+<li> <p><code>remove_variables()</code> returns <code>x</code> after resetting any model fit and
+removing the variables preprocessor.
+</p>
+</li>
+<li> <p><code>update_variables()</code> returns <code>x</code> after removing the variables preprocessor,
+and then re-specifying it with new variables.
+</p>
+</li>
+<li> <p><code>workflow_variables()</code> returns a 'workflow_variables' object containing
+both the <code>outcomes</code> and <code>predictors</code>.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(parsnip)
+
+spec_lm &lt;- linear_reg()
+spec_lm &lt;- set_engine(spec_lm, "lm")
+
+workflow &lt;- workflow()
+workflow &lt;- add_model(workflow, spec_lm)
+
+# Add terms with tidyselect expressions.
+# Outcomes are specified before predictors.
+workflow1 &lt;- add_variables(
+  workflow,
+  outcomes = mpg,
+  predictors = c(cyl, disp)
+)
+
+workflow1 &lt;- fit(workflow1, mtcars)
+workflow1
+
+# Removing the variables of a fit workflow will also remove the model
+remove_variables(workflow1)
+
+# Variables can also be updated
+update_variables(workflow1, mpg, starts_with("d"))
+
+# The `outcomes` are removed before the `predictors` expression
+# is evaluated. This allows you to easily specify the predictors
+# as "everything except the outcomes".
+workflow2 &lt;- add_variables(workflow, mpg, everything())
+workflow2 &lt;- fit(workflow2, mtcars)
+extract_mold(workflow2)$predictors
+
+# Variables can also be added from the result of a call to
+# `workflow_variables()`, which creates a standalone variables object
+variables &lt;- workflow_variables(mpg, c(cyl, disp))
+workflow3 &lt;- add_variables(workflow, variables = variables)
+fit(workflow3, mtcars)
+</code></pre>
+
+
+</div>

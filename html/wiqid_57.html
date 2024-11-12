@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getMCerror</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+MCMC error using the batch method (deprecated)
+</h2>
+
+<h3>Description</h3>
+
+<p>This is now a wrapper for <code>getMCE</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getMCerror(object, n.chains, SDpc=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+
+<p>an object of any class with MCMC output that can be coerced to class mcmcOutput.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.chains</code></td>
+<td>
+
+<p>ignored
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SDpc</code></td>
+<td>
+
+<p>if TRUE, the value of the MC error as a percentage of the posterior SD will be returned.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>If SDpc is FALSE (the default), a named vector with the estimates of MC error. If TRUE, the MC error as a percentage of the standard deviation of the posterior chain. A value &lt;5% of SD is adequate for most purposes, but &lt;1.5% is needed to properly estimate tail probabilities (Lunn et al 2013, p78-79).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith
+</p>
+
+
+<h3>References</h3>
+
+<p>Lunn, D., Jackson, C., Best, N., Thomas, A., &amp; Spiegelhalter, D. (2013) <em>The BUGS book: a practical introduction to Bayesian analysis</em>, Chapman and Hall.
+</p>
+<p>Roberts, G.O. (1996). Markov chain concepts related to sampling algorithms. In <em>Markov Chain Monte Carlo in practice</em> (eds W.R. Gilks, D.J. Spiegelhalter &amp; S. Richardson). Chapman &amp; Hall, London.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Get some output to use
+data(salamanders)
+y &lt;- rowSums(salamanders)
+( out &lt;- BoccSS0(y, 5) )
+
+getMCerror(out)
+getMCerror(out, SDpc=TRUE)
+</code></pre>
+
+
+</div>

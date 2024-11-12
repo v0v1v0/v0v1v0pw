@@ -1,0 +1,60 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotWriteFilenameToLaTexFile</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Write an includegraphic element to the generated LaTeX file</h2>
+
+<h3>Description</h3>
+
+<p>Writes an includegraphic element to the brew-generated LaTeX file.  Written to be used in a series of nested calls as shown in the example. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotWriteFilenameToLaTexFile(graphicFileName) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>graphicFileName</code></td>
+<td>
+
+<p>The name of the file to be included in the LaTeX
+</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Does not return a value
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Greg Hunt &lt;greg@firmansyah.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+logFileName = logFileNamesGetLast(dataDirectory=datd, 
+  directoryNames=c(".", "."), 
+  fileNamePattern="*[.]log")[[1]]
+
+cols = logFileFieldsGetIIS(logFileName)
+
+logdf = logFileRead(logFileName, columnList=cols, 
+            logTimeZone = "", timeFormat = "")
+
+plotWriteFilenameToLaTexFile(plotSaveGG(plotErrorRateByHour(logdf),"xxx", "eps"))
+
+</code></pre>
+
+
+</div>

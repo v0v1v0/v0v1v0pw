@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hf.snps.meth</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Parameter Estimation for W-test Probability Distribution in Gene-methylation Data</h2>
+
+<h3>Description</h3>
+
+<p>Estimate parameters (<em>h</em> and <em>f</em>) for <code>W-test</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">hf.snps.meth(B = 400, geno, meth, y, geno.pos, meth.pos, window.size,
+  n.sample = nrow(geno), n.pair = 1000)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+<p>a numeric number specifying the number of bootstrapping times. Default is 400.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geno</code></td>
+<td>
+<p>a data frame or matrix containing genotypes in the columns. Genotypes should be coded as (0, 1, 2) or (0, 1). SNP names should be stored as column names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meth</code></td>
+<td>
+<p>a data frame or matrix containing methylation data in the columns. Methylation data should be recoded as (0, 1, 2) or (0, 1). Names of CpG sites should be stored as column names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>a numeric vector of 0 or 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geno.pos</code></td>
+<td>
+<p>a data frame containing SNP names and positions in two columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meth.pos</code></td>
+<td>
+<p>a data frame containing CpG names and positions in two columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>window.size</code></td>
+<td>
+<p>a numeric number specifying the size of genome distance. Interaction of the SNPs and CpG sites located within the size of genome distance will be evaluated exhaustively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.sample</code></td>
+<td>
+<p>a numeric number specifying the number of samples to be included for estimating parameters. Default is the total number of samples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.pair</code></td>
+<td>
+<p>a numeric value, the number of SNP-CpG pairs to use in bootstrapping. Default = min(P, 1000). P is the total number of pairs within the <code>window.size</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a set of <em>h</em> and <em>f</em> values indexed by <em>k</em>, estimated automatically. Variable <em>k</em> is the number of categorical combinations of a variable pair.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Rui Sun, Maggie Haitian Wang
+</p>
+
+
+<h3>References</h3>
+
+<p>Maggie Haitian Wang, Rui Sun, Junfeng Guo, Haoyi Weng, Jack Lee, Inchi Hu, Pak Sham and Benny C.Y. Zee (2016). A fast and powerful W-test for pairwise epistasis testing. Nucleic Acids Research. doi:10.1093/nar/gkw347.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(SNP.pos)
+data(CpG.pos)
+data(genotype)
+data(methylation)
+data(phenotype2)
+
+# Please note that parameter B is recommended to be greater than 400.
+hf.pair &lt;- hf.snps.meth(B = 80, geno = genotype, meth = methylation, y = phenotype2,
+                        geno.pos = SNP.pos, meth.pos = CpG.pos, window.size = 1000)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,126 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>identify_datefreq</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Identify date frequency based on a series of dates</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+</p>
+<p>Takes a vector of dates and identify whether the frequency is 'daily',
+'weekly', or 'monthly'. The primary use case for this function is to provide
+an accurate description of the query type used and for raising errors should
+a wrong date grouping be used in the data input.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">identify_datefreq(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>Vector containing a series of dates.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Date frequency detection works as follows:
+</p>
+
+<ul>
+<li>
+<p> If at least three days of the week are present (e.g., Monday, Wednesday,
+Thursday) in the series, then the series is classified as 'daily'
+</p>
+</li>
+<li>
+<p> If the total number of months in the series is equal to the length, then
+the series is classified as 'monthly'
+</p>
+</li>
+<li>
+<p> If the total number of sundays in the series is equal to the length of
+the series, then the series is classified as 'weekly
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>String describing the detected date frequency, i.e.:
+</p>
+
+<ul>
+<li>
+<p> 'daily'
+</p>
+</li>
+<li>
+<p> 'weekly'
+</p>
+</li>
+<li>
+<p> 'monthly'
+</p>
+</li>
+</ul>
+<h3>Limitations</h3>
+
+<p>One of the assumptions made behind the classification is that weeks are
+denoted with Sundays, hence the count of sundays to measure the number of
+weeks. In this case, weeks where a Sunday is missing would result in an
+'unable to classify' error.
+</p>
+<p>Another assumption made is that dates are evenly distributed, i.e. that the
+gap between dates are equal. If dates are unevenly distributed, e.g. only two
+days of the week are available for a given week, then the algorithm will fail
+to identify the frequency as 'daily'.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">start_date &lt;- as.Date("2022/06/26")
+end_date &lt;- as.Date("2022/11/27")
+
+# Daily
+day_seq &lt;-
+  seq.Date(
+    from = start_date,
+    to = end_date,
+    by = "day"
+  )
+
+identify_datefreq(day_seq)
+
+# Weekly
+week_seq &lt;-
+  seq.Date(
+    from = start_date,
+    to = end_date,
+    by = "week"
+  )
+
+identify_datefreq(week_seq)
+
+# Monthly
+month_seq &lt;-
+  seq.Date(
+    from = start_date,
+    to = end_date,
+    by = "month"
+  )
+identify_datefreq(month_seq)
+
+</code></pre>
+
+
+</div>

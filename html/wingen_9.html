@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>krig_gd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Krige moving window maps</h2>
+
+<h3>Description</h3>
+
+<p>Perform interpolation of the raster(s) produced by window_gd using autoKrige
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">krig_gd(
+  r,
+  grd = NULL,
+  index = 1,
+  coords = NULL,
+  agg_grd = NULL,
+  disagg_grd = NULL,
+  agg_r = NULL,
+  disagg_r = NULL,
+  autoKrige_output = FALSE,
+  lower_bound = TRUE,
+  upper_bound = TRUE,
+  krig_method = "ordinary",
+  resample = FALSE,
+  resample_first = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>SpatRaster produced by window_gd</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grd</code></td>
+<td>
+<p>object to create grid for kriging; can be a SpatRaster or RasterLayer. If undefined, will use <code>r</code> to create a grid.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>index</code></td>
+<td>
+<p>integer indices of layers in raster stack to krige (defaults to 1; i.e., the first layer)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coords</code></td>
+<td>
+<p>if provided, kriging will occur based only on values at these coordinates. Can be provided as an sf points, a two-column matrix, or a data.frame representing x and y coordinates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>agg_grd</code></td>
+<td>
+<p>factor to use for aggregation of <code>grd</code>, if provided (this will decrease the resolution of the final kriged raster; defaults to NULL)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>disagg_grd</code></td>
+<td>
+<p>factor to use for disaggregation of <code>grd</code>, if provided (this will increase the resolution of the final kriged raster; defaults to NULL)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>agg_r</code></td>
+<td>
+<p>factor to use for aggregation of <code>r</code>, if provided (this will decrease the number of points used in the kriging model; defaults to NULL)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>disagg_r</code></td>
+<td>
+<p>factor to use for disaggregation, of <code>r</code> if provided (this will increase the number of points used in the kriging model; defaults to NULL)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>autoKrige_output</code></td>
+<td>
+<p>whether to return full output from autoKrige including uncertainty rasters (defaults to FALSE). If TRUE, returns a list with the kriged input raster layer ("raster"), kriged variance ("var"), kriged standard deviation ("stdev"), and full autoKrige output ("autoKrige_output").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower_bound</code></td>
+<td>
+<p>if TRUE (default), converts all values in the kriged raster less than the minimum value of the input raster, to that minimum</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upper_bound</code></td>
+<td>
+<p>if TRUE (default), converts all values in the kriged raster greater than the maximum value of the input raster, to that maximum</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>krig_method</code></td>
+<td>
+<p>method to use for kriging. If <code>ordinary</code>, ordinary/simple kriging is performed (formula: ~ 1; default). If <code>universal</code>,  universal kriging is performed (formula = ~ x + y).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resample</code></td>
+<td>
+<p>whether to resample <code>grd</code> or <code>r</code>. Set to <code>"r"</code> to resample <code>r</code> to <code>grd</code>. Set to <code>"grd"</code> to resample <code>grd</code> to <code>r</code> (defaults to FALSE for no resampling)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resample_first</code></td>
+<td>
+<p>if aggregation or disaggregation is used in addition to resampling, specifies whether to resample before (resample_first = TRUE) or after (resample_first = FALSE) aggregation/disaggregation (defaults to TRUE)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a SpatRaster object or a list of autoKrige outputs (if autoKrige_output = TRUE)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">load_mini_ex()
+wpi &lt;- window_gd(mini_vcf, mini_coords, mini_lyr, L = 10, rarify = TRUE)
+kpi &lt;- krig_gd(wpi, mini_lyr)
+plot_gd(kpi, main = "Kriged Pi")
+
+</code></pre>
+
+
+</div>

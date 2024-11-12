@@ -1,0 +1,153 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.LRfit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot the estimated survival-completed cumulative loss curve</h2>
+
+<h3>Description</h3>
+
+<p>Plot the estimated survival-completed cumulative loss (while-alive
+loss rate times the length of follow-up) as a function of
+the time horizon.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'LRfit'
+plot(
+  x,
+  group = NULL,
+  conf = FALSE,
+  main = NULL,
+  xlim = NULL,
+  ylim = NULL,
+  xlab = "Follow-up time",
+  ylab = "Survival-completed cumulative loss",
+  group.col = NULL,
+  conf.lty = 3,
+  lwd = 2,
+  legend = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An object returned by <code>LRfit</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group</code></td>
+<td>
+<p>Specifies the group to be plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conf</code></td>
+<td>
+<p>If TRUE, 95% confidence limits for the target curve are overlaid.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>A main title for the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim</code></td>
+<td>
+<p>The x limits of the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylim</code></td>
+<td>
+<p>The y limits of the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>A label for the x axis, defaults to a description of x.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>A label for the y axis, defaults to a description of y.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group.col</code></td>
+<td>
+<p>A vector of colors for the group-specific curves; must be commensurate
+with the number of groups.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>conf.lty</code></td>
+<td>
+<p>Line type for the confidence limits if <code>conf=TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd</code></td>
+<td>
+<p>Line width.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend</code></td>
+<td>
+<p>If TRUE, a crude legend for the group-specific curves will appear
+on the bottom right corner of the graph.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments that can be passed to the underlying <code>plot</code> method.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>No return value, called for side effects.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>LRfit</code>, <code>summary.LRfit</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load the HF-ACTION trial data
+head(hfaction_cpx12)
+# fit the data
+dat&lt;-hfaction_cpx12
+obj&lt;-LRfit(dat$id,dat$time,dat$status,dat$trt)
+# print the event numbers by group
+obj
+# summarize the inference results for tau=3.5 years
+# with joint test with RMST
+summary(obj,tau=3.5,joint.test=TRUE)
+# plot the estimated survival-completed cumulative loss
+# by group, with 95% confidence intervals
+plot(obj,conf=TRUE,xlab="Time (years)",xlim=c(0, 3.5),ylim=c(0,3),
+    ylab="Survival-completed cumulative frequency")
+</code></pre>
+
+
+</div>

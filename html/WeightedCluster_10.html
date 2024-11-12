@@ -1,0 +1,181 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>seqpropclust</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Monothetic clustering of state sequences
+</h2>
+
+<h3>Description</h3>
+
+<p>Monothetic divisive clustering of the data using object properties. For state sequences object different set of properties are automoatically extracted.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">seqpropclust(seqdata, diss, properties = c("state", "duration", "spell.age", 
+		"spell.dur", "transition", "pattern", "AFtransition", "AFpattern", 
+		"Complexity"), other.prop = NULL, prop.only = FALSE, pmin.support = 0.05, 
+		max.k = -1, with.missing = TRUE, R = 1, weight.permutation = "diss", 
+		min.size = 0.01, max.depth = 5, maxcluster = NULL, ...)
+		
+wcPropertyClustering(diss, properties, maxcluster = NULL, ...)
+dtcut(st, k, labels = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>seqdata</code></td>
+<td>
+<p>State sequence object (see <code>seqdef</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>diss</code></td>
+<td>
+<p>a dissimilarity matrix or a <code>dist</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>properties</code></td>
+<td>
+<p>Character or <code>data.frame</code>. In <code>seqpropclust</code>, it can be a list of properties to be extracted from <code>seqdata</code>. It can also be a <code>data.frame</code> specifying the properties to use for the clustering.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>other.prop</code></td>
+<td>
+<p><code>data.frame</code>. Additional properties to be considered to cluster the sequences.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prop.only</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>, the function returns a data.frame containing the extracted properties (without clustering the data).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pmin.support</code></td>
+<td>
+<p>Numeric. Minimum support (as a proportion of sequences). See <code>seqefsub</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.k</code></td>
+<td>
+<p>Numeric. The maximum number of events allowed in a subsequence. See <code>seqefsub</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>with.missing</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>, property of missing spell are also extracted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+<p>Number of permutations used to assess the significance of the split. See <code>disstree</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight.permutation</code></td>
+<td>
+<p>Weight permutation method: "diss" (attach weights to the dissimilarity matrix), "replicate" (replicate cases using weights), "rounded-replicate" (replicate case using rounded weights), "random-sampling" (random assignment of covariate profiles to the objects using distributions defined by the weights.). See <code>disstree</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min.size</code></td>
+<td>
+<p>Minimum number of cases in a node, will be treated as a proportion if less than 1. See <code>disstree</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.depth</code></td>
+<td>
+<p>Maximum depth of the tree. See <code>disstree</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxcluster</code></td>
+<td>
+<p>Maximum number of cluster to consider.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>st</code></td>
+<td>
+<p>A divise clustering tree as produced by <code>seqpropclust</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>The number of groups to extract.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>, rules to assign an object to a sequence is used to label the cluster (instead of a number).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments passed to/from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The method implement the DIVCLUS-T algorithm.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Return a <code>seqpropclust</code> object, which is (in fact) a <code>distree</code> object.  See <code>disstree</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Studer, M. (2018). Divisive property-based and fuzzy clustering for sequence analysis. In G. Ritschard and M. Studer (Eds.), <em>Sequence Analysis and Related Approaches: Innovative Methods and Applications</em>, Life Course Research and Social Policies. Springer.
+</p>
+<p>Piccarreta R, Billari FC (2007). Clustering work and family trajectories by using a divisive algorithm. <em>Journal of the Royal Statistical Society: Series A (Statistics in Society)</em>, 170(4), 1061-1078.
+</p>
+<p>Chavent M, Lechevallier Y, Briant O (2007). DIVCLUS-T: A monothetic divisive hierarchical clustering method. <em>Computational Statistics &amp; Data Analysis</em>, 52(2), 687-701.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>as.clustrange</code>, <code>seqtreedisplay</code>, <code>disstree</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(mvad)
+mvad.seq &lt;- seqdef(mvad[1:100, 17:86])
+
+## COmpute distance using Hamming distance
+diss &lt;- seqdist(mvad.seq, method="HAM")
+
+pclust &lt;- seqpropclust(mvad.seq , diss=diss, maxcluster=5, properties=c("state", "duration")) 
+
+## Run it to visualize the results
+##seqtreedisplay(pclust, type="d", border=NA, showdepth=TRUE)
+
+pclustqual &lt;- as.clustrange(pclust, diss=diss, ncluster=5)
+</code></pre>
+
+
+</div>

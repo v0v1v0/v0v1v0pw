@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cleanUp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cleans up hydrologic time series data</h2>
+
+<h3>Description</h3>
+
+<p>Function to identify and fix common problems with hydrologic data
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cleanUp(dataset, task = "view", replace = 0.1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dataset</code></td>
+<td>
+<p>is a data frame in format of the data frame returned by 
+importDVs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>task</code></td>
+<td>
+<p>is either "view" or "fix."  View will return a list containing 
+rows with negative values and rows with missing values.  Fix will 
+replace negative values with NA and replace zeroes with the value
+specified by the replace argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>replace</code></td>
+<td>
+<p>is the value used to replace 0 values.  The default
+is 0.1.  For streamflow in small streams, one might want to use 0.01.
+For daily data other than streamflow, such as turbidity, users may not want
+to replace 0 values with a nonzero value.  In those cases, replace can be 
+set to 0.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list showing days with negative values and days with 
+values of 0 when task is "view."  When task is "fix" the fixed dataset 
+is returned.
+When a negative value is replaced with NA, an "N" is added to the qualcode
+field to indicate that there had been a negative number.
+When a zero value is replaced, an "R" is added to the qualcode field to
+indicate that a zero value was replaced.
+</p>
+
+
+<h3>Note</h3>
+
+<p>If calculating anomalies (see compAnom), the user may need to 
+replace isolated missing values with with a value; however, if there are 
+larger periods with missing values, streamflow anomalies may not be an 
+appropriate use of the data.  The substitution of some missing data with 
+values may be done using the function fillMiss that is part of this 
+package.  However, care needs to be taken when filling in missing data.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>fillMiss
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(exampleWaterData)
+head(badDataSet)
+cleanUp(badDataSet, task="view")
+q05054000Fix &lt;- cleanUp(badDataSet, task="fix")
+# replace 0s with NA, then one could use the fillMiss function
+# to estimate values
+q05054000Fix2 &lt;- cleanUp(badDataSet, task="fix", replace=NA)
+summary(badDataSet)
+summary(q05054000Fix)
+summary(q05054000Fix2)
+</code></pre>
+
+
+</div>

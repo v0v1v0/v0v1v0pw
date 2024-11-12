@@ -1,0 +1,295 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>godambe</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>INVERSE GODAMBE MATRIX</h2>
+
+<h3>Description</h3>
+
+<p>Inverse Godambe matrix.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">godambe(param,WtScMat,xdat,ydat,id,tvec,margmodel,link)
+godambe.ord(param,WtScMat,xdat,ydat,id,tvec,link)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>param</code></td>
+<td>
+<p>The weighted scores estimates of regression and not regression parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>WtScMat</code></td>
+<td>
+<p>A list containing the following components.
+omega: The array with the <code class="reqn">\Omega_i,\,i=1,\ldots,n</code> matrices;
+delta: The array with the <code class="reqn">\Delta_i,\,i=1,\ldots,n</code> matrices;
+X: The array with the <code class="reqn">X_i,\,i=1,\ldots,n</code> matrices.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xdat</code></td>
+<td>
+<p><code class="reqn">(\mathbf{x}_1 ,  \mathbf{x}_2 , \ldots ,
+  \mathbf{x}_n )^\top</code>, where the matrix <code class="reqn">\mathbf{x}_i,\,i=1,\ldots,n</code> for a given unit will
+depend on the  times of observation for that unit (<code class="reqn">j_i</code>) and will have
+number of rows <code class="reqn">j_i</code>, each row corresponding to one of the <code class="reqn">j_i</code> elements
+of <code class="reqn">y_i</code> and <code class="reqn">p</code> columns where <code class="reqn">p</code> is the number of covariates including
+the unit first column  to account for the intercept  (except for ordinal regression where there is no intercept). This xdat matrix is
+of dimension <code class="reqn">(N\times p),</code> where <code class="reqn">N =\sum_{i=1}^n j_i</code> is the total
+number of observations from all units.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ydat</code></td>
+<td>
+<p><code class="reqn">(y_1 , y_2 , \ldots , y_n  )^\top</code>, where
+the response data vectors <code class="reqn">y_i,\,i=1,\ldots,n</code>
+are of possibly different lengths for different units.  In particular,
+we now have that <code class="reqn">y_i</code> is (<code class="reqn">j_i \times 1</code>), where <code class="reqn">j_i</code> is the   number of
+observations on unit <code class="reqn">i</code>. The total number of observations   from all units
+is <code class="reqn">N =\sum_{i=1}^n j_i</code>. The ydat are the collection of data   vectors
+<code class="reqn">y_i, i = 1,\ldots,n</code> one from each unit which summarize all the data
+together in a single, long vector of length <code class="reqn">N</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>An index for individuals or clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tvec</code></td>
+<td>
+<p>A vector with the time indicator of individuals or clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>margmodel</code></td>
+<td>
+
+<p>Indicates the marginal model.
+Choices are “poisson” for Poisson, “bernoulli” for Bernoulli, 
+and  “nb1” , “nb2” for the NB1 and NB2 parametrization 
+of negative binomial in Cameron and Trivedi (1998).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+<p>The link function. 
+Choices are “log” for the log link function, “logit” for 
+the logit link function, and “probit” for 
+the probit link function. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If the <code class="reqn">W_{i,\rm working}</code> are assumed fixed for the
+second stage of solving the weighted scores equations 
+</p>
+<p style="text-align: center;"><code class="reqn">
+ g_1= g_1(a)=\sum_{i=1}^n X_i^T\, W_{i,\rm working}^{-1}\, s_i( a)=0,
+</code>
+</p>
+<p> the asymptotic covariance matrix of the
+solution <code class="reqn">\widehat a_1</code> is
+</p>
+<p style="text-align: center;"><code class="reqn">
+  V_1=(-D_{g_1})^{-1}M_{g_1}(-D^T_{g_1})^{-1}
+</code>
+</p>
+
+<p>with
+</p>
+<p style="text-align: center;"><code class="reqn">
+  -D_{g_1} =\sum_{i=1}^n X_i^T W_{i,\rm working}^{-1}\Delta_i X_i,
+</code>
+</p>
+
+<p style="text-align: center;"><code class="reqn">
+  M_{ g_1} = \sum_{i=1}^n X_i^T W_{i,\rm working}^{-1}
+  \Omega_{i,\rm true}( W_{i,\rm working}^{-1})^T X_i,
+</code>
+</p>
+
+<p>where <code class="reqn">\Omega_{i,\rm true}</code> is the true covariance matrix of <code class="reqn">s_i(a)</code>.
+The inverse of <code class="reqn">V_1</code> is known as
+Godambe information matrix (Godambe, 1991).
+</p>
+<p>Note that <code>godambe.ord</code> is a variant of the code for ordinal (probit and logistic) regression.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The inverse Godambe matrix.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Aristidis K. Nikoloulopoulos <a href="mailto:A.Nikoloulopoulos@uea.ac.uk">A.Nikoloulopoulos@uea.ac.uk</a><br>
+Harry Joe <a href="mailto:harry.joe@ubc.ca">harry.joe@ubc.ca</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Godambe, V. P. (1991)
+<em>Estimating Functions</em>.
+Oxford: Oxford University Press
+</p>
+<p>Nikoloulopoulos, A.K., Joe, H. and Chaganty, N.R. (2011)
+Weighted scores method for regression models with dependent data.
+<em>Biostatistics</em>, <b>12</b>, 653–665. doi: <a href="https://doi.org/10.1093/biostatistics/kxr005">10.1093/biostatistics/kxr005</a>.
+</p>
+<p>Nikoloulopoulos, A.K. (2016)
+Correlation structure and variable selection in generalized estimating equations via composite likelihood information criteria.
+<em>Statistics in Medicine</em>, <b>35</b>, 2377–2390. doi: <a href="https://doi.org/10.1002/sim.6871">10.1002/sim.6871</a>.
+</p>
+<p>Nikoloulopoulos, A.K. (2017)
+Weighted scores method for longitudinal  ordinal data.
+<em>Arxiv e-prints</em>, &lt;arXiv:1510.07376&gt;. <a href="https://arxiv.org/abs/1510.07376">https://arxiv.org/abs/1510.07376</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wtsc</code>,
+<code>solvewtsc</code>,
+<code>weightMat</code>,
+<code>wtsc.wrapper</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">################################################################################
+#                           Poisson regression 
+################################################################################
+################################################################################
+#                      read and set up the data set
+################################################################################
+data(childvisit)
+# covariates
+season1&lt;-childvisit$q
+season1[season1&gt;1]&lt;-0
+xdat&lt;-cbind(1,childvisit$sex,childvisit$age,childvisit$m,season1)
+# response
+ydat&lt;-childvisit$hosp
+#id
+id&lt;-childvisit$id
+#time
+tvec&lt;-childvisit$q
+################################################################################
+#                      select the marginal model
+################################################################################
+margmodel="poisson"
+################################################################################
+#                      select the  correlation structure
+################################################################################
+corstr="exch"
+################################################################################
+#                      perform CL1 estimation
+################################################################################
+i.est&lt;-iee(xdat,ydat,margmodel)
+cat("\niest: IEE estimates\n")
+print(c(i.est$reg,i.est$gam))
+est.rho&lt;-cl1(b=i.est$reg,gam=i.est$gam,xdat,ydat,id,tvec,margmodel,corstr)
+cat("\nest.rho: CL1 estimates\n")
+print(est.rho$e)
+################################################################################
+#                      obtain the fixed weight matrices
+################################################################################
+WtScMat&lt;-weightMat(b=i.est$reg,gam=i.est$gam,rh=est.rho$e,
+xdat,ydat,id,tvec,margmodel,corstr)
+################################################################################
+#                      obtain the weighted scores estimates
+################################################################################
+# solve the nonlinear system of equations
+ws&lt;-solvewtsc(start=c(i.est$reg,i.est$gam),WtScMat,xdat,ydat,id,
+tvec,margmodel,link)
+cat("ws=parameter estimates\n")
+print(ws$r)
+################################################################################
+#                      obtain the inverse Godambe matrix
+################################################################################
+acov&lt;-godambe(ws$r,WtScMat,xdat,ydat,id,tvec,margmodel)
+cat("\nacov: inverse Godambe matrix with W based on first-stage wt
+matrices\n")
+print(acov)
+################################################################################
+#                         Ordinal regression 
+################################################################################
+################################################################################
+#                      read and set up data set
+################################################################################
+
+data(arthritis)
+nn=nrow(arthritis)
+bas2&lt;-bas3&lt;-bas4&lt;-bas5&lt;-rep(0,nn)
+bas2[arthritis$b==2]&lt;-1
+bas3[arthritis$b==3]&lt;-1
+bas4[arthritis$b==4]&lt;-1
+bas5[arthritis$b==5]&lt;-1
+t2&lt;-t3&lt;-rep(0,nn)
+t2[arthritis$ti==3]&lt;-1
+t3[arthritis$ti==5]&lt;-1
+xdat=cbind(t2,t3,arthritis$trt,bas2,bas3,bas4,bas5,arthritis$age) 
+ydat=arthritis$y
+id&lt;-arthritis$id
+#time
+tvec&lt;-arthritis$time
+################################################################################
+#                      select the link
+################################################################################
+link="probit"
+################################################################################
+#                      select the  correlation structure
+################################################################################
+corstr="exch"
+################################################################################
+#                      perform CL1 estimation
+################################################################################
+i.est&lt;-iee.ord(xdat,ydat,link)
+cat("\niest: IEE estimates\n")
+print(c(i.est$reg,i.est$gam))
+est.rho&lt;-cl1.ord(b=i.est$reg,gam=i.est$gam,xdat,ydat,id,tvec,corstr,link)
+cat("\nest.rho: CL1 estimates\n")
+print(est.rho$e)
+################################################################################
+#                      obtain the fixed weight matrices
+################################################################################
+WtScMat&lt;-weightMat.ord(b=i.est$reg,gam=i.est$gam,rh=est.rho$e,xdat,ydat,id,
+tvec,corstr,link)
+################################################################################
+#                      obtain the weighted scores estimates
+################################################################################
+# solve the nonlinear system of equations
+ws&lt;-solvewtsc.ord(start=c(i.est$reg,i.est$gam),WtScMat,xdat,ydat,id,
+tvec,link)
+cat("ws=parameter estimates\n")
+print(ws$r)
+################################################################################
+#                      obtain the inverse Godambe matrix
+################################################################################
+acov&lt;-godambe.ord(ws$r,WtScMat,xdat,ydat,id,tvec,link)
+cat("\nacov: inverse Godambe matrix with W based on first-stage wt
+matrices\n")
+print(acov)
+
+</code></pre>
+
+
+</div>

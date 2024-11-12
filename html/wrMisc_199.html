@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>packageDownloadStat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Simple Package Download Statistics From CRAN</h2>
+
+<h3>Description</h3>
+
+<p>This function allows accessing the most recent counts of package downloads availabale on http://www.datasciencemeta.com/rpackages,
+obtaining rank quantiles and to compare (multiple) given packages to the bulk data, optionally a plot can be drawn.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">packageDownloadStat(
+  queryPackages = c("wrMisc", "wrProteo", "cif", "bcv", "FinCovRegularization"),
+  countUrl = "http://www.datasciencemeta.com/rpackages",
+  refQuant = (1:10)/10,
+  options = c("naOmit", "sort"),
+  figure = TRUE,
+  log = "",
+  silent = FALSE,
+  callFrom = NULL,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>queryPackages</code></td>
+<td>
+<p>(character or integer) package names of interest, if <code>integer</code>, n random packages will be picked by random</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>countUrl</code></td>
+<td>
+<p>(character) the url where the dayly counts ara available</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refQuant</code></td>
+<td>
+<p>(numeric) add reference quantile values to output matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>options</code></td>
+<td>
+<p>(character) additional seetings : use 'naOmit' to remove NA-lines from output (package-names not found in 'countUrl'); 
+'sort' for sorting output by number of downloads</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>figure</code></td>
+<td>
+<p>(logical) decide of figure should be printed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log</code></td>
+<td>
+<p>(character) set count-axis of figure to linear or log-scale (by setting <code>log="y"</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Detailed articles on this subject have been published on R-Hub (https://blog.r-hub.io/2020/05/11/packagerank-intro/) and on
+R-bloggers (https://www.r-bloggers.com/2020/10/a-cran-downloads-experiment/).
+The task of checking the number of downloads for a given package has also been addressed by several other packages (eg dlstats, cranlogs, adjustedcranlogs).
+</p>
+<p>This function only allows accessing counts as listed on the website of <code>www.datasciencemeta.com</code> which get updated dayly.
+Please note, that reading all lines from the website may take a few seconds !!
+To get a better understanding of the counts read, reference quantiles for download-counts get added by default  (see argument <code>refQuant</code>).
+The (optional) figure can be drawn in linear scale (default, with minor zoom to lower number of counts) or in log (necessary for proper display of the entire range of counts), by setting the argument <code>log="y"</code>.
+</p>
+<p>The number of downloads counted by RStudio may not be a perfect measure for the actual usage/popularity of a given package,
+the articles cited above discuss this in more detail.
+For example, multiple downloads from the same IP or subsequent downloads of multiple (older) versions of the same package seem to get counted, too.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function retuns a matrix with download counts (or <code>NULL</code> if the web-site can't be accessed or the query-packages are not found there)
+</p>
+
+
+<h3>See Also</h3>
+
+<p>packages <a href="https://CRAN.R-project.org/package=cranlogs">cranlogs</a> and <a href="https://CRAN.R-project.org/package=packageRank">packageRank</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Let's try a microscopic test-file (NOT representative for true up-to-date counts !!)
+pack1 &lt;- c("cif", "bcv", "FinCovRegularization", "wrMisc", "wrProteo")
+testFi &lt;- file.path(system.file("extdata", package="wrMisc"), "rpackagesMicro.html")
+packageDownloadStat(pack1, countUrl=testFi, log="y", figure=FALSE)
+## For real online counting simply use the argument countUrl in default setting
+
+</code></pre>
+
+
+</div>

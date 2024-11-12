@@ -1,0 +1,69 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotTransactionRateImpactOnDynamicContentResponse</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate a plot of mean transaction rate by interval against dynamic content response</h2>
+
+<h3>Description</h3>
+
+<p>Calls <code>plotByRate</code> internally to generate a rate plot.   
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotTransactionRateImpactOnDynamicContentResponse(b)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+
+<p>a transaction data frame created by <code>logFileRead</code> or <code>logFileListRead</code> 
+</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Returns an R base graphics plot.  This function is intended to be wrapped in a call to <code>plotSave</code> 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Greg Hunt &lt;greg@firmansyah.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>plotByRate</code>
+<code>savePlot</code>
+<code>logFileRead</code>
+<code>logFileListRead</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+logFileName = logFileNamesGetLast(dataDirectory=datd, 
+  directoryNames=c(".", "."), 
+  fileNamePattern="*[.]log")[[1]]
+
+cols = logFileFieldsGetIIS(logFileName)
+
+logdf = logFileRead(logFileName, columnList=cols, 
+            logTimeZone = "", timeFormat = "")
+
+plotTransactionRateImpactOnDynamicContentResponse(logdf)
+
+</code></pre>
+
+
+</div>

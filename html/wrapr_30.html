@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>build_frame</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Build a data.frame from the user's description.</h2>
+
+<h3>Description</h3>
+
+<p>A convenient way to build a data.frame in legible transposed form.  Position of
+first "|" (or other infix operator) determines number of columns
+(all other infix operators are aliases for ",").
+Names are de-referenced.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">build_frame(..., cf_eval_environment = parent.frame())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>cell names, first infix operator denotes end of header row of column names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cf_eval_environment</code></td>
+<td>
+<p>environment to evaluate names in.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>character data.frame
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>draw_frame</code>, <code>qchar_frame</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+tc_name &lt;- "training"
+x &lt;- build_frame(
+   "measure",                   tc_name, "validation" |
+   "minus binary cross entropy",      5, -7           |
+   "accuracy",                      0.8, 0.6          )
+print(x)
+str(x)
+cat(draw_frame(x))
+
+build_frame(
+  "x" |
+  -1  |
+  2   )
+
+</code></pre>
+
+
+</div>

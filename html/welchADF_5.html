@@ -1,0 +1,63 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>perceptionData</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Number of puzzles 42 students were able to solve</h2>
+
+<h3>Description</h3>
+
+<p>An artificial dataset created by Lix et al. which recreates data reported by a real study
+on perception and concentration, on which 42 students were given several puzzles to be solved. 
+The students are divided into three balanced groups as they had previously been asked to 
+imagine solving puzzles in the distant future, near future, or not to imagine anything at all 
+(control group).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">perceptionData
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 42 rows and 2 variables:
+</p>
+
+<dl>
+<dt>Group</dt>
+<dd>
+<p>group of the student (what the student was asked to imagine)</p>
+</dd>
+<dt>y</dt>
+<dd>
+<p>number of puzzles the student was able to solve, out of 12</p>
+</dd>
+</dl>
+<h3>References</h3>
+
+<p>Forster, J., Liberman, N., &amp; Friedman, R.S. (2004). Temporal construal effects on
+abstract and concrete thinking: consequences for insight and creative cognition.
+Journal of Personality and Social Psychology, 87, 2, 177-189.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">omnibus_LSM &lt;- welchADF.test(perceptionData, response = "y", between.s = "Group")
+omnibus_trimmed &lt;- update(omnibus_LSM, trimming = TRUE)
+pairwise_LSM &lt;- update(omnibus_LSM, effect = "Group", contrast = "all.pairwise")
+pairwise_trimmed &lt;- update(pairwise_LSM, trimming = TRUE, effect.size = TRUE)
+summary(omnibus_LSM)
+## Not run: 
+  pairwise_trimmed_boot &lt;- update(pairwise_trimmed, bootstrap = TRUE, seed = 12345, numsim_b = 600)
+  summary(pairwise_trimmed_boot, digits = 6) # digits defaults to max(4, getOption("digits"))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>stepwise.VT.val</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate stepwise high order VT in validation</h2>
+
+<h3>Description</h3>
+
+<p>Calculate stepwise high order VT in validation
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">stepwise.VT.val(data, J, dwt, mode = c("MRA", "MODWT", "AT"), detrend = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A list of data, including response and predictors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>Specifies the depth of the decomposition. This must be a number less than or equal to log(length(x),2).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dwt</code></td>
+<td>
+<p>Output from dwt.vt(), including the transformation covariance</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>A mode of variance transformation, i.e., MRA, MODWT, or AT</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detrend</code></td>
+<td>
+<p>Detrend the input time series or just center, default (F)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of objects, including transformed predictors
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">### Real-world example
+data("rain.mon")
+data("obs.mon")
+mode &lt;- switch(1,
+  "MRA",
+  "MODWT",
+  "a trous"
+)
+wf &lt;- "d4"
+station.id &lt;- 5 # station to investigate
+#SPI.12 &lt;- SPEI::spi(rain.mon, scale = 12)$fitted
+SPI.12 &lt;- SPI.calc(window(rain.mon, start=c(1949,1), end=c(2009,12)),sc=12)
+lab.names &lt;- colnames(obs.mon)
+# plot.ts(SPI.12[,1:10])
+
+#--------------------------------------
+### calibration
+x &lt;- window(SPI.12[, station.id], start = c(1950, 1), end = c(1979, 12))
+dp &lt;- window(obs.mon[, lab.names], start = c(1950, 1), end = c(1979, 12))
+
+data &lt;- list(x = x, dp = matrix(dp, ncol = ncol(dp)))
+dwt &lt;- stepwise.VT(data, mode = mode, wf = wf, flag = "biased")
+cpy &lt;- dwt$cpy
+#--------------------------------------
+### validation
+x &lt;- window(SPI.12[, station.id], start = c(1980, 1), end = c(2009, 12))
+dp &lt;- window(obs.mon[, lab.names], start = c(1980, 1), end = c(2009, 12))
+
+data.n &lt;- list(x = x, dp = matrix(dp, ncol = ncol(dp)))
+dwt.val &lt;- stepwise.VT.val(data = data.n, dwt = dwt, mode = mode)
+
+### plot transformed predictor before and after
+op &lt;- par(mfrow = c(length(cpy), 1), mar = c(0, 3, 2, 1))
+for (i in seq_along(cpy))
+{
+  ts.plot(cbind(dwt.val$dp[, i], dwt.val$dp.n[, i]), xlab = "NA", col = 1:2)
+}
+par(op)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>convMatr2df</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert matrix (eg with redundant) row-names to data.frame</h2>
+
+<h3>Description</h3>
+
+<p>This function provides flexible converting of matrix to data.frame. 
+For example repeated/redundant rownames are not allowed in data.frame(), thus the corresponding column-names have to be renamed using a counter-suffix.
+In case of non-redundant rownames, a new column 'addIniNa' will be introduced at beginning to document the initial (redundant) rownames, 
+non-redundant rownames will be created.
+Finally, this functions converts the corrected matrix to data.frame and checks/converts columns for transforming character to numeric if possible. 
+If the input is a data.frame containing factors, they will be converted to character before potential conversion.
+Note: for simpler version (only text to numeric) see from this package <code>.convertMatrToNum</code> .
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">convMatr2df(
+  mat,
+  addIniNa = TRUE,
+  duplTxtSep = "_",
+  silent = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mat</code></td>
+<td>
+<p>matrix (or data.frame) to be converted</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addIniNa</code></td>
+<td>
+<p>(logical) if <code>TRUE</code> an additional column ('ID') with rownames will be added at beginning</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>duplTxtSep</code></td>
+<td>
+<p>(character) separator for enumerating replicated names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppres messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This functions returns a data.frame equivalent to the input matrix, an additional column named 'ID' will be added for initial rownames
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>numeric</code>, for simpler version (only text to numeric) see from this package <code>.convertMatrToNum</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">dat1 &lt;- matrix(1:10, ncol=2)
+rownames(dat1) &lt;- letters[c(1:3,2,5)]
+## as.data.frame(dat1)  ...  would result in an error
+convMatr2df(dat1)
+
+df1 &lt;- data.frame(a=as.character((1:3)/2), b=LETTERS[1:3], c=1:3)
+str(convMatr2df(df1))
+
+df2 &lt;- df1; df2$b &lt;- as.factor(df2$b)
+str(convMatr2df(df2))
+</code></pre>
+
+
+</div>

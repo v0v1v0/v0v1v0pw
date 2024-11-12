@@ -1,0 +1,62 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>import_wig</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Imports a WIG file</h2>
+
+<h3>Description</h3>
+
+<p><code>import_wig</code> reads a <a href="https://m.ensembl.org/info/website/upload/wig.html">WIG (wiggle)</a> file and
+expands the data into long format, i.e., the each observation in the returned
+tibble pertains the position of one single base.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">import_wig(file_path, n = -1L)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file_path</code></td>
+<td>
+<p>A path to a WIG file.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The (maximal) number of lines to read. Negative values indicate that
+one should read up to the end of input on the connection.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A tibble of three variables: <code>chr</code>, chromosome; <code>pos</code>, genomic
+position; and <code>val</code>, value. Chromosome positions are 1-relative, i.e. the
+first base is 1, as specified in WIG files.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Import a WIG file
+wig_file &lt;- system.file(
+              "extdata",
+              file = 'hg19-pik3ca.wig',
+              package = "wig",
+              mustWork = TRUE)
+
+import_wig(wig_file)
+
+</code></pre>
+
+
+</div>

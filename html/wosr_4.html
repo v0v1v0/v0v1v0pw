@@ -1,0 +1,104 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pull_cited_refs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Pull cited references</h2>
+
+<h3>Description</h3>
+
+<p>Pull cited references
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pull_cited_refs(uts, sid = auth(Sys.getenv("WOS_USERNAME"),
+  Sys.getenv("WOS_PASSWORD")), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>uts</code></td>
+<td>
+<p>Vector of UTs (i.e., publications) whose cited references you want.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sid</code></td>
+<td>
+<p>Session identifier (SID). The default setting is to get a fresh
+SID each time you query WoS via a call to <code>auth</code>. However,
+you should try to reuse SIDs across queries so that you don't run into the
+throttling limits placed on new sessions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments passed along to <code>POST</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data frame with the following columns:
+</p>
+
+<dl>
+<dt>ut</dt>
+<dd>
+<p>The publication that is doing the citing. These are the UTs that
+you submitted to <code>pull_cited_refs</code>. If one of your publications
+doesn't have any cited refs, it will not appear in this column.</p>
+</dd>
+<dt>doc_id</dt>
+<dd>
+<p>The cited ref's document identifier (similar to a UT).</p>
+</dd>
+<dt>title</dt>
+<dd>
+<p>Roughly equivalent to the cited ref's title.</p>
+</dd>
+<dt>journal</dt>
+<dd>
+<p>Roughly equivalent to the cited ref's journal.</p>
+</dd>
+<dt>author</dt>
+<dd>
+<p>The cited ref's first author.</p>
+</dd>
+<dt>tot_cites</dt>
+<dd>
+<p>The total number of citations the cited ref has received.</p>
+</dd>
+<dt>year</dt>
+<dd>
+<p>The cited ref's publication year.</p>
+</dd>
+<dt>page</dt>
+<dd>
+<p>The cited ref's page number.</p>
+</dd>
+<dt>volume</dt>
+<dd>
+<p>The cited ref's journal volume.</p>
+</dd>
+</dl>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+sid &lt;- auth("your_username", password = "your_password")
+uts &lt;- c("WOS:000362312600021", "WOS:000439855300030", "WOS:000294946900020")
+pull_cited_refs(uts, sid)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

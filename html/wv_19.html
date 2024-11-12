@@ -1,0 +1,183 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>compare_wvar</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Comparison Between Multiple Wavelet Variances</h2>
+
+<h3>Description</h3>
+
+<p>Displays plots of multiple wavelet variances of different time series accounting for CI values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">compare_wvar(
+  ...,
+  split = FALSE,
+  add_legend = TRUE,
+  units = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  main = NULL,
+  col_wv = NULL,
+  col_ci = NULL,
+  nb_ticks_x = NULL,
+  nb_ticks_y = NULL,
+  legend_position = NULL,
+  ci_wv = NULL,
+  point_cex = NULL,
+  point_pch = NULL,
+  names = NULL,
+  cex_labels = 0.8,
+  x_range = NULL,
+  y_range = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>One or more time series objects.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>split</code></td>
+<td>
+<p>A <code>boolean</code> that, if TRUE, arranges the plots into a matrix-like format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add_legend</code></td>
+<td>
+<p>A <code>boolean</code> that, if TRUE, adds a legend to the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>units</code></td>
+<td>
+<p>A <code>string</code> that specifies the units of time plotted on the x axes. Note: This argument will not be used if xlab is specified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>A <code>string</code> that gives a title for the x axes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>A <code>string</code> that gives a title for the y axes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>A <code>string</code> that gives an overall title for the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col_wv</code></td>
+<td>
+<p>A <code>string</code> that specifies the color of the wavelet variance lines.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col_ci</code></td>
+<td>
+<p>A <code>string</code> that specifies the color of the confidence interval shade.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nb_ticks_x</code></td>
+<td>
+<p>An <code>integer</code> that specifies the maximum number of ticks for the x-axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nb_ticks_y</code></td>
+<td>
+<p>An <code>integer</code> that specifies the maximum number of ticks for the y-axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend_position</code></td>
+<td>
+<p>A <code>string</code> that specifies the position of the legend (use <code>legend_position = NA</code> to remove legend).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci_wv</code></td>
+<td>
+<p>A <code>boolean</code> that determines whether confidence interval polygons will be drawn.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>point_cex</code></td>
+<td>
+<p>A <code>double</code> that specifies the size of each symbol to be plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>point_pch</code></td>
+<td>
+<p>A <code>double</code> that specifies the symbol type to be plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>names</code></td>
+<td>
+<p>A <code>string</code> that specifies the name of the WVAR objects.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex_labels</code></td>
+<td>
+<p>A <code>double</code> that specifies the magnification of the labels (x and y).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x_range</code></td>
+<td>
+<p>A <code>vector</code> that specifies the range of values on the x axis (default NULL).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y_range</code></td>
+<td>
+<p>A <code>vector</code> that specifies the range of values on the y axis (default NULL).</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Stephane Guerrier and Justin Lee
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(999)
+n = 10^4
+Xt = arima.sim(n = n, list(ar = 0.10))
+Yt = arima.sim(n = n, list(ar = 0.35))
+Zt = arima.sim(n = n, list(ar = 0.70))
+Wt = arima.sim(n = n, list(ar = 0.95))
+
+wv_Xt = wvar(Xt)
+wv_Yt = wvar(Yt)
+wv_Zt = wvar(Zt)
+wv_Wt = wvar(Wt)
+
+compare_wvar(wv_Xt, wv_Yt, wv_Zt, wv_Wt)
+</code></pre>
+
+
+</div>

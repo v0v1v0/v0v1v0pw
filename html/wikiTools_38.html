@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>w_Property</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get properties of Wikidata entities</h2>
+
+<h3>Description</h3>
+
+<p>Search the entities of the <code>entity_list</code> for property or properties. If
+searched properties can have more than one language, then the parameter
+<code>langsorder</code> set the order of language used. If parameter <code>includeQ</code> is TRUE,
+also is returned the Wikidata entities for the properties. The Wikidata class
+of which the entities are instances of are returned too. Duplicated entities
+are deleted before search. Index of the data-frame is also set to
+entity_list.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">w_Property(
+  entity_list,
+  Pproperty,
+  includeQ = FALSE,
+  langsorder = "en",
+  nlimit = 10000,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>entity_list</code></td>
+<td>
+<p>A vector with de Wikidata entities.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Pproperty</code></td>
+<td>
+<p>Wikidata properties to search, separated with '|', mandatory.
+For example, is Pproperty="P21", the results contain information of the sex
+of entities. If Pproperty="P21|P569" also searches for birthdate. If
+Pproperty='P21|P569|P214' also searches for VIAF identifier.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>includeQ</code></td>
+<td>
+<p>If the value is TRUE the function returns the Wikidata entity
+(Qxxx) of the Pproperty. If also <code>langsorder</code> has language(s), the labels, if
+any, are returned too. Note that includeQ is only effective if <code>Pproperty</code>
+corresponds with a Wikidata entity, else the same values that label are
+returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>langsorder</code></td>
+<td>
+<p>Order of languages in which the information will be
+returned, separated with '|'. If no information is given in the first
+language, next is used. This parameter is mandatory if parameter <code>includeQ</code>
+if FALSE. If includeQ=TRUE and langsorder=” no labels are returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlimit</code></td>
+<td>
+<p>If the number of entities exceeds this number, chunked queries
+are done. This is the number of entities requested in each chunk. Please,
+reduce the default value if error is raised.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>For debugging purposes (default FALSE). If debug='info'
+information about chunked queries is shown. If debug='query' also the query
+launched is shown.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data-frame with the entity, the entities of the properties and the
+labels in langsorder for them.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Angel Zazo, Department of Computer Science and Automatics, University of Salamanca
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+w_Property(c("Q1252859", "Q712609", "Q381800"), Pproperty='P21|P569|P214', langsorder='en|es')
+# Large list
+df &lt;- w_SearchByOccupation(Qoc='Q2306091') # ~ 20000
+l &lt;- df$entity
+p &lt;- w_Property(l, Pproperty='P21|P569|P214', langsorder='es|en', debug='info')
+# Get birth-place (P19)
+p &lt;- w_Property(l, Pproperty='P19', langsorder='es|en', includeQ=TRUE, debug='info')
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,521 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wnba_playercompare</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2><strong>Get WNBA Stats API Player Compare</strong></h2>
+
+<h3>Description</h3>
+
+<p><strong>Get WNBA Stats API Player Compare</strong>
+</p>
+<p><strong>Get WNBA Stats API Player Compare</strong>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wnba_playercompare(
+  conference = "",
+  date_from = "",
+  date_to = "",
+  game_segment = "",
+  last_n_games = 0,
+  league_id = "10",
+  location = "",
+  measure_type = "Base",
+  month = 0,
+  opponent_team_id = 0,
+  outcome = "",
+  pace_adjust = "N",
+  per_mode = "Totals",
+  period = 0,
+  player_id_list = "100720,202250,204319,1627668,1628931",
+  plus_minus = "N",
+  rank = "N",
+  season = most_recent_wnba_season(),
+  season_segment = "",
+  season_type = "Regular Season",
+  shot_clock_range = "",
+  vs_conference = "",
+  vs_division = "",
+  vs_player_id_list = "202252,203399,1631022,1628878,204333",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>conference</code></td>
+<td>
+<p>conference</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date_from</code></td>
+<td>
+<p>date_from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date_to</code></td>
+<td>
+<p>date_to</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>game_segment</code></td>
+<td>
+<p>game_segment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>last_n_games</code></td>
+<td>
+<p>last_n_games</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>league_id</code></td>
+<td>
+<p>League - default: '00'. Other options include '10': WWNBA, '20': G-League</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+<p>location</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>measure_type</code></td>
+<td>
+<p>measure_type</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>month</code></td>
+<td>
+<p>month</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>opponent_team_id</code></td>
+<td>
+<p>opponent_team_id</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outcome</code></td>
+<td>
+<p>outcome</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pace_adjust</code></td>
+<td>
+<p>pace_adjust</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>per_mode</code></td>
+<td>
+<p>per_mode</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>period</code></td>
+<td>
+<p>period</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>player_id_list</code></td>
+<td>
+<p>Player ID</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plus_minus</code></td>
+<td>
+<p>plus_minus</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rank</code></td>
+<td>
+<p>rank</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>season</code></td>
+<td>
+<p>Season - format 2020-21</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>season_segment</code></td>
+<td>
+<p>season_segment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>season_type</code></td>
+<td>
+<p>Season Type - Regular Season, Playoffs, All-Star</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shot_clock_range</code></td>
+<td>
+<p>shot_clock_range</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vs_conference</code></td>
+<td>
+<p>vs_conference</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vs_division</code></td>
+<td>
+<p>vs_division</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vs_player_id_list</code></td>
+<td>
+<p>vs_player_id_list</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to an underlying function like httr.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<div class="sourceCode r"><pre> wnba_playercompare(player_id_list = '100720,202250,204319,1627668,1628931', vs_player_id_list = '202252,203399,1631022,1628878,204333')
+</pre></div>
+
+
+<h3>Value</h3>
+
+<p>Return a named list of data frames: Individual, OverallCompare
+</p>
+<p><strong>OverallCompare</strong></p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   col_name </td>
+<td style="text-align: left;"> types </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   GROUP_SET </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   DESCRIPTION </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   MIN </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FGM </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FGA </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FG_PCT </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FG3M </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FG3A </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FG3_PCT </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FTM </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FTA </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FT_PCT </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   OREB </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   DREB </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   REB </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   AST </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   TOV </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   STL </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   BLK </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   BLKA </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   PF </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   PFD </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   PTS </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   PLUS_MINUS </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p><strong>Individual</strong></p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   col_name </td>
+<td style="text-align: left;"> types </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   GROUP_SET </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   DESCRIPTION </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   MIN </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FGM </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FGA </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FG_PCT </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FG3M </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FG3A </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FG3_PCT </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FTM </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FTA </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   FT_PCT </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   OREB </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   DREB </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   REB </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   AST </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   TOV </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   STL </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   BLK </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   BLKA </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   PF </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   PFD </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   PTS </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   PLUS_MINUS </td>
+<td style="text-align: left;"> character </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Saiem Gilani
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other WNBA Player Functions: 
+<code>wnba_infographicfanduelplayer()</code>,
+<code>wnba_leaguedashplayerbiostats()</code>,
+<code>wnba_leaguedashplayerclutch()</code>,
+<code>wnba_leaguedashplayershotlocations()</code>,
+<code>wnba_leaguedashplayerstats()</code>,
+<code>wnba_leagueplayerondetails()</code>,
+<code>wnba_leagueseasonmatchups()</code>,
+<code>wnba_playerawards()</code>,
+<code>wnba_playercareerbycollegerollup()</code>,
+<code>wnba_playercareerbycollege()</code>,
+<code>wnba_playercareerstats()</code>,
+<code>wnba_playerdashboardbyclutch()</code>,
+<code>wnba_playerdashboardbygamesplits()</code>,
+<code>wnba_playerdashboardbygeneralsplits()</code>,
+<code>wnba_playerdashboardbylastngames()</code>,
+<code>wnba_playerdashboardbyopponent()</code>,
+<code>wnba_playerdashboardbyshootingsplits()</code>,
+<code>wnba_playerdashboardbyteamperformance()</code>,
+<code>wnba_playerdashboardbyyearoveryear()</code>,
+<code>wnba_playerestimatedmetrics()</code>,
+<code>wnba_playerfantasyprofilebargraph()</code>,
+<code>wnba_playerfantasyprofile()</code>,
+<code>wnba_playergamelogs()</code>,
+<code>wnba_playergamelog()</code>,
+<code>wnba_playergamestreakfinder()</code>,
+<code>wnba_playerheadshot()</code>,
+<code>wnba_playerindex()</code>,
+<code>wnba_playernextngames()</code>,
+<code>wnba_playerprofilev2()</code>,
+<code>wnba_playervsplayer()</code>
+</p>
+
+
+</div>

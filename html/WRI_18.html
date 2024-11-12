@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WARp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>WAR(p) models: estimation and forecast</h2>
+
+<h3>Description</h3>
+
+<p>this function produces an object of the WARp class which includes WAR(p) model parameter estimates and relevant quantities (see output list)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WARp(quantile, quantile.grid, p)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>quantile</code></td>
+<td>
+<p>A matrix containing all the sample quantile functions. Columns represent time indices and rows represent evaluation grid.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quantile.grid</code></td>
+<td>
+<p>A numeric vector, the grid over which quantile functions are evaluated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>A positive integer, the order of the fitted WAR(p) model.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function takes in a density time series in the form of the corresponding quantile functions as the main input. If the quantile series is not readily available, a general practice is to estimate density functions from samples, then use <code>dens2quantile</code> from the <code>fdadensity</code> package to convert density time series to quantile series.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>WARp</code> object of:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>coef</code></td>
+<td>
+<p>estimated AR parameters of the fitted WAR(p) model</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coef.cov</code></td>
+<td>
+<p>covariance matrix of <code>coef</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>acvf</code></td>
+<td>
+<p>Wasserstein autocovariance function values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Wass.mean</code></td>
+<td>
+<p>Wasserstein mean quantile function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quantile</code></td>
+<td>
+<p>a matrix containing all the sample quantile functions (columns represent time indices and rows represent evaluation grid)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quantile.grid</code></td>
+<td>
+<p>quantile function grid that is utilized in calculation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>order</code></td>
+<td>
+<p>a positive integer, the order of the fitted WAR(p) model</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p><cite>Wasserstein Autoregressive Models for Density Time Series, Chao Zhang, Piotr Kokoszka, Alexander Petersen, 2022</cite>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Simulate a density time series represented in quantile functions
+# warSimData$sample.ts: A sample TS of quantile functions of length 100, taken from
+#            the simulation experiments in Section 4 of Zhang et al. 2022.
+
+# warSimData$quantile.grid: The grid over which quantile functions in sample.ts are evaluated.
+
+warSimData &lt;- warSim()
+
+p &lt;- 3
+dSup &lt;- seq(-2, 2, 0.02)
+expSup &lt;- seq(-2, 2, 0.1)
+
+# Estimation: fit a WAR(3) model
+WARp_obj &lt;- WARp(warSimData$sample.ts, warSimData$quantile.grid, p)
+
+# Forecast: one-step-ahead forecast
+forecast_1 &lt;- predict(WARp_obj)               # dSup and expSup are chosen automatically
+forecast_2 &lt;- predict(WARp_obj, dSup, expSup) # dSup and expSup are chosen by user
+
+# Plots
+par(mfrow=c(1,2))
+
+plot(forecast_1$dSup, forecast_1$pred.cdf, type="l", xlab="dSup", ylab="cdf")
+plot(forecast_1$dSup, forecast_1$pred.pdf, type="l", xlab="dSup", ylab="pdf")
+
+plot(forecast_2$dSup, forecast_2$pred.cdf, type="l", xlab="dSup", ylab="cdf")
+plot(forecast_2$dSup, forecast_2$pred.pdf, type="l", xlab="dSup", ylab="pdf")
+
+
+</code></pre>
+
+
+</div>

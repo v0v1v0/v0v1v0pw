@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WGScan.prelim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+The preliminary data management for WGScan
+</h2>
+
+<h3>Description</h3>
+
+<p>This function does the preliminary data management and fit the model under null hypothesis. The output will be used in the other WGScan functions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WGScan.prelim(Y, X=NULL, id=NULL, out_type="C", B=5000)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+
+<p>The outcome variable, an n*1 matrix where n is the total number of observations
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+
+<p>An n*d covariates matrix where d is the total number of covariates.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+
+<p>The subject id. This is used to match phenotype with genotype. The default is NULL, where the matched phenotype and genotype matrices are assumed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>out_type</code></td>
+<td>
+
+<p>Type of outcome variable. Can be either "C" for continuous or "D" for dichotomous. The default is "C".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+
+<p>Number of resampling replicates. The default is 5000. A larger value leads to more accurate and stable p-value calculation, but requires more computing time.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>It returns a list used for function WGScan.Region(), WGScan.SingleWindow() and WGScan.VCF.chr().
+
+
+
+
+
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(WGScan)
+
+# Load data example
+# Y: outcomes, n by 1 matrix where n is the total number of observations
+# X: covariates, n by d matrix
+# G: genotype matrix, n by p matrix where n is the total number of subjects
+# Z: functional annotation matrix, p by q matrix
+
+data(WGScan.example)
+Y&lt;-WGScan.example$Y;X&lt;-WGScan.example$X;G&lt;-WGScan.example$G;Z&lt;-WGScan.example$Z
+
+# Preliminary data management
+result.prelim&lt;-WGScan.prelim(Y,X=X,out_type="C",B=5000)
+
+</code></pre>
+
+
+</div>

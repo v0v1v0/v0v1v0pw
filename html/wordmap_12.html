@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.textmodel_wordmap</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Predict the most likely class of documents</h2>
+
+<h3>Description</h3>
+
+<p>Predict document class using fitted Wordmap models.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'textmodel_wordmap'
+predict(
+  object,
+  newdata = NULL,
+  confidence = FALSE,
+  rank = 1L,
+  type = c("top", "all"),
+  rescale = FALSE,
+  min_conf = -Inf,
+  min_n = 0L,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>a model fitted by <code>textmodel_wordmap()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newdata</code></td>
+<td>
+<p>a dfm on which prediction will be made.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>confidence</code></td>
+<td>
+<p>if <code>TRUE</code>, it returns likelihood ratio scores.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rank</code></td>
+<td>
+<p>rank of the class to be predicted. Only used when <code>type = "top"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>if <code>top</code>, returns the most likely class specified by <code>rank</code>;
+otherwise return a matrix of likelihood ratio scores for all possible
+classes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rescale</code></td>
+<td>
+<p>if <code>TRUE</code>, likelihood ratio scores are normalized using <code>scale()</code>.
+This affects both types of results.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_conf</code></td>
+<td>
+<p>returns <code>NA</code> when confidence is lower than this value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_n</code></td>
+<td>
+<p>set the minimum number of polarity words in documents.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>not used.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns predicted classes as a vector. If <code>confidence = TRUE</code>,
+it returns a list of two vectors:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>class</code></td>
+<td>
+<p>predicted classes of documents.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>confidence.fit</code></td>
+<td>
+<p>the confidence of predictions.</p>
+</td>
+</tr>
+</table>
+</div>

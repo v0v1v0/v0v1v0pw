@@ -1,0 +1,230 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>BodyPattern</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>BodyPattern</h2>
+
+<h3>Description</h3>
+
+<p>body matcher
+</p>
+
+
+<h3>Public fields</h3>
+
+<div class="r6-fields">
+
+<dl>
+<dt><code>pattern</code></dt>
+<dd>
+<p>a list</p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-BodyPattern-new"><code>BodyPattern$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-BodyPattern-matches"><code>BodyPattern$matches()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-BodyPattern-to_s"><code>BodyPattern$to_s()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-BodyPattern-clone"><code>BodyPattern$clone()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-BodyPattern-new"></a>
+
+
+
+<h4>Method <code>new()</code>
+</h4>
+
+<p>Create a new <code>BodyPattern</code> object
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>BodyPattern$new(pattern)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>pattern</code></dt>
+<dd>
+<p>(list) a body object</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>A new <code>BodyPattern</code> object
+</p>
+
+
+<hr>
+<a id="method-BodyPattern-matches"></a>
+
+
+
+<h4>Method <code>matches()</code>
+</h4>
+
+<p>Match a request body pattern against a pattern
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>BodyPattern$matches(body, content_type = "")</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>body</code></dt>
+<dd>
+<p>(list) the body</p>
+</dd>
+<dt><code>content_type</code></dt>
+<dd>
+<p>(character) content type</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>a boolean
+</p>
+
+
+<hr>
+<a id="method-BodyPattern-to_s"></a>
+
+
+
+<h4>Method <code>to_s()</code>
+</h4>
+
+<p>Print pattern for easy human consumption
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>BodyPattern$to_s()</pre></div>
+
+
+
+<h5>Returns</h5>
+
+<p>a string
+</p>
+
+
+<hr>
+<a id="method-BodyPattern-clone"></a>
+
+
+
+<h4>Method <code>clone()</code>
+</h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>BodyPattern$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt>
+<dd>
+<p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># make a request signature
+bb &lt;- RequestSignature$new(
+  method = "get",
+  uri = "https:/httpbin.org/get",
+  options = list(
+    body = list(foo = "bar", a = 5)
+  )
+)
+
+# make body pattern object
+## FALSE
+z &lt;- BodyPattern$new(pattern = list(foo = "bar"))
+z$pattern
+z$matches(bb$body)
+## TRUE
+z &lt;- BodyPattern$new(pattern = list(foo = "bar", a = 5))
+z$pattern
+z$matches(bb$body)
+
+# uploads in bodies
+## upload NOT in a list
+bb &lt;- RequestSignature$new(
+  method = "post", uri = "https:/httpbin.org/post",
+  options = list(body = crul::upload(system.file("CITATION"))))
+bb$body
+z &lt;- BodyPattern$new(pattern = 
+  crul::upload(system.file("CITATION")))
+z$pattern
+z$matches(bb$body)
+
+## upload in a list
+bb &lt;- RequestSignature$new(
+  method = "post", uri = "https:/httpbin.org/post",
+  options = list(body = list(y = crul::upload(system.file("CITATION")))))
+bb$body
+z &lt;- BodyPattern$new(pattern =
+  list(y = crul::upload(system.file("CITATION"))))
+z$pattern
+z$matches(bb$body)
+</code></pre>
+
+
+</div>

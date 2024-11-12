@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>test.bootwrq</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Test of covariate effects between different quantiles
+</h2>
+
+<h3>Description</h3>
+
+<p>This function provides a test for the covariate effects estimated for
+different quantiles.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">test.bootwrq(x, m)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>results from bootstrap estimations obtained with bootwrq function
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+
+<p>a quantile regression model estimated with rq function from quantreg
+package. At least 2 quantiles should be specified in rq function.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For 2 quantiles tau1 and tau2, the test of the null hypothesis H0 : b_tau1 =
+b_tau2 is obtained with the following procedure
+:
+1. estimate the difference diff = b_tau1 - b_tau2 on the initial sample
+(ie from model m)
+2. estimate the difference diff_b = b_tau1^b - b_tau2^b on each of the B
+bootstrap samples
+3. compute se_diff, the empirical standard error of these B differences
+4. the associated p-value is obtained with the Gaussian assumption (
+p-value = 2*P(N(0,1) &gt; abs(diff/se_diff)) )
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing :
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>results0</code></td>
+<td>
+<p>a matrix with 3 columns containing the results
+(difference of the coefficients, standard erros of the diffrence and
+assocated p-values) without computing the
+weights in each bootstrap sample. Or NULL if the bootstrap results are
+obtained with wcompute=1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>results1</code></td>
+<td>
+<p>a matrix with 3 columns containing the results
+(difference of the coefficients, standard erros of the diffrence and
+assocated p-values) with re-estimated weights
+on each bootstrap sample. Or NULL if the bootstrap results are
+obtained with wcompute=0.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Viviane Philipps
+</p>
+
+
+</div>

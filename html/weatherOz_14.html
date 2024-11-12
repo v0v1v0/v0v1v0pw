@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_dpird_apsim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get DPIRD Summary Weather Data in the APSIM Format From the Weather 2.0 API</h2>
+
+<h3>Description</h3>
+
+<p>Automates the retrieval and conversion of summary data from the
+<abbr><span class="acronym">DPIRD</span></abbr> Weather 2.0 <abbr><span class="acronym">API</span></abbr> to an <abbr><span class="acronym">APSIM</span></abbr> .met file
+formatted weather data object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_dpird_apsim(
+  station_code,
+  start_date,
+  end_date = Sys.Date(),
+  api_key = get_key(service = "DPIRD")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>station_code</code></td>
+<td>
+<p>A <code>character</code> string or <code>factor</code> from
+<code>get_stations_metadata()</code> of the <abbr><span class="acronym">BOM</span></abbr> station code for the station
+of interest.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_date</code></td>
+<td>
+<p>A <code>character</code> string or <code>Date</code> object representing the
+beginning of the range to query in the format “yyyy-mm-dd”
+(ISO8601).  Data returned is inclusive of this date.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end_date</code></td>
+<td>
+<p>A <code>character</code> string or <code>Date</code> object representing the end of
+the range query in the format  “yyyy-mm-dd” (ISO8601).  Data
+returned is inclusive of this date.  Defaults to the current system date.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_key</code></td>
+<td>
+<p>A <code>character</code> string containing your <abbr><span class="acronym">API</span></abbr> key from
+<abbr><span class="acronym">DPIRD</span></abbr>, <a href="https://www.agric.wa.gov.au/web-apis">https://www.agric.wa.gov.au/web-apis</a>, for the
+<abbr><span class="acronym">DPIRD</span></abbr> Weather 2.0 <abbr><span class="acronym">API</span></abbr>.  Defaults to automatically
+detecting your key from your local .Renviron, .Rprofile or similar.
+Alternatively, you may directly provide your key as a string here.  If
+nothing is provided, you will be prompted on how to set up your <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> session
+so that it is auto-detected.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An <a href="https://CRAN.R-project.org/package=apsimx"><span class="pkg">apsimx</span></a> object of class ‘met’ with attributes.
+</p>
+
+
+<h3>Saving objects</h3>
+
+<p>To save “met” objects the <code>apsimx::write_apsim_met()</code> is reexported.
+Note that when saving, comments from SILO will be included, but these will
+not be printed as a part of the resulting <code>met</code> object in your <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> session.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Adam H. Sparks, <a href="mailto:adamhsparks@gmail.com">adamhsparks@gmail.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other DPIRD: 
+<code>dpird_extreme_weather_values</code>,
+<code>dpird_minute_values</code>,
+<code>dpird_summary_values</code>,
+<code>find_nearby_stations()</code>,
+<code>find_stations_in()</code>,
+<code>get_dpird_availability()</code>,
+<code>get_dpird_extremes()</code>,
+<code>get_dpird_minute()</code>,
+<code>get_dpird_summaries()</code>,
+<code>get_stations_metadata()</code>
+</p>
+<p>Other data fetching: 
+<code>get_ag_bulletin()</code>,
+<code>get_coastal_forecast()</code>,
+<code>get_data_drill()</code>,
+<code>get_data_drill_apsim()</code>,
+<code>get_dpird_extremes()</code>,
+<code>get_dpird_minute()</code>,
+<code>get_dpird_summaries()</code>,
+<code>get_patched_point()</code>,
+<code>get_patched_point_apsim()</code>,
+<code>get_precis_forecast()</code>,
+<code>get_radar_imagery()</code>,
+<code>get_satellite_imagery()</code>
+</p>
+<p>Other APSIM: 
+<code>get_data_drill_apsim()</code>,
+<code>get_patched_point_apsim()</code>,
+<code>reexports</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Get an APSIM format object for Binnu
+# Note that you need to supply your own API key
+
+wd &lt;- get_dpird_apsim(
+  station_code = "BI",
+  start_date = "20220101",
+  end_date = "20221231",
+  api_key = "your_api_key"
+)
+
+## End(Not run)
+
+
+</code></pre>
+
+
+</div>

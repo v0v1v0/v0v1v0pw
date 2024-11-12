@@ -1,0 +1,174 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>overlapping_sels</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find overlapping selections</h2>
+
+<h3>Description</h3>
+
+<p><code>overlapping_sels</code> finds which selections overlap in time within a given sound file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">overlapping_sels(
+  X,
+  index = FALSE,
+  pb = TRUE,
+  max.ovlp = 0,
+  relabel = FALSE,
+  drop = FALSE,
+  priority = NULL,
+  priority.col = NULL,
+  indx.row = FALSE,
+  parallel = 1,
+  verbose = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>'selection_table' object or data frame with the following columns: 1) "sound.files": name of the sound
+files, 2) "selec": number of the selections, 3) "start": start time of selections, 4) "end":
+end time of selections.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>index</code></td>
+<td>
+<p>Logical. Indicates if only the index of the overlapping selections would be returned.
+Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Logical argument to control progress bar and messages. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.ovlp</code></td>
+<td>
+<p>Numeric vector of length 1 specifying the maximum overlap allowed (in seconds)
+. Default is 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>relabel</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> then selection names ('selec' column) are reset within each sound files.
+Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drop</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>, when 2 or more selections overlap the function will remove
+all but one of the overlapping selection. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>priority</code></td>
+<td>
+<p>Character vector. Controls the priority criteria used for removing overlapped selections. It
+must list the levels of the column used to determine priority (argument priority.col) in the desired
+priority order. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>priority.col</code></td>
+<td>
+<p>Character vector of length 1 with the name of the column use to determine the priority of
+overlapped selections. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indx.row</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> then a character column with the indices of all selections that overlapped with
+each selection is added to the ouput data frame (if <code>index = TRUE</code>). For instance, if the selections in rows 1,2
+and 3 all overlapped with each other, the 'indx.row' value would be "1/2/3" for all. However, if selection 3 only overlaps
+with 2 but not with 1, then it returns, "1/2" for row 1, "1/2/3" for row 2, and "2/3" for row 3. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Numeric. Controls whether parallel computing is applied.
+It specifies the number of cores to be used. Default is 1 (i.e. no parallel computing).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical to control if messages are printed to the console.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function detects selections within a selection table that overlap in time. Selections must be
+listed in a data frame similar to <code>lbh_selec_table</code>. Note that row names are set to <code>1:nrow(X)</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame with the columns in X plus an additional column ('ovlp.sels') indicating
+which selections overlap. For instance, if the selections in rows 1,2
+overlap and 2 and 3 also overlap, the 'ovlp.sels' label would be the same for all 3 selections. If
+<code>drop = TRUE</code> only the non-overlapping selections are returned.and if 2 or more selections
+overlap only the first one is kept. The arguments 'priority' and 'priority.col' can be used to modified the criterium for droping overlapping selections.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>filter_sels</code>, <code>lbh_selec_table</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">{
+  # no overlap
+  overlapping_sels(X = lbh_selec_table)
+
+  # modified lbh_selec_table to make the first and second selection overlap
+  Y &lt;- lbh_selec_table
+  Y$end[4] &lt;- 1.5
+
+  overlapping_sels(X = Y)
+
+  # drop overlapping
+  overlapping_sels(X = Y, drop = TRUE)
+
+  # get index instead
+  overlapping_sels(X = Y, index = TRUE)
+}
+</code></pre>
+
+
+</div>

@@ -1,0 +1,172 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>modwt</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>(Inverse) Maximal Overlap Discrete Wavelet Transform</h2>
+
+<h3>Description</h3>
+
+<p>This function performs a level <code class="reqn">J</code> decomposition of the input vector
+using the non-decimated discrete wavelet transform. The inverse transform
+performs the reconstruction of a vector or time series from its maximal
+overlap discrete wavelet transform.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">modwt(x, wf = "la8", n.levels = 4, boundary = "periodic")
+
+imodwt(y)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a vector or time series containing the data be to decomposed.
+There is <b>no</b> restriction on its length.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wf</code></td>
+<td>
+<p>Name of the wavelet filter to use in the decomposition.  By
+default this is set to <code>"la8"</code>, the Daubechies orthonormal compactly
+supported wavelet of length L=8 (Daubechies, 1992), least asymmetric family.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.levels</code></td>
+<td>
+<p>Specifies the depth of the decomposition.  This must be a
+number less than or equal to log(length(x),2).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>Character string specifying the boundary condition.  If
+<code>boundary=="periodic"</code> the defaulTRUE, then the vector you decompose is
+assumed to be periodic on its defined interval,<br> if
+<code>boundary=="reflection"</code>, the vector beyond its boundaries is assumed
+to be a symmetric reflection of itself.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>an object of class <code>"modwt"</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The code implements the one-dimensional non-decimated DWT using the pyramid
+algorithm.  The actual transform is performed in C using pseudocode from
+Percival and Walden (2001).  That means convolutions, not inner products,
+are used to apply the wavelet filters.
+</p>
+<p>The MODWT goes by several names in the statistical and engineering
+literature, such as, the “stationary DWT”, “translation-invariant DWT”,
+and “time-invariant DWT”.
+</p>
+<p>The inverse MODWT implements the one-dimensional inverse transform using the
+pyramid algorithm (Mallat, 1989).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Basically, a list with the following components 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>d?</code></td>
+<td>
+<p>Wavelet coefficient vectors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s?</code></td>
+<td>
+<p>Scaling coefficient vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wavelet</code></td>
+<td>
+<p>Name of the wavelet filter used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>boundary</code></td>
+<td>
+<p>How the boundaries were handled.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>B. Whitcher
+</p>
+
+
+<h3>References</h3>
+
+<p>Gencay, R., F. Selcuk and B. Whitcher (2001) <em>An
+Introduction to Wavelets and Other Filtering Methods in Finance and
+Economics</em>, Academic Press.
+</p>
+<p>Percival, D. B. and P. Guttorp (1994) Long-memory processes, the Allan
+variance and wavelets, In <em>Wavelets and Geophysics</em>, pages 325-344,
+Academic Press.
+</p>
+<p>Percival, D. B. and A. T. Walden (2000) <em>Wavelet Methods for Time
+Series Analysis</em>, Cambridge University Press.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dwt</code>, <code>idwt</code>, <code>mra</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Figure 4.23 in Gencay, Selcuk and Whitcher (2001)
+data(ibm)     
+ibm.returns &lt;- diff(log(ibm))
+# Haar
+ibmr.haar &lt;- modwt(ibm.returns, "haar")
+names(ibmr.haar) &lt;- c("w1", "w2", "w3", "w4", "v4")
+# LA(8)
+ibmr.la8 &lt;- modwt(ibm.returns, "la8")
+names(ibmr.la8) &lt;- c("w1", "w2", "w3", "w4", "v4")
+# shift the MODWT vectors
+ibmr.la8 &lt;- phase.shift(ibmr.la8, "la8")
+## plot partial MODWT for IBM data
+par(mfcol=c(6,1), pty="m", mar=c(5-2,4,4-2,2))
+plot.ts(ibm.returns, axes=FALSE, ylab="", main="(a)")
+for(i in 1:5)
+  plot.ts(ibmr.haar[[i]], axes=FALSE, ylab=names(ibmr.haar)[i])
+axis(side=1, at=seq(0,368,by=23), 
+  labels=c(0,"",46,"",92,"",138,"",184,"",230,"",276,"",322,"",368))
+par(mfcol=c(6,1), pty="m", mar=c(5-2,4,4-2,2))
+plot.ts(ibm.returns, axes=FALSE, ylab="", main="(b)")
+for(i in 1:5)
+  plot.ts(ibmr.la8[[i]], axes=FALSE, ylab=names(ibmr.la8)[i])
+axis(side=1, at=seq(0,368,by=23), 
+  labels=c(0,"",46,"",92,"",138,"",184,"",230,"",276,"",322,"",368))
+
+</code></pre>
+
+
+</div>

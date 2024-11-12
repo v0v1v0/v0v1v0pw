@@ -1,0 +1,182 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wflow_status</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Report status of workflowr project</h2>
+
+<h3>Description</h3>
+
+<p><code>wflow_status</code> reports the analysis files that require user action.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wflow_status(files = NULL, include_git_status = TRUE, project = ".")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>character (default: NULL) The analysis file(s) to report the
+status. By default checks the status of all analysis files. Supports
+file <a href="https://en.wikipedia.org/wiki/Glob_(programming)">globbing</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_git_status</code></td>
+<td>
+<p>logical (default: TRUE) Include the Git status of
+the project files in the output. Note that this excludes any files in the
+website directory, since these generated files should only be committed by
+workflowr, and not the user.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>character (default: ".") By default the function assumes the
+current working directory is within the project. If this is not true,
+you'll need to provide the path to the project directory.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>wflow_status</code> reports analysis files with one of the following
+statuses:
+</p>
+
+<ul>
+<li> <p><b>Mod</b>: Modified file. Any published file that has been modified
+since the last time the HTML was published.
+</p>
+</li>
+<li> <p><b>Unp</b>: Unpublished file. Any tracked file whose corresponding HTML
+is not tracked. May or may not have staged or unstaged changes.
+</p>
+</li>
+<li> <p><b>Scr</b>: Scratch file. Any untracked file that is not specifically
+ignored.
+</p>
+</li>
+</ul>
+<p><code>wflow_status</code> only works for workflowr projects that use Git.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an object of class <code>wflow_status</code>, which is a list with
+the following elements:
+</p>
+
+<ul>
+<li> <p><b>root</b>: The relative path to the root directory of the workflowr
+project (i.e. contains the RStudio .Rproj file).
+</p>
+</li>
+<li> <p><b>analysis</b>: The relative path to the directory that contains
+<code>_site.yml</code> and the R Markdown files.
+</p>
+</li>
+<li> <p><b>docs</b>: The relative path to the directory that contains the HTML
+files and figures.
+</p>
+</li>
+<li> <p><b>git</b>: The relative path to the <code>.git</code> directory that
+contains the history of the Git repository.
+</p>
+</li>
+<li> <p><b>site_yml</b>: <code>TRUE</code> if the configuration file <code>_site.yml</code>
+has uncommitted changes, otherwise <code>FALSE</code>.
+</p>
+</li>
+<li> <p><b>wflow_yml</b>: <code>TRUE</code> if the configuration file
+<code>_workflowr.yml</code> has uncommitted changes, otherwise <code>FALSE</code>. If the
+file does not exist, the result is <code>NULL</code>. If the file was recently
+deleted and not yet committed to Git, then it will be <code>TRUE</code>.
+</p>
+</li>
+<li> <p><b>git_status</b> The Git status as a <code>git_status</code>
+object from the package git2r (see <code>git2r::status</code>).
+</p>
+</li>
+<li> <p><b>include_git_status</b> The argument <code>include_git_status</code>
+indicating whether the Git status should be printed along with the status of
+the Rmd files.
+</p>
+</li>
+<li> <p><b>status</b>: A data frame with detailed information on the status of
+each R Markdown file (see below).
+</p>
+</li>
+</ul>
+<p>The data frame <code>status</code> contains the following non-mutually exclusive
+columns (all logical vectors):
+</p>
+
+<ul>
+<li> <p><b>ignored</b>: The R Markdown file has been ignored by Git according
+to the patterns in the file <code>.gitignore</code>.
+</p>
+</li>
+<li> <p><b>mod_unstaged</b>: The R Markdown file has unstaged modifications.
+</p>
+</li>
+<li> <p><b>conflicted</b>: The R Markdown file has merge conflicts.
+</p>
+</li>
+<li> <p><b>mod_staged</b>: The R Markdown file has staged modifications.
+</p>
+</li>
+<li> <p><b>tracked</b>: The R Markdown file is tracked by Git.
+</p>
+</li>
+<li> <p><b>committed</b>: The R Markdown file has been previously committed to
+the Git repository.
+</p>
+</li>
+<li> <p><b>published</b>: The corresponding HTML file has been previously
+committed.
+</p>
+</li>
+<li> <p><b>mod_committed</b>: The R Markdown file has modifications that have
+been committed since the last time the HTML was built and committed.
+</p>
+</li>
+<li> <p><b>modified</b>: The R Markdown file has been modified since it was
+last published (i.e. <code>mod_unstaged</code> or <code>mod_staged</code> or
+<code>mod_committed</code>).
+</p>
+</li>
+<li> <p><b>unpublished</b>: The R Markdown file is tracked by Git but not
+published (i.e. the HTML has not been committed).
+</p>
+</li>
+<li> <p><b>scratch</b>: The R Markdown file is untracked by Git, i.e. it is
+considered a scratch file until it is committed.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+wflow_status()
+# Get status of specific file(s)
+wflow_status("analysis/file.Rmd")
+# Save the results
+s &lt;- wflow_status()
+
+## End(Not run)
+</code></pre>
+
+
+</div>

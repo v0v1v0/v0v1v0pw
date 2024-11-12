@@ -1,0 +1,114 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>iwishmom</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Expectation of a Matrix-valued Function of an Inverse beta-Wishart Distribution</h2>
+
+<h3>Description</h3>
+
+<p>When <code>iw = 0</code>, the function calculates <code class="reqn">E[\prod_{j=1}^r \mbox{tr}(W^{-j})^{f_j}]</code>,
+where <code class="reqn">W \sim W_m^{\beta}(n, S)</code>.  When <code>iw != 0</code>,
+the function calculates <code class="reqn">E[\prod_{j=1}^r \mbox{tr}(W^{-j})^{f_j}W^{-iw}]</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">iwishmom(n, S, f, iw = 0, alpha = 2)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The degrees of freedom of the beta-Wishart matrix <code class="reqn">W</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>S</code></td>
+<td>
+<p>The covariance matrix of the beta-Wishart matrix <code class="reqn">W</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f</code></td>
+<td>
+<p>A vector of nonnegative integers <code class="reqn">f_j</code> that represents
+the power of <code class="reqn">\mbox{tr}(W^{-j})</code>, where <code class="reqn">j=1, \ldots, r</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iw</code></td>
+<td>
+<p>The power of the inverse beta-Wishart matrix <code class="reqn">W^{-1}</code> (0 by default)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>The type of Wishart distribution <code class="reqn">(\alpha=2/\beta)</code>:
+</p>
+
+<ul>
+<li>
+<p> 1/2: Quaternion Wishart
+</p>
+</li>
+<li>
+<p> 1: Complex Wishart
+</p>
+</li>
+<li>
+<p> 2: Real Wishart (default)
+</p>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>When <code>iw = 0</code>, it returns <code class="reqn">E[\prod_{j=1}^r \mbox{tr}(W^{-j})^{f_j}]</code>.
+When <code>iw != 0</code>, it returns <code class="reqn">E[\prod_{j=1}^r \mbox{tr}(W^{-j})^{f_j}W^{-iw}]</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Example 1: For E[tr(W^{-1})^2] with W ~ W_m^1(n,S),
+# where n and S are defined below:
+n &lt;- 20
+S &lt;- matrix(c(25, 49,
+              49, 109), nrow=2, ncol=2)
+iwishmom(n, S, 2) # iw = 0, for real Wishart distribution
+
+# Example 2: For E[tr(W^{-1})^2*tr(W^{-3})W^{-2}] with W ~ W_m^1(n,S),
+# where n and S are defined below:
+n &lt;- 20
+S &lt;- matrix(c(25, 49,
+              49, 109), nrow=2, ncol=2)
+iwishmom(n, S, c(2, 0, 1), 2, 2) # iw = 2, for real Wishart distribution
+
+# Example 3: For E[tr(W^{-1})^2*tr(W^{-3})] with W ~ W_m^2(n,S),
+# where n and S are defined below:
+# Hermitian S for the complex case
+n &lt;- 20
+S &lt;- matrix(c(25, 49 + 2i,
+              49 - 2i, 109), nrow=2, ncol=2)
+iwishmom(n, S, c(2, 0, 1), 0, 1) # iw = 0, for complex Wishart distribution
+
+# Example 4: For E[tr(W^{-1})*tr(W^{-2})^2*tr(W^{-3})^2*W^{-1}] with W ~ W_m^2(n,S),
+# where n and S are defined below:
+n &lt;- 30
+S &lt;- matrix(c(25, 49 + 2i,
+              49 - 2i, 109), nrow=2, ncol=2)
+iwishmom(n, S, c(1, 2, 2), 1, 1) # iw = 1, for complex Wishart distribution
+</code></pre>
+
+
+</div>

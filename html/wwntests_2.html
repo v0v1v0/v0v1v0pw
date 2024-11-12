@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>autocorrelation_coeff_plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot Confidence Bounds of Estimated Functional Autocorrelation Coefficients</h2>
+
+<h3>Description</h3>
+
+<p>'autocorrelation_coeff_plot' Computes the 1-alpha upper confidence bounds for the functional
+autocorrelation coefficients at lags h = 1:K under both weak white noise (WWN) and strong white
+noise (SWN) assumptions. It plots the coefficients as well as the bounds for all lags h = 1:K.
+Note, the SWN bound is constant, while the WWN is dependent on the lag.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">autocorrelation_coeff_plot(
+  f_data,
+  K = 20,
+  alpha = 0.05,
+  M = NULL,
+  wwn_bound = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>f_data</code></td>
+<td>
+<p>The functional data matrix with observed functions in the columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>K</code></td>
+<td>
+<p>A positive Integer value. The maximum lag for which to compute the single-lag test (tests
+will be computed for lags h in 1:K).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>A numeric value between 0 and 1 specifying the significance level to be used in the single-lag
+test. The default value is 0.05.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>A positive Integer value. Determines the number of Monte-Carlo simulations employed in the
+Welch-Satterthwaite approximation of the limiting distribution of the test statistics, for each test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wwn_bound</code></td>
+<td>
+<p>A Boolean value allowing the user to turn off the weak white noise bound. TRUE by default.
+Speeds up computation when FALSE.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function computes and plots autocorrelation coefficients at lag h, for h in 1:K. It also
+computes an estimated asymptotic 1 - alpha confidence bound, under the assumption that the series
+forms a weak white noise. Additionally, it computes a similar (constant) bound under the assumption the
+series form a strong white noise. Please see the vignette or the references for a more complete treatment.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Plot of the estimated autocorrelation coefficients for lags h in 1:K with the weak
+white noise 1-alpha upper  confidence bound for each lag, as well as the constant strong white
+noise 1-alpha confidence bound.
+</p>
+
+
+<h3>References</h3>
+
+<p>[1] Kokoszka P., &amp; Rice G., &amp; Shang H.L. (2017). Inference for the autocovariance of a functional time series
+under conditional heteroscedasticity. Journal of Multivariate Analysis, 162, 32-50.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">b &lt;- brown_motion(75, 40)
+autocorrelation_coeff_plot(b)
+autocorrelation_coeff_plot(b, M = 200)
+
+</code></pre>
+
+
+</div>

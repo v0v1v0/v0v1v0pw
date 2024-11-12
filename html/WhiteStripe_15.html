@@ -1,0 +1,81 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>whitestripe_ind_to_mask</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>WhiteStripe Indices to Mask</h2>
+
+<h3>Description</h3>
+
+<p>Uses WhiteStripe indices to create image mask
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">whitestripe_ind_to_mask(img, indices, writeimg = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>img</code></td>
+<td>
+<p>Array or class nifti that is corresponds to dimensions of the images the
+indices were generated from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indices</code></td>
+<td>
+<p>indices from <code>whitestripe</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>writeimg</code></td>
+<td>
+<p>logical to write image or not</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments to passed to <code>writeNIfTI</code> for writing image</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Class of array or nifti depending on <code>img</code> input
+</p>
+
+
+<h3>See Also</h3>
+
+<p>whitestripe, whitestripe_hybrid
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+lib.loc = tempdir()
+if (download_img_data(lib.loc = lib.loc)){
+  t1 = oro.nifti::readNIfTI(system.file("T1Strip.nii.gz",
+                                        package="WhiteStripe",
+                                        lib.loc = lib.loc))
+  t2 = oro.nifti::readNIfTI(system.file("T2Strip.nii.gz",
+                                        package="WhiteStripe",
+                                        lib.loc = lib.loc))
+  ind = whitestripe_hybrid(t1, t2)
+  mask = whitestripe_ind_to_mask(t1, ind$whitestripe.ind)
+  oro.nifti::orthographic(mask)
+}
+
+</code></pre>
+
+
+</div>

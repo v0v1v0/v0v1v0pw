@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Bayesian Poisson analysis</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Bayesian analysis of count data
+</h2>
+
+<h3>Description</h3>
+
+<p>Generates random draws from the posterior for a Poisson likelihood and gamma prior.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Bpoisson(y, n, priors=NULL, draws=10000, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>the count
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+
+<p>the sample size
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>priors</code></td>
+<td>
+
+<p>an optional list with elements specifying the priors for the mode and SD of the gamma prior distribution; see Details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>draws</code></td>
+<td>
+
+<p>the number of MCMC draws to be returned.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>additional arguments to pass to the function.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function generates a vector of random draws from the posterior distribution of the probability of the observed count. It uses conjugacy to determine the parameters of the posterior gamma distribution, and draws independent values from this.
+</p>
+<p>A prior can be specified with the <code>priors</code> argument. A gamma prior is used, specified by mode, <code>mode</code>, and SD, <code>sd</code>.
+</p>
+<p>When <code>priors = NULL</code> (the default), a uniform prior corresponding to gamma(1, 0) is used.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an object of class <code>mcmcOutput</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Generate a sample from a Poisson distribution, maybe the number of ticks
+#   observed on a sample of rodents:
+n &lt;- 10  # number of trials (rodents examined)
+( y &lt;- rpois(n, 1.2) ) # number of ticks on each rodent
+Bpoisson(sum(y), n)  # with uniform prior
+plot(Bpoisson(sum(y), n))
+Bpoisson(sum(y), n, priors=list(mode=1, sd=3))  # with informative prior
+plot(Bpoisson(sum(y), n, priors=list(mode=1, sd=3)))
+</code></pre>
+
+
+</div>

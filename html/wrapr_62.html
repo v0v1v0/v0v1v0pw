@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mk_formula</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Construct a formula.</h2>
+
+<h3>Description</h3>
+
+<p>Safely construct a simple Wilkinson notation formula from the outcome (dependent variable) name
+and vector of input (independent variable) names.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mk_formula(
+  outcome,
+  variables,
+  ...,
+  intercept = TRUE,
+  outcome_target = NULL,
+  outcome_comparator = "==",
+  env = baseenv(),
+  extra_values = NULL,
+  as_character = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>outcome</code></td>
+<td>
+<p>character scalar, name of outcome or dependent variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variables</code></td>
+<td>
+<p>character vector, names of input or independent variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>not used, force later arguments to bind by name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intercept</code></td>
+<td>
+<p>logical, if TRUE allow an intercept term.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outcome_target</code></td>
+<td>
+<p>scalar, if not NULL write outcome==outcome_target in formula.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outcome_comparator</code></td>
+<td>
+<p>one of "==", "!=", "&gt;=", "&lt;=", "&gt;", "&lt;", only use of outcome_target is not NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>env</code></td>
+<td>
+<p>environment to use in formula (unless extra_values is non empty, then this is a parent environemnt).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>extra_values</code></td>
+<td>
+<p>if not empty extra values to be added to a new formula environment containing env.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>as_character</code></td>
+<td>
+<p>if TRUE return formula as a character string.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note: outcome and variables
+are each intended to be simple variable names or column names (or .). They are not
+intended to specify
+interactions, I()-terms, transforms, general experessions or other complex formula terms.
+Essentially the same effect as <code>reformulate</code>, but trying to avoid the
+<code>paste</code> currently in <code>reformulate</code> by calling <code>update.formula</code>
+(which appears to work over terms).
+Another reasonable way to do this is just <code>paste(outcome, paste(variables, collapse = " + "), sep = " ~ ")</code>.
+</p>
+<p>Care must be taken with later arguments to functions like <code>lm()</code> whose help states:
+"All of weights, subset and offset are evaluated in the same way as variables in formula, that is first in data and then in the environment of formula."
+Also note <code>env</code> defaults to <code>baseenv()</code> to try and minimize refence leaks produced by the environemnt
+captured by the formal ending up stored in the resulting model for <code>lm()</code> and <code>glm()</code>.  For
+behavior closer to <code>as.formula()</code> please set the <code>env</code> argument to <code>parent.frame()</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a formula object
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>reformulate</code>, <code>update.formula</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+f &lt;- mk_formula("mpg", c("cyl", "disp"))
+print(f)
+(model &lt;- lm(f, mtcars))
+format(model$terms)
+
+f &lt;- mk_formula("cyl", c("wt", "gear"), outcome_target = 8, outcome_comparator = "&gt;=")
+print(f)
+(model &lt;- glm(f, mtcars, family = binomial))
+format(model$terms)
+
+</code></pre>
+
+
+</div>

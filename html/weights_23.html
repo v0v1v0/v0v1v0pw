@@ -1,0 +1,299 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wtd.hist</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Weighted Histograms
+</h2>
+
+<h3>Description</h3>
+
+<p>Produces weighted histograms by adding a "weight" option to the his.default function from the graphics package (Copyright R-core). The code here was copied from that function and modified slightly to allow for weighted histograms as well as unweighted histograms. The generic function hist computes a histogram of the given data values. If plot=TRUE, the resulting object of class "histogram" is plotted by plot.histogram, before it is returned.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wtd.hist(x, breaks = "Sturges",
+     freq = NULL, probability = !freq,
+     include.lowest = TRUE, right = TRUE,
+     density = NULL, angle = 45, col = NULL, border = NULL,
+     main = paste("Histogram of" , xname),
+     xlim = range(breaks), ylim = NULL,
+     xlab = xname, ylab,
+     axes = TRUE, plot = TRUE, labels = FALSE,
+     nclass = NULL, weight = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a vector of values for which the histogram is desired.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>breaks</code></td>
+<td>
+<p>one of:
+</p>
+
+<ul>
+<li>
+<p> a vector giving the breakpoints between histogram cells,
+</p>
+</li>
+<li>
+<p> a single number giving the number of cells for the histogram,
+</p>
+</li>
+<li>
+<p> a character string naming an algorithm to compute the
+number of cells (see ‘Details’),
+</p>
+</li>
+<li>
+<p> a function to compute the number of cells.
+</p>
+</li>
+</ul>
+<p>In the last three cases the number is a suggestion only.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>freq</code></td>
+<td>
+<p>logical; if <code>TRUE</code>, the histogram graphic is a
+representation of frequencies, the <code>counts</code> component of
+the result; if <code>FALSE</code>, probability densities, component
+<code>density</code>, are plotted (so that the histogram has a total area
+of one).  Defaults to <code>TRUE</code> <em>if and only if</em> <code>breaks</code> are
+equidistant (and <code>probability</code> is not specified).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>probability</code></td>
+<td>
+<p>an <em>alias</em> for <code>!freq</code>, for S compatibility.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include.lowest</code></td>
+<td>
+<p>logical; if <code>TRUE</code>, an <code>x[i]</code> equal to
+the <code>breaks</code> value will be included in the first (or last, for
+<code>right = FALSE</code>) bar.  This will be ignored (with a warning)
+unless <code>breaks</code> is a vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>right</code></td>
+<td>
+<p>logical; if <code>TRUE</code>, the histogram cells are
+right-closed (left open) intervals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>density</code></td>
+<td>
+<p>the density of shading lines, in lines per inch.
+The default value of <code>NULL</code> means that no shading lines
+are drawn. Non-positive values of <code>density</code> also inhibit the
+drawing of shading lines.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>angle</code></td>
+<td>
+<p>the slope of shading lines, given as an angle in
+degrees (counter-clockwise).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>a colour to be used to fill the bars.
+The default of <code>NULL</code> yields unfilled bars.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>border</code></td>
+<td>
+<p>the color of the border around the bars.  The default
+is to use the standard foreground color.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main, xlab, ylab</code></td>
+<td>
+<p>these arguments to <code>title</code> have useful
+defaults here.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim, ylim</code></td>
+<td>
+<p>the range of x and y values with sensible defaults.
+Note that <code>xlim</code> is <em>not</em> used to define the histogram (breaks),
+but only for plotting (when <code>plot = TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axes</code></td>
+<td>
+<p>logical.  If <code>TRUE</code> (default), axes are draw if the
+plot is drawn.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>logical.  If <code>TRUE</code> (default), a histogram is
+plotted, otherwise a list of breaks and counts is returned.  In the
+latter case, a warning is used if (typically graphical) arguments
+are specified that only apply to the <code>plot = TRUE</code> case.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>logical or character.  Additionally draw labels on top
+of bars, if not <code>FALSE</code>; see <code>plot.histogram</code> in the <code>graphics</code> package.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nclass</code></td>
+<td>
+<p>numeric (integer).  For S(-PLUS) compatibility only,
+<code>nclass</code> is equivalent to <code>breaks</code> for a scalar or
+character argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight</code></td>
+<td>
+<p>numeric.  Defines a set of weights to produce a weighted histogram.  Will default to 1 for each case if no other weight is defined.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments and graphical parameters passed to
+<code>plot.histogram</code> and thence to <code>title</code> and
+<code>axis</code> (if <code>plot=TRUE</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The definition of <em>histogram</em> differs by source (with
+country-specific biases). R's default with equi-spaced breaks (also
+the default) is to plot the (weighted) counts in the cells defined by
+<code>breaks</code>.  Thus the height of a rectangle is proportional to
+the (weighted) number of points falling into the cell, as is the area
+<em>provided</em> the breaks are equally-spaced.
+</p>
+<p>The default with non-equi-spaced breaks is to give
+a plot of area one, in which the <em>area</em> of the rectangles is the
+fraction of the data points falling in the cells.
+</p>
+<p>If <code>right = TRUE</code> (default), the histogram cells are intervals
+of the form <code>(a, b]</code>, i.e., they include their right-hand endpoint,
+but not their left one, with the exception of the first cell when
+<code>include.lowest</code> is <code>TRUE</code>.
+</p>
+<p>For <code>right = FALSE</code>, the intervals are of the form <code>[a, b)</code>,
+and <code>include.lowest</code> means ‘<em>include highest</em>’.
+</p>
+<p>The default for <code>breaks</code> is <code>"Sturges"</code>: see
+<code>nclass.Sturges</code>.  Other names for which algorithms
+are supplied are <code>"Scott"</code> and <code>"FD"</code> /
+<code>"Freedman-Diaconis"</code> (with corresponding functions
+<code>nclass.scott</code> and <code>nclass.FD</code>).
+Case is ignored and partial matching is used.
+Alternatively, a function can be supplied which
+will compute the intended number of breaks as a function of <code>x</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>an object of class <code>"histogram"</code> which is a list with components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>breaks</code></td>
+<td>
+<p>the <code class="reqn">n+1</code> cell boundaries (= <code>breaks</code> if that
+was a vector). These are the nominal breaks, not with the boundary fuzz.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>counts</code></td>
+<td>
+<p><code class="reqn">n</code> values; for each cell, the number of
+<code>x[]</code> inside.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>density</code></td>
+<td>
+<p>values for each bin such that the area under the histogram totals 1.
+<code class="reqn">\hat f(x_i \omega_i)</code> / <code class="reqn">f^(x[i] \omega[i])</code>, as estimated
+density values. If <code>all(diff(breaks) == 1)</code>, they are the
+relative frequencies <code>counts/n</code> and in general satisfy
+<code class="reqn">\sum_i \hat f(x_i  \omega_i) (b_{i+1}-b_i) = 1</code> / <code class="reqn">sum[i; f^(x[i]  \omega[i])
+      (b[i+1]-b[i])] = 1</code>, where <code class="reqn">b_i</code> = <code>breaks[i]</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intensities</code></td>
+<td>
+<p>same as <code>density</code>. Deprecated, but retained
+for compatibility.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mids</code></td>
+<td>
+<p>the <code class="reqn">n</code> cell midpoints.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xname</code></td>
+<td>
+<p>a character string with the actual <code>x</code> argument name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>equidist</code></td>
+<td>
+<p>logical, indicating if the distances between
+<code>breaks</code> are all the same.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Josh Pasek, Assistant Professor of Communication Studies at the University of Michigan (www.joshpasek.com) was responsible for the updates to the hist function necessary to implement weighted counts. The hist.default code from the graphics package on which the current function was based was written by R-core. All modifications are noted in code and the copyright for all original code remains with R-core.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">var1 &lt;- c(1:100)
+wgt &lt;- var1/mean(var1)
+par(mfrow=c(2, 2))
+wtd.hist(var1)
+wtd.hist(var1, weight=wgt)
+wtd.hist(var1, weight=var1)
+</code></pre>
+
+
+</div>

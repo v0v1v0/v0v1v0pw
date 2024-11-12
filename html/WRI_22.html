@@ -1,0 +1,54 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wass_R2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute Wasserstein Coefficient of Determination</h2>
+
+<h3>Description</h3>
+
+<p>Compute Wasserstein Coefficient of Determination
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wass_R2(wass_regress_res)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>wass_regress_res</code></td>
+<td>
+<p>an object returned by the <code>wass_regress</code> function</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Wasserstein <code class="reqn">R^2</code>, the Wasserstein coefficient of determination
+</p>
+
+
+<h3>References</h3>
+
+<p><cite>Frechet regression for random objects with Euclidean predictors, Alexander Petersen and Hans-Georg Müller, 2019</cite>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(strokeCTdensity)
+predictor = strokeCTdensity$predictors
+dSup = strokeCTdensity$densitySupport
+densityCurves = strokeCTdensity$densityCurve
+
+res = wass_regress(rightside_formula = ~., Xfit_df = predictor,
+Ymat = densityCurves, Ytype = 'density', Sup = dSup)
+wass_r2 = wass_R2(res)
+</code></pre>
+
+
+</div>

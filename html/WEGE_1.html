@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_edge</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>get_edge</h2>
+
+<h3>Description</h3>
+
+<p>A function to get the WEGE index value for a provided polygon.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_edge(
+  target_area,
+  input,
+  x,
+  y,
+  species = "binomial",
+  ed = "ED",
+  category = "category",
+  res = 1
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>target_area</code></td>
+<td>
+<p>Either a sp or sf object to which to calculate the WEGE 
+index.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>input</code></td>
+<td>
+<p>Species ranges, either from a shapefile or from a georeferenced 
+species list with a column for species, two columns for coordinates and one 
+for the IUCN category.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>name of the longitude column.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>name of the latitude column.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>species</code></td>
+<td>
+<p>name of the species column.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ed</code></td>
+<td>
+<p>name of the evolutionary distinctiveness column.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>category</code></td>
+<td>
+<p>name of IUCN the category column. Terminology must be as 
+follows: DD for Data Deficient, LC for Least Concern, NT for Near Threatened, 
+EN, for Endangered, CR for Critically Endangered, EW for Extinct in the wild 
+</p>
+<p>and EX for Extinct.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res</code></td>
+<td>
+<p>grid-cell size to use to calculate the range of the species in 
+case a georeferenced species list was provided.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a value corresponding to the EDGE score of the provided target_area
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(WEGE) 
+library(sp)
+library(sf)
+
+species &lt;- letters[1:26]
+range_list &lt;- list()
+for (i in seq_along(species)) {
+  temp0 &lt;- cbind(runif(3,1,50),runif(3,1,50))
+  temp &lt;- Polygon(rbind(temp0,temp0[1,]))
+  range_list[[i]] &lt;- Polygons(list(temp), ID = c(species[i]))
+}
+input &lt;- st_as_sf(SpatialPolygons(range_list))
+categories &lt;- c('LC','NT','VU','EN','CR')
+input$binomial &lt;- species
+input$category &lt;- sample(size = nrow(input),x = categories,replace = TRUE)
+input$ED &lt;- runif(nrow(input),1,30)
+temp0 &lt;- cbind(runif(3,1,50),runif(3,1,50))
+target_area &lt;- Polygon(rbind(temp0,temp0[1,]))
+target_area &lt;- Polygons(list(target_area), ID = 'Target area')
+target_area &lt;- st_as_sf(SpatialPolygons(list(target_area)))
+
+get_edge(target_area = target_area,input = input,species = 'binomial',category = 'category')
+
+</code></pre>
+
+
+</div>

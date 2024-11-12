@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>minDiff</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Minimum distance/difference between values</h2>
+
+<h3>Description</h3>
+
+<p>This function aims to find the min distance (ie closest point) to any other x (numeric value), ie intra 'x' and
+returns matrix with 'index','value','dif','ppm','ncur','nbest','best'.
+At equal distance to lower &amp; upper neighbour point, the upper (following) point is chosen (as single best).
+In case of multiple ex-aequo distance returns 1st of multiple, may be different at various repeats.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">minDiff(
+  x,
+  digSig = 3,
+  ppm = TRUE,
+  initOrder = TRUE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(numeric) vector to search minimum difference</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digSig</code></td>
+<td>
+<p>number of significant digits, used for ratio or ppm column</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ppm</code></td>
+<td>
+<p>(logical) display distance as ppm (1e6*diff/refValue, ie normalized difference eg as used in mass spectrometry), otherwise the ratio is given as : value(from 'x') / closestValue (from 'x')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>initOrder</code></td>
+<td>
+<p>(logical) return matrix so that 'x' matches exactely 2nd col of output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a matrix
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>diff</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2017); aa &lt;- 100*c(0.1 +round(runif(20),2),0.53,0.53)
+minDiff(aa); 
+minDiff(aa,initO=TRUE,ppm=FALSE); .minDif(unique(aa))
+</code></pre>
+
+
+</div>

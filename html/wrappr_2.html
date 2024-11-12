@@ -1,0 +1,67 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>lazy_eval</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>save and Delay a function call with the option to change the function and arguments when called</h2>
+
+<h3>Description</h3>
+
+<p>save and Delay a function call with the option to change the function and arguments when called
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">lazy_eval(..., .f)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to be passed to the param .f.  Also in closure function returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.f</code></td>
+<td>
+<p>function.  A function that will be called when needed.  Also in closure function returned.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>closure function with same param names plus the param names overwrite_args Boolean and return_new_closure Boolean.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+numbers &lt;- c(1,2,3,4,5)
+
+func &lt;- lazy_eval(numbers, .f = sum)
+
+sum_result &lt;- func()
+
+max_result &lt;- func(.f = max)
+
+mean_result &lt;- func(.f = mean)
+
+range_result &lt;- func(.f = function(...) { max(...) - min(...)})
+
+add_more_num_result &lt;- func(4,5,6, NA, na.rm = TRUE)
+
+updated_func &lt;- func(na.rm = TRUE, return_new_closure = TRUE)
+
+updated_func_result &lt;- updated_func()
+
+</code></pre>
+
+
+</div>

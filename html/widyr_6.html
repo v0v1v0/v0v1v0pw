@@ -1,0 +1,110 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pairwise_delta</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Delta measure of pairs of documents</h2>
+
+<h3>Description</h3>
+
+<p>Compute the delta distances (from its two variants) of all pairs of documents in a tidy table.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pairwise_delta(tbl, item, feature, value, method = "burrows", ...)
+
+pairwise_delta_(tbl, item, feature, value, method = "burrows", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tbl</code></td>
+<td>
+<p>Table</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item</code></td>
+<td>
+<p>Item to compare; will end up in <code>item1</code> and
+<code>item2</code> columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>feature</code></td>
+<td>
+<p>Column describing the feature that links one item to others</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>Value</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Distance measure to be used; see <code>dist()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Extra arguments passed on to <code>squarely()</code>,
+such as <code>diag</code> and <code>upper</code></p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>squarely()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(janeaustenr)
+library(dplyr)
+library(tidytext)
+
+# closest documents in terms of 1000 most frequent words
+closest &lt;- austen_books() %&gt;%
+  unnest_tokens(word, text) %&gt;%
+  count(book, word) %&gt;%
+  top_n(1000, n) %&gt;%
+  pairwise_delta(book, word, n, method = "burrows") %&gt;%
+  arrange(delta)
+
+closest
+
+closest %&gt;%
+  filter(item1 == "Pride &amp; Prejudice")
+
+# to remove duplicates, use upper = FALSE
+closest &lt;- austen_books() %&gt;%
+  unnest_tokens(word, text) %&gt;%
+  count(book, word) %&gt;%
+  top_n(1000, n) %&gt;%
+  pairwise_delta(book, word, n, method = "burrows", upper = FALSE) %&gt;%
+  arrange(delta)
+
+# Can also use Argamon's Linear Delta
+closest &lt;- austen_books() %&gt;%
+  unnest_tokens(word, text) %&gt;%
+  count(book, word) %&gt;%
+  top_n(1000, n) %&gt;%
+  pairwise_delta(book, word, n, method = "argamon", upper = FALSE) %&gt;%
+  arrange(delta)
+
+</code></pre>
+
+
+</div>

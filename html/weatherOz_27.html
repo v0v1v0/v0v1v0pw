@@ -1,0 +1,155 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>parse_coastal_forecast</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Parse BOM Coastal Waters Forecast XML Files</h2>
+
+<h3>Description</h3>
+
+<p>Parse local <abbr><span class="acronym">BOM</span></abbr> daily coastal waters forecast <abbr><span class="acronym">XML</span></abbr> file(s)
+for a specified state or territory or all of Australia.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">parse_coastal_forecast(state, filepath)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>state</code></td>
+<td>
+<p>Required value of an Australian state or territory as full name
+or postal code.  Fuzzy string matching via <code>base::agrep()</code> is done.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filepath</code></td>
+<td>
+<p>A string providing the directory location of the coastal
+forecast file(s) to parse. See Details for more.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Allowed state and territory postal codes, only one state per request
+or all using <code>AUS</code>.
+</p>
+
+<dl>
+<dt>AUS</dt>
+<dd>
+<p>Australia, returns forecast for all states, NT and ACT</p>
+</dd>
+<dt>ACT</dt>
+<dd>
+<p>Australian Capital Territory (will return NSW)</p>
+</dd>
+<dt>NSW</dt>
+<dd>
+<p>New South Wales</p>
+</dd>
+<dt>NT</dt>
+<dd>
+<p>Northern Territory</p>
+</dd>
+<dt>QLD</dt>
+<dd>
+<p>Queensland</p>
+</dd>
+<dt>SA</dt>
+<dd>
+<p>South Australia</p>
+</dd>
+<dt>TAS</dt>
+<dd>
+<p>Tasmania</p>
+</dd>
+<dt>VIC</dt>
+<dd>
+<p>Victoria</p>
+</dd>
+<dt>WA</dt>
+<dd>
+<p>Western Australia</p>
+</dd>
+</dl>
+<p>The <var>filepath</var> argument will only accept a directory where files
+are located for parsing. DO NOT supply the full path including the file
+name.  This function will only parse the requested state or all of
+Australia in the same fashion as <code>get_coastal_forecast()</code>, provided that
+the files are all present in the directory.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>data.table::data.table()</code> of an Australia <abbr><span class="acronym">BOM</span></abbr> Coastal Waters
+Forecast.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Dean Marchiori, <a href="mailto:deanmarchiori@gmail.com">deanmarchiori@gmail.com</a>, and Paul Melloy,
+<a href="mailto:paul@melloy.com.au">paul@melloy.com.au</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Forecast data come from Australian Bureau of Meteorology (BOM) Weather Data
+Services<br><a href="http://www.bom.gov.au/catalogue/data-feeds.shtml">http://www.bom.gov.au/catalogue/data-feeds.shtml</a>.
+</p>
+<p>Location data and other metadata come from the <abbr><span class="acronym">BOM</span></abbr> anonymous
+<abbr><span class="acronym">FTP</span></abbr> server with spatial data <br><a href="ftp://ftp.bom.gov.au/anon/home/adfd/spatial/">ftp://ftp.bom.gov.au/anon/home/adfd/spatial/</a>, specifically the
+<abbr><span class="acronym">DBF</span></abbr> file portion of a shapefile, <br><a href="ftp://ftp.bom.gov.au/anon/home/adfd/spatial/IDM00003.dbf">ftp://ftp.bom.gov.au/anon/home/adfd/spatial/IDM00003.dbf</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>get_coastal_forecast
+</p>
+<p>Other BOM: 
+<code>find_forecast_towns()</code>,
+<code>get_ag_bulletin()</code>,
+<code>get_available_imagery()</code>,
+<code>get_available_radar()</code>,
+<code>get_coastal_forecast()</code>,
+<code>get_precis_forecast()</code>,
+<code>get_radar_imagery()</code>,
+<code>get_satellite_imagery()</code>,
+<code>parse_ag_bulletin()</code>,
+<code>parse_precis_forecast()</code>
+</p>
+<p>Other parse: 
+<code>parse_ag_bulletin()</code>,
+<code>parse_precis_forecast()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# parse the coastal forecast for Queensland
+
+#download to tempfile() using basename() to keep original name
+utils::download.file(url = "ftp://ftp.bom.gov.au/anon/gen/fwo/IDQ11290.xml",
+              destfile = file.path(tempdir(),
+              basename("ftp://ftp.bom.gov.au/anon/gen/fwo/IDQ11290.xml")),
+              mode = "wb")
+
+parse_coastal_forecast(state = "QLD", filepath = tempdir())
+
+</code></pre>
+
+
+</div>

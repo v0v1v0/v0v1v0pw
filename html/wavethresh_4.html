@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>accessC.mwd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get Smoothed Data from Wavelet Structure</h2>
+
+<h3>Description</h3>
+
+<p>The smoothed and original data from a multiple wavelet decomposition structure, <code>mwd.object</code>  ect  (e.g. returned from <code>mwd</code>) are packed into a single matrix in that structure.  TRUE  his function extracts the data corresponding to a particular resolution level.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'mwd'
+accessC(mwd, level = nlevelsWT(mwd), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mwd</code></td>
+<td>
+<p>Multiple wavelet decomposition structure from which you wish to extract the smoothed or original data if the structure is from a wavelet decomposition, or the reconstructed data if the structure is from a wavelet reconstruction.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>The level that you wish to extract. By default, this is the level with most detail (in the case of structures from a decomposition this is the original data, in the case of structures from a reconstruction this is the top-level reconstruction).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The mwd function produces a wavelet decomposition structure.
+</p>
+<p>For decomposition, the top level contains the original data, and subsequent lower levels contain the successively smoothed data. So if there are <code>mwd$filter$npsi*2^m</code> original data points (<code>mwd$filter$npsi</code> is the multiplicity of wavelets), there will be <code>m+1</code> levels indexed 0,1,...,m. So 
+</p>
+<p><code>accessC.mwd(Mwd, level=m)</code>
+</p>
+<p>pulls out the original data, as does
+</p>
+<p><code>accessC.mwd(mwd)</code>
+</p>
+<p>To get hold of lower levels just specify the level that you're interested in, e.g. 
+</p>
+<p><code>accessC.mwd(mwd, level=2)</code>
+</p>
+<p>Gets hold of the second level.
+</p>
+<p>The need for this function is a consequence of the pyramidal structure of Mallat's algorithm and the memory efficiency gain achieved by storing the pyramid as a linear matrix of coefficients. AccessC obtains information about where the smoothed data appears from the fl.dbase component of mwd, in particular the array <code>fl.dbase$first.last.c</code> which gives a complete specification of index numbers and offsets for <code>mwd$C</code>. 
+</p>
+<p>Note also that this function only gets information from mwd class objects. To <em>put</em> coefficients into mwd structures you have to use the putC.mwd function. 
+</p>
+<p>See Downie and Silverman, 1998. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix with <code>mwd$filter$npsi</code> rows containing the extracted data of all the coefficients at that level.
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.9.6 (Although Copyright Tim Downie 1995-6.)</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code>accessD.mwd</code>, <code>draw.mwd</code>, <code>mfirst.last</code>, <code>mfilter.select</code>, <code>mwd</code>, <code>mwd.object</code>, <code>mwr</code>, <code>plot.mwd</code>, <code>print.mwd</code>, <code>putC.mwd</code>, <code>putD.mwd</code>, <code>summary.mwd</code>, <code>threshold.mwd</code>, <code>wd</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Get the 3rd level of smoothed data from a decomposition
+#
+dat &lt;- rnorm(32)
+accessC.mwd(mwd(dat), level=3)
+</code></pre>
+
+
+</div>

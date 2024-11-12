@@ -1,0 +1,167 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>table_weightedpct</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate table of percentages or N of response distribution for survey items, survey weighted, disaggregated</h2>
+
+<h3>Description</h3>
+
+<p>Calculate table of percentages or N of response distribution for survey items, survey weighted, disaggregated
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">table_weightedpct(
+  df,
+  vars_ids,
+  vars_strata,
+  vars_weights,
+  formula_vars,
+  ...,
+  formula_vars_levels = 0:1,
+  by_vars = NULL,
+  pct = TRUE,
+  willfilter = NULL,
+  add_totals = FALSE,
+  spread_key = NULL,
+  spread_value = "prop",
+  arrange_vars = NULL,
+  include_SE = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>a data frame of individual survey data, where each row is an individual</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vars_ids</code></td>
+<td>
+<p>a character vector of cluster ids, passed to <code>srvyr::as_survey_design()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vars_strata</code></td>
+<td>
+<p>a character vector of strata ids, passed to <code>srvyr::as_survey_design()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vars_weights</code></td>
+<td>
+<p>a character vector of survey weight ids, passed to <code>srvyr::as_survey_design()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula_vars</code></td>
+<td>
+<p>a character vector of variables to calculate the percentages of each level for</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>captures expressions to pass to <code>dplyr::filter()</code> or <code>dplyr::transmute()</code>, depending on the value of argument <code>willfilter</code>. See Details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>formula_vars_levels</code></td>
+<td>
+<p>a vector of the levels of the the <code>formula_vars</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>by_vars</code></td>
+<td>
+<p>a character vector of variables to disaggregate results by. Default is <code>NULL</code> for no disaggregation. The columns listed must not include NAs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pct</code></td>
+<td>
+<p>a logical variable indicating whether or not to calculate weighted percentages. Default is <code>TRUE</code> for weighted percentages. Set to <code>FALSE</code> for weighted N.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>willfilter</code></td>
+<td>
+<p>a logical variable that tells the function whether or not to filter or transmute the data. Leave as default <code>NULL</code> to not filter or transmute. Set as <code>TRUE</code> to filter and <code>FALSE</code> to transmute. See Details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add_totals</code></td>
+<td>
+<p>logical determining whether to create total rows or columns (as appropriate) that demonstrate the margin that sums to 100. Default is FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spread_key</code></td>
+<td>
+<p>a string with variable name to pass to <code>names_from</code> argument of <code>tidyr::pivot_wider()</code>. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spread_value</code></td>
+<td>
+<p>a string with variable name to pass to <code>values_from</code> argument of <code>tidyr::pivot_wider()</code>. Default is "prop" (the column of percentages created within the function)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arrange_vars</code></td>
+<td>
+<p>a character vector with variables to pass to <code>dplyr::arrange()</code>. Default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_SE</code></td>
+<td>
+<p>a logical variable indicating whether to include the standard errors in the table. Default is FALSE. Currently does not work when adding totals, spreading or transmuting.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If <code>willfilter</code> is NULL, the table is not filtered or transmuted. If <code>willfilter</code> is TRUE, the table is filtered before it is spread or arranged. If <code>willfilter</code> is FALSE, the table is transmuted after the spread and/or arrange. "..." captures the non-standard evaluation expressions (NSE) to pass to <code>dplyr::filter</code> or <code>dplyr::transmute()</code>.
+</p>
+<p>The function performs the following actions with the table after results are calculated in the following order (if applicable): filter, add totals, spread, arrange, transmute
+</p>
+
+
+<h3>Value</h3>
+
+<p>a tibble of weighted response percentages or N's
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See <code>vignette("programming", package = "dplyr")</code> for more about non-standard evaluation (NSE)
+</p>
+<p>Other table functions: 
+<code>table_basicstats()</code>,
+<code>table_unweightedpctn()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">table_weightedpct(df_adults, 
+    vars_ids = c("HHID", "PSU"),
+    vars_strata = "strata",
+    vars_weights = "weight",
+    formula_vars = paste0("EF",1:10),
+    formula_vars_levels = 1:5,
+    by_vars = "sex")
+</code></pre>
+
+
+</div>

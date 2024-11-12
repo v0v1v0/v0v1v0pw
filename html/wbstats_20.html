@@ -1,0 +1,60 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_indicators</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download Avialable Indicators from the World Bank</h2>
+
+<h3>Description</h3>
+
+<p>This function returns a tibble of indicator IDs and related information
+that are available for download from the World Bank API
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_indicators(lang, include_archive = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lang</code></td>
+<td>
+<p>Language in which to return the results. If <code>lang</code> is unspecified,
+english is the default. For supported languages see <code>wb_languages()</code>.
+Possible values of <code>lang</code> are in the <code>iso2</code> column. A note of warning, not
+all data returns have support for langauges other than english. If the specific
+return does not support your requested language by default it will return <code>NA</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_archive</code></td>
+<td>
+<p><code>logical</code>. If <code>TRUE</code> indicators that have been archived
+by the World Bank will be included in the return. Data for these additional
+indicators are not available through the standard API and querying them
+using <code>wb_data()</code> will not return data. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># can get a new list of available indicators by downloading new cache
+fresh_cache &lt;- wb_cache()
+fresh_indicators &lt;- fresh_cache$indicators
+
+# or by running the wb_indicators() function directly
+fresh_indicators &lt;- wb_indicators()
+
+# include archived indicators
+# see include_archive parameter description
+indicators_with_achrive &lt;- wb_indicators(include_archive = TRUE)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,60 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>split_squid</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>split the "status_code" field in a Squid-formatted dataset.</h2>
+
+<h3>Description</h3>
+
+<p>the Squid data format (which can be read in with
+<code>read_squid</code>) stores the squid response and the HTTP status
+code as a single field. <code>split_squid</code> allows you to split
+these into a data.frame of two distinct columns.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">split_squid(status_codes)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>status_codes</code></td>
+<td>
+<p>a <code>status_code</code> column from a Squid file read in
+with <code>read_squid</code></p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>a data.frame of two columns - "squid_code" and "http_status" -
+representing, respectively, the Squid response to the request and the
+HTTP status of it.  In cases where the status code is not intact (containing, 
+for example, just the squid_code) a row of empty strings will currently be returned.
+In the future, this will be somewhat improved.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read_squid</code> for reading these files in,
+and <code>split_clf</code> for similar parsing of multi-field
+columns in Common/Combined Log Format (CLF) data.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#Read in an example Squid file provided with the webtools package, then split out the codes
+data &lt;- read_squid(system.file("extdata/log.squid", package = "webreadr"))
+statuses &lt;- split_squid(data$status_code)
+
+</code></pre>
+
+
+</div>

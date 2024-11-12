@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fix_GR</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Adjust for the gear ratio of a motor arm</h2>
+
+<h3>Description</h3>
+
+<p>Fix a discrepancy between the gear ratio of the motor arm used and the gear
+ratio recorded by software.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fix_GR(x, GR = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>muscle_stim</code> object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>GR</code></td>
+<td>
+<p>Gear ratio, set to 1 by default</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>muscle_stim</code> object can be of any type, including
+<code>workloop</code>, <code>twitch</code>, or <code>tetanus</code>.
+</p>
+<p>If you have manually constructed the object via <code>as_muscle_stim()</code>,
+the <code>muscle_stim</code> object should have columns as follows: <br><code>Position</code>: length change of the muscle; <br><code>Force</code>: force <br></p>
+
+
+<h3>Value</h3>
+
+<p>An object of the same class(es) as the input (<code>x</code>). The function
+will multiply <code>Position</code> by (1/GR) and multiply <code>Force</code> by GR,
+returning an object with new values in <code>$Position</code> and <code>$Force</code>.
+Other columns and attributes are welcome and will simply be passed on
+unchanged into the resulting object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Vikram B. Baliga
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>analyze_workloop</code>,
+<code>read_analyze_wl</code>,
+<code>read_analyze_wl_dir</code>
+</p>
+<p>Other data transformations: 
+<code>invert_position()</code>,
+<code>select_cycles()</code>
+</p>
+<p>Other workloop functions: 
+<code>analyze_workloop()</code>,
+<code>get_wl_metadata()</code>,
+<code>invert_position()</code>,
+<code>read_analyze_wl_dir()</code>,
+<code>read_analyze_wl()</code>,
+<code>select_cycles()</code>,
+<code>summarize_wl_trials()</code>,
+<code>time_correct()</code>
+</p>
+<p>Other twitch functions: 
+<code>invert_position()</code>,
+<code>isometric_timing()</code>
+</p>
+<p>Other tetanus functions: 
+<code>invert_position()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(workloopR)
+
+# import the workloop.ddf file included in workloopR
+wl_dat &lt;-read_ddf(system.file("extdata", "workloop.ddf",
+                              package = 'workloopR'),
+                  phase_from_peak = TRUE)
+
+# apply a gear ratio correction of 2
+# this will multiply Force by 2 and divide Position by 2
+wl_fixed &lt;- fix_GR(wl_dat, GR = 2)
+
+# quick check:
+max(wl_fixed$Force) / max(wl_dat$Force) # 5592.578 / 2796.289 = 2
+max(wl_fixed$Position) / max(wl_dat$Position) # 1.832262 / 3.664524 = 0.5
+
+</code></pre>
+
+
+</div>

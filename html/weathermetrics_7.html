@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>convert_precip</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert between precipitation metrics</h2>
+
+<h3>Description</h3>
+
+<p>This function allows you to convert among the following precipitation metrics:
+inches, millimeters, and centimeters.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">convert_precip(precip, old_metric, new_metric, round = 2)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>precip</code></td>
+<td>
+<p>A numerical vector of precipitation to be converted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>old_metric</code></td>
+<td>
+<p>The metric from which you want to convert. Possible options
+are:
+</p>
+
+<ul>
+<li> <p><code>inches</code>: Inches
+</p>
+</li>
+<li> <p><code>mm</code>: Millimeters
+</p>
+</li>
+<li> <p><code>cm</code>: Centimeters
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>new_metric</code></td>
+<td>
+<p>The metric to which you want to convert. The same options
+are possible as for <code>old_metric</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>round</code></td>
+<td>
+<p>An integer indicating the number of decimal places to
+round the converted value.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A numeric vector with precipitation converted to the metric specified
+by the argument <code>new_metric</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Joshua Ferreri <a href="mailto:joshua.m.ferreri@gmail.com">joshua.m.ferreri@gmail.com</a>,
+Brooke Anderson <a href="mailto:brooke.anderson@colostate.edu">brooke.anderson@colostate.edu</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+data(breck)
+breck$Precip.mm &lt;- convert_precip(breck$Precip.in,
+   old_metric = "inches", new_metric = "mm", round = 2)
+breck
+
+data(loveland)
+loveland$Precip.in &lt;- convert_precip(loveland$Precip.mm,
+   old_metric = "mm", new_metric = "inches", round = NULL)
+loveland$Precip.cm &lt;- convert_precip(loveland$Precip.mm,
+   old_metric = "mm", new_metric = "cm", round = 3)
+loveland
+</code></pre>
+
+
+</div>

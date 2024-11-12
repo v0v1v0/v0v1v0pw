@@ -1,0 +1,488 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>options.wblr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Options list for <code>wblr</code> Objects
+</h2>
+
+<h3>Description</h3>
+
+<p>This function handles the various calculation, printing and plotting options
+for wblr objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">options.wblr(...)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Options for calculating, printing and plotting <code>wblr</code> objects using the <span class="pkg">WeibullR</span>
+package.
+</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Typical usage of <code>wblr</code> objects involves calling a sequence of functions each forming
+the object, then modifying it in this typical manner:
+</p>
+<p><code>da &lt;- wblr(c(10,11,27), col="red")</code><br><code>da &lt;- wblr.fit(da, col="darkgreen")</code><br><code>da &lt;- wblr.conf(da), col="blue"</code><br><code>plot(da)</code>
+</p>
+<p>The correct time to specify an option is when it is needed for the first
+time. For example, when the color setting option <code>col = "red"</code> is
+passed as an argument of function <code>wblr</code>, it will be used for
+data points, fitted lines and confidence interval bounds. If supplied to <code>wblr.conf</code>,
+only the confidence bounds will have the re-specified color, hereby overriding
+any previously inherited color settings from <code>wblr.fit</code>
+or <code>wblr</code>.
+</p>
+<p>Do not call <code>options.wblr</code> in between these functions because some
+options are locked and cannot be altered further in this chain. This is an
+implication of the way the <code>wblr</code> object is structured.
+</p>
+<p>As a function, options.wblr, borrows its internal structure from
+the <code>par</code> function of package <span class="pkg">graphics</span>.
+It can be used independently of the typical wblr, wblr.fit, wblr.conf sequence,
+but this is discouraged. However, when used independently the following guidance is
+provided:
+</p>
+<p><code>options.wblr()</code>
+</p>
+<p>Returns the currently used options and their values.
+</p>
+<p><code>options.wblr()$dist </code>
+<code>options.wblr("dist")</code>
+</p>
+<p>Returns the current value of an option.
+</p>
+<p><code>options.wblr(ci=0.95) </code>
+<code>options.wblr(list(ci=0.95,S=5e4))</code>
+</p>
+<p>Sets the specified options.
+</p>
+<p>Currently, there is no way to reset the options to the default values using
+this function.  One might, before changing any options, store the option
+list in a temporary variable like
+</p>
+<p><code>wblr.defaults &lt;- options.wblr()</code>
+</p>
+<p>for restoring it later by running <code>options.wblr(wblr.defaults)</code>.
+</p>
+<p>The function creates a globally accessible list named  <code>options_wblr</code>,
+holding the options.  One should always use the  <code>options.wblr</code>
+function to access the option list, do not access this list directly.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Executing <code>options.wblr</code> without arguments returns a named list
+containing the currently active global options of the <code>wblr</code> object.<br>
+When arguments are supplied, these are returned in a named list.
+</p>
+
+
+<h3>wblr options</h3>
+
+<p>Options specific to initial <code>wblr</code> object creation with data prepared for graphical display
+</p>
+
+<dl>
+<dt><code>dist</code></dt>
+<dd>
+<p>A character string defining the distribution target. When used to establish the basis for
+contour mapping (without using wblr.conf with method.conf="lrb") only "weibull" (default)
+and "lognormal" are recognized.<br>
+Also used with <code>wblr.fit</code> for specific fitting control.
+</p>
+</dd>
+<dt><code>pp</code></dt>
+<dd>
+<p>Plotting position method, it is a character string describing the method of determining
+vertical plot positions. Implemented methods are "median" (default), "benard","hazen","mean", "kaplan-meier", and "blom".
+</p>
+</dd>
+<dt><code>rank.adj</code></dt>
+<dd>
+<p>The method employed for determining rank of failures when suspensions (right censored data)
+are present in the data set. Implemented methods are "johnson" (default) and "KMestimator".
+</p>
+</dd>
+<dt><code>ties.handler</code></dt>
+<dd>
+<p>The method employed for handling duplicate values in the data set.<br>
+Implemented methods are "none" (default) "highest", "lowest", "mean", and "sequential".<br>
+It is expected that ties handling will be applied to large data sets that will be fitted
+using the maximum likelihood estimation method, where the effect is only on the graphical
+presentation. Employing a ties handler on a rank regression model will effectively remove data
+from the data set, which is likely not intended.<br>
+Use of simply <code>ties</code> as an argument to function <code>wblr</code> will silently be accepted as <code>ties.handler</code>.
+</p>
+</dd>
+<dt>Options for graphical control over data points see <code>par</code>
+</dt>
+<dd>
+
+<ul>
+<li>
+<p><code>pch</code> Point choice defaults to <code>1</code>. For more info, see
+<code>points</code>.
+
+</p>
+</li>
+<li>
+<p><code>cex.points</code> Point size defaults to <code>1</code>.
+
+</p>
+</li>
+<li>
+<p><code>lwd.points</code> Line width defaults to <code>2</code>.
+
+</p>
+</li>
+</ul>
+</dd>
+<dt>Independent graphical control over interval lines</dt>
+<dd>
+
+<ul>
+<li>
+<p><code>interval.col</code> Color defaults to <code>"black"</code>.
+
+</p>
+</li>
+<li>
+<p><code>interval.lty</code> Line type, defaults to <code>"dashed"</code>.
+
+</p>
+</li>
+<li>
+<p><code>interval.lwd</code> Line width defaults to <code>1</code>.
+
+</p>
+</li>
+</ul>
+</dd>
+</dl>
+<p>Options specific to <code>wblr.fit</code>
+</p>
+
+<dl>
+<dt><code>dist</code></dt>
+<dd>
+<p>A character string defining the distribution target. Recognized values are
+"weibull" (default), "lognormal","lnorm","lognormal2p", "weibull2p","lognormal3p", and "weibull3p".
+</p>
+</dd>
+<dt><code>method.fit</code></dt>
+<dd>
+<p>A vector of class <code>"character"</code> with fitting options. Recognized values are "rr-xony" (default),
+"rr","rr-yonx", "mle","mle-rba", and "mle-unbias".
+</p>
+</dd>
+</dl>
+<p>Options specific to <code>wblr.conf</code>
+</p>
+
+<dl>
+<dt><code>method.conf</code></dt>
+<dd>
+<p>A character string describing the techniques used for calculating confidence interval bounds.
+Implemented methods are "pivotal-rr" (default), "bbb", "fm" "fmbounds", and "lrb".
+Methods must conform to the method.fit in the wblr.fit call immediately preceding the wblr.conf call.
+Method "pivotal-rr" requires a rank regression fit method. Methods "fm", "fmbounds", and "lrb" require a mle based fit.
+</p>
+</dd>
+<dt><code>dq</code></dt>
+<dd>
+<p>A named series of quantiles at which confidence interval bounds will be calculated.
+</p>
+
+<ul>
+<li>
+<p><code>"abrem"</code> 
+Default. This is the original default by Jurgen Symynck for predecessor package abrem
+it produces evenly spaced points across the y limits of a weibull canvas
+attempting to hold a constant number of points (see <code>num_dq</code> below).
+
+</p>
+</li>
+<li>
+<p><code>"minitab"</code> 
+Quantiles matching Minitab(TM) unchangeable defaults (27 values).
+
+</p>
+</li>
+<li>
+<p><code>"supersmith"</code> 
+Quantiles for comparison with SuperSMITH(TM) (limit of 15 values)
+
+</p>
+</li>
+<li>
+<p><code>"user"</code> 
+Provides for a user defined series of quantiles. (see <code>user_dq</code> below).
+
+</p>
+</li>
+</ul>
+</dd>
+<dt><code>num_dq</code></dt>
+<dd>
+<p>The number of points used for the <code>"abrem"</code> dq determination.
+</p>
+</dd>
+<dt><code>user_dq</code></dt>
+<dd>
+<p>A vector of quantiles set by user. Default <code>c(seq(.01,.09,by=.01),seq(.10,.90,by=.10),seq(.91,.99, by=.01))</code>.
+</p>
+</dd>
+<dt><code>ci</code></dt>
+<dd>
+<p>The double-sided confidence interval, also chi sq confidence level for likelihood ratio.
+Must be in a range &lt;1 &amp;&amp; &gt;0, default is <code>0.9</code>.
+</p>
+</dd>
+<dt><code>blife.pts</code></dt>
+<dd>
+<p>The probability points at which to report Blife on legend.
+</p>
+</dd>
+<dt>Specific controls for pivotal analysis only</dt>
+<dd>
+
+<ul>
+<li>
+<p><code>seed</code>
+The RNG seed integer such that results are duplicated between runs, default is <code>1234</code>.
+
+</p>
+</li>
+<li>
+<p><code>S</code>
+The number of samples to be run during pivotal analysis, default is <code>1e4</code>.
+
+</p>
+</li>
+</ul>
+</dd>
+<dt>Specific controls for likelihood ratio contour and bounds only</dt>
+<dd>
+
+<ul>
+<li>
+<p><code>dof</code>
+The degrees of freedom, <code>dof=1</code> (default) for confidence interval, <code>dof=2</code> for comparison.
+
+</p>
+</li>
+<li>
+<p><code>ptDensity</code>
+The number of points calculated to form the contour outline, default is <code>120</code>.
+
+</p>
+</li>
+</ul>
+</dd>
+</dl>
+<p>General graphical options
+</p>
+
+<dl>
+<dt>Graphical control for fitted lines, confidence bounds, or contours can be set at
+wblr, wblr.fit, or wblr.conf functions for individual object control. See <code>par</code>
+</dt>
+<dd>
+
+<ul>
+<li>
+<p><code>col</code> Color defaults to <code>"black"</code>.
+
+</p>
+</li>
+<li>
+<p><code>lty</code> Line type, defaults to <code>"solid"</code>.
+
+</p>
+</li>
+<li>
+<p><code>lwd</code> Line width defaults to <code>2</code>.
+
+</p>
+</li>
+</ul>
+</dd>
+<dt>Graphical controls typically used with <code>plot</code> or <code>plot.wblr</code>
+</dt>
+<dd>
+
+<ul>
+<li>
+<p><code>canvas</code>
+The plotting canvas to be used. This does not necessarily have to match the fit distribution.
+Only <code>"weibull"</code> (default) or <code>"lognormal"</code> are recognized.
+
+</p>
+</li>
+<li>
+<p><code>mar</code> Margins defaults to <code>c(5.1,4.1,5.1,2.1),</code>.
+
+</p>
+</li>
+<li>
+<p><code>main</code> Title, defaults to <code>"Probability Plot"</code>.
+
+</p>
+</li>
+<li>
+<p><code>main.contour</code> Contour plot title defaults to <code>"Contour Plot"</code>.
+
+</p>
+</li>
+<li>
+<p><code>sub</code> Subtitle defaults to <code>NULL</code>.
+
+</p>
+</li>
+<li>
+<p><code>sub.contour</code> Contour subtitle defaults to <code>NULL</code>.
+
+</p>
+</li>
+<li>
+<p><code>xlim</code> Plot x limits override to be presented as a vector c(lo,hi), default <code>NULL</code>.
+
+</p>
+</li>
+<li>
+<p><code>ylim</code> Plot y limits override to be presented as a vector c(lo,hi), default <code>NULL</code>.
+
+</p>
+</li>
+<li>
+<p><code>xlab</code> X axis label defaults to <code>"Time To Failure"</code>.
+
+</p>
+</li>
+<li>
+<p><code>ylab</code> Y axis label defaults to <code>"Unreliability [%]"</code>.
+
+</p>
+</li>
+<li>
+<p><code>coordinate.text.size</code> default <code>0.7</code>.
+
+</p>
+</li>
+<li>
+<p><code>signif</code> Used to control display of numbers in Legend, default <code>4</code>.
+
+</p>
+</li>
+<li>
+<p><code>col.grid</code> Color for chart gridlines defaults <code>"grey"</code>.
+
+</p>
+</li>
+<li>
+<p><code>is.plot.grid</code> default <code>TRUE</code>.
+
+</p>
+</li>
+<li>
+<p><code>is.plot.fit</code> default <code>TRUE</code>.
+
+</p>
+</li>
+<li>
+<p><code>is.plot.pp</code> default <code>TRUE</code>.
+
+</p>
+</li>
+<li>
+<p><code>is.plot.ppcoordinates</code> default <code>FALSE</code>.
+
+</p>
+</li>
+<li>
+<p><code>is.plot.legend</code> default <code>TRUE</code>.
+
+</p>
+</li>
+<li>
+<p><code>legend.position</code> default <code>"bottomright"</code>. See <code>legend</code> Details.
+
+</p>
+</li>
+<li>
+<p><code>legend.inset</code> default <code>c(0,0)</code>. legend inset values are fractions of graph width and height.
+
+</p>
+</li>
+<li>
+<p><code>legend.text.size</code> default <code>0.7</code>.
+
+</p>
+</li>
+<li>
+<p><code>label</code> defaults to <code>""</code>.
+
+</p>
+</li>
+<li>
+<p><code>in.legend</code> default <code>TRUE</code>.
+
+</p>
+</li>
+<li>
+<p><code>in.legend.blives</code> default <code>TRUE</code>.
+
+</p>
+</li>
+<li>
+<p><code>in.legend.gof</code> default <code>TRUE</code>.
+
+</p>
+</li>
+<li>
+<p><code>is.plot.cb</code> default <code>TRUE</code>.
+
+</p>
+</li>
+<li>
+<p><code>persistent</code> default <code>TRUE</code>.
+
+</p>
+</li>
+</ul>
+</dd>
+</dl>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## backup options ##
+wblr.defaults &lt;- options.wblr()
+
+## setting new options ##
+options.wblr(S=5e5,ci=0.99)
+
+
+## listing options ##
+options.wblr()
+options.wblr()$main
+
+## restore options ##
+options.wblr(wblr.defaults)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,81 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sx</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>String eXplode. Parse argument as a vector of string allowing "blank separators".</h2>
+
+<h3>Description</h3>
+
+<p>Separates string data on whitespace and separating symbols into an array.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sx(s, ..., sep_symbols = ",|", strict = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p>string to parse</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>force later arguments to be set by name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep_symbols</code></td>
+<td>
+<p>characters to consider separators</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strict</code></td>
+<td>
+<p>logical, if TRUE throw exception on confusing input</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Can throw exception on lack of explicit value separators, example: <code>bc('"a""b"')</code> and  non-matching portions.
+Whitespace is normalized to spaces.
+Suggested by Emil Erik Pula Bellamy Begtrup-Bright <a href="https://github.com/WinVector/wrapr/issues/15">https://github.com/WinVector/wrapr/issues/15</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>vector of values
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>qc</code>, <code>qe</code>, <code>qae</code>, <code>bquote</code>, <code>bc</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+sx('1 2 "c", d') # returns c("1", "2", "c", "d")
+sx('1 2 3') # returns c("1", "2", "3")
+sx('1 2 "3"') # returns c("1", "2", "3")
+sx('1,2|3.4') # returns c("1", "2", "3.4")
+sx('01 02') # returns c("01", "02")
+
+</code></pre>
+
+
+</div>

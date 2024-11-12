@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cat_desc_stats</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute absolute and relative frequencies.</h2>
+
+<h3>Description</h3>
+
+<p><code>cat_desc_stats</code> computes absolute and relative frequencies for
+categorical data with a number of formatting options.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cat_desc_stats(
+  source = NULL,
+  separator = " ",
+  return_level = TRUE,
+  ndigit = 0,
+  groupvar = NULL,
+  singleline = FALSE,
+  percent = TRUE,
+  prettynum = FALSE,
+  .german = FALSE,
+  quelle = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>source</code></td>
+<td>
+<p>Data for computation. Previously "quelle".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>separator</code></td>
+<td>
+<p>delimiter between results per level, preset as ' '.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_level</code></td>
+<td>
+<p>Should levels be reported?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ndigit</code></td>
+<td>
+<p>Digits for rounding of relative frequencies.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groupvar</code></td>
+<td>
+<p>Optional grouping factor.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>singleline</code></td>
+<td>
+<p>Put all group levels in  a single line?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percent</code></td>
+<td>
+<p>Logical, add percent-symbol after relative frequencies?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prettynum</code></td>
+<td>
+<p>logical, apply prettyNum to results?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.german</code></td>
+<td>
+<p>logical, should "." and "," be used as bigmark and decimal?
+Sets prettynum to TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quelle</code></td>
+<td>
+<p>deprecated, retained for compatibility, use 'source' instead.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Structure depends on parameter return_level:
+if FALSE than a tibble with descriptives, otherwise a list with two tibbles
+with levels of factor and descriptives.
+If parameter singleline is FALSE (default), results for each factor level is
+reported in a separate line, otherwise they are pasted.
+Number of columns for result tibbles is one or number of levels of the
+additional grouping variable.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">cat_desc_stats(mtcars$gear)
+cat_desc_stats(mtcars$gear, return_level = FALSE)
+cat_desc_stats(mtcars$gear, groupvar = mtcars$am)
+cat_desc_stats(mtcars$gear, groupvar = mtcars$am, singleline = TRUE)
+</code></pre>
+
+
+</div>

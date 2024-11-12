@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>circleBoxInt</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Integration of the intersection of a rectangle and a circle</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the area of the intersection between a rectangle and and circle.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">circleBoxInt(R, S, L, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+<p>Numeric, circle radius.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>S</code></td>
+<td>
+<p>Numeric, short side of the rectangle</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>Numeric, long side of the rectangle</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Currently ignored.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The rectangle is defined with lower left corner being the origin and upper right corner at (L, S). The area returned is the intersection between the circle, centered at the origin, and the rectangle.
+</p>
+<p>If <code class="reqn">R \leq S</code> then <code class="reqn">(\pi R^2)/4</code> is returned.
+</p>
+<p>If <code class="reqn">R \geq \sqrt{S^2 + L^2}</code> then <code class="reqn">L*S</code> is returned.
+</p>
+<p>If <code class="reqn">R \leq L</code> then <code class="reqn">R^2*sin^{-1}(S/R)/2 + S*\sqrt(R^2-S^2)/2</code>
+This is the area of a circle in the first quadrant between the horizontial line <code class="reqn">y=S</code>
+</p>
+<p>if <code class="reqn">R &gt; L</code> and <code class="reqn">R &lt; \sqrt{S^2 + L^2}</code> then
+</p>
+<p style="text-align: center;"><code class="reqn">(R^2*sin^{-1}(S/R)/2 + S*\sqrt(R^2-S^2)/2) - (R^2*sin^{-1}(B/R)/2 + S*\sqrt(R^2-B^2)/2) + B*L</code>
+</p>
+
+<p>where <code class="reqn">B = \sqrt{R^2 - L^2}</code>. In this case the there is part of the circle to the right of the rectangle. First set of parenthesis is the area of the circle below <code>S</code>, the second set is the area below <code>B</code>. Substracting the two gives the area between <code>B</code> and <code>S</code>. The rectangle defined by <code>B</code> and <code>L</code> needs to be added back in.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Numeric value
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+radius &lt;- 115
+short &lt;- 80
+long &lt;- 100
+circleBoxInt(R=radius,S=short,L=long)
+
+## not run
+## the integral is the area inside the polygon
+
+ x &lt;- seq(0,max(radius,long),length=100)
+outlineY &lt;- function(x,R,S,L){
+    suppressWarnings(y &lt;- sqrt(R^2-x^2))
+   y[x&gt;R] &lt;- 0
+   y[x&gt;L] &lt;- 0
+   y[y&gt;=S] &lt;- S
+   return(y)
+}
+y &lt;- outlineY(x=x,R=radius,S=short,L=long)
+plot(x,y,type='l',ylim=c(-10,short))
+text(long,0,label='L',pos=1)
+text(0,short,label='S',pos=1)
+text(long,sqrt(radius^2-long^2),label='B',pos=4)
+
+</code></pre>
+
+
+</div>

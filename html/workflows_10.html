@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>augment.workflow</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Augment data with predictions</h2>
+
+<h3>Description</h3>
+
+<p>This is a <code>generics::augment()</code> method for a workflow that calls
+<code>augment()</code> on the underlying parsnip model with <code>new_data</code>.
+</p>
+<p><code>x</code> must be a trained workflow, resulting in fitted parsnip model to
+<code>augment()</code> with.
+</p>
+<p><code>new_data</code> will be preprocessed using the preprocessor in the workflow,
+and that preprocessed data will be used to generate predictions. The
+final result will contain the original <code>new_data</code> with new columns containing
+the prediction information.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'workflow'
+augment(x, new_data, eval_time = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A workflow</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>new_data</code></td>
+<td>
+<p>A data frame of predictors</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eval_time</code></td>
+<td>
+<p>For censored regression models, a vector of time points at
+which the survival probability is estimated. See
+<code>parsnip::augment.model_fit()</code> for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments passed on to methods</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>new_data</code> with new prediction specific columns.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (rlang::is_installed("broom")) {
+
+library(parsnip)
+library(magrittr)
+library(modeldata)
+
+data("attrition")
+
+model &lt;- logistic_reg() %&gt;%
+  set_engine("glm")
+
+wf &lt;- workflow() %&gt;%
+  add_model(model) %&gt;%
+  add_formula(
+    Attrition ~ BusinessTravel + YearsSinceLastPromotion + OverTime
+  )
+
+wf_fit &lt;- fit(wf, attrition)
+
+augment(wf_fit, attrition)
+
+}
+</code></pre>
+
+
+</div>

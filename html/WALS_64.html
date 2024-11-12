@@ -1,0 +1,351 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>walsFit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fitter function for Weighted Average Least Squares estimation</h2>
+
+<h3>Description</h3>
+
+<p>Workhorse function behind <code>wals</code> and <code>walsGLM</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">walsFit(
+  X1,
+  X2,
+  y,
+  sigma = NULL,
+  prior = weibull(),
+  method = "original",
+  svdTol = .Machine$double.eps,
+  svdRtol = 1e-06,
+  keepUn = FALSE,
+  eigenSVD = TRUE,
+  prescale = TRUE,
+  postmult = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X1</code></td>
+<td>
+<p>Design matrix for focus regressors. Usually includes a constant
+(column full of 1s) and can be generated using <code>model.matrix</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X2</code></td>
+<td>
+<p>Design matrix for auxiliary regressors. Usually does not include
+a constant column and can also be generated using <code>model.matrix</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Response as vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>if NULL (default), then the variance of the error term is estimated,
+see p.136 of Magnus and De Luca (2016). If sigma is specified,
+then the unrestricted estimator is divided by sigma before performing the
+Bayesian posterior mean estimation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior</code></td>
+<td>
+<p>Object of class <code>"familyPrior"</code>. For example
+<code>weibull</code> or <code>laplace</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Specifies method used. Available methods are
+<code>"original"</code> (default) or <code>"svd"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>svdTol</code></td>
+<td>
+<p>Tolerance for rank of matrix <code class="reqn">\bar{Z}_{1}</code>
+Only used if <code>method = "svd"</code>.
+Checks if smallest eigenvalue in SVD of <code class="reqn">\bar{Z}_1</code> and <code class="reqn">\bar{Z}</code>
+is larger than <code>svdTol</code>, otherwise reports a rank deficiency.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>svdRtol</code></td>
+<td>
+<p>Relative tolerance for rank of matrix <code class="reqn">\bar{Z}_{1}</code>.
+Only used if <code>method = "svd"</code>. Checks if ratio of largest to smallest
+eigenvalue in SVD of <code class="reqn">\bar{Z}_1</code> is larger than  <code>svdRtol</code>,
+otherwise reports a rank deficiency.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepUn</code></td>
+<td>
+<p>If <code>TRUE</code>, keeps the estimators of the unrestricted model,
+i.e. <code class="reqn">\tilde{\gamma}_{u}</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eigenSVD</code></td>
+<td>
+<p>If <code>TRUE</code>, then <code>semiorthogonalize</code>
+uses <code>svd</code> to compute the eigendecomposition of
+<code class="reqn">\bar{\Xi}</code> instead of <code>eigen</code>. In this case, the
+tolerances of <code>svdTol</code> and <code>svdRtol</code> are used to
+determine whether <code class="reqn">\bar{\Xi}</code> is of full rank (need it for <code class="reqn">\bar{\Xi}^{-1/2}</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prescale</code></td>
+<td>
+<p>If <code>TRUE</code> (default), prescales the regressors X1 and X2 with
+<code class="reqn">\Delta_1</code> and <code class="reqn">\Delta_2</code>, respectively, to improve numerical stability
+and make the coefficients of the auxiliary regressors scale equivariant.
+See De Luca and Magnus (2011) for more details.
+<strong>WARNING: It is not recommended to set <code>prescale = FALSE</code>.</strong>
+The option <code>prescale = FALSE</code> only exists for historical reasons.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>postmult</code></td>
+<td>
+<p>If <code>TRUE</code>, then it computes
+</p>
+<p style="text-align: center;"><code class="reqn">Z_{2} = X_{2} \Delta_{2} T \Lambda^{-1/2} T^{\top},</code>
+</p>
+
+<p>where <code class="reqn">T</code> contains the eigenvectors and <code class="reqn">\Lambda</code> the eigenvalues
+from the eigenvalue decomposition
+</p>
+<p style="text-align: center;"><code class="reqn">\Xi = \Delta_2 X_{2}^{\top} M_{1} X_{2} \Delta_2 = T \Lambda T^{\top},</code>
+</p>
+
+<p>instead of
+</p>
+<p style="text-align: center;"><code class="reqn">Z_{2} = X_{2} \Delta_{2} T \Lambda^{-1/2}.</code>
+</p>
+
+<p>See Huynh (2024b) for more details. The latter is used
+in the original MATLAB code for WALS in the linear regression model
+(Magnus et al. 2010; De Luca and Magnus 2011; Kumar and Magnus 2013; Magnus and De Luca 2016),
+see eq. (12) of Magnus and De Luca (2016).
+The first form is required in eq. (9) of De Luca et al. (2018).
+It is not recommended to set <code>postmult = FALSE</code> when using <code>walsGLM</code>
+and <code>walsNB</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments for internal function <code>computePosterior</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>coef</code></td>
+<td>
+<p>Model averaged estimates of all coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta1</code></td>
+<td>
+<p>Model averaged estimates of the coefficients of the focus regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta2</code></td>
+<td>
+<p>Model averaged estimates of the coefficients of the auxiliary regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma1</code></td>
+<td>
+<p>Model averaged estimates of the coefficients of the transformed
+focus regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma2</code></td>
+<td>
+<p>Model averaged estimates of the coefficients of the transformed
+auxiliary regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vcovBeta</code></td>
+<td>
+<p>Estimated covariance matrix of the regression coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vcovGamma</code></td>
+<td>
+<p>Estimated covariance matrix of the coefficients of the
+transformed regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>Estimated or prespecified standard deviation of the error term.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior</code></td>
+<td>
+<p><code>familyPrior</code>. The <code>prior</code> specified in the arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Stores <code>method</code> used from the arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>betaUn1</code></td>
+<td>
+<p>If <code>keepUn = TRUE</code>, contains the unrestricted
+estimators of the coefficients of the focus regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>betaUn2</code></td>
+<td>
+<p>If <code>keepUn = TRUE</code>, contains the unrestricted
+estimators of the coefficients of the auxiliary regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gammaUn1</code></td>
+<td>
+<p>If <code>keepUn = TRUE</code>, contains the unrestricted
+estimators of the coefficients of the transformed focus regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gammaUn2</code></td>
+<td>
+<p>If <code>keepUn = TRUE</code>, contains the unrestricted
+estimators of the coefficients of the transformed auxiliary regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitted.values</code></td>
+<td>
+<p>Estimated conditional means of the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>residuals</code></td>
+<td>
+<p>Residuals, i.e. response - fitted mean.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X1names</code></td>
+<td>
+<p>Names of the focus regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X2names</code></td>
+<td>
+<p>Names of the auxiliary regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k1</code></td>
+<td>
+<p>Number of focus regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k2</code></td>
+<td>
+<p>Number of auxiliary regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Number of observations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>condition</code></td>
+<td>
+<p>Condition number of the matrix
+<code class="reqn">\Xi = \Delta_{2} X_{2}^{\top} M_{1} X_{2} \Delta_{2}</code>.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>De Luca G, Magnus JR (2011).
+“Bayesian model averaging and weighted-average least squares: Equivariance, stability, and numerical issues.”
+<em>The Stata Journal</em>, <b>11</b>(4), 518–544.
+<a href="https://doi.org/10.1177/1536867X1201100402">doi:10.1177/1536867X1201100402</a>.<br><br> De Luca G, Magnus JR, Peracchi F (2018).
+“Weighted-average least squares estimation of generalized linear models.”
+<em>Journal of Econometrics</em>, <b>204</b>(1), 1–17.
+<a href="https://doi.org/10.1016/j.jeconom.2017.12.007">doi:10.1016/j.jeconom.2017.12.007</a>.<br><br> Huynh K (2024b).
+“WALS: Weighted-Average Least Squares Model Averaging in R.”
+University of Basel.
+Mimeo.<br><br> Kumar K, Magnus JR (2013).
+“A characterization of Bayesian robustness for a normal location parameter.”
+<em>Sankhya B</em>, <b>75</b>(2), 216–237.
+<a href="https://doi.org/10.1007/s13571-013-0060-9">doi:10.1007/s13571-013-0060-9</a>.<br><br> Magnus JR, De Luca G (2016).
+“Weighted-average least squares (WALS): A survey.”
+<em>Journal of Economic Surveys</em>, <b>30</b>(1), 117-148.
+<a href="https://doi.org/10.1111/joes.12094">doi:10.1111/joes.12094</a>.<br><br> Magnus JR, Powell O, Prüfer P (2010).
+“A comparison of two model averaging techniques with an application to growth empirics.”
+<em>Journal of Econometrics</em>, <b>154</b>(2), 139-153.
+<a href="https://doi.org/10.1016/j.jeconom.2009.07.004">doi:10.1016/j.jeconom.2009.07.004</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>wals, walsGLM.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">X &lt;- model.matrix(gdpgrowth ~ lgdp60 + equipinv + school60 + life60 + popgrowth
+                  + law + tropics + avelf + confucian, data = GrowthMPP)
+X1 &lt;- X[, c("(Intercept)", "lgdp60", "equipinv", "school60", "life60", "popgrowth")]
+X2 &lt;- X[, c("law", "tropics", "avelf", "confucian")]
+y &lt;- GrowthMPP$gdpgrowth
+
+walsFit(X1, X2, y, prior = weibull(), method = "svd")
+
+</code></pre>
+
+
+</div>

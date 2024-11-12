@@ -1,0 +1,242 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>workflow_map</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Process a series of workflows</h2>
+
+<h3>Description</h3>
+
+<p><code>workflow_map()</code> will execute the same function across the workflows in the
+set. The various <code style="white-space: pre;">⁠tune_*()⁠</code> functions can be used as well as
+<code>tune::fit_resamples()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">workflow_map(
+  object,
+  fn = "tune_grid",
+  verbose = FALSE,
+  seed = sample.int(10^4, 1),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A workflow set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fn</code></td>
+<td>
+<p>The name of the function to run, as a character. Acceptable values are:
+"tune_grid",
+"tune_bayes",
+"fit_resamples",
+"tune_race_anova",
+"tune_race_win_loss", or
+"tune_sim_anneal". Note that users need not
+provide the namespace or parentheses in this argument,
+e.g. provide <code>"tune_grid"</code> rather than <code>"tune::tune_grid"</code> or <code>"tune_grid()"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>A logical for logging progress.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>A single integer that is set prior to each function execution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Options to pass to the modeling function. See details below.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When passing options, anything passed in the <code>...</code> will be combined with any
+values in the <code>option</code> column. The values in <code>...</code> will override that
+column's values and the new options are added to the <code>options</code> column.
+</p>
+<p>Any failures in execution result in the corresponding row of <code>results</code> to
+contain a <code>try-error</code> object.
+</p>
+<p>In cases where a model has no tuning parameters is mapped to one of the
+tuning functions, <code>tune::fit_resamples()</code> will be used instead and a
+warning is issued if <code>verbose = TRUE</code>.
+</p>
+<p>If a workflow requires packages that are not installed, a message is printed
+and <code>workflow_map()</code> continues with the next workflow (if any).
+</p>
+
+
+<h3>Value</h3>
+
+<p>An updated workflow set. The <code>option</code> column will be updated with
+any options for the <code>tune</code> package functions given to <code>workflow_map()</code>. Also,
+the results will be added to the <code>result</code> column. If the computations for a
+workflow fail, a <code>try-catch</code> object will be saved in place of the results
+(without stopping execution).
+</p>
+
+
+<h3>Note</h3>
+
+<p>The package supplies two pre-generated workflow sets, <code>two_class_set</code>
+and <code>chi_features_set</code>, and associated sets of model fits
+<code>two_class_res</code> and <code>chi_features_res</code>.
+</p>
+<p>The <code style="white-space: pre;">⁠two_class_*⁠</code> objects are based on a binary classification problem
+using the <code>two_class_dat</code> data from the modeldata package. The six
+models utilize either a bare formula or a basic recipe utilizing
+<code>recipes::step_YeoJohnson()</code> as a preprocessor, and a decision tree,
+logistic regression, or MARS model specification. See <code>?two_class_set</code>
+for source code.
+</p>
+<p>The <code style="white-space: pre;">⁠chi_features_*⁠</code> objects are based on a regression problem using the
+<code>Chicago</code> data from the modeldata package. Each of the three models
+utilize a linear regression model specification, with three different
+recipes of varying complexity. The objects are meant to approximate the
+sequence of models built in Section 1.3 of Kuhn and Johnson (2019). See
+<code>?chi_features_set</code> for source code.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>workflow_set()</code>, <code>as_workflow_set()</code>, <code>extract_workflow_set_result()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(workflowsets)
+library(workflows)
+library(modeldata)
+library(recipes)
+library(parsnip)
+library(dplyr)
+library(rsample)
+library(tune)
+library(yardstick)
+library(dials)
+
+# An example of processed results
+chi_features_res
+
+# Recreating them:
+
+# ---------------------------------------------------------------------------
+data(Chicago)
+Chicago &lt;- Chicago[1:1195,]
+
+time_val_split &lt;-
+   sliding_period(
+      Chicago,
+      date,
+      "month",
+      lookback = 38,
+      assess_stop = 1
+   )
+
+# ---------------------------------------------------------------------------
+
+base_recipe &lt;-
+   recipe(ridership ~ ., data = Chicago) %&gt;%
+   # create date features
+   step_date(date) %&gt;%
+   step_holiday(date) %&gt;%
+   # remove date from the list of predictors
+   update_role(date, new_role = "id") %&gt;%
+   # create dummy variables from factor columns
+   step_dummy(all_nominal()) %&gt;%
+   # remove any columns with a single unique value
+   step_zv(all_predictors()) %&gt;%
+   step_normalize(all_predictors())
+
+date_only &lt;-
+   recipe(ridership ~ ., data = Chicago) %&gt;%
+   # create date features
+   step_date(date) %&gt;%
+   update_role(date, new_role = "id") %&gt;%
+   # create dummy variables from factor columns
+   step_dummy(all_nominal()) %&gt;%
+   # remove any columns with a single unique value
+   step_zv(all_predictors())
+
+date_and_holidays &lt;-
+   recipe(ridership ~ ., data = Chicago) %&gt;%
+   # create date features
+   step_date(date) %&gt;%
+   step_holiday(date) %&gt;%
+   # remove date from the list of predictors
+   update_role(date, new_role = "id") %&gt;%
+   # create dummy variables from factor columns
+   step_dummy(all_nominal()) %&gt;%
+   # remove any columns with a single unique value
+   step_zv(all_predictors())
+
+date_and_holidays_and_pca &lt;-
+   recipe(ridership ~ ., data = Chicago) %&gt;%
+   # create date features
+   step_date(date) %&gt;%
+   step_holiday(date) %&gt;%
+   # remove date from the list of predictors
+   update_role(date, new_role = "id") %&gt;%
+   # create dummy variables from factor columns
+   step_dummy(all_nominal()) %&gt;%
+   # remove any columns with a single unique value
+   step_zv(all_predictors()) %&gt;%
+   step_pca(!!stations, num_comp = tune())
+
+# ---------------------------------------------------------------------------
+
+lm_spec &lt;- linear_reg() %&gt;% set_engine("lm")
+
+# ---------------------------------------------------------------------------
+
+pca_param &lt;-
+   parameters(num_comp()) %&gt;%
+   update(num_comp = num_comp(c(0, 20)))
+
+# ---------------------------------------------------------------------------
+
+chi_features_set &lt;-
+   workflow_set(
+      preproc = list(date = date_only,
+                     plus_holidays = date_and_holidays,
+                     plus_pca = date_and_holidays_and_pca),
+      models = list(lm = lm_spec),
+      cross = TRUE
+   )
+
+# ---------------------------------------------------------------------------
+
+chi_features_res_new &lt;-
+   chi_features_set %&gt;%
+   option_add(param_info = pca_param, id = "plus_pca_lm") %&gt;%
+   workflow_map(resamples = time_val_split, grid = 21, seed = 1, verbose = TRUE)
+
+chi_features_res_new
+
+</code></pre>
+
+
+</div>

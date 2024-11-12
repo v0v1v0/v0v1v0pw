@@ -1,0 +1,195 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mtd.apply</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Apply a function to each set in a multiData structure.
+</h2>
+
+<h3>Description</h3>
+
+<p>Inspired by <code>lapply</code>, these functions apply a given function to each <code>data</code> component in
+the input <code>multiData</code> structure, and optionally simplify the result to an array if possible.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mtd.apply(
+    # What to do
+    multiData, FUN, ..., 
+
+    # Pre-existing results and update options
+    mdaExistingResults = NULL, mdaUpdateIndex = NULL,
+    mdaCopyNonData = FALSE,
+
+    # Output formatting options
+    mdaSimplify = FALSE, 
+    returnList = FALSE,
+
+    # Internal behaviour options
+    mdaVerbose = 0, mdaIndent = 0)
+
+mtd.applyToSubset(
+    # What to do
+    multiData, FUN, ..., 
+
+    # Which rows and cols to keep
+    mdaRowIndex = NULL, mdaColIndex = NULL, 
+
+    # Pre-existing results and update options
+    mdaExistingResults = NULL, mdaUpdateIndex = NULL,
+    mdaCopyNonData = FALSE,
+
+    # Output formatting options
+    mdaSimplify = FALSE, 
+    returnList = FALSE,
+
+    # Internal behaviour options
+    mdaVerbose = 0, mdaIndent = 0)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>multiData</code></td>
+<td>
+
+<p>A multiData structure to apply the function over
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>FUN</code></td>
+<td>
+<p>Function to be applied. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Other arguments to the function <code>FUN</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mdaRowIndex</code></td>
+<td>
+<p>If given, must be a list of the same length as <code>multiData</code>. Each element must be
+a logical or numeric vector that specifies rows in each <code>data</code> component 
+to select before applying the function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mdaColIndex</code></td>
+<td>
+<p>A logical or numeric vector that specifies columns in each <code>data</code> component 
+to select before applying the function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mdaExistingResults</code></td>
+<td>
+<p>Optional list that contains previously calculated results. This can be useful
+if only a few sets in <code>multiData</code> have changed and recalculating the unchanged ones is computationally
+expensive. If not given, all calculations will be performed. If given, components of this list are copied
+into the output. See <code>mdmUpdateIndex</code> for which components are re-calculated by default. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mdaUpdateIndex</code></td>
+<td>
+<p>Optional specification of which sets in <code>multiData</code> the calculation should
+actually be carried out. This argument has an effect only if <code>mdaExistingResults</code> is non-NULL. If the
+length of <code>mdaExistingResults</code> (call the length ‘k’) 
+is less than the number of sets in <code>multiData</code>, the function
+assumes that the existing results correspond to the first ‘k’ sets in <code>multiData</code> and the rest of the
+sets are automatically calculated, irrespective of the setting of <code>mdaUpdateIndex</code>. The argument
+<code>mdaUpdateIndex</code> can be used to specify re-calculation of some (or all) of the results that already
+exist in <code>mdaExistingResults</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mdaCopyNonData</code></td>
+<td>
+<p>Logical: should non-data components of <code>multiData</code> be copied into the output?
+Note that the copying is incompatible with simplification; enabling both will trigger an error.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mdaSimplify</code></td>
+<td>
+
+<p>Logical: should the result be simplified to an array, if possible? Note that this may lead to errors; if
+so, disable simplification.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnList</code></td>
+<td>
+<p>Logical: should the result be turned into a list (rather than a multiData structure)?
+Note that this is incompatible with simplification: if <code>mdaSimplify</code> is <code>TRUE</code>, this argument is
+ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mdaVerbose</code></td>
+<td>
+<p>Integer specifying whether progress diagnistics should be printed out. Zero means
+silent, increasing values will lead to more diagnostic messages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mdaIndent</code></td>
+<td>
+<p>Integer specifying the indentation of the printed progress messages. Each unit equals
+two spaces.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+  
+<p>A multiData structure is intended to store (the same type of) data for multiple, possibly independent,
+realizations
+(for example, expression data for several independent experiments). It is a list where
+each component corresponds to an (independent) data set. Each component is in turn a list that can hold
+various types of information but must have a <code>data</code> component. In a "strict" multiData structure, the
+<code>data</code> components are required to each be a matrix or a data frame and have the same number of
+columns. In a "loose" multiData structure, the <code>data</code> components can be anything (but for most
+purposes should be of comparable type and content).
+</p>
+<p><code>mtd.apply</code> works on any "loose" multiData structure; <code>mtd.applyToSubset</code> assumes (and checks
+for) a "strict" multiData structure.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A multiData structure containing the results of the supplied function on each <code>data</code> component in the
+input multiData structure. Other components are simply copied.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>multiData</code> to create a multiData structure;
+<code>mtd.applyToSubset</code> for applying a function to a subset of a multiData structure;
+<code>mtd.mapply</code> for vectorizing over several arguments.
+</p>
+
+
+</div>

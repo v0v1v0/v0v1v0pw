@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>as.seqtree</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Convert a hierarchical clustering object to a seqtree object.
+</h2>
+
+<h3>Description</h3>
+
+<p>Convert a hierarchical clustering object to a seqtree object which can then be displayed using <code>seqtreedisplay</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">as.seqtree(object, seqdata, diss, weighted=TRUE, ...)
+## S3 method for class 'twins'
+as.seqtree(object, seqdata, diss, weighted=TRUE, ncluster, ...)
+## S3 method for class 'hclust'
+as.seqtree(object, seqdata, diss, weighted=TRUE, ncluster, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>An object to be converted to a <code>seqtree</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seqdata</code></td>
+<td>
+<p>State sequence object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>diss</code></td>
+<td>
+<p>A dissimilarity matrix or a dist object (see <code>dist</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weighted</code></td>
+<td>
+<p>Logical. If <code>TRUE</code>, <code>weights</code> of the <code>seqdata</code> object are taken to build the tree.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncluster</code></td>
+<td>
+<p>Maximum number of cluster. The tree will be builded until this number of cluster.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additionnal parameters passed to/from methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>By default <code>as.seqtree</code> try to convert the object to a <code>data.frame</code> assuming that it contains a list of nested clustering solutions. 
+Be aware that <code>seqtree</code> and <code>as.seqtree</code> only support binary splits.
+</p>
+<p>If <code>object</code> is an <code>hclust</code> or <code>twins</code> objects (i.e. hierarchical clustering output, see <code>hclust</code>, <code>diana</code> or <code>agnes</code>), the function returns a <code>seqtree</code> object reproducing the agglomerative schedulde.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>seqtree</code> object.</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(mvad)
+## Aggregating state sequence
+aggMvad &lt;- wcAggregateCases(mvad[, 17:86], weights=mvad$weight)
+
+## Creating state sequence object
+mvad.seq &lt;- seqdef(mvad[aggMvad$aggIndex, 17:86], weights=aggMvad$aggWeights)
+
+## COmpute distance using Hamming distance
+diss &lt;- seqdist(mvad.seq, method="HAM")
+
+## Ward clustering
+wardCluster &lt;- hclust(as.dist(diss), method="ward", members=aggMvad$weight)
+
+st &lt;- as.seqtree(wardCluster, seqdata=mvad.seq, diss=diss, weighted=TRUE, ncluster=10)
+
+print(st)
+
+## You typically want to run (You need to install GraphViz before)
+## seqtreedisplay(st, type="d", border=NA)
+
+</code></pre>
+
+
+</div>

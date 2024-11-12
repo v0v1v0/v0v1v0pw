@@ -1,0 +1,173 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wTO.Complete</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>wTO.Complete</h2>
+
+<h3>Description</h3>
+
+<p>Compute the wTO and also the bootstraps. Proposed at: 	arXiv:1711.04702
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wTO.Complete(
+  k = 1,
+  n = 100,
+  Data,
+  Overlap = row.names(Data),
+  method = "p",
+  method_resampling = "Bootstrap",
+  pvalmethod = "BH",
+  savecor = F,
+  expected.diff = 0.2,
+  lag = NULL,
+  ID = NULL,
+  normalize = F,
+  plot = T
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>Number of threads to be used for computing the weight Topological Overlap. Default is set to 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Number of resamplings, used to compute the empirical distribuitions of the links. Default is set to 100.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Data</code></td>
+<td>
+<p>data.frame containing the count / expression data for the correlation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Overlap</code></td>
+<td>
+<p>Set of nodes of interest, where the Overlapping weights will be computed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Type of the correlation that should be used. "s" / "spearman" will compute the rank spearman correlation, "p" / "pearson" will compute the linear correlation. If no value is given, the default is to use "p".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method_resampling</code></td>
+<td>
+<p>method of the resampling. Bootstrap, BlockBootstrap or Reshuffle. Bootstrap null hypothesis is that the wTO is random, and Reshuffle tests if the wTO is equal to zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pvalmethod</code></td>
+<td>
+<p>method to compute the multiple test correction for the pvalue. for more information check the function <code>p.adjust</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>savecor</code></td>
+<td>
+<p>T/F if need to save the correlation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expected.diff</code></td>
+<td>
+<p>Difference expected between the real wTO and resampled wTO By default, it is set to 0.2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lag</code></td>
+<td>
+<p>time dependency, lag, if you are using the BlockedBootstrap.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ID</code></td>
+<td>
+<p>ID of the samples for the blocked bootstrap (for repeated measures).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalize</code></td>
+<td>
+<p>T/F Should the data be normalized?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>T/F Should the diagnosis plot be plotted?</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a list with results.
+</p>
+
+<ul>
+<li>
+<p> wTO is a data.frame containig the Nodes, the wTO computed using the signed correlations, the pvalue and the adj.pvalue.
+</p>
+</li>
+<li>
+<p> abs.wTO is a data.frame containig the Nodes, the wTO computed using the absolute correlations, the pvalue and the adj.pvalue.
+</p>
+</li>
+<li>
+<p> Correlation is a data.frame containing the correlation between all the nodes.
+</p>
+</li>
+<li>
+<p> Empirical.Quantile quantile values for the empirical distribution.
+</p>
+</li>
+<li>
+<p> Quantile quantile values for the sample distribution.
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Deisy Morselli Gysi &lt;deisy at bioinf.uni-leipzig.de&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Using spearman rank correlation and bonferroni correction for the pvalues.
+wTO.Complete( k =8, n = 1000, Data = Microarray_Expression1,
+ Overlap = ExampleGRF$x, method = "s", pvalmethod = "bonferroni")
+ # Changing the resampling method to Reshuffle.
+wTO.Complete( k =1, n = 1000, Data = Microarray_Expression1,
+Overlap = ExampleGRF$x, method_resampling = "Reshuffle")
+ # Changing the resampling method to BlockBootstrap, with a lag of 2.
+ row.names(metagenomics_abundance) = metagenomics_abundance$OTU
+ metagenomics_abundance = metagenomics_abundance[,-1]
+wTO.Complete( k =1, n = 1000, Data = metagenomics_abundance, method = "s",
+Overlap = row.names(metagenomics_abundance), method_resampling = "BlockBootstrap", lag = 2)
+wTO.Complete( k =2, n = 1000, Data = Microarray_Expression1, method = "s",
+Overlap = ExampleGRF$x, method_resampling = "BlockBootstrap", ID = rep(1:9,each = 2))
+X = wTO.Complete( k =1, n = 1000, Data = Microarray_Expression1,
+Overlap = ExampleGRF$x, method = "p", plot = FALSE)
+ 
+## End(Not run)
+</code></pre>
+
+
+</div>

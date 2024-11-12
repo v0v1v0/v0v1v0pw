@@ -1,0 +1,262 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotDendroAndColors</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Dendrogram plot with color annotation of objects </h2>
+
+<h3>Description</h3>
+
+<p>This function plots a hierarchical clustering dendrogram and color annotation(s) of objects in the
+dendrogram underneath.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotDendroAndColors(
+  dendro, 
+  colors, 
+  groupLabels = NULL, 
+  rowText = NULL,
+  rowTextAlignment = c("left", "center", "right"),
+  rowTextIgnore = NULL,
+  textPositions = NULL,
+  setLayout = TRUE, 
+  autoColorHeight = TRUE, 
+  colorHeight = 0.2, 
+  colorHeightBase = 0.2, 
+  colorHeightMax = 0.6,
+  rowWidths = NULL, 
+  dendroLabels = NULL, 
+  addGuide = FALSE, guideAll = FALSE, 
+  guideCount = 50, guideHang = 0.2, 
+  addTextGuide = FALSE,
+  cex.colorLabels = 0.8, cex.dendroLabels = 0.9, 
+  cex.rowText = 0.8,
+  marAll = c(1, 5, 3, 1), saveMar = TRUE, 
+  abHeight = NULL, abCol = "red", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dendro</code></td>
+<td>
+<p> a hierarchical clustering dendrogram such as one produced by
+<code>hclust</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colors</code></td>
+<td>
+<p> Coloring of objects on the dendrogram. Either a vector (one color per object) or a
+matrix (can also be an array or a data frame)
+with each column giving one color per object. Each column will be plotted as a horizontal row of colors
+under the dendrogram. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groupLabels</code></td>
+<td>
+<p> Labels for the colorings given in <code>colors</code>. The labels will be printed to the
+left of the color rows in the plot. If the argument is given, it must be a vector of length
+equal to the number of columns in <code>colors</code>. If not given, <code>names(colors)</code>
+will be used if available. If not, sequential numbers starting from 1 will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rowText</code></td>
+<td>
+<p>Optional labels to identify colors in the color rows. 
+If given, must be either the same dimensions as <code>colors</code> or must have the same number of rows and
+<code>textPositions</code> must be used to specify which columns of <code>colors</code> each column of <code>rowText</code>
+corresponds to. Each label that occurs will be displayed 
+once, under the largest continuous block of the corresponding <code>colors</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rowTextAlignment</code></td>
+<td>
+<p>Character string specifying whether the labels should be left-justified to the
+start of the largest block of each label, centered in the middle, or right-justified to the end of the 
+largest block.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rowTextIgnore</code></td>
+<td>
+<p>Optional specifications of labels that should be ignored when displaying them using 
+<code>rowText</code> above. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>textPositions</code></td>
+<td>
+<p>optional numeric vector of the same length as the number of columns in <code>rowText</code>
+giving the color rows under which the text rows should appear.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>setLayout</code></td>
+<td>
+<p> logical: should the plotting device be partitioned into a standard layout?
+If <code>FALSE</code>, the user is responsible for partitioning. The function expects two regions of the same
+width, the first one immediately above the second one. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>autoColorHeight</code></td>
+<td>
+<p> logical: should the height of the color area below the dendrogram be
+automatically adjusted for the number of traits? Only effective if <code>setLayout</code> is <code>TRUE</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorHeight</code></td>
+<td>
+<p> specifies the height of the color area under dendrogram as a fraction of the
+height of the dendrogram area. Only effective when <code>autoColorHeight</code> above is <code>FALSE</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorHeightBase</code></td>
+<td>
+<p>when <code>autoColorHeight</code> is <code>TRUE</code>, this specifies the minimum height of the color
+area (the height when there is one color row).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colorHeightMax</code></td>
+<td>
+<p>when <code>autoColorHeight</code> is <code>TRUE</code>, this specifies the maximum height of the color
+area (the height when there are many color rows).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rowWidths</code></td>
+<td>
+<p> optional specification of relative row widths for the color and text (if given) rows.
+Need not sum to 1. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dendroLabels</code></td>
+<td>
+<p> dendrogram labels. Set to <code>FALSE</code> to disable dendrogram labels altogether;
+set to <code>NULL</code> to use row labels of <code>datExpr</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addGuide</code></td>
+<td>
+<p> logical: should vertical "guide lines" be added to the dendrogram plot? The lines make
+it easier to identify color codes with individual samples. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>guideAll</code></td>
+<td>
+<p> logical: add a guide line for every sample? Only effective for <code>addGuide</code> set
+<code>TRUE</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>guideCount</code></td>
+<td>
+<p> number of guide lines to be plotted. Only effective when <code>addGuide</code> is
+<code>TRUE</code> and <code>guideAll</code> is <code>FALSE</code>.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>guideHang</code></td>
+<td>
+<p> fraction of the dendrogram height to leave between the top end of the guide line and
+the dendrogram merge height. If the guide lines overlap with dendrogram labels, increase <code>guideHang</code>
+to leave more space for the labels. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addTextGuide</code></td>
+<td>
+<p> logical: should guide lines be added for the text rows (if given)? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.colorLabels</code></td>
+<td>
+<p> character expansion factor for trait labels. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.dendroLabels</code></td>
+<td>
+<p> character expansion factor for dendrogram (sample) labels. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.rowText</code></td>
+<td>
+<p> character expansion factor for text rows (if given). </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>marAll</code></td>
+<td>
+<p> a vector of length 4 giving the bottom, left, top and right margins of the combined
+plot. There is no margin between the dendrogram and the color plot underneath. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>saveMar</code></td>
+<td>
+<p> logical: save margins setting before starting the plot and restore on exit? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abHeight</code></td>
+<td>
+<p> optional specification of the height for a horizontal line in the dendrogram, see
+<code>abline</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>abCol</code></td>
+<td>
+<p> color for plotting the horizontal line. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p> other graphical parameters to <code>plot.hclust</code>. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function slits the plotting device into two regions, plots the given dendrogram in the upper
+region, then plots color rows in the region below the dendrogram. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>None.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder </p>
+
+
+<h3>See Also</h3>
+
+ <p><code>plotColorUnderTree</code> </p>
+
+
+</div>

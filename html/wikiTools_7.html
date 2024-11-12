@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getFiles</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Downloads a list of files in a specified path of the computer, and return a vector of the no-found names (if any).</h2>
+
+<h3>Description</h3>
+
+<p>Downloads a list of files in a specified path of the computer, and return a vector of the no-found names (if any).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">getFiles(lista, path = "./", ext = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lista</code></td>
+<td>
+<p>A list or data frame of files' URLs to be download (See details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Directory where to export the files.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ext</code></td>
+<td>
+<p>Select desired extension of the files. Default= NULL.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function allows download a file of files directly into your directory.
+This function needs a preexistent data frame of names and pictures' URL. It must be a list (or data.frame) with two values: "name" (specifying the names of the files) and "url" (containing the urls to the files to download)..
+All the errors are reported as outcomes (NULL= no errors). The files are donwload into your chosen directory.
+</p>
+
+
+<h3>Value</h3>
+
+<p>It returns a vector of errors, if any. All pictures are download into the selected directory (NULL= no errors).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Modesto Escobar, Department of Sociology and Communication, University of Salamanca. See <a href="https://sociocav.usal.es/blog/modesto-escobar/">https://sociocav.usal.es/blog/modesto-escobar/</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+## In case you want to download a file directly from an URL:
+
+# dta &lt;- data.frame(name = "Data", url = "https://sociocav.usal.es/me/Stata/example.dta")
+# getFiles(dta, path = "./")
+
+##  You can can also combine this function with getWikiData (among others).
+## In case you want to download a picture of a person:
+
+# A &lt;- data.frame(name= getWikiData("Rembrandt")$label, url=getWikiData("Rembrandt")$pics)
+# getFiles(A, path = "./", ext = "png")
+
+## Or the pics of multiple authors: 
+
+# B &lt;- getWikiData(c("Monet", "Renoir", "Caillebotte"))
+# data &lt;- data.frame(name = B$label, url = B$pics)
+# getFiles(data, path = "./", ext = NULL)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

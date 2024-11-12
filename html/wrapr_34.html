@@ -1,0 +1,107 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>clean_fit_lm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fit a stats::lm without carying back large structures.</h2>
+
+<h3>Description</h3>
+
+<p>Please see <a href="https://win-vector.com/2014/05/30/trimming-the-fat-from-glm-models-in-r/">https://win-vector.com/2014/05/30/trimming-the-fat-from-glm-models-in-r/</a> for discussion.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">clean_fit_lm(
+  outcome,
+  variables,
+  data,
+  ...,
+  intercept = TRUE,
+  weights = NULL,
+  env = baseenv()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>outcome</code></td>
+<td>
+<p>character, name of outcome column.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variables</code></td>
+<td>
+<p>character, names of varaible columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>data.frame, training data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>not used, force later arguments to be used by name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intercept</code></td>
+<td>
+<p>logical, if TRUE allow an intercept term.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>passed to stats::glm()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>env</code></td>
+<td>
+<p>environment to work in.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>list(model=model, summary=summary)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+mk_data_example &lt;- function(k) {
+  data.frame(
+    x1 = rep(c("a", "a", "b", "b"), k),
+    x2 = rep(c(0, 0, 0, 1), k),
+    y = rep(1:4, k),
+    yC = rep(c(FALSE, TRUE, TRUE, TRUE), k),
+    stringsAsFactors = FALSE)
+}
+
+res_lm &lt;- clean_fit_lm("y", c("x1", "x2"),
+                       mk_data_example(1))
+length(serialize(res_lm$model, NULL))
+
+res_lm &lt;- clean_fit_lm("y", c("x1", "x2"),
+                       mk_data_example(10000))
+length(serialize(res_lm$model, NULL))
+
+predict(res_lm$model,
+        newdata = mk_data_example(1))
+
+</code></pre>
+
+
+</div>

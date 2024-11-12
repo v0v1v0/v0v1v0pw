@@ -1,0 +1,114 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read_header_genesis</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read Header of a GENESIS csv</h2>
+
+<h3>Description</h3>
+
+<p><code>read_header_genesis</code> reads the header of a GENESIS csv.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read_header_genesis(
+  ...,
+  start,
+  lines = 2,
+  readr_locale = locale(encoding = "windows-1252"),
+  replacer = NULL,
+  clean_letters = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments to <code>read_csv2</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p>number of the first line of the header</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lines</code></td>
+<td>
+<p>number of header lines</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>readr_locale</code></td>
+<td>
+<p>definition of locale() to be passed to read_csv2()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>replacer</code></td>
+<td>
+<p>a vector that is used as the first K column-names</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clean_letters</code></td>
+<td>
+<p>make proper variable names? (default: TRUE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locale</code></td>
+<td>
+<p>default encoding is 'windows-1252'</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>To generate valid column names, the function replaces all special characters (e.g. German öüä) with ASCII letters 
+and removes whitespaces. Multi-line headers are joined but separated with a '_'.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a <code>vector</code> of column names.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read_csv2</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"> ## Not run: 
+  
+ library(readr)
+ 
+ download_csv(tablename="12411-0004")
+ 
+ d &lt;- read_header_genesis('12411-0004.csv', start=6, replacer=c("STAG"))
+ data &lt;- read_csv2('12411-0004.csv', skip=6, n_max=30-6+1, 
+		na="-", locale=locale(encoding="windows-1252") )
+ colnames(data) &lt;- d
+  
+## End(Not run)
+
+
+
+
+</code></pre>
+
+
+</div>

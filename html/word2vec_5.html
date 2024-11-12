@@ -1,0 +1,81 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read.wordvectors</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read word vectors from a word2vec model from disk</h2>
+
+<h3>Description</h3>
+
+<p>Read word vectors from a word2vec model from disk into a dense matrix
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read.wordvectors(
+  file,
+  type = c("bin", "txt"),
+  n = .Machine$integer.max,
+  normalize = FALSE,
+  encoding = "UTF-8"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>the path to the model file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>either 'bin' or 'txt' indicating the <code>file</code> is a binary file or a text file</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>integer, indicating to limit the number of words to read in. Defaults to reading all words.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>normalize</code></td>
+<td>
+<p>logical indicating to normalize the embeddings by dividing by the factor (sqrt(sum(x . x) / length(x))). Defaults to FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>encoding</code></td>
+<td>
+<p>encoding to be assumed for the words. Defaults to 'UTF-8'</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A matrix with the embeddings of the words. The rownames of the matrix are the words which are by default set to UTF-8 encoding.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">path  &lt;- system.file(package = "word2vec", "models", "example.bin")
+embed &lt;- read.wordvectors(path, type = "bin", n = 10)
+embed &lt;- read.wordvectors(path, type = "bin", n = 10, normalize = TRUE)
+embed &lt;- read.wordvectors(path, type = "bin")
+
+path  &lt;- system.file(package = "word2vec", "models", "example.txt")
+embed &lt;- read.wordvectors(path, type = "txt", n = 10)
+embed &lt;- read.wordvectors(path, type = "txt", n = 10, normalize = TRUE)
+embed &lt;- read.wordvectors(path, type = "txt")
+</code></pre>
+
+
+</div>

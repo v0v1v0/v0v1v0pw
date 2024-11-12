@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>readUCSCtable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read annotation files from UCSC</h2>
+
+<h3>Description</h3>
+
+<p>This function allows reading and importing genomic <a href="https://genome.ucsc.edu/cgi-bin/hgTables">UCSC-annotation</a> data.
+Files can be read as default UCSC exprot or as GTF-format. 
+In the context of proteomics we noticed that sometimes UniProt tables from UCSC are hard to match to identifiers from UniProt Fasta-files, ie many protein-identifiers won't match.
+For this reason additional support is given to reading 'Genes and Gene Predictions': Since this table does not include protein-identifiers, a non-redundant list of ENSxxx transcript identifiers 
+can be exprted as file for an additional stop of conversion, eg using a batch conversion tool at the site of <a href="https://www.uniprot.org/id-mapping/">UniProt</a>. 
+The initial genomic annotation can then be complemented using <code>readUniProtExport</code>. 
+Using this more elaborate route, we found higher coverage when trying to add genomic annotation to protein-identifiers to proteomics results with annnotation based on an initial Fasta-file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">readUCSCtable(
+  fiName,
+  exportFileNa = NULL,
+  gtf = NA,
+  simplifyCols = c("gene_id", "chr", "start", "end", "strand", "frame"),
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fiName</code></td>
+<td>
+<p>(character) name (and path) of file to read</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exportFileNa</code></td>
+<td>
+<p>(character) optional file-name to be exported, if <code>NULL</code> no file will be written</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gtf</code></td>
+<td>
+<p>(logical) specify if file <code>fiName</code> in gtf-format (see <a href="https://genome.ucsc.edu/cgi-bin/hgTables">UCSC</a>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simplifyCols</code></td>
+<td>
+<p>(character) optional list of column-names to be used for simplification  (if 6 column-headers are given) : the 1st value will be used to identify the column
+used as refence to summarize all lines with this ID; for the 2nd (typically chromosome names) will be taken a representative value, 
+for the 3rd (typically gene start site) will be taken the minimum, 
+for the 4th (typically gene end site) will be taken the maximum, for the 5th and 6th a representative values will be reported;</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a matrix, optionally the file 'exportFileNa' may be written
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>readUniProtExport</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">path1 &lt;- system.file("extdata", package="wrProteo")
+gtfFi &lt;- file.path(path1, "UCSC_hg38_chr11extr.gtf.gz")
+# here we'll write the file for UniProt conversion to tempdir() to keep things tidy
+expFi &lt;- file.path(tempdir(), "deUcscForUniProt2.txt")
+UcscAnnot1 &lt;- readUCSCtable(gtfFi, exportFileNa=expFi)
+
+## results can be further combined with readUniProtExport() 
+deUniProtFi &lt;- file.path(path1, "deUniProt_hg38chr11extr.tab")
+deUniPr1 &lt;- readUniProtExport(deUniProtFi, deUcsc=UcscAnnot1,
+  targRegion="chr11:1-135,086,622")  
+deUniPr1[1:5,-5] 
+</code></pre>
+
+
+</div>

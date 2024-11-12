@@ -1,0 +1,208 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>confidenceBands</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Confidence Bands for Wasserstein Regression</h2>
+
+<h3>Description</h3>
+
+<p>Confidence Bands for Wasserstein Regression
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">confidenceBands(
+  wass_regress_res,
+  Xpred_df,
+  level = 0.95,
+  delta = 0.01,
+  type = "density",
+  figure = TRUE,
+  fig_num = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wass_regress_res</code></td>
+<td>
+<p>an object returned by the <code>wass_regress</code> function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Xpred_df</code></td>
+<td>
+<p>k-by-p matrix (or dataframe, or named vector) used for prediction. Note that Xpred_df should have the same column names with Xfit_df used in wass_regress_res</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>confidence level</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delta</code></td>
+<td>
+<p>boundary control value in density band computation. Must be a value in the interval (0, 1/2) (default: 0.01)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>'density', 'quantile' or 'both'
+</p>
+
+<ul>
+<li>
+<p>'density': density function bands will be returned (and plotted if <code>figure = TRUE</code>) 
+</p>
+</li>
+<li>
+<p>'quantile': quantile function and CDF bands will be returned (and plotted if <code>figure = TRUE</code>) 
+</p>
+</li>
+<li>
+<p>'both': three kinds of bands, density function, quantile function and CDF bands will be returned (and plotted if <code>figure = TRUE</code>) 
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>figure</code></td>
+<td>
+<p>logical; if TRUE, return a sampled plot (default: TRUE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fig_num</code></td>
+<td>
+<p>the fig_num-th row of <code>Xpred_df</code> will be used for visualization of confidence bands. If NULL, then <code>fig_num</code> is randomly chosen (default: NULL)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function computes intrinsic confidence bands for <code>Xpred_df</code> if <code>type</code> = 'quantile' and density bands if <code>type</code> = 'density', and visualizes the confidence and/or density bands when <code>figure</code> = TRUE.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a list containing the following lists:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>den_list:</code></td>
+<td>
+
+
+<ul>
+<li>
+<p>fpred: k-by-m matrix, predicted density function at Xpred_df.
+</p>
+</li>
+<li>
+<p>f_ux: k-by-m matrix, upper bound of confidence bands of density functions.
+</p>
+</li>
+<li>
+<p>f_lx: k-by-m matrix, lower bound of confidence bands of density functions.
+</p>
+</li>
+<li>
+<p>Qpred: k-by-m matrix, f_lx[i, ], f_ux[i, ] and fpred[i, ] evaluated on Qpred[i, ] vector.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quan_list:</code></td>
+<td>
+
+
+<ul>
+<li>
+<p>Qpred: k-by-m matrix of predicted quantile functions.
+</p>
+</li>
+<li>
+<p>Q_ux: k-by-m matrix of upper bound of quantile functions.
+</p>
+</li>
+<li>
+<p>Q_lx: k-by-m matrix of lower bound of quantile functions.
+</p>
+</li>
+<li>
+<p>t_vec: a length m vector - common grid for all quantile functions.</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cdf_list:</code></td>
+<td>
+
+
+<ul>
+<li>
+<p>fpred: k-by-m matrix, predicted density function.
+</p>
+</li>
+<li>
+<p>Fpred: k-by-m matrix, predicted cumulative distribution functions.
+</p>
+</li>
+<li>
+<p>F_ux: k-by-m matrix, upper bound of cumulative distribution functions.
+</p>
+</li>
+<li>
+<p>F_lx: k-by-m matrix, lower bound of cumulative distribution functions.
+</p>
+</li>
+<li>
+<p>Fsup: k-by-m matrix, fpred[i, ], F_lx[i, ], F_ux[i, ] and Fpred[i, ] evaluated on Fsup[i, ] vector.</p>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">alpha = 2
+beta = 1
+n = 50
+x1 = runif(n)
+t_vec = unique(c(seq(0, 0.05, 0.001), seq(0.05, 0.95, 0.05), seq(0.95, 1, 0.001)))
+set.seed(1)
+quan_obs = simulate_quantile_curves(x1, alpha, beta, t_vec)
+Xfit_df = data.frame(x1 = x1)
+res = wass_regress(rightside_formula = ~., Xfit_df = Xfit_df,
+                   Ytype = 'quantile', Ymat = quan_obs, Sup = t_vec)
+confidence_Band = confidenceBands(res, Xpred_df = data.frame(x1 = c(-0.5,0.5)),
+type = 'both', fig_num = 2)
+
+data(strokeCTdensity)
+predictor = strokeCTdensity$predictors
+dSup = strokeCTdensity$densitySupport
+densityCurves = strokeCTdensity$densityCurve
+xpred = predictor[2:3, ]
+
+res = wass_regress(rightside_formula = ~., Xfit_df = predictor,
+Ytype = 'density', Ymat = densityCurves, Sup = dSup)
+confidence_Band = confidenceBands(res, Xpred_df = xpred, type = 'density', fig_num = 1)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wk_handle.wk_grd_xy</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Handler interface for grid objects</h2>
+
+<h3>Description</h3>
+
+<p>Handler interface for grid objects
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wk_grd_xy'
+wk_handle(handleable, handler, ..., data_order = c("y", "x"))
+
+## S3 method for class 'wk_grd_rct'
+wk_handle(handleable, handler, ..., data_order = c("y", "x"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>handleable</code></td>
+<td>
+<p>A geometry vector (e.g., <code>wkb()</code>, <code>wkt()</code>, <code>xy()</code>,
+<code>rct()</code>, or <code>sf::st_sfc()</code>) for which <code>wk_handle()</code> is defined.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>handler</code></td>
+<td>
+<p>A wk_handler object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Passed to the <code>wk_handle()</code> method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data_order</code></td>
+<td>
+<p>A vector of length 2 describing the order in which
+values should appear. The default, <code>c("y", "x")</code>, will output values
+in the same order as the default matrix storage in R (column-major).
+You can prefix a dimension with <code>-</code> to reverse the order of a
+dimension (e.g., <code>c("-y", "x")</code>).</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The result of the <code>handler</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wk_handle(grd(nx = 3, ny = 3), wkt_writer())
+wk_handle(grd(nx = 3, ny = 3, type = "centers"), wkt_writer())
+
+</code></pre>
+
+
+</div>

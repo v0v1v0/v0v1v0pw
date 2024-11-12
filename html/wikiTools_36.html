@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>w_isValid</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check if Wikidata entities are valid</h2>
+
+<h3>Description</h3>
+
+<p>A entity is valid if it has a label or has a description. If one entity
+exists but is not valid, is possible that it has a redirection to other
+entity, in that case, the redirection is obtained. Other entities may have
+existed in the past, but have been deleted. The returned dataframe also
+includes the Wikidata class (another Wikidata entity) of which the searched
+entity are instances of. The data-frame no contains labels or descriptions
+about entities: the function <code>w_LabelDesc</code> can be used for valid entities.
+Duplicated entities are deleted before search. Index of the data-frame
+returned are also set to entity_list.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">w_isValid(entity_list, nlimit = 50000, debug = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>entity_list</code></td>
+<td>
+<p>A vector with de Wikidata entities.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlimit</code></td>
+<td>
+<p>If the number of entities exceeds this number, chunked queries
+are done. This is the number of entities requested in each chunk. Please,
+reduce the default value if error is raised.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>For debugging purposes (default FALSE). If debug='info'
+information about chunked queries is shown. If debug='query' also the query
+launched is shown.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data-frame with four columns: entity, valid (TRUE or FALSE),
+instanceof and redirection (if the entity redirects to another Wikidata
+entity, the redirection column contains the last).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Angel Zazo, Department of Computer Science and Automatics, University of Salamanca
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+w_isValid(c("Q9021", "Q115637688", "Q105660123"))
+# Large list
+l  &lt;- w_SearchByOccupation(Qoc='Q2306091')
+l2 &lt;- append(l$entity, c("Q115637688", "Q105660123"))  # Note: adding two new entities
+v &lt;- w_isValid(l2)
+# Not valid
+v[!v$valid, ]
+
+## End(Not run)
+</code></pre>
+
+
+</div>

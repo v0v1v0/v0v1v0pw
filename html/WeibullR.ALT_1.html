@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>alt.data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Create a <code>alt.data</code> Object for Accelerated Life (Failure) Test Data
+</h2>
+
+<h3>Description</h3>
+
+<p>This function reads life test data for a single stress level using the flexible input format
+also provided for <code>"WeibullR::mleframe"</code> to create an <code>"alt.data"</code> object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">alt.data(x, s=NULL, interval=NULL, stress) </code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>Either a dataframe containing at least <code>$time</code> and <code>$event</code>
+columns and optionally a <code>$qty</code> column, or a vector of class <code>"numeric"</code> or <code>"integer"</code> with
+(life-)time observations.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+
+<p>An optional vector of right-censored data, or suspensions. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interval</code></td>
+<td>
+
+<p>An optional dataframe of interval data having columns specifically named "left" and "right". 
+Left values are the last time at which no failure was evident and may be zero for discovery.
+Right values are the earliest time at which failure was observed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stress</code></td>
+<td>
+
+<p>A scalar value representing the accelerating stress applied during a life test.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>There are several methods to passing arguments for building an <code>alt.data</code>
+object.
+</p>
+
+<ul>
+<li>
+<p> If argument <code>x</code> is of class <code>"data.frame"</code>,
+then it must contain <code>$time</code> and <code>$event</code>
+columns. Additional columns in the dataframe will be ignored.
+</p>
+</li>
+<li>
+<p> When a single unnamed vector of class <code>"numeric"</code>
+or <code>"integer"</code> is supplied, it is treated as a vector
+of (life-)time observations.
+</p>
+</li>
+<li>
+<p> If argument <code>time</code> or <code>fail</code> is provided, it is treated as
+a vector of (life-)time observations. Take care NOT to supply both
+<code>time</code> and <code>fail</code> in the same function call.
+</p>
+</li>
+<li>
+<p> If argument <code>event</code> is provided, it is treated as
+a vector of event indicators with possible values of
+<code>0</code> and <code>1</code>. See section "Value" for more details on
+event vectors.
+</p>
+</li>
+<li>
+<p> If the <code>x</code> argument is not provided as a dataframe and <code>susp</code> is provided, 
+it is treated as a vector of right-censored (life-)time observations 
+(also called suspended observations or suspensions).
+</p>
+</li>
+</ul>
+<p>While <code>"WeibullR::mleframe"</code> is used for data sets with 3 or more failures (including intervals)
+alt.data will also prepare conforming dataframe for sets with less failuers or even no failures (ie. all censored items)
+</p>
+
+
+<h3>Value</h3>
+
+<p>A named list of class <code>"alt.data"</code>. The first list
+item (<code>$data</code>) is a list with up to least three items:
+</p>
+
+<dl>
+<dt><code>$stress</code></dt>
+<dd>
+<p>A scalar value representing the accelerating stress applied during a life test.
+</p>
+</dd>
+<dt><code>$data</code></dt>
+<dd>
+<p>A dataframe containing the provided data formatted with <code>"left"</code>, <code>"right"</code>, and <code>"qty"</code> columns.
+This conforms with the output of function <code>"WeibullR::mleframe"</code>.
+</p>
+</dd>
+</dl>
+<h3>References</h3>
+
+<p>Wayne Nelson, (1990) "Accelerated Testing", Wiley-Interscience, New York
+</p>
+<p>William Q. Meeker and Luis A. Escobar, (1998) "Statistical Methods for Reliability Data", Wiley-Interscience, New York
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  table2.1&lt;-NelsonData("table2.1")
+  alt_da190&lt;-alt.data(table2.1$C190, stress=190) 
+  ClassH_goal&lt;-alt.data(20000, stress=180)
+</code></pre>
+
+
+</div>

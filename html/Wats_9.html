@@ -1,0 +1,159 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>county_month_birth_rate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Monthly Growth Fertility Rates (GFR) for 12 urban Oklahoma counties</h2>
+
+<h3>Description</h3>
+
+<p>Monthly Growth Fertility Rates (GFR) for 12 urban counties in Oklahoma
+between January 1990 and December 1999.
+The GFR is defined as the number of births divided
+by the number of females (ages 15-44), multiplied by 1,000.
+</p>
+<p>There are two datasets in this package that are almost identical.
+The 2014 version is better suited for substantive researchers
+in the areas of fertility and traumatic cultural events.
+The 2005 version recreates the 2005 article
+and, therefore is better suited for the graphical aims of the 2014 manuscript.
+</p>
+<p>The difference is that the 2005 version uses constant estimate for a county population
+–specifically the US Census 1990 estimates.  The 2014 version uses different estimates
+for each month –specifically the US intercensal annual estimates, with linear interpolation
+for February through December of each year.
+</p>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 1,440 observations on the following 11 variables.
+</p>
+
+<dl>
+<dt>fips</dt>
+<dd>
+<p>The county's 5-digit value according to the Federal Information Processing Standards.  <code>integer</code></p>
+</dd>
+<dt>county_name</dt>
+<dd>
+<p>The lower case name of the county. <code>character</code></p>
+</dd>
+<dt>year</dt>
+<dd>
+<p>The year of the record, ranging from 1990 to 1999. <code>integer</code></p>
+</dd>
+<dt>month</dt>
+<dd>
+<p>The month of the record, ranging from 1 to 12. <code>integer</code></p>
+</dd>
+<dt>fecund_population</dt>
+<dd>
+<p>The number of females in the county, ages of
+15 to 44. <code>numeric</code></p>
+</dd>
+<dt>birth_count</dt>
+<dd>
+<p>The number of births in a county for the given month.
+<code>integer</code></p>
+</dd>
+<dt>date</dt>
+<dd>
+<p>The year and month of the record, with a date of the 15th.
+Centering the date within the month makes the value a little more representative
+and the graphs a little easier. <code>date</code></p>
+</dd>
+<dt>days_in_month</dt>
+<dd>
+<p>The number of days in the specific month. <code>integer</code></p>
+</dd>
+<dt>days_in_year</dt>
+<dd>
+<p>The number of days in the specific years <code>integer</code></p>
+</dd>
+<dt>stage_id</dt>
+<dd>
+<p>The "Stage" of the month.  The pre-bombing records are "1"
+(accounting for 9 months of gestation); the post-bombing months are "2". <code>integer</code></p>
+</dd>
+<dt>birth_rate</dt>
+<dd>
+<p>The Growth Fertility Rate (GFR). <code>numeric</code></p>
+</dd>
+</dl>
+<h3>Details</h3>
+
+<p>&lt;&lt;Joe, can you please finish/edit this sentence?&gt;&gt;
+The monthly birth counts were copied from county records by Ronnie Coleman during the
+summer of 2001 from state vital statistics records.  It was collected
+for <a href="https://pubmed.ncbi.nlm.nih.gov/16463916/">Rodgers, St. John, &amp; Coleman (2005)</a>.
+</p>
+<p>The US Census' intercensal estimates are used for the January values of
+<code>fecund_population</code>.  Values for February-December are interpolated using
+<code>approx()</code>.
+</p>
+<p>The datasets were manipulated to produce this data frame by the two R files
+<a href="https://github.com/OuhscBbmc/Wats/blob/main/utility/isolate-census-pops-for-gfr.R">isolate-census-pops-for-gfr.R</a>
+and <a href="https://github.com/OuhscBbmc/Wats/blob/main/utility/calculate-gfr.R">calculate-gfr.R</a>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Will Beasley
+</p>
+
+
+<h3>References</h3>
+
+
+<ul>
+<li>
+<p> Rodgers, J. L., St. John, C. A. &amp; Coleman R. (2005).
+<a href="https://pubmed.ncbi.nlm.nih.gov/16463916/">Did Fertility Go Up after the Oklahoma City Bombing? An Analysis of Births in Metropolitan Counties in Oklahoma, 1990-1999.</a>
+<em>Demography, 42</em>, 675-692.
+</p>
+</li>
+<li> <p><a href="https://www.census.gov/data/tables/time-series/demo/popest/intercensal-1990-2000-state-and-county-totals.html">Intercensal estimates for 199x</a>
+</p>
+</li>
+<li> <p><a href="https://www.census.gov/data/datasets/time-series/demo/popest/intercensal-2000-2010-counties.html">Intercensal estimates for 200x</a>
+</p>
+</li>
+<li>
+<p> Documentation: <a href="https://www.census.gov/programs-surveys/popest/technical-documentation/file-layouts.html">US Census Intercensal Estimates</a>
+for <a href="https://www.census.gov/programs-surveys/popest/technical-documentation/file-layouts/1990-2000-intercensal.html">199x</a>
+and <a href="https://www.census.gov/programs-surveys/popest/technical-documentation/file-layouts/2000-2010-intercensal.html">200x</a>.
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(ggplot2)
+
+# 2005 Version (see description above)
+ds2005 &lt;- county_month_birth_rate_2005_version
+ggplot(ds2005, aes(x = date, y = birth_rate, color = factor(fips))) +
+  geom_line() +
+  labs(title="County Fertility - Longitudinal")
+
+ggplot(ds2005, aes(x = birth_rate, color = factor(fips))) +
+  geom_density() +
+  labs(title="Distributions of County Fertility")
+
+
+# 2014 Version (see description above)
+ds2014 &lt;- county_month_birth_rate_2014_version
+ggplot(ds2014, aes(x = date, y = birth_rate, color = factor(fips))) +
+  geom_line() +
+  labs(title="County Fertility - Longitudinal")
+
+ggplot(ds2014, aes(x = birth_rate, color = factor(fips))) +
+  geom_density() +
+  labs(title="Distributions of County Fertility")
+
+</code></pre>
+
+
+</div>

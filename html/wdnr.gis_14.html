@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_wis_raster_layer</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get WDNR Image and Map Layers</h2>
+
+<h3>Description</h3>
+
+<p>Functions to pull layers from the ImageServer and MapServer sections of the
+<a href="https://dnrmaps.wi.gov/arcgis_image/rest/services">
+Wisconsin Department of Natural Resources ArcGIS REST API
+</a>. These are raster layers representing various maps and images throughout
+the state of Wisconsin. Arguments to these function can be used to specify
+the spatial extent of the output. If no argument is provided, the full
+raster will be queried.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_wis_landcover(
+  service = "EN_Land_Cover2_Lev2",
+  county = NULL,
+  watershed_code = NULL,
+  watershed_name = NULL,
+  sf_object = NULL,
+  ...
+)
+
+get_wis_imagery(
+  service = "EN_Image_Basemap_Leaf_Off",
+  county = NULL,
+  watershed_code = NULL,
+  watershed_name = NULL,
+  sf_object = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>service</code></td>
+<td>
+<p>A string describing the service to be pulled.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>county</code></td>
+<td>
+<p>A character object specifying a county name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>watershed_code</code></td>
+<td>
+<p>A character object specifying the HUC code for a
+watershed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>watershed_name</code></td>
+<td>
+<p>A character object specifying the HUC name for a
+watershed</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sf_object</code></td>
+<td>
+<p>Any sf polygon object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to be passed to <code>get_map_layer</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For a full list of available services use the following search options.
+</p>
+
+<dl>
+<dt>
+get_wis_landcover
+</dt>
+<dd>
+<p>– <code>list_services(section = "DW_Land_Cover")</code>
+</p>
+</dd>
+<dt>
+get_wis_imagery
+</dt>
+<dd>
+<p>– <code>list_services(section = "DW_Image")</code>
+</p>
+</dd>
+</dl>
+<h3>Value</h3>
+
+<p>A "RasterLayer" object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+mke_forest &lt;- get_wis_landcover(county = c("Milwaukee","Forest"))
+plot_layer(mke_forest, outline_poly = wi_poly, legend = FALSE)
+
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

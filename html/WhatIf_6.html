@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summary.whatif</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summary of "whatif" Object</h2>
+
+<h3>Description</h3>
+
+<p>Summarizes the information produced by the function <code>whatif</code>. 
+The summary generated is returned as an output object and also printed 
+to the screen.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'whatif'
+summary(object, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>An object of class "whatif", the output of 
+the function <code>whatif</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to and from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of class "summary.whatif", a list containing the following five
+elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>The original call to <code>whatif</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>A scalar.  The total number of counterfactuals evaluated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m.inhull</code></td>
+<td>
+<p>A scalar.  The number of counterfactuals evaluated
+that are in the convex hull of the observed covariate data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mean.near</code></td>
+<td>
+<p>A scalar.  The average percentage of data nearby
+each counterfactual, where the average is taken over all
+counterfactuals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sum.df</code></td>
+<td>
+<p>A data frame with three columns and <code class="reqn">m</code> rows, where <code class="reqn">m</code> is
+the number of counterfactuals.  The first column, <code>cfact</code>, indexes
+the counterfactuals.  The second column, <code>in.hull</code>, contains the
+results of the convex hull test.  The third column, <code>per.near</code>,
+contains the percentage of data points nearby each counterfactual.</p>
+</td>
+</tr>
+</table>
+<p>This object is printed to the screen.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stoll, Heather <a href="mailto:hstoll@polsci.ucsb.edu">hstoll@polsci.ucsb.edu</a>, King, Gary
+<a href="mailto:king@harvard.edu">king@harvard.edu</a> and Zeng, Langche <a href="mailto:zeng@ucsd.edu">zeng@ucsd.edu</a></p>
+
+
+<h3>References</h3>
+
+<p>King, Gary and Langche Zeng.  2006.  "The Dangers of 
+Extreme Counterfactuals."  <em>Political Analysis</em> 14 (2).
+Available from <a href="https://gking.harvard.edu">https://gking.harvard.edu</a>.
+</p>
+<p>King, Gary and Langche Zeng.  2007.  "When Can History Be Our Guide?
+The Pitfalls of Counterfactual Inference."  <em>International Studies Quarterly</em>
+51 (March).  Available from <a href="https://gking.harvard.edu">https://gking.harvard.edu</a>.</p>
+
+
+<h3>See Also</h3>
+
+<p><code>whatif</code>,
+<code>plot.whatif</code>,
+<code>print.whatif</code>,
+<code>print.summary.whatif</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##  Create example data sets and counterfactuals
+my.cfact &lt;- matrix(rnorm(3*5), ncol = 5)
+my.data &lt;- matrix(rnorm(100*5), ncol = 5)
+
+##  Evaluate counterfactuals
+my.result &lt;- whatif(data = my.data, cfact = my.cfact, mc.cores = 1)
+
+##  Print summary
+summary(my.result)
+</code></pre>
+
+
+</div>

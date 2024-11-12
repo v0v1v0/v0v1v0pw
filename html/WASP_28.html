@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mra.plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot function: Plot original time series and decomposed frequency components</h2>
+
+<h3>Description</h3>
+
+<p>Plot function: Plot original time series and decomposed frequency components
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mra.plot(
+  y,
+  y.mra,
+  limits.x,
+  limits.y,
+  type = c("details", "coefs"),
+  ps = 12,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Original time series (Y).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y.mra</code></td>
+<td>
+<p>Decomposed frequency components (d1,d2,..,aJ).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limits.x</code></td>
+<td>
+<p>x limit for plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limits.y</code></td>
+<td>
+<p>y limit for plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>type of wavelet coefficients, details or approximations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ps</code></td>
+<td>
+<p>integer; the point size of text (but not symbols).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments for plot().</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A plot with original time series and decomposed frequency components.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">### synthetic example
+# frequency, sampled from a given range
+fd &lt;- c(3, 5, 10, 15, 25, 30, 55, 70, 95)
+data.SW3 &lt;- data.gen.SW(nobs = 512, fp = c(15, 25, 30), fd = fd)
+
+x &lt;- data.SW3$x
+xx &lt;- padding(x, pad = "zero")
+### wavelet transfrom
+# wavelet family, extension mode and package
+wf &lt;- "d4" # wavelet family D8 or db4
+boundary &lt;- "periodic"
+pad &lt;- "zero"
+if (wf != "haar") v &lt;- as.integer(as.numeric(substr(wf, 2, 3)) / 2) else v &lt;- 1
+
+# Maximum decomposition level J
+n &lt;- length(x)
+J &lt;- ceiling(log(n / (2 * v - 1)) / log(2)) # (Kaiser, 1994)
+
+### decomposition
+x.mra &lt;- waveslim::mra(xx, wf = wf, J = J, method = "dwt", boundary = "periodic")
+x.mra.m &lt;- matrix(unlist(x.mra), ncol = J + 1)
+
+print(sum(abs(x - rowSums(x.mra.m[1:n, ])))) # additive check
+var(x)
+sum(apply(x.mra.m[1:n, ], 2, var)) # variance check
+
+limits.x &lt;- c(0, n)
+limits.y &lt;- c(-3, 3)
+mra.plot(x, x.mra.m, limits.x, limits.y, type = "details")
+</code></pre>
+
+
+</div>

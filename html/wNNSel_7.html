@@ -1,0 +1,157 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cv.wNNSel</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cross Validation for wNNSel Imputation</h2>
+
+<h3>Description</h3>
+
+<p>This function aims to search for optimal values of the tuning parameters for the wNNSel imputation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cv.wNNSel(x, kernel = "gaussian", x.dist = "euclidean", method = "2",
+  m.values = seq(2, 8, by = 2), c.values = seq(0.1, 0.5, by = 0.1),
+  lambda.values = seq(0, 0.6, by = 0.01)[-1], times.max = 5,
+  testNA.prop = 0.05)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a <code>matrix</code> containing missing values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kernel</code></td>
+<td>
+<p>kernel function to be used in nearest neighbors imputation. Default kernel function is "gaussian".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x.dist</code></td>
+<td>
+<p>distance to compute, The default is <code>x.dist="euclidean"</code>
+to compute Euclidean distance. Set <code>x.dist</code> to <code>NULL</code> to use Manhattan distance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>convex function,  performs selection of variables. If <code>method="1"</code>,
+linear function is used and when if <code>method="c"</code>, power function is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m.values</code></td>
+<td>
+<p>a <code>vector</code> of integer values, required when mehtod="2".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c.values</code></td>
+<td>
+<p>a <code>vector</code> between 0 and less than 1. It is required when mehtod="1".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda.values</code></td>
+<td>
+<p>a <code>vector</code>, for the tuning parameter <code class="reqn">\lambda</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>times.max</code></td>
+<td>
+<p>maximum number of repititions for the cross validation procedure.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>testNA.prop</code></td>
+<td>
+<p>proportion of values to be deleted artificially for
+cross validation in the missing matrix <code>x</code>. Default method uses 5 percent.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Some values are artificially deleted and wNNSel is run multiple times, varying  <code class="reqn">\lambda</code> and  <code class="reqn">m</code>.
+For each pair of <code class="reqn">\lambda</code> and <code class="reqn">m</code>, compute MSIE on the subset of the data matrix x for which the
+the values were deleted artificially. (See References for more detail).
+</p>
+
+
+<h3>Value</h3>
+
+<p>a list containing 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>lambda.opt</code></td>
+<td>
+<p>optimal parameter selected by cross validation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m.opt</code></td>
+<td>
+<p>optimal parameter selected by cross validation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MSIE.cv</code></td>
+<td>
+<p>cross validation error</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Shahla Faisal &lt;shahla_ramzan@yahoo.com&gt;
+</p>
+
+
+<h3>References</h3>
+
+<p>Tutz, G. and Ramzan,S. (2015). Improved methods for the imputation of missing data
+by nearest neighbor methods.  <em>Computational Statistics and Data Analysis</em>, Vol. 90, pp. 84-99.
+</p>
+<p>Faisal, S. and Tutz, G. (2017). Missing value imputation for gene expression data by tailored nearest neighbors.
+<em>Statistical Application in Genetics and  Molecular Biology</em>.  Vol. 16(2), pp. 95-106.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>artifNA.cv</code>, <code>wNNSel</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"> set.seed(3)
+ x.true = matrix(rnorm(100),10,10)
+ ## create 10% missing values in x
+ x.miss = artifNA(x.true, 0.10)
+ ## use cross validation to find optimal values
+ result = cv.wNNSel(x.miss)
+ ## optimal values are
+ result$lambda.opt
+ result$m.opt
+ ## Now use these values to get final imputation
+ x.impute = wNNSel.impute(x.miss, lambda=result$lambda.opt, m=result$m.opt)
+ ## and final MSIE
+ computeMSIE(x.miss, x.impute, x.true)
+</code></pre>
+
+
+</div>

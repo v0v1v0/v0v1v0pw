@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pairsAsPropensMatr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert Pairs of Node-Names to Non-Oriented Propensity Matrix</h2>
+
+<h3>Description</h3>
+
+<p>Numerous network query tools produce a listing of pairs of nodes (with one pair of nodes per line). 
+Using this function such a <code>matrix</code> (or <code>data.frame</code>) can be combined to this more comprehensive view as propensity-matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pairsAsPropensMatr(mat, silent = FALSE, debug = FALSE, callFrom = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mat</code></td>
+<td>
+<p>(matrix) main input, matrix of interaction partners with each line as a separate pair of nodes; 
+the first two columns should contain identifiers of the nodes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note, this has been primarily developed for undirected interaction networks, the resulting propensity-matrix does not show any orientation any more.   
+In a number of applications (eg in protein-protein interaction networks, PPI) the resulting matrix may be rather sparse.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns matrix or data.frame
+</p>
+
+
+<h3>See Also</h3>
+
+<p>uses typically input from <code>filterNetw</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">pairs3L &lt;- matrix(LETTERS[c(1,3,3, 2,2,1)], ncol=2)    # loop of 3
+(netw13pr &lt;- pairsAsPropensMatr(pairs3L))              # as prop matr
+
+</code></pre>
+
+
+</div>

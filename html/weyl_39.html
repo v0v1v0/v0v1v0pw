@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>grade</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The grade of a weyl object</h2>
+
+<h3>Description</h3>
+
+<p>The <dfn>grade</dfn> of a homogeneous term of a Weyl algebra is the sum of
+the powers.  Thus the grade of
+<code class="reqn">4xy^2\partial_x^3\partial_y^4</code> is <code class="reqn">1+2+3+4=10</code>.
+</p>
+<p>The functionality documented here closely follows the equivalent in
+the <a href="https://CRAN.R-project.org/package=clifford"><span class="pkg">clifford</span></a> package.
+</p>
+<p>Coutinho calls this the <dfn>symbol map</dfn>. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">grade(C, n, drop=TRUE)
+grade(C,n) &lt;- value
+grades(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>C,x</code></td>
+<td>
+<p>Weyl object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Integer vector specifying grades to extract</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>value</code></td>
+<td>
+<p>Replacement value, a numeric vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>drop</code></td>
+<td>
+<p>Boolean, with default <code>TRUE</code> meaning to coerce a
+constant operator to numeric, and <code>FALSE</code> meaning not
+to</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Function <code>grades()</code> returns an (unordered) vector specifying the
+grades of the constituent terms.  Function <code>grades&lt;-()</code> allows
+idiom such as <code>grade(x,1:2) &lt;- 7</code> to operate as expected [here to
+set all coefficients of terms with grades 1 or 2 to value 7].
+</p>
+<p>Function <code>grade(C,n)</code> returns a Weyl object with just the
+elements of grade <code>g</code>, where <code>g %in% n</code>.
+</p>
+<p>The zero grade term, <code>grade(C,0)</code>, is given more naturally by
+<code>constant(C)</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Integer vector or weyl object</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Robin K. S. Hankin</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+a &lt;- rweyl(30)
+
+grades(a)
+grade(a,1:4)
+grade(a,5:9) &lt;- -99
+a
+</code></pre>
+
+
+</div>

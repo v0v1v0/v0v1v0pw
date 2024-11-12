@@ -1,0 +1,160 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>generate_report</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate HTML report with list inputs</h2>
+
+<h3>Description</h3>
+
+<p>This is a support function using a list-pmap workflow to
+create a HTML document, using RMarkdown as the engine.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">generate_report(
+  title = "My minimal HTML generator",
+  filename = "minimal_html",
+  outputs = output_list,
+  titles,
+  subheaders,
+  echos,
+  levels,
+  theme = "united",
+  preamble = ""
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>Character string to specify the title of the chunk.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+<p>File name to be used in the exported HTML.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outputs</code></td>
+<td>
+<p>A list of outputs to be added to the HTML report.
+Note that <code>outputs</code>, <code>titles</code>, <code>echos</code>, and <code>levels</code> must have the same
+length</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>titles</code></td>
+<td>
+<p>A list/vector of character strings to specify the title of the
+chunks.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subheaders</code></td>
+<td>
+<p>A list/vector of character strings to specify the
+subheaders for each chunk.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>echos</code></td>
+<td>
+<p>A list/vector of logical values to specify whether to display
+code.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>levels</code></td>
+<td>
+<p>A list/vector of numeric value to specify the header level of
+the chunk.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>theme</code></td>
+<td>
+<p>Character vector to specify theme to be used for the report.
+E.g. <code>"united"</code>, <code>"default"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>preamble</code></td>
+<td>
+<p>A preamble to appear at the beginning of the report, passed
+as a text string.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An HTML report with the same file name as specified in the arguments is
+generated in the working directory. No outputs are directly returned by the
+function.
+</p>
+
+
+<h3>Creating a custom report</h3>
+
+<p>Below is an example on how to set up a custom report.
+</p>
+<p>The first step is to define the content that will go into a report and assign
+the outputs to a list.
+</p>
+<div class="sourceCode"><pre># Step 1: Define Content
+output_list &lt;-
+  list(sq_data %&gt;% workloads_summary(return = "plot"),
+       sq_data %&gt;% workloads_summary(return = "table")) %&gt;%
+  purrr::map_if(is.data.frame, create_dt)
+</pre></div>
+<p>The next step is to add a list of titles for each of the objects on the list:
+</p>
+<div class="sourceCode"><pre># Step 2: Add Corresponding Titles
+title_list &lt;- c("Workloads Summary - Plot", "Workloads Summary - Table")
+n_title &lt;- length(title_list)
+</pre></div>
+<p>The final step is to run <code>generate_report()</code>. This can all be wrapped within
+a function such that the function can be used to generate a HTML report.
+</p>
+<div class="sourceCode"><pre># Step 3: Generate Report
+generate_report(title = "My First Report",
+                filename = "My First Report",
+                outputs = output_list,
+                titles = title_list,
+                subheaders = rep("", n_title),
+                echos = rep(FALSE, n_title
+</pre></div>
+
+
+<h3>Author(s)</h3>
+
+<p>Martin Chan <a href="mailto:martin.chan@microsoft.com">martin.chan@microsoft.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Reports: 
+<code>IV_report()</code>,
+<code>capacity_report()</code>,
+<code>coaching_report()</code>,
+<code>collaboration_report()</code>,
+<code>connectivity_report()</code>,
+<code>meeting_tm_report()</code>,
+<code>read_preamble()</code>,
+<code>subject_validate_report()</code>,
+<code>validation_report()</code>,
+<code>workpatterns_report()</code>
+</p>
+
+
+</div>

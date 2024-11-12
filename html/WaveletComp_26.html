@@ -1,0 +1,446 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wt</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Wavelet transformation, and a simulation algorithm</h2>
+
+<h3>Description</h3>
+
+<p>This function provides Morlet wavelet transformation results of the given time series, 
+performed within the lower-order function <code>WaveletTransform</code>,  
+subject to criteria concerning the time and frequency resolution, and an (optional) lower and/or upper Fourier period.
+It performs a simulation algorithm to test against a specified alternative hypothesis, which can be chosen from a variety of options,
+and provides p-values. The selected model will be fitted to the data and simulated according to estimated parameters 
+in order to provide surrogate time series.
+This function is called by function <code>analyze.wavelet</code>.
+</p>
+<p>The name and parts of the layout were inspired by a similar function developed by Huidong Tian and Bernard Cazelles 
+(archived R package <code>WaveletCo</code>).
+The major part of the code for the computation of the cone of influence, and the code for Fourier-randomized surrogate time series
+has been adopted from Huidong Tian.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wt(x, start = 1, dt = 1, dj = 1/20, 
+   lowerPeriod = 2*dt, upperPeriod = floor(length(x)*dt/3), 
+   make.pval = TRUE, method = "white.noise", params = NULL, 
+   n.sim = 100, save.sim = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>the time series to be analyzed</p>
+</td>
+</tr></table>
+<table><tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p>starting point in time (for the computation of the cone of influence).
+</p>
+<p>Default: <code>start = 1</code>.</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>dt</code></td>
+<td>
+<p>time resolution, i.e. sampling resolution in the time domain, <code>1/dt</code> = number of observations per time unit. 
+For example: a natural choice of <code>dt</code> in case of hourly data is <code>dt = 1/24</code>, 
+resulting in one time unit equaling one day. This is also the time unit in which periods are measured.
+If <code>dt = 1</code>, the time interval between two consecutive observations will equal one time unit.
+</p>
+<p>Default: <code>1</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dj</code></td>
+<td>
+<p>frequency resolution, i.e. sampling resolution in the frequency domain, <code>1/dj</code> = number of 
+suboctaves (voices per octave).
+</p>
+<p>Default: <code>1/20</code>.
+</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>lowerPeriod</code></td>
+<td>
+<p>lower Fourier period (measured in time units determined by <code>dt</code>, 
+see the explanations concerning <code>dt</code>) for wavelet decomposition.<br> 
+If <code>dt = 1</code>, the minimum admissible value is 2. 
+</p>
+<p>Default: <code>2*dt</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upperPeriod</code></td>
+<td>
+<p>upper Fourier period (measured in time units determined by <code>dt</code>, 
+see the explanations concerning <code>dt</code>) for wavelet decomposition. 
+</p>
+<p>Default: <code>(floor of one third of time series length)*dt</code>.
+</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>make.pval</code></td>
+<td>
+<p>Compute p-values? Logical. Default: <code>TRUE</code>.</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>the method of generating surrogate time series; select from:
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+                    </td>
+<td style="text-align: left;"> <code>"white.noise"</code>  </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> white noise </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                    </td>
+<td style="text-align: left;"> <code>"shuffle"</code>      </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> shuffling the given time series </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                    </td>
+<td style="text-align: left;"> <code>"Fourier.rand"</code> </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> time series with a similar spectrum </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                    </td>
+<td style="text-align: left;"> <code>"AR"</code>           </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> AR(p) </td>
+</tr>
+<tr>
+<td style="text-align: right;">  
+                    </td>
+<td style="text-align: left;"> <code>"ARIMA"</code>        </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> ARIMA(p,0,q) 
+                    </td>
+</tr>
+</table>
+<p>Default: <code>"white.noise"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>params</code></td>
+<td>
+<p>a list of assignments between methods (AR, and ARIMA) and lists of parameter values 
+applying to surrogates. Default: <code>NULL</code>. 
+</p>
+<p>Default includes two lists named <code>AR</code> and <code>ARIMA</code>:
+</p>
+  
+<ul>
+<li> <p><code>AR = list(...)</code>, a list containing one single element:
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>p</code> </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> AR order.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;">          </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;"> Default: <code>1</code>.
+                </td>
+</tr>
+</table>
+</li>
+<li> <p><code>ARIMA = list(...)</code>, a list of six elements:            
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>p</code>            </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  AR order. </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>1</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>q</code>            </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  MA order. </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>1</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>include.mean</code> </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  Include a mean/intercept term? </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>TRUE</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>sd.fac</code>       </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  magnification factor to boost the </td>
+</tr>
+<tr>
+<td style="text-align: right;"> 
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  residual standard deviation. </td>
+</tr>
+<tr>
+<td style="text-align: right;">  
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>1</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>trim</code>         </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  Simulate trimmed data? </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>FALSE</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>trim.prop</code>    </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  high/low trimming proportion. </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>0.01</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                </td>
+</tr>
+</table>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>n.sim</code></td>
+<td>
+<p>number of simulations. Default: <code>100</code>.</p>
+</td>
+</tr></table>
+<table><tr style="vertical-align: top;">
+<td><code>save.sim</code></td>
+<td>
+<p>Should simulations be saved on the output list? Logical. Default: <code>FALSE</code>.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>A list with the following elements:
+
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Wave</code></td>
+<td>
+<p>complex wavelet transform of the series</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Phase</code></td>
+<td>
+<p>phases</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ampl</code></td>
+<td>
+<p>amplitudes</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Power</code></td>
+<td>
+<p>wavelet power in the time/frequency domain</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Power.avg</code></td>
+<td>
+<p>vector of average wavelet power in the frequency domain (averages over time)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Power.pval</code></td>
+<td>
+<p>p-values of wavelet power</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Power.avg.pval</code></td>
+<td>
+<p>vector of p-values of average wavelet power</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Period</code></td>
+<td>
+<p>the Fourier periods 
+(measured in time units determined by <code>dt</code>, see the explanations concerning <code>dt</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Scale</code></td>
+<td>
+<p>the scales (the Fourier periods divided by the Fourier factor)</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>coi.1, coi.2</code></td>
+<td>
+<p>borders of the region where the wavelet transforms are not influenced by edge effects (cone of influence). 
+The coordinates of the borders are expressed in terms of internal axes <code>axis.1</code> and <code>axis.2</code>.</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>nc</code></td>
+<td>
+<p>number of columns = number of observations = number of observation epochs; "epoch" meaning point in time</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nr</code></td>
+<td>
+<p>number of rows = number of scales (Fourier periods)</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>axis.1</code></td>
+<td>
+<p>tick levels corresponding to the time steps used for (cross-)wavelet transformation: <code>1, 1+dt, 1+2dt, ...</code>.
+The default time axis in plot functions provided by <code>WaveletComp</code> is determined by observation epochs, however; "epoch" meaning point in time. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axis.2</code></td>
+<td>
+<p>tick levels corresponding to the log of Fourier periods: <code>log2(Period)</code>. This determines the period axis in plot functions provided by <code>WaveletComp</code>.</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>series.sim</code></td>
+<td>
+<p>a data frame of the series simulated as surrogates for the (detrended) time series 
+(if both <code>make.pval = TRUE</code> and <code>save.sim = TRUE</code>.)</p>
+</td>
+</tr></table>
+<h3>Author(s)</h3>
+
+<p>Angi Roesch and Harald Schmidbauer; credits are also due to Huidong Tian, and Bernard Cazelles</p>
+
+
+<h3>References</h3>
+
+<p>Aguiar-Conraria L., and Soares M.J., 2011. 
+The Continuous Wavelet Transform: A Primer. 
+NIPE Working Paper Series 16/2011.
+</p>
+<p>Carmona R., Hwang W.-L., and Torresani B., 1998. 
+Practical Time Frequency Analysis. Gabor and Wavelet Transforms with an Implementation in S.
+Academic Press, San Diego.
+</p>
+<p>Cazelles B., Chavez M., Berteaux, D., Menard F., Vik J.O., Jenouvrier S., and Stenseth N.C., 2008.
+Wavelet analysis of ecological time series.
+Oecologia 156, 287–304.
+</p>
+<p>Liu Y., Liang X.S., and Weisberg R.H., 2007.
+Rectification of the Bias in the Wavelet Power Spectrum. 
+Journal of Atmospheric and Oceanic Technology 24, 2093–2102.
+</p>
+<p>Tian, H., and Cazelles, B., 2012. <code>WaveletCo</code>. 
+Available at <a href="https://cran.r-project.org/src/contrib/Archive/WaveletCo/">https://cran.r-project.org/src/contrib/Archive/WaveletCo/</a>, archived April 2013; accessed July 26, 2013.
+</p>
+<p>Torrence C., and Compo G.P., 1998. 
+A practical guide to wavelet analysis. 
+Bulletin of the American Meteorological Society 79 (1), 61–78.
+</p>
+
+
+<h3>See Also</h3>
+
+ <p><code>WaveletTransform</code>, <code>analyze.wavelet</code> </p>
+
+
+</div>

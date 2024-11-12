@@ -1,0 +1,297 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sampWiener</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Random sampling from the Wiener diffusion model</h2>
+
+<h3>Description</h3>
+
+<p>Draws random samples from the (truncated) first-passage time distribution of the Wiener diffusion model with up to 7 parameters.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sampWiener(
+  N,
+  a,
+  v,
+  w,
+  t0 = 0,
+  sv = 0,
+  sw = 0,
+  st0 = 0,
+  response = "both",
+  bound = Inf,
+  method = "ars",
+  precision = NULL,
+  n.threads = 1,
+  ars_list = NULL,
+  ARS_STORE = FALSE
+)
+
+rWDM(
+  N,
+  a,
+  v,
+  w,
+  t0 = 0,
+  sv = 0,
+  sw = 0,
+  st0 = 0,
+  response = "both",
+  bound = Inf,
+  method = "ars",
+  precision = NULL,
+  n.threads = 1,
+  ars_list = NULL,
+  ARS_STORE = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>Number of samples. Numeric value (integer).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>a</code></td>
+<td>
+<p>Upper barrier. Numeric value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>v</code></td>
+<td>
+<p>Drift rate. Numeric value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+<p>Relative starting point. Numeric value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t0</code></td>
+<td>
+<p>Non-decision time. Numeric value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sv</code></td>
+<td>
+<p>Inter-trial variability of drift rate. Numeric value. Standard deviation of a normal distribution <code>N(v, sv)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sw</code></td>
+<td>
+<p>Inter-trial variability of relative starting point. Numeric value. Range of uniform distribution <code>U(w-0.5*sw, w+0.5*sw)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>st0</code></td>
+<td>
+<p>Inter-trial variability of non-decision time. Numeric value. Range of uniform distribution <code>U(t0, t0+st0)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>response</code></td>
+<td>
+<p>Response boundary. Character string, either <code>"upper"</code>, <code>"lower"</code>, or <code>"both"</code>. Alternatively a numeric value,
+<code>2</code>=upper, <code>1</code>=lower, or <code>0</code>=both. Default is "both".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bound</code></td>
+<td>
+<p>Boundary for the first-passage time. Numeric value. Default is Inf.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Sampling method. Either "ars", "rs", "its", or "p-ars". The method "ars" stands for adaptive rejection sampling, "rs" stands for rejection sampling,
+"its" stands for inverse transform sampling, and "p-ars" stands for pseudo adaptive rejection sampling. Default is "ars".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>precision</code></td>
+<td>
+<p>Optional numeric value. Precision of the infinite series approximation. Numeric value. Default is <code>NULL</code>, which takes default value 1e-12.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.threads</code></td>
+<td>
+<p>Optional numeric or logic value. Number of threads to use. If not provided (<code>FALSE</code> or 1) parallelization is not used. If set to 
+<code>TRUE</code> then all available threads are used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ars_list</code></td>
+<td>
+<p>Optional list for method "ars". For <code>response</code> "lower" or "upper" a list with upper hull, lower hull etc. is needed. 
+For <code>response</code> "both" a list with two lists must be provided. The corresponding list is produced when using the "ars" method 
+and the argument <code>ARS_STORE = TRUE</code>. Do not make the list yourself and do not mix the lists for the corresponding boundaries.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ARS_STORE</code></td>
+<td>
+<p>Optional flag for method "ars". If <code>TRUE</code> saves upper hull, lower hull and some more values, which are updated at each rejection step,
+as a list. The list can then be used with the "ars" method in the argument <code>ars_list</code> to make the new sampling faster. If the first-passage times
+were sampled only from one boundary then the list will contain upper hull, etc. and if they were sampled from both boundaries then the list consists of two
+lists, each containing upper hull, etc. for the respective boundary.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The following <code>methods</code> can be used:
+</p>
+
+<ul>
+<li> <p><code>"ars"</code>: adaptive rejection sampling method. This method builds on Gilks and Wild (1992) as well as Hartmann and Klauer (in press). The former provides
+a method for an adaptive rejection sampling method which assumes that the density is log-concave. This method is fastest for cases where <code>sv = 0</code>. This is
+the only method where the integral needs to be calculated. The advantage, though, is that after each rejection the upper and lower hull functions will be adapted
+(or updated), which leads to fewer and fewer rejections in the proceeding sampling steps.
+</p>
+</li>
+<li> <p><code>"rs"</code>: rejection sampling method by Drugowitsch (2016). This method uses different proposal distributions in different conditions.
+</p>
+</li>
+<li> <p><code>"its"</code>: inverse transform (a.k.a. probability integral transform) sampling method. A random sample u is sampled from a uniform
+distribution and the corresponding first-passage time, for which CDF(t) = u, is approximated.
+</p>
+</li>
+<li> <p><code>"p-ars"</code>: pseudo-adaptive rejection sampling. A variation of "ars". In this method the hull functions will be adapted until the current sample is drawn,
+but the information from this adaptation will be discarded for the next sample.
+</p>
+</li>
+</ul>
+<p>Note: The speed of the methods do not depend on <code>t0</code> or <code>st0</code>.
+</p>
+<p><code>ars_store</code>, one of the returned list objects if method <code>"ars"</code> and <code>ARS_STORE = TRUE</code>, consists of twelve vectors and three scalars:
+</p>
+
+<ul>
+<li> <p><code>hstore_x</code>: vector of alpha values – change of variable <code>alpha = (log(t)-start)/scale</code>, where t is the first-passage time – relevant for the upper and
+lower hull functions.
+</p>
+</li>
+<li> <p><code>hstore_h</code>: vector of log-density of change of variable <code>A = (log(T)-start)/scale</code> at the alpha points <code>hstore_x</code>
+</p>
+</li>
+<li> <p><code>hstore_dh</code>: vector of partial derivative of log-density of A with respect to alpha.
+</p>
+</li>
+<li> <p><code>upperstore_z</code>: vector of alpha values at which the piece-wise linear upper hull transitions from one linear segment to the next.
+</p>
+</li>
+<li> <p><code>upperstore_slope</code>: same as <code>hstore_dh</code>. Gives the slope of the piece-wise linear functions for the upper hull.
+</p>
+</li>
+<li> <p><code>upperstore_absc</code>: same as <code>hstore_h</code>. Gives the evaluation of the function h() at <code>hstore_x</code>, where the piece-wise linear function touches h().
+</p>
+</li>
+<li> <p><code>upperstore_center</code>: same as <code>hstore_x</code>. Gives the alpha values, where the piece-wise linear function touches h().
+</p>
+</li>
+<li> <p><code>lowerstore_z</code>: same as <code>hstore_x</code> but with an additional leading element (=-Inf) in the vector.
+</p>
+</li>
+<li> <p><code>lowerstore_slope</code>: vector of zeros since not needed.
+</p>
+</li>
+<li> <p><code>lowerstore_absc</code>: vector of zeros since not needed.
+</p>
+</li>
+<li> <p><code>lowerstore_center:</code>: vector of zeros since not needed.
+</p>
+</li>
+<li> <p><code>startstore</code>: scalar representing the "start" value for the change of variable <code>A = (log(T)-start)/scale</code>.
+</p>
+</li>
+<li> <p><code>scalestore</code>: scalar representing the "scale" value for the change of variable <code>A = (log(T)-start)/scale</code>.
+</p>
+</li>
+<li> <p><code>normstore</code>: scalar. Gives the value of h() at alpha = 0.
+</p>
+</li>
+<li> <p><code>sstore</code>: vector of values at <code>log(s_k(hstore_x))</code>, where s_k() is the function defined in equation 3 in Gilks and Wild (1992).
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A list of the class <code>Diffusion_samp</code> containing
+</p>
+
+<ul>
+<li> <p><code>q</code>: first-passage time sample(s),
+</p>
+</li>
+<li> <p><code>response</code>: response(s) "lower" and/or "upper",
+</p>
+</li>
+<li> <p><code>call</code>: the function call,
+</p>
+</li>
+<li> <p><code>ars_store</code>: if <code>ARS_STORE = TRUE</code> is used with the method "ars" then either a list with upper hull, etc. is stored (either from the upper
+or lower boundary) or a list of two lists with corresponding upper hull, etc. is stored (from both boundaries) and can be used as function argument to
+(<code>ars_list</code>) for further sampling with the same parameters.
+</p>
+</li>
+</ul>
+<h3>Author(s)</h3>
+
+<p>Raphael Hartmann
+</p>
+
+
+<h3>References</h3>
+
+<p>Drugowitsch, J. (2016). Fast and accurate Monte Carlo sampling of first-passage times from Wiener diffusion models. <em>Scientific Reports, 6</em>(1). <a href="https://doi.org/10.1038/srep20490">doi:10.1038/srep20490</a>
+</p>
+<p>Gilks, W. R., &amp; Wild, P. (1992). Adaptive Rejection Sampling for Gibbs Sampling. <em>Applied Statistics, 41</em>(2), 337. <a href="https://doi.org/10.2307/2347565">doi:10.2307/2347565</a>
+</p>
+<p>Hartmann, R., &amp; Klauer, K. C. (2021). Partial derivatives for the first-passage time distribution in Wiener diffusion models. <em>Journal of Mathematical Psychology, 103</em>, 102550. <a href="https://doi.org/10.1016/j.jmp.2021.102550">doi:10.1016/j.jmp.2021.102550</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+sample_list1 &lt;- sampWiener(N = 100000, a = 1, v = .3, w = .5)
+hist(sample_list1$q, 200)
+
+sample_list2 &lt;- sampWiener(N = 100000, a = 1, v = .3, w = .5, ARS_STORE = TRUE)
+hist(sample_list2$q, 200)
+sample_list2$ars_store
+
+sample_list3 &lt;- sampWiener(N = 100000, a = 1, v = .3, w = .5, ars_list = sample_list2$ars_store)
+hist(sample_list3$q, 200)
+
+
+sample_list1 &lt;- rWDM(N = 100000, a = 1, v = .3, w = .5)
+hist(sample_list1$q, 200)
+
+sample_list2 &lt;- rWDM(N = 100000, a = 1, v = .3, w = .5, ARS_STORE = TRUE)
+hist(sample_list2$q, 200)
+sample_list2$ars_store
+
+sample_list3 &lt;- rWDM(N = 100000, a = 1, v = .3, w = .5, ars_list = sample_list2$ars_store)
+hist(sample_list3$q, 200)
+</code></pre>
+
+
+</div>

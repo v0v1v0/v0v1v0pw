@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fragmentSeq</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fragment protein or peptide sequence</h2>
+
+<h3>Description</h3>
+
+<p>Makes internal/terminal fragments of a SINGLE peptide/protein input (as single letter amino-acid code) and returns list of all possible sequences ($full, $Nter, $Cter, $inter).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fragmentSeq(
+  sequ,
+  minSize = 3,
+  maxSize = 300,
+  internFragments = TRUE,
+  separTerm = FALSE,
+  keepRedSeqs = TRUE,
+  prefName = NULL,
+  silent = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>sequ</code></td>
+<td>
+<p>(character, length=1) sequence used for fragmenting, as as mono-aminoacid letter code (so that cuting will be perfomed between all the letters/characters)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minSize</code></td>
+<td>
+<p>(integer) min number of AA residues for considering peptide fragments</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxSize</code></td>
+<td>
+<p>(integer) max number of AA residues for considering peptide fragments</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>internFragments</code></td>
+<td>
+<p>(logical) logical (return only terminal fragments if 'FALSE')</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>separTerm</code></td>
+<td>
+<p>(logical) if 'TRUE', separate N-terminal, C-terminal and internal fragments in list</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepRedSeqs</code></td>
+<td>
+<p>(logical) if 'FALSE' remove fragments with redundant content (but my be from different origin in 'sequ'); remove redundant so far only when no separation of Nterm/Cterm/intern as list</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prefName</code></td>
+<td>
+<p>(logical) alternative name for all fragments (default the sequence itself), avoid separators '.' and '-'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>numeric vector with mass
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>makeFragments</code>;   <code>convAASeq2mass</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">fragmentSeq("ABCDE")
+fragmentSeq("ABCDE", minSize=3, internFragments=FALSE)
+fragmentSeq("ABCDE", minSize=3, internFragments=TRUE)
+
+## Run multiple peptides/proteins
+twoPep &lt;- cbind(c("a","ABCABCA"), c("e","EFGEFGEF"))
+apply(twoPep, 2, function(x) fragmentSeq(x[2], mi=3, kee=FALSE, sep=TRUE, pre=x[1]))
+
+## Ubiquitin example
+P0CG48 &lt;- "MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG"  
+system.time( fra1 &lt;- (fragmentSeq(P0CG48, mi=5, kee=FALSE)))      # &lt; 0.5 sec  
+
+</code></pre>
+
+
+</div>

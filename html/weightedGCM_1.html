@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wgcm.est</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Weighted Generalised Covariance Measure (WGCM) With Estimated Weight Function
+Conditional Independence Test</h2>
+
+<h3>Description</h3>
+
+<p>The Weighted Generalised Covariance Measure (WGCM) with Estimated Weight Function
+is a test for conditional independence. It is a generalisation of the
+Generalised Covariance Measure implemented in the R package
+GeneralisedCovarianceMeasure.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wgcm.est(X, Y, Z, beta = 0.3, regr.meth, regr.pars = list(), nsim = 499)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>A (n x d_X) numeric matrix with n observations of d_X variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>A (n x d_Y) numeric matrix with n observations of d_Y variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+<p>A (n x d_Z) numeric matrix with n observations of d_Z variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta</code></td>
+<td>
+<p>A real number between 0 and 1 indicating the fraction of the sample
+used to estimate the weight function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>regr.meth</code></td>
+<td>
+<p>One of "gam" and "xgboost" indicating the regression method
+used to estimate the conditional expectations E[X|Z] and E[Y|Z] and the
+weight function sign(E[(X-E[X|Z])(Y-E[Y|Z])|Z]).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>regr.pars</code></td>
+<td>
+<p>Optional additional regression parameters according to
+GeneralisedCovarianceMeasure::comp.resids()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsim</code></td>
+<td>
+<p>Number of samples used to calculate the p-value using simulation.
+Only used if max(d_X, d_Y) &gt; 1.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A p-value for the null hypothesis of conditional independence of X
+and Y given Z.
+</p>
+
+
+<h3>References</h3>
+
+<p>Please cite the following papers.
+Cyrill Scheidegger, Julia Hoerrmann, Peter Buehlmann:
+"The Weighted Generalised Covariance Measure"
+<a href="https://arxiv.org/abs/2111.04361">https://arxiv.org/abs/2111.04361</a>
+</p>
+<p>Rajen D. Shah, Jonas Peters:
+"The Hardness of Conditional Independence Testing and the Generalised
+Covariance Measure"
+<a href="https://arxiv.org/abs/1804.07203">https://arxiv.org/abs/1804.07203</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(1)
+n &lt;- 200
+Z &lt;- rnorm(n)
+X &lt;- Z + 0.3*rnorm(n)
+Y1 &lt;- Z + 0.3*rnorm(n)
+Y2 &lt;- Z + 0.3*rnorm(n) + 0.3*X
+Y3 &lt;- Z + 0.3*rnorm(n) + 0.15*X^2
+wgcm.est(X, Y1, Z, beta = 0.3, regr.meth = "gam")
+wgcm.est(X, Y2, Z, beta = 0.3, regr.meth = "gam")
+wgcm.est(X, Y3, Z, beta = 0.3, regr.meth = "gam")
+
+</code></pre>
+
+
+</div>

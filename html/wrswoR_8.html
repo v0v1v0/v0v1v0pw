@@ -1,0 +1,210 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sample_int_crank</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Weighted sampling without replacement</h2>
+
+<h3>Description</h3>
+
+<p>These functions implement weighted sampling without replacement using various
+algorithms, i.e., they take a sample of the specified
+<code>size</code> from the elements of <code>1:n</code> without replacement, using the
+weights defined by <code>prob</code>.  The call
+<code style="white-space: pre;">⁠sample_int_*(n, size, prob)⁠</code> is equivalent
+to <code>sample.int(n, size, replace = F, prob)</code>.  (The results will
+most probably be different for the same random seed, but the
+returned samples are distributed identically for both calls.)
+Except for <code>sample_int_R()</code> (which
+has quadratic complexity as of this writing), all functions have complexity
+<code class="reqn">O(n \log n)</code> or better and
+often run faster than R's implementation, especially when <code>n</code> and
+<code>size</code> are large.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sample_int_crank(n, size, prob)
+
+sample_int_ccrank(n, size, prob)
+
+sample_int_expj(n, size, prob)
+
+sample_int_expjs(n, size, prob)
+
+sample_int_R(n, size, prob)
+
+sample_int_rank(n, size, prob)
+
+sample_int_rej(n, size, prob)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>a positive number, the number of items to choose from.  See
+‘Details.’</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>a non-negative integer giving the number of items to choose.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prob</code></td>
+<td>
+<p>a vector of probability weights for obtaining the elements
+of the vector being sampled.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>sample_int_R()</code> is a simple wrapper for <code>base::sample.int()</code>.
+</p>
+<p><code>sample_int_expj()</code> and <code>sample_int_expjs()</code>
+implement one-pass random sampling with a reservoir with exponential jumps
+(Efraimidis and Spirakis, 2006, Algorithm A-ExpJ).  Both functions are
+implemented in <code>Rcpp</code>; <code style="white-space: pre;">⁠*_expj()⁠</code> uses log-transformed keys,
+<code style="white-space: pre;">⁠*_expjs()⁠</code> implements the algorithm in the paper verbatim
+(at the cost of numerical stability).
+</p>
+<p><code>sample_int_rank()</code>, <code>sample_int_crank()</code> and
+<code>sample_int_ccrank()</code> implement one-pass random sampling
+(Efraimidis and Spirakis, 2006, Algorithm A).  The first function is
+implemented purely in R, the other two are optimized <code>Rcpp</code>
+implementations (<code style="white-space: pre;">⁠*_crank()⁠</code> uses R vectors internally, while
+<code style="white-space: pre;">⁠*_ccrank()⁠</code> uses <code>std::vector</code>; surprisingly, <code style="white-space: pre;">⁠*_crank()⁠</code> seems
+to be faster on most inputs). It can be
+shown that the order statistic of <code class="reqn">U^{(1/w_i)}</code> has the same
+distribution as random sampling without replacement (<code class="reqn">U=\mbox{uniform}(0,1)</code>
+distribution). To increase numerical stability, <code class="reqn">\log(U) /
+  w_i</code> is computed instead; the log transform does not
+change the order statistic.
+</p>
+<p><code>sample_int_rej()</code> uses repeated weighted sampling with
+replacement and a variant of rejection sampling. It is implemented purely
+in R.
+This function simulates weighted sampling without replacement using
+somewhat more draws <em>with</em> replacement, and then discarding
+duplicate values (rejection sampling).  If too few items are
+sampled, the routine calls itself recursively on a (hopefully) much
+smaller problem.  See also
+<a href="http://stats.stackexchange.com/q/20590/6432">http://stats.stackexchange.com/q/20590/6432</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An integer vector of length <code>size</code> with elements from
+<code>1:n</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Dinre (for <code style="white-space: pre;">⁠*_rank()⁠</code>), Kirill Müller
+(for all other functions)
+</p>
+
+
+<h3>References</h3>
+
+<p><a href="https://stackoverflow.com/q/15113650/946850">https://stackoverflow.com/q/15113650/946850</a>
+</p>
+<p>Efraimidis, Pavlos S., and Paul G. Spirakis. "Weighted
+random sampling with a reservoir." <em>Information Processing
+Letters</em> 97, no. 5 (2006): 181-185.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>base::sample.int()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Base R implementation
+s &lt;- sample_int_R(2000, 1000, runif(2000))
+stopifnot(unique(s) == s)
+p &lt;- c(995, rep(1, 5))
+n &lt;- 1000
+set.seed(42)
+tbl &lt;- table(replicate(sample_int_R(6, 3, p),
+                       n = n)) / n
+stopifnot(abs(tbl - c(1, rep(0.4, 5))) &lt; 0.04)
+
+## Algorithm A, Rcpp version using std::vector
+s &lt;- sample_int_ccrank(20000, 10000, runif(20000))
+stopifnot(unique(s) == s)
+p &lt;- c(995, rep(1, 5))
+n &lt;- 1000
+set.seed(42)
+tbl &lt;- table(replicate(sample_int_ccrank(6, 3, p),
+                       n = n)) / n
+stopifnot(abs(tbl - c(1, rep(0.4, 5))) &lt; 0.04)
+
+## Algorithm A, Rcpp version using R vectors
+s &lt;- sample_int_crank(20000, 10000, runif(20000))
+stopifnot(unique(s) == s)
+p &lt;- c(995, rep(1, 5))
+n &lt;- 1000
+set.seed(42)
+tbl &lt;- table(replicate(sample_int_crank(6, 3, p),
+                       n = n)) / n
+stopifnot(abs(tbl - c(1, rep(0.4, 5))) &lt; 0.04)
+
+## Algorithm A-ExpJ (with log-transformed keys)
+s &lt;- sample_int_expj(20000, 10000, runif(20000))
+stopifnot(unique(s) == s)
+p &lt;- c(995, rep(1, 5))
+n &lt;- 1000
+set.seed(42)
+tbl &lt;- table(replicate(sample_int_expj(6, 3, p),
+                       n = n)) / n
+stopifnot(abs(tbl - c(1, rep(0.4, 5))) &lt; 0.04)
+
+## Algorithm A-ExpJ (paper version)
+s &lt;- sample_int_expjs(20000, 10000, runif(20000))
+stopifnot(unique(s) == s)
+p &lt;- c(995, rep(1, 5))
+n &lt;- 1000
+set.seed(42)
+tbl &lt;- table(replicate(sample_int_expjs(6, 3, p),
+                       n = n)) / n
+stopifnot(abs(tbl - c(1, rep(0.4, 5))) &lt; 0.04)
+
+## Algorithm A
+s &lt;- sample_int_rank(20000, 10000, runif(20000))
+stopifnot(unique(s) == s)
+p &lt;- c(995, rep(1, 5))
+n &lt;- 1000
+set.seed(42)
+tbl &lt;- table(replicate(sample_int_rank(6, 3, p),
+                       n = n)) / n
+stopifnot(abs(tbl - c(1, rep(0.4, 5))) &lt; 0.04)
+
+## Rejection sampling
+s &lt;- sample_int_rej(20000, 10000, runif(20000))
+stopifnot(unique(s) == s)
+p &lt;- c(995, rep(1, 5))
+n &lt;- 1000
+set.seed(42)
+tbl &lt;- table(replicate(sample_int_rej(6, 3, p),
+                       n = n)) / n
+stopifnot(abs(tbl - c(1, rep(0.4, 5))) &lt; 0.04)
+
+</code></pre>
+
+
+</div>

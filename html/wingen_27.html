@@ -1,0 +1,185 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>window_gd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a moving window map of genetic diversity</h2>
+
+<h3>Description</h3>
+
+<p>Generate a continuous raster map of genetic diversity using moving windows.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">window_gd(
+  gen,
+  coords,
+  lyr,
+  stat = "pi",
+  wdim = 3,
+  fact = 0,
+  rarify = FALSE,
+  rarify_n = NULL,
+  rarify_nit = 5,
+  min_n = 2,
+  fun = mean,
+  L = "nvariants",
+  rarify_alleles = TRUE,
+  sig = 0.05,
+  crop_edges = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>gen</code></td>
+<td>
+<p>genetic data either as an object of type vcf or a path to a vcf file (<em>note:</em> order matters! The coordinate and genetic data should be in the same order; there are currently no checks for this)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coords</code></td>
+<td>
+<p>coordinates of samples as sf points, a two-column matrix, or a data.frame representing x and y coordinates (see Details for important information about projections)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lyr</code></td>
+<td>
+<p>SpatRaster or RasterLayer to slide the window across (see Details for important information about projections)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stat</code></td>
+<td>
+<p>genetic diversity statistic(s) to calculate (see Details, defaults to <code>"pi"</code>). Can be a single statistic or a vector of statistics</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wdim</code></td>
+<td>
+<p>dimensions (height x width) of window; if only one value is provided, a square window is created (defaults to 3 x 3 window)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fact</code></td>
+<td>
+<p>aggregation factor to apply to <code>lyr</code> (defaults to 0; <em>note:</em> increasing this value reduces computational time)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rarify</code></td>
+<td>
+<p>if rarify = TRUE, rarefaction is performed (defaults to FALSE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rarify_n</code></td>
+<td>
+<p>if rarify = TRUE, number of points to use for rarefaction (defaults to min_n)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rarify_nit</code></td>
+<td>
+<p>if rarify = TRUE, number of iterations to use for rarefaction (defaults to 5). Can also be set to <code>"all"</code> to use all possible combinations of samples of size <code>rarify_n</code> within the window.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_n</code></td>
+<td>
+<p>minimum number of samples to use in calculations (any focal cell with a window containing less than this number of samples will be assigned a value of NA; defaults to 2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>function to use to summarize rarefaction results (defaults to mean, must take <code>na.rm = TRUE</code> as an argument)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>for calculating <code>"pi"</code>, L argument in pi.dosage function. Return the average nucleotide diversity per nucleotide given the length L of the sequence. The wingen default is L = "nvariants", which sets L to the number of variants in the VCF. If L = NULL, returns the sum over SNPs of nucleotide diversity (<em>note:</em> L = NULL is the pi.dosage default which wingen does not use)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rarify_alleles</code></td>
+<td>
+<p>for calculating <code>"biallelic_richness"</code>, whether to perform rarefaction of allele counts as in allelic.richness (defaults to TRUE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sig</code></td>
+<td>
+<p>for calculating <code>"hwe"</code>, significance threshold (i.e., alpha level) to use for hardy-weinberg equilibrium tests (defaults to 0.05)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crop_edges</code></td>
+<td>
+<p>whether to remove cells on the edge of the raster where the window is incomplete (defaults to FALSE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>deprecated this was intended to be used to pass additional arguments to the <code>stat</code> function, however now formal arguments are used instead (see <code>L</code>, <code>rarify_alleles</code>, and <code>sig</code>). Passing additional arguments using <code>...</code> is still possible with the <code style="white-space: pre;">⁠*_general()⁠</code> functions.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Coordinates and rasters should be in a projected (planar) coordinate system such that raster cells are of equal sizes.
+Therefore, spherical systems (including latitute-longitude coordinate systems) should be projected prior to use.
+Transformation can be performed using st_set_crs for coordinates or project for rasters (see vignette for more details).
+</p>
+<p>Current genetic diversity metrics that can be specified with <code>stat</code> include:
+</p>
+
+<ul>
+<li> <p><code>"pi"</code> for nucleotide diversity (default) calculated using <code>hierfstat</code> pi.dosage. Use the <code>L</code> argument to set the sequence length (defaults to dividing by the number of variants).
+</p>
+</li>
+<li> <p><code>"Ho"</code> for average observed heterozygosity across all sites
+</p>
+</li>
+<li> <p><code>"allelic_richness"</code> for average number of alleles across all sites
+</p>
+</li>
+<li> <p><code>"biallelic_richness"</code> for average allelic richness across all sites for a biallelic dataset (this option is faster than <code>"allelic_richness"</code>)
+</p>
+</li>
+<li> <p><code>"hwe"</code> for the proportion of sites that are not in Hardy–Weinberg equilibrium, calculated using <code>pegas</code> hw.test at the 0.05 level (other alpha levels  can be specified by adding the sig argument; e.g., <code>sig = 0.10</code>).
+</p>
+</li>
+<li> <p><code>"basic_stats"</code> for a series of statistics produced by <code>hierfstat</code> basic.stats including
+mean observed heterozygosity (same as Ho), mean gene diversities within population (Hs),
+Gene diversities overall (Ht), and Fis following Nei (1987). Population-based statistics (e.g., FST) normally reported by basic.stats
+are not included as they are not meaningful within the individual-based moving windows.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>SpatRaster that includes raster layers of genetic diversity and a raster layer of the number of samples within the window for each cell
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+load_mini_ex()
+wpi &lt;- window_gd(mini_vcf, mini_coords, mini_lyr, rarify = TRUE)
+
+</code></pre>
+
+
+</div>

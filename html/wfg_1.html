@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>network.simu</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Simulation of Networks with Community Structures
+</h2>
+
+<h3>Description</h3>
+
+<p>Simulation of networks under the framework by Girvan and Newman. The vertices are connected with each other randomly and independents with probability p.in (within same community) and p.out (between communities).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">network.simu(nv = c(32, 32, 32, 32),
+  p.in = c(0.323, 0.323, 0.323, 0.323),
+  p.out = 0.0625, p.del = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>nv</code></td>
+<td>
+
+<p>a vector of community sizes. The number of communities equals the number of elements in this vector.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.in</code></td>
+<td>
+
+<p>a vector of probability of a node to be randomly linked to other nodes in the same community.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.out</code></td>
+<td>
+
+<p>the probability of a node to be randomly linked to nodes in other communities.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.del</code></td>
+<td>
+
+<p>the proportion of links that are randomly deleted.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>net</code></td>
+<td>
+<p> The simulated network. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code> group </code></td>
+<td>
+<p> The membership of vertices. </p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Han Yu &amp; Rachael Hageman Blair
+</p>
+
+
+<h3>References</h3>
+
+<p>Girvan, Michelle, and Mark EJ Newman. "Community structure in social and biological networks." Proceedings of the national academy of sciences 99.12 (2002): 7821-7826.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## simulation of a network with four communities, each with size 32
+
+library(wfg)
+nv = c(32, 32, 32, 32)
+p.in = c(0.452, 0.452, 0.452, 0.452)
+p.out = 0.021
+p.del = 0
+net.simu &lt;- network.simu(nv=nv, p.in=p.in, p.out=p.out, p.del=p.del)
+net &lt;- net.simu$net
+group &lt;- net.simu$group
+
+## plot simulated network with vertices colored by membership
+
+V(net)$size &lt;- 7
+V(net)$color &lt;- group
+plot(net, vertex.label='')
+
+</code></pre>
+
+
+</div>

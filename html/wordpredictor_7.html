@@ -1,0 +1,278 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Model</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Represents n-gram models</h2>
+
+<h3>Description</h3>
+
+<p>The Model class represents n-gram models. An instance of the class is a
+single n-gram model. The attributes of this class are used to store n-gram
+model information. The class provides methods for loading and saving the
+model.
+</p>
+
+
+<h3>Details</h3>
+
+<p>The attributes of this class are used to store n-gram model information such
+as model name, model description, model file name, n-gram size, transition
+probabilities data, default probability for words, data cleaning and
+tokenization options, word list, model path, data directory path and
+performance stats. The model is saved to a single file as a R object.
+</p>
+<p>A model file contains all the information required by the model. The model
+object is used as input by classes that perform operations on the model such
+as evaluation of model performance, text predictions and comparison of model
+performance.
+</p>
+
+
+<h3>Super class</h3>
+
+<p><code>wordpredictor::Base</code> -&gt; <code>Model</code>
+</p>
+
+
+<h3>Public fields</h3>
+
+<div class="r6-fields">
+
+<dl>
+<dt><code>pstats</code></dt>
+<dd>
+<p>The performance stats for the model.</p>
+</dd>
+<dt><code>name</code></dt>
+<dd>
+<p>The model name.</p>
+</dd>
+<dt><code>desc</code></dt>
+<dd>
+<p>The model description.</p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-Model-new"><code>Model$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Model-load_model"><code>Model$load_model()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Model-get_config"><code>Model$get_config()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Model-get_size"><code>Model$get_size()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-Model-clone"><code>Model$clone()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-Model-new"></a>
+
+
+
+<h4>Method <code>new()</code>
+</h4>
+
+<p>It initializes the current object. It is used to set the
+maximum n-gram number, sample size, input file name, data cleaner
+options, tokenization options, combined transition probabilities file
+name and verbose.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Model$new(
+  name = NULL,
+  desc = NULL,
+  fn = NULL,
+  df = NULL,
+  n = 4,
+  ssize = 0.3,
+  dir = ".",
+  dc_opts = list(),
+  tg_opts = list(),
+  ve = 0
+)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>name</code></dt>
+<dd>
+<p>The model name.</p>
+</dd>
+<dt><code>desc</code></dt>
+<dd>
+<p>The model description.</p>
+</dd>
+<dt><code>fn</code></dt>
+<dd>
+<p>The model file name.</p>
+</dd>
+<dt><code>df</code></dt>
+<dd>
+<p>The name of the file used to generate the model.</p>
+</dd>
+<dt><code>n</code></dt>
+<dd>
+<p>The maximum n-gram number supported by the model.</p>
+</dd>
+<dt><code>ssize</code></dt>
+<dd>
+<p>The sample size as a proportion of the input file.</p>
+</dd>
+<dt><code>dir</code></dt>
+<dd>
+<p>The directory containing the model files.</p>
+</dd>
+<dt><code>dc_opts</code></dt>
+<dd>
+<p>The data cleaner options.</p>
+</dd>
+<dt><code>tg_opts</code></dt>
+<dd>
+<p>The token generator options.</p>
+</dd>
+<dt><code>ve</code></dt>
+<dd>
+<p>The level of detail in the information messages.</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-Model-load_model"></a>
+
+
+
+<h4>Method <code>load_model()</code>
+</h4>
+
+<p>It loads the model using the given information
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Model$load_model()</pre></div>
+
+
+<hr>
+<a id="method-Model-get_config"></a>
+
+
+
+<h4>Method <code>get_config()</code>
+</h4>
+
+<p>It returns the given configuration data
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Model$get_config(cn)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>cn</code></dt>
+<dd>
+<p>The name of the required configuration.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>The configuration value.
+</p>
+
+
+<hr>
+<a id="method-Model-get_size"></a>
+
+
+
+<h4>Method <code>get_size()</code>
+</h4>
+
+<p>It returns the size of the current object. The object
+size is calculated as the sum of sizes of the object attributes.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Model$get_size()</pre></div>
+
+
+
+<h5>Returns</h5>
+
+<p>The size of the object in bytes.
+</p>
+
+
+<hr>
+<a id="method-Model-clone"></a>
+
+
+
+<h4>Method <code>clone()</code>
+</h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>Model$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt>
+<dd>
+<p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+</div>

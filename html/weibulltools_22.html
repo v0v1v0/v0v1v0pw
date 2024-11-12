@@ -1,0 +1,155 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>field_data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Field Data</h2>
+
+<h3>Description</h3>
+
+<p>An illustrative field dataset that contains a variety of variables commonly
+collected in the automotive sector.
+</p>
+<p>The dataset has complete information about failed and incomplete information
+about intact vehicles. See 'Format' and 'Details' for further insights.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">field_data
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A tibble with 10,684 rows and 20 variables:
+</p>
+
+<dl>
+<dt>vin</dt>
+<dd>
+<p>Vehicle identification number.</p>
+</dd>
+<dt>dis</dt>
+<dd>
+<p>Days in service.</p>
+</dd>
+<dt>mileage</dt>
+<dd>
+<p>Distances covered, which are unknown for censored units.</p>
+</dd>
+<dt>status</dt>
+<dd>
+<p><code>1</code> for failed and <code>0</code> for censored units.</p>
+</dd>
+<dt>production_date</dt>
+<dd>
+<p>Date of production.</p>
+</dd>
+<dt>registration_date</dt>
+<dd>
+<p>Date of registration. Known for all failed units and
+for a few intact units.</p>
+</dd>
+<dt>repair_date</dt>
+<dd>
+<p>The date on which the failure was repaired. It is assumed
+that the repair date is equal to the date of failure occurrence.</p>
+</dd>
+<dt>report_date</dt>
+<dd>
+<p>The date on which lifetime information about the failure
+were available.</p>
+</dd>
+<dt>country</dt>
+<dd>
+<p>Delivering country.</p>
+</dd>
+<dt>region</dt>
+<dd>
+<p>The region within the country of delivery. Known for registered
+vehicles, <code>NA</code> for units with a missing <code>registration_date</code>.</p>
+</dd>
+<dt>climatic_zone</dt>
+<dd>
+<p>Climatic zone based on "Köppen-Geiger" climate classification.
+Known for registered vehicles, <code>NA</code> for units with a missing <code>registration_date</code>.</p>
+</dd>
+<dt>climatic_subzone</dt>
+<dd>
+<p>Climatic subzone based on "Köppen-Geiger" climate classification.
+Known for registered vehicles, <code>NA</code> for units with a <code>registration_date</code>.</p>
+</dd>
+<dt>brand</dt>
+<dd>
+<p>Brand of the vehicle.</p>
+</dd>
+<dt>vehicle_model</dt>
+<dd>
+<p>Model of the vehicle.</p>
+</dd>
+<dt>engine_type</dt>
+<dd>
+<p>Type of the engine.</p>
+</dd>
+<dt>engine_date</dt>
+<dd>
+<p>Date where the engine was installed.</p>
+</dd>
+<dt>gear_type</dt>
+<dd>
+<p>Type of the gear.</p>
+</dd>
+<dt>gear_date</dt>
+<dd>
+<p>Date where the gear was installed.</p>
+</dd>
+<dt>transmission</dt>
+<dd>
+<p>Transmission of the vehicle.</p>
+</dd>
+<dt>fuel</dt>
+<dd>
+<p>Vehicle fuel.</p>
+</dd>
+</dl>
+<h3>Details</h3>
+
+<p>All vehicles were produced in 2014 and an analysis of the field data was
+made at the end of 2015. At the date of analysis, there were 684 failed and
+10,000 intact vehicles.
+</p>
+<p><strong>Censored vehicles</strong>:
+</p>
+<p>For censored units the service time (<code>dis</code>) was computed as the difference
+of the date of analysis <code>"2015-12-31"</code> and the <code>registration_date</code>.
+</p>
+<p>For many units the latter date is unknown. For these, the difference of the
+analysis date and <code>production_date</code> was used to get a rough estimation of
+the real service time. This uncertainty has to be considered in the subsequent
+analysis (see <strong>delay in registration</strong> in the section 'Details' of
+<code>mcs_delay</code>).
+</p>
+<p>Furthermore, due to the delay in report, the computed service time could also
+be inaccurate. This uncertainty should be considered as well (see
+<strong>delay in report</strong> in the section 'Details' of <code>mcs_delay</code>).
+</p>
+<p>The lifetime characteristic <code>mileage</code> is unknown for all censored units.
+If an analysis is to be made for this lifetime characteristic, covered distances
+for these units have to be estimated (see <code>mcs_mileage</code>).
+</p>
+<p><strong>Failed vehicles</strong>:
+For failed units the service time (<code>dis</code>) is computed as the difference
+of <code>repair_date</code> and <code>registration_date</code>, which are known for all of them.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>mcs_mileage_data</code>
+</p>
+
+
+</div>

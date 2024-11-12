@@ -1,0 +1,121 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>preview_gd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Preview moving window and sample counts</h2>
+
+<h3>Description</h3>
+
+<p>Generate a preview of moving window size and sample counts based on the coordinates and
+parameters to be supplied to window_gd, circle_gd, or  resist_gd.
+The method to be used should be specified with <code>method = "window"</code>, <code>"circle"</code>, or <code>"resist"</code>. For <code>method = "window"</code>,
+<code>wdim</code> must be specified. For <code>method = "circle"</code> or <code>"resist"</code>, <code>maxdist</code> must be specified and
+<code>distmat</code> can also optionally be specified.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">preview_gd(
+  lyr,
+  coords,
+  method = "window",
+  wdim = 3,
+  maxdist = NULL,
+  distmat = NULL,
+  fact = 0,
+  sample_count = TRUE,
+  min_n = 0,
+  plot = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lyr</code></td>
+<td>
+<p>SpatRaster or RasterLayer to slide the window across (see Details for important information about projections). For <code>method = "resist"</code> this should also be the conductivity layer (see resist_gd)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coords</code></td>
+<td>
+<p>coordinates of samples as sf points, a two-column matrix, or a data.frame representing x and y coordinates (see Details for important information about projections)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>which method to use to create preview (<code>"window"</code> for window_gd, <code>"circle"</code> for circle_gd, or <code>"resist"</code> for resist_gd; defaults to <code>"window"</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wdim</code></td>
+<td>
+<p>if <code>method = "window"</code>, dimensions (height x width) of window; if only one value is provided, a square window is created (defaults to 3 x 3 window)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxdist</code></td>
+<td>
+<p>if <code>method = "circle"</code> or <code style="white-space: pre;">⁠method = "resist⁠</code>, the maximum geographic distance used to define the neighborhood; any samples further than this distance will not be included (see get_geodist or get_resdist)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distmat</code></td>
+<td>
+<p>if <code>method = "circle"</code> or <code>method = "resist"</code>, an optional distance matrix to be used output from either get_geodist or get_resdist, respectively. If not provided, one will be automatically calculated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fact</code></td>
+<td>
+<p>aggregation factor to apply to <code>lyr</code> (defaults to 0; <em>note:</em> increasing this value reduces computational time)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sample_count</code></td>
+<td>
+<p>whether to create plot of sample counts for each cell (defaults to TRUE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_n</code></td>
+<td>
+<p>minimum number of samples to use in calculations (any focal cell with a window containing less than this number of samples will be assigned a value of NA)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot</code></td>
+<td>
+<p>whether to plot results (default = TRUE)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Coordinates and rasters should be in a projected (planar) coordinate system such that raster cells are of equal sizes.
+Therefore, spherical systems (including latitute-longitude coordinate systems) should be projected prior to use.
+Transformation can be performed using st_set_crs for coordinates or project for rasters (see vignette for more details).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Plots preview of window and returns SpatRaster with sample counts layer (if sample_count = TRUE)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">load_mini_ex()
+preview_gd(mini_lyr, mini_coords, wdim = 3, fact = 3, sample_count = TRUE, min_n = 2)
+</code></pre>
+
+
+</div>

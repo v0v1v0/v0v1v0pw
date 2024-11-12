@@ -1,0 +1,151 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>checkUnitPrefix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check For Common Unit-Name in Text</h2>
+
+<h3>Description</h3>
+
+<p>This function aims to find a unit abbreviation or name occurring in all elements of a character-vector <code>x</code>.
+The unit name may be preceeded by different decimal prefixes (eg 'k','M'), as defined by argument <code>pref</code> and separators (<code>sep</code>). 
+The unit name will be returned (or first of multiple).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">checkUnitPrefix(
+  x,
+  pref = c("a", "f", "p", "n", "u", "m", "", "k", "M", "G", "T", "P"),
+  unit = c("m", "s", "sec", "Mol", "mol", "g", "K", "cd", "A", "W", "Watt", "V", "Volt"),
+  sep = c("", " ", ";", ",", "_", "."),
+  sep2 = "",
+  stringentSearch = FALSE,
+  na.rm = FALSE,
+  protSpecChar = TRUE,
+  inclPat = FALSE,
+  callFrom = NULL,
+  silent = FALSE,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(character) vector containing digit uunit-prefix and unit terms</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pref</code></td>
+<td>
+<p>(character) multiplicative unit-prefixes, assumes as increasing factors of 1000</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unit</code></td>
+<td>
+<p>(character) unit name, the numeric part may be sepatated by one space-character</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep</code></td>
+<td>
+<p>(character) separator character(s) that may appear between integer numeric value and unit-prefix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep2</code></td>
+<td>
+<p>(character) separator character(s) after <code>unit</code>, set to <code>sep2=""</code> for ignoring characters following <code>unit</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stringentSearch</code></td>
+<td>
+<p>(logical) if <code>TRUE</code> only matches with same separators (sep, sep2) pass, otherwise different elements may contain different separators</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>(logical) remove <code>NA</code> from input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>protSpecChar</code></td>
+<td>
+<p>(logical) protect special characters and use as they are instead of regex-meaning</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inclPat</code></td>
+<td>
+<p>(logical) return list including pattern of successful search</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Basically this function searches the pattern : digit + separator(<code>sep</code>) + prefix(<code>pref</code>) + <code>unit</code> + optional separator2(<code>sep2</code>)
+and returns the first unit-name/abbreviation found in all elements of <code>x</code>.
+</p>
+<p>If  if()
+In case of invalid entries or no common unit-names <code>NULL</code> will be returned.
+</p>
+<p>Please note the 'u' is used for 'micro' since handeling of special characters may not be portal between different operating systems.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a charcter vector (length=1) with the common unit name, if <code>inclPat=TRUE</code> it returns a list with $unit and $pattern
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>convToNum</code>; <code>adjustUnitPrefix</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x1 &lt;- c("10fg WW","xx 10fg 3pW"," 1pg 2.0W")
+checkUnitPrefix(x1)
+## different separators between digit and prefix:
+x2 &lt;- c("10fg WW","xx 8_fg 3pW"," 1 pg-2.0W")
+checkUnitPrefix(x2, stringentSearch=TRUE)
+checkUnitPrefix(x2, stringentSearch=FALSE)
+
+x4 &lt;- c("CT_mixture_QY_50_amol_CN_UPS1_CV_Standards_Research_Group",
+  "CT_mixture_QY_5_fmol_CN_UPS1_CV_Standards_Research_Group")
+
+</code></pre>
+
+
+</div>

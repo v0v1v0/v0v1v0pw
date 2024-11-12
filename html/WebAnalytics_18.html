@@ -1,0 +1,224 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>logFileRead</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Given a list of file names, read them as log files
+</h2>
+
+<h3>Description</h3>
+
+<p>This function reads a file, parsing it for the fields specified, and normalises the values that have been read.    
+</p>
+<p>The log file is assumed to be space delimited, which is the case for Apache and IIS.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">logFileRead(fileName, 
+  columnList=c("MSTimestamp", "clientip", "url", "httpcode", "elapsed"), 
+  logTimeZone = "", 
+  timeFormat = "") 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fileName</code></td>
+<td>
+
+<p>The name, including path, of the file to read
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>columnList</code></td>
+<td>
+
+<p>The columns in the file, in order.  Columns are:
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+<code>ApacheTimestamp</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> Apache log format timestamp </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>MSTimestamp</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> IIS log format timestamp </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>servername</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> Name of the web server </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>serverip</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> IP of the server </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>httpop</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> HTTP verb </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>url</code> </td>
+<td style="text-align: left;"> Required </td>
+<td style="text-align: left;"> Path part of the request </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>parms</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> Query string </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>port</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> TCP/IP port that the request arrived on </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>username</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> User name logged by the web server </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>userip</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> IP that the request was seen to originate from. </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>useragent</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> User agent string in the request </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>httpcode</code> </td>
+<td style="text-align: left;"> Required </td>
+<td style="text-align: left;"> HTTP response code </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>windowscode</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> Windows return code recorded by IIS </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>windowssubcode</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> Windows sub code recorded by IIS </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>responsebytes</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> Number of bytes in the HTTP response </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>requestbytes</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> Number of bytes in the HTTP request </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>elapsedms</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> Request elapsed time in milliseconds </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>elapsedus</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> Request elapsed time in microseconds (will be rounded to milliseconds)</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>elapseds</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> Request elapsed time in seconds (not recommended, will be expanded to milliseconds) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>jsessionid</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> User session identifier </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>ignore*</code> </td>
+<td style="text-align: left;"> Optional </td>
+<td style="text-align: left;"> Columns with names starting with 'ignore' are dropped  
+</td>
+</tr>
+</table>
+<p>One timestamp and one elapsed time column name must be specified.  
+</p>
+<p>The Apache URL is handled partly in the fix data procedure in the config file because it wraps the operation and URL path in one field.  The IIS URL does not need this additional parsing. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logTimeZone</code></td>
+<td>
+
+<p>The timezone to use to adjust the timestamps in the log.  This is used primarily for IIS logs where the log may be either UTC or local time.  
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timeFormat</code></td>
+<td>
+
+<p>If the timestamp in the log is not in the default for IIS or Apache this can be used to override the timestamp parsing.  The format is the r strptime format.  
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>The function returns a dataframe that contains the contents of the file.  
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Greg Hunt &lt;greg@firmansyah.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+logFileName = logFileNamesGetLast(dataDirectory=datd, 
+  directoryNames=c(".", "."), 
+  fileNamePattern="*[.]log")[[1]]
+
+cols = logFileFieldsGetIIS(logFileName)
+
+logdf = logFileRead(logFileName, columnList=cols, 
+            logTimeZone = "", timeFormat = "")
+</code></pre>
+
+
+</div>

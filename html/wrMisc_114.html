@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>combineReplFromListToMatr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Combine replicates from list to matrix</h2>
+
+<h3>Description</h3>
+
+<p>Suppose multiple measures (like multiple chanels) are taken for subjects and these measures are organized as groups in a list, 
+like muliple parameters (= channels) or types of measurements (typically many paramters are recorded when screeinig compounds in microtiter plates).
+Within one parameter/channel all replicate-data from separate list-entries ('lst') will get combined according to names of list-elements.
+The function will trim any redundant text in names of list-elements, try to isolate separator (may vary among replicate-groups, but should be 1 character long).
+eg names "hct116 1.1.xlsx" &amp; "hct116 1.2.xlsx" will be combined as replicates, "hct116 2.1.xlsx" will be considered as new group.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">combineReplFromListToMatr(lst, silent = FALSE, debug = FALSE, callFrom = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lst</code></td>
+<td>
+<p>(list)  list of arrays (typically multi-parameter measures of micortiterplate data)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>list of arrays now with same dimension of arrays (but shorter, since replicate-arrays were combined)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>extr1chan</code>, <code>organizeAsListOfRepl</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">lst2 &lt;- list(aa_1x=matrix(1:12,nrow=4,byrow=TRUE),ab_2x=matrix(24:13,nrow=4,byrow=TRUE))
+combineReplFromListToMatr(lst2)
+</code></pre>
+
+
+</div>

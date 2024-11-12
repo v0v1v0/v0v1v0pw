@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fun_icwt</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Inverse of continuous wavelet transform</h2>
+
+<h3>Description</h3>
+
+<p>Inverse of continuous wavelet transform
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fun_icwt(x.wave, dt, dj, flag.wav = "WaveletComp", scale = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x.wave</code></td>
+<td>
+<p>input complex matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dt</code></td>
+<td>
+<p>sampling resolution in the time domain.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dj</code></td>
+<td>
+<p>sampling resolution in the frequency domain.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flag.wav</code></td>
+<td>
+<p>String for two different CWT packages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>Wavelet scales.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>reconstructed time series
+</p>
+
+
+<h3>References</h3>
+
+<p>fun_stoch_sim_wave in PRSim, Brunner and Furrer, 2020.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(100)
+
+dt&lt;-1
+dj&lt;-1/8
+flag.wav &lt;- switch(2, "wmtsa", "WaveletComp")
+
+n &lt;- 100
+x &lt;- rnorm(n)
+x.wave &lt;- t(WaveletComp::WaveletTransform(x=x)$Wave)
+rec &lt;- fun_icwt(x.wave, dt, dj, flag.wav)
+
+x.wt &lt;- WaveletComp::analyze.wavelet(data.frame(x=x),"x",dt=dt,dj=dj)
+rec_orig &lt;- WaveletComp::reconstruct(x.wt,only.sig = FALSE, plot.rec = FALSE)$series$x.r
+
+### compare to original series
+op &lt;- par(mfrow = c(1, 1), mar=c(3,3,1,1), mgp=c(1, 0.5, 0))
+plot(1:n, x, type="l", lwd=5, xlab=NA, ylab=NA)
+lines(1:n, rec, col="red",lwd=3)
+lines(1:n, rec_orig, col="blue", lwd=1)
+legend("topright",legend=c("Raw","Inverse","Inverse_orig"),
+       lwd=c(5,3,1),bg="transparent",bty = "n",
+       col=c("black","red","blue"),horiz=TRUE)
+par(op)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wikipedia_rest_apis</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Build a REST request to one of Wikipedia's specific REST APIs</h2>
+
+<h3>Description</h3>
+
+<p><code>core_request_request()</code> builds a request for the <a href="https://www.mediawiki.org/wiki/API:REST_API">MediaWiki Core REST API</a>, the basic REST
+API available on all MediaWiki wikis.
+</p>
+<p><code>wikimedia_rest_request()</code> builds a request for the <a href="https://www.mediawiki.org/wiki/Wikimedia_REST_API">Wikimedia REST API</a>, an additional
+api just for Wikipedia and other wikis managed by the Wikimedia
+Foundation
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">core_rest_request(..., language = "en")
+
+wikimedia_rest_request(..., language = "en")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>&lt;<code>dynamic-dots</code>&gt; Components to add to the URL.
+Unnamed arguments are added to the path of the request, while named
+arguments are added as query parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>The two-letter language code for the Wikipedia edition</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>core/rest</code>, <code>wikimedia/rest</code>, object, an S3 vector that subclasses
+<code>httr2_request</code> (see httr2::request). The request needs to be passed to
+httr2::req_perform to retrieve data from the API.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Get the html of the 'Earth' article on English Wikipedia
+response &lt;- core_rest_request("page", "Earth", "html") %&gt;%
+  httr2::req_perform()
+
+response &lt;- wikimedia_rest_request("page", "html", "Earth") %&gt;%
+  httr2::req_perform()
+
+# Some REST requests take query parameters. Pass these as named arguments.
+# To search German Wikipedia for articles about Goethe
+response &lt;- core_rest_request("search/page", q = "Goethe", limit = 2, language = "de") %&gt;%
+  httr2::req_perform() %&gt;%
+  httr2::resp_body_json()
+</code></pre>
+
+
+</div>

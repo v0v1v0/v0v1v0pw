@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>conProcess</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Process contacts</h2>
+
+<h3>Description</h3>
+
+<p>This function performs basic contact analysis between individuals in a group of tracked animals, or between two different groups of tracked animals.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">conProcess(traj, traj2, dc = 0, tc = 0, GetSim = TRUE, fixid, return = "move2")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>traj</code></td>
+<td>
+<p>an object of the class <code>move2</code> which contains the time-stamped movement fixes of at least two individuals. For more information on objects of this type see <code>help(mt_as_move2)</code>. If traj2 is specified traj may have only one individual.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>traj2</code></td>
+<td>
+<p>(optional) same as traj, but for the second group of individuals. See <code>checkTO</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dc</code></td>
+<td>
+<p>distance tolerance limit (in appropriate units) for defining when two fixes are spatially together.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tc</code></td>
+<td>
+<p>time threshold for determining simultaneous fixes – see function: GetSimultaneous.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>GetSim</code></td>
+<td>
+<p>(logical) whether or not to use GetSimultaneous to time match fixes between pairs of individuals. Default = TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixid</code></td>
+<td>
+<p>(optional) a column providing unique fix ID's or if not specified one is created by combining the track ID with the fix number for that individual (e.g., "Leroy_107").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>What to return (one of 'move2' (default) or 'contacts'). See Return below.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function can be used to identify all fixes defined as contacts in space and time between individuals in one or two groups.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If return = 'move2' (the default) this function returns the input traj move2 object with additional columns: contact - (binary) whether or not a fix is a contact, contact_id - the id of the individual with which a contact occurs, contact_d - the proximity distance of the contact, contact_dt - the difference in time between the two fixes in the contact, contact_n - the number of contacts at that time. In the event that there is more than one contact for a given fix, the contact_id, contact_d, and contact_dt values are all associated with the most proximal (in geographical space) contact. If return = 'contacts' this function returns a data.frame with the columns: (id1,id2) the id's of the individuals involved in a contact, the unique fix id's from the original data associated with each of the fixes involved in a contact (see parameter fixid), the times of the contact fixes, (dist) the distance between the two fixes associated with the contact, and (difftime) the difference in time between the two fixes involved in the contact.
+</p>
+
+
+<h3>References</h3>
+
+<p>Long, JA, Webb, SL, Harju, SM, Gee, KL (2022) Analyzing Contacts and Behavior from High Frequency 
+Tracking Data Using the wildlifeDI R Package. <em>Geographical Analysis</em>. <b>54</b>, 648–663.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>GetSimultaneous, dcPlot, conPhase
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data(does)
+doecons &lt;- conProcess(does,tc=15*60,dc=50)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,58 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>evalb</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Near <code>eval(bquote(expr))</code> shortcut.</h2>
+
+<h3>Description</h3>
+
+<p>Evaluate <code>expr</code> with <code>bquote</code> <code>.()</code> substitution.
+Including <code>.(-x)</code> promoting <code>x</code>'s value from character to a name,
+which is called "quote negation" (hence the minus-sign).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">evalb(expr, where = parent.frame())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>expr</code></td>
+<td>
+<p>expression to evaluate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>where</code></td>
+<td>
+<p>environment to work in.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>evaluated substituted expression.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if(requireNamespace('graphics', quietly = TRUE)) {
+   angle = 1:10
+   variable &lt;- as.name("angle")
+   fn_name &lt;- 'sin'
+   evalb(  plot(x = .(variable), y = .(-fn_name)(.(variable))) )
+}
+
+</code></pre>
+
+
+</div>

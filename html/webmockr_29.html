@@ -1,0 +1,272 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>RequestSignature</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>RequestSignature</h2>
+
+<h3>Description</h3>
+
+<p>General purpose request signature builder
+</p>
+
+
+<h3>Public fields</h3>
+
+<div class="r6-fields">
+
+<dl>
+<dt><code>method</code></dt>
+<dd>
+<p>(character) an http method</p>
+</dd>
+<dt><code>uri</code></dt>
+<dd>
+<p>(character) a uri</p>
+</dd>
+<dt><code>body</code></dt>
+<dd>
+<p>(various) request body</p>
+</dd>
+<dt><code>headers</code></dt>
+<dd>
+<p>(list) named list of headers</p>
+</dd>
+<dt><code>proxies</code></dt>
+<dd>
+<p>(list) proxies as a named list</p>
+</dd>
+<dt><code>auth</code></dt>
+<dd>
+<p>(list) authentication details, as a named list</p>
+</dd>
+<dt><code>url</code></dt>
+<dd>
+<p>internal use</p>
+</dd>
+<dt><code>disk</code></dt>
+<dd>
+<p>(character) if writing to disk, the path</p>
+</dd>
+<dt><code>fields</code></dt>
+<dd>
+<p>(various) request body details</p>
+</dd>
+<dt><code>output</code></dt>
+<dd>
+<p>(various) request output details, disk, memory, etc</p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-RequestSignature-new"><code>RequestSignature$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-RequestSignature-print"><code>RequestSignature$print()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-RequestSignature-to_s"><code>RequestSignature$to_s()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-RequestSignature-clone"><code>RequestSignature$clone()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-RequestSignature-new"></a>
+
+
+
+<h4>Method <code>new()</code>
+</h4>
+
+<p>Create a new <code>RequestSignature</code> object
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>RequestSignature$new(method, uri, options = list())</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>method</code></dt>
+<dd>
+<p>the HTTP method (any, head, options, get, post, put,
+patch, trace, or delete). "any" matches any HTTP method. required.</p>
+</dd>
+<dt><code>uri</code></dt>
+<dd>
+<p>(character) request URI. required.</p>
+</dd>
+<dt><code>options</code></dt>
+<dd>
+<p>(list) options. optional. See Details.</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>A new <code>RequestSignature</code> object
+</p>
+
+
+<hr>
+<a id="method-RequestSignature-print"></a>
+
+
+
+<h4>Method <code>print()</code>
+</h4>
+
+<p>print method for the <code>RequestSignature</code> class
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>RequestSignature$print()</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>x</code></dt>
+<dd>
+<p>self</p>
+</dd>
+<dt><code>...</code></dt>
+<dd>
+<p>ignored</p>
+</dd>
+</dl>
+</div>
+
+
+<hr>
+<a id="method-RequestSignature-to_s"></a>
+
+
+
+<h4>Method <code>to_s()</code>
+</h4>
+
+<p>Request signature to a string
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>RequestSignature$to_s()</pre></div>
+
+
+
+<h5>Returns</h5>
+
+<p>a character string representation of the request signature
+</p>
+
+
+<hr>
+<a id="method-RequestSignature-clone"></a>
+
+
+
+<h4>Method <code>clone()</code>
+</h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>RequestSignature$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt>
+<dd>
+<p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># make request signature
+x &lt;- RequestSignature$new(method = "get", uri = "https:/httpbin.org/get")
+# method
+x$method
+# uri
+x$uri
+# request signature to string
+x$to_s()
+
+# headers
+w &lt;- RequestSignature$new(
+  method = "get",
+  uri = "https:/httpbin.org/get",
+  options = list(headers = list(`User-Agent` = "foobar", stuff = "things"))
+)
+w
+w$headers
+w$to_s()
+
+# headers and body
+bb &lt;- RequestSignature$new(
+  method = "get",
+  uri = "https:/httpbin.org/get",
+  options = list(
+    headers = list(`User-Agent` = "foobar", stuff = "things"),
+    body = list(a = "tables")
+  )
+)
+bb
+bb$headers
+bb$body
+bb$to_s()
+
+# with disk path
+f &lt;- tempfile()
+bb &lt;- RequestSignature$new(
+  method = "get",
+  uri = "https:/httpbin.org/get",
+  options = list(disk = f)
+)
+bb
+bb$disk
+bb$to_s()
+</code></pre>
+
+
+</div>

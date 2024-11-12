@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>show_prdseason</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot predictions for GAMs over time, by season</h2>
+
+<h3>Description</h3>
+
+<p>Plot predictions for GAMs over time, by season
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">show_prdseason(mod, ylab, base_size = 11, xlim = NULL, ylim = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mod</code></td>
+<td>
+<p>input model object as returned by <code>anlz_gam</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylab</code></td>
+<td>
+<p>chr string for y-axis label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>base_size</code></td>
+<td>
+<p>numeric indicating base font size, passed to <code>theme_bw</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim</code></td>
+<td>
+<p>optional numeric vector of length two for x-axis limits</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ylim</code></td>
+<td>
+<p>optional numeric vector of length two for y-axis limits</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>ggplot</code> object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(dplyr)
+
+# data to model
+tomod &lt;- rawdat %&gt;%
+  filter(station %in% 34) %&gt;%
+  filter(param %in% 'chl') %&gt;% 
+  filter(yr &gt; 2015)
+  
+mod &lt;- anlz_gam(tomod, trans = 'log10')
+show_prdseason(mod, ylab = 'Chlorophyll-a (ug/L)')
+</code></pre>
+
+
+</div>

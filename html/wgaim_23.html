@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>qtlTable</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Stack QTL summary information into a super table</h2>
+
+<h3>Description</h3>
+
+<p>Stack QTL summary information into a super table ready for
+simple exporting.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">qtlTable(..., intervalObj = NULL, labels = NULL, columns = "all")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>list of objects of class <code>"wgaim"</code>. All
+models must have been analysed with the same <code>gen.type</code>
+(see help for <code>wgaim.asreml()</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>intervalObj</code></td>
+<td>
+<p>a genetic object of class <code>"interval"</code>
+reequire in a <code>wgaim</code> analysis  (see help for
+<code>wgaim.asreml()</code>). This is required to be non NULL</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>a vector of character strings describing the trait
+names of each model QTL table.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>columns</code></td>
+<td>
+<p>this can be either a numeric vector determining which columns of the QTL
+summaries should be outputted or <code>"all"</code> for all
+columns. The default is <code>"all"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The super table is created by obtaining the QTL summaries for each model
+in <code>...</code> using <code>summary.wgaim()</code> and then row binding them
+together. An extra column is created on the left hand side of the
+super table for the trait names given in the <code>labels</code>
+argument. If <code>labels = NULL</code> then trait names are extracted from
+the left hand-side of the fixed component of the associated <code>wgaim</code>
+model. The returned super table allows simple exporting to spreadsheet software packages
+or with the R/LaTeX package <span class="pkg">xtable</span>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>data.frame</code> object with stacked QTL summaries
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Julian Taylor</p>
+
+
+<h3>References</h3>
+
+<p>Julian Taylor, Arunas Vebyla (2011). R Package wgaim: QTL Analysis in
+Bi-Parental Populations Using Linear Mixed Models. <em>Journal of
+Statistical Software</em>, <b>40</b>(7), 1-18. URL <a href="https://www.jstatsoft.org/v40/i07/">https://www.jstatsoft.org/v40/i07/</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wgaim</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Not run: 
+
+## fit wgaim models
+
+rktgw.qtl &lt;- wgaim(rktgw.asf, intervalObj = genoRxK, merge.by = "Genotype",
+                   trace = "trace.txt", na.action = na.method(x = "include"))
+
+rkyld.qtl &lt;- wgaim(rkyld.asf, intervalObj = genoRxK, merge.by = "Genotype",
+                   trace = "trace.txt", na.action = na.method(x = "include"))
+
+## create super table and export
+
+qtlt &lt;- qtlTable(rktgw.qtl, rkyld.qtl, labels = c("Conc.", "Shoot"))
+print(xtable(qtlt), file = "superQTL.tex", include.rownames = FALSE)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,224 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wflow_quickstart</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Quickly start a workflowr project</h2>
+
+<h3>Description</h3>
+
+<p><code>wflow_quickstart</code> provides a simple interface to effortlessly create a
+workflowr project from an existing data analysis.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wflow_quickstart(
+  files,
+  username = NULL,
+  organization = NULL,
+  supporting_files = NULL,
+  directory = NULL,
+  change_wd = TRUE,
+  delete_on_error = TRUE,
+  view = getOption("workflowr.view"),
+  git.user.name = NULL,
+  git.user.email = NULL,
+  host = c("github", "gitlab"),
+  create_on_github = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>character. The R Markdown file(s) to be copied into the
+subdirectory <code>analysis/</code> of the newly created workflowr project. If
+the argument <code>directory</code> is left as <code>NULL</code>, the workflowr project
+will be named after the first Rmd file. This new directory will be located
+in the current working directory. Supports file
+<a href="https://en.wikipedia.org/wiki/Glob_(programming)">globbing</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>username</code></td>
+<td>
+<p>character (default: NULL). The GitHub or GitLab personal
+account you want to use to create the remote Git repository. It can also be
+the name of a GitLab Group that you belong to. However, if it is a GitHub
+organization, instead use the argument <code>organization</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>organization</code></td>
+<td>
+<p>The GitHub organization account you want to use to
+create the remote Git repository.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>supporting_files</code></td>
+<td>
+<p>character (default: NULL) Supporting files or
+directories that are used by the Rmd files. These will be copied to the
+root of the project. Since by default Rmd files are executed in the root of
+the project, any relative file paths should still work. Long term it is
+recommended to move these supporting files to subdirectories of the
+workflowr project, e.g. <code>data/</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>directory</code></td>
+<td>
+<p>character (default: NULL). The path to the directory to
+create the workflowr project. This directory will also be used to name the
+remote Git repository. If left as <code>NULL</code>, the name is derived from the
+first Rmd file that is passed to the argument <code>files</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>change_wd</code></td>
+<td>
+<p>logical (default: TRUE). Change the working directory to
+the newly created workflowr project. Passed to <code>wflow_start</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delete_on_error</code></td>
+<td>
+<p>logical (default: TRUE). Delete the newly created
+project if any error occurs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>view</code></td>
+<td>
+<p>logical (default: <code>getOption("workflowr.view")</code>). View the
+local website after it is built (will open the home page in the RStudio
+Viewer pane or your web browser).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>git.user.name</code></td>
+<td>
+<p>character (default: <code>NULL</code>). The user name
+used by Git to sign commits, e.g., "Ada Lovelace". This setting
+only applies to the workflowr project being created. To specify the
+global setting for the Git user name, use
+<code>wflow_git_config</code> instead. When <code>user.name =
+NULL</code>, no user name is recorded for the project, and the global
+setting will be used. This setting can be modified later
+by running <code>git config --local</code> in the Terminal.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>git.user.email</code></td>
+<td>
+<p>character (default: <code>NULL</code>). The email
+address used by Git to sign commits, e.g.,
+"ada.lovelace@ox.ac.uk". This setting only applies to the workflowr
+project being created. To specify the global setting for the Git
+email address, use <code>wflow_git_config</code> instead. When
+<code>user.name = NULL</code>, no email address is recorded for the
+project, and the global setting will be used. This setting can be
+modified later by running <code>git config --local</code> in the Terminal.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>host</code></td>
+<td>
+<p>character. Choose the service for hosting the Git repository.
+Must be either "github" for GitHub.com or "gitlab" for GitLab.com.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>create_on_github</code></td>
+<td>
+<p>logical (default: NULL). Should workflowr create the
+repository on GitHub? This requires logging into your GitHub account to
+authenticate workflowr to act on your behalf. The default behavior is to
+ask the user. Note that this only works for public repositories on
+github.com. If you want to create a private repository or are using GitHub
+Enterprise, you will need to manually create the repository.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>wflow_quickstart</code> performs the following steps:
+</p>
+
+<ul>
+<li>
+<p> Starts a new project with <code>wflow_start</code>
+</p>
+</li>
+<li>
+<p> Copies the Rmd file(s) to the subdirectory <code>analysis/</code>
+</p>
+</li>
+<li>
+<p> Copies the supporting file(s) and/or directory(s) to the root of the
+project (Note: by default Rmd files are executed in the root of the project,
+so relative file paths should still work)
+</p>
+</li>
+<li>
+<p> Adds link(s) to the results to the main index page
+</p>
+</li>
+<li>
+<p> Publishes the Rmd files with <code>wflow_publish</code>
+</p>
+</li>
+<li>
+<p> Configures the remote repository with <code>wflow_use_github</code> or
+<code>wflow_use_gitlab</code>
+</p>
+</li>
+</ul>
+<p>Once it has completed, you can push to the remote service with
+<code>wflow_git_push</code>. Alternatively you can run <code>git push</code> in the
+terminal.
+</p>
+<p>If you are using GitHub and you chose to not allow workflowr to create the
+repository for you, then you will have to login to your account and create
+the new repository yourself. If you're using GitLab, you don't have to worry
+about this because the new repository will be automatically created when you
+push.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Invisibly returns the absolute path to the newly created workflowr
+project.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>workflowr, <code>wflow_start</code>, <code>wflow_publish</code>,
+<code>wflow_use_github</code>, <code>wflow_use_gitlab</code>,
+<code>wflow_git_push</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+wflow_quickstart(files = "existing-analysis.Rmd", username = "your-github-username")
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Cost</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Stub for a turbine's cost function.</h2>
+
+<h3>Description</h3>
+
+<p>A function that returns the yearly installation costs for a given set of turbines (provide x and y for the turbines' locations). In its present form it only returns the 'UnitCost' value from the <code>FarmVars</code> settings object per turbine.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Cost(x, y)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>can be a single value or a numeric vector of values, contains the 'x' location(s) of turbines.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>can be a single value or a numeric vector of values, contains the 'y' location(s) of turbines.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note that <code>x</code> and <code>y</code> should both be of length <code>n</code>, i.e. the numbers of values they contain should match the number of turbines in the current wind farm layout problem.<br>
+This function is a stub and can and should be replaced by something reasonable in an actual wind farm layout problem.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>Cost</code> returns a vector of values. The number of elements matches the length of <code>x</code> and <code>y</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Carsten Croonenbroeck
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Profit</code> to see where to use <code>Cost</code>, <code>Yield</code> for a similar function for yearly yield.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Returns a vector of two, c(100000, 100000).
+Cost(c(0.5, 0.7), c(0.2, 0.3))
+
+## Replace the function by another function
+## also called 'Cost', embedded in environment e.
+## Also, see the vignette.
+## Not run: 
+e$Cost &lt;- function(x, y) #x, y \in R^n
+{
+	retVal &lt;- rep(e$FarmVars$UnitCost, min(length(x), length(y)))
+	retVal[x &gt; 0.5] &lt;- retVal[x &gt; 0.5] * 2
+	return(retVal)
+}
+set.seed(1357)
+NumTurbines &lt;- 4 # For example.
+Result &lt;- pso::psoptim(par = runif(NumTurbines * 2), fn = Profit,
+  lower = rep(0, NumTurbines * 2), upper = rep(1, NumTurbines * 2))
+Result
+rm(Cost, envir = e)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

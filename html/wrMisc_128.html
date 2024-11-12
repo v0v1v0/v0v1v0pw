@@ -1,0 +1,67 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>countSameStartEnd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Count same start- and end- sites of edges (or fragments)</h2>
+
+<h3>Description</h3>
+
+<p>Suppose a parent sequence/string 'ABCDE' gets cut in various fragments (eg 'ABC','AB' ...).   
+<code>countSameStartEnd</code> counts how many (ie re-occuring) start- and end- sites of edges do occur in the input-data. 
+The input is presented as matrix of/indicating start- and end-sites of edges.
+The function is used to characterize partially redundant edges and accumulation of cutting/breakage sites.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">countSameStartEnd(frag, minFreq = 2, nDig = 4)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frag</code></td>
+<td>
+<p>(matrix) 1st column <code>beg</code> start-sites, 2nd column <code>end</code> end-sites of edges, rownames to precise fragment identities are recommended</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minFreq</code></td>
+<td>
+<p>(integer) min number of accumulated sites for taking into account (allows filtering with large datasets)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nDig</code></td>
+<td>
+<p>(integer) rounding: number of digits for columns <code>beg.rat</code> and <code>end.rat</code> in output</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>matrix of 6 columns: input (beg and end), beg.n, beg.rat, end.n, end.rat
+</p>
+
+
+<h3>See Also</h3>
+
+<p>to build initial tree <code>buildTree</code>, <code>contribToContigPerFrag</code>, <code>simpleFragFig</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">frag1 &lt;- cbind(beg=c(2,3,7,13,13,15,7,9,7, 3,3,5), end=c(6,12,8,18,20,20,19,12,12, 4,5,7))
+rownames(frag1) &lt;- letters[1:nrow(frag1)]
+countSameStartEnd(frag1)
+simpleFragFig(frag1)
+</code></pre>
+
+
+</div>

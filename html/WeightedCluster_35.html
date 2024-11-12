@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wcKMedRange</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Compute <code>wcKMedoids</code> clustering for different number of clusters.
+</h2>
+
+<h3>Description</h3>
+
+<p>Compute <code>wcKMedoids</code> clustering for different number of clusters.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wcKMedRange(diss, kvals, weights=NULL, R=1,  samplesize=NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>diss</code></td>
+<td>
+<p>A dissimilarity matrix or a dist object (see <code>dist</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kvals</code></td>
+<td>
+<p>A numeric vector containing the number of cluster to compute.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>Numeric. Optional numerical vector containing case weights.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+<p>Optional number of bootstrap that can be used to build confidence intervals.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>samplesize</code></td>
+<td>
+<p>Size of bootstrap sample. Default to sum of weights.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additionnal parameters passed to <code>wcKMedoids</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Compute a <code>clustrange</code> object using the <code>wcKMedoids</code> method. <code>clustrange</code> objects contains a list of clustering solution with associated statistics and can be used to find the optimal clustering solution.
+</p>
+<p>See <code>as.clustrange</code> for more details.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See <code>as.clustrange</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(mvad)
+## Aggregating state sequence
+aggMvad &lt;- wcAggregateCases(mvad[, 17:86], weights=mvad$weight)
+
+## Creating state sequence object
+mvad.seq &lt;- seqdef(mvad[aggMvad$aggIndex, 17:86], weights=aggMvad$aggWeights)
+
+## Compute distance using Hamming distance
+diss &lt;- seqdist(mvad.seq, method="HAM")
+
+## Pam clustering
+pamRange &lt;- wcKMedRange(diss, 2:15)
+
+## Plot all statistics (standardized)
+plot(pamRange, stat="all", norm="zscoremed", lwd=3)
+
+## Plotting sequences in 3 groups
+seqdplot(mvad.seq, group=pamRange$clustering$cluster3)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hullMuirMaxDistance</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate the Hull and Muir (2010) maximum distance</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the maximum fall distance from a turbine using the
+regression model from Hull and Muir (2010).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">hullMuirMaxDistance(hubHeight, bladeRadius, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>hubHeight</code></td>
+<td>
+<p>Numeric, turbine hub height.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bladeRadius</code></td>
+<td>
+<p>Numeric, turbine blade radius.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Currently ignored.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Using the linear regression coefficients from Hull and Muir (2010), a
+maximum distance is calculated. This is done for three size classes (bats,
+small birds (SB), and large birds (LB)) separately.
+</p>
+<p>It is assumed that <code>hubHeight</code> and <code>bladeRadius</code> have the same units.
+</p>
+<p>Note: Hull and Muir (2010) used the range of 65 m &lt; <code>hubHeight</code> &lt; 94 m  and  33 m &lt; <code>bladeRadius</code> &lt; 55 m.
+Anything outside of this range is extrapolation and should only be done with care.
+</p>
+
+
+<h3>Value</h3>
+
+<p>data frame of maximum distance by size class, <code>hubHeight</code>, and
+<code>bladeRadius</code>. Distance will be in the same units as were provided for <code>hubHeight</code> and <code>bladeRadius</code>
+</p>
+
+
+<h3>References</h3>
+
+<p>Hull, C. L., &amp; Muir, S. (2010).
+Search areas for monitoring bird and bat carcasses at wind farms using a Monte-Carlo model.
+Australasian Journal of Environmental Management, 17(2), 77-87.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+hubHeights &lt;- rnorm(10, mean = 87.5, sd = 10)
+bladeRadii &lt;- rnorm(10, mean = 62.5, sd = 10)
+
+hullMuirMaxDistance(hubHeight = hubHeights, bladeRadius = bladeRadii)
+</code></pre>
+
+
+</div>

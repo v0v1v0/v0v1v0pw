@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>percentileBaselinePrint</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Print a LaTeX table comparing current and baseline values and return a bar graph of the same data 
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculate quantile values for a supplied numeric list.  This is a wrapper around the R quantile function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">percentileBaselinePrint(column, 
+        baselineColumn, 
+        columnNames = c("Delta", "Current", "Baseline", "Percentile")) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>column</code></td>
+<td>
+
+<p>a vector of numeric values from the current dataset  The values will be rounded to two decimal places before calculation.  
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>baselineColumn</code></td>
+<td>
+
+<p>a vector of numeric values from the baseline data.  The values will be rounded to two decimal places before calculation.  
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>columnNames</code></td>
+<td>
+
+<p>names of the columns in the table that is printed by this function.  
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a ggplot graph of the data.  
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Greg Hunt &lt;greg@firmansyah.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+fileNameList = logFileNamesGetAll(dataDirectory=datd)
+
+logdf = logFileListRead(fileNameList, 
+          readFunction=logFileRead, 
+          columnList=logFileFieldsGetIIS(fileNameList[[1]]))
+
+logbasedf = logFileListRead(fileNameList, 
+          readFunction=logFileRead, 
+          columnList=logFileFieldsGetIIS(fileNameList[[1]]))
+plotWriteFilenameToLaTexFile(
+  plotSaveGG(
+    percentileBaselinePrint(logdf$elapsed, 
+              logbasedf$elapsed, 
+              columnNames = c("Delta", "Current", "Baseline", "Percentile"))
+    , "xxx")
+    )
+
+
+</code></pre>
+
+
+</div>

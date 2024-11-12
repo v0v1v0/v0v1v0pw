@@ -1,0 +1,62 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>computeMAIE</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Mean Absolute Imputation Error</h2>
+
+<h3>Description</h3>
+
+<p>This function computes the mean absolute imputation error for a given complete/true data matrix,
+imputed data matrix and the data matrix with missing values.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">computeMAIE(x.miss, x.impute, x.true)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x.miss</code></td>
+<td>
+<p>a <code>matrix</code>,  having missing values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x.impute</code></td>
+<td>
+<p>an imputed data <code>matrix</code>. Note that it should not contain any missing values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x.true</code></td>
+<td>
+<p>complete/true data <code>matrix</code>. Note that it should not contain any missing values.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>value of MSIE
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  set.seed(3)
+  x.true = matrix(rnorm(100),10,10)
+  ## create 10% missing values in x
+  x.miss = artifNA(x.true, 0.10)
+  ## impute using wNNSel method
+  x.impute = wNNSel.impute(x.miss)
+  computeMAIE(x.miss, x.impute, x.true)
+</code></pre>
+
+
+</div>

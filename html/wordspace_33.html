@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>DSM_VerbNounTriples_BNC</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Verb-Noun Co-occurrence Frequencies from British National Corpus (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>A table of co-occurrence frequency counts for verb-subject and verb-object pairs in the British National Corpus (BNC).
+Subject and object are represented by the respective head noun.  Both verb and noun entries are lemmatized.
+Separate frequency counts are provided for the written and the spoken part of the BNC.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  
+DSM_VerbNounTriples_BNC
+
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 250117 rows and the following columns:
+</p>
+
+<dl>
+<dt>
+<code>noun</code>:</dt>
+<dd>
+<p>noun lemma</p>
+</dd>
+<dt>
+<code>rel</code>:</dt>
+<dd>
+<p>syntactic relation (<code>subj</code> or <code>obj</code>)</p>
+</dd>
+<dt>
+<code>verb</code>:</dt>
+<dd>
+<p>verb lemma</p>
+</dd>
+<dt>
+<code>f</code>:</dt>
+<dd>
+<p>co-occurrence frequency of noun-rel-verb triple in subcorpus</p>
+</dd>
+<dt>
+<code>mode</code>:</dt>
+<dd>
+<p>subcorpus (<code>written</code> for the writte part of the BNC, <code>spoken</code> for the spoken part of the BNC)</p>
+</dd>
+</dl>
+<h3>Details</h3>
+
+<p>In order to save disk space, triples that occur less than 5 times in the respective subcorpus have been omitted from the table.
+The data set should therefore not be used for practical applications.
+</p>
+
+
+<h3>Source</h3>
+
+<p>Syntactic dependencies were extracted from the British National Corpus (Aston &amp; Burnard 1998) using the C&amp;C robust syntactic parser (Curran <em>et al.</em> 2007).  Lemmatization and POS tagging are also based on the C&amp;C output.
+</p>
+
+
+<h3>References</h3>
+
+<p>Aston, Guy and Burnard, Lou (1998). <em>The BNC Handbook</em>. Edinburgh University Press, Edinburgh. See also the BNC homepage at <a href="http://www.natcorp.ox.ac.uk/">http://www.natcorp.ox.ac.uk/</a>.
+</p>
+<p>Curran, James; Clark, Stephen; Bos, Johan (2007). Linguistically motivated large-scale NLP with C&amp;C and Boxer. In <em>Proceedings of the 45th Annual Meeting of the Association for Computational Linguistics, Posters and Demonstrations Sessions</em>, pages 33–36, Prague, Czech Republic.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# compile some typical DSMs for spoken part of BNC
+bncS &lt;- subset(DSM_VerbNounTriples_BNC, mode == "spoken")
+dim(bncS) # ca. 14k verb-rel-noun triples
+
+# dependency-filtered DSM for nouns, using verbs as features
+# (note that multiple entries for same relation are collapsed automatically)
+bncS_depfilt &lt;- dsm(
+  target=bncS$noun, feature=bncS$verb, score=bncS$f,
+  raw.freq=TRUE, verbose=TRUE)
+
+# dependency-structured DSM
+bncS_depstruc &lt;- dsm(
+  target=bncS$noun, feature=paste(bncS$rel, bncS$verb, sep=":"), score=bncS$f,
+  raw.freq=TRUE, verbose=TRUE)
+
+</code></pre>
+
+
+</div>

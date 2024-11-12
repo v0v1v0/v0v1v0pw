@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>appshot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Take a screenshot of a Shiny app</h2>
+
+<h3>Description</h3>
+
+<p><code>appshot</code> performs a <code>webshot</code> using two different methods
+depending upon the object provided. If a 'character' is provided (pointing to
+an app.R file or app directory) an isolated background R process is launched
+to run the Shiny application. The current R process then captures the
+<code>webshot</code>. When a Shiny application object is supplied to
+<code>appshot</code>, it is reversed: the Shiny application runs in the current R
+process and an isolated background R process is launched to capture a
+<code>webshot</code>. The reason it is reversed in the second case has to do
+with scoping: although it would be preferable to run the Shiny application in
+a background process and call <code>webshot</code> from the current process, with
+Shiny application objects, there are potential scoping errors when run this
+way.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">appshot(
+  app,
+  file = "webshot.png",
+  ...,
+  port = getOption("shiny.port"),
+  envvars = NULL
+)
+
+## S3 method for class 'character'
+appshot(
+  app,
+  file = "webshot.png",
+  ...,
+  port = getOption("shiny.port"),
+  envvars = NULL
+)
+
+## S3 method for class 'shiny.appobj'
+appshot(
+  app,
+  file = "webshot.png",
+  ...,
+  port = getOption("shiny.port"),
+  envvars = NULL,
+  webshot_timeout = 60
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>app</code></td>
+<td>
+<p>A Shiny app object, or a string naming an app directory.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>A vector of names of output files. Should end with an image file
+type (<code>.png</code>, <code>.jpg</code>, <code>.jpeg</code>, or <code>.webp</code>) or
+<code>.pdf</code>. If several screenshots have to be taken and only one filename
+is provided, then the function appends the index number of the screenshot
+to the file name. For PDF output, it is just like printing the page to PDF
+in a browser; <code>selector</code>, <code>cliprect</code>, <code>expand</code>, and
+<code>zoom</code> will not be used for PDFs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments to pass on to <code>webshot</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>port</code></td>
+<td>
+<p>Port that Shiny will listen on.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>envvars</code></td>
+<td>
+<p>A named character vector or named list of environment
+variables and values to set for the Shiny app's R process. These will be
+unset after the process exits. This can be used to pass configuration
+information to a Shiny app.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>webshot_timeout</code></td>
+<td>
+<p>The maximum number of seconds the phantom application
+is allowed to run before killing the process. If a delay argument is
+supplied (in <code>...</code>), the delay value is added to the timeout value.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Invisibly returns the normalized path to all screenshots taken. The
+character vector will have a class of '"webshot"'.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if (interactive()) {
+  appdir &lt;- system.file("examples", "01_hello", package="shiny")
+
+  # With a Shiny directory
+  appshot(appdir, "01_hello.png")
+
+  # With a Shiny App object
+  shinyapp &lt;- shiny::shinyAppDir(appdir)
+  appshot(shinyapp, "01_hello_app.png")
+}
+
+</code></pre>
+
+
+</div>

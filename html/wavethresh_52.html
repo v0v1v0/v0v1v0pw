@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dencvwd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Calculate variances of wavlet coefficients of a p.d.f.
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculates the variances of the empirical wavelet coefficients by performing a 2D wavelet decomposition on the covariance matrix of the empirical scaling function coefficients of the probability density function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dencvwd(hrproj, filter.number=hrproj$filter$filter.number,
+    family=hrproj$filter$family, type="wavelet", bc="zero",
+    firstk=hrproj$klim, RetFather=TRUE, verbose=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>hrproj</code></td>
+<td>
+<p>Output from <code>denproj</code> with <code>covar=T</code> argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.number</code></td>
+<td>
+<p>The filter number of the wavelet basis to be used.
+This argument should not be altered from the default, as it is tied
+to the <code>hrproj</code> argument</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>The family of wavelets to use.
+This argument should not be altered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>The type of decomposition to be performed. This argument should not be altered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bc</code></td>
+<td>
+<p>The type of boundary conditions to be used.
+For density estimation this should always be zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>firstk</code></td>
+<td>
+<p>The bounds on the translation index of the empirical scaling function coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>RetFather</code></td>
+<td>
+<p>Ignore this.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>If TRUE the function will be chatty. Note that comments are only availble for part of the algorithm, so might not be very enlightening.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is basically <code>imwd</code> adapted to handle zero
+boundary conditions, except that only the variances are returned,
+i.e. the diagonals of the covariance matrices produced.
+Note that this code is not very efficient.
+The full covariance matrices of all levels of coefficients are calculated,
+and then the diagonals are extracted.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>wd.object</code>, but the contents are not a
+standard wavelet transform, ie the object is used to hold other information
+which organisationally is arranged like a wavelet tranform, ie variances of
+coefficients. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Herrick</p>
+
+
+<h3>See Also</h3>
+
+<p><code>denproj</code>,<code>imwd</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Simulate data from the claw density, find the 
+# empirical scaling function coefficients and covariances and then decompose
+# both to give wavelet coefficients and their variances.
+
+data &lt;- rclaw(100)
+datahr &lt;- denproj(data, J=8, filter.number=2,family="DaubExPhase", covar=TRUE)
+data.wd &lt;- denwd(datahr)
+## Not run: plotdenwd(data.wd, top.level=(datahr$res$J-1))
+
+datavar &lt;- dencvwd(datahr)
+## Not run: plotdenwd(datavar, top.level=(datahr$res$J-1)) 
+</code></pre>
+
+
+</div>

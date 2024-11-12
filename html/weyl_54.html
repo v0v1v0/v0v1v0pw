@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>print.weyl</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Print methods for weyl objects</h2>
+
+<h3>Description</h3>
+
+<p>Printing methods for weyl objects follow those for the <a href="https://CRAN.R-project.org/package=spray"><span class="pkg">spray</span></a>
+package, with some additional functionality.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'weyl'
+print(x, ...)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A weyl object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments, currently ignored</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Option <code>polyform</code> determines whether the object is to be printed in
+matrix form or polynomial form: as in the <a href="https://CRAN.R-project.org/package=spray"><span class="pkg">spray</span></a> package, this
+option governs dispatch to either <code>print_spray_polyform()</code> or
+<code>print_spray_matrixform()</code>.
+</p>
+<pre>
+&gt; a &lt;- rweyl()
+&gt; a    # default print method
+A member of the Weyl algebra:
+  x  y  z dx dy dz     val
+  1  2  2  2  1  0  =    3
+  2  2  0  0  1  1  =    2
+  0  0  0  1  1  2  =    1
+&gt; options(polyform = TRUE)
+&gt; a
+A member of the Weyl algebra:
++3*x*y^2*z^2*dx^2*dy +2*x^2*y^2*dy*dz +dx*dy*dz^2
+&gt; options(polyform = FALSE)  # restore default
+</pre>
+<p>Irrespective of the value of <code>polyform</code>, option <code>weylvars</code>
+controls the variable names.  If <code>NULL</code> (the default), then
+sensible values are used: either <code>[xyz]</code> if the dimension is three
+or less, or integers.  But option <code>weylvars</code> is user-settable:
+</p>
+<pre>
+&gt; options(weylvars=letters[18:20])
+&gt; a
+A member of the Weyl algebra:
+  r  s  t dr ds dt     val
+  1  2  2  2  1  0  =    3
+  2  2  0  0  1  1  =    2
+  0  0  0  1  1  2  =    1
+&gt; options(polyform=TRUE)
+&gt; a
+A member of the Weyl algebra:
++3*r*s^2*t^2*dr^2*ds +2*r^2*s^2*ds*dt +dr*ds*dt^2
+&gt; options(polyform=FALSE) ; options(weylvars=NULL)
+</pre>
+<p>If the user sets <code>weylvars</code>, the print method tries to do the Right
+Thing (tm).  If set to <code>c("a","b","c")</code>, for example, the
+generators are named <code>c(" a"," b"," c","da","db","dc")</code> [note the
+spaces].  If the algebra is univariate, the names will be something like
+<code>d</code> and <code>x</code>.  No checking is performed and if the length is
+not equal to the dimension, undesirable behaviour may occur.  For the
+love of God, do not use a variable named <code>d</code>.  Internally,
+<code>weylvars</code> works by changing the <code>sprayvars</code> option in the
+<a href="https://CRAN.R-project.org/package=spray"><span class="pkg">spray</span></a> package.
+</p>
+<p>Note that, as for <code>spray</code> objects, this option has no algebraic
+significance: it only affects the print method.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a <code>weyl</code> object.</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Robin K. S. Hankin</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">a &lt;- rweyl()
+print(a)
+options(polyform=TRUE)
+print(a)
+</code></pre>
+
+
+</div>

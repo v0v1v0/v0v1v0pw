@@ -1,0 +1,305 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>color_spectro</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Highlight spectrogram regions</h2>
+
+<h3>Description</h3>
+
+<p><code>color_spectro</code> highlights spectrogram regions specified by users
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">color_spectro(
+  wave,
+  wl = 512,
+  wn = "hanning",
+  ovlp = 70,
+  dB = "max0",
+  collevels = NULL,
+  selec.col = "red2",
+  col.clm = NULL,
+  base.col = "black",
+  bg.col = "white",
+  strength = 1,
+  cexlab = 1,
+  cexaxis = 1,
+  tlab = "Time (s)",
+  flab = "Frequency (kHz)",
+  title = NULL,
+  axisX = TRUE,
+  axisY = TRUE,
+  flim = NULL,
+  rm.zero = FALSE,
+  X = NULL,
+  fast.spec = FALSE,
+  t.mar = NULL,
+  f.mar = NULL,
+  interactive = NULL,
+  add = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wave</code></td>
+<td>
+<p>A 'wave' object produced by  <code>readWave</code> or similar functions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wl</code></td>
+<td>
+<p>A numeric vector of length 1 specifying the window length of the spectrogram. Default
+is 512.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wn</code></td>
+<td>
+<p>Character vector of length 1 specifying window name. Default is
+"hanning". See function <code>ftwindow</code> for more options.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ovlp</code></td>
+<td>
+<p>Numeric vector of length 1 specifying the percent overlap between two
+consecutive windows, as in <code>spectro</code>. Default is 70.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dB</code></td>
+<td>
+<p>Character vector of length 1 controlling the amplitude weights as in
+<code>spectro</code>. Default is 'max0'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>collevels</code></td>
+<td>
+<p>Numeric. Levels used to partition amplitude range as in <code>spectro</code>.
+Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>selec.col</code></td>
+<td>
+<p>Character vector of length 1 specifying the color to be used to highlight selection.
+See 'col.clm' for specifying unique colors for each selection. Default is 'red2'. Ignored if 'col.cm'
+and 'X' are provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col.clm</code></td>
+<td>
+<p>Character vector of length 1 indicating the name of the column in 'X' that contains the
+color names for each selection. Ignored if <code>X == NULL</code> or <code>interactive != NULL</code>. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>base.col</code></td>
+<td>
+<p>Character vector of length 1 specifying the color of the background spectrogram.
+Default is 'black'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bg.col</code></td>
+<td>
+<p>Character vector of length 1 specifying the background color for both base
+and highlighted spectrograms. Default is 'white'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strength</code></td>
+<td>
+<p>Numeric vector of length 1 controlling the strength of the highlighting color (actually how many times it is repeated in the internal color palette). Must be a positive integer. Default is 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexlab</code></td>
+<td>
+<p>Numeric vector of length 1 specifying the relative size of axis
+labels. See <code>spectro</code>. Default is 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexaxis</code></td>
+<td>
+<p>Numeric vector of length 1 specifying the relative size of axis. See
+<code>spectro</code>. Default is 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tlab</code></td>
+<td>
+<p>Character vector of length 1 specifying the label of the time axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flab</code></td>
+<td>
+<p>Character vector of length 1 specifying the label of the frequency axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>Logical argument to add a title to individual spectrograms.
+Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axisX</code></td>
+<td>
+<p>Logical to control whether time axis is plotted. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>axisY</code></td>
+<td>
+<p>Logical to control whether frequency axis is plotted. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>flim</code></td>
+<td>
+<p>A numeric vector of length 2 for the frequency limit (in kHz) of
+the spectrogram, as in <code>spectro</code>. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rm.zero</code></td>
+<td>
+<p>Logical indicated if the 0 at the start of the time axis should be removed. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>Optional. Data frame containing columns for start and end time of signals ('start' and 'end') and low and high frequency ('bottom.freq' and 'top.freq').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fast.spec</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> then image function is used internally to create spectrograms, which substantially
+increases performance (much faster), although some options become unavailable, as collevels, and sc (amplitude scale).
+This option is indicated for signals with high background noise levels. Palette colors <code>gray.1</code>, <code>gray.2</code>,
+<code>gray.3</code>, <code>topo.1</code> and <code>rainbow.1</code> (which should be imported from the package monitoR) seem
+to work better with 'fast' spectrograms. Palette colors <code>gray.1</code>, <code>gray.2</code>,
+<code>gray.3</code> offer
+decreasing darkness levels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t.mar</code></td>
+<td>
+<p>Numeric vector of length 1. Specifies the margins adjacent to the start and end points to be added when highlighting selection. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f.mar</code></td>
+<td>
+<p>Numeric vector of length 1. Specifies the margins adjacent to the low and high frequencies to be added when highlighting selection. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interactive</code></td>
+<td>
+<p>Numeric. Allow user to interactively select the signals to be highlighted by clicking
+on the graphic device. Users must select the opposite corners of a square delimiting the spectrogram region
+to be highlighted. Controls the number of signals that users would be able to select (2 clicks per signal).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> new highlighting can be applied to the current plot (which means
+that the function with <code>add = FALSE</code> should be run first). Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function highlights regions of the spectrogram with different colors. The regions to be
+highlighted can be provided in a selection table (as the example data 'lbh_selec_table') or interactively ('interactive' argument).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A plot is produced in the graphic device.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>) and Grace Smith Vidaurre
+</p>
+
+
+<h3>References</h3>
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>track_freq_contour</code> for creating spectrograms to visualize
+frequency measurements by <code>spectro_analysis</code>, <code>snr_spectrograms</code> for
+creating spectrograms to optimize noise margins used in <code>sig2noise</code>
+</p>
+<p>Other spectrogram creators: 
+<code>freq_DTW()</code>,
+<code>multi_DTW()</code>,
+<code>phylo_spectro()</code>,
+<code>snr_spectrograms()</code>,
+<code>spectrograms()</code>,
+<code>track_freq_contour()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data(list = c("Phae.long1", "lbh_selec_table"))
+writeWave(Phae.long1, file.path(tempdir(), "Phae.long1.wav")) # save sound files
+
+# subset selection table
+st &lt;- lbh_selec_table[lbh_selec_table$sound.files == "Phae.long1.wav", ]
+
+# read wave file as an R object
+sgnl &lt;- tuneR::readWave(file.path(tempdir(), st$sound.files[1]))
+
+# create color column
+st$colors &lt;- c("red2", "blue", "green")
+
+# highlight selections
+color_spectro(
+  wave = sgnl, wl = 300, ovlp = 90, flim = c(1, 8.6), collevels = seq(-40, 0, 5),
+  dB = "B", X = st, col.clm = "colors", base.col = "skyblue", t.mar = 0.07, f.mar = 0.1,
+  interactive = NULL
+)
+
+# interactive (selected manually: you have to select them by clicking on the spectrogram)
+color_spectro(
+  wave = sgnl, wl = 300, ovlp = 90, flim = c(1, 8.6), collevels = seq(-40, 0, 5),
+  dB = "B", col.clm = "colors", t.mar = 0.07, f.mar = 1, interactive = 2
+)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

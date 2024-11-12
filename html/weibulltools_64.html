@@ -1,0 +1,170 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_prob.default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Probability Plotting Method for Univariate Lifetime Distributions</h2>
+
+<h3>Description</h3>
+
+<p>This function is used to apply the graphical technique of probability
+plotting.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+plot_prob(
+  x,
+  y,
+  status,
+  id = rep("XXXXXX", length(x)),
+  distribution = c("weibull", "lognormal", "loglogistic", "sev", "normal", "logistic",
+    "exponential"),
+  title_main = "Probability Plot",
+  title_x = "Characteristic",
+  title_y = "Unreliability",
+  title_trace = "Sample",
+  plot_method = c("plotly", "ggplot2"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector which consists of lifetime data. Lifetime data
+could be every characteristic influencing the reliability of a product, e.g.
+operating time (days/months in service), mileage (km, miles), load cycles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A numeric vector which consists of estimated failure probabilities
+regarding the lifetime data in <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>A vector of binary data (0 or 1) indicating whether a unit is a
+right censored observation (= 0) or a failure (= 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>Identification for every unit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the random variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_main</code></td>
+<td>
+<p>A character string which is assigned to the main title.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_x</code></td>
+<td>
+<p>A character string which is assigned to the title of the x axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_y</code></td>
+<td>
+<p>A character string which is assigned to the title of the y axis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_trace</code></td>
+<td>
+<p>A character string which is assigned to the legend trace.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_method</code></td>
+<td>
+<p>Package, which is used for generating the plot output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For <code>plot_method == "plotly"</code> the marker label for x and y are determined by
+the first word provided in the argument <code>title_x</code> and <code>title_y</code> respectively,
+i.e. if <code>title_x = "Mileage in km"</code> the x label of the marker is "Mileage".
+</p>
+
+
+<h3>Value</h3>
+
+<p>A plot object containing the probability plot.
+</p>
+
+
+<h3>References</h3>
+
+<p>Meeker, William Q; Escobar, Luis A., Statistical methods for
+reliability data, New York: Wiley series in probability and statistics, 1998
+</p>
+
+
+<h3>See Also</h3>
+
+<p>plot_prob
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Vectors:
+cycles   &lt;- alloy$cycles
+status &lt;- alloy$status
+
+# Probability estimation:
+prob_tbl &lt;- estimate_cdf(
+  x = cycles,
+  status = status,
+  method = "johnson"
+)
+
+# Example 1: Probability Plot Weibull:
+plot_weibull &lt;- plot_prob(
+  x = prob_tbl$x,
+  y = prob_tbl$prob,
+  status = prob_tbl$status,
+  id = prob_tbl$id
+)
+
+# Example 2: Probability Plot Lognormal:
+plot_lognormal &lt;- plot_prob(
+  x = prob_tbl$x,
+  y = prob_tbl$prob,
+  status = prob_tbl$status,
+  id = prob_tbl$id,
+  distribution = "lognormal"
+)
+
+</code></pre>
+
+
+</div>

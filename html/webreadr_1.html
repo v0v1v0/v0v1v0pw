@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>read_aws</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>read Amazon CloudFront access logs</h2>
+
+<h3>Description</h3>
+
+<p>Amazon CloudFront uses access logs with a standard format described
+<a href="http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AccessLogs.html">
+on their website</a>. <code>read_aws</code> reads these files in; due to the Amazon treatment of header lines,
+it is capable of organically detecting whether files lack common fields, and compensating for that. See
+"Details"
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">read_aws(file)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>the full path to the AWS file you want to read.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Amazon CloudFront uses tab-separated files with 
+<a href="http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AccessLogs.html">
+Amazon-specific fields</a>. This can be changed by individual CloudFront users, however, to exclude particular fields,
+and historically has contained fewer fields than it now does. Luckily, Amazon's insistence on standardisation in field
+names means that we can organically detect if fields are missing, and compensate for that before reading in the file.
+</p>
+<p>If no fields are missing, the fields returned will be:
+</p>
+
+<ul>
+<li>
+<p>date: the date and time when the request was <em>completed</em>
+</p>
+</li>
+<li>
+<p>time_elapsed: the amount of time (in milliseconds) that the connection and fulfilment
+of the request lasted for.
+</p>
+</li>
+<li>
+<p>edge_location: the Amazon edge location that served the request, identified by a three-letter
+code. See the Amazon documentation for more details.
+</p>
+</li>
+<li>
+<p>bytes_sent: a count of the number of bytes sent by the server to the client, including headers,
+to fulfil the request.
+</p>
+</li>
+<li>
+<p>ip_address: the IP address of the client making the request.
+</p>
+</li>
+<li>
+<p>http_method: the HTTP method (POST, GET, etc) used.
+</p>
+</li>
+<li>
+<p>host: the CloudFront host name.
+</p>
+</li>
+<li>
+<p>path: the path to the requested asset.
+</p>
+</li>
+<li>
+<p>status_code: the HTTP status code associated with the request.
+</p>
+</li>
+<li>
+<p>referer: the referer associated with the request.
+</p>
+</li>
+<li>
+<p>user_agent: the user agent of the client that made the request.
+</p>
+</li>
+<li>
+<p>query: the query string associated with the request; if there is no query string,
+this will be a dash.
+</p>
+</li>
+<li>
+<p>cookie: the cookie header from the request, stored as name-value pairs. When no
+cookie header is provided, or it is empty, this will be a dash.
+</p>
+</li>
+<li>
+<p>result_type: the result of the request. This is similar to Squid response codes (
+see <code>read_squid</code>) but Amazon-specific; their documentation contains details on
+what each code means.
+</p>
+</li>
+<li>
+<p>request_id: A hashed unique identifier for each request.
+</p>
+</li>
+<li>
+<p>host_header: the host header of the requested asset. While <code>host</code> will always
+be the CloudFront host name, <code>host_header</code> contains alternate domain names (or 'CNAMES')
+when the CloudFront distribution is using them.
+</p>
+</li>
+<li>
+<p>protocol:  the protocol used in the request (http/https).
+</p>
+</li>
+<li>
+<p>bytes_received: client-to-server bytes, including headers.
+</p>
+</li>
+<li>
+<p>time_elapsed: the time elapsed, in seconds, between the time the request was received and
+the time the server completed responding to it.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p><code>read_s3</code>, for Amazon S3 files,
+<code>read_clf</code> for the Common Log Format, <code>read_squid</code> and
+<code>read_combined</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#Read in an example CloudFront file provided with the webreadr package.
+data &lt;- read_aws(system.file("extdata/log.aws", package = "webreadr"))
+</code></pre>
+
+
+</div>

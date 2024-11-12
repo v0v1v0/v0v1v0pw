@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_mod</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add Estimated Population Line(s) to a Probability Plot</h2>
+
+<h3>Description</h3>
+
+<p>This function adds one or multiple estimated regression lines to an existing
+probability plot (plot_prob). Depending on the output of the functions
+rank_regression, ml_estimation, mixmod_regression or mixmod_em one or
+multiple lines are plotted.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_mod(p_obj, x, ...)
+
+## S3 method for class 'wt_model'
+plot_mod(p_obj, x, title_trace = "Fit", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>p_obj</code></td>
+<td>
+<p>A plot object returned by plot_prob.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A list with class <code>wt_model</code> returned by rank_regression,
+ml_estimation, mixmod_regression or mixmod_em.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_trace</code></td>
+<td>
+<p>A character string which is assigned to the legend trace.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The name of the legend entry is a combination of the <code>title_trace</code> and the
+number of determined subgroups from mixmod_regression or mixmod_em. If
+<code>title_trace = "Line"</code> and the data could be split in two groups, the legend
+entries would be "Line: 1" and "Line: 2".
+</p>
+
+
+<h3>Value</h3>
+
+<p>A plot object containing the probability plot with plotting positions
+and the estimated regression line(s).
+</p>
+
+
+<h3>References</h3>
+
+<p>Meeker, William Q; Escobar, Luis A., Statistical methods for
+reliability data, New York: Wiley series in probability and statistics, 1998
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Reliability data:
+data &lt;- reliability_data(data = alloy, x = cycles, status = status)
+
+# Probability estimation:
+prob_tbl &lt;- estimate_cdf(data, methods = c("johnson", "kaplan"))
+
+
+## Rank Regression
+# Example 1 - Probability Plot and Regression Line Three-Parameter-Weibull:
+plot_weibull &lt;- plot_prob(prob_tbl, distribution = "weibull")
+rr_weibull &lt;- rank_regression(prob_tbl, distribution = "weibull3")
+
+plot_reg_weibull &lt;- plot_mod(p_obj = plot_weibull, x = rr_weibull)
+
+# Example 2 - Probability Plot and Regression Line Three-Parameter-Lognormal:
+plot_lognormal &lt;- plot_prob(prob_tbl, distribution = "lognormal")
+rr_lognormal &lt;- rank_regression(prob_tbl, distribution = "lognormal3")
+
+plot_reg_lognormal &lt;- plot_mod(p_obj = plot_lognormal, x = rr_lognormal)
+
+
+## ML Estimation
+# Example 3 - Probability Plot and Regression Line Two-Parameter-Weibull:
+plot_weibull &lt;- plot_prob(prob_tbl, distribution = "weibull")
+ml_weibull_2 &lt;- ml_estimation(data, distribution = "weibull")
+
+plot_reg_weibull_2 &lt;- plot_mod(p_obj = plot_weibull, ml_weibull_2)
+
+
+## Mixture Identification
+# Reliability data:
+data_mix &lt;- reliability_data(voltage, x = hours, status = status)
+
+# Probability estimation:
+prob_mix &lt;- estimate_cdf(
+  data_mix,
+  methods = c("johnson", "kaplan", "nelson")
+)
+
+# Example 4 - Probability Plot and Regression Line Mixmod Regression:
+mix_mod_rr &lt;- mixmod_regression(prob_mix, distribution = "weibull")
+plot_weibull &lt;- plot_prob(mix_mod_rr)
+
+plot_reg_mix_mod_rr &lt;- plot_mod(p_obj = plot_weibull, x = mix_mod_rr)
+
+# Example 5 - Probability Plot and Regression Line Mixmod EM:
+mix_mod_em &lt;- mixmod_em(data_mix)
+plot_weibull &lt;- plot_prob(mix_mod_em)
+
+plot_reg_mix_mod_em &lt;- plot_mod(p_obj = plot_weibull, x = mix_mod_em)
+
+</code></pre>
+
+
+</div>

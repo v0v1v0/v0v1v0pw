@@ -1,0 +1,261 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>stat_t.plot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Plot Win Statistics over the Study Time.
+</h2>
+
+<h3>Description</h3>
+
+<p>Plot the win statistics as a function of the study time for time-to-event endpoints only. The function "win.stat" is called to calculate the win statistics at each time in the plot function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">stat_t.plot(data, Ctime = Inf, arm.name = c(1,2), priority = c(1,2),
+statistic = c("WR","NB","WO"),
+Z_t_trt = NULL, Z_t_con = NULL, tau = 0,np_direction = "larger",
+stratum.weight = c("unstratified","MH-type","wt.stratum1","wt.stratum2","equal"),
+censoring_adjust = c("No","IPCW","CovIPCW"),
+win.strategy = NULL, plotTimeUnit = NULL,
+plot_CI = FALSE, alpha = 0.05, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The analysis dataset which contains the following variables:
+</p>
+
+<dl>
+<dt>arm: </dt>
+<dd>
+<p>A vector for the treatment group (trt = 1 | 2), trt is the new treatment. Alternative names for "arm" include "trt", "treat" and "treatment".</p>
+</dd>
+<dt>id: </dt>
+<dd>
+<p>A vector for the patient id.</p>
+</dd>
+<dt>stratum: </dt>
+<dd>
+<p>A vector for the stratum.</p>
+</dd>
+<dt>Delta_j: </dt>
+<dd>
+<p>A vector for the event status of the j-th endpoint if the endpoint is a time-to-event outcome (1=event, 0=censored).</p>
+</dd>
+<dt>Y_j: </dt>
+<dd>
+<p>A vector for the outcome of the j-th endpoint, for a time-to-event outcome, it would be a vector for time.</p>
+</dd>
+<dt>Start_time: </dt>
+<dd>
+<p>A vector for the time when each of the individuals is first accrued to study.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ctime</code></td>
+<td>
+<p>A vector of study times, at which the win proportions are to be plotted. Study time for a subject is the time since the subject is accrued, default as Inf.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>arm.name</code></td>
+<td>
+<p>A vector for the labels of the two experimental arms, default to be c(1,2). The first label is for the treatment group, and the second label is for the control group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>priority</code></td>
+<td>
+<p>Importance order (from the most to the least important). For example, given three endpoints with the importance order as Endpoint 3, Endpoint 2, and Endpoint 1, input priority = c(3,2,1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>statistic</code></td>
+<td>
+<p>The win statistic to be plotted.
+</p>
+
+<dl>
+<dt>"WR": </dt>
+<dd>
+<p>Win ratio.</p>
+</dd>
+<dt>"NB": </dt>
+<dd>
+<p>Net benefit.</p>
+</dd>
+<dt>"WO": </dt>
+<dd>
+<p>Win odds.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z_t_trt</code></td>
+<td>
+<p>A matrix for the covariate history, each row is a (p+2) vector for one record of each subject in the treatment group. The first two columns are subject id, time, the other columns are the covariates (vector of length p). The baseline covariates are provided as the observed covariates corresponding to time 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z_t_con</code></td>
+<td>
+<p>A matrix for the covariate history, each row is a (p+2) vector for one record of each subject in the control group. The first two columns are subject id, time, the other columns are the covariates (vector of length p). The baseline covariates are provided as the observed covariates corresponding to time 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>A vector of numerical value for the magnitude of difference to determine win/loss/tie for each endpoint. If tau is input as scalar, the function treat the taus for TTE endpoints and continuous endpoints to be the same and taus for binary endpoints as 0. Default as 0 for all endpoints.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>np_direction</code></td>
+<td>
+<p>A vector of character for the direction to define a better result for each endpoint.
+</p>
+
+<dl>
+<dt>"larger": </dt>
+<dd>
+<p>The treatment group wins if min(T_trt, C_trt, C_con + tau) &gt; T_con + tau, for time-to-event outcomes; "the larger value wins" for continuous outcome, value 1 wins over the value 0 for binary outcome.</p>
+</dd>
+<dt>"smaller": </dt>
+<dd>
+<p>The treatment group wins if min(T_trt, C_trt, C_con - tau) &lt; T_con - tau, for time-to-event outcomes; "the smaller value wins" for continuous outcome, value 0 wins over the value 1 for binary outcome.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stratum.weight</code></td>
+<td>
+<p>The weighting method for each stratum. Default is "unstratified" for unstratified analysis. A stratified analysis is performed if other weight option is specified. Other possible choices for this argument are listed below.
+</p>
+
+<dl>
+<dt>"MH-type": </dt>
+<dd>
+<p>weight the wins with the reciprocal of the stratum size following the Mantel-Haenszel type stratified analysis as described in Dong et al. (2018).</p>
+</dd>
+<dt>"wt.stratum1": </dt>
+<dd>
+<p>weight the win statistics with weight equal to the number of subjects in each stratum divided by the total number of subjects.</p>
+</dd>
+<dt>"wt.stratum2": </dt>
+<dd>
+<p>weight the win statistics with weight equal to the number of subjects with events (of any TTE endpoint) in each stratum divided by the total number of subjects with events (of any TTE endpoint).</p>
+</dd>
+<dt>"equal": </dt>
+<dd>
+<p>set equal weights for all stratum.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>censoring_adjust</code></td>
+<td>
+<p>The method to adjust censoring for the kernal functions. Possible choices are listed below.
+</p>
+
+<dl>
+<dt>"No": </dt>
+<dd>
+<p>Without using the IPCW approach to dealing with the censoring.</p>
+</dd>
+<dt>"IPCW": </dt>
+<dd>
+<p>IPCW adjustment for censoring with the Kaplan-Meier estimator.</p>
+</dd>
+<dt>"CovIPCW": </dt>
+<dd>
+<p>IPCW adjustment for censoring with the time dependent Cox model.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>win.strategy</code></td>
+<td>
+<p>The strategy to determine the win status. Default as NULL. If NULL, the default win strategy funtion "win.strategy.default" is called, see win.strategy.default for more details. Users can also define their own "win.strategy" function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotTimeUnit</code></td>
+<td>
+<p>The time units, e.g., "days", "months", "years", default as NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_CI</code></td>
+<td>
+<p>If TRUE, plot the pointwise confidence interval, default as FALSE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>The significance level, default to be 0.05.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Argument passed from user defined functions "win.strategy" if there is any. For instructions on this "win.strategy" function, see win.strategy.default for more details.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A ggplot2 object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+#### An simulated example with two TTE endpoints.
+data &lt;- sim.data(n_trt = 200, n_con = 200, n_ep = 2, arm.name = c("A","B"),
+ep_type = "tte", cdist.rate = 0.5, sim_method = "copula",
+copula_trt=copula::normalCopula(0.9), margins_trt=c("gamma", "beta"),
+paramMargins_trt=list(list(shape=2, scale=1),list(shape1=2, shape2=2)),
+copula_con=copula::normalCopula(0.9), margins_con=c("gamma", "beta"),
+paramMargins_con=list(list(shape=2, scale=1),list(shape1=2, shape2=2)),
+max_accrual_time = 5)
+
+stat_t.plot(data, arm.name = c("A","B"),priority = c(1,2),
+Ctime = seq(2,12,1),plotTimeUnit = "years",statistic = "WR", tau = 0,
+stratum.weight = "unstratified", censoring_adjust = "No", plot_CI = TRUE)
+
+#### An simulated example with three TTE endpoints.
+data &lt;- sim.data(n_trt = 200, n_con = 200, n_ep = 3, arm.name = c("A","B"),
+ep_type = "tte", cdist.rate = 0.5, sim_method = "copula",
+copula_trt=copula::normalCopula(param=c(0.9,0.8,0.95), dim = 3, dispstr = "un"),
+margins_trt=c("gamma", "beta", "t"),
+paramMargins_trt=list(list(shape=2, scale=1),list(shape1=2, shape2=2),list(df=5)),
+copula_con=copula::normalCopula(param=c(0.9,0.8,0.95), dim = 3, dispstr = "un"),
+margins_con=c("gamma", "beta", "t"),
+paramMargins_con=list(list(shape=1, scale=1),list(shape1=2, shape2=3),list(df=5)),
+max_accrual_time = 5)
+
+stat_t.plot(data, arm.name = c("A","B"),priority = c(3,2,1),
+Ctime = seq(1,8,0.5),plotTimeUnit = "years", statistic = "WR",
+tau = 0, plot_CI = TRUE)
+
+</code></pre>
+
+
+</div>

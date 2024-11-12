@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>worcs_project</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create new WORCS project</h2>
+
+<h3>Description</h3>
+
+<p>Creates a new 'worcs' project. This function is invoked by
+the 'RStudio' project template manager, but can also be called directly to
+create a WORCS project through syntax or the console.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">worcs_project(
+  path = "worcs_project",
+  manuscript = "APA6",
+  preregistration = "cos_prereg",
+  add_license = "CC_BY_4.0",
+  use_renv = TRUE,
+  use_targets = FALSE,
+  remote_repo = "https",
+  verbose = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Character, indicating the directory in which to create the
+'worcs' project. Default: 'worcs_project'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>manuscript</code></td>
+<td>
+<p>Character, indicating what template to use for the
+'R Markdown' manuscript. Default: 'APA6'. Available choices include
+<code>APA6</code> from the <code>papaja</code> package,
+a <code>github_document</code>, and templates included in the
+<code>rticles</code> package.
+For more information, see <code>add_manuscript</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>preregistration</code></td>
+<td>
+<p>Character, indicating what template to use for the
+preregistration. Default: 'cos_prereg'. Available choices include:
+<code>"PSS", "Secondary", "None"</code>, and all templates from the
+<code>prereg</code> package. For more information, see
+<code>add_preregistration</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>add_license</code></td>
+<td>
+<p>Character, indicating what license to include.
+Default: 'CC_BY_4.0'. Available options include:
+<code>"CC_BY_4.0", "CC_BY-SA_4.0", "CC_BY-NC_4.0", "CC_BY-NC-SA_4.0",
+"CC_BY-ND_4.0", "CC_BY-NC-ND_4.0", "None"</code>. For more information, see
+<a href="https://creativecommons.org/licenses/">https://creativecommons.org/licenses/</a>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use_renv</code></td>
+<td>
+<p>Logical, indicating whether or not to use 'renv' to make the
+project reproducible. Default: TRUE. See <code>init</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use_targets</code></td>
+<td>
+<p>Logical, indicating whether or not to use 'targets' to
+create a Make-like pipeline. Default: FALSE See <code>targets-package</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remote_repo</code></td>
+<td>
+<p>Character, address of the remote repository for
+this project. This link should have the form
+<code>https://github.com[username][repo].git</code> (preferred) or
+<code>git@[...].git</code> (if using SSH).
+If a valid remote repository link is provided, a commit will
+be made containing the 'README.md' file, and will be pushed to the remote
+repository. Default: 'https'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Logical. Whether or not to print messages to the console
+during project creation. Default: TRUE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments passed to and from functions.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>No return value. This function is called for its side effects.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">the_test &lt;- "worcs_template"
+old_wd &lt;- getwd()
+dir.create(file.path(tempdir(), the_test))
+do.call(git_user, worcs:::get_user())
+worcs_project(file.path(tempdir(), the_test, "worcs_project"),
+              manuscript = "github_document",
+              preregistration = "None",
+              add_license = "None",
+              use_renv = FALSE,
+              remote_repo = "https")
+setwd(old_wd)
+unlink(file.path(tempdir(), the_test))
+</code></pre>
+
+
+</div>

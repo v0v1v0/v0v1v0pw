@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fix_wavs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fix .wav files to allow importing them into R</h2>
+
+<h3>Description</h3>
+
+<p><code>fix_wavs</code> fixes sound files in .wav format so they can be imported into R.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fix_wavs(
+  checksels = NULL,
+  files = NULL,
+  samp.rate = NULL,
+  bit.depth = NULL,
+  path = NULL,
+  mono = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>checksels</code></td>
+<td>
+<p>Data frame with results from <code>check_sels</code>. Default is <code>NULL</code>. If  both 'checksels' and 'files' are <code>NULL</code>
+then all files in 'path' are converted. Note that it only fixes/convert sound files in .wav format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>files</code></td>
+<td>
+<p>Character vector with the names of the .wav files to fix. Default is <code>NULL</code>. If  both 'checksels' and 'files'  are <code>NULL</code>
+then all files in 'path' are converted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>samp.rate</code></td>
+<td>
+<p>Numeric vector of length 1 with the sampling rate (in kHz) for output files. Default is <code>NULL</code>.
+(remain unchanged).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bit.depth</code></td>
+<td>
+<p>Numeric vector of length 1 with the dynamic interval (i.e. bit depth) for output files.
+Default is <code>NULL</code> (remain unchanged).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Character string containing the directory path where the sound files are located.
+If <code>NULL</code> (default) then the current working directory is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mono</code></td>
+<td>
+<p>Logical indicating if stereo (2 channel) files should be converted to mono (1 channel). Default is <code>FALSE</code> (remain unchanged).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function aims to simplify the process of converting sound files that cannot be imported into R and/or homogenizing sound files. Problematic files can be determined using <code>check_sound_files</code> or <code>check_sels</code>. The
+<code>check_sels</code> output can be directly input using the argument 'checksels'. Alternatively a vector of file
+names to be "fixed" can be provided (argument 'files'). If neither of those 2 are provided the function will convert
+all .wav sound files in the working directory to the specified sample rate/bit depth. Files are saved in a new directory
+('converted_sound_files'). Internally the function calls <a href="https://sourceforge.net/projects/sox/">SOX</a> (<a href="https://sourceforge.net/projects/sox/">SOX</a> must be installed). If  both 'checksels' and 'files' are <code>NULL</code>
+then all files in 'path' are converted. Note that it only fixes/convert sound files in .wav format.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A folder inside the working directory (or path provided) all 'converted_sound_files', containing
+sound files in a format that can be imported in R.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>)
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# Load example files and save to temporary working directory
+data(list = c("Phae.long1", "Phae.long2", "Phae.long3", "Phae.long4", "lbh_selec_table"))
+writeWave(Phae.long1, file.path(tempdir(), "Phae.long1.wav"))
+writeWave(Phae.long2, file.path(tempdir(), "Phae.long2.wav"))
+writeWave(Phae.long3, file.path(tempdir(), "Phae.long3.wav"))
+writeWave(Phae.long4, file.path(tempdir(), "Phae.long4.wav"))
+
+fix_wavs(files = lbh_selec_table$sound.files, path = tempdir())
+
+# check this folder
+tempdir()
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

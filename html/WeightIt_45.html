@@ -1,0 +1,163 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>summary.weightit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Print and Summarize Output</h2>
+
+<h3>Description</h3>
+
+<p><code>summary()</code> generates a summary of the <code>weightit</code> or
+<code>weightitMSM</code> object to evaluate the properties of the estimated
+weights. <code>plot()</code> plots the distribution of the weights. <code>nobs()</code> extracts the number of observations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'weightit'
+summary(object, top = 5, ignore.s.weights = FALSE, ...)
+
+## S3 method for class 'summary.weightit'
+plot(x, binwidth = NULL, bins = NULL, ...)
+
+## S3 method for class 'weightitMSM'
+summary(object, top = 5, ignore.s.weights = FALSE, ...)
+
+## S3 method for class 'summary.weightitMSM'
+plot(x, binwidth = NULL, bins = NULL, time = 1, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>a <code>weightit</code> or <code>weightitMSM</code> object; the output of
+a call to <code>weightit()</code> or <code>weightitMSM()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>top</code></td>
+<td>
+<p>how many of the largest and smallest weights to display. Default
+is 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ignore.s.weights</code></td>
+<td>
+<p>whether or not to ignore sampling weights when
+computing the weight summary. If <code>FALSE</code>, the default, the estimated
+weights will be multiplied by the sampling weights (if any) before values
+are computed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>For <code>plot()</code>, additional arguments passed to <code>graphics::hist()</code> to
+determine the number of bins, though <code>ggplot2::geom_histogram()</code> is actually used to create the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a <code>summary.weightit</code> or <code>summary.weightitMSM</code> object; the
+output of a call to <code>summary.weightit()</code> or
+<code>summary.weightitMSM()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binwidth, bins</code></td>
+<td>
+<p>arguments passed to <code>ggplot2::geom_histogram()</code> to
+control the size and/or number of bins.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p><code>numeric</code>; the time point for which to display the distribution of weights. Default is to plot the distribution for the first time points.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>For point treatments (i.e., <code>weightit</code> objects), <code>summary()</code> returns a <code>summary.weightit</code> object with the following elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>weight.range</code></td>
+<td>
+<p>The range (minimum and maximum) weight for each treatment group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight.top</code></td>
+<td>
+<p>The units with the greatest weights in each treatment group; how many are included is determined by <code>top</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coef.of.var (Coef of Var)</code></td>
+<td>
+<p>The coefficient of variation (standard deviation divided by mean) of the weights in each treatment group and overall.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scaled.mad (MAD)</code></td>
+<td>
+<p>The mean absolute deviation of the weights in each treatment group and overall divided by the mean of the weights in the corresponding group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>negative entropy (Entropy)</code></td>
+<td>
+<p>The negative entropy (<code class="reqn">\sum w log(w)</code>) of the weights in each treatment group and overall divided by the mean of the weights in the corresponding group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num.zeros</code></td>
+<td>
+<p>The number of weights equal to zero.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>effective.sample.size</code></td>
+<td>
+<p>The effective sample size for each treatment group before and after weighting. See <code>ESS()</code>.</p>
+</td>
+</tr>
+</table>
+<p>For longitudinal treatments (i.e., <code>weightitMSM</code> objects), <code>summary()</code> returns a list of
+the above elements for each treatment period.
+</p>
+<p><code>plot()</code> returns a <code>ggplot</code> object with a histogram displaying the
+distribution of the estimated weights. If the estimand is the ATT or ATC,
+only the weights for the non-focal group(s) will be displayed (since the
+weights for the focal group are all 1). A dotted line is displayed at the
+mean of the weights.
+</p>
+<p><code>nobs()</code> returns a single number. Note that even units with <code>weights</code> or <code>s.weights</code> of 0 are included.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>weightit()</code>, <code>weightitMSM()</code>, <code>summary()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# See example at ?weightit or ?weightitMSM
+
+</code></pre>
+
+
+</div>

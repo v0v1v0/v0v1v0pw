@@ -1,0 +1,64 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>retrieveFactory</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Retrieve the type factory object
+</h2>
+
+<h3>Description</h3>
+
+<p>As factory may be modified, this function allows you to make changes and to record them in
+your own specialized type factory, to match various needs and ease reuse. </p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">retrieveFactory()
+</code></pre>
+
+
+<h3>Details</h3>
+
+<p>Retrieves a <b><em><code>FunctionParameterTypeFactory</code></em></b>
+from options variable named
+<em><b><code>op_type_factory</code></b></em> or provides a default type factory.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> <em><code>object</code></em> that is a <b><em><code>FunctionParameterTypeFactory</code></em></b>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+<p>Maintainer: Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##---- typical case ----
+ff &lt;- retrieveFactory()
+ff$addSuffix('wo', "wo class", function(o_) is(o_, "wo"))
+ff$addSuffix('yo', "yo class", function(o_) is(o_, "yo"))
+ff$addSuffix('zo', "zo class", function(o_) is(o_, "zo"))
+
+options('op_type_factory' = ff)
+fg &lt;- retrieveFactory() # retrieves the factory pointed by R variable ff
+fg$getRecordedTypes()[suffix %in% c('wo', 'yo', 'zo')] # right behavior !
+
+# wrong behavior as retrieveFactory will provide the default factory and not yours!
+options('op_type_factory' = ff)
+fh &lt;- retrieveFactory() # retrieves the default factory
+fh$getRecordedTypes()[suffix %in% c('wo', 'yo', 'zo')]
+</code></pre>
+
+
+</div>

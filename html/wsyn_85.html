@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wpmf_methods</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Basic methods for the <code>wpmf</code> class</h2>
+
+<h3>Description</h3>
+
+<p>Set, get, summary, and print methods for the <code>wpmf</code> class.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wpmf'
+summary(object, ...)
+
+## S3 method for class 'wpmf'
+print(x, ...)
+
+## S3 method for class 'wpmf'
+set_times(obj, newval)
+
+## S3 method for class 'wpmf'
+set_timescales(obj, newval)
+
+## S3 method for class 'wpmf'
+set_values(obj, newval)
+
+## S3 method for class 'wpmf'
+set_dat(obj, newval)
+
+## S3 method for class 'wpmf'
+set_wtopt(obj, newval)
+
+## S3 method for class 'wpmf'
+set_signif(obj, newval)
+
+## S3 method for class 'wpmf'
+get_times(obj)
+
+## S3 method for class 'wpmf'
+get_timescales(obj)
+
+## S3 method for class 'wpmf'
+get_values(obj)
+
+## S3 method for class 'wpmf'
+get_dat(obj)
+
+## S3 method for class 'wpmf'
+get_wtopt(obj)
+
+## S3 method for class 'wpmf'
+get_signif(obj)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object, x, obj</code></td>
+<td>
+<p>An object of class <code>wpmf</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not currently used. Included for argument consistency
+with existing generics.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newval</code></td>
+<td>
+<p>A new value, for the <code>set_*</code> methods</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>summary.wpmf</code> produces a summary of a <code>wpmf</code> object.
+A <code>print.wpmf</code> method is also available. For <code>wpmf</code> objects, 
+<code>set_*</code> and <code>get_*</code> methods are available for all slots,
+i.e., <code>*</code> equal to <code>times</code>, <code>timescales</code>, <code>wtopt</code>, 
+<code>values</code>, <code>dat</code>, and <code>signif</code>. The <code>set_*</code> methods just throw an 
+error, to prevent breaking the consistency between the slots of a 
+<code>wpmf</code> object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Daniel Reuman, <a href="mailto:reuman@ku.edu">reuman@ku.edu</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wpmf</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">times&lt;-1:30 #generate time steps
+#generate fake count data for 20 locations
+dat&lt;-matrix(rpois(20*length(times),20),nrow=20,ncol=length(times)) 
+dat&lt;-cleandat(dat=dat,times=times,clev=2)$cdat #detrend and demean
+h&lt;-wpmf(dat,times)
+get_times(h)
+summary(h)
+print(h)
+
+</code></pre>
+
+
+</div>

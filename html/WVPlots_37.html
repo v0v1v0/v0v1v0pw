@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ScatterBoxPlotH</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot a scatter box plot in horizontal mode.</h2>
+
+<h3>Description</h3>
+
+<p>Plot a boxplot with the data points superimposed. Box plots are aligned horizontally.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ScatterBoxPlotH(
+  frm,
+  xvar,
+  yvar,
+  title,
+  ...,
+  pt_alpha = 0.3,
+  pt_color = "black",
+  box_color = "black",
+  box_fill = "lightgray"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frm</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar</code></td>
+<td>
+<p>name of the continuous column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yvar</code></td>
+<td>
+<p>name of the independent column in frame; assumed discrete</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>plot title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>(doesn't take additional arguments, used to force later arguments by name)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pt_alpha</code></td>
+<td>
+<p>transparency of points in scatter plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pt_color</code></td>
+<td>
+<p>point color</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>box_color</code></td>
+<td>
+<p>boxplot line color</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>box_fill</code></td>
+<td>
+<p>boxplot fill color (can be NA for no fill)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>xvar</code> is a continuous variable and <code>yvar</code> is a discrete variable.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ScatterBoxPlot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+classes = c("a", "b", "c")
+means = c(2, 4, 3)
+names(means) = classes
+label = sample(classes, size=1000, replace=TRUE)
+meas = means[label] + rnorm(1000)
+frm2 = data.frame(label=label,
+                  meas = meas)
+WVPlots::ScatterBoxPlotH(frm2, "meas", "label",  pt_alpha=0.2, title="Example Scatter/Box plot")
+
+
+</code></pre>
+
+
+</div>

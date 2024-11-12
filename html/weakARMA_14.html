@@ -1,0 +1,197 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>portmanteauTest.h</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Portmanteau tests for one lag.</h2>
+
+<h3>Description</h3>
+
+<p>Computes Box-Pierce and Ljung-Box statistics for standard, modified and 
+self-normalized test procedures.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">portmanteauTest.h(ar = NULL, ma = NULL, y, h, grad = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ar</code></td>
+<td>
+<p>Vector of AR coefficients. If <code>NULL</code>, it is a MA process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ma</code></td>
+<td>
+<p>Vector of MA coefficients. If <code>NULL</code>, it is an AR process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Univariate time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>Integer for the chosen lag.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grad</code></td>
+<td>
+<p>Gradient of the series from the function gradient. If <code>NULL</code> gradient will be computed.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Portmanteau statistics are generally used to  test the null hypothesis.
+H0 : <code class="reqn">X_t</code> satisfies an ARMA(p,q) representation.
+</p>
+<p>The Box-Pierce (BP) and Ljung-Box (LB) statistics, defined as follows, are
+based on the residual empirical autocorrelation. </p>
+<p style="text-align: center;"><code class="reqn">Q_{m}^{BP} =
+ n\sum_{h}^{m} \rho^{2}(h)</code>
+</p>
+ <p style="text-align: center;"><code class="reqn">Q_{m}^{LB} = n(n+2) \sum_{h}^{m}
+ \frac{\rho^{2}(h)}{(n-h)}</code>
+</p>
+
+<p>The standard test procedure consists in rejecting the null hypothesis of an
+ARMA(p,q) model if the statistic <code class="reqn">Q_m &gt; \chi^{2}(1-\alpha)</code> where
+<code class="reqn">\chi^{2}(1-\alpha)</code> denotes the <code class="reqn">(1-\alpha)</code>-quantile of a
+chi-squared distribution with m-(p+q) (where m &gt; p + q) degrees of freedom. The
+two statistics have the same asymptotic distribution, but the LB statistic
+has the reputation of doing better for small or medium sized samples.
+</p>
+<p>But the significance limits of the residual autocorrelation can be very
+different for an ARMA models with iid noise and ARMA models with only
+uncorrelated noise but dependant. The standard test is obtained under the
+stronger assumption that <code class="reqn">\epsilon_{t}</code> is iid. So we give an another
+way to obtain the exact asymptotic distribution of the standard portmanteau
+statistics under the weak dependence assumptions.
+</p>
+<p>Under H0, the statistics <code class="reqn">Q_{m}^{BP}</code> and <code class="reqn">Q_{m}^{LB}</code> converge in
+distribution as <code class="reqn">n \rightarrow \infty</code>, to </p>
+<p style="text-align: center;"><code class="reqn">Z_m(\xi_m) :=
+ \sum_{i}^{m}\xi_{i,m} Z^{2}_i</code>
+</p>
+<p> where <code class="reqn">\xi_m =
+ (\xi_{1,m}',...,\xi_{m,m}')</code> is the eigenvalues vector of the asymptotic
+covariance matrix of the residual autocorrelations vector and
+<code class="reqn">Z_{1},...,Z_{m}</code> are independent <code class="reqn">\mathcal{N}(0,1)</code> variables.
+</p>
+<p>So when the error process is a weak white noise, the asymptotic distribution
+<code class="reqn">Q_{m}^{BP}</code> and <code class="reqn">Q_{m}^{LB}</code> statistics is a weighted sum of
+chi-squared. The distribution of the quadratic form <code class="reqn">Z_{m}(\xi_m)</code> can
+be computed using the algorithm by Imhof available here :
+<code>imhof</code>
+</p>
+<p>We propose an alternative method where we do not estimate an asymptotic
+covariance matrix. It is based on a self-normalization based approach to
+construct a new test-statistic which is asymptotically distribution-free
+under the null hypothesis.
+</p>
+<p>The sample autocorrelation, at lag <code>h</code> take the form <code class="reqn">\hat{\rho}(h) =
+ \frac{\hat{\Gamma}(h)}{\hat{\Gamma}(0)}</code>. 
+Where <code class="reqn">\hat{\Gamma}(h) = \frac{1}{n} \sum_{t=h+1}^n \hat{e}_t\hat{e}_{t-h}</code>.
+With <code class="reqn">\hat{\Gamma}_m = (\hat{\Gamma}(1),...,\hat{\Gamma}(m))   </code>
+The vector of the first m sample autocorrelations is written <code class="reqn">\hat{\rho}_m = (\hat{\rho}(1),...,\hat{\rho}(m))'</code>.
+</p>
+<p>The normalization matrix is defined by <code class="reqn">\hat{C}_{m} =
+ \frac{1}{n^{2}}\sum_{t=1}^{n} \hat{S}_t \hat{S}_t'</code> where <code class="reqn">\hat{S}_t = \sum_{j=1}^{t} (\hat{\Lambda} \hat{U}_{j} -
+ \hat{\Gamma}_m)</code>.
+</p>
+<p>The sample autocorrelations satisfy <code class="reqn">Q_{m}^{SN}=n\hat{\sigma}^{4}\hat{\rho}_m '
+ \hat{C}_m^{-1}\hat{\rho}_m \rightarrow U_{m}</code>.
+</p>
+<p><code class="reqn">\tilde{Q}_{m}^{SN} =
+ n\hat{\sigma}^{4}\hat{\rho}_{m}' D_{n,m}^{1/2}\hat{C}_{m}^{-1} D_{n,m}^{1/2}\hat{\rho}_{m} \rightarrow U_{m} </code>
+reprensating respectively the version modified of Box-Pierce (BP) and
+Ljung-Box (LB) statistics. Where <code class="reqn">D_{n,m} = \left(\begin{array}{ccc} \frac{n}{n-1} &amp; &amp; 0 \\
+  &amp; \ddots &amp; \\
+ 0 &amp; &amp; \frac{n}{n-m}
+ \end{array}\right)</code>.
+The critical values for <code class="reqn">U_{m}</code> have been tabulated by Lobato.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list including statistics and p-value:
+</p>
+
+<dl>
+<dt><code>Pm.BP</code></dt>
+<dd>
+<p>Standard portmanteau Box-Pierce statistics.</p>
+</dd>
+<dt><code>PvalBP</code></dt>
+<dd>
+<p>p-value corresponding at standard test where the
+asymptotic distribution is approximated by a chi-squared</p>
+</dd>
+<dt><code>PvalBP.Imhof</code></dt>
+<dd>
+<p>p-value corresponding at the exact asymptotic distribution
+of the standard portmanteau Box-Pierce statistics.</p>
+</dd>
+<dt><code>Pm.LB</code></dt>
+<dd>
+<p>Standard portmanteau Box-Pierce statistics. </p>
+</dd>
+<dt><code>PvalLB</code></dt>
+<dd>
+<p>p-value corresponding at standard test where the
+asymptotic distribution is approximated by a chi-squared. </p>
+</dd>
+<dt><code>PvalLB.Imhof</code></dt>
+<dd>
+<p> p-value corresponding at the exact asymptotic distribution
+of the standard portmanteau Ljung-Box statistics.</p>
+</dd>
+<dt><code>LB.modSN </code></dt>
+<dd>
+<p>Ljung-Box statistic with the self-normalization method. </p>
+</dd>
+<dt><code>BP.modSN</code></dt>
+<dd>
+<p>Box-Pierce statistic with the self-normalization method.</p>
+</dd> </dl>
+<h3>References</h3>
+
+<p>Boubacar Maïnassara, Y. 2011, Multivariate portmanteau test for structural VARMA models
+with uncorrelated but non-independent error terms <em>Journal of Statistical Planning and Inference</em>,
+vol. 141, no. 8, pp. 2961-2975.
+</p>
+<p>Boubacar Maïnassara, Y. and Saussereau, B. 2018, Diagnostic checking in multivariate ARMA models with 
+dependent errors using normalized residual autocorrelations ,
+<em>Journal of the American Statistical Association</em>, vol. 113, no. 524, pp. 1813-1827.
+</p>
+<p>Francq, C., Roy, R. and Zakoïan, J.M. 2005, Diagnostic Checking in ARMA
+Models with Uncorrelated Errors, <em>Journal of the American Statistical
+Association</em>, vol. 100, no. 470 pp. 532-544
+</p>
+<p>Lobato, I.N. 2001, Testing that a dependant process is
+uncorrelated. J. Amer. Statist. Assos. 96, vol. 455, pp. 1066-1076.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>portmanteauTest</code> to obtain the statistics of all m
+lags.
+</p>
+
+
+</div>

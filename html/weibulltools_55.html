@@ -1,0 +1,213 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_conf.default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add Confidence Region(s) for Quantiles and Probabilities</h2>
+
+<h3>Description</h3>
+
+<p>This function is used to add estimated confidence region(s) to an existing
+probability plot which also includes the estimated regression line.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+plot_conf(
+  p_obj,
+  x,
+  y,
+  distribution = c("weibull", "lognormal", "loglogistic", "sev", "normal", "logistic",
+    "weibull3", "lognormal3", "loglogistic3", "exponential", "exponential2"),
+  direction = c("y", "x"),
+  title_trace = "Confidence Limit",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>p_obj</code></td>
+<td>
+<p>A plot object returned by plot_mod.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A list containing the x-coordinates of the confidence region(s). The
+list can be of length 1 or 2. For more information see <strong>Details</strong>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A list containing the y-coordinates of the Confidence Region(s).
+The list can be of length 1 or 2. For more information see <strong>Details</strong>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the random variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>direction</code></td>
+<td>
+<p>A character string specifying the direction of the plotted
+interval(s). <code>"y"</code> for failure probabilities or <code>"x"</code> for quantiles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_trace</code></td>
+<td>
+<p>A character string which is assigned to the legend trace.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>It is important that the length of the vectors provided as lists in <code>x</code> and
+<code>y</code> match with the length of the vectors <code>x</code> and <code>y</code> in the function plot_mod.
+For this reason the following procedure is recommended:
+</p>
+
+<ul>
+<li>
+<p> Calculate confidence intervals with the function confint_betabinom or
+confint_fisher and store it in a <code>data.frame</code>. For instance call it df.
+</p>
+</li>
+<li>
+<p> Inside plot_mod use the output <code>df$x</code> for <code>x</code> and <code>df$prob</code> for <code>y</code> of
+the function(s) named before.
+</p>
+</li>
+<li>
+<p> In <strong>Examples</strong> the described approach is shown with code.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A plot object containing the probability plot with plotting positions,
+the estimated regression line and the estimated confidence region(s).
+</p>
+
+
+<h3>References</h3>
+
+<p>Meeker, William Q; Escobar, Luis A., Statistical methods for
+reliability data, New York: Wiley series in probability and statistics, 1998
+</p>
+
+
+<h3>See Also</h3>
+
+<p>plot_conf
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Vectors:
+cycles &lt;- alloy$cycles
+status &lt;- alloy$status
+
+prob_tbl &lt;- estimate_cdf(x = cycles, status = status, method = "johnson")
+
+# Example 1 - Probability Plot, Regression Line and Confidence Bounds for Three-Parameter-Weibull:
+rr &lt;- rank_regression(
+  x = prob_tbl$x,
+  y = prob_tbl$prob,
+  status = prob_tbl$status,
+  distribution = "weibull3"
+)
+
+conf_betabin &lt;- confint_betabinom(
+  x = prob_tbl$x,
+  status = prob_tbl$status,
+  dist_params = rr$coefficients,
+  distribution = "weibull3"
+)
+
+plot_weibull &lt;- plot_prob(
+  x = prob_tbl$x,
+  y = prob_tbl$prob,
+  status = prob_tbl$status,
+  id = prob_tbl$id,
+  distribution = "weibull"
+)
+
+plot_reg_weibull &lt;- plot_mod(
+  p_obj = plot_weibull,
+  x = conf_betabin$x,
+  y = conf_betabin$prob,
+  dist_params = rr$coefficients,
+  distribution = "weibull3"
+)
+
+plot_conf_beta &lt;- plot_conf(
+  p_obj = plot_reg_weibull,
+  x = list(conf_betabin$x),
+  y = list(conf_betabin$lower_bound, conf_betabin$upper_bound),
+  direction = "y",
+  distribution = "weibull3"
+)
+
+# Example 2 - Probability Plot, Regression Line and Confidence Bounds for Three-Parameter-Lognormal:
+rr_ln &lt;- rank_regression(
+  x = prob_tbl$x,
+  y = prob_tbl$prob,
+  status = prob_tbl$status,
+  distribution = "lognormal3"
+)
+
+conf_betabin_ln &lt;- confint_betabinom(
+  x = prob_tbl$x,
+  status = prob_tbl$status,
+  dist_params = rr_ln$coefficients,
+  distribution = "lognormal3"
+)
+
+plot_lognormal &lt;- plot_prob(
+  x = prob_tbl$x,
+  y = prob_tbl$prob,
+  status = prob_tbl$status,
+  id = prob_tbl$id,
+  distribution = "lognormal"
+)
+
+plot_reg_lognormal &lt;- plot_mod(
+  p_obj = plot_lognormal,
+  x = conf_betabin_ln$x,
+  y = conf_betabin_ln$prob,
+  dist_params = rr_ln$coefficients,
+  distribution = "lognormal3"
+)
+
+plot_conf_beta_ln &lt;- plot_conf(
+  p_obj = plot_reg_lognormal,
+  x = list(conf_betabin_ln$x),
+  y = list(conf_betabin_ln$lower_bound, conf_betabin_ln$upper_bound),
+  direction = "y",
+  distribution = "lognormal3"
+)
+
+</code></pre>
+
+
+</div>

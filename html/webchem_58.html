@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>srs_query</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get record details from U.S. EPA Substance Registry Servives (SRS)</h2>
+
+<h3>Description</h3>
+
+<p>Get record details from SRS, see <a href="https://cdxnodengn.epa.gov/cdx-srs-rest/">https://cdxnodengn.epa.gov/cdx-srs-rest/</a>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">srs_query(
+  query,
+  from = c("itn", "cas", "epaid", "tsn", "name"),
+  verbose = getOption("verbose"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>character; query ID.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>character; type of query ID, e.g. <code>'itn'</code> , <code>'cas'</code>,
+<code>'epaid'</code>, <code>'tsn'</code>, <code>'name'</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical; should a verbose output be printed on the console?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>not currently used.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a list of lists (for each supplied query): a list of 22. subsKey,
+internalTrackingNumber, systematicName, epaIdentificationNumber,
+currentCasNumber, currentTaxonomicSerialNumber, epaName, substanceType,
+categoryClass, kingdomCode, iupacName, pubChemId, molecularWeight,
+molecularFormula, inchiNotation, smilesNotation, classifications,
+characteristics, synonyms, casNumbers, taxonomicSerialNumbers, relationships
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# might fail if API is not available
+srs_query(query = '50-00-0', from = 'cas')
+
+### multiple inputs
+casrn &lt;- c('50-00-0', '67-64-1')
+srs_query(query = casrn, from = 'cas')
+
+## End(Not run)
+</code></pre>
+
+
+</div>

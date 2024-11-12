@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>correctWinPath</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Correct mixed slash and backslash in file path</h2>
+
+<h3>Description</h3>
+
+<p>This function corrects paths character strings for mixed slash and backslash in file path.
+In Windows the function <code>tempdir()</code> will use double backslashes as separator while <code>file.path()</code> uses regular slashes.
+So when combining these two one might encounter a mix of slashes and double backslashes which may cause trouble, unless this is streightened out to a single separator used.
+When pointig to given files inside html-files, paths need to have a prefix, this can be added using the argument <code>asHtml</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">correctWinPath(
+  x,
+  asHtml = FALSE,
+  anyPlatf = FALSE,
+  silent = TRUE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(character) input path to test and correct</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>asHtml</code></td>
+<td>
+<p>(logical) option for use in html : add prefix "file:/"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>anyPlatf</code></td>
+<td>
+<p>(logical) if <code>TRUE</code>, checking will only be performed in Windows environement</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>character vector with corrected path
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>tempfile</code>, <code>file.path</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">path1 &lt;- 'D:\\temp\\Rtmp6X8/working_dir\\RtmpKC/example.txt'
+(path1b &lt;- correctWinPath(path1, anyPlatf=TRUE)) 
+(path1h &lt;- correctWinPath(path1, anyPlatf=TRUE, asHtml=TRUE)) 
+</code></pre>
+
+
+</div>

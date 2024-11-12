@@ -1,0 +1,178 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wt.filter</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Wavelet Transform Filter
+</h2>
+
+<h3>Description</h3>
+
+<p>Generates a wavelet transform filter.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wt.filter(filter="la8", modwt=FALSE, level=1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>A character string indicating which wavelet transform
+filter to compute or a numeric vector of wavelet (high pass) filter
+coefficients (not scaling (low pass) coefficients). If a numeric
+vector is supplied, the length must be even.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>modwt</code></td>
+<td>
+<p>A logical value indicating whether to compute the
+maximal overlap discrete wavelet transform filter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>An integer value indicating the level of the wavelet
+filter to compute.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The character strings currently supported are derived from one of four
+classes of wavelet transform filters: Daubechies, Least Asymetric,
+Best Localized and Coiflet. The prefixes for filters of these classes
+are <code>d</code>, <code>la</code>, <code>bl</code> and <code>c</code>,
+respectively. Following the prefix, the filter name consists of an
+integer indicating length.  Supported lengths are as follows:
+</p>
+
+<dl>
+<dt>Daubechies</dt>
+<dd>
+<p>2,4,6,8,10,12,14,16,18,20.</p>
+</dd>
+<dt>Least Asymetric</dt>
+<dd>
+<p>8,10,12,14,16,18,20.</p>
+</dd>
+<dt>Best Localized</dt>
+<dd>
+<p>14,18,20.</p>
+</dd>
+<dt>Coiflet</dt>
+<dd>
+<p>6,12,18,24,30.</p>
+</dd>
+</dl>
+<p>Thus, to obtain the Daubechies wavelet transform filter of length 4,
+the character string <code>"d4"</code> can be passed to
+<code>wt.filter</code>.
+<br><br>
+This naming convention has one exception: the Daubechies wavelet
+transform filter of length 2 is denoted by <code>haar</code> instead of
+<code>d2</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an object of class <code>wt.filter</code>, which is an S4 object
+with slots 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>An integer representing the length of the wavelet and scaling
+filters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>A numeric vector of wavelet filter coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>g</code></td>
+<td>
+<p>A numeric vector of scaling filter coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wt.class</code></td>
+<td>
+<p>A character string indicating the class of the wavelet
+transform filter. Possible values are <code>"Daubechies"</code>,
+<code>"Least Asymetric"</code>, <code>"Best Localized"</code>, and
+<code>"Coiflet"</code>. If the <code>wt.filter</code> object is generated from a
+numeric vector of wavelet coefficients, <code>wt.class</code> is
+<code>"none"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wt.name</code></td>
+<td>
+<p>A character string indicating the name of the wavlet
+filter as listed in the Details section, above. If the
+<code>wt.filter</code> object is generated from a numeric vector of
+wavelet coefficients, <code>wt.name</code> is <code>"none"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transform</code></td>
+<td>
+<p>A character string indicating whether the resulting
+wavelet transform object contains DWT or MODWT coefficients. Possible
+values are <code>"dwt"</code> and <code>"modwt"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>The notation <code>h</code> and <code>g</code> for wavelet and scaling
+coefficients, respectively, follows Percival and Walden (2000).  In
+other texts and articles the reverse notation is often adopted.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Eric Aldrich. ealdrich@gmail.com.</p>
+
+
+<h3>References</h3>
+
+<p>Percival, D. B. and A. T. Walden (2000) <em>Wavelet Methods for Time
+Series Analysis</em>, Cambridge University Press.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wt.filter.qmf</code>,
+<code>dwt</code>,
+<code>modwt</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wt.filter("la14")
+
+wt.filter(1:10, modwt=TRUE)
+</code></pre>
+
+
+</div>

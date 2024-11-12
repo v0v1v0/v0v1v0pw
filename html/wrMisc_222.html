@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>replNAbyLow</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Replace NAs by low values</h2>
+
+<h3>Description</h3>
+
+<p>With several screening techniques used in hight-throughput biology values at/below detection limit are returned as <code>NA</code>.
+However, the resultant <code>NA</code>-values may be difficult to analyse properly, simply ignoring <code>NA</code>-values mat not be a good choice.
+When (technical) replicate measurements are available, one can look for cases where one gave an <code>NA</code> while the other did not 
+with the aim of investigating such 'NA-neighbours'.  
+<code>replNAbyLow</code> locates and replaces <code>NA</code> values by (random) values from same line &amp; same group 'grp'. 
+The origin of NAs should be predominantly absence of measure (quantitation) due to signal below limit of detection
+and not saturation at upper detection limit or other technical problems.  
+Note, this approach may be not optimal if the number of NA-neighbours is very low.
+Replacamet is done -depending on agrument 'unif'- by Gaussian random model based on neighbour values (within same group),
+using their means and sd, or a uniform random model (min and max of neighbour values) .
+Then numeric matrix (same dim as 'x') with <code>NA</code> replaced is returned.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">replNAbyLow(
+  x,
+  grp,
+  quant = 0.8,
+  signific = 3,
+  unif = TRUE,
+  absOnly = FALSE,
+  seed = NULL,
+  silent = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(numeric matrix or data.frame) main input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grp</code></td>
+<td>
+<p>(factor) to organize replicate columns of (x)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quant</code></td>
+<td>
+<p>(numeric) quantile form 'neighbour' values to use as upper limit for random values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signific</code></td>
+<td>
+<p>number of signif digits for random values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unif</code></td>
+<td>
+<p>(logical) toggle between uniform and Gaussian random values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>absOnly</code></td>
+<td>
+<p>(logical) if TRUE, make negative NA-replacment values positive as absolute values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>(integer) for use with set.seed for reproducible output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>numeric matrix (same dim as 'x') with <code>NA</code> replaced
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>naOmit</code>, <code>na.fail</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">dat &lt;- matrix(round(rnorm(30),2),ncol=6); grD &lt;- gl(2,3)
+dat[sort(sample(1:30,9,repl=FALSE))] &lt;- NA
+dat; replNAbyLow(dat,gr=grD)
+</code></pre>
+
+
+</div>

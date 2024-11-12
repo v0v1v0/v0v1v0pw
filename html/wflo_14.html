@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>GetDirInfo</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Returns average wind direction and direction standard deviation for a turbine's location.</h2>
+
+<h3>Description</h3>
+
+<p>For a turbine's location represented by <code>x</code> and <code>y</code>, looks up the wind direction from the matrix <code>Dirs</code> and the corresponding standard deviation from matrix <code>SDs</code>. Internally transforms coordinates of <code>x</code> and <code>y</code> from problem space (usually unit square) to the matrix space of <code>Dirs</code> and <code>SDs</code>, respectively.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">GetDirInfo(x, y, Dirs, SDs)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>must be a single value containing the 'x' location of a turbine in problem space.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>must be a single value containing the 'y' location of a turbine in problem space.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Dirs</code></td>
+<td>
+
+<p>a matrix containing average yearly wind directions. Usually, the third element of the list object <code>FarmData</code> will be used as this matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SDs</code></td>
+<td>
+
+<p>a matrix containing average yearly wind direction standard deviations. Usually, the fourth element of the list object <code>FarmData</code> will be used as this matrix.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>GetDirInfo</code> returns a vector of two elements, the first being the average wind direction in degrees and the second being the corresponding standard deviation. Note that degrees are meant in the arithmetic degrees system (0° being east, ascending counterclockwise). To transform into an azimuth system (0° being north, ascending clockwise), use function <code>Geo2Ari</code>. Also note that wind directions are meant to denote 'where the wind is going to' rather than 'where the wind is coming from'.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Carsten Croonenbroeck
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Profit</code> to see where to use <code>GetDirInfo</code>, <code>Yield</code> for a similar function for adjusted yield. See <code>FarmVars</code> for the data object.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">Dirs &lt;- FarmData[[3]][e$FarmVars$StartPoint:e$FarmVars$EndPoint,
+e$FarmVars$StartPoint:e$FarmVars$EndPoint]
+SDs &lt;- FarmData[[4]][e$FarmVars$StartPoint:e$FarmVars$EndPoint,
+e$FarmVars$StartPoint:e$FarmVars$EndPoint]
+GetDirInfo(0.5, 0.7, Dirs, SDs)
+## Returns wind direction and standard deviation for the given location
+## and provided the matrices given.
+</code></pre>
+
+
+</div>

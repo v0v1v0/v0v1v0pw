@@ -1,0 +1,250 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wp.mc.sem.boot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Statistical Power Analysis for Structural Equation Modeling / Mediation based on Monte Carlo Simulation: bootstrap method</h2>
+
+<h3>Description</h3>
+
+<p>Structural equation modeling (SEM) is a multivariate technique used to analyze relationships among observed and latent variables.
+It can be viewed as a combination of factor analysis and multivariate regression analysis. A mediation model can be viewed as a SEM model.
+Funtions <cite>wp.sem.chisq</cite> and <cite>wp.sem.rmsea</cite> provide anlytical solutions of power analysis for SEM.
+Function <cite>wp.mediation</cite> provides anlytical solutions of power analysis for a simple mediatoin model.
+This function provides a solution based on Monte Carlo simulation (see <cite>Zhang, 2014</cite>) and a bootstrap method for testing the indirect /mediation effects.
+The solution is extended from the general framework for power analysis for complex mediation models using Monte Carlo simulation in Mplus <cite>(Muthén &amp; Muthén, 2011)</cite> proposed by <cite>Thoemmes et al. (2010)</cite>.
+We extended the framework in three ways. 
+First, we proposes a general method to conduct power analysis for mediation models based on the bootstrap method.
+The method is still based on Monte Carlo simulation but uses the bootstrap method to test mediation effects.
+Second, the method allows the specification of nonnormal data in the Monte Carlo simulation and can thereby reflect more closely practical data collection.
+Third, the function <cite>wp.mc.sem.boot</cite> of a free, open-source R package, WebPower, is developed to ease power anlysis for mediation models using the proposed method.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wp.mc.sem.boot(model, indirect = NULL, nobs = 100, nrep = 1000,
+  nboot = 1000, alpha = 0.95, skewness = NULL, kurtosis = NULL,
+  ovnames = NULL, se = "default", estimator = "default",
+  parallel = "no", ncore = Sys.getenv("NUMBER_OF_PROCESSORS"), cl = NULL,
+  ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+<p>Model specified using lavaan syntax. More about model specification can be found in <cite>Rosseel (2012)</cite>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indirect</code></td>
+<td>
+<p>Indirect effect difined using lavaan syntax.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nobs</code></td>
+<td>
+<p>Sample size. It is 100 by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nrep</code></td>
+<td>
+<p>Number of replications for the Monte Carlo simulation. It is 1000 by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nboot</code></td>
+<td>
+<p>Number of replications for the bootstrap to test the specified parameter (e.g., mediation). It is 1000 by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>significance level chosed for the test. It equals 0.05 by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skewness</code></td>
+<td>
+<p>A sequence of skewnesses of the observed variables. It is not required.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kurtosis</code></td>
+<td>
+<p>A sequence of kurtosises of the observed variables. It is not required.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ovnames</code></td>
+<td>
+<p>Names of the observed variables in the model. It is not required.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>se</code></td>
+<td>
+<p>The method for calculatating the standard errors. Its default method "default" is regular standard errors.
+More about methods specification standard errors calculatationcan be found in <cite>Rosseel (2012)</cite>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimator</code></td>
+<td>
+<p>Estimator. It is Maxmum likelihood estimator by default. More about estimator specification can be found in <cite>Rosseel (2012)</cite>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Parallel computing (<code>"no"</code> or <code>"parallel"</code> or <code>"snow"</code>). It is "no" by default, which means it will not use parallel computing.
+The option "parallel" is to use multiple cores in a computer for parallel computing. It is used with the number of cores (<cite>ncore</cite>).
+The option "snow" is to use clusters for parallel computing. It is used with the number of clusters (<cite>cl</cite>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncore</code></td>
+<td>
+<p>Number of processors used for parallel computing. By default, ncore = Sys.getenv('NUMBER_OF_PROCESSORS').</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cl</code></td>
+<td>
+<p>Number of clusters. It is NULL by default. When it is NULL, the program will detect the number of clusters automatically.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Extra arguments. It is not required.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of the power analysis. The power for all parameters in the model as well as the indirect effects if specified.
+</p>
+
+
+<h3>References</h3>
+
+<p>Rosseel, Y. (2012). Lavaan: An R package for structural equation modeling and more. Version 0.5–12 (BETA). Ghent, Belgium: Ghent University.
+</p>
+<p>Thoemmes, F., MacKinnon, D. P., &amp; Reiser, M. R. (2010). Power analysis for complex mediational designs using Monte Carlo methods. Structural Equation Modeling, 17(3), 510-534.
+</p>
+<p>Zhang, Z. (2014). Monte Carlo based statistical power analysis for mediation models: Methods and software. Behavior research methods, 46(4), 1184-1198.
+</p>
+<p>Zhang, Z., &amp; Yuan, K.-H. (2018). Practical Statistical Power Analysis Using Webpower and R (Eds). Granger, IN: ISDSA Press.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+set.seed(20220722)
+
+#To specify the model
+demo ="
+		y ~ cp*x + start(0)*x + b*m + start(0.39)* m
+		m ~ a*x + start(0.39)*x
+		x ~~ start(1)*x
+		m ~~ start(1)*m
+		y ~~ start(1)*y
+	"
+#To specify the indirect effects
+mediation = "
+		ab := a*b
+		abc:= a*b + cp
+" 
+#Power for mediation based on MC method when bootstrap method is used to test the effects:
+# change nrep and nboot to at least 1,000 in real analysis
+
+mediation.boot = wp.mc.sem.boot(model=demo, indirect=mediation, nobs=100,
+                               nrep=10, nboot=10,
+             skewness=c(0, 0, 1.3), kurtosis=c(0,0,10), ovnames=c("x","m","y"))
+
+#To print the power analysis results
+summary(mediation.boot)
+
+#Example: Power for Simple Mediation Analysis
+ex1model &lt;- "
+		math ~ c*ME + start(0)*ME + b*HE + start(0.39)*HE
+		HE ~ a*ME + start(0.39)*ME
+"
+
+indirect &lt;- "ab:=a*b"
+
+# change nrep and nboot to at least 1,000 in real analysis
+boot.normal &lt;- wp.mc.sem.boot(ex1model,indirect, 50, nrep=10, nboot=10)
+summary(boot.normal) 
+
+boot.non.normal &lt;- wp.mc.sem.boot(ex1model,indirect, 100, nrep=10, nboot=10,
+                              skewness=c(-0.3, -0.7, 1.3),
+                              kurtosis=c(1.5, 0, 5), ovnames=c('ME','HE','math'))
+summary(boot.non.normal) 
+
+#Example: Multiple Group Mediation Analysis (Moderated Mediation)
+ex3model &lt;- "
+		y ~ start(c(0.283, 0.283))*x + c(c1,c2)*x + start(c(0.36, 0.14))*m + c(b1,b2)*m
+		m ~ start(c(0.721, 0.721))*x + c(a1,a2)*x
+		m =~ c(1,1)*m1 + start(c(0.8, 0.8))*m2 + start(c(0.8, 0.8))*m3
+		x ~~ start(c(0.25, 0.25))*x
+		y ~~ start(c(0.81, 0.95))*y
+		m ~~ start(c(0.87, 0.87))*m
+		m1 ~~ start(c(0.36, 0.36))*m1
+		m2 ~~ start(c(0.36, 0.36))*m2
+		m3 ~~ start(c(0.36, 0.36))*m3
+"
+
+# med1 and med2 are the mediation effect for group1 and group2, respectively.
+indirect &lt;- "
+		med1 := a1*b1
+		med2 := a2*b2
+		diffmed := a1*b1 - a2*b2
+"
+
+# change nrep and nboot to at least 1,000 in real analysis
+bootstrap &lt;- wp.mc.sem.boot(ex3model, indirect, nobs=c(400,200),
+                              nrep=10, nboot=10)
+summary(bootstrap) 
+
+#Example: A Longitudinal Mediation Model
+ex4model &lt;- "
+x2 ~ start(.9)*x1 + x*x1
+x3 ~ start(.9)*x2 + x*x2
+m2 ~ start(.3)*x1 + a*x1 + start(.3)*m1 + m*m1
+m3 ~ start(.3)*x2 + a*x2 + start(.3)*m2 + m*m2
+y2 ~ start(.3)*m1 + b*m1 + start(.7)*y1 + y*y1
+y3 ~ start(.3)*m2 + b*m2 + start(.7)*y2 + y*y2 + start(0)*x1 + c*x1
+x1 ~~ start(.37)*m1
+x1 ~~ start(.27)*y1
+y1 ~~ start(.2278)*m1
+x2 ~~ start(.19)*x2
+x3 ~~ start(.19)*x3
+m2 ~~ start(.7534)*m2
+m3 ~~ start(.7534)*m3
+y2 ~~ start(.3243)*y2
+y3 ~~ start(.3243)*y3
+"
+
+indirect &lt;- "ab := a*b"
+
+# change nrep and nboot to at least 1,000 in real analysis
+set.seed(10)
+bootstrap &lt;- wp.mc.sem.boot(ex4model, indirect, nobs=500, nrep=10, nboot=10)
+summary(bootstrap)
+
+
+</code></pre>
+
+
+</div>

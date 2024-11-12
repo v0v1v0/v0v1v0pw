@@ -1,0 +1,68 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>frameableWidget</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Adds pymjs initialization code to a htmlwidget.</h2>
+
+<h3>Description</h3>
+
+<p>This function augments a htmlwidget so that when saved,
+the resulting HTML document can be rendered correctly inside a responsive iframe
+(created using <a href="http://blog.apps.npr.org/pym.js/">Pym.js</a>) of another HTML document.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">frameableWidget(widget, renderCallback = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>widget</code></td>
+<td>
+<p>The widget to add the pymjs code to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>renderCallback</code></td>
+<td>
+<p>An optional Javascript function wrapped in <code>JS()</code>
+which will be called when parent sends a resize event.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Generate your htmlwidget in the normal way and then call this function
+passing in your widget. Then call <code>saveWidget()</code> and
+the saved HTML file is now embeddable inside a Pym.js iframe of another HTML document.
+See <a href="http://blog.apps.npr.org/pym.js/">Pym.js</a> documentation on how to
+create an HTML document with a responsive iframe.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>frameWidget()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+library(leaflet)
+l &lt;- leaflet() %&gt;% addTiles() %&gt;% setView(0,0,1)
+htmlwidgets::saveWidget(
+  widgetframe::frameableWidget(l),'some-directory-on-your-disk')
+
+## End(Not run)
+</code></pre>
+
+
+</div>

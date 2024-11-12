@@ -1,0 +1,151 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>track_HR_change</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Sankey chart of organizational movement between HR attributes and
+missing values (outside company move) (Data Overview)</h2>
+
+<h3>Description</h3>
+
+<p>Creates a list of everyone at a specified start date and a specified end date
+then aggregates up people who have moved between organizations between this
+to points of time and visualizes the move through a sankey chart.
+</p>
+<p>Through this chart you can see:
+</p>
+
+<ul>
+<li>
+<p> The HR attribute/orgs that have the highest move out
+</p>
+</li>
+<li>
+<p> The HR attribute/orgs that have the highest move in
+</p>
+</li>
+<li>
+<p> The number of people that do not have that HR attribute or if they are no
+longer in the system
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">track_HR_change(
+  data,
+  start_date = min(data$Date),
+  end_date = max(data$Date),
+  hrvar = "Organization",
+  mingroup = 5,
+  return = "plot",
+  NA_replacement = "Out of Company"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A Person Query dataset in the form of a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_date</code></td>
+<td>
+<p>A start date to compare changes. See <code>end_date</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end_date</code></td>
+<td>
+<p>An end date to compare changes. See <code>start_date</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hrvar</code></td>
+<td>
+<p>HR Variable by which to compare changes between, defaults to
+<code>"Organization"</code> but accepts any character vector, e.g.
+<code>"LevelDesignation"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mingroup</code></td>
+<td>
+<p>Numeric value setting the privacy threshold / minimum group
+size. Defaults to 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>Character vector specifying what to return, defaults to
+<code>"plot"</code>. Valid inputs are <code>"plot"</code> and <code>"table"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NA_replacement</code></td>
+<td>
+<p>Character replacement for NA defaults to "out of
+company"</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a 'NetworkD3' object by default, where 'plot' is passed in <code>return</code>.
+When 'table' is passed, a summary table is returned as a data frame.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Tannaz Sattari Tabrizi <a href="mailto:Tannaz.Sattari@microsoft.com">Tannaz.Sattari@microsoft.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Data Validation: 
+<code>check_query()</code>,
+<code>extract_hr()</code>,
+<code>flag_ch_ratio()</code>,
+<code>flag_em_ratio()</code>,
+<code>flag_extreme()</code>,
+<code>flag_outlooktime()</code>,
+<code>hr_trend()</code>,
+<code>hrvar_count()</code>,
+<code>hrvar_count_all()</code>,
+<code>hrvar_trend()</code>,
+<code>identify_churn()</code>,
+<code>identify_holidayweeks()</code>,
+<code>identify_inactiveweeks()</code>,
+<code>identify_nkw()</code>,
+<code>identify_outlier()</code>,
+<code>identify_privacythreshold()</code>,
+<code>identify_query()</code>,
+<code>identify_shifts()</code>,
+<code>identify_shifts_wp()</code>,
+<code>identify_tenure()</code>,
+<code>remove_outliers()</code>,
+<code>standardise_pq()</code>,
+<code>subject_validate()</code>,
+<code>subject_validate_report()</code>,
+<code>validation_report()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+dv_data %&gt;% track_HR_change()
+
+</code></pre>
+
+
+</div>

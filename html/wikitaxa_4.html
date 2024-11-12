@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wt_data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Wikidata taxonomy data</h2>
+
+<h3>Description</h3>
+
+<p>Wikidata taxonomy data
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wt_data(x, property = NULL, ...)
+
+wt_data_id(x, language = "en", limit = 10, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(character) a taxonomic name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>property</code></td>
+<td>
+<p>(character) a property id, e.g., P486</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>curl options passed on to <code>httr::GET()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>(character) two letter language code</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit</code></td>
+<td>
+<p>(integer) records to return. Default: 10</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note that <code>wt_data</code> can take a while to run since when fetching
+claims it has to do so one at a time for each claim
+</p>
+<p>You can search things other than taxonomic names with <code>wt_data</code> if you
+like
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>wt_data</code> searches Wikidata, and returns a list with elements:
+</p>
+
+<ul>
+<li>
+<p> labels - data.frame with columns: language, value
+</p>
+</li>
+<li>
+<p> descriptions - data.frame with columns: language, value
+</p>
+</li>
+<li>
+<p> aliases - data.frame with columns: language, value
+</p>
+</li>
+<li>
+<p> sitelinks - data.frame with columns: site, title
+</p>
+</li>
+<li>
+<p> claims - data.frame with columns: claims, property_value,
+property_description, value (comma separted values in string)
+</p>
+</li>
+</ul>
+<p><code>wt_data_id</code> gets the Wikidata ID for the searched term, and
+returns the ID as character
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# search by taxon name
+# wt_data("Mimulus alsinoides")
+
+# choose which properties to return
+wt_data(x="Mimulus foliatus", property = c("P846", "P815"))
+
+# get a taxonomic identifier
+wt_data_id("Mimulus foliatus")
+# the id can be passed directly to wt_data()
+# wt_data(wt_data_id("Mimulus foliatus"))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

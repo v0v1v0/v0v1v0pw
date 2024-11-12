@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>weekToMonth</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert weekly data to monthly data</h2>
+
+<h3>Description</h3>
+
+<p>Converts weekly data to monthly data.
+The start week or date is needed along with the data. The start week can be
+defined by ISO week or epi week.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">weekToMonth(wkdata, year = NULL, wkIndex = NULL, wkMethod = "ISO",
+  datStart = NULL, format = "%d-%m-%Y")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wkdata</code></td>
+<td>
+<p>a numeric vector for weekly data to be converted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>year</code></td>
+<td>
+<p>a value for the year of the start of the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wkIndex</code></td>
+<td>
+<p>a value for the week index of the start of the data if a week-counting
+method is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wkMethod</code></td>
+<td>
+<p>a character string for the week-counting methods.
+Default is "ISO" for ISO-week;
+other options are "epiSat", "epiSun" and "epiMon" for epi-week method
+defining Saturday, Sunday and Monday as the firstday in a week, respectively.
+In addition, users also have the option of specifying the start date of
+the data by "startDat" method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>datStart</code></td>
+<td>
+<p>a character string for the start date of the data.
+If left blank, the date generated from the week-counting method will be applied.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>a character string specifying the input formate for <code>datStart</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a dataframe containing two column vectors: <code>yearMonth</code> and
+<code>value</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>You Li
+</p>
+
+
+<h3>See Also</h3>
+
+<p>dateFromWeek
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># extract data
+data(weeklyFlu)
+# subset data of interest, e.g. to convert weekly influenza A cases in China
+weeklyData &lt;- weeklyFlu$fluA[weeklyFlu$country == "China"]
+# convert weekly data to monthly data;
+# these two input methods below will return the same results.
+monthlyData &lt;- weekToMonth(weeklyData, year = 2010, wkIndex = 1, wkMethod = "ISO")
+monthlyData &lt;- weekToMonth(weeklyData, datStart = "04-01-2010", wkMethod = "startDat")
+</code></pre>
+
+
+</div>

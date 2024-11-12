@@ -1,0 +1,168 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>TDist</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+The Generalized Student's t Distribution
+</h2>
+
+<h3>Description</h3>
+
+<p>Density, distribution function, quantile function and random generation for the generalised t distribution with df degrees of freedom, using location and scale, or mean and sd. These are wrappers for <code>stats::dt</code>, etc.
+</p>
+<p>Note: In earlier versions of <code>wiqid</code> the <code>scale</code> argument to <code>*t2</code> functions was incorrectly named <code>sd</code>; they are not the same. These function now give a warning with the correct value of the <code>sd</code>. New <code>*t3</code> functions do use <code>sd</code> which is only defined for <code>df &gt; 2</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dt2(x, location, scale, df)
+pt2(x, location, scale, df, lower.tail=TRUE, log.p=FALSE)
+qt2(p, location, scale, df, lower.tail=TRUE, log.p=FALSE)
+rt2(n, location, scale, df)
+
+dt3(x, mean, sd, df)
+pt3(x, mean, sd, df, lower.tail=TRUE, log.p=FALSE)
+qt3(p, mean, sd, df, lower.tail=TRUE, log.p=FALSE)
+rt3(n, mean, sd, df)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>vector of parameter values
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>location</code></td>
+<td>
+
+<p>location of the t-distribution
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mean</code></td>
+<td>
+
+<p>mean of the t-distribution
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+
+<p>scale parameter of the t-distribution
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd</code></td>
+<td>
+
+<p>standard deviation of the t-distribution, only defined for <code>df &gt; 2</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+
+<p>degrees of freedom
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower.tail</code></td>
+<td>
+
+<p>logical; if TRUE (default), cumulative probabilities up to x, otherwise, above x.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log.p</code></td>
+<td>
+
+<p>logical; if TRUE, probabilities p are given as log(p).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+
+<p>probability.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+
+<p>number of random draws required.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>dtx</code> gives the density, <code>ptx</code> gives the cumulative probability, <code>qtx</code> gives the quantile function, and <code>rtx</code> generates random deviates.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See the <span class="pkg">stats</span> functions <code>dt</code>, <code>pt</code>, <code>qt</code>, <code>rt</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Plot the t-distribution with varying sd and scale
+require(graphics)
+xx &lt;- seq(-5, 15, length=201)
+density &lt;- dt3(xx, mean=5, sd=1, 4)
+plot(xx, density, type='l', lwd=2, main="t-distribution with df = 4")
+lines(xx, dt3(xx, 5, 2, 4), lwd=2, col=2)
+lines(xx, dt3(xx, 5, 3, 4), lwd=2, col=3)
+lines(xx, dt3(xx, 5, 4, 4), lwd=2, col=4)
+legend('topleft', paste0("sd = ", 1:4), lwd=2, lty=1, col=1:4,
+  bty='n')
+lines(xx, dt2(xx, 5, 1, 4), lwd=2, lty=2, col=1)
+lines(xx, dt2(xx, 5, 2, 4), lwd=2, lty=2, col=2)
+lines(xx, dt2(xx, 5, 3, 4), lwd=2, lty=2, col=3)
+lines(xx, dt2(xx, 5, 4, 4), lwd=2, lty=2, col=4)
+legend('topright', paste0("scale = ", 1:4), lwd=2, lty=2, col=1:4,
+  bty='n')
+
+# Generate random numbers
+rand2 &lt;- rt2(1e6, location=5, scale=2, df=4)
+mean(rand2)
+sd(rand2)  # about 2.83
+rand3 &lt;- rt3(1e6, mean=5, sd=2, df=4)
+mean(rand3)
+sd(rand3)  # close to 2
+
+# check pt* and qt*
+prob &lt;- pt2(x=7, location=5, scale=3, df=4)
+qt2(p=prob, location=5, scale=3, df=4)
+</code></pre>
+
+
+</div>

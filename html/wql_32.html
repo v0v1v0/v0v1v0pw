@@ -1,0 +1,173 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotTsTile</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Image plot of monthly time series</h2>
+
+<h3>Description</h3>
+
+<p>Monthly values are transformed into deciles or other bins, and corresponding
+colors are plotted in a month by year matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotTsTile(
+  x,
+  plot.title = NULL,
+  legend.title = NULL,
+  four = TRUE,
+  loganom = TRUE,
+  square = TRUE,
+  legend = TRUE,
+  trim = TRUE,
+  overall = TRUE,
+  stat = c("median", "mean")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>monthly time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot.title</code></td>
+<td>
+<p>plot title.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend.title</code></td>
+<td>
+<p>legend title.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>four</code></td>
+<td>
+<p>logical indicating if data should be binned into 4 special
+groups or into deciles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loganom</code></td>
+<td>
+<p>logical indicating if data should be transformed into
+log-anomalies.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>square</code></td>
+<td>
+<p>logical indicating if tiles should be square.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend</code></td>
+<td>
+<p>logical indicating if a legend should be included.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim</code></td>
+<td>
+<p>logical indicating if leading and trailing NA values should be
+removed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overall</code></td>
+<td>
+<p>determines whether anomalies are calculated with respect to
+overall mean or to long-term mean for the same month.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stat</code></td>
+<td>
+<p>determines whether anomalies are calculated and binned using
+mean or median.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If <code>four = TRUE</code>, then <code>x</code> is first divided into a positive and
+negative bin. Each bin is then further divided into two bins by its mean,
+yielding a total of four bins. If <code>four=FALSE</code>, then <code>x</code> is simply
+divided into deciles. In either case, each bin has its own assigned color,
+with colors ranging from dark blue (smallest numbers) through light blue and
+pink to red.
+</p>
+<p>Although <code>four = TRUE</code> can be useful for any data in which 0 represents
+a value with special significance, it is especially so for data converted
+into log-anomalies, i.e., <code>log10(x/xbar)</code> where <code>xbar = mean(x,
+na.rm=TRUE)</code>. The mean month then has value 0, and a value of -1, for
+example, indicates original data equal to one-tenth the mean. Log-anomaly
+transforms can be particularly appropriate for biological populations, in
+which variability is often approximately proportional to the mean.
+</p>
+<p>When <code>loganom = TRUE</code>, the anomalies are calculated with respect to the
+overall mean month. This differs from, for example, the log-anomaly
+zooplankton plot of O'Brien et al. (2008), in which a monthly anomaly is
+calculated with respect to the mean value of the same month. To get the
+latter behavior, set <code>overall = FALSE</code>. A further option is to set
+<code>stat = "median"</code> rather than the default <code>stat = "mean"</code>, in
+which case <code>xbar = median(x, na.rm = TRUE)</code>, and the positive and
+negative bins are each divided into two bins by their median instead of
+mean. Using combinations of these different options can reveal complementary
+information.
+</p>
+<p>You may want to set <code>square = FALSE</code> and then adjust the plot window
+manually if you plan to use the plot in a subsequent layout or if there is
+too much white space.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An image plot of monthly values classified into either deciles or
+into four bins as described above (and corresponding object of class
+“ggplot”).
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alan Jassby, James Cloern
+</p>
+
+
+<h3>References</h3>
+
+<p>O'Brien T., Lopez-Urrutia A., Wiebe P.H., Hay S. (editors)
+(2008) <em>ICES Zooplankton Status Report 2006/2007.</em> ICES Cooperative
+Research Report 292, International Council for the Exploration of the Sea,
+Copenhagen, 168 p.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# plot log-anomalies in four bins
+chl27 = sfbayChla[, 's27']
+plotTsTile(chl27, legend.title = 'Chl log-anomaly')
+
+# plot deciles
+plotTsTile(chl27, plot.title = 'SF Bay station 27', legend.title =
+	'chlorophyll', four = FALSE, loganom = FALSE, square = FALSE)
+
+</code></pre>
+
+
+</div>

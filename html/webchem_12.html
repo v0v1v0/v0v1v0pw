@@ -1,0 +1,261 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cir_query</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Query Chemical Identifier Resolver</h2>
+
+<h3>Description</h3>
+
+<p>A interface to the Chemical Identifier Resolver (CIR).
+(<a href="https://cactus.nci.nih.gov/chemical/structure_documentation">https://cactus.nci.nih.gov/chemical/structure_documentation</a>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cir_query(
+  identifier,
+  representation = "smiles",
+  resolver = NULL,
+  match = c("all", "first", "ask", "na"),
+  verbose = getOption("verbose"),
+  choices = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>identifier</code></td>
+<td>
+<p>character; chemical identifier.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>representation</code></td>
+<td>
+<p>character; what representation of the identifier should
+be returned. See details for possible representations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>resolver</code></td>
+<td>
+<p>character; what resolver should be used? If NULL (default)
+the identifier type is detected and the different resolvers are used in turn.
+See details for possible resolvers.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>match</code></td>
+<td>
+<p>character; How should multiple hits be handled? <code>"all"</code>
+returns all matches, <code>"first"</code> returns only the first result,
+<code>"ask"</code> enters an interactive mode and the user is asked for input,
+<code>"na"</code> returns <code>NA</code> if multiple hits are found.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical; should a verbose output be printed on the console?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>choices</code></td>
+<td>
+<p>deprecated.  Use the <code>match</code> argument instead.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>currently not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>CIR can resolve can be of the following <code>identifier</code>: Chemical Names,
+IUPAC names,
+CAS Numbers, SMILES strings, IUPAC InChI/InChIKeys, NCI/CADD Identifiers,
+CACTVS HASHISY, NSC number, PubChem SID, ZINC Code, ChemSpider ID,
+ChemNavigator SID, eMolecule VID.
+</p>
+<p><code>cir_query()</code> can handle only a part of all possible conversions of CIR.
+Possible <code>representations</code> are:
+</p>
+
+<ul>
+<li> <p><code>'smiles'</code>(SMILES strings),
+</p>
+</li>
+<li> <p><code>'names'</code> (Names),
+</p>
+</li>
+<li> <p><code>'cas'</code> (CAS numbers),
+</p>
+</li>
+<li> <p><code>'stdinchikey'</code> (Standard InChIKey),
+</p>
+</li>
+<li> <p><code>'stdinchi'</code> (Standard InChI),
+</p>
+</li>
+<li> <p><code>'ficts'</code> (FICTS Identifier),
+</p>
+</li>
+<li> <p><code>'ficus'</code> (FICuS Indetifier),
+</p>
+</li>
+<li> <p><code>'uuuuu'</code> (uuuuu Identifier),
+</p>
+</li>
+<li> <p><code>'mw'</code> (Molecular weight),
+</p>
+</li>
+<li> <p><code>'monoisotopic_mass'</code> (Monoisotopic Mass),
+</p>
+</li>
+<li> <p><code>'formula'</code> (Chemical Formula),
+</p>
+</li>
+<li> <p><code>'chemspider_id'</code> (ChemSpider ID),
+</p>
+</li>
+<li> <p><code>'pubchem_sid'</code> (PubChem SID),
+</p>
+</li>
+<li> <p><code>'chemnavigator_sid'</code> (ChemNavigator SID),
+</p>
+</li>
+<li> <p><code>'h_bond_donor_count'</code> (Number of Hydrogen Bond Donors),
+</p>
+</li>
+<li> <p><code>'h_bond_acceptor_count'</code> (Number of Hydrogen Bond Acceptors),
+</p>
+</li>
+<li> <p><code>'h_bond_center_count'</code> (Number of Hydrogen Bond Centers),
+</p>
+</li>
+<li> <p><code>'rule_of_5_violation_count'</code> (Number of Rule of 5 Violations),
+</p>
+</li>
+<li> <p><code>'rotor_count'</code> (Number of Freely Rotatable Bonds),
+</p>
+</li>
+<li> <p><code>'effective_rotor_count'</code> (Number of Effectively Rotatable Bonds),
+</p>
+</li>
+<li> <p><code>'ring_count'</code> (Number of Rings),
+</p>
+</li>
+<li> <p><code>'ringsys_count'</code> (Number of Ring Systems),
+</p>
+</li>
+<li> <p><code>'xlogp2'</code> (octanol-water partition coefficient),
+</p>
+</li>
+<li> <p><code>'aromatic'</code> (is the compound aromatic),
+</p>
+</li>
+<li> <p><code>'macrocyclic'</code> (is the compound macrocyclic),
+</p>
+</li>
+<li> <p><code>'heteroatom_count'</code> (heteroatom count),
+</p>
+</li>
+<li> <p><code>'hydrogen_atom_count'</code> (H atom count),
+</p>
+</li>
+<li> <p><code>'heavy_atom_count'</code> ( Heavy atom count),
+</p>
+</li>
+<li> <p><code>'deprotonable_group_count'</code> (Number of deprotonable groups),
+</p>
+</li>
+<li> <p><code>'protonable_group_count'</code> (Number of protonable groups).
+</p>
+</li>
+</ul>
+<p>CIR first tries to determine the identifier type submitted and then
+uses 'resolvers' to look up the data.
+If no <code>resolver</code> is supplied, CIR tries different resolvers in
+turn till a hit is found.
+E.g. for names CIR tries first to look up in OPSIN and if this fails
+the local name index of CIR.
+However, it can be also specified which resolvers to use
+(if you know e.g. know your identifier type)
+Possible <code>resolvers</code> are:
+</p>
+
+<ul>
+<li> <p><code>'name_by_cir'</code> (Lookup in name index of CIR),
+</p>
+</li>
+<li> <p><code>'name_by_opsin'</code> (Lookup in OPSIN),
+</p>
+</li>
+<li> <p><code>'name_by_chemspider'</code> (Lookup in ChemSpider,
+<a href="https://cactus.nci.nih.gov/blog/?p=1386">https://cactus.nci.nih.gov/blog/?p=1386</a>),
+</p>
+</li>
+<li> <p><code>'smiles'</code> (Lookup SMILES),
+</p>
+</li>
+<li> <p><code>'stdinchikey'</code>, <code>'stdinchi'</code> (InChI),
+</p>
+</li>
+<li> <p><code>'cas_number'</code> (CAS Number),
+</p>
+</li>
+<li> <p><code>'name_pattern'</code> (Google-like pattern search
+(<a href="https://cactus.nci.nih.gov/blog/?p=1456">https://cactus.nci.nih.gov/blog/?p=1456</a>)
+Note, that the pattern search can be combined with other resolvers,
+e.g. <code>resolver = 'name_by_chemspider,name_pattern'</code>.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A tibble with a 'query' column and a column for the requested representation.
+</p>
+
+
+<h3>Note</h3>
+
+<p>You can only make 1 request per second (this is a hard-coded feature).
+</p>
+
+
+<h3>References</h3>
+
+<p><code>cir</code> relies on the great CIR web service created by the CADD
+Group at NCI/NIH! <br><a href="https://cactus.nci.nih.gov/chemical/structure_documentation">https://cactus.nci.nih.gov/chemical/structure_documentation</a>, <br><a href="https://cactus.nci.nih.gov/blog/?cat=10">https://cactus.nci.nih.gov/blog/?cat=10</a>, <br><a href="https://cactus.nci.nih.gov/blog/?p=1386">https://cactus.nci.nih.gov/blog/?p=1386</a>, <br><a href="https://cactus.nci.nih.gov/blog/?p=1456">https://cactus.nci.nih.gov/blog/?p=1456</a>, <br></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# might fail if API is not available
+cir_query("Triclosan", "cas")
+cir_query("3380-34-5", "cas", match = "first")
+cir_query("3380-34-5", "cas", resolver = "cas_number")
+cir_query("3380-34-5", "smiles")
+cir_query("Triclosan", "mw")
+
+# multiple inputs
+comp &lt;- c("Triclosan", "Aspirin")
+cir_query(comp, "cas", match = "first")
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

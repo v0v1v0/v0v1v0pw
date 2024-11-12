@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>replace.n.highest.risk</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Rehabilitation strategy: replace the <code>n</code> pipes with the highest risk</h2>
+
+<h3>Description</h3>
+
+<p>Strategy to prioritize pipes with the highest risk. Pipes are only
+replaced if the budget remains positive.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">replace.n.highest.risk(state, n, prob.failure, max.costs = Inf)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>state</code></td>
+<td>
+<p>a state list</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>number of highest risk pipes to replace</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prob.failure</code></td>
+<td>
+<p>failure rate function. Typically the same as passed to <code>simulate_network</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max.costs</code></td>
+<td>
+<p>maximal amount of money allowed to be spent on this strategy</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The risk is defined as the product of the failure probability in the next year
+and the expected failure costs.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a state list
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Andreas Scheidegger
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>replace.n.oldest</code>, <code>replace.n.random</code>,
+<code>replace.older.than</code>,
+<code>replace.more.failures.than</code>, <code>do.nothing</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## define a strategy function that can be passed to simulate_network():
+mystrategy &lt;- . %&gt;% replace.n.highest.risk(n=2, prob.failure=prob.failure.exp, max.costs=30000)
+
+## or define a more complex strategy by combining multiple strategies
+## into a prioritized sequence:
+mystrategy &lt;- . %&gt;%
+  replace.more.failures.than(failures=2) %&gt;%
+  replace.n.oldest(n=3) %&gt;%
+  replace.n.highest.risk(n=2, prob.failure=prob.failure.exp) %&gt;%
+  replace.older.than(age=8) %&gt;%
+  replace.n.random(n=4)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wbs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Change-point detection via Wild Binary Segmentation</h2>
+
+<h3>Description</h3>
+
+<p>The function applies the Wild Binary Segmentation algorithm to identify potential locations of the change-points in the mean of the input vector <code>x</code>. 
+The object returned by this routine can be further passed to the <code>changepoints</code> function, 
+which finds the final estimate of the change-points based on chosen stopping criteria.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wbs(x, ...)
+
+## Default S3 method:
+wbs(x, M = 5000, rand.intervals = TRUE,
+  integrated = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a numeric vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>not in use</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>a number of intervals used in the WBS algorithm</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rand.intervals</code></td>
+<td>
+<p>a logical variable; if <code>rand.intervals=TRUE</code> intervals used in the procedure are random, thus
+the output of the algorithm may slightly vary from run to run;  for <code>rand.intervals=FALSE</code> the intervals used depend on <code>M</code> and the length of <code>x</code> only,
+hence the output is always the same for given input parameters</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>integrated</code></td>
+<td>
+<p>a logical variable indicating the version of Wild Binary Segmentation algorithm used; when <code>integrated=TRUE</code>, 
+augmented version of WBS is launched, which combines WBS and BS into one</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>an object of class "wbs", which contains the following fields
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>the input vector provided</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>the length of <code>x</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>the number of intervals used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rand.intervals</code></td>
+<td>
+<p>a logical variable indicating type of intervals</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>integrated</code></td>
+<td>
+<p>a logical variable indicating type of WBS procedure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>res</code></td>
+<td>
+<p>a 6-column matrix with results, where 's' and 'e' denote start-
+end points of the intervals in which change-points candidates 'cpt' have been found;
+column 'CUSUM' contains corresponding value of CUSUM statistic; 'min.th' is the smallest 
+threshold value for which given change-point candidate would be not added to the set of estimated 
+change-points; the last column is the scale at which the change-point has been found</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- rnorm(300) + c(rep(1,50),rep(0,250))
+w &lt;- wbs(x)
+plot(w)
+w.cpt &lt;- changepoints(w)
+w.cpt
+th &lt;- c(w.cpt$th,0.7*w.cpt$th) 
+w.cpt &lt;- changepoints(w,th=th)
+w.cpt$cpt.th
+</code></pre>
+
+
+</div>

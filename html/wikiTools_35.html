@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>w_isInstanceOf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check if a Wikidata entity is an instance of a class</h2>
+
+<h3>Description</h3>
+
+<p>Check using WDQS if the Wikidata entities in entity_list are instances of
+<code>instanceof</code> Wikidata entity class. For example, if instanceof="Q5", check if
+entities are instances of the Wikidata entity class Q5, i.e, are humans.
+Some entity classes are allowed, separately by '|'; in this case, the OR
+operator is considered. If instanceof=” then no filter is applied: the
+function returns all Wikidata entities class of which each of the entities in
+the list are instances.
+Duplicated entities are deleted before search.
+Note that no labels or descriptions of the entities are returned. Please, use
+function <code>w_LabelDesc</code> for this.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">w_isInstanceOf(entity_list, instanceof = "", nlimit = 50000, debug = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>entity_list</code></td>
+<td>
+<p>A vector with the Wikidata entities.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>instanceof</code></td>
+<td>
+<p>The Wikidata class to check, mandatory. Some entity classes
+separated by '|' are allowed, in this case, the OR operator is considered.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlimit</code></td>
+<td>
+<p>If the number of entities exceeds this number, chunked queries
+are done. This is the number of entities requested in each chunk. Please,
+reduce the default value if error is raised.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>For debugging purposes (default FALSE). If debug='info'
+information about chunked queries is shown. If debug='query' also the query
+launched is shown.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data-frame with three columns, first Wikidata entity, second all
+Wikidata class each instance is instance of them, last TRUE or FALSE if each
+entity is instance of the <code>instanceof</code> parameter, if this one is set.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Angel Zazo, Department of Computer Science and Automatics, University of Salamanca
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# aux: get a vector of entities (l).
+df &lt;- w_SearchByLabel(string='Iranzo', langsorder='es|en', mode='inlabel')
+l &lt;- df$entity
+
+df &lt;- w_isInstanceOf(entity_list=l, instanceof='Q5')
+# Not TRUE
+df[!df$instanceof_Q5,]
+
+## End(Not run)
+</code></pre>
+
+
+</div>

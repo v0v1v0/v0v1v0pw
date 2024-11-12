@@ -1,0 +1,175 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>check.dsm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Validate Internal Structure of DSM Object (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>Validate the internal structure of a DSM object and return a list with information about the object.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+check.dsm(model, validate = FALSE, nonneg.check = FALSE)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+
+<p>an object of class <code>dsm</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>validate</code></td>
+<td>
+
+<p>carry out extended validation of internal consistency? (may be expensive)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nonneg.check</code></td>
+<td>
+
+<p>if <code>TRUE</code>, check the co-occurrence (<code class="reqn">M</code>) and/or score (<code class="reqn">S</code>) matrix for non-negativity (may be expensive)
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Aborts with error message if any inconsistency is detected.
+Otherwise a list with the following items is returned:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>nrow</code></td>
+<td>
+
+<p>number of rows (target terms) of the DSM
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncol</code></td>
+<td>
+
+<p>number of columns (features) of the DSM
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+
+<p>sample size of the underlying data set (may be <code>NA</code>)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M$ok</code></td>
+<td>
+
+<p>whether co-occurrence frequency matrix <code class="reqn">M</code> is available
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M$sparse</code></td>
+<td>
+
+<p>whether <code class="reqn">M</code> is sparse or dense (only present if <code>M$ok</code>)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M$canonical</code></td>
+<td>
+
+<p>whether <code class="reqn">M</code> is in canonical DSM format (only present if <code>M$ok</code>)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M$nonneg</code></td>
+<td>
+
+<p>whether <code class="reqn">M</code> is non-negative (only present if <code>M$ok</code>, and may be <code>NA</code> unless <code>nonneg.check=TRUE was specified</code>)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>S$ok</code></td>
+<td>
+
+<p>whether score matrix <code class="reqn">S</code> is available
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>S$sparse</code></td>
+<td>
+
+<p>whether <code class="reqn">S</code> is sparse or dense (only present if <code>S$ok</code>)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>S$canonical</code></td>
+<td>
+
+<p>whether <code class="reqn">S</code> is in canonical DSM format (only present if <code>S$ok</code>)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>S$nonneg</code></td>
+<td>
+
+<p>whether <code class="reqn">S</code> is non-negative (only present if <code>S$ok</code>, and may be <code>NA</code> unless <code>nonneg.check=TRUE was specified</code>)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locked</code></td>
+<td>
+
+<p><code>TRUE</code> if matrix combines data with inconsistent row or column marginals (in this case, association scores cannot be computed any more)
+</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dsm</code>, <code>print.dsm</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+check.dsm(DSM_TermTerm)
+
+</code></pre>
+
+
+</div>

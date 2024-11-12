@@ -1,0 +1,69 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>webexercises_default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create default webexercises document</h2>
+
+<h3>Description</h3>
+
+<p>This function wraps <code>rmarkdown::html_document</code> to configure
+compilation to embed the default webexercises CSS and JavaScript files in
+the resulting HTML.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">webexercises_default(...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional function arguments to pass to
+<code>html_document</code>.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Call this function as the <code>output_format</code> argument
+for the <code>render</code> function when compiling
+HTML documents from RMarkdown source.
+</p>
+
+
+<h3>Value</h3>
+
+<p>R Markdown output format to pass to 'render'.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>render</code>, <code>html_document</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># copy the webexercises 'R Markdown' template to a temporary file
+## Not run: 
+my_rmd &lt;- tempfile(fileext = ".Rmd")
+rmarkdown::draft(my_rmd, "webexercises", "webexercises")
+
+# compile it
+rmarkdown::render(my_rmd, webexercises::webexercises_default())
+
+# view the result
+browseURL(sub("\\.Rmd$", ".html", my_rmd))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

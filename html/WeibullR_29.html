@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_contour</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Plotting of Likelihood Ratio Contours from <code>wblr</code> Objects
+</h2>
+
+<h3>Description</h3>
+
+<p>Plots likelihood ratio contours from a <code>wblr</code> object or a list of <code>wblr</code> objects. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_contour(x, CL=NULL, AL=TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>Object of class <code>"wblr"</code> or a list of <code>"wblr"</code> objects.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CL</code></td>
+<td>
+<p>An optional argument for establishing the confidence limit(s) for calculated contours. A vector of values may be provided to generate concentric contours on a single object.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>AL</code></td>
+<td>
+<p>A Logical defining whether parameters of lognormal contours should be presented as AntiLog values.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Entry for a limited set of graphic parameters (col, lty, lwd, xlim, ylim, main and sub)
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If no CL argument is provided, the contours generated in the provided <code>wblr</code> objects for likelihood confidence bounds will be plotted.
+If a vector is provided for CL, multiple contours for each provided object will be calculated to display concentric contours according to values in the CL vector.
+In all cases options for distribution, degrees of freedom and graphic options will be extracted from the underlying objects.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns the list of contours that were prepared for plotting.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(1234)
+fail&lt;-rweibull(5,2,10)
+ctest&lt;-wblr(fail)
+ctest&lt;-wblr.fit(ctest, method.fit="mle")
+ctest&lt;-wblr.conf(ctest, method.conf="lrb",col="red")
+fail2&lt;-c(10,40,40,50)
+susp&lt;-c(20,60)
+ctest2&lt;-wblr(fail2, susp)
+ctest2&lt;-wblr.fit(ctest2, method.fit="mle")
+ctest2&lt;-wblr.conf(ctest2, method.conf="lrb",col="blue")
+
+## Not run: 
+ plot_contour(list(ctest, ctest2))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

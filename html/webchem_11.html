@@ -1,0 +1,233 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cir_img</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Query Chemical Identifier Resolver Images</h2>
+
+<h3>Description</h3>
+
+<p>A interface to the Chemical Identifier Resolver (CIR).
+(<a href="https://cactus.nci.nih.gov/chemical/structure_documentation">https://cactus.nci.nih.gov/chemical/structure_documentation</a>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cir_img(
+  query,
+  dir,
+  format = c("png", "gif"),
+  width = 500,
+  height = 500,
+  linewidth = 2,
+  symbolfontsize = 16,
+  bgcolor = NULL,
+  antialiasing = TRUE,
+  atomcolor = NULL,
+  bondcolor = NULL,
+  csymbol = c("special", "all"),
+  hsymbol = c("special", "all"),
+  hcolor = NULL,
+  header = NULL,
+  footer = NULL,
+  frame = NULL,
+  verbose = getOption("verbose"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>character; Search term. Can be any common chemical identifier
+(e.g. CAS, INCHI(KEY), SMILES etc.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dir</code></td>
+<td>
+<p>character; Directory to save the image.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>character; Output format of the image. Can be one of "png",
+"gif".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>width</code></td>
+<td>
+<p>integer; Width of the image.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>height</code></td>
+<td>
+<p>integer; Height of the image.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>linewidth</code></td>
+<td>
+<p>integer; Width of lines.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>symbolfontsize</code></td>
+<td>
+<p>integer; Fontsize of atoms in the image.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bgcolor</code></td>
+<td>
+<p>character; E.g. transparent, white, %23AADDEE</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>antialiasing</code></td>
+<td>
+<p>logical; Should antialiasing be used?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>atomcolor</code></td>
+<td>
+<p>character; Color of the atoms in the image.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bondcolor</code></td>
+<td>
+<p>character; Color of the atom bond lines.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>csymbol</code></td>
+<td>
+<p>character; Can be one of "special" (default - i.e. only
+hydrogen atoms in functional groups or defining stereochemistry) or "all".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hsymbol</code></td>
+<td>
+<p>character; Can be one of "special" (default - i.e. none are
+shown) or "all" (all are printed).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hcolor</code></td>
+<td>
+<p>character; Color of the hydrogen atoms.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>header</code></td>
+<td>
+<p>character; Should a header text be added to the image? Can be
+any string.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>footer</code></td>
+<td>
+<p>character; Should a footer text be added to the image? Can be
+any string.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>frame</code></td>
+<td>
+<p>integer; Should a frame be plotted? Can be on of NULL (default)
+or 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical; Should a verbose output be printed on the console?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>currently not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>CIR can resolve can be of the following <code>identifier</code>: Chemical Names,
+IUPAC names,
+CAS Numbers, SMILES strings, IUPAC InChI/InChIKeys, NCI/CADD Identifiers,
+CACTVS HASHISY, NSC number, PubChem SID, ZINC Code, ChemSpider ID,
+ChemNavigator SID, eMolecule VID.
+</p>
+<p>For an image with transparent background use ‘transparent’ as color name and
+switch off antialiasing (i.e. antialiasing = 0).
+</p>
+
+
+<h3>Value</h3>
+
+<p>image written to disk
+</p>
+
+
+<h3>Note</h3>
+
+<p>You can only make 1 request per second (this is a hard-coded feature).
+</p>
+
+
+<h3>References</h3>
+
+<p><code>cir</code> relies on the great CIR web service created by the CADD
+Group at NCI/NIH! <br><a href="https://cactus.nci.nih.gov/chemical/structure_documentation">https://cactus.nci.nih.gov/chemical/structure_documentation</a>, <br><a href="https://cactus.nci.nih.gov/blog/?cat=10">https://cactus.nci.nih.gov/blog/?cat=10</a>, <br><a href="https://cactus.nci.nih.gov/blog/?p=1386">https://cactus.nci.nih.gov/blog/?p=1386</a>, <br><a href="https://cactus.nci.nih.gov/blog/?p=1456">https://cactus.nci.nih.gov/blog/?p=1456</a>, <br></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# might fail if API is not available
+cir_img("CCO", dir = tempdir()) # SMILES
+
+# multiple query strings and different formats
+query = c("Glyphosate", "Isoproturon", "BSYNRYMUTXBXSQ-UHFFFAOYSA-N")
+cir_img(query, dir = tempdir(), bgcolor = "transparent", antialising = 0)
+
+# all parameters
+query  = "Triclosan"
+cir_img(query,
+        dir = tempdir(),
+        format = "png",
+        width = 600,
+        height = 600,
+        linewidth = 5,
+        symbolfontsize = 30,
+        bgcolor = "red",
+        antialiasing = FALSE,
+        atomcolor = "green",
+        bondcolor = "yellow",
+        csymbol = "all",
+        hsymbol = "all",
+        hcolor = "purple",
+        header = "My funky chemical structure..",
+        footer = "..is just so awesome!",
+        frame = 1,
+        verbose = getOption("verbose"))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

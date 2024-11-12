@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>stnd.Hst.ls</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Standardize Space-Time Covariates
+</h2>
+
+<h3>Description</h3>
+
+<p>Standardize spacio-temporal covariates with respect to both the spacial and time dimensions
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">stnd.Hst.ls(Hst.ls, Hst0.ls = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Hst.ls</code></td>
+<td>
+
+<p>Space-time covariates (of supporting sites).  A list of length <code class="reqn">\tau</code>, each element should be a numeric <code class="reqn">n</code> x <code class="reqn">p_st</code> matrix. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hst0.ls</code></td>
+<td>
+
+<p>Space-time covariates (of interpolation sites).  A list of length <code class="reqn">\tau</code>, each element should be a numeric <code class="reqn">n</code>* x <code class="reqn">p_st</code> matrix. 
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A named list.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>sHst.ls</code></td>
+<td>
+<p>A list of length <code class="reqn">\tau</code>, each element a numeric <code class="reqn">n</code> x <code class="reqn">p_st</code> matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sHst0.ls</code></td>
+<td>
+<p>A list of length <code class="reqn">\tau</code>, each element a <code class="reqn">n</code>* x <code class="reqn">p_st</code> matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h.mean</code></td>
+<td>
+<p>The covariates' mean over space-time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h.sd</code></td>
+<td>
+<p>The covariates' standard deviation over space-time.</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>stnd.Ht</code>, <code>stnd.Hs</code>, <code>applystnd.Hst.ls</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">	
+##### Please see the examples in Hst.sumup
+
+## The function is currently defined as
+function (Hst.ls, Hst0.ls = NULL) 
+{
+    tau &lt;- length(Hst.ls)
+    big.sum &lt;- 0
+    for (i in 1:tau) {
+        big.sum &lt;- big.sum + apply(Hst.ls[[i]], 2, mean)
+    }
+    h.mean &lt;- big.sum/tau
+    sHst.ls &lt;- list()
+    big.sum.mx &lt;- 0
+    for (i in 1:tau) {
+        sHst.ls[[i]] &lt;- t(t(Hst.ls[[i]]) - h.mean)
+        big.sum.mx &lt;- big.sum.mx + crossprod(sHst.ls[[i]])
+    }
+    cov.mx &lt;- big.sum.mx/tau
+    sqrtXX &lt;- 1/sqrt(diag(cov.mx))
+    for (i in 1:tau) {
+        sHst.ls[[i]] &lt;- t(t(sHst.ls[[i]]) * sqrtXX)
+    }
+    sHst0.ls &lt;- NULL
+    if (!is.null(Hst0.ls)) {
+        sHst0.ls &lt;- list()
+        for (i in 1:tau) {
+            sHst0.ls[[i]] &lt;- t((t(Hst0.ls[[i]]) - h.mean) * sqrtXX)
+        }
+    }
+    ls.out &lt;- list(sHst.ls = sHst.ls, sHst0.ls = sHst0.ls, h.mean = h.mean, 
+        h.sd = 1/sqrtXX)
+    return(ls.out)
+  }
+</code></pre>
+
+
+</div>

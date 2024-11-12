@@ -1,0 +1,65 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotG_inferred</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot the metaweb G according to the inferred coefficients</h2>
+
+<h3>Description</h3>
+
+<p>Plot the metaweb G with links colored accordingly to the inferred prey-predator regression coefficients of a fitted trophicSDM model. Plots the metaweb G, where each predator-prey link is colored according to whether the related regression coefficient if inferred as positive (in red), negative (in blue) or non-significant (dashed grey line) according to the confidence level specified in "level". Estimates of the significant standardised regression coefficients are pasted on the links. Only works if species are modeled as a function of their preys or predators without composite variables (i.e., the function only works if tSDM is fitted with sp.formula = NULL and sp.partition = NULL)
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotG_inferred(tSDM, level = 0.9)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tSDM</code></td>
+<td>
+<p>A trophicSDMfit object obtained with trophicSDM()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>The confidence level used to decide whether regression coefficients are non-significant or not. Default to 0.9.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A ggnet object
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Giovanni Poggiato
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(Y, X, G)
+# define abiotic part of the model
+env.formula = "~ X_1 + X_2"
+# Run the model with bottom-up control using stan_glm as fitting method and no penalisation
+# (set iter = 1000 to obtain reliable results)
+m = trophicSDM(Y, X, G, env.formula, 
+               family = binomial(link = "logit"), penal = NULL, 
+               mode = "prey", method = "glm")
+
+plotG_inferred(m)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>GetSimultaneous</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Identify simultaneous fixes between trajectories</h2>
+
+<h3>Description</h3>
+
+<p>The function <code>GetSimultaneous</code> identifies and extracts simultaneous fixes, 
+within a given tolerance limit, between two movement trajectories.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">GetSimultaneous(traj1, traj2, tc = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>traj1</code></td>
+<td>
+<p>an object of the class <code>move2</code> which contains the time-stamped movement fixes of EXACTLY 1 individual. For more information on objects of this type see <code>help(mt_as_move2)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>traj2</code></td>
+<td>
+<p>same as <code>traj1</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tc</code></td>
+<td>
+<p>time threshold for determining simultaneous fixes. For simplicity, <code>tc</code>
+is always taken in seconds.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is used to determine the simultaneous fixes between two movement 
+datasets facilitating further analysis.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>move2</code> object containing two individuals, representing the two original <code>move2</code> 
+objects, each containing only those fixes that are deemed simultaneous.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>GetTO
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(move2)
+data(deer)
+deer37 &lt;- deer[mt_track_id(deer) == '37',]
+deer38 &lt;- deer[mt_track_id(deer) == '38',]
+deer_sim &lt;- GetSimultaneous(deer37, deer38, tc = 7.5*60)
+table(deer$id)
+table(deer_sim$id)
+
+</code></pre>
+
+
+</div>

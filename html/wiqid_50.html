@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Diversity indices</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Biodiversity indices
+</h2>
+
+<h3>Description</h3>
+
+<p>Common indices of biodiversity, expressed as the number of common species.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">biodSimpson(abVec, correct = TRUE)
+biodShannon(abVec)
+biodBerger(abVec)
+biodBrillouin(cntVec)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>abVec</code></td>
+<td>
+
+<p>a vector of measures of abundance, eg. counts of individuals or biomass, one element per species; or a corresponding matrix or data frame, which will be converted to a vector with <code>rowSums</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cntVec</code></td>
+<td>
+
+<p>a vector (or matrix or data frame) of counts of individuals, one element per species. Non-integers will be rounded without warning.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>correct</code></td>
+<td>
+
+<p>if TRUE, a small sample correction is applied, and in that case <code>abVec</code> should have count data (non-integers will be silently rounded).
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+<dl>
+<dt>biodSimpson</dt>
+<dd>
+<p>Inverse of Simpson's (1949) index of dominance. If <code>correct = TRUE</code>, a small-sample correction is applied, giving Hurlbert's (1971) diversity index. Otherwise, the result is equivalent to Hill's (1973) <code class="reqn">N_2</code>.
+</p>
+</dd>
+<dt>biodShannon</dt>
+<dd>
+<p>Exponential form of Shannon's (1948) entropy measure, equivalent to Hill's (1973) <code class="reqn">N_1</code>.
+</p>
+</dd>
+<dt>biodBerger</dt>
+<dd>
+<p>Inverse of Berger &amp; Parker's (1970) index of dominance, equivalent to Hill's (1973) <code class="reqn">N_Inf</code>.
+</p>
+</dd>
+<dt>biodBrillouin</dt>
+<dd>
+<p>Exponential form of Brillouin's index: for small, completely censused populations, Brillouin's index is a more appropriate measure of entropy than Shannon's measure (Maurer &amp; McGill 2011:61).
+</p>
+</dd>
+</dl>
+<h3>Value</h3>
+
+<p>The relevant index.
+</p>
+
+
+<h3>Warning</h3>
+
+<p>It is important that the proportions of each species in the <em>sample</em> represent those in the <em>population</em> from which it is drawn. This will not be the case if probability of inclusion varies among species, as often occurs when samples are collected in the field.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith
+</p>
+
+
+<h3>References</h3>
+
+<p>Berger, W H; F L Parker. 1970. Diversity of planktonic Foramenifera in deep sea sediments. <em>Science</em> 168:1345-1347. 
+</p>
+<p>Hill, M O. 1973. Diversity and evenness: a unifying notation and its consequences. <em>Ecology</em> 54:427-431.
+</p>
+<p>Hurlbert, S H. 1971. The nonconcept of species diversity: A critique and alternative parameters. <em>Ecology</em> 52:577-586.
+</p>
+<p>Maurer, B A; B J McGill. 2011. Measurement of species diversity. 55-64 in Magurran, A E, and B J McGill, editors. <em>Biological diversity: frontiers in measurement and assessment.</em> Oxford University Press, Oxford, New York NY
+</p>
+<p>Shannon, C E. 1948. A mathematical theory of communication. <em>Bell System Technical Journal</em> 27:379-423
+</p>
+<p>Simpson, E H. 1949. Measurement of diversity. <em>Nature</em> 163:688.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>richSobs</code> and Species richness estimators for alternatives to indices.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(KillarneyBirds)
+apply(KillarneyBirds, 2, biodSimpson)
+
+</code></pre>
+
+
+</div>

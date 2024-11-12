@@ -1,0 +1,151 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Hals.fastcv.snow</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+ALS Spacial Cross-Validation
+</h2>
+
+<h3>Description</h3>
+
+<p>Fit Adaptive Least Squares with <code class="reqn">k</code>-fold cross-validation
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Hals.fastcv.snow(j, rm.ndx, Z, Hs, Ht, Hst.ls, GP.mx)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>j</code></td>
+<td>
+
+<p>Index used by <code>snowfall</code>.  A scalar integer.  Which row of <code>GP.mx</code> to use for the ALS hyperparameters, <code>GP</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rm.ndx</code></td>
+<td>
+
+<p>A list of vectors of indices to remove for <em>k</em>-fold cross-validation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+
+<p>Data.  A <code class="reqn">\tau</code> x <code class="reqn">n</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hs</code></td>
+<td>
+
+<p>Spacial covariates.  An <code class="reqn">n</code> x <code class="reqn">p_s</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ht</code></td>
+<td>
+
+<p>Temporal covariates.  An <code class="reqn">\tau</code> x <code class="reqn">p_t</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hst.ls</code></td>
+<td>
+
+<p>Space-time covariates.  A list of length <code class="reqn">\tau</code>, each element containing a <code class="reqn">n</code> x <code class="reqn">p_st</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>GP.mx</code></td>
+<td>
+
+<p>Hyperparameters.  A <code class="reqn">k.glob</code> x 2 non-negative matrix.  See <code>MSS.snow</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code class="reqn">\tau</code> x <code class="reqn">n</code> numeric matrix.  The ALS cross-validated predictions of <code>Z</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Hals.snow</code>, <code>MSS.snow</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+set.seed(99999)
+
+
+
+library(SSsimple)
+
+tau &lt;- 70
+n.all &lt;- 14
+
+Hs.all &lt;- matrix(rnorm(n.all), nrow=n.all)
+Ht &lt;- matrix(rnorm(tau*2), nrow=tau)
+Hst.ls.all &lt;- list()
+for(i in 1:tau) { Hst.ls.all[[i]] &lt;- matrix(rnorm(n.all*2), nrow=n.all) }
+
+Hst.combined &lt;- list()
+for(i in 1:tau) { 
+    Hst.combined[[i]] &lt;- cbind( Hs.all, matrix(Ht[i, ], nrow=n.all, 
+    ncol=ncol(Ht), byrow=TRUE), Hst.ls.all[[i]] ) 
+}
+
+######## use SSsimple to simulate
+sssim.obj &lt;- SS.sim.tv( 0.999, Hst.combined, 0.01, diag(1, n.all), tau )
+
+
+
+Z.all &lt;- sssim.obj$Z
+Z &lt;- Z.all
+n &lt;- n.all
+
+Hst.ls &lt;- Hst.ls.all
+
+Hs &lt;- Hs.all
+
+xrho &lt;- 1/10
+xreg &lt;- 1/10
+
+GP.mx &lt;- matrix(c(xrho, xreg), nrow=1)
+
+rm.ndx &lt;- create.rm.ndx.ls(n, 10)
+
+Zcv &lt;- Hals.fastcv.snow(j=1, rm.ndx, Z, Hs, Ht, Hst.ls, GP.mx) 
+
+
+
+test.rng &lt;- 20:tau
+
+errs.sq &lt;- (Z - Zcv)^2
+sqrt( mean(errs.sq[test.rng, ]) )
+
+
+</code></pre>
+
+
+</div>

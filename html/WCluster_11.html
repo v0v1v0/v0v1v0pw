@@ -1,0 +1,137 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Wpca</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Weighted PCA
+</h2>
+
+<h3>Description</h3>
+
+<p>This function performs PCA on the given data matrix, with row and column weights.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Wpca(x, wrow = rep(1, nrow(x)), wcol = rep(1, ncol(x)), corr = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A data matrix (data frame, data table, matrix, etc) containing only entries of class numeric.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wrow</code></td>
+<td>
+<p>Row Weights: vector of length nrow(x) of weights for each observation in the dataset. Must be of class numeric or integer or table. If NULL, the default value is a vector of 1 with length nrow(x), i.e., weights equal 1 for all observations.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wcol</code></td>
+<td>
+<p>Column Weights: Vector of length ncol(x) of weights for each variable in the dataset. Must be of class numeric or integer or table. If NULL, the default value is a vector of 1 with length ncol(x), i.e., weights equal 1 for all columns.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corr</code></td>
+<td>
+<p>A logical value indicating whether to use correlation matrix. This is recommended when the column weights are not equal. The default value is FALSE.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>PCA with row and column weights is conducted by eigen method.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>sdev</code></td>
+<td>
+<p>the standard deviations of the weighted principal components (i.e., the square roots of the eigenvalues of the weighted covariance/correlation matrix).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rotation</code></td>
+<td>
+<p>The matrix of the loading vectors for each of the weighted prinicipal components.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The weighted prinicipal components.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center, scale</code></td>
+<td>
+<p>the weighted centering and scaling used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wrow, wcol</code></td>
+<td>
+<p>row weights and column weights used.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Javier Cabrera, Yajie Duan, Ge Cheng
+</p>
+
+
+<h3>References</h3>
+
+<p>Amaratunga, D., &amp; Cabrera, J. (2009). Exploration and analysis of DNA microarray and protein array data. <em>John Wiley &amp; Sons</em> (Vol. 605).
+</p>
+<p>Cherasia, K. E., Cabrera, J., Fernholz, L. T., &amp; Fernholz, R. (2022). Data Nuggets in Supervised Learning. <em>In Robust and Multivariate Statistical Methods: Festschrift in Honor of David E. Tyler</em> (pp. 429-449). Cham: Springer International Publishing.
+</p>
+<p>Beavers, T., Cheng, G., Duan, Y., Cabrera, J., Lubomirski, M., Amaratunga, D., Teigler, J. (2023). Data Nuggets: A Method for Reducing Big Data While Preserving Data Structure (Submitted for Publication)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+    require(cluster)
+
+    # The Ruspini data set from the package "cluster""
+    x = as.matrix(ruspini)
+
+    # assign random weights to observations
+    w = sample(1:20,nrow(x),replace = TRUE)
+
+    #PCA with observational weights
+    res = Wpca(x, wrow = w)
+
+    #weighted prinicipal components
+    pc = res$x
+    pc
+
+    #loading vectors
+    loadings = res$rotation
+    loadings
+</code></pre>
+
+
+</div>

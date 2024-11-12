@@ -1,0 +1,252 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sampledBlockwiseModules</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Blockwise module identification in sampled data
+</h2>
+
+<h3>Description</h3>
+
+<p>This function repeatedly resamples the samples (rows) in supplied data and identifies 
+modules on the resampled data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sampledBlockwiseModules(
+  datExpr,
+  nRuns,
+  startRunIndex = 1,
+  endRunIndex = startRunIndex + nRuns - skipUnsampledCalculation,
+  replace = FALSE,
+  fraction = if (replace) 1.0 else 0.63,
+  randomSeed = 12345,
+  checkSoftPower = TRUE,
+  nPowerCheckSamples = 2000,
+  skipUnsampledCalculation = FALSE,
+  corType = "pearson",
+  power = 6,
+  networkType = "unsigned",
+  saveTOMs = FALSE,
+  saveTOMFileBase = "TOM",
+  ...,
+  verbose = 2, indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datExpr</code></td>
+<td>
+
+<p>Expression data. A matrix (preferred) or 
+data frame in which columns are genes and rows ar samples. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nRuns</code></td>
+<td>
+
+<p>Number of sampled network construction and module identification runs. If <code>skipUnsampledCalculation</code> is <code>FALSE</code>,
+one extra calculation (the first) will contain the unsampled calculation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>startRunIndex</code></td>
+<td>
+
+<p>Number to be assigned to the start run. The run number or index is used to make saved files unique. It is also used in
+setting the seed for each run to allow the runs to be replicated in smaller or larger batches.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>endRunIndex</code></td>
+<td>
+
+<p>Number (index) of the last run. If given, <code>nRuns</code> is ignored.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>replace</code></td>
+<td>
+
+<p>Logical: should samples (observations or rows in entries in <code>multiExpr</code>) be sampled with replacement?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fraction</code></td>
+<td>
+
+<p>Fraction of samples to sample for each run.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>randomSeed</code></td>
+<td>
+
+<p>Integer specifying the random seed. If non-NULL, the random number generator state is saved before the seed is set
+and restored at the end of the function. If <code>NULL</code>, the random number generator state is not saved nor
+changed at the start, and not restored at the end.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checkSoftPower</code></td>
+<td>
+
+<p>Logical: should the soft-tresholding power be adjusted to approximately match the connectivity distribution
+of the sampled data set and the full data set?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nPowerCheckSamples</code></td>
+<td>
+
+<p>Number of genes to be sampled from the full data set to calculate connectivity and match soft-tresholding
+powers.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>skipUnsampledCalculation</code></td>
+<td>
+
+<p>Logical: should a calculation on original (not resampled) data be skipped?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corType</code></td>
+<td>
+<p>Character string specifying the correlation to be used. Allowed values are (unique
+abbreviations of) <code>"pearson"</code> and <code>"bicor"</code>, corresponding to Pearson and bidweight
+midcorrelation, respectively. Missing values are handled using the <code>pairwise.complete.obs</code> option. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p> Soft-thresholding power for network construction. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkType</code></td>
+<td>
+<p> network type. Allowed values are (unique abbreviations of) <code>"unsigned"</code>,
+<code>"signed"</code>, <code>"signed hybrid"</code>. See <code>adjacency</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>saveTOMs</code></td>
+<td>
+
+<p>Logical: should the networks (topological overlaps) be saved for each run? Note
+that for large data sets (tens of thousands of nodes) the TOM files are rather large.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>saveTOMFileBase</code></td>
+<td>
+
+<p>Character string giving the base of the file names for TOMs. The actual file names will consist of a
+concatenation of <code>saveTOMFileBase</code> and <code>"-run-&lt;run
+number&gt;-Block-&lt;block number&gt;.RData"</code>. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Other arguments to <code>blockwiseModules</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For each run, samples (but not genes) are randomly sampled to obtain a perturbed data set; a full network
+analysis and module identification is carried out, and the results are returned in a list with one component
+per run.
+</p>
+<p>For each run, the soft-thresholding power can optionally be adjusted such that the mean adjacency in the
+re-sampled data set equals the mean adjacency in the original data. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with one component per run. Each component is a list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>mods</code></td>
+<td>
+<p>The output of the function <code>blockwiseModules</code> applied to a resampled data set.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>samples</code></td>
+<td>
+<p>Indices of the samples selected for the resampled data step for this run.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>powers</code></td>
+<td>
+<p>Actual soft-thresholding powers used in this run.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>References</h3>
+
+<p>An application of this function is described in the motivational example section of 
+</p>
+<p>Langfelder P, Horvath S (2012) Fast R Functions for Robust Correlations and Hierarchical Clustering.
+Journal of Statistical Software 46(11) 1-17; PMID: 23050260 PMCID: PMC3465711 
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>blockwiseModules</code> for the underlying network analysis and module identification;
+</p>
+<p><code>sampledHierarchicalConsensusModules</code> for a similar resampling analysis of consensus networks.
+</p>
+
+
+</div>

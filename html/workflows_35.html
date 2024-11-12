@@ -1,0 +1,221 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fit-workflow</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fit a workflow object</h2>
+
+<h3>Description</h3>
+
+<p>Fitting a workflow currently involves two main steps:
+</p>
+
+<ul>
+<li>
+<p> Preprocessing the data using a formula preprocessor, or by calling
+<code>recipes::prep()</code> on a recipe.
+</p>
+</li>
+<li>
+<p> Fitting the underlying parsnip model using <code>parsnip::fit.model_spec()</code>.
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'workflow'
+fit(object, data, ..., control = control_workflow())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A workflow</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data frame of predictors and outcomes to use when fitting the
+workflow</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>control</code></td>
+<td>
+<p>A <code>control_workflow()</code> object</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In the future, there will also be <em>postprocessing</em> steps that can be added
+after the model has been fit.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The workflow <code>object</code>, updated with a fit parsnip model in the
+<code>object$fit$fit</code> slot.
+</p>
+
+
+<h3>Indicator Variable Details</h3>
+
+<p>Some modeling functions in R create indicator/dummy variables from
+categorical data when you use a model formula, and some do not. When you
+specify and fit a model with a <code>workflow()</code>, parsnip and workflows match
+and reproduce the underlying behavior of the user-specified model’s
+computational engine.
+</p>
+
+
+<h4>Formula Preprocessor</h4>
+
+<p>In the modeldata::Sacramento data set of real
+estate prices, the <code>type</code> variable has three levels: <code>"Residential"</code>,
+<code>"Condo"</code>, and <code>"Multi-Family"</code>. This base <code>workflow()</code> contains a
+formula added via <code>add_formula()</code> to predict property
+price from property type, square footage, number of beds, and number of
+baths:
+</p>
+<div class="sourceCode r"><pre>set.seed(123)
+
+library(parsnip)
+library(recipes)
+library(workflows)
+library(modeldata)
+
+data("Sacramento")
+
+base_wf &lt;- workflow() %&gt;%
+  add_formula(price ~ type + sqft + beds + baths)
+</pre></div>
+<p>This first model does create dummy/indicator variables:
+</p>
+<div class="sourceCode r"><pre>lm_spec &lt;- linear_reg() %&gt;%
+  set_engine("lm")
+
+base_wf %&gt;%
+  add_model(lm_spec) %&gt;%
+  fit(Sacramento)
+</pre></div>
+<div class="sourceCode"><pre>## == Workflow [trained] ================================================
+## Preprocessor: Formula
+## Model: linear_reg()
+## 
+## -- Preprocessor ------------------------------------------------------
+## price ~ type + sqft + beds + baths
+## 
+## -- Model -------------------------------------------------------------
+## 
+## Call:
+## stats::lm(formula = ..y ~ ., data = data)
+## 
+## Coefficients:
+##      (Intercept)  typeMulti_Family   typeResidential  
+##          32919.4          -21995.8           33688.6  
+##             sqft              beds             baths  
+##            156.2          -29788.0            8730.0
+</pre></div>
+<p>There are <strong>five</strong> independent variables in the fitted model for this
+OLS linear regression. With this model type and engine, the factor
+predictor <code>type</code> of the real estate properties was converted to two
+binary predictors, <code>typeMulti_Family</code> and <code>typeResidential</code>. (The third
+type, for condos, does not need its own column because it is the
+baseline level).
+</p>
+<p>This second model does not create dummy/indicator variables:
+</p>
+<div class="sourceCode r"><pre>rf_spec &lt;- rand_forest() %&gt;%
+  set_mode("regression") %&gt;%
+  set_engine("ranger")
+
+base_wf %&gt;%
+  add_model(rf_spec) %&gt;%
+  fit(Sacramento)
+</pre></div>
+<div class="sourceCode"><pre>## == Workflow [trained] ================================================
+## Preprocessor: Formula
+## Model: rand_forest()
+## 
+## -- Preprocessor ------------------------------------------------------
+## price ~ type + sqft + beds + baths
+## 
+## -- Model -------------------------------------------------------------
+## Ranger result
+## 
+## Call:
+##  ranger::ranger(x = maybe_data_frame(x), y = y, num.threads = 1,      verbose = FALSE, seed = sample.int(10^5, 1)) 
+## 
+## Type:                             Regression 
+## Number of trees:                  500 
+## Sample size:                      932 
+## Number of independent variables:  4 
+## Mtry:                             2 
+## Target node size:                 5 
+## Variable importance mode:         none 
+## Splitrule:                        variance 
+## OOB prediction error (MSE):       7058847504 
+## R squared (OOB):                  0.5894647
+</pre></div>
+<p>Note that there are <strong>four</strong> independent variables in the fitted model
+for this ranger random forest. With this model type and engine,
+indicator variables were not created for the <code>type</code> of real estate
+property being sold. Tree-based models such as random forest models can
+handle factor predictors directly, and don’t need any conversion to
+numeric binary variables.
+</p>
+
+
+
+<h4>Recipe Preprocessor</h4>
+
+<p>When you specify a model with a <code>workflow()</code> and a recipe preprocessor
+via <code>add_recipe()</code>, the <em>recipe</em> controls whether dummy
+variables are created or not; the recipe overrides any underlying
+behavior from the model’s computational engine.
+</p>
+
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(parsnip)
+library(recipes)
+library(magrittr)
+
+model &lt;- linear_reg() %&gt;%
+  set_engine("lm")
+
+base_wf &lt;- workflow() %&gt;%
+  add_model(model)
+
+formula_wf &lt;- base_wf %&gt;%
+  add_formula(mpg ~ cyl + log(disp))
+
+fit(formula_wf, mtcars)
+
+recipe &lt;- recipe(mpg ~ cyl + disp, mtcars) %&gt;%
+  step_log(disp)
+
+recipe_wf &lt;- base_wf %&gt;%
+  add_recipe(recipe)
+
+fit(recipe_wf, mtcars)
+</code></pre>
+
+
+</div>

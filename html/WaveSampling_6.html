@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wpik</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Stratification matrix from inclusion probabilities</h2>
+
+<h3>Description</h3>
+
+<p>The stratification matrix is calculated from the inclusion probabilities. It takes the distances between units into account. See Details.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wpik(X, pik, bound = 1, tore = FALSE, shift = FALSE, toreBound = -1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>matrix representing the spatial coordinates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pik</code></td>
+<td>
+<p>vector of the inclusion probabilities. The length should be equal to <code class="reqn">N</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bound</code></td>
+<td>
+<p>a scalar representing the bound to reach. Default is 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tore</code></td>
+<td>
+<p>an optional logical value, if we are considering the distance on a tore. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shift</code></td>
+<td>
+<p>an optional logical value, if you would use a shift perturbation. See Details for more informations. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>toreBound</code></td>
+<td>
+<p>a numeric value that specify the size of the grid. Default is -1.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Entries of the stratification matrix indicates how the units are close from each others. Hence a large value <code class="reqn">w_{kl}</code> means that the unit <code class="reqn">k</code> 
+is close to the unit <code class="reqn">l</code>. This function considers that a unit represents its neighbor till their inclusion probabilities
+sum up to <code>bound</code>.
+</p>
+<p>We define <code class="reqn">G_k</code> the set of the nearest neighbor of the unit <code class="reqn">k</code> including <code class="reqn">k</code> such that the sum of their inclusion
+probabilities is just greater than <code>bound</code>. Moreover, let <code class="reqn">g_k = \#{G_k}</code>, the number of elements in <code class="reqn">G_k</code>.
+The matrix <code class="reqn">\bf W</code> is then defined as follows,
+</p>
+
+<ul>
+<li> <p><code class="reqn"> w_{kl} = \pi_l</code> if unit <code class="reqn">l</code> is in the set of the  <code class="reqn">g_k - 1</code> nearest neighbor of <code class="reqn">k</code>.
+</p>
+</li>
+<li> <p><code class="reqn"> w_{kl} = \pi_l + 1 - (\sum_{t \in G_k} \pi_t)</code> if unit <code class="reqn">l</code> is the <code class="reqn">g_k</code> nearest neighbour of <code class="reqn">k</code>.
+</p>
+</li>
+<li> <p><code class="reqn">w_{kl} = 0</code> otherwise.
+</p>
+</li>
+</ul>
+<p>Hence, the <code class="reqn">k</code>th row of the matrix represents
+neighborhood or stratum of the unit such that the inclusion probabilities sum up to 1 and
+the <code class="reqn">k</code>th column the weights that unit <code class="reqn">k</code> takes for each stratum. 
+</p>
+<p>The option <code>shift</code> add a small normally distributed perturbation <code>rnorm(0,0.01)</code> to the coordinates
+of the centroid of the stratum considered. This could be useful if there are many unit that have the same distances.
+Indeed, if two units have the same distance and are the last unit before that the bound is reached, then the weights
+of the both units is updated. If a shift perturbation is used then all the distances are differents and only one unit
+weight is update such that the bound is reached. 
+</p>
+<p>The shift perturbation is generated at the beginning of the procedure such that each stratum is shifted by the same perturbation.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A sparse matrix representing the spatial weights.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Raphaël Jauslin <a href="mailto:raphael.jauslin@unine.ch">raphael.jauslin@unine.ch</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wpikInv</code>, <code>distUnitk</code>, <code>wave</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+N &lt;- 25
+n &lt;- 5
+X &lt;- as.matrix(cbind(runif(N),runif(N)))
+pik &lt;- rep(n/N,N)
+W &lt;- wpik(X,pik)
+
+</code></pre>
+
+
+</div>

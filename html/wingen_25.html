@@ -1,0 +1,201 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>resist_general</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>General function for making resistance-based maps</h2>
+
+<h3>Description</h3>
+
+<p>Generate a continuous raster map using resistance distances.
+While resist_gd is built specifically for making maps
+of genetic diversity from vcfs,<code>resist_general</code> can be used to make maps
+from different data inputs. Unlike <code>resist_gd</code>, <code>resist_general</code>
+will not convert your data into the correct format for calculations of different
+diversity metrics. See details for how to format data inputs for different statistics.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">resist_general(
+  x,
+  coords,
+  lyr,
+  maxdist,
+  distmat = NULL,
+  stat,
+  fact = 0,
+  rarify = FALSE,
+  rarify_n = 2,
+  rarify_nit = 5,
+  min_n = 2,
+  fun = mean,
+  L = "nvariants",
+  rarify_alleles = TRUE,
+  sig = 0.05,
+  transitionFunction = mean,
+  directions = 8,
+  geoCorrection = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>data to be summarized by the moving window (<em>note:</em> order matters! <code>coords</code> should be in the same order, there are currently no checks for this). The class of <code>x</code> required depends on the statistic being calculated (see the <code>stat</code> argument and the function description for more details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coords</code></td>
+<td>
+<p>coordinates of samples as sf points, a two-column matrix, or a data.frame representing x and y coordinates (see Details for important information about projections)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lyr</code></td>
+<td>
+<p>SpatRaster or RasterLayer to slide the window across (see Details for important information about projections)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxdist</code></td>
+<td>
+<p>maximum cost distance used to define neighborhood; any samples further than this cost distance will not be included (this can be thought of as the neighborhood radius, but in terms of cost distance).
+Can either be (1) a single numeric value or (2) a SpatRaster where each pixel is the maximum distance to be used for that cell on the landscape (must be the same spatial scale as <code>lyr</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distmat</code></td>
+<td>
+<p>distance matrix output from get_resdist (optional; can be used to save time on distance calculations)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stat</code></td>
+<td>
+<p>moving window statistic to calculate (see details). <code>stat</code> can generally be set to any function that will take <code>x</code>as input and return a single numeric value (for example, <code>x</code> can be a vector and <code>stat</code> can be set equal to a summary statistic like <code>mean</code>, <code>sum</code>, or <code>sd</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fact</code></td>
+<td>
+<p>aggregation factor to apply to <code>lyr</code> (defaults to 0; <em>note:</em> increasing this value reduces computational time)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rarify</code></td>
+<td>
+<p>if rarify = TRUE, rarefaction is performed (defaults to FALSE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rarify_n</code></td>
+<td>
+<p>if rarify = TRUE, number of points to use for rarefaction (defaults to min_n)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rarify_nit</code></td>
+<td>
+<p>if rarify = TRUE, number of iterations to use for rarefaction (defaults to 5). Can also be set to <code>"all"</code> to use all possible combinations of samples of size <code>rarify_n</code> within the window.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_n</code></td>
+<td>
+<p>minimum number of samples to use in calculations (any focal cell with a window containing less than this number of samples will be assigned a value of NA; defaults to 2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fun</code></td>
+<td>
+<p>function to use to summarize rarefaction results (defaults to mean, must take <code>na.rm = TRUE</code> as an argument)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>for calculating <code>"pi"</code>, L argument in pi.dosage function. Return the average nucleotide diversity per nucleotide given the length L of the sequence. The wingen default is L = "nvariants", which sets L to the number of variants in the VCF. If L = NULL, returns the sum over SNPs of nucleotide diversity (<em>note:</em> L = NULL is the pi.dosage default which wingen does not use)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rarify_alleles</code></td>
+<td>
+<p>for calculating <code>"biallelic_richness"</code>, whether to perform rarefaction of allele counts as in allelic.richness (defaults to TRUE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sig</code></td>
+<td>
+<p>for calculating <code>"hwe"</code>, significance threshold (i.e., alpha level) to use for hardy-weinberg equilibrium tests (defaults to 0.05)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transitionFunction</code></td>
+<td>
+<p>function to calculate transition values from grid values (defaults to mean)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>directions</code></td>
+<td>
+<p>directions in which cells are connected (4, 8, 16, or other), see adjacent (defaults to 8)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geoCorrection</code></td>
+<td>
+<p>whether to apply correction to account for local distances (defaults to TRUE). Geographic correction is necessary for all objects of the class Transition that are either: (1) based on a grid in a geographic (lonlat) projection and covering a large area; (2) made with directions &gt; 4 (see geoCorrection for more details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>if a function is provided for <code>stat</code>, additional arguments to pass to the <code>stat</code> function (e.g. if <code>stat = mean</code>, users may want to set <code>na.rm = TRUE</code>)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>To calculate genetic diversity statistics with the built in wingen functions, data must be formatted as such:
+</p>
+
+<ul>
+<li>
+<p> for <code>"pi"</code> or <code>"biallelic_richness"</code>, <code>x</code> must be a dosage matrix with values of 0, 1, or 2
+</p>
+</li>
+<li>
+<p> for <code>"Ho"</code>, <code>x</code> must be a heterozygosity matrix where values of 0 = homozygosity and values of 1 = heterozygosity
+</p>
+</li>
+<li>
+<p> for <code>"allelic_richness"</code> or <code style="white-space: pre;">⁠"hwe⁠</code>, <code>x</code> must be a <code>genind</code> type object
+</p>
+</li>
+<li>
+<p> for <code>"basic_stats"</code>, <code>x</code> must be a <code>hierfstat</code> type object
+</p>
+</li>
+</ul>
+<p>Otherwise, <code>stat</code> can be any function that takes a matrix or data frame and outputs a
+single numeric value (e.g., a function that produces a custom diversity index);
+however, this should be attempted with caution since this functionality has
+not have been tested extensively and may produce errors.
+</p>
+
+
+<h3>Value</h3>
+
+<p>SpatRaster that includes a raster layer of genetic diversity and a raster layer of the number of samples within the window for each cell
+</p>
+
+
+</div>

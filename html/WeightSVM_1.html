@@ -1,0 +1,225 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>tune_wsvm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Parameter Tuning of Functions Using Grid Search</h2>
+
+<h3>Description</h3>
+
+<p>This generic function tunes hyperparameters of statistical methods
+using a grid search over supplied parameter ranges.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">tune_wsvm(train.x, train.y = NULL, weight, use_zero_weight = FALSE,
+     pre.check = TRUE, data = list(), validation.x = NULL,
+     validation.y = NULL, validation.weight = NULL,
+     weigthed.error = TRUE, ranges = NULL, predict.func = predict,
+     tunecontrol = tune.control(), ...)
+best.tune_wsvm(...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>train.x</code></td>
+<td>
+<p>either a formula or a '<em>design</em> matrix' of predictors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>train.y</code></td>
+<td>
+<p>the response variable if <code>train.x</code> is a predictor
+matrix. Ignored if <code>train.x</code> is a formula.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weight</code></td>
+<td>
+<p>the weight of each subject. It should be in the same length of <code>train.y</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use_zero_weight</code></td>
+<td>
+<p>if <code>FALSE</code>, any subjects in the training data and the validation data (if exist) with zero (or negative) weights will be removed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pre.check</code></td>
+<td>
+<p>if <code>TRUE</code>, we prefit the model with partitioned training data using the first set of parameters in <code>range</code>. If fails (i.e., too many zero weight subjects in the partitioned training data), we re-partition the data and re-try the model for up to 10 times. This is useful when <code>use_zero_weight=TRUE</code> and there many zero weights subjects in the data. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>data, if a formula interface is used. Ignored, if
+predictor matrix and response are supplied directly.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>validation.x</code></td>
+<td>
+<p>an optional validation set. Depending on whether a
+formula interface is used or not, the response can be
+included in <code>validation.x</code> or separately specified using
+<code>validation.y</code>. Only used for bootstrap and fixed validation
+set (see <code>tune.control</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>validation.y</code></td>
+<td>
+<p>if no formula interface is used, the response of
+the (optional) validation set. Only used for bootstrap and fixed validation
+set (see <code>tune.control</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>validation.weight</code></td>
+<td>
+<p>the weight of each subject in the validation set. Will be set to 1, if the user does not provide.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weigthed.error</code></td>
+<td>
+<p>if <code>TRUE</code>, the preformance measure will be weighted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ranges</code></td>
+<td>
+<p>a named list of parameter vectors spanning the sampling
+space. See <code>wsvm</code>. The vectors will usually be created by <code>seq</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>predict.func</code></td>
+<td>
+<p>optional predict function, if the standard <code>predict</code>
+behavior is inadequate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tunecontrol</code></td>
+<td>
+<p>object of class <code>"tune.control"</code>, as created by the
+function <code>tune.control()</code>. In additon, <code>tune.control$error.fun</code> should be a
+function that takes three arguments: (true y, predicted y, weight). If omitted, <code>tune.control()</code>
+gives the defaults.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further parameters passed to the training functions.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>As performance measure, the classification error is used
+for classification, and the mean squared error for regression. It is
+possible to specify only one parameter combination (i.e., vectors of
+length 1) to obtain an error estimation of the specified type
+(bootstrap, cross-classification, etc.) on the given data set.
+</p>
+<p>Cross-validation randomizes the data set before building the splits
+which—once created—remain constant during the training
+process. The splits can be recovered through the <code>train.ind</code>
+component of the returned object.
+</p>
+
+
+<h3>Value</h3>
+
+<p>For <code>tune_wsvm</code>, an object of class <code>tune_wsvm</code>, including the components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>best.parameters</code></td>
+<td>
+<p>a 1 x k data frame, k number of parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>best.performance</code></td>
+<td>
+<p>best achieved performance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>performances</code></td>
+<td>
+<p>if requested, a data frame of all parameter
+combinations along with the corresponding performance results.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>train.ind</code></td>
+<td>
+<p>list of index vectors used for splits into
+training and validation sets.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>best.model</code></td>
+<td>
+<p>if requested, the model trained on the complete training data
+using the best parameter combination.</p>
+</td>
+</tr>
+</table>
+<p><code>best.tune_wsvm()</code> returns the best model detected by <code>tune_wsvm</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Meyer <br>
+Modified by Tianchen Xu <a href="mailto:tx2155@columbia.edu">tx2155@columbia.edu</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>tune.control</code>, <code>plot.tune_wsvm</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(iris)
+
+obj &lt;- tune_wsvm(Species~., weight = c(rep(0.8, 50),rep(1,100)),
+            data = iris, ranges = list(gamma = 2^(-1:1), cost = 2^(2:4)),
+            tunecontrol = tune.control(sampling = "fix"))
+
+
+set.seed(11)
+obj &lt;- tune_wsvm(Species~., weight = c(rep(0, 52),rep(1,98)),
+            data = iris, use_zero_weight = TRUE,
+            ranges = list(gamma = 2^(-1:1), cost = 2^(2:4)),
+            tunecontrol = tune.control(sampling = "bootstrap"))
+
+
+
+summary(obj)
+plot(obj, transform.x = log2, transform.y = log2)
+plot(obj, type = "perspective", theta = 120, phi = 45)
+
+best.tune_wsvm(Species~.,weight = c(rep(0.08, 50),rep(1,100)),
+            data = iris, ranges = list(gamma = 2^(-1:1), cost = 2^(2:4)),
+            tunecontrol = tune.control(sampling = "fix"))
+</code></pre>
+
+
+</div>

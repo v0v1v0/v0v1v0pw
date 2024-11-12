@@ -1,0 +1,182 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>extract_workflow_set_result</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract elements of workflow sets</h2>
+
+<h3>Description</h3>
+
+<p>These functions extract various elements from a workflow set object. If they
+do not exist yet, an error is thrown.
+</p>
+
+<ul>
+<li> <p><code>extract_preprocessor()</code> returns the formula, recipe, or variable
+expressions used for preprocessing.
+</p>
+</li>
+<li> <p><code>extract_spec_parsnip()</code> returns the parsnip model specification.
+</p>
+</li>
+<li> <p><code>extract_fit_parsnip()</code> returns the parsnip model fit object.
+</p>
+</li>
+<li> <p><code>extract_fit_engine()</code> returns the engine specific fit embedded within
+a parsnip model fit. For example, when using <code>parsnip::linear_reg()</code>
+with the <code>"lm"</code> engine, this returns the underlying <code>lm</code> object.
+</p>
+</li>
+<li> <p><code>extract_mold()</code> returns the preprocessed "mold" object returned
+from <code>hardhat::mold()</code>. It contains information about the preprocessing,
+including either the prepped recipe, the formula terms object, or
+variable selectors.
+</p>
+</li>
+<li> <p><code>extract_recipe()</code> returns the recipe. The <code>estimated</code> argument specifies
+whether the fitted or original recipe is returned.
+</p>
+</li>
+<li> <p><code>extract_workflow_set_result()</code> returns the results of <code>workflow_map()</code>
+for a particular workflow.
+</p>
+</li>
+<li> <p><code>extract_workflow()</code> returns the workflow object. The workflow will not
+have been estimated.
+</p>
+</li>
+<li> <p><code>extract_parameter_set_dials()</code> returns the parameter set
+<em>that will be used to fit</em> the supplied row <code>id</code> of the workflow set.
+Note that workflow sets reference a parameter set associated with the
+<code>workflow</code> contained in the <code>info</code> column by default, but can be
+fitted with a modified parameter set via the <code>option_add()</code> interface.
+This extractor returns the latter, if it exists, and returns the former
+if not, mirroring the process that <code>workflow_map()</code> follows to provide
+tuning functions a parameter set.
+</p>
+</li>
+<li> <p><code>extract_parameter_dials()</code> returns the <code>parameters</code> object
+<em>that will be used to fit</em> the supplied tuning <code>parameter</code> in the supplied
+row <code>id</code> of the workflow set. See the above notes in
+<code>extract_parameter_set_dials()</code> on precedence.
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">extract_workflow_set_result(x, id, ...)
+
+## S3 method for class 'workflow_set'
+extract_workflow(x, id, ...)
+
+## S3 method for class 'workflow_set'
+extract_spec_parsnip(x, id, ...)
+
+## S3 method for class 'workflow_set'
+extract_recipe(x, id, ..., estimated = TRUE)
+
+## S3 method for class 'workflow_set'
+extract_fit_parsnip(x, id, ...)
+
+## S3 method for class 'workflow_set'
+extract_fit_engine(x, id, ...)
+
+## S3 method for class 'workflow_set'
+extract_mold(x, id, ...)
+
+## S3 method for class 'workflow_set'
+extract_preprocessor(x, id, ...)
+
+## S3 method for class 'workflow_set'
+extract_parameter_set_dials(x, id, ...)
+
+## S3 method for class 'workflow_set'
+extract_parameter_dials(x, id, parameter, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A workflow set outputted by <code>workflow_set()</code> or <code>workflow_map()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>A single character string for a workflow ID.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other options (not currently used).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estimated</code></td>
+<td>
+<p>A logical for whether the original (unfit) recipe or the
+fitted recipe should be returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameter</code></td>
+<td>
+<p>A single string for the parameter ID.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>These functions supersede the <code style="white-space: pre;">⁠pull_*()⁠</code> functions (e.g.,
+<code>extract_workflow_set_result()</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>The extracted value from the object, <code>x</code>, as described in the
+description section.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The package supplies two pre-generated workflow sets, <code>two_class_set</code>
+and <code>chi_features_set</code>, and associated sets of model fits
+<code>two_class_res</code> and <code>chi_features_res</code>.
+</p>
+<p>The <code style="white-space: pre;">⁠two_class_*⁠</code> objects are based on a binary classification problem
+using the <code>two_class_dat</code> data from the modeldata package. The six
+models utilize either a bare formula or a basic recipe utilizing
+<code>recipes::step_YeoJohnson()</code> as a preprocessor, and a decision tree,
+logistic regression, or MARS model specification. See <code>?two_class_set</code>
+for source code.
+</p>
+<p>The <code style="white-space: pre;">⁠chi_features_*⁠</code> objects are based on a regression problem using the
+<code>Chicago</code> data from the modeldata package. Each of the three models
+utilize a linear regression model specification, with three different
+recipes of varying complexity. The objects are meant to approximate the
+sequence of models built in Section 1.3 of Kuhn and Johnson (2019). See
+<code>?chi_features_set</code> for source code.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(tune)
+
+two_class_res
+
+extract_workflow_set_result(two_class_res, "none_cart")
+
+extract_workflow(two_class_res, "none_cart")
+</code></pre>
+
+
+</div>

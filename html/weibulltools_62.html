@@ -1,0 +1,234 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_pop</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add Population Line(s) to an Existing Grid</h2>
+
+<h3>Description</h3>
+
+<p>This function adds one (or multiple) linearized CDF(s) to an existing plot grid.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_pop(
+  p_obj = NULL,
+  x,
+  dist_params_tbl,
+  distribution = c("weibull", "lognormal", "loglogistic", "sev", "normal", "logistic",
+    "exponential"),
+  tol = 1e-06,
+  title_trace = "Population",
+  plot_method = c("plotly", "ggplot2")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>p_obj</code></td>
+<td>
+<p>A plot object to which the population line(s) is (are) added or
+<code>NULL</code>. If <code>NULL</code> the population line(s) is (are) plotted in an empty grid.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector of length two or greater used for the x coordinates
+of the population line. If <code>length(x) == 2</code> a sequence of length 200 between
+<code>x[1]</code> and <code>x[2]</code> is created. This sequence is equidistant with respect to the
+scale of the x axis. If <code>length(x) &gt; 2</code> the elements of <code>x</code> are the x
+coordinates of the population line.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist_params_tbl</code></td>
+<td>
+<p>A <code>data.frame</code>. See 'Details'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the random variable. The distinction
+between a threshold distribution and the respective standard variant is made with
+<code>dist_params_tbl</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>The failure probability is restricted to the interval
+<code class="reqn">[tol, 1 - tol]</code>. The default value is in accordance with the decimal
+places shown in the hover for <code>plot_method = "plotly"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_trace</code></td>
+<td>
+<p>A character string which is assigned to the legend trace.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plot_method</code></td>
+<td>
+<p>Package, which is used for generating the plot output. Only
+used when <code>p_obj = NULL</code>. If <code>p_obj != NULL</code> the plot object is used to
+determine the plot method.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>dist_params_tbl</code> is a <code>data.frame</code> with parameter columns. An overview of the
+distribution-specific parameters and their order can be found in section
+'Distributions'.
+</p>
+<p>If only one population line should be displayed, a numeric vector is also
+supported. The order of the vector elements also corresponds to the table in
+section 'Distributions'.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A plot object containing the linearized CDF(s).
+</p>
+
+
+<h3>Distributions</h3>
+
+<p>The following table summarizes the available distributions and their parameters
+</p>
+
+<ul>
+<li> <p><em>location parameter</em> <code class="reqn">\mu</code>,
+</p>
+</li>
+<li> <p><em>scale parameter</em> <code class="reqn">\sigma</code> or <code class="reqn">\theta</code> and
+</p>
+</li>
+<li> <p><em>threshold parameter</em> <code class="reqn">\gamma</code>.
+</p>
+</li>
+</ul>
+<p>The column order within <code>dist_params_tbl</code> is given in the table header.</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   <strong><code>distribution</code></strong> </td>
+<td style="text-align: center;"> <strong><code>dist_params_tbl[1]</code></strong> </td>
+<td style="text-align: center;"> <strong><code>dist_params_tbl[2]</code></strong> </td>
+<td style="text-align: center;"> <strong><code>dist_params_tbl[3]</code></strong> </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"sev"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"weibull"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> (<code class="reqn">\gamma</code>) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"normal"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"lognormal"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> (<code class="reqn">\gamma</code>) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"logistic"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"loglogistic"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\mu</code> </td>
+<td style="text-align: center;"> <code class="reqn">\sigma</code> </td>
+<td style="text-align: center;"> (<code class="reqn">\gamma</code>) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>"exponential"</code> </td>
+<td style="text-align: center;"> <code class="reqn">\theta</code> </td>
+<td style="text-align: center;"> (<code class="reqn">\gamma</code>) </td>
+<td style="text-align: center;"> - </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- rweibull(n = 100, shape = 1, scale = 20000)
+
+# Example 1 - Two-parametric straight line:
+pop_weibull &lt;- plot_pop(
+  p_obj = NULL,
+  x = range(x),
+  dist_params_tbl = c(log(20000), 1),
+  distribution = "weibull"
+)
+
+# Example 2 - Three-parametric curved line:
+x2 &lt;- rweibull(n = 100, shape = 1, scale = 20000) + 5000
+
+pop_weibull_2 &lt;- plot_pop(
+  p_obj = NULL,
+  x = x2,
+  dist_params_tbl = c(log(20000 - 5000), 1, 5000),
+  distribution = "weibull"
+)
+
+# Example 3 - Multiple lines:
+pop_weibull_3 &lt;- plot_pop(
+  p_obj = NULL,
+  x = x,
+  dist_params_tbl = data.frame(
+    p_1 = c(log(20000), log(20000), log(20000)),
+    p_2 = c(1, 1.5, 2)
+    ),
+  distribution = "weibull",
+  plot_method = "ggplot2"
+)
+
+# Example 4 - Compare two- and three-parametric distributions:
+pop_weibull_4 &lt;- plot_pop(
+  p_obj = NULL,
+  x = x,
+  dist_params_tbl = data.frame(
+    param_1 = c(log(20000), log(20000)),
+    param_2 = c(1, 1),
+    param_3 = c(NA, 2)
+  ),
+  distribution = "weibull"
+)
+
+</code></pre>
+
+
+</div>

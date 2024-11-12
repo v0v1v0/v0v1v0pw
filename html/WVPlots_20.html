@@ -1,0 +1,146 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>PlotDistCountBinomial</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot count data with a theoretical binomial</h2>
+
+<h3>Description</h3>
+
+<p>Compares empirical count data to a binomial distribution
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">PlotDistCountBinomial(
+  frm,
+  xvar,
+  trial_size,
+  title,
+  ...,
+  p = NULL,
+  limit_to_observed_range = FALSE,
+  count_color = "black",
+  binom_color = "blue"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frm</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar</code></td>
+<td>
+<p>column of frm that counts the number of successes for each trial</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trial_size</code></td>
+<td>
+<p>the number of "coin flips" in a trial</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>mean of the binomial. If NULL, use empirical mean</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limit_to_observed_range</code></td>
+<td>
+<p>If TRUE, limit plot to observed counts</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>count_color</code></td>
+<td>
+<p>color of empirical distribution</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binom_color</code></td>
+<td>
+<p>color of theoretical binomial</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is useful for comparing the number of successes that occur
+in a series of trials, all of the same size, to a binomial of a given
+success-probability.
+</p>
+<p>Plots the empirical distribution of successes, and a theoretical matching binomial. If
+the mean of the binomial, <code>p</code>, is given, the binomial with success-probability
+<code>p</code> is plotted. Otherwise, <code>p</code> is taken to be the pooled success rate
+of the data: <code>sum(frm[[xvar]]) / (trial_size*nrow(frm))</code>. The mean of
+the binomial is reported in the subtitle of the plot (to three significant figures).
+</p>
+<p>If <code>limit_to_observed_range</code> is TRUE, the range of the plot will only cover
+the range of the empirical data. Otherwise, the range of the plot will be
+<code>0:trial_size</code> (the default).
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>PlotDistHistBeta</code>, <code>PlotDistDensityBeta</code>,
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+set.seed(23590)
+class_size = 35
+nclasses = 100
+true_frate = 0.4
+fdata = data.frame(n_female = rbinom(nclasses, class_size, true_frate), stringsAsFactors = FALSE)
+
+title = paste("Distribution of count of female students, class size =", class_size)
+# compare to empirical p
+PlotDistCountBinomial(fdata, "n_female", class_size, title)
+
+if(FALSE) {
+  # compare to theoretical p of 0.5
+  PlotDistCountBinomial(fdata, "n_female", class_size, title,
+                        p = 0.5)
+
+  # Example where the distribution is not of a true single binomial
+  fdata2 = rbind(data.frame(n_female = rbinom(50, class_size, 0.25)),
+                data.frame(n_female = rbinom(10, class_size, 0.60)),
+                stringsAsFactors = FALSE )
+  PlotDistCountBinomial(fdata2, "n_female", class_size, title)
+}
+
+</code></pre>
+
+
+</div>

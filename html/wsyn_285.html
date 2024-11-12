@@ -1,0 +1,203 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>synmat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Synchrony matrices</h2>
+
+<h3>Description</h3>
+
+<p>Calculate synchrony matrices using a variety of methods
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">synmat(
+  dat,
+  times,
+  method,
+  tsrange = c(0, Inf),
+  nsurrogs = 1000,
+  scale.min = 2,
+  scale.max.input = NULL,
+  sigma = 1.05,
+  f0 = 1,
+  weighted = TRUE,
+  sigthresh = 0.95
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>A locations (rows) x time (columns) matrix of measurements</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>times</code></td>
+<td>
+<p>The times at which measurements were made, spacing 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Method for synchrony calculation. See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tsrange</code></td>
+<td>
+<p>A vector containing the min and max of the focal timescale range. Defaults 
+to all timescales that are valid given choices for scale.min, scale.max.input, f0, sigma.
+Only used for wavelet-based methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsurrogs</code></td>
+<td>
+<p>Number of surrogates for significance test. Defaults to 1000. Only used
+for surrogate-based methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.min</code></td>
+<td>
+<p>The smallest scale of fluctuation that will be examined. At least 2. Used 
+only for wavelet-based methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.max.input</code></td>
+<td>
+<p>The largest scale of fluctuation guaranteed to be examined. Only used 
+for wavelet-based methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>The ratio of each time scale examined relative to the next timescale. Should be 
+greater than 1. Only used for wavelet-based methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f0</code></td>
+<td>
+<p>The ratio of the period of fluctuation to the width of the envelope. Only used for 
+wavelet-based methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weighted</code></td>
+<td>
+<p>If <code>TRUE</code>, create a weighted network. If <code>FALSE</code>, create a binary 
+network using statistical significance. Binary networks are only allowed for networks based
+on significance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigthresh</code></td>
+<td>
+<p>Significance threshold needed, if <code>weighted</code> is false, for a network
+link to be realized. Typically 0.95, 0.99, or 0.999, etc. Only used if <code>weighted</code> is
+<code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The following values are valid for <code>method</code>: 
+<code>"pearson"</code>, <code>"pearson.sig.std"</code>, <code>"pearson.sig.fft"</code>, 
+<code>"pearson.sig.aaft"</code>, 
+<code>"spearman"</code>, <code>"spearman.sig.std"</code>, <code>"spearman.sig.fft"</code>, 
+<code>"spearman.sig.aaft"</code>, 
+<code>"kendall"</code>, <code>"kendall.sig.std"</code>, <code>"kendall.sig.fft"</code>, 
+<code>"kendall.sig.aaft"</code>, 
+<code>"ReXWT"</code>, <code>"ReXWT.sig.fft"</code>, <code>"ReXWT.sig.aaft"</code>, <code>"ReXWT.sig.fast"</code>, 
+<code>"coh"</code>, <code>"coh.sig.fft"</code>, <code>"coh.sig.aaft"</code>, <code>"coh.sig.fast"</code>,
+<code>"phasecoh"</code>, <code>"phasecoh.sig.fft"</code>, and <code>"phasecoh.sig.aaft"</code>.
+The first portions of these identifiers correspond to the Pearson, Spearman, and Kendall 
+correlations, the real part of the cross-wavelet transform, the wavelet coherence, and the 
+wavelet phase coherence. The second portions of these identifiers, when present, indicates
+that significance of the measure specified in the first portion of the identifies is to
+be used for establishing the synchrony matrix. Otherwise the value itself is used. The
+third part of the <code>method</code> identifier indicates what type of significance is used.
+</p>
+<p>Significance testing is performed using standard approaches (<code>method</code> flag containg
+<code>std</code>; for correlation coefficients, 
+although these are inappropriate for autocorrelated data), or surrogates generated using the 
+Fourier (<code>method</code> flag containing <code>"fft"</code>) or amplitude adjusted Fourier 
+surrogates (<code>"aaft"</code>). For 
+<code>"coh"</code> and <code>"ReXWT"</code>, the fast testing algorithm of Sheppard et al. (2017) is also
+implemented (<code>"fast"</code>). That method uses implicit Fourier surrogates. The choice of 
+wavelet coherence (method flag containing <code>"coh"</code>) or the real part of 
+the cross-wavelet 
+transform (method flag containing <code>"ReXWT"</code>) depends mainly 
+on treatment of out-of-phase 
+relationships. The <code>"ReXWT"</code> is more akin to a correlation coefficient in that 
+strong in-phase relationships approach 1 and strong antiphase relationships approach -1. 
+Wavelet coherence allows any phase relationship and ranges from 0 to 1. Power normalization
+is applied for <code>"coh"</code> and for <code>"ReXWT"</code>. All significance tests are one-tailed. 
+Synchrony matrices for significance-based methods when <code>weighted</code> is <code>TRUE</code> 
+contain 1 minus the p-values.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>synmat</code> returns a synchrony matrix, of type depending on the <code>method</code>
+argument. See details. Diagonal entries are left as <code>NA</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jonathan Walter, <a href="mailto:jaw3es@virginia.edu">jaw3es@virginia.edu</a>; Daniel Reuman, <a href="mailto:reuman@ku.edu">reuman@ku.edu</a>;
+Lei Zhao, <a href="mailto:lei.zhao@cau.edu.cn">lei.zhao@cau.edu.cn</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Walter, J. A., et al. (2017) The geography of spatial synchrony. Ecology 
+Letters. doi: 10.1111/ele.12782
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>clust</code>, <code>coh</code>, <code>surrog</code>, <code>browseVignettes("wsyn")</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">sig&lt;-matrix(.9,5,5)
+diag(sig)&lt;-1
+if (requireNamespace("mvtnorm",quietly=TRUE))
+{
+  dat1&lt;-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+  dat2&lt;-t(mvtnorm::rmvnorm(30,mean=rep(0,5),sigma=sig))
+}else
+{
+  dat1&lt;-t(matrix(rep(rnorm(30),times=5),30,5))
+  dat2&lt;-t(matrix(rep(rnorm(30),times=5),30,5))
+}
+dat&lt;-rbind(dat1,dat2)
+times&lt;-1:30
+dat&lt;-cleandat(dat,times,clev=2)$cdat
+method&lt;-"pearson.sig.fft"
+res&lt;-synmat(dat,times,method,nsurrogs=100,weighted=FALSE,
+            sigthresh=0.95)
+  
+</code></pre>
+
+
+</div>

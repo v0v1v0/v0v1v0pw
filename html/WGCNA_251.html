@@ -1,0 +1,268 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simulateDatExpr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Simulation of expression data</h2>
+
+<h3>Description</h3>
+
+<p>Simulation of expression data with a customizable modular structure and several different types of
+noise. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">simulateDatExpr(
+  eigengenes, 
+  nGenes, 
+  modProportions, 
+  minCor = 0.3, 
+  maxCor = 1, 
+  corPower = 1, 
+  signed = FALSE, 
+  propNegativeCor = 0.3, 
+  geneMeans = NULL,
+  backgroundNoise = 0.1, 
+  leaveOut = NULL, 
+  nSubmoduleLayers = 0, 
+  nScatteredModuleLayers = 0, 
+  averageNGenesInSubmodule = 10, 
+  averageExprInSubmodule = 0.2, 
+  submoduleSpacing = 2, 
+  verbose = 1, indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>eigengenes</code></td>
+<td>
+<p> a data frame containing the seed eigengenes for the simulated modules. Rows
+correspond to samples and columns to modules. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nGenes</code></td>
+<td>
+<p> total number of genes to be simulated. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>modProportions</code></td>
+<td>
+<p> a numeric vector with length equal the number of eigengenes in <code>eigengenes</code>
+plus one, containing fractions of the total number of genes to be put into each of the modules and into
+the "grey module", which means genes not related to any of the modules. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minCor</code></td>
+<td>
+<p> minimum correlation of module genes with the corresponding eigengene. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxCor</code></td>
+<td>
+<p> maximum correlation of module genes with the corresponding eigengene. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corPower</code></td>
+<td>
+<p> controls the dropoff of gene-eigengene correlation. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signed</code></td>
+<td>
+<p> logical: should the genes be simulated as belonging to a signed network? If <code>TRUE</code>,
+all genes will be simulated to have positive correlation with the eigengene. If <code>FALSE</code>, a
+proportion given by <code>propNegativeCor</code> will be simulated with negative correlations of the same
+absolute values. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>propNegativeCor</code></td>
+<td>
+<p> proportion of genes to be simulated with negative gene-eigengene correlations.
+Only effective if <code>signed</code> is <code>FALSE</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geneMeans</code></td>
+<td>
+<p> optional vector of length <code>nGenes</code> giving desired mean expression for each gene. If
+not given, the returned expression profiles will have mean zero. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>backgroundNoise</code></td>
+<td>
+<p> amount of background noise to be added to the simulated expression data. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>leaveOut</code></td>
+<td>
+<p> optional specification of modules that should be left out of the simulation, that is
+their genes will be simulated as unrelated ("grey"). This can
+be useful when simulating several sets, in some which a module is present while in others it is absent. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nSubmoduleLayers</code></td>
+<td>
+<p> number of layers of ordered submodules to be added. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nScatteredModuleLayers</code></td>
+<td>
+<p> number of layers of scattered submodules to be added. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>averageNGenesInSubmodule</code></td>
+<td>
+<p> average number of genes in a submodule. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>averageExprInSubmodule</code></td>
+<td>
+<p> average strength of submodule expression vectors. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>submoduleSpacing</code></td>
+<td>
+<p> a number giving submodule spacing: this multiple of the submodule size will
+lie between the submodule and the next one.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Given <code>eigengenes</code> can be unrelated or they can exhibit non-trivial correlations. Each module is
+simulated separately from others. The expression profiles are chosen such that their
+correlations with the eigengene run from just below <code>maxCor</code> to <code>minCor</code> (hence minCor must be
+between 0 and 1, not including the bounds). The parameter <code>corPower</code> can be chosen to control the
+behaviour of the simulated correlation with the gene index; values higher than 1 will result in the
+correlation approaching <code>minCor</code> faster and lower than 1 slower. 
+</p>
+<p>Numbers of genes in each module are specified (as fractions of the total number of genes <code>nGenes</code>)
+by <code>modProportions</code>. The last entry in <code>modProportions</code> corresponds to the genes that will be
+simulated as unrelated to anything else ("grey" genes). The proportion must add up to 1 or less. If the
+sum is less than one, the remaining genes will be partitioned into groups and simulated to be "close" to
+the proper modules, that is with small but non-zero correlations (between <code>minCor</code> and 0)
+with the module eigengene. 
+</p>
+<p>If <code>signed</code> is set <code>FALSE</code>, the correlation for
+some of the module genes is chosen negative (but the absolute values remain the same as they would be for
+positively correlated genes). To ensure consistency for simulations of multiple sets, the indices of the
+negatively correlated genes are fixed and distributed evenly. 
+</p>
+<p>In addition to the primary module structure, a secondary structure can be optionally simulated. Modules
+in the secondary structure have sizes chosen from an exponential distribution with mean equal
+<code>averageNGenesInSubmodule</code>. Expression vectors simulated in the secondary structure are simulated
+with expected standard deviation chosen from an exponential distribution with mean equal
+<code>averageExprInSubmodule</code>; the higher this coefficient, the
+more pronounced will the submodules be in the main modules. The secondary structure can be simulated in
+several layers; their number is given by <code>SubmoduleLayers</code>. Genes in these submodules are ordered in
+the same order as in the main modules. 
+</p>
+<p>In addition to the ordered submodule structure, a scattered submodule structure can be simulated as well.
+This structure can be viewed as noise that tends to correlate random groups of genes. The size and effect 
+parameters are the same as for the ordered submodules, and the number of layers added is controlled by
+<code>nScatteredModuleLayers</code>. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>datExpr</code></td>
+<td>
+<p> simulated expression data in a data frame whose columns correspond genes and rows to
+samples. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>setLabels</code></td>
+<td>
+<p> simulated module assignment. Module labels are numeric, starting from 1. Genes
+simulated to be outside of proper modules have label 0. 
+Modules that are left out (specified in <code>leaveOut</code>)
+are indicated as 0 here. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allLabels</code></td>
+<td>
+<p> simulated module assignment. Genes that belong to leftout modules (specified in
+<code>leaveOut</code>) are indicated by their would-be  assignment here. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labelOrder</code></td>
+<td>
+<p> a vector specifying the order in which labels correspond to the given eigengenes,
+that is <code>labelOrder[1]</code> is the label assigned to module whose seed is <code>eigengenes[, 1]</code> etc.  </p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder </p>
+
+
+<h3>References</h3>
+
+<p> A short description of the simulation method can also be found in the Supplementary Material
+to the article
+</p>
+<p>Langfelder P, Horvath S (2007) Eigengene networks for studying the relationships between co-expression
+modules. BMC Systems Biology 2007, 1:54.
+</p>
+<p>The material is posted at
+http://horvath.genetics.ucla.edu/html/CoexpressionNetwork/EigengeneNetwork/SupplementSimulations.pdf.
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code>simulateEigengeneNetwork</code> for a simulation of eigengenes with a given causal structure;
+</p>
+<p><code>simulateModule</code> for simulations of individual modules;
+</p>
+<p><code>simulateDatExpr5Modules</code> for a simplified interface to expression simulations;
+</p>
+<p><code>simulateMultiExpr</code> for a simulation of several related data sets. 
+</p>
+
+
+</div>

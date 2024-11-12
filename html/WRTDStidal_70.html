@@ -1,0 +1,146 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>seasplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot seasonal trends across all years</h2>
+
+<h3>Description</h3>
+
+<p>Plot seasonal trends by combining annual data
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">seasplot(dat_in, ...)
+
+## S3 method for class 'tidal'
+seasplot(
+  dat_in,
+  tau = NULL,
+  predicted = TRUE,
+  span = 0.4,
+  lwd = 1,
+  size = 2,
+  alpha = 1,
+  col_vec = NULL,
+  grids = TRUE,
+  logspace = TRUE,
+  ...
+)
+
+## S3 method for class 'tidalmean'
+seasplot(
+  dat_in,
+  predicted = TRUE,
+  span = 0.4,
+  lwd = 1,
+  size = 2,
+  alpha = 1,
+  col_vec = NULL,
+  grids = TRUE,
+  logspace = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>Input data object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>numeric of quantile to plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>predicted</code></td>
+<td>
+<p>logical indicating if seasonal smooth is based on model predictions, default <code>TRUE</code>, otherwise the smooth is based on flow-normalized predictions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>span</code></td>
+<td>
+<p>numeric indicating the smoothing parameter for the loess fit, passed to <code>stat_smooth</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd</code></td>
+<td>
+<p>numeric value indicating width of lines</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>size</code></td>
+<td>
+<p>numeric value indicating size of points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>numeric value indicating transparency of points or lines</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col_vec</code></td>
+<td>
+<p>chr string of plot colors to use, passed to <code>gradcols</code>.  Any color palette from RColorBrewer can be used as a named input. Palettes from grDevices must be supplied as the returned string of colors for each palette.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grids</code></td>
+<td>
+<p>logical indicating if grid lines are present</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logspace</code></td>
+<td>
+<p>logical indicating if plots are in log space</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Seasonal variation across all years can be viewed by showing the observed annual data on a common y-axis.  The year value is removed from the results such that the y-axis shows only the day of the year.  A simple loess (locally estimated) polynomial smooth is added to show the seasonal trend in the results, where the smoother is fit through the model results for the observed data.  The fit can be smoothed through the model predictions or the flow-normalized predictions, neither of which are shown on the plot.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dynaplot</code>, <code>fitmoplot</code>, <code>gridplot</code>, and <code>sliceplot</code> produce similar graphics except variation in the same month across years is emphasized.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load a fitted tidal object
+data(tidfit)
+
+# plot using defaults
+# defaults to all quantiles for tidal object
+seasplot(tidfit)
+
+# tidalmean object
+seasplot(tidfitmean)
+</code></pre>
+
+
+</div>

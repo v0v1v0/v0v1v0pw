@@ -1,0 +1,58 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>anlz_prd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get predicted data from fitted GAMs across period of observation</h2>
+
+<h3>Description</h3>
+
+<p>Get predicted data from fitted GAMs across period of observation
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">anlz_prd(mod, annual = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mod</code></td>
+<td>
+<p>input model object as returned by <code>anlz_gam</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annual</code></td>
+<td>
+<p>logical indicating if predictions only for the <code>cont_year</code> smoother are returned</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a <code>data.frame</code> with predictions
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(dplyr)
+
+# data to model
+tomod &lt;- rawdat %&gt;%
+  filter(station %in% 34) %&gt;%
+  filter(param %in% 'chl') %&gt;% 
+  filter(yr &gt; 2015)
+  
+mod &lt;- anlz_gam(tomod, trans = 'log10')
+anlz_prd(mod)
+</code></pre>
+
+
+</div>

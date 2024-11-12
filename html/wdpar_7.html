@@ -1,0 +1,252 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wdpa_fetch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fetch data</h2>
+
+<h3>Description</h3>
+
+<p>Fetch data from <a href="https://www.protectedplanet.net/en">Protected Planet</a>.
+Specifically, data are downloaded from the
+World Database on Protected Areas
+(WDPA) and the World Database on Other Effective Area-Based Conservation
+Measures (WDOECM).
+<strong>Note that data are downloaded assuming non-commercial use.</strong>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wdpa_fetch(
+  x,
+  wait = FALSE,
+  download_dir = tempdir(),
+  force_download = FALSE,
+  check_version = TRUE,
+  n = NULL,
+  page_wait = 2,
+  datatype = "gdb",
+  verbose = interactive()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>character</code> country for which to download data. This argument
+can be the name of the country (e.g. <code>"Liechtenstein"</code>) or the
+ISO-3 code for the country (e.g. <code>"LIE"</code>). This argument can also
+be set to <code>"global"</code> to download all of the protected areas available
+in the database (approximately 1.1 GB).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wait</code></td>
+<td>
+<p><code>logical</code> if data is not immediately available for download
+should the session be paused until it is ready for download? If argument
+to <code>wait</code> is <code>FALSE</code> and the data is not ready then <code>NA</code>
+will be returned. Defaults to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>download_dir</code></td>
+<td>
+<p><code>character</code> folder path to download the data.
+Defaults to a temporary directory. To avoid downloading the
+same dataset multiple times, it is recommended to use a persistent
+directory (e.g. <code>rappdirs::user_data_dir("wdpar")</code>; see Examples below).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>force_download</code></td>
+<td>
+<p><code>logical</code> if the data has previously been
+downloaded and is available at argument to <code>download_dir</code>, should a
+fresh copy be downloaded? Defaults to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>check_version</code></td>
+<td>
+<p><code>logical</code> if the data are being imported from
+from the argument to <code>download_dir</code>, should the data be checked to see
+if the version number matches the latest version available online?
+Defaults to <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p><code>integer</code> number of records to import per data source.
+Defaults to <code>NULL</code> such that all data are imported.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>page_wait</code></td>
+<td>
+<p><code>numeric</code> number of seconds to wait for web pages
+to load when finding the download URL on
+<a href="https://www.protectedplanet.net/en">Protected Planet</a>.
+Defaults to 2.
+Since the process of finding a download URL requires
+navigating through multiple web pages,
+the default argument means that the function will take at least 8
+seconds to complete.
+Users on slow internet connections may experience issues
+with the default argument (e.g. resulting in an error
+containing the message <code>Error: Summary: NoSuchElement</code>).
+To avoid this, users can try specifying a greater value (e.g. 5 seconds).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>datatype</code></td>
+<td>
+<p><code>character</code> denoting the file format for which to download
+protected area data. Available options include: (<code>"shp"</code>) shapefile format
+and (<code>"gdb"</code>) file geodatabase format. Defaults to '"gdb".
+Note that global data are only available in file geodatabase format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p><code>logical</code> should a progress on downloading data be
+reported? Defaults to <code>TRUE</code> in an interactive session, otherwise
+<code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function obtains and imports data from Protected Planet.
+By default (per <code>force_download = FALSE</code>), it will check to see if the
+data have already been downloaded and, if so, simply import the previously
+downloaded data.
+It will also check to see if a newer version of the dataset is available
+on Protected Planet (per <code>check_version = TRUE</code>) and, if so, provide an
+alert.
+If the latest version is not required, this alert can be safely ignored.
+However, if the latest version of the data is required,
+then using <code>force_download = TRUE</code> will ensure that the latest version
+is always obtained.
+After importing the data, it is strongly recommended to clean the data
+prior to analysis (see <code>wdpa_clean()</code>).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>sf::sf()</code> object.
+</p>
+
+
+<h3>Data source</h3>
+
+<p>The <code>PA_DEF</code> column indicates the data source for individual
+areas and sites that comprise the imported dataset.
+Specifically, data obtained through the World Database on Protected Areas
+(WDPA) are indicated with a value of <code>1</code> in the <code>PA_DEF</code> column.
+Additionally, data obtained through the World Database on Other Effective
+Area-Based Conservation Measures (WDOECM) are indicated with a value of <code>0</code>
+in the <code>PA_DEF</code> column.
+For more details on data conventions, please consult the official manual
+(UNEP-WCMC 2019).
+</p>
+
+
+<h3>Troubleshooting</h3>
+
+<p>The function requires a Chromium-based browser
+(e.g., Google Chrome, Chromium, or Brave) to be installed.
+This is because it uses the <span class="pkg">chromote</span> to find the URL
+for downloading data from Protected Planet.
+If you don't have one of these browsers installed, then please try
+installing Google Chrome.
+If you do have one of these browsers installed and this function
+throws an error indicating that it can't find the browser,
+try setting the <code>CHROMOTE_CHROME</code> environment variable to the
+file path of the executable. For example, you could do this with:
+</p>
+<div class="sourceCode"><pre>Sys.setenv(CHROMOTE_CHROME = "INSERT_FILE_PATH_HERE.exe")
+</pre></div>
+<p>Also, the function will sometimes produce a message
+that complains about a <code>handle_read_frame</code> error. Please understand
+that this message is, in fact, not an error and can be safely ignored
+(see <a href="https://github.com/rstudio/chromote/pull/111">https://github.com/rstudio/chromote/pull/111</a>).
+As such, if you see this message when running the function,
+you can assume that the function still worked correctly.
+For reference, the misleading message will look something like this:
+</p>
+<div class="sourceCode"><pre>[error] handle_read_frame error: websocketpp.transport:7 (End of File)
+</pre></div>
+<p>For further help with troubleshooting, please refer to the documentation
+for the <span class="pkg">chromote</span> package (https://rstudio.github.io/chromote/).
+</p>
+
+
+<h3>References</h3>
+
+<p>UNEP-WCMC (2019). User Manual for the World Database on Protected Areas and
+world database on other effective area-based conservation measures: 1.6.
+UNEP-WCMC: Cambridge, UK. Available at: <a href="https://wcmc.io/WDPA_Manual">https://wcmc.io/WDPA_Manual</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wdpa_clean()</code>, <code>wdpa_read()</code>,
+<code>wdpa_url()</code>, <code>countrycode::countrycode()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# fetch data for Liechtenstein
+lie_raw_data &lt;- wdpa_fetch("Liechtenstein", wait = TRUE)
+
+# print data
+print(lie_raw_data)
+
+# plot data
+plot(lie_raw_data)
+
+# fetch data for Liechtenstein using the ISO3 code
+lie_raw_data &lt;- wdpa_fetch("LIE", wait = TRUE)
+
+# since data are saved in a temporary directory by default,
+# a persistent directory can be specified to avoid having to download the
+# same dataset every time the R session is restarted
+lie_raw_data &lt;- wdpa_fetch("LIE", wait = TRUE,
+                           download_dir = rappdirs::user_data_dir("wdpar"))
+
+# data for multiple countries can be downloaded separately and combined,
+# this is useful to avoid having to download the global dataset
+## load packages to easily merge datasets
+library(dplyr)
+library(tibble)
+
+## define country names to download
+country_codes &lt;- c("LIE", "MHL")
+
+## download data for each country
+mult_data &lt;- lapply(country_codes, wdpa_fetch, wait = TRUE)
+
+## merge datasets together
+mult_dat &lt;- st_as_sf(as_tibble(bind_rows(mult_data)))
+
+## print data
+print(mult_dat)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

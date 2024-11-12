@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fdp.mle</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Wavelet-based Maximum Likelihood Estimation for a Fractional Difference
+Process</h2>
+
+<h3>Description</h3>
+
+<p>Parameter estimation for a fractional difference (long-memory, self-similar)
+process is performed via maximum likelihood on the wavelet coefficients.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fdp.mle(y, wf, J = log(length(y), 2))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Dyadic length time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wf</code></td>
+<td>
+<p>Name of the wavelet filter to use in the decomposition.  See
+<code>wave.filter</code> for those wavelet filters available.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>Depth of the discrete wavelet transform.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The variance-covariance matrix of the original time series is approximated
+by its wavelet-based equivalent.  A Whittle-type likelihood is then
+constructed where the sums of squared wavelet coefficients are compared to
+bandpass filtered version of the true spectrum.  Minimization occurs only
+for the fractional difference parameter <code class="reqn">d</code>, while variance is estimated
+afterwards.
+</p>
+
+
+<h3>Value</h3>
+
+<p>List containing the maximum likelihood estimates (MLEs) of <code class="reqn">d</code>
+and <code class="reqn">\sigma^2</code>, along with the value of the likelihood for those
+estimates.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>B. Whitcher
+</p>
+
+
+<h3>References</h3>
+
+<p>M. J. Jensen (2000) An alternative maximum likelihood estimator
+of long-memory processes using compactly supported wavelets, <em>Journal
+of Economic Dynamics and Control</em>, <b>24</b>, No. 3, 361-387.
+</p>
+<p>McCoy, E. J., and A. T. Walden (1996) Wavelet analysis and synthesis of
+stationary long-memory processes, <em>Journal for Computational and
+Graphical Statistics</em>, <b>5</b>, No. 1, 26-56.
+</p>
+<p>Percival, D. B. and A. T. Walden (2000) <em>Wavelet Methods for Time
+Series Analysis</em>, Cambridge University Press.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Figure 5.5 in Gencay, Selcuk and Whitcher (2001)
+fdp.sdf &lt;- function(freq, d, sigma2=1)
+  sigma2 / ((2*sin(pi * freq))^2)^d
+dB &lt;- function(x) 10 * log10(x)
+per &lt;- function(z) {
+  n &lt;- length(z)
+  (Mod(fft(z))**2/(2*pi*n))[1:(n %/% 2 + 1)]
+}
+data(ibm)     
+ibm.returns &lt;- diff(log(ibm))
+ibm.volatility &lt;- abs(ibm.returns)
+ibm.vol.mle &lt;- fdp.mle(ibm.volatility, "d4", 4)
+freq &lt;- 0:184/368
+ibm.vol.per &lt;- 2 * pi * per(ibm.volatility)
+ibm.vol.resid &lt;- ibm.vol.per/ fdp.sdf(freq, ibm.vol.mle$parameters[1])
+par(mfrow=c(1,1), las=0, pty="m")
+plot(freq, dB(ibm.vol.per), type="l", xlab="Frequency", ylab="Spectrum")
+lines(freq, dB(fdp.sdf(freq, ibm.vol.mle$parameters[1],
+                       ibm.vol.mle$parameters[2]/2)), col=2)
+
+</code></pre>
+
+
+</div>

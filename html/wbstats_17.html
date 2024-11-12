@@ -1,0 +1,269 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wb_data</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download Data from the World Bank API</h2>
+
+<h3>Description</h3>
+
+<p>This function downloads the requested information using the World Bank API
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wb_data(
+  indicator,
+  country = "countries_only",
+  start_date,
+  end_date,
+  return_wide = TRUE,
+  mrv,
+  mrnev,
+  cache,
+  freq,
+  gapfill = FALSE,
+  date_as_class_date = FALSE,
+  lang
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>indicator</code></td>
+<td>
+<p>Character vector of indicator codes. These codes correspond
+to the <code>indicator_id</code> column from the <code>indicators</code> tibble of <code>wb_cache()</code>, wb_cachelist, or
+the result of running <code>wb_indicators()</code> directly</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>country</code></td>
+<td>
+<p>Character vector of country, region, or special value codes for the
+locations you want to return data for. Permissible values can be found in the
+countries tibble in wb_cachelist or by running <code>wb_countries()</code> directly.
+Specifically, values listed in the following fields <code>iso3c</code>, <code>iso2c</code>, <code>country</code>,
+<code>region</code>, <code>admin_region</code>, <code>income_level</code> and all of the <code style="white-space: pre;">⁠region_*⁠</code>,
+<code style="white-space: pre;">⁠admin_region_*⁠</code>, <code style="white-space: pre;">⁠income_level_*⁠</code>, columns. As well as the following special values
+</p>
+
+<ul>
+<li> <p><code>"countries_only"</code> (Default)
+</p>
+</li>
+<li> <p><code>"regions_only"</code>
+</p>
+</li>
+<li> <p><code>"admin_regions_only"</code>
+</p>
+</li>
+<li> <p><code>"income_levels_only"</code>
+</p>
+</li>
+<li> <p><code>"aggregates_only"</code>
+</p>
+</li>
+<li> <p><code>"all"</code>
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_date</code></td>
+<td>
+<p>Numeric or character. If numeric it must be in <code style="white-space: pre;">⁠%Y⁠</code> form (i.e. four digit year).
+For data at the subannual granularity the API supports a format as follows: for monthly data, "2016M01"
+and for quarterly data, "2016Q1". This also accepts a special value of "YTD", useful for more frequently
+updated subannual indicators.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end_date</code></td>
+<td>
+<p>Numeric or character. If numeric it must be in <code style="white-space: pre;">⁠%Y⁠</code> form (i.e. four digit year).
+For data at the subannual granularity the API supports a format as follows: for monthly data, "2016M01"
+and for quarterly data, "2016Q1".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return_wide</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> data is returned in a wide format instead of long,
+with a column named for each <code>indicator_id</code> or if the <code>indicator</code> argument is a named vector,
+the <code>names()</code> given to the indicator will be the column names. To necessitate this transformation,
+the <code>indicator</code> column that provides the human readable description is dropped, but provided as a column label.
+Default is <code>TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mrv</code></td>
+<td>
+<p>Numeric. The number of Most Recent Values to return. A replacement
+of <code>start_date</code> and <code>end_date</code>, this number represents the number of observations
+you which to return starting from the most recent date of collection. This may include missing values.
+Useful in conjuction with <code>freq</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mrnev</code></td>
+<td>
+<p>Numeric. The number of Most Recent Non Empty Values to return. A replacement
+of <code>start_date</code> and <code>end_date</code>, similar in behavior as <code>mrv</code> but excludes locations with missing values.
+Useful in conjuction with <code>freq</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cache</code></td>
+<td>
+<p>List of tibbles returned from <code>wb_cache()</code>. If omitted, wb_cachelist is used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>freq</code></td>
+<td>
+<p>Character String. For fetching quarterly ("Q"), monthly("M") or yearly ("Y") values.
+Useful for querying high frequency data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gapfill</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> fills in missing values by carrying forward the last
+available value until the next available period (max number of periods back tracked will be limited by <code>mrv</code> number).
+Default is <code>FALSE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date_as_class_date</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> the date field is returned as class Date, useful when working with
+non-annual data or data at mixed resolutions. Default is <code>FALSE</code>
+available value until the next available period (max number of periods back tracked will be limited by <code>mrv</code> number).
+Default is <code>FALSE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lang</code></td>
+<td>
+<p>Language in which to return the results. If <code>lang</code> is unspecified,
+english is the default. For supported languages see <code>wb_languages()</code>.
+Possible values of <code>lang</code> are in the <code>iso2</code> column. A note of warning, not
+all data returns have support for langauges other than english. If the specific
+return does not support your requested language by default it will return <code>NA</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+
+<h4>
+<code>obs_status</code> column</h4>
+
+<p>Indicates the observation status for location, indicator and date combination.
+For example <code>"F"</code> in the response indicates that the observation status for
+that data point is "forecast".
+</p>
+
+
+
+<h3>Value</h3>
+
+<p>a tibble of all available requested data.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+# gdp for all countries for all available dates
+df_gdp &lt;- wb_data("NY.GDP.MKTP.CD")
+
+# Brazilian gdp for all available dates
+df_brazil &lt;- wb_data("NY.GDP.MKTP.CD", country = "br")
+
+# Brazilian gdp for 2006
+
+df_brazil_1 &lt;- wb_data("NY.GDP.MKTP.CD", country = "brazil", start_date = 2006)
+
+
+# Brazilian gdp for 2006-2010
+
+df_brazil_2 &lt;- wb_data("NY.GDP.MKTP.CD", country = "BRA",
+                       start_date = 2006, end_date = 2010)
+
+
+# Population, GDP, Unemployment Rate, Birth Rate (per 1000 people)
+
+my_indicators &lt;- c("SP.POP.TOTL",
+                   "NY.GDP.MKTP.CD",
+                   "SL.UEM.TOTL.ZS",
+                   "SP.DYN.CBRT.IN")
+
+
+df &lt;- wb_data(my_indicators)
+
+# you pass multiple country ids of different types
+# Albania (iso2c), Georgia (iso3c), and Mongolia
+
+my_countries &lt;- c("AL", "Geo", "mongolia")
+df &lt;- wb_data(my_indicators, country = my_countries,
+              start_date = 2005, end_date = 2007)
+
+
+# same data as above, but in long format
+
+df_long &lt;- wb_data(my_indicators, country = my_countries,
+                   start_date = 2005, end_date = 2007,
+                   return_wide = FALSE)
+
+
+# regional population totals
+# regions correspond to the region column in wb_cachelist$countries
+
+df_region &lt;- wb_data("SP.POP.TOTL", country = "regions_only",
+                     start_date = 2010, end_date = 2014)
+
+
+# a specific region
+
+df_world &lt;- wb_data("SP.POP.TOTL", country = "world",
+                    start_date = 2010, end_date = 2014)
+
+
+# if the indicator is part of a named vector the name will be the column name
+my_indicators &lt;- c("pop" = "SP.POP.TOTL",
+                   "gdp" = "NY.GDP.MKTP.CD",
+                   "unemployment_rate" = "SL.UEM.TOTL.ZS",
+                   "birth_rate" = "SP.DYN.CBRT.IN")
+
+df_names &lt;- wb_data(my_indicators, country = "world",
+                    start_date = 2010, end_date = 2014)
+
+
+# custom names are ignored if returning in long format
+
+df_names_long &lt;- wb_data(my_indicators, country = "world",
+                         start_date = 2010, end_date = 2014,
+                         return_wide = FALSE)
+
+
+# same as above but in Bulgarian
+# note that not all indicators have translations for all languages
+
+df_names_long_bg &lt;- wb_data(my_indicators, country = "world",
+                            start_date = 2010, end_date = 2014,
+                            return_wide = FALSE, lang = "bg")
+
+</code></pre>
+
+
+</div>

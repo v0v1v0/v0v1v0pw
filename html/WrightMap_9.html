@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>extract.deltas</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Extract Master's Delta parameters from a TAM model.
+</h2>
+
+<h3>Description</h3>
+
+<p>This function takes as its input a TAM object. It adds reads the TAM item parameters and organizes them into a matrix that can be used as input in the <code>CCCfit</code> function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">extract.deltas(tamObject)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>tamObject</code></td>
+<td>
+
+<p>TAM object containing the results of a a Rasch model or Partial Credit model.
+</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>This function organizes the item parameter results into a matrix where each row is contains the parameters associated with an item and each columns is contains the parameters associated with a specific step (score 0 vs score 1, score 1 vs score 2, etc.). The resulting matrix will have as many rows as items and as many columns as the maximum number of steps among the items.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix in which each row is an item and each column is a step
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>David Torres Irribarra
+</p>
+
+
+<h3>References</h3>
+
+<p>Masters, G. N. (1982). A Rasch model for partial credit scoring. <em>Psychometrika</em>, 47(2), 149-174. 
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>CCCfit</code>
+<code>make.thresholds</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##---- Should be DIRECTLY executable !! ----
+##-- ==&gt;  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (tamObject) 
+{
+    delta.long &lt;- tamObject$xsi
+    n.deltas &lt;- apply(tamObject$B, 1, max)
+    delta.mat &lt;- matrix(NA, nrow = length(n.deltas), ncol = max(n.deltas))
+    matCoords.row &lt;- rep(1:length(n.deltas), n.deltas)
+    matCoords.col &lt;- c()
+    for (i in 1:length(n.deltas)) {
+        for (j in 1:n.deltas[i]) {
+            matCoords.col &lt;- c(matCoords.col, j)
+        }
+    }
+    delta.long$matCoords.row &lt;- matCoords.row
+    delta.long$matCoords.col &lt;- matCoords.col
+    for (k in 1:nrow(delta.long)) {
+        delta.mat[delta.long$matCoords.row[k], delta.long$matCoords.col[k]] &lt;- delta.long$xsi[k]
+    }
+    delta.mat
+  }
+</code></pre>
+
+
+</div>

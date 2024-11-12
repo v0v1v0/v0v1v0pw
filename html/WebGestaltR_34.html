@@ -1,0 +1,546 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WebGestaltR</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>WebGestaltR: The R interface for enrichment analysis with WebGestalt.</h2>
+
+<h3>Description</h3>
+
+<p>Main function for enrichment analysis
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WebGestaltR(
+  enrichMethod = "ORA",
+  organism = "hsapiens",
+  enrichDatabase = NULL,
+  enrichDatabaseFile = NULL,
+  enrichDatabaseType = NULL,
+  enrichDatabaseDescriptionFile = NULL,
+  interestGeneFile = NULL,
+  interestGene = NULL,
+  interestGeneType = NULL,
+  collapseMethod = "mean",
+  referenceGeneFile = NULL,
+  referenceGene = NULL,
+  referenceGeneType = NULL,
+  referenceSet = NULL,
+  minNum = 10,
+  maxNum = 500,
+  sigMethod = "fdr",
+  fdrMethod = "BH",
+  fdrThr = 0.05,
+  topThr = 10,
+  reportNum = 20,
+  perNum = 1000,
+  gseaP = 1,
+  isOutput = TRUE,
+  outputDirectory = getwd(),
+  projectName = NULL,
+  dagColor = "continuous",
+  saveRawGseaResult = FALSE,
+  gseaPlotFormat = c("png", "svg"),
+  setCoverNum = 10,
+  networkConstructionMethod = NULL,
+  neighborNum = 10,
+  highlightType = "Seeds",
+  highlightSeedNum = 10,
+  nThreads = 1,
+  cache = NULL,
+  hostName = "https://www.webgestalt.org/",
+  ...
+)
+
+WebGestaltRBatch(
+  interestGeneFolder = NULL,
+  enrichMethod = "ORA",
+  isParallel = FALSE,
+  nThreads = 3,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>enrichMethod</code></td>
+<td>
+<p>Enrichment methods: <code>ORA</code>, <code>GSEA</code> or <code>NTA</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>organism</code></td>
+<td>
+<p>Currently, WebGestaltR supports 12 organisms. Users can use the function
+<code>listOrganism</code> to check available organisms. Users can also input <code>others</code> to
+perform the enrichment analysis for other organisms not supported by WebGestaltR. For
+other organisms, users need to provide the functional categories, interesting list and
+reference list (for ORA method). Because WebGestaltR does not perform the ID mapping for
+the other organisms, the above data should have the same ID type.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>enrichDatabase</code></td>
+<td>
+<p>The functional categories for the enrichment analysis. Users can use
+the function <code>listGeneSet</code> to check the available functional databases for the
+selected organism. Multiple databases in a vector are supported for ORA and GSEA.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>enrichDatabaseFile</code></td>
+<td>
+<p>Users can provide one or more GMT files as the functional
+category for enrichment analysis. The extension of the file should be <code>gmt</code> and the
+first column of the file is the category ID, the second one is the external link for the
+category. Genes annotated to the category are from the third column. All columns are
+separated by tabs. The GMT files will be combined with <code>enrichDatabase</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>enrichDatabaseType</code></td>
+<td>
+<p>The ID type of the genes in the <code>enrichDatabaseFile</code>.
+If users set <code>organism</code> as <code>others</code>, users do not need to set this ID type because
+WebGestaltR will not perform ID mapping for other organisms. The supported ID types of
+WebGestaltR for the selected organism can be found by the function <code>listIdType</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>enrichDatabaseDescriptionFile</code></td>
+<td>
+<p>Users can also provide description files for the custom
+<code>enrichDatabaseFile</code>. The extension of the description file should be <code>des</code>. The
+description file contains two columns: the first column is the category ID that should be
+exactly the same as the category ID in the custom <code>enrichDatabaseFile</code> and the second
+column is the description of the category. All columns are separated by tabs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interestGeneFile</code></td>
+<td>
+<p>If <code>enrichMethod</code> is <code>ORA</code> or <code>NTA</code>, the extension of
+the <code>interestGeneFile</code> should be <code>txt</code> and the file can only contain one column:
+the interesting gene list. If <code>enrichMethod</code> is <code>GSEA</code>, the extension of the
+<code>interestGeneFile</code> should be <code>rnk</code> and the file should contain two columns
+separated by tab: the gene list and the corresponding scores.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interestGene</code></td>
+<td>
+<p>Users can also use an R object as the input. If <code>enrichMethod</code> is
+<code>ORA</code> or <code>NTA</code>, <code>interestGene</code> should be an R <code>vector</code> object
+containing the interesting gene list. If <code>enrichMethod</code> is <code>GSEA</code>,
+<code>interestGene</code> should be an R <code>data.frame</code> object containing two columns: the
+gene list and the corresponding scores.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interestGeneType</code></td>
+<td>
+<p>The ID type of the interesting gene list. The supported ID types of
+WebGestaltR for the selected organism can be found by the function <code>listIdType</code>. If
+the <code>organism</code> is <code>others</code>, users do not need to set this parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>collapseMethod</code></td>
+<td>
+<p>The method to collapse duplicate IDs with scores. <code>mean</code>,
+<code>median</code>, <code>min</code> and <code>max</code> represent the mean, median, minimum and maximum
+of scores for the duplicate IDs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>referenceGeneFile</code></td>
+<td>
+<p>For the ORA method, the users need to upload the reference gene
+list. The extension of the <code>referenceGeneFile</code> should be <code>txt</code> and the file can
+only contain one column: the reference gene list.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>referenceGene</code></td>
+<td>
+<p>For the ORA method, users can also use an R object as the reference
+gene list. <code>referenceGene</code> should be an R <code>vector</code> object containing the
+reference gene list.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>referenceGeneType</code></td>
+<td>
+<p>The ID type of the reference gene list. The supported ID types
+of WebGestaltR for the selected organism can be found by the function <code>listIdType</code>.
+If the <code>organism</code> is <code>others</code>, users do not need to set this parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>referenceSet</code></td>
+<td>
+<p>Users can directly select the reference set from existing platforms in
+WebGestaltR and do not need to provide the reference set through <code>referenceGeneFile</code>.
+All existing platforms supported in WebGestaltR can be found by the function
+<code>listReferenceSet</code>. If <code>referenceGeneFile</code> and <code>refereneceGene</code> are
+<code>NULL</code>, WebGestaltR will use the <code>referenceSet</code> as the reference gene set.
+Otherwise, WebGestaltR will use the user supplied reference set for enrichment analysis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minNum</code></td>
+<td>
+<p>WebGestaltR will exclude the categories with the number of annotated genes
+less than <code>minNum</code> for enrichment analysis. The default is <code>10</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxNum</code></td>
+<td>
+<p>WebGestaltR will exclude the categories with the number of annotated genes
+larger than <code>maxNum</code> for enrichment analysis. The default is <code>500</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigMethod</code></td>
+<td>
+<p>Two methods of significance are available in WebGestaltR: <code>fdr</code> and
+<code>top</code>. <code>fdr</code> means the enriched categories are identified based on the FDR and
+<code>top</code> means all categories are ranked based on FDR and then select top categories
+as the enriched categories. The default is <code>fdr</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fdrMethod</code></td>
+<td>
+<p>For the ORA method, WebGestaltR supports five FDR methods: <code>holm</code>,
+<code>hochberg</code>, <code>hommel</code>, <code>bonferroni</code>, <code>BH</code> and <code>BY</code>. The default
+is <code>BH</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fdrThr</code></td>
+<td>
+<p>The significant threshold for the <code>fdr</code> method. The default is <code>0.05</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>topThr</code></td>
+<td>
+<p>The threshold for the <code>top</code> method. The default is <code>10</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reportNum</code></td>
+<td>
+<p>The number of enriched categories visualized in the final report. The default
+is <code>20</code>. A larger <code>reportNum</code> may be slow to render in the report.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>perNum</code></td>
+<td>
+<p>The number of permutations for the GSEA method. The default is <code>1000</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gseaP</code></td>
+<td>
+<p>The exponential scaling factor of the phenotype score. The default is <code>1</code>.
+When p=0, ES reduces to standard K-S statistics (See original paper for more details).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>isOutput</code></td>
+<td>
+<p>If <code>isOutput</code> is TRUE, WebGestaltR will create a folder named by
+the <code>projectName</code> and save the results in the folder. Otherwise, WebGestaltR will
+only return an R <code>data.frame</code> object containing the enrichment results. If
+hundreds of gene list need to be analyzed simultaneously, it is better to set
+<code>isOutput</code> to <code>FALSE</code>. The default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outputDirectory</code></td>
+<td>
+<p>The output directory for the results.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>projectName</code></td>
+<td>
+<p>The name of the project. If <code>projectName</code> is <code>NULL</code>,
+WebGestaltR will use time stamp as the project name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dagColor</code></td>
+<td>
+<p>If <code>dagColor</code> is <code>binary</code>, the significant terms in the DAG
+structure will be colored by steel blue for ORA method or steel blue (positive related)
+and dark orange (negative related) for GSEA method. If <code>dagColor</code> is <code>continous</code>,
+the significant terms in the DAG structure will be colored by the color gradient based on
+corresponding FDRs.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>saveRawGseaResult</code></td>
+<td>
+<p>Whether the raw result from GSEA is saved as a RDS file, which can be
+used for plotting. Defaults to <code>FALSE</code>. The list includes
+</p>
+
+<dl>
+<dt>Enrichment_Results</dt>
+<dd>
+<p>A data frame of GSEA results with statistics</p>
+</dd>
+<dt>Running_Sums</dt>
+<dd>
+<p>A matrix of running sum of scores for each gene set</p>
+</dd>
+<dt>Items_in_Set</dt>
+<dd>
+<p>A list with ranks of genes for each gene set</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gseaPlotFormat</code></td>
+<td>
+<p>The graphic format of GSEA enrichment plots. Either <code>svg</code>,
+<code>png</code>, or <code>c("png", "svg")</code> (default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>setCoverNum</code></td>
+<td>
+<p>The number of expected gene sets after set cover to reduce redundancy.
+It could get fewer sets if the coverage reaches 100%. The default is <code>10</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkConstructionMethod</code></td>
+<td>
+<p>Netowrk construction method for NTA. Either
+<code>Network_Retrieval_Prioritization</code> or <code>Network_Expansion</code>. Network Retrieval &amp;
+Prioritization first uses random walk analysis to calculate random walk probabilities
+for the input seeds, then identifies the relationships among the seeds in the selected
+network and returns a retrieval sub-network. The seeds with the top random walk
+probabilities are highlighted in the sub-network. Network Expansion first uses random
+walk analysis to rank all genes in the selected network based on their network
+proximity to the input seeds and then return an expanded sub-network in which nodes
+are the input seeds and their top ranking neighbors and edges represent their
+relationships.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>neighborNum</code></td>
+<td>
+<p>The number of neighbors to include in NTA Network Expansion method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>highlightType</code></td>
+<td>
+<p>The type of nodes to highlight in the NTA Network Expansion method,
+either <code>Seeds</code> or <code>Neighbors</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>highlightSeedNum</code></td>
+<td>
+<p>The number of top input seeds to highlight in NTA Network Retrieval
+&amp; Prioritizaiton method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nThreads</code></td>
+<td>
+<p>The number of cores to use for GSEA and set cover, and in batch function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cache</code></td>
+<td>
+<p>A directory to save data cache for reuse. Defaults to <code>NULL</code> and disabled.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hostName</code></td>
+<td>
+<p>The server URL for accessing data. Mostly for development purposes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>In batch function, passes parameters to WebGestaltR function.
+Also handles backward compatibility for some parameters in old versions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interestGeneFolder</code></td>
+<td>
+<p>Run WebGestaltR for gene list files in the folder.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>isParallel</code></td>
+<td>
+<p>If jobs are run parallelly in the batch.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>WebGestaltR function can perform three enrichment analyses:
+ORA (Over-Representation Analysis) and GSEA (Gene Set Enrichment Analysis).and
+NTA (Network Topology Analysis). Based on the user-uploaded gene list or gene list
+with scores, WebGestaltR function will first map the gene list to the entrez gene
+ids and then summarize the gene list based on the GO (Gene Ontology) Slim. After
+performing the enrichment analysis, WebGestaltR function also returns a user-friendly
+HTML report containing GO Slim summary and the enrichment analysis result. If functional
+categories have DAG (directed acyclic graph) structure or genes in the functional
+categories have network structure, those relationship can also be visualized in the
+report.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The WebGestaltR function returns a data frame containing the enrichment analysis
+result and also outputs an user-friendly HTML report if <code>isOutput</code> is <code>TRUE</code>.
+The columns in the data frame depend on the <code>enrichMethod</code> and they are the following:
+</p>
+
+<dl>
+<dt>geneSet</dt>
+<dd>
+<p>ID of the gene set.</p>
+</dd>
+<dt>description</dt>
+<dd>
+<p>Description of the gene set if available.</p>
+</dd>
+<dt>link</dt>
+<dd>
+<p>Link to the data source.</p>
+</dd>
+<dt>size</dt>
+<dd>
+<p>The number of genes in the set after filtering by <code>minNum</code> and <code>maxNum</code>.</p>
+</dd>
+<dt>overlap</dt>
+<dd>
+<p>The number of mapped input genes that are annotated in the gene set.</p>
+</dd>
+<dt>expect</dt>
+<dd>
+<p>Expected number of input genes that are annotated in the gene set.</p>
+</dd>
+<dt>enrichmentRatio</dt>
+<dd>
+<p>Enrichment ratio, overlap / expect.</p>
+</dd>
+<dt>enrichmentScore</dt>
+<dd>
+<p>Enrichment score, the maximum running sum of scores for the ranked list.</p>
+</dd>
+<dt>normalizedEnrichmentScore</dt>
+<dd>
+<p>Normalized enrichment score, normalized against the average
+enrichment score of all permutations.</p>
+</dd>
+<dt>leadingEdgeNum</dt>
+<dd>
+<p>Number of genes/phosphosites in the leading edge.</p>
+</dd>
+<dt>pValue</dt>
+<dd>
+<p>P-value from hypergeometric test for ORA. For GSEA, please refer to its original
+publication or online at <a href="https://software.broadinstitute.org/gsea/doc/GSEAUserGuideTEXT.htm">https://software.broadinstitute.org/gsea/doc/GSEAUserGuideTEXT.htm</a>.</p>
+</dd>
+<dt>FDR</dt>
+<dd>
+<p>Corrected P-value for mulilple testing with <code>fdrMethod</code> for ORA.</p>
+</dd>
+<dt>overlapId</dt>
+<dd>
+<p>The gene/phosphosite IDs of <code>overlap</code> for ORA (entrez gene IDs or
+phosphosite sequence).</p>
+</dd>
+<dt>leadingEdgeId</dt>
+<dd>
+<p>Genes/phosphosites in the leading edge in entrez gene ID or
+phosphosite sequence.</p>
+</dd>
+<dt>userId</dt>
+<dd>
+<p>The gene/phosphosite IDs of <code>overlap</code> for ORA or <code>leadingEdgeId</code>
+for GSEA in User input IDs.</p>
+</dd>
+<dt>plotPath</dt>
+<dd>
+<p>Path of the GSEA enrichment plot.</p>
+</dd>
+<dt>database</dt>
+<dd>
+<p>Name of the source database if multiple enrichment databases are given.</p>
+</dd>
+<dt>goId</dt>
+<dd>
+<p>In NTA, like <code>geneSet</code>, the enriched GO terms of genes in the
+returned subnetwork.</p>
+</dd>
+<dt>interestGene</dt>
+<dd>
+<p>In NTA, the gene IDs in the subnetwork with 0/1 annotations indicating
+if it is from user input.</p>
+</dd>
+</dl>
+<p>The WebGestaltRBatch function returns a list of enrichment results.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+####### ORA example #########
+geneFile &lt;- system.file("extdata", "interestingGenes.txt", package="WebGestaltR")
+refFile &lt;- system.file("extdata", "referenceGenes.txt", package="WebGestaltR")
+outputDirectory &lt;- getwd()
+enrichResult &lt;- WebGestaltR(enrichMethod="ORA", organism="hsapiens",
+  enrichDatabase="pathway_KEGG", interestGeneFile=geneFile,
+  interestGeneType="genesymbol", referenceGeneFile=refFile,
+  referenceGeneType="genesymbol", isOutput=TRUE,
+  outputDirectory=outputDirectory, projectName=NULL)
+
+####### GSEA example #########
+rankFile &lt;- system.file("extdata", "GeneRankList.rnk", package="WebGestaltR")
+outputDirectory &lt;- getwd()
+enrichResult &lt;- WebGestaltR(enrichMethod="GSEA", organism="hsapiens",
+  enrichDatabase="pathway_KEGG", interestGeneFile=rankFile,
+  interestGeneType="genesymbol", sigMethod="top", topThr=10, minNum=5,
+  outputDirectory=outputDirectory)
+
+####### NTA example #########
+enrichResult &lt;- WebGestaltR(enrichMethod="NTA", organism="hsapiens",
+  enrichDatabase="network_PPI_BIOGRID", interestGeneFile=geneFile,
+  interestGeneType="genesymbol", sigMethod="top", topThr=10,
+  outputDirectory=getwd(), highlightSeedNum=10,
+  networkConstructionMethod="Network_Retrieval_Prioritization")
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

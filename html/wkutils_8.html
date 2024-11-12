@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wkb_coords</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract coordinates from well-known geometries</h2>
+
+<h3>Description</h3>
+
+<p>These functions are optimised for graphics output,
+which in R require flat coordinate structures. See
+<code>graphics::points()</code>, <code>graphics::lines()</code>,
+and  <code>graphics::polypath()</code> for how to send these
+to a graphics device, or <code>grid::pointsGrob()</code>,
+<code>grid::linesGrob()</code>, and <code>grid::pathGrob()</code> for how
+to create graphical objects using this output.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wkb_coords(wkb, sep_na = FALSE)
+
+wkt_coords(wkt, sep_na = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wkb</code></td>
+<td>
+<p>A <code>list()</code> of <code>raw()</code> vectors, such as that
+returned by <code>sf::st_as_binary()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep_na</code></td>
+<td>
+<p>Use <code>TRUE</code> to separate geometries and linear
+rings with a row of <code>NA</code>s. This is useful for generating
+output that can be fed directly to <code>graphics::polypath()</code>
+or <code>graphics::lines()</code> without modification.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wkt</code></td>
+<td>
+<p>A character vector containing well-known text.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data.frame with columns:
+</p>
+
+<ul>
+<li> <p><code>feature_id</code>: The index of the top-level feature
+</p>
+</li>
+<li> <p><code>part_id</code>: The part identifier, guaranteed to be unique for every simple geometry
+(including those contained within a multi-geometry or collection)
+</p>
+</li>
+<li> <p><code>ring_id</code>: The ring identifier, guaranteed to be unique for every ring.
+</p>
+</li>
+<li> <p><code>x</code>, <code>y</code>, <code>z</code>, <code>m</code>: Coordinaate values (both absence and <code>nan</code> are recorded
+as <code>NA</code>)
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">text &lt;- c("LINESTRING (0 1, 19 27)", "LINESTRING (-1 -1, 4 10)")
+wkt_coords(text)
+wkt_coords(text, sep_na = TRUE)
+
+</code></pre>
+
+
+</div>

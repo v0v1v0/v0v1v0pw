@@ -1,0 +1,109 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wk_linestring</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create lines, polygons, and collections</h2>
+
+<h3>Description</h3>
+
+<p>Create lines, polygons, and collections
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wk_linestring(handleable, feature_id = 1L, ..., geodesic = NULL)
+
+wk_polygon(handleable, feature_id = 1L, ring_id = 1L, ..., geodesic = NULL)
+
+wk_collection(
+  handleable,
+  geometry_type = wk_geometry_type("geometrycollection"),
+  feature_id = 1L,
+  ...
+)
+
+wk_linestring_filter(handler, feature_id = 1L)
+
+wk_polygon_filter(handler, feature_id = 1L, ring_id = 1L)
+
+wk_collection_filter(
+  handler,
+  geometry_type = wk_geometry_type("geometrycollection"),
+  feature_id = 1L
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>handleable</code></td>
+<td>
+<p>A geometry vector (e.g., <code>wkb()</code>, <code>wkt()</code>, <code>xy()</code>,
+<code>rct()</code>, or <code>sf::st_sfc()</code>) for which <code>wk_handle()</code> is defined.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>feature_id</code></td>
+<td>
+<p>An identifier where changes in sequential
+values indicate a new feature. This is recycled silently
+as needed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Passed to the <code>wk_handle()</code> method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geodesic</code></td>
+<td>
+<p>Use <code>TRUE</code> or <code>FALSE</code> to explicitly force
+the geodesic-ness of the output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ring_id</code></td>
+<td>
+<p>An identifier where changes in sequential
+values indicate a new ring. Rings are automatically
+closed. This is recycled silently as needed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geometry_type</code></td>
+<td>
+<p>The collection type to create.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>handler</code></td>
+<td>
+<p>A wk_handler object.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of the same class as <code>handleable</code> with
+whose coordinates have been assembled into the given
+type.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wk_linestring(xy(c(1, 1), c(2, 3)))
+wk_polygon(xy(c(0, 1, 0), c(0, 0, 1)))
+wk_collection(xy(c(1, 1), c(2, 3)))
+
+</code></pre>
+
+
+</div>

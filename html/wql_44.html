@@ -1,0 +1,132 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>tsMake</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create time series from water quality data</h2>
+
+<h3>Description</h3>
+
+<p>Creates a matrix time series object from an object of class <code>"WqData"</code>,
+either all variables for a single site or all sites for a single variable.
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>Object of class <code>"WqData"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>focus</code></td>
+<td>
+<p>Name of a site or water quality variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>layer</code></td>
+<td>
+<p>Number specifying a single depth; a numeric vector of length 2
+specifying top and bottom depths of layer; a list specifying multiple depths
+and/or layers; or just the string <code>"max.depths"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p><code>ts.mon</code> to get a monthly time series, <code>zoo</code> to get an
+object of class <code>"zoo"</code> with individual observation dates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qprob</code></td>
+<td>
+<p>quantile probability, a number between 0 and 1.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When <code>qprob = NULL</code>, the function averages all included depths for each
+day, the implicit assumption being that the layer is well-mixed and/or the
+samples are evenly distributed with depth in the layer. If <code>layer =
+"max.depths"</code>, then only the value at the maximum depth for each time, site
+and variable combination will be used. If no layer is specified, all depths
+will be used.
+</p>
+<p>The function produces a matrix time series of all variables for the
+specified site or all sites for the specified variable. If <code>type =
+"ts.mon"</code>, available daily data are averaged to produce a monthly time
+series, from which a quarterly or annual series can be created if needed. If
+you want values for the actual dates of observation, then set <code>type =
+"zoo"</code>.
+</p>
+<p>When <code>qprob</code> is a number from 0 to 1, it is interpreted as a
+probability and the corresponding quantile is used to aggregate observations
+within the specified layer. So to get the maximum, for example, use qprob =
+1. If <code>type = "ts.mon"</code>, the same quantile is used to aggregate all the
+available daily values.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix of class <code>"mts"</code> or <code>"zoo"</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The layer list is allowed to include negative numbers, which may have
+been used in the <code>WqData</code> object to denote variables that apply to the
+water column as a whole, such as, say, -1 for light attenuation coefficient.
+This enables <code>focus = 's27'</code> and <code>layer = list(-1, c(0, 5))</code> to
+produce a time series matrix for station 27 that includes both attenuation
+coefficient and chlorophyll averaged over the top 5 m. Negative numbers may
+also have been used in the <code>WqData</code> object to identify qualitative
+depths such as “near bottom”, which is not uncommon in historical
+data sets. So data from such depths can be aggregated easily with other data
+to make these time series.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>WqData-class</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Create new WqData object
+sfb &lt;- wqData(sfbay, c(1, 3:4), 5:12, site.order = TRUE,
+  time.format = "%m/%d/%Y", type = "wide")
+
+# Find means in the 0-10 m layer
+y &lt;- tsMake(sfb, focus = "s27", layer = c(0, 10))
+plot(y, main = "Station 27")
+# Or select medians in the same layer
+y1 &lt;- tsMake(sfb, focus = "s27", layer = c(0, 10), qprob = 0.5)
+plot(y1, main = "Station 27")
+# Compare means:medians
+apply(y / y1, 2, mean, na.rm = TRUE)
+
+# Combine a layer with a single additional depth
+y &lt;- tsMake(sfb, focus = "chl", layer = list(c(0, 2), 5))
+plot(y, main = "Chlorophyll a, ug/L")
+
+# Use values from the deepest samples
+y &lt;- tsMake(sfb, focus = "dox", layer = "max.depths", type = "zoo")
+head(y)
+plot(y, type = "h", main = "'Bottom' DO, mg/L")
+
+</code></pre>
+
+
+</div>

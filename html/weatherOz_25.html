@@ -1,0 +1,302 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_stations_metadata</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get Weather Station Metadata for Both DPIRD and SILO Weather Stations</h2>
+
+<h3>Description</h3>
+
+<p>Download the latest station locations and metadata for stations in the
+<abbr><span class="acronym">SILO</span></abbr> and <abbr><span class="acronym">DPIRD</span></abbr> networks.  For <abbr><span class="acronym">BOM</span></abbr> stations
+that exist in <abbr><span class="acronym">SILO</span></abbr>, but lack metadata from <abbr><span class="acronym">BOM</span></abbr>, the
+rows will exist to indicate that the station is in the <abbr><span class="acronym">SILO</span></abbr> data
+set, but there is no corresponding <abbr><span class="acronym">BOM</span></abbr> metadata available.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_stations_metadata(
+  station_code = NULL,
+  station_name = NULL,
+  which_api = "all",
+  api_key = NULL,
+  include_closed = FALSE,
+  rich = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>station_code</code></td>
+<td>
+<p>An optional value that should be provided as a single
+<code>string</code> value or character <code>vector</code> of station codes for which to return
+metadata.  If this or <code>station_name</code> are not provided, all station metadata
+is returned by default.  If this and <code>station_name</code> are both provided, this
+takes precedence and values corresponding to this input will be returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>station_name</code></td>
+<td>
+<p>An optional value that should be provided as either a
+single <code>string</code> or character <code>vector</code> of station names for which to return
+metadata.  Fuzzy matching is used, <em>e.g.</em>, using
+<code>c("brisbane", "melbourne")</code> will return rows for “Brisbane”,
+“Brisbane Aero”, “Mt Brisbane”,
+“City of Melbourne Bay”, “Selbourne Kirnbrae”,
+“Maroondah Weir Melbourne Water”, “Melbourne Airport” and
+“Melbourne Botanical Gardens” <code>station_name</code> values.  If this or
+<code>station_code</code> are not provided, all station metadata is returned by
+default.  Using <code>station_code</code> will always override this argument if both
+are provided.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>which_api</code></td>
+<td>
+<p>A <code>string</code> value that indicates which <abbr><span class="acronym">API</span></abbr> to use.
+Valid values are <code>all</code>, for both <abbr><span class="acronym">SILO</span></abbr> (<abbr><span class="acronym">BOM</span></abbr> data) and
+<abbr><span class="acronym">DPIRD</span></abbr> <abbr><span class="acronym">API</span></abbr>s; <code>silo</code> for only stations from the
+<abbr><span class="acronym">SILO</span></abbr> <abbr><span class="acronym">API</span></abbr> (<abbr><span class="acronym">BOM</span></abbr> data); or <code>dpird</code> for stations
+from the <abbr><span class="acronym">DPIRD</span></abbr> Weather 2.0 <abbr><span class="acronym">API</span></abbr>.  Defaults to <code>all</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_key</code></td>
+<td>
+<p>A <code>character</code> string containing your <abbr><span class="acronym">API</span></abbr> key from
+<abbr><span class="acronym">DPIRD</span></abbr>, <a href="https://www.agric.wa.gov.au/web-apis">https://www.agric.wa.gov.au/web-apis</a>, for the
+<abbr><span class="acronym">DPIRD</span></abbr> Weather 2.0 <abbr><span class="acronym">API</span></abbr>.  If left as <code>NULL</code>, defaults to
+automatically detecting your key from your local .Renviron, .Rprofile or
+similar.  Alternatively, you may directly provide your key as a string
+here.  If nothing is provided, you will be prompted on how to set up your
+<span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> session so that it is auto-detected.  Only used  when <var>which_api</var> is
+<code>DPIRD</code> or <code>all</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_closed</code></td>
+<td>
+<p>A <code>Boolean</code> string indicating whether to include closed
+stations' metadata.  Use <code>TRUE</code> to include these.  Defaults to <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rich</code></td>
+<td>
+<p>A <code>Boolean</code> string indicating whether to return rich information
+about <abbr><span class="acronym">DPIRD</span></abbr>'s weather station(s), this does not affect the
+<abbr><span class="acronym">SILO</span></abbr> stations' metadata, the variables for these observations
+will be <code>NA</code>.  Defaults to <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>data.table::data.table()</code> of <abbr><span class="acronym">BOM</span></abbr> weather stations'
+metadata for stations available from <abbr><span class="acronym">SILO</span></abbr> and weather stations'
+metadata for stations available from <abbr><span class="acronym">DPIRD</span></abbr>'s Weather 2.0
+<abbr><span class="acronym">API</span></abbr> with the following columns sorted by <code>state</code> and
+<code>station_name</code>.
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+<strong>station_code</strong>:</td>
+<td style="text-align: left;"> Unique station code. <code>factor</code>
+</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+<strong>station_name</strong>:</td>
+<td style="text-align: left;"> Unique station name. <code>character</code>
+</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+<strong>start</strong>:</td>
+<td style="text-align: left;"> Date observations start. <code>date</code>
+</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+<strong>end</strong>:</td>
+<td style="text-align: left;"> Date observations end. <code>date</code>
+</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+<strong>latitude</strong>:</td>
+<td style="text-align: left;"> Latitude in decimal degrees. <code>numeric</code>
+</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+<strong>longitude</strong>:</td>
+<td style="text-align: left;"> Longitude in decimal degrees. <code>numeric</code>
+</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+<strong>state</strong>:</td>
+<td style="text-align: left;"> State in which the station is located. <code>character</code>
+</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+<strong>elev_m</strong>:</td>
+<td style="text-align: left;"> Station elevation in metres. <code>numeric</code>
+</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+<strong>source</strong>:</td>
+<td style="text-align: left;"> Organisation responsible for the data or station
+maintenance. <code>character</code>
+</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+<strong>include_closed</strong>:</td>
+<td style="text-align: left;"> Station include_closed, one of ‘open’ or
+‘closed’. <code>character</code>
+</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+<strong>wmo</strong>:</td>
+<td style="text-align: left;"> World Meteorological Organisation, (<abbr><span class="acronym">WMO</span></abbr>), number
+if applicable. <code>numeric</code>
+</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+<strong><code>rich</code> values</strong>
+</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: right;">
+<strong>capabilities</strong>:</td>
+<td style="text-align: left;"> a list of the station's capabilities (data that it
+records). <code>character</code>
+</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+<strong>probe_height</strong>:</td>
+<td style="text-align: left;"> temperature probe height in metres. <code>double</code>
+</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+<strong>rain_gauge_height</strong>
+</td>
+<td style="text-align: left;"> rain gauge height in metres. <code>double</code>
+</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+<strong>wind_probe_heights</strong>:</td>
+<td style="text-align: left;"> wind probe heights always 3 metres, although
+some have 10 metre probes. <code>integer</code>
+</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>For stations in the <abbr><span class="acronym">SILO</span></abbr> <abbr><span class="acronym">API</span></abbr>, <abbr><span class="acronym">BOM</span></abbr> does
+not report the exact date on which stations opened or closed, only the
+year.  Therefore the <code>start</code> and <code>end</code> columns will indicate January 1 of
+the year that a station opened or closed, whereas stations in the
+<abbr><span class="acronym">DPIRD</span></abbr> network have the date to the day.  For <abbr><span class="acronym">BOM</span></abbr>
+stations that are closed for the current year, this indicates that the
+station closed sometime during the current year prior to the request being
+made. <code>NA</code> in the current year indicates a station is still open.
+</p>
+<p>There are discrepancies between the <abbr><span class="acronym">BOM</span></abbr>'s official station
+metadata, <em>e.g.</em> longitude and latitude values and <abbr><span class="acronym">SILO</span></abbr> metadata.
+In these cases, the <abbr><span class="acronym">BOM</span></abbr> metadata is used as it is considered to
+be the authority on the stations' locations.
+</p>
+<p>The station names are returned by both <abbr><span class="acronym">API</span></abbr>s in full caps.
+For purposes of cleaner graphs and maps where these data may be sued, this
+function converts them to proper name formats/title case with the first
+letter of every word capitalised excepting words like “at” or
+“on” and keeps acronyms like “AWS” or “PIRSA” or state
+abbreviations in the station names as all caps.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Adam H. Sparks, <a href="mailto:adamhsparks@gmail.com">adamhsparks@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Station location and other metadata are sourced from the Australian Bureau of
+Meteorology (<abbr><span class="acronym">BOM</span></abbr>) webpage, Bureau of Meteorology Site Numbers:<br><a href="http://www.bom.gov.au/climate/cdo/about/site-num.shtml">http://www.bom.gov.au/climate/cdo/about/site-num.shtml</a> and
+<a href="http://www.bom.gov.au/climate/data/lists_by_element/stations.txt">http://www.bom.gov.au/climate/data/lists_by_element/stations.txt</a> and the
+<abbr><span class="acronym">DPIRD</span></abbr> Weather 2.0 <abbr><span class="acronym">API</span></abbr>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other DPIRD: 
+<code>dpird_extreme_weather_values</code>,
+<code>dpird_minute_values</code>,
+<code>dpird_summary_values</code>,
+<code>find_nearby_stations()</code>,
+<code>find_stations_in()</code>,
+<code>get_dpird_apsim()</code>,
+<code>get_dpird_availability()</code>,
+<code>get_dpird_extremes()</code>,
+<code>get_dpird_minute()</code>,
+<code>get_dpird_summaries()</code>
+</p>
+<p>Other SILO: 
+<code>find_nearby_stations()</code>,
+<code>find_stations_in()</code>,
+<code>get_data_drill()</code>,
+<code>get_data_drill_apsim()</code>,
+<code>get_patched_point()</code>,
+<code>get_patched_point_apsim()</code>,
+<code>silo_daily_values</code>
+</p>
+<p>Other metadata: 
+<code>find_forecast_towns()</code>,
+<code>find_nearby_stations()</code>,
+<code>find_stations_in()</code>,
+<code>get_available_imagery()</code>,
+<code>get_available_radar()</code>,
+<code>get_dpird_availability()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# fetch metadata for all stations available in {weatherOz}
+get_stations_metadata(api_key = "your_api_key")
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,209 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>workpatterns_hclust</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a hierarchical clustering of email or IMs by hour of day</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+</p>
+<p>Apply hierarchical clustering to emails sent by hour of day.
+The hierarchical clustering uses cosine distance and the ward.D method
+of agglomeration.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">workpatterns_hclust(
+  data,
+  k = 4,
+  return = "plot",
+  values = "percent",
+  signals = "email",
+  start_hour = "0900",
+  end_hour = "1700"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data frame containing data from the Hourly Collaboration query.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>Numeric vector to specify the <code>k</code> number of clusters to cut by.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String specifying what to return. This must be one of the
+following strings:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>
+</p>
+</li>
+<li> <p><code>"data"</code>
+</p>
+</li>
+<li> <p><code>"table"</code>
+</p>
+</li>
+<li> <p><code>"plot-area"</code>
+</p>
+</li>
+<li> <p><code>"hclust"</code>
+</p>
+</li>
+<li> <p><code>"dist"</code>
+</p>
+</li>
+</ul>
+<p>See <code>Value</code> for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>Character vector to specify whether to return percentages
+or absolute values in "data" and "plot". Valid values are:
+</p>
+
+<ul>
+<li>
+<p> "percent": percentage of signals divided by total signals (default)
+</p>
+</li>
+<li>
+<p> "abs": absolute count of signals
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signals</code></td>
+<td>
+<p>Character vector to specify which collaboration metrics to use:
+</p>
+
+<ul>
+<li> <p><code>"email"</code> (default) for emails only
+</p>
+</li>
+<li> <p><code>"IM"</code> for Teams messages only
+</p>
+</li>
+<li> <p><code>"unscheduled_calls"</code> for Unscheduled Calls only
+</p>
+</li>
+<li> <p><code>"meetings"</code> for Meetings only
+</p>
+</li>
+<li>
+<p> or a combination of signals, such as <code>c("email", "IM")</code>
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_hour</code></td>
+<td>
+<p>A character vector specifying starting hours,
+e.g. "0900"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end_hour</code></td>
+<td>
+<p>A character vector specifying starting hours,
+e.g. "1700"</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The hierarchical clustering is applied on the person-average volume-based (pav) level.
+In other words, the clustering is applied on a dataset where the collaboration hours
+are averaged by person and calculated as % of total daily collaboration.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A different output is returned depending on the value passed to the <code>return</code>
+argument:
+</p>
+
+<ul>
+<li> <p><code>"plot"</code>: ggplot object of a bar plot (default)
+</p>
+</li>
+<li> <p><code>"data"</code>: data frame containing raw data with the clusters
+</p>
+</li>
+<li> <p><code>"table"</code>: data frame containing a summary table. Percentages of signals
+are shown, e.g. x% of signals are sent by y hour of the day.
+</p>
+</li>
+<li> <p><code>"plot-area"</code>: ggplot object. An overlapping area plot
+</p>
+</li>
+<li> <p><code>"hclust"</code>: <code>hclust</code> object for the hierarchical model
+</p>
+</li>
+<li> <p><code>"dist"</code>: distance matrix used to build the clustering model
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>Other Clustering: 
+<code>personas_hclust()</code>,
+<code>workpatterns_classify()</code>
+</p>
+<p>Other Working Patterns: 
+<code>flex_index()</code>,
+<code>identify_shifts()</code>,
+<code>identify_shifts_wp()</code>,
+<code>plot_flex_index()</code>,
+<code>workpatterns_area()</code>,
+<code>workpatterns_classify()</code>,
+<code>workpatterns_classify_bw()</code>,
+<code>workpatterns_classify_pav()</code>,
+<code>workpatterns_rank()</code>,
+<code>workpatterns_report()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Run clusters, returning plot
+workpatterns_hclust(em_data, k = 5, return = "plot")
+
+# Run clusters, return raw data
+workpatterns_hclust(em_data, k = 4, return = "data") %&gt;% head()
+
+# Run clusters for instant messages only, return hclust object
+workpatterns_hclust(em_data, k = 4, return = "hclust", signals = c("IM"))
+
+
+</code></pre>
+
+
+</div>

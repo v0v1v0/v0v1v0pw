@@ -1,0 +1,206 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>testRobustToNAimputation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Pair-wise testing robust to NA-imputation</h2>
+
+<h3>Description</h3>
+
+<p>This function replaces <code>NA</code> values based on group neighbours (based on grouping of columns in argument <code>gr</code>), following overall assumption of close to Gaussian distribution.
+Furthermore, it is assumed that <code>NA</code>-values originate from experimental settings where measurements at or below detection limit are recoreded as <code>NA</code>.
+In  such cases (eg in proteomics) it is current practice to replace <code>NA</code>-values by very low (random) values in order to be able to perform t-tests.
+However, random normal values used for replacing may in rare cases deviate from the average (the 'assumed' value) and in particular, if multiple <code>NA</code> replacements are above the average, 
+may look like induced biological data and be misinterpreted as so.      
+The statistical testing uses <code>eBayes</code> from Bioconductor package <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a> for robust testing in the context of small numbers of replicates. 
+By repeating multiple times the process of replacing <code>NA</code>-values and subsequent testing the results can be sumarized afterwards by median over all repeated runs to remmove the stochastic effect of individual NA-imputation.
+Thus, one may gain stability towards random-character of <code>NA</code> imputations by repeating imputation &amp; test 'nLoop' times and summarize p-values by median (results stabilized at 50-100 rounds).
+It is necessary to define all groups of replicates in <code>gr</code> to obtain all possible pair-wise testing (multiple columns in $BH, $lfdr etc). 
+The modified testing-procedure of Bioconductor package <a href="https://bioconductor.org/packages/release/bioc/html/ROTS.html">ROTS</a> may optionaly be included, if desired.
+This function returns a <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a>-like S3 list-object further enriched by additional fields/elements.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">testRobustToNAimputation(
+  dat,
+  gr = NULL,
+  annot = NULL,
+  retnNA = TRUE,
+  avSd = c(0.15, 0.5),
+  avSdH = NULL,
+  plotHist = FALSE,
+  xLab = NULL,
+  tit = NULL,
+  imputMethod = "mode2",
+  seedNo = NULL,
+  multCorMeth = NULL,
+  nLoop = 100,
+  lfdrInclude = NULL,
+  ROTSn = NULL,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(matrix or data.frame) main data (may contain <code>NA</code>); if <code>dat</code> is list containing $quant and $annot as matrix, the element $quant will be used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gr</code></td>
+<td>
+<p>(character or factor) replicate association; if <code>dat</code> contains a list-element <code>$sampleSetup$groups</code> or <code>$sampleSetup$lev</code> this may be used in case <code>gr=NULL</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annot</code></td>
+<td>
+<p>(matrix or data.frame) annotation (lines must match lines of data !), if <code>annot</code> is <code>NULL</code> and argument <code>dat</code> is a list containing both $quant and $annot, the element $annot will be used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>retnNA</code></td>
+<td>
+<p>(logical) retain and report number of <code>NA</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>avSd</code></td>
+<td>
+<p>(numerical,length=2) population characteristics (mean and sd) for &gt;1 <code>NA</code>-neighbours (per line)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>avSdH</code></td>
+<td>
+<p>depreciated, please use <code>avSd</code> inestad; (numerical,length=2) population characteristics 'high' (mean and sd) for &gt;1 <code>NA</code>-neighbours (per line)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotHist</code></td>
+<td>
+<p>(logical) additional histogram of original, imputed and resultant distribution (made using <code>matrixNAneighbourImpute</code> )</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xLab</code></td>
+<td>
+<p>(character) custom x-axis label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tit</code></td>
+<td>
+<p>(character) custom title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>imputMethod</code></td>
+<td>
+<p>(character) choose the imputation method (may be 'mode2'(default), 'mode1', 'datQuant', 'modeAdopt', 'informed' or 'none', for details see <code>matrixNAneighbourImpute</code> )</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seedNo</code></td>
+<td>
+<p>(integer) seed-value for normal random values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multCorMeth</code></td>
+<td>
+<p>(character) define which method(s) for correction of multipl testing should be run (for choice : 'BH','lfdr','BY','tValTab', choosing several is possible)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nLoop</code></td>
+<td>
+<p>(integer) number of runs of independent <code>NA</code>-imputation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lfdrInclude</code></td>
+<td>
+<p>(logical) depreciated, please used <code>multCorMeth</code> instead (include lfdr estimations, may cause warning message(s) concerning convergence if few too lines/proteins in dataset tested).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ROTSn</code></td>
+<td>
+<p>(integer) depreciated, please used <code>multCorMeth</code> instead (number of repeats by <code>ROTS</code>, if <code>NULL</code> <code>ROTS</code> will not be called)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) This function allows easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The argument <code>multCorMeth</code> allows to choose which multiple correction algorimths will be used and included to the final results.
+Possible options are 'lfdr','BH','BY','tValTab', ROTSn='100' (name to element necessary) or 'noLimma' (to add initial p.values and BH to limma-results). By default 'lfdr' (local false discovery rate from package 'fdrtools') and 'BH' (Benjamini-Hochberg FDR) are chosen.
+The option 'BY' referrs to Benjamini-Yakuteli FDR, 'tValTab' allows exporting all individual t-values from the repeated NA-substitution and subsequent testing.
+</p>
+<p>This function is compatible with automatic extraction of experimental setup based on sdrf or other quantitation-specific sample annotation.
+In this case, the results of automated importing and mining of sample annotation should be stored as <code>$sampleSetup$groups</code> or <code>$sampleSetup$lev</code>  
+</p>
+<p>For details 'on choice of NA-impuation procedures with arguments 'imputMethod' and 'avSd' please see  <code>matrixNAneighbourImpute</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a limma-type S3 object of class 'MArrayLM' (which can be accessed lika a list); multiple results of testing or multiple testing correction types may get included ('p.value','FDR','BY','lfdr' or 'ROTS.BH')
+</p>
+
+
+<h3>See Also</h3>
+
+<p>NA-imputation via <code>matrixNAneighbourImpute</code>, modereated t-test without NA-imputation <code>moderTest2grp</code>, calculating lfdr <code>pVal2lfdr</code>, <code>eBayes</code> in Bioconductor package <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a>, <code>t.test</code>,<code>ROTS</code> of Bioconductor package <a href="https://bioconductor.org/packages/release/bioc/html/ROTS.html">ROTS</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2015); rand1 &lt;- round(runif(600) +rnorm(600,1,2),3)
+dat1 &lt;- matrix(rand1,ncol=6) + matrix(rep((1:100)/20,6),ncol=6)
+dat1[13:16,1:3] &lt;- dat1[13:16,1:3] +2      # augment lines 13:16 
+dat1[19:20,1:3] &lt;- dat1[19:20,1:3] +3      # augment lines 19:20
+dat1[15:18,4:6] &lt;- dat1[15:18,4:6] +1.4    # augment lines 15:18 
+dat1[dat1 &lt;1] &lt;- NA                        # mimick some NAs for low abundance
+## normalize data
+boxplot(dat1, main="data before normalization")
+dat1 &lt;- wrMisc::normalizeThis(as.matrix(dat1), meth="median")
+## designate replicate relationships in samples ...  
+grp1 &lt;- gl(2, 3, labels=LETTERS[1:2])                   
+## moderated t-test with repeated inputations (may take &gt;10 sec,  &gt;60 sec if ROTSn &gt;0 !) 
+PLtestR1 &lt;- testRobustToNAimputation(dat=dat1, gr=grp1, retnNA=TRUE, nLoop=70)
+names(PLtestR1)
+</code></pre>
+
+
+</div>

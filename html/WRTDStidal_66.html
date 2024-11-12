@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>resscls</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get the scale parameters for predicted values</h2>
+
+<h3>Description</h3>
+
+<p>Get the scale parameters for predicted values of the response variable, only applies to <code>tidalmean</code> objects.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">resscls(dat_in, ...)
+
+## S3 method for class 'tidalmean'
+resscls(dat_in, dat_pred = NULL, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input tidalmean object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to or from other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dat_pred</code></td>
+<td>
+<p>optional data to predict using the interpolation grids in dat_in, defaults to observed data in <code>dat_in</code> if not supplied</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is used after <code>wrtds</code> to get scale parameters for predicted values of the response variable from the interpolation grids.  The values are based on a bilinear interpolation of the four predicted response values at two salinity/flow and two date values nearest to the observed salinity/flow and date values to predict.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Appends columns to the data.frame for the associated scale value for the predicted values.  A column is appended to the <code>dat_in</code> object, named ‘scls’.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">##
+
+# load a tidalmean object
+data(tidobjmean)
+
+# get predicted values
+res &lt;- resscls(tidobjmean)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wordspace.openmp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Control multi-core processing in wordspace functions (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>Control whether multi-core processing is used by wordspace functions (if available)
+and how many threads are run in parallel.  See "Details" below for more information.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+wordspace.openmp(threads = NULL)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>threads</code></td>
+<td>
+
+<p>if specified, number of parallel threads to be used for multi-core processing
+</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>The <code>wordspace</code> package has experimental support for multi-core processing using OpenMP on some platforms.
+So far, only the <code>dist.matrix</code> function uses multi-core processing (for all distance measures except <code>cosine</code>).
+</p>
+<p>Even where supported, OpenMP is not enabled by default and has to be activated explicitly with <code>wordspace.openmp(threads=N)</code>, where <code>N</code> is
+the number of parallel threads to be used.
+</p>
+<p>Call <code>wordspace.openmp()</code> without arguments to find out whether OpenMP is supported on your platform
+and obtain information about the maximum number of threads available as well as the current setting.
+</p>
+<p>Note that multi-threading of other R packages and functions (such as optimised matrix algebra in the BLAS library) is never affected by this function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>threads</code> is unspecified or <code>NULL</code>, a data frame with a single row and the following information is returned:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>available</code></td>
+<td>
+<p><code>TRUE</code> if OpenMP multi-core support is available</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>max</code></td>
+<td>
+<p>maximum number of threads that can be used (0 if not available)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threads</code></td>
+<td>
+<p>currently selected number of threads (defaults to 1 if not available)</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dist.matrix</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wordspace.openmp()
+</code></pre>
+
+
+</div>

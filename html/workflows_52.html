@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_case_weights</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add case weights to a workflow</h2>
+
+<h3>Description</h3>
+
+<p>This family of functions revolves around selecting a column of <code>data</code> to use
+for <em>case weights</em>. This column must be one of the allowed case weight types,
+such as <code>hardhat::frequency_weights()</code> or <code>hardhat::importance_weights()</code>.
+Specifically, it must return <code>TRUE</code> from <code>hardhat::is_case_weights()</code>. The
+underlying model will decide whether or not the type of case weights you have
+supplied are applicable or not.
+</p>
+
+<ul>
+<li> <p><code>add_case_weights()</code> specifies the column that will be interpreted as
+case weights in the model. This column must be present in the <code>data</code>
+supplied to fit().
+</p>
+</li>
+<li> <p><code>remove_case_weights()</code> removes the case weights. Additionally, if the
+model has already been fit, then the fit is removed.
+</p>
+</li>
+<li> <p><code>update_case_weights()</code> first removes the case weights, then replaces them
+with the new ones.
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_case_weights(x, col)
+
+remove_case_weights(x)
+
+update_case_weights(x, col)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A workflow</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>A single unquoted column name specifying the case weights for
+the model. This must be a classed case weights column, as determined by
+<code>hardhat::is_case_weights()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For formula and variable preprocessors, the case weights <code>col</code> is removed
+from the data before the preprocessor is evaluated. This allows you to use
+formulas like <code>y ~ .</code> or tidyselection like <code>everything()</code> without fear of
+accidentally selecting the case weights column.
+</p>
+<p>For recipe preprocessors, the case weights <code>col</code> is not removed and is
+passed along to the recipe. Typically, your recipe will include steps that
+can utilize case weights.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(parsnip)
+library(magrittr)
+library(hardhat)
+
+mtcars2 &lt;- mtcars
+mtcars2$gear &lt;- frequency_weights(mtcars2$gear)
+
+spec &lt;- linear_reg() %&gt;%
+  set_engine("lm")
+
+wf &lt;- workflow() %&gt;%
+  add_case_weights(gear) %&gt;%
+  add_formula(mpg ~ .) %&gt;%
+  add_model(spec)
+
+wf &lt;- fit(wf, mtcars2)
+
+# Notice that the case weights (gear) aren't included in the predictors
+extract_mold(wf)$predictors
+
+# Strip them out of the workflow, which also resets the model
+remove_case_weights(wf)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mts2ts</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Converts matrix to vector time series for various analyses</h2>
+
+<h3>Description</h3>
+
+<p>First aggregates multivariate matrix time series by year. Then converts to a
+vector time series in which “seasons” correspond to these annualized
+values for the original variables.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mts2ts(x, seas = 1:frequency(x), na.rm = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>An object of class "mts"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seas</code></td>
+<td>
+<p>Numeric vector of seasons to aggregate in original time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p>Should missing data be ignored when aggregating?</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>seas</code> parameter enables focusing the subsequent analysis on
+seasons of special interest, or to ignore seasons where there are too many
+missing data. The function can be used in conjunction with <code>seaKen</code> to
+conduct a Regional Kendall trend analysis. Sometimes just plotting the
+resulting function can be useful for exploring a spatial transect over time.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector time series
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alan Jassby, James Cloern
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>seaKen</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## Quick plot a spatial transect of chlorophyll a during the 
+## spring bloom period (Feb-Apr) for each year.
+y &lt;- mts2ts(sfbayChla, seas = 2:4)
+plot(y, type = 'n')
+abline(v = 1978:2010, col = 'lightgrey')
+lines(y, type = 'h')
+
+</code></pre>
+
+
+</div>

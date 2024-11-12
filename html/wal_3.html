@@ -1,0 +1,55 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>closest.color.from.palette</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find closest color from palette for each RGB color.</h2>
+
+<h3>Description</h3>
+
+<p>Find closest color from a palette for given colors. The similarity method used to define 'closest' is deltaE, and the input RGB colors are transformed to LAB space for the computation, assuming they are given in sRGB space.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">closest.color.from.palette(colors_rgb, fixed_palette_rgb)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>colors_rgb</code></td>
+<td>
+<p>n x 3 integer matrix, the truecolor (arbitrary) input RGB colors for which you want to find the most similar colors included in the fixed palette. Range 0..255.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fixed_palette_rgb</code></td>
+<td>
+<p>the fixed palette, an n x 3 matrix of integers, representing the fixed palette colors in RGB values in range 0..255.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>vector of n integers, the index of the closest color into the palette for each of the <code>colors_rgb</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">    colors_rgb = matrix(c(255, 0, 0, 100, 100, 100, 10, 10, 10, 5, 5, 5),
+     ncol = 3, byrow = TRUE);
+    fixed_palette_rgb = matrix(c(255, 0, 0, 255, 5, 0, 11, 11, 11, 0, 0, 0,
+     255, 255, 255), ncol = 3, byrow = TRUE);
+    pal_similar_colors = closest.color.from.palette(colors_rgb,
+     fixed_palette_rgb);
+
+</code></pre>
+
+
+</div>

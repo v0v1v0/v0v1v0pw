@@ -1,0 +1,79 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simulate_conditionally</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add simulated values to a dataset conditionally, based on a <code>simbase_*</code> object</h2>
+
+<h3>Description</h3>
+
+<p>Add simulated values to a dataset conditionally, based on a <code>simbase_*</code> object
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">simulate_conditionally(data, simbase, force_positive = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The dataset where simulated values are added to.
+The dataset has to contain at least one variable which is also included in
+the <code>simbase_*</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simbase</code></td>
+<td>
+<p>Basic data object for the simulation, as calculated e.g.
+by <code>simbase_covar</code> or <code>simbase_list</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>force_positive</code></td>
+<td>
+<p>If <code>TRUE</code>, the resulting values are forced
+to be <code class="reqn">\ge 0</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments passed to or from other methods.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Given a <code>simbase_*</code> object, this function adds simulated values to a
+dataset, conditional on the values of some of the variables already
+contained in the dataset.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The modified dataset <code>data</code> with simulated values.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># add simulated tension data based on a simbase stored in WoodSimulatR
+dataset &lt;- data.frame(E_dyn = rnorm(n = 100, mean = 12500, sd = 2200));
+dataset_t &lt;- simulate_conditionally(dataset, ws_t)
+
+# add simulated bending data
+dataset_be &lt;- simulate_conditionally(dataset, ws_be)
+
+</code></pre>
+
+
+</div>

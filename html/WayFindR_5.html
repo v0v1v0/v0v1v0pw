@@ -1,0 +1,148 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gpml-utility</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Utility Functions to Parse GPML FIles
+</h2>
+
+<h3>Description</h3>
+
+<p>Extract entities of different types from GPML files in order to convert
+the pathway to a mathematical graph that we can compute on.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">collectEdges(xmldoc)
+collectNodes(xmldoc)
+collectGroups(xmldoc, allnodes)
+collectAnchors(xmldoc)
+collectLabels(xmldoc)
+collectShapes(xmldoc)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>xmldoc</code></td>
+<td>
+<p>Either the name of an XML file meeting the
+specifications of the Genomic Pathway Markup Language (GPML), or an
+object of class <code>XMLInternalDocument</code> obtained by running such
+a file through the <code>xmlParseDoc</code> function of the <code>XML</code>
+package. (All of the functions described here will call
+<code>xmlParseDoc</code> if it hasn't already been used.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>allnodes</code></td>
+<td>
+<p>A data frame containing node information, in the format
+produced by the <code>collectNodes</code> function.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>These functions are primarily intended as utility functions that
+implement processes required by the main function in the package,
+<code>GPMLtoIgraph</code>. They have been made accessible to
+the end user for use in debugging problematic GPML files or to reuse
+the GPML files in contexts other than the one we focus on in this
+package.
+</p>
+<p>While the meaning of  nodes (known as <code>DataNodes</code> in GPML) and
+edges (known as <code>Interactions</code> in GPML) should be obvious, some
+of the other objects are less so. For example, an <code>Anchor</code> in
+GPML is an invisible object used to allow an edge to point to 
+another edge instead of to a node. That structure isn't allowed in
+graphs in mathematics or computer science.  <code>WayFindR</code> handles
+this by creating a new node type to represent the anchor position,
+breaking the target edge into two pieces separated by the anchor, and
+adding an edge from the source of the anchored edge to the new node.
+</p>
+<p>In GPML, a <code>Label</code> is a text box allowing extra information to be
+placed on a pathway, and a <code>Shape</code> is a graphical display object. The
+definition type document (DTD) for GPML describes both of these
+entities as non-semantic, intending them for display purposes
+only. However, some authors of pathways in the WikiPathways database
+use such objects as the (usually, final or "leaf") targets of
+interaction edges. When that happens, the <code>WayFindR</code> package
+deals with it by creating actual nodes to represent such labels or
+shapes. Other labels and shapes are ignored.
+</p>
+<p>GPML also uses the idea of a <code>Group</code> as a first class object in
+their DTD. These are defined as  "A collection of structurally or
+functionally similar or related pathway elements." The GPML file
+subclassifies some groups as "Complexes", indicating that they
+represent physical interactions and bindings between two or more
+molecules. Other groups may simply indicate that there is a related set
+of molecules (for example, STAT2 and STA3) that play the same role at
+this point in the pathway. <code>WayFindR</code> deals with groups by
+creating a new node to represent the group as a whole and expanding
+the component genes into nodes with a single "contained" edge that
+points to the new group node.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The <code>collectEdges</code> function returns a data frame with three
+columns (<code>Source</code>, <code>Target</code>, and <code>MIM</code>), where each row
+describes one edge (or "Interaction" in the GPML terminology) of the
+pathway/graph. The <code>Source</code> and <code>Target</code> columns are the
+alphanumeric identifiers of items decribing nodes. The <code>MIM</code>
+column is the edge type in GPML, which often contains terminology based
+on the "Molecular Interaction Map" standard. When creating an
+<code>igraph</code> object from a pathway, the first two columns are
+used as identifiers to define the nodes at each end of the edge.
+</p>
+<p>The <code>collectNodes</code> function returns a data frame with three
+columns (GraphId, label, and Type), where each row describes node
+or vertex of the pathway/graph. The <code>GraphId</code> column is a unique
+alphanumeric identifier. The <code>label</code> column is a human-readable
+name for the node, often the official gene symbol. When creating an
+<code>igraph</code> object from a pathway, the first column is used as
+identifier to define the node. Also, the <code>plot</code> method for
+<code>igraph</code>s recognizes the term <code>label</code> as a column that
+defines the text that should be displayed in a node.
+</p>
+<p>The <code>collectAnchors</code> function returns a list containing a
+<code>nodes</code> element (in the same format returned by
+<code>collectNodes</code>) and an <code>edges</code> element (in the same format
+returned by <code>collectEdges</code>). The <code>collectGroups</code> function
+returns a list with <code>nodes</code> and <code>edges</code> components, just
+like the one from <code>collectAnchors</code>. 
+</p>
+<p>Both the <code>collectLabels</code> and <code>collectShapes</code> functions return
+the same kind of data frame that is returned by <code>collectNodes</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Kevin R. Coombes <a href="mailto:krc@silicovore.com">krc@silicovore.com</a>,
+Polina Bombina <a href="mailto:pbombina@augusta.edu">pbombina@augusta.edu</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">xmlfile &lt;- system.file("pathways/WP3850.gpml", package = "WayFindR")
+xmldoc &lt;- XML::xmlParseDoc(xmlfile)
+edges &lt;- collectEdges(xmldoc)
+nodes &lt;- collectNodes(xmldoc)
+anchors &lt;- collectAnchors(xmldoc)
+labels &lt;- collectLabels(xmldoc)
+edges &lt;- collectShapes(xmldoc)
+groups &lt;- collectGroups(xmldoc, nodes)
+</code></pre>
+
+
+</div>

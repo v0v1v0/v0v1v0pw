@@ -1,0 +1,210 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>identifFixedModif</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Identify Fixed Modifications</h2>
+
+<h3>Description</h3>
+
+<p>Identify peptide/protein fragment based on experimental m/z values 'expMass' for given range of aa-length.
+Internally all possible fragments will be predicted and their mass compared to the experimental values (argument <code>expMass</code>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">identifFixedModif(
+  prot,
+  expMass,
+  minFragSize = 5,
+  maxFragSize = 60,
+  indexStart = 1,
+  suplPepTab = NULL,
+  internFra = TRUE,
+  filtChargeCatch = TRUE,
+  maxMod = c(p = 3, h = 1, k = 1, o = 1, m = 1, n = 1, u = 1, r = 1, s = 1),
+  modTy = NULL,
+  specModif = NULL,
+  knownMods = NULL,
+  identMeas = "ppm",
+  limitIdent = 5,
+  filtAmbiguous = FALSE,
+  recalibrate = FALSE,
+  chargeCatchFilter = TRUE,
+  massTy = "mono",
+  prefFragPat = NULL,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>prot</code></td>
+<td>
+<p>(character) amino-acid sequene of peptide or protein</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>expMass</code></td>
+<td>
+<p>(numeric) erperimental masses to identify peptides from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minFragSize</code></td>
+<td>
+<p>(integer) min number of AA residues for considering peptide fragments</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxFragSize</code></td>
+<td>
+<p>(integer) max number of AA residues for considering peptide fragments</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indexStart</code></td>
+<td>
+<p>(integer) for starting at correct index (if not 1)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suplPepTab</code></td>
+<td>
+<p>(matrix) additional peptides to be add to theoretical peptides</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>internFra</code></td>
+<td>
+<p>(logical) decide whether internal fragments should be cosiered</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filtChargeCatch</code></td>
+<td>
+<p>(logical) by default removing of all fragments not containing a (polar) charge-cathing residue</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxMod</code></td>
+<td>
+<p>(integer) maximum number of residue modifications to be consiered in fragments (values &gt;1 will increase complexity and RAM consumption)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>modTy</code></td>
+<td>
+<p>(character) type of fixed and variable modifications</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>specModif</code></td>
+<td>
+<p>(list) supplemental custom fixed or variable modifications (eg Zn++ at given residue)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>knownMods</code></td>
+<td>
+<p>(character) optional custom alternative to <code>AAfragSettings(ou="all")$knownMods</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>identMeas</code></td>
+<td>
+<p>(character) default 'ppm'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limitIdent</code></td>
+<td>
+<p>(character) thershold for identification in 'identMeas' units</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filtAmbiguous</code></td>
+<td>
+<p>(logical) allows filtering/removing ambiguous results (ie same mass peptides)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>recalibrate</code></td>
+<td>
+<p>(logical or numeric) may be direct recalibration-factor (numeric,length=1), if 'TRUE'  fresh determination of 'recalibFact' or 'FALSE' (no action);  final recalibration-factor used exported in result as $recalibFact</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chargeCatchFilter</code></td>
+<td>
+<p>(logical) optionally remove all peptides not containing charge-catch AAs (K, R, H, defined via <code>.chargeCatchingAA()</code> )</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>massTy</code></td>
+<td>
+<p>(character) 'mono' or 'average'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prefFragPat</code></td>
+<td>
+<p>(numeric) pattern for preferential fragmentation (see also Haverland 2017), if <code>NULL</code> default will be taken (in function <code>evalIsoFragm</code>) from <code>.prefFragPattern()</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages and objects exportet to current session for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>list, ie result of massMatch() on 'pepTab' and 'expMass'
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>makeFragments</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">protP &lt;- c(protP="PEPTIDEKR")
+obsMassX &lt;- cbind(a=c(199.1077,296.1605,397.2082,510.2922,625.3192),
+  b=c(227.1026,324.1554,425.2031,538.2871,653.3141),
+  x=c(729.2937,600.2511,503.1984,402.1507,289.0666),
+  y=c(703.3145,574.2719,477.2191,376.1714,263.0874))
+rownames(obsMassX) &lt;- c("E","P","T","I","D")       # all 1 &amp; 7 ions not included
+identP1 &lt;- identifFixedModif(prot=protP, expMass=as.numeric(obsMassX), minFragSize=2, 
+  maxFragSize=7,modTy=list(basMod=c("b","y")))     # looks ok
+identP2 &lt;- identifFixedModif(prot=protP, expMass=as.numeric(obsMassX), minFragSize=2, 
+ maxFragSize=7, modTy=list(basMod=c("a","x"), varMod=c("h","o","r","m")))
+ head(identP1$preMa,n=17)     # predicted masses incl fixed modif
+ head(identP2$preMa,n=17)     # predicted masses incl fixed modif 
+</code></pre>
+
+
+</div>

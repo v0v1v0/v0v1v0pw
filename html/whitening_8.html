@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>lusc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>TCGA LUSC Data</h2>
+
+<h3>Description</h3>
+
+<p>A preprocessed sample of gene expression and methylation data as well as selected clinical covariates for 130 patients with lung squamous cell carcinoma (LUSC) as available from The Cancer Genome Atlas (TCGA) database (Kandoth et al. 2013).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(lusc)
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p><code>lusc$rnaseq2</code> is a 130 x 206 matrix containing the calibrated gene expression 
+levels of 206 genes for 130 patients.
+</p>
+<p><code>lusc$methyl</code> is a 130 x 234 matrix containing the methylation levels
+of 234 probes for 130 patients.
+</p>
+<p><code>sex</code> is a vector recording the sex (male vs. female) of the 130 patients.
+</p>
+<p><code>packs</code> is the number of cigarette packs per year smoked by each patient.
+</p>
+<p><code>survivalTime</code> is number of days to last follow-up or the days to death.
+</p>
+<p><code>censoringStatus</code> is the vital status (0=alive, 1=dead).
+</p>
+
+
+<h3>Details</h3>
+
+<p>This data set is used to illustrate CCA-based data integration
+in Jendoubi and Strimmer (2019) and also described in Wan et al. (2016).
+</p>
+
+
+<h3>Source</h3>
+
+<p>The data were retrieved from TCGA (Kandoth et al. 2014) using the TCGA2STAT tool following the guidelines and the preprocessing steps detailed in Wan et al. (2016).
+</p>
+
+
+<h3>References</h3>
+
+<p>Jendoubi, T., Strimmer, K.: A whitening approach to probabilistic canonical correlation analysis for omics data integration. BMC Bioinformatics 20:15 
+&lt;DOI:10.1186/s12859-018-2572-9&gt;
+</p>
+<p>Kandoth, C., McLellan, M.D., Vandin, F., Ye, K., Niu, B., Lu, C., Xie, M., andJ. F. McMichael, Q.Z., Wyczalkowski, M.A., Leiserson, M.D.M., Miller, C.A., Welch, J.S., Walter, M.J., Wendl, M.C., Ley, T.J., Wilson, R.K., Raphael, B.J., Ding, L.: Mutational landscape and significance across 12 major cancer types.
+Nature 502, 333–339 (2013). &lt;DOI:10.1038/nature12634&gt;
+</p>
+<p>Wan, Y.-W., Allen, G.I., Liu, Z.: TCGA2STAT: simple TCGA data access for integrated statistical analysis in R. Bioinformatics 32, 952–954 (2016). &lt;DOI:10.1093/bioinformatics/btv677&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load whitening library
+library("whitening")
+
+# load TGCA LUSC data set
+data(lusc)
+
+names(lusc)
+#"rnaseq2"         "methyl"          "sex"             "packs"          
+#"survivalTime"    "censoringStatus" 
+
+dim(lusc$rnaseq2) # 130 206 gene expression
+dim(lusc$methyl)  # 130 234 methylation level
+
+## Not run: 
+library("survival")
+s = Surv(lusc$survivalTime, lusc$censoringStatus)
+plot(survfit(s ~ lusc$sex), xlab = "Years", ylab = "Probability of survival", lty=c(2,1), lwd=2)
+legend("topright", legend = c("male", "female"), lty =c(1,2), lwd=2)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

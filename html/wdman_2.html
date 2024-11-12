@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>gecko</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Start gecko driver</h2>
+
+<h3>Description</h3>
+
+<p>Start gecko driver
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">gecko(
+  port = 4567L,
+  version = "latest",
+  check = TRUE,
+  loglevel = c("info", "fatal", "error", "warn", "config", "debug", "trace"),
+  verbose = TRUE,
+  retcommand = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>port</code></td>
+<td>
+<p>Port to run on</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>version</code></td>
+<td>
+<p>what version of geckodriver to run. Default = "latest"
+which runs the most recent version. To see other version currently
+sourced run binman::list_versions("geckodriver")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>check</code></td>
+<td>
+<p>If TRUE check the versions of geckodriver available. If
+new versions are available they will be downloaded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loglevel</code></td>
+<td>
+<p>Set Gecko log level [values: fatal, error,
+warn, info, config, debug, trace]</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>If TRUE, include status messages (if any)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>retcommand</code></td>
+<td>
+<p>If TRUE return only the command that would be passed
+to <code>process</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>pass additional options to the driver</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a list with named elements <code>process</code>, <code>output</code>,
+<code>error</code>, <code>stop</code>, and <code>log</code>.
+<code>process</code> is the object from calling <code>process</code>.
+<code>output</code> and <code>error</code> are the functions reading the latest
+messages from "stdout" and "stderr" since the last call whereas <code>log</code>
+is the function that reads all messages.
+Lastly, <code>stop</code> call the <code>kill</code> method in
+<code>process</code> to the kill the <code>process</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+gDrv &lt;- gecko()
+gDrv$output()
+gDrv$stop()
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

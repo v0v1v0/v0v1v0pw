@@ -1,0 +1,133 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>GetMagneticFieldWMM</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate Expected Magnetic Field from WMM</h2>
+
+<h3>Description</h3>
+
+<p>Function that takes in geodetic GPS location and annualized time, and returns the expected magnetic field from WMM.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">GetMagneticFieldWMM(lon, lat, height, time, wmmVersion = "derived")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lon</code></td>
+<td>
+<p>GPS longitude</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lat</code></td>
+<td>
+<p>GPS latitude, geodetic</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>height</code></td>
+<td>
+<p>GPS height in meters above ellipsoid</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time</code></td>
+<td>
+<p>Annualized date time. E.g., 2015-02-01 = (2015 + 32/365) = 2015.088; optionally an object (length 1) of class 'POSIXt' or 'Date'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wmmVersion</code></td>
+<td>
+<p>String representing WMM version to use. Must be consistent with <code>time</code> and one of the following: 'derived', 'WMM2000', 'WMM2005', 'WMM2010', 'WMM2015', 'WMM2015v2', 'WMM2020'. Default 'derived' value will infer the latest WMM version consistent with <code>time</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>list</code> of calculated main field and secular variation vector components in nT and nT/yr, resp. The magnetic element intensities (i.e., horizontal and total intensities, h &amp; f) are in nT and the magnetic element angles (i.e., inclination and declination, i &amp; d) are in degrees, with their secular variation in nT/yr and deg/yr, resp.: <code>x</code>, <code>y</code>, <code>z</code>, <code>xDot</code>, <code>yDot</code>, <code>zDot</code>, <code>h</code>, <code>f</code>, <code>i</code>, <code>d</code>, <code>hDot</code>, <code>fDot</code>, <code>iDot</code>, <code>dDot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">GetMagneticFieldWMM(
+   lon = 240,
+   lat = -80,
+   height = 1e5,
+   time = 2022.5,
+   wmmVersion = 'WMM2020'
+)
+
+## Expected output
+# x = 5814.9658886215 nT
+# y = 14802.9663839328 nT
+# z = -49755.3119939183 nT
+# xDot = 28.0381961827 nT/yr
+# yDot = 1.3970624624 nT/yr
+# zDot = 85.6309533031 nT/yr
+# h = 15904.1391483373 nT
+# f = 52235.3588449608 nT
+# i = -72.27367 deg
+# d = 68.55389 deg
+# hDot = 11.5518244235 nT/yr
+# fDot = -78.0481471753 nT/yr
+# iDot = 0.04066726 deg/yr
+# dDot = -0.09217566 deg/yr
+
+## Calculated output
+#$x
+#[1] 5814.966
+
+#$y
+#[1] 14802.97
+
+#$z
+#[1] -49755.31
+
+#$xDot
+#[1] 28.0382
+
+#$yDot
+#[1] 1.397062
+
+#$zDot
+#[1] 85.63095
+
+#$h
+#[1] 15904.14
+
+#$f
+#[1] 52235.36
+
+#$i
+#[1] -72.27367
+
+#$d
+#[1] 68.55389
+
+#$hDot
+#[1] 11.55182
+
+#$fDot
+#[1] -78.04815
+
+#$iDot
+#[1] 0.04066726
+
+#$dDot
+#[1] -0.09217566
+
+</code></pre>
+
+
+</div>

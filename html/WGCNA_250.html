@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simpleHierarchicalConsensusCalculation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Simple hierarchical consensus calculation
+</h2>
+
+<h3>Description</h3>
+
+<p>Hierarchical consensus calculation without calibration. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">simpleHierarchicalConsensusCalculation(individualData, consensusTree, level = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>individualData</code></td>
+<td>
+
+<p>Individual data from which the consensus is to be calculated. It can be either a list or a
+<code>multiData</code> structure. Each element in <code>individulData</code> should be a numeric
+object (vector, matrix or array).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>consensusTree</code></td>
+<td>
+
+<p>A list specifying the consensus calculation. See details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+
+<p>Integer which the user should leave at 1.  This serves to keep default set names unique.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function calculates consensus in a hierarchical manner, using a separate (and possibly different) set of
+consensus options at each step. The "recipe" for the consensus calculation is supplied in the argument
+<code>consensusTree</code>.
+</p>
+<p>The argument <code>consensusTree</code> should have the following components: (1) <code>inputs</code> must be either a
+character vector whose components match <code>names(inputData)</code>, or consensus trees in the own right.
+(2) <code>consensusOptions</code> must be a list of class <code>"ConsensusOptions"</code> that specifies options for
+calculating the consensus. A suitable set of options can be obtained by calling
+<code>newConsensusOptions</code>. (3) Optionally, the component <code>analysisName</code> can be a single
+character string giving the name for the analysis. When intermediate results are returned, they are returned
+in a list whose names will be set from <code>analysisName</code> components, if they exist.
+</p>
+<p>Unlike the similar function <code>hierarchicalConsensusCalculation</code>, this function ignores the
+calibration settings in the <code>consensusOptions</code> component of <code>consensusTree</code>; no calibration of
+input data is performed.
+</p>
+<p>The actual consensus calculation at each level of the consensus tree
+is carried out in function <code>simpleConsensusCalculation</code>. The consensus options for each individual
+consensus calculation are independent from one another, i.e., the consensus options for different steps can
+be different.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with a single component  <code>consensus</code>, containing the consensus data of the same dimensions as the
+individual entries in the input <code>individualData</code>. This perhaps somewhat cumbersome convention is used to
+make the output compatible with that of <code>hierarchicalConsensusCalculation</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>simpleConsensusCalculation</code> for a "single-level" consensus calculation;
+</p>
+<p><code>hierarchicalConsensusCalculation</code> for hierarchical consensus calculation with calibration
+</p>
+
+
+</div>

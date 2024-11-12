@@ -1,0 +1,236 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WaveD</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>WaveD</h2>
+
+<h3>Description</h3>
+
+<p>Performs statistical wavelet deconvolution using Meyer wavelet.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WaveD(yobs,g=c(1,rep(0,(length(yobs)-1))),MC=FALSE,SOFT=FALSE,
+      F=find.j1(g,scale(yobs))[2],L=3,deg=3,eta=sqrt(6),
+      thr=maxithresh(yobs,g,eta=eta),label="WaveD")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>yobs</code></td>
+<td>
+<p>Sample of <code class="reqn">f*g</code> + (Gaussian noise), a vector of dyadic length 
+(i.e. <code class="reqn">2^{J-1}</code> where J is the largest resolution level). 
+Here f is the target function, g is the convolution kernel.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>g</code></td>
+<td>
+<p>Sample of <code class="reqn">g</code> or <code class="reqn">g</code> +  (Gaussian noise), same length as yobs.
+The default is the Dirac mass at 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MC</code></td>
+<td>
+<p>Option to only return the (fast) translation-invariant WaveD estimate
+(MC=TRUE) as opposed to the full WaveD output (MC=FALSE, the default), 
+as described below. MC=TRUE recommended for Monte Carlo simulation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SOFT</code></td>
+<td>
+<p>if SOFT=TRUE, uses the soft thresholding policy as opposed to the
+hard (SOFT=FALSE, the default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>F</code></td>
+<td>
+<p>Finest resolution level; the default is the data-driven choice j1
+(see Value below).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>L</code></td>
+<td>
+<p>Lowest resolution level; the default is 3.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>deg</code></td>
+<td>
+<p>The degree of the Meyer wavelet, either 1, 2, or 3 (the default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eta</code></td>
+<td>
+<p>Tuning parameter of the maxiset threshold; default is <code class="reqn">\sqrt6</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thr</code></td>
+<td>
+<p>A vector of length <code class="reqn">F-L+1</code>, giving thresholds at each resolution levels 
+<code class="reqn">L,L+1,\ldots,F</code>; 
+default is maxiset threshold.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>label</code></td>
+<td>
+<p>Auxiliary plotting parameter; do not change this.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>In the case that MC=TRUE, WaveD returns a vector consisting of the translation-invariant WaveD estimate.
+In the case that MC=FALSE (the default), WaveD returns a list with components
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>waved</code></td>
+<td>
+<p>translation invariant WaveD transform; in the case MC=TRUE this is all that is returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ordinary</code></td>
+<td>
+<p>ordinary WaveD transform</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>FWaveD</code></td>
+<td>
+<p>Forward WaveD Transform; see <code>FWaveD</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+<p>alternate name for FWaveD</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.thr</code></td>
+<td>
+<p>thresholded version of w</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>IWaveD</code></td>
+<td>
+<p>Inverse WaveD Transform</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iw</code></td>
+<td>
+<p>alternate name for IWaveD</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p>estimate of the noise standard deviation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>j1</code></td>
+<td>
+<p>estimate of optimal resolution level (for maxiset threshold).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>F</code></td>
+<td>
+<p>Fine resolution level used (may be different to j1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>estimate of optimal Fourier frequency (for maxiset threshold).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thr</code></td>
+<td>
+<p>vector of thresholds used (default is maxiset threshold).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>percent</code></td>
+<td>
+<p>percentage of thresholding per resolution level</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>noise</code></td>
+<td>
+<p>noise proxy, wavelet coefficients of the raw data at the largest resolution level, used for estimating noise features.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ps</code></td>
+<td>
+<p>P-value of the Shapiro-Wilk test for normality applied to the noise proxy.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>residuals</code></td>
+<td>
+<p>wavelet coefficients that have been removed before fine level F.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Marc Raimondo and Michael Stewart</p>
+
+
+<h3>References</h3>
+
+<p>Cavalier, L. and Raimondo, M.  (2007), ‘Wavelet deconvolution with noisy eigen-values’, <em> IEEE Trans. Signal
+Process</em>, Vol. 55(6), In the press.
+</p>
+<p>Donoho, D. and Raimondo, M.  (2004),
+‘Translation invariant deconvolution in a periodic setting’, <em> The
+International Journal of Wavelets, Multiresolution and Information
+Processing</em> <b>14</b>(1),415–423.
+</p>
+<p>Johnstone, I., Kerkyacharian, G., Picard, D. and Raimondo, M.  (2004), 
+'Wavelet deconvolution in a periodic
+setting', <em> Journal of the Royal Statistical Society, Series B</em> <b>
+66</b>(3),547–573.  with discussion pp.627–652.
+</p>
+<p>Raimondo, M. and Stewart, M. (2007),
+‘The WaveD Transform in R’, Journal of Statistical Software.</p>
+
+
+<h3>See Also</h3>
+
+<p><code>FWaveD</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(waved)
+data=waved.example(TRUE,FALSE)
+doppler.wvd=WaveD(data$doppler.noisy,data$g)
+summary(doppler.wvd)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,114 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>BBB</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Beta Binomial Bounds</h2>
+
+<h3>Description</h3>
+
+<p>Generates confidence inference bounds by means of the beta binomial distribution applied to data ranks.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">BBB(xdata, xfit,n=NULL, CI=.90, unrel=NULL, type="horizontal", nknots=NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>xdata</code></td>
+<td>
+<p>A list containing either dpoints and/or dlines such as available from a wblr object.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xfit</code></td>
+<td>
+<p>A list containing dist and fit elements. A suitable object can be extracted from a wblr object containing the resuult of at least one modifying wblr.fit call.
+Function <code>xfit</code> has been provided to return such a list.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>The total number of data entries fail, suspension, discovery and interval. This value is only required to be provided
+if not available from either xdata (as sum(xdata$lrq_frame$qty) or xfit (as attr(xfit$fit)$n), however, an entry
+for this argument will take precidence over the other argument sources.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CI</code></td>
+<td>
+<p>A scalar for the double-sided confidence interval of interest. Default = 0.9, for 90
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>unrel</code></td>
+<td>
+<p>An optional vector of unreliability values to be used as the descriptive percentiles at which the bound quantiles will be calculated.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>A string indicating the adjustment direction(s) for application of the beta binomial. Since both "horizontal" and "vertical" directions
+on the rank positions of failure data are considered valid, a smoothed spline can be created by appling both directions using "valid".
+An extrapolation of the smoothed spline is provided by using "extrapolated".
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nknots</code></td>
+<td>
+<p>An optional number of knots to be used to form the smooth spline in the event that disjoints are formed
+at the junction of horizontal and vertical bounds. Usually, applying 75 to 80
+result in a pleasing smoothness.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This non-parametric approach calculates confidence bounds for quantiles and/or
+failure probabilities applying the CFD of the beta distribution at ranks and reverse ranks of the failure data including intervals.
+Although a result is provided for 3-parameter models, it does not reflect uncertainty in the third, translation parameter.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a dataframe holding values of Prob, Lower, Fit, and Upper values for the bounds.
+</p>
+
+
+<h3>References</h3>
+
+<p>William Q. Meeker and Luis A. Escobar, (1998) "Statistical Methods for Reliability Data", Wiley-Interscience, New York
+</p>
+<p>Robert B. Abernethy, (2008) "The New Weibull Handbook, Fifth Edition" 
+</p>
+<p>John I. McCool, (2012) "Using the Weibull Distribution: Reliability, Modeling and Inference"
+</p>
+<p>Tim-Gunnar Hensel, (2017) "weibulltools", A package on CRAN.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(4321)
+obj&lt;-wblr.fit(wblr(rweibull(10,1,1)))
+beta_binomial_bounds&lt;-BBB(obj$data,xfit(obj))
+</code></pre>
+
+
+</div>

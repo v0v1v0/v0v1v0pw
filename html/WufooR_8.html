@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>form_entriesFromCSV</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Return responses of your form, from CSV format</h2>
+
+<h3>Description</h3>
+
+<p>This function imports your report csv file as a data frame from the report csv export url (example url below).
+The report must be public and not protected. To verify your CSV url,
+open the browser, select your report, then "Export" in "Commas (.csv)".
+Please note that the name of your report will be in lowercase with spaces replaced with hyphens.
+For example, the report titled "My Example Report" will be "my-example-report" in the URL as shown below.
+E.g. <code>https://YourName.wufoo.com/export/reports/manager/NameOfYourReport.csv</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">form_entriesFromCSV(
+  wufoo_name = auth_name(NULL),
+  reportName = NULL,
+  showRequestURL = FALSE,
+  debugConnection = 0L,
+  domain = "wufoo.com"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wufoo_name</code></td>
+<td>
+<p>- User's Name. Default: <code>auth_name</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reportName</code></td>
+<td>
+<p>- the name of your report as displayed in the csv export
+URL (which is in lowercase with hyphens replacing spaces of your report name). The report should be also public.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>showRequestURL</code></td>
+<td>
+<p>- use only for DEBUG purposes</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debugConnection</code></td>
+<td>
+<p>- samilar as above. Either "0L" (false; default) or "1L"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>domain</code></td>
+<td>
+<p>- for whatever reason domain's ccTLD may change. With this parameter you can change
+default <code>wufoo.com</code> to another one such as <code>wufoo.eu</code></p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+options(Wufoo_Name = "johnmalc", Wufoo_API = "S6VI-I8UA-BY11-TDHO")
+df_csv &lt;- form_entriesFromCSV(reportName = "untitled-report", showRequestURL = F)
+View(df_csv)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

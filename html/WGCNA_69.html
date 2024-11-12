@@ -1,0 +1,105 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>consensusOrderMEs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Put close eigenvectors next to each other in several sets. </h2>
+
+<h3>Description</h3>
+
+<p>Reorder given (eigen-)vectors such that similar ones (as measured by correlation) are next to each
+other. This is a multi-set version of <code>orderMEs</code>; the dissimilarity used can be of consensus
+type (for each pair of eigenvectors the consensus dissimilarity is the maximum of individual set
+dissimilarities over all sets) or of majority type (for each pair of eigenvectors the consensus
+dissimilarity is the average of individual set dissimilarities over all sets).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">consensusOrderMEs(MEs, useAbs = FALSE, useSets = NULL, 
+                  greyLast = TRUE, 
+                  greyName = paste(moduleColor.getMEprefix(), "grey", sep=""), 
+                  method = "consensus")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>MEs</code></td>
+<td>
+<p>Module eigengenes of several sets in a multi-set format (see <code>checkSets</code>). A
+vector of lists, with each list corresponding to one dataset and the module eigengenes in the component
+<code>data</code>, that is <code>MEs[[set]]$data[sample, module]</code> is the expression of the eigengene of module
+<code>module</code> in sample <code>sample</code> in dataset <code>set</code>. The number of samples can be different
+between the sets, but the modules must be the same. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useAbs</code></td>
+<td>
+<p>Controls whether vector similarity should be given by absolute value of correlation or
+plain correlation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useSets</code></td>
+<td>
+<p>Allows the user to specify for which sets the eigengene ordering is to be performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>greyLast</code></td>
+<td>
+<p>Normally the color grey is reserved for unassigned genes; hence the grey module is not
+a proper module and it is conventional to put it last. If this is not desired, set the parameter to
+<code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>greyName</code></td>
+<td>
+<p>Name of the grey module eigengene.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>A character string giving the method to be used calculating the consensus
+dissimilarity. Allowed values are (abbreviations of) 
+<code>"consensus"</code> and <code>"majority"</code>. The consensus dissimilarity is calculated as the
+maximum of given set dissimilarities for <code>"consensus"</code> and as the average for <code>"majority"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Ordering module eigengenes is useful for plotting purposes. This function calculates the consensus
+or majority
+dissimilarity of given eigengenes over the sets specified by <code>useSets</code> (defaults to all sets).
+A hierarchical dendrogram is calculated using the dissimilarity and the order given by the dendrogram is
+used for the eigengenes in all other sets.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of lists of the same type as <code>MEs</code> containing the re-ordered eigengenes.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder, <a href="mailto:Peter.Langfelder@gmail.com">Peter.Langfelder@gmail.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>moduleEigengenes</code>, <code>multiSetMEs</code>, <code>orderMEs</code></p>
+
+
+</div>

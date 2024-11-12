@@ -1,0 +1,206 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>labeledHeatmap.multiPage</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Labeled heatmap divided into several separate plots.
+</h2>
+
+<h3>Description</h3>
+
+<p>This function produces labaled heatmaps divided into several plots. This is useful for large heatmaps where
+labels on individual columns and rows may become unreadably small (or overlap).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">labeledHeatmap.multiPage(
+   # Input data and ornaments
+   Matrix, 
+   xLabels, yLabels = NULL,
+   xSymbols = NULL, ySymbols = NULL,
+   textMatrix = NULL, 
+
+   # Paging options
+   rowsPerPage = NULL, maxRowsPerPage = 20, 
+   colsPerPage = NULL, maxColsPerPage = 10, 
+   addPageNumberToMain = TRUE, 
+
+   # Further arguments to labeledHeatmap
+   zlim = NULL,
+   signed = TRUE, 
+   main = "", 
+   ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Matrix</code></td>
+<td>
+<p> numerical matrix to be plotted in the heatmap. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xLabels</code></td>
+<td>
+<p> labels for the columns. See Details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yLabels</code></td>
+<td>
+<p> labels for the rows. See Details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xSymbols</code></td>
+<td>
+<p> additional labels used when <code>xLabels</code> are interpreted as colors. See Details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ySymbols</code></td>
+<td>
+<p> additional labels used when <code>yLabels</code> are interpreted as colors. See Details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>textMatrix</code></td>
+<td>
+<p> optional text entries for each cell. Either a matrix of the same dimensions as 
+<code>Matrix</code> or a vector of the same length as the number of entries in <code>Matrix</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rowsPerPage</code></td>
+<td>
+<p> optional list in which each component is a vector specifying which rows should appear
+together in each plot. If not given, will be generated automatically based on <code>maxRowsPerPage</code> below
+and the number of rows in <code>Matrix</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxRowsPerPage</code></td>
+<td>
+<p> integer giving maximum number of rows appearing on each plot (page).  
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colsPerPage</code></td>
+<td>
+<p> optional list in which each component is a vector specifying which columns should appear 
+together in each plot. If not given, will be generated automatically based on <code>maxColsPerPage</code> below
+and the number of rows in <code>Matrix</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxColsPerPage</code></td>
+<td>
+
+<p>integer giving maximum number of columns appearing on each plot (page).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addPageNumberToMain</code></td>
+<td>
+
+<p>logical: should plot/page number be added to the <code>main</code> title of each plot?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zlim</code></td>
+<td>
+
+<p>Optional specification of the extreme values for the color scale. If not given, will be determined from the
+input <code>Matrix</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signed</code></td>
+<td>
+
+<p>logical: should the input <code>Matrix</code> be converted to colors using a scale centered at zero?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+
+<p>Main title for each plot/page, optionally with the plot/page number added.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>other arguments to function <code>labeledHeatmap</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function <code>labeledHeatmap</code> is used to produce each plot/page; most arguments are described
+in more detail in the help file for that function.
+</p>
+<p>In each plot/page <code>labeledHeatmap</code> plots a standard heatmap plot of an appropriate 
+sub-rectangle of <code>Matrix</code> and embellishes it with
+row and column labels and/or with text within the heatmap entries. Row and column labels can be either
+character strings or color squares, or both.
+</p>
+<p>To get simple text labels, use <code>colorLabels=FALSE</code> and pass the desired row and column labels in
+<code>yLabels</code> and <code>xLabels</code>, respectively.
+</p>
+<p>To label rows and columns by color squares, use
+<code>colorLabels=TRUE</code>; <code>yLabels</code> and <code>xLabels</code> are then expected to represent valid colors.
+For reasons of compatibility with other functions, each entry in <code>yLabels</code> and <code>xLabels</code> is
+expected to consist of a color designation preceded by 2 characters: an example would be
+<code>MEturquoise</code>. The first two characters can be arbitrary, they are stripped.
+Any labels that do not represent valid colors will be considered text labels and printed in full,
+allowing the user to mix text and color labels.
+</p>
+<p>It is also possible to label rows and columns by both color squares and additional text annotation. To
+achieve this, use the above technique to get color labels and, additionally, pass the desired text
+annotation in the <code>xSymbols</code> and <code>ySymbols</code> arguments.
+</p>
+<p>If <code>rowsPerPage</code> (<code>colsPerPage</code>) is not given, rows (columns) are allocated automatically as
+uniformly as possible, in contiguous blocks of size at most <code>maxRowsPerPage</code> (<code>maxColsPerPage</code>). 
+The allocation is performed by the function <code>allocateJobs</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>None.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p>The workhorse function <code>labeledHeatmap</code> for the actual heatmap plot;
+</p>
+<p>function <code>allocateJobs</code> for the allocation of rows/columns to each plot.
+</p>
+
+
+</div>

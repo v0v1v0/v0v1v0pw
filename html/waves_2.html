@@ -1,0 +1,86 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>aggregate_spectra</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Aggregate data based on grouping variables and a user-provided
+function</h2>
+
+<h3>Description</h3>
+
+<p>Use grouping variables to collapse spectral <code>data.frame</code> by
+mean or median. Recommended for use after <code>filter_spectra</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">aggregate_spectra(df, grouping.colnames, reference.value.colname,
+  agg.function)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p><code>data.frame</code> object containing one or multiple columns of
+grouping variables (must be consistent within each group), column of
+reference values (optional), and columns of spectra. Spectral column names
+must start with "X".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grouping.colnames</code></td>
+<td>
+<p>Names of columns to be used as grouping variables.
+Minimum 2 variables required. Default is c("trial", "plot").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reference.value.colname</code></td>
+<td>
+<p>Name of reference column to be aggregated
+along with spectra. Default is "reference"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>agg.function</code></td>
+<td>
+<p>Name of function (string format) to be used for sample
+aggregation. Must be either "mean" or "median". Default is "mean".</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>data.frame</code> object <code>df</code> aggregated based on grouping
+column by <code>agg.function</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jenna Hershberger <a href="mailto:jmh579@cornell.edu">jmh579@cornell.edu</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(magrittr)
+aggregated.test &lt;- ikeogu.2017 %&gt;%
+  dplyr::select(-TCC) %&gt;%
+  na.omit() %&gt;%
+  aggregate_spectra(
+    grouping.colnames = c("study.name"),
+    reference.value.colname = "DMC.oven",
+    agg.function = "mean"
+  )
+aggregated.test[1:5, 1:5]
+</code></pre>
+
+
+</div>

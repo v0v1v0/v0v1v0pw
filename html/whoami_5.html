@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>whoami</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>User name and full name of the current user</h2>
+
+<h3>Description</h3>
+
+<p>Calls <code>username</code> and <code>fullname</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">whoami()
+</code></pre>
+
+
+<h3>Details</h3>
+
+<p>For the username it tries the <code>LOGNAME</code>, <code>USER</code>,
+<code>LNAME</code> and <code>USERNAME</code> environment variables first.
+If these are all unset, or set to an empty string,
+then it tries running <code>id</code> on Unix-like
+systems and <code>whoami</code> on Windows.
+</p>
+<p>For the full name of the user, it queries the system services
+and also tries the user's global git configuration.
+On Windows, it tries finding the global git configuration
+in <code>Sys.getenv("USERPROFILE")</code> if it doesn't find it
+in <code>Sys.getenv("HOME")</code> (often "Documents").
+</p>
+<p>For the email address it uses the user's global git
+configuration. It tries finding the global git
+configuration in <code>Sys.getenv("USERPROFILE")</code>
+if it doesn't find it in <code>Sys.getenv("HOME")</code>.
+</p>
+<p>For the GitHub username it uses the <code>GITHUB_USERNAME</code>
+environment variable then it tries searching on GitHub
+for the user's email address.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A named character vector with entries: <code>username</code>,
+<code>fullname</code>, <code>email_address</code>, <code>gh_username</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other user names: <code>email_address</code>,
+<code>fullname</code>, <code>gh_username</code>,
+<code>username</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+whoami()
+
+## End(Not run)
+</code></pre>
+
+
+</div>

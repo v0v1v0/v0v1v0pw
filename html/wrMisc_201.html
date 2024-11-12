@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>partialDist</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Partial distance matrix (focus on closest)</h2>
+
+<h3>Description</h3>
+
+<p><code>partialDist</code> calculates distance matrix like <code>dist</code> for 1- or 2-dim data, but only partially, ie only cases of small distances.
+This function was made for treating very large data-sets where only very close distances to a given point need to be found,
+it allows to overcome memory-problems with larger data (and faster execution with &gt; 50 rows of 'dat').
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">partialDist(
+  dat,
+  groups,
+  overLap = TRUE,
+  method = "euclidean",
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(matrix of numeric values) main input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groups</code></td>
+<td>
+<p>(factor) to split using <code>cut</code> or specific custom grouping (length of dat)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overLap</code></td>
+<td>
+<p>(logical) if TRUE make groups overlapping by 1 value (ie maintain some context-information)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>'character' name of method passed to <code>dist</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a matrix with partial distances (not of class 'dist' object)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dist</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2016); mat3 &lt;- matrix(runif(300),nr=30)
+round(dist(mat3), 1)
+round(partialDist(mat3, gr=3), 1)
+</code></pre>
+
+
+</div>

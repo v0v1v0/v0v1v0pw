@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wkb_meta</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract meta information</h2>
+
+<h3>Description</h3>
+
+<p>Extract meta information
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wkb_meta(wkb, recursive = FALSE)
+
+wkt_meta(wkt, recursive = FALSE)
+
+wkt_streamer_meta(wkt, recursive = FALSE)
+
+wk_geometry_type(type_id)
+
+wk_geometry_type_id(type)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wkb</code></td>
+<td>
+<p>A <code>list()</code> of <code>raw()</code> vectors, such as that
+returned by <code>sf::st_as_binary()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>recursive</code></td>
+<td>
+<p>Pass <code>TRUE</code> to recurse into multi-geometries
+and collections to extract meta of sub-geometries</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wkt</code></td>
+<td>
+<p>A character vector containing well-known text.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type_id</code></td>
+<td>
+<p>An integer version of the geometry type</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>A string version of the geometry type (e.g.,
+point, linestring, polygon, multipoint, multilinestring,
+multipolygon, geometrycollection)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data.frame with columns:
+</p>
+
+<ul>
+<li> <p><code>feature_id</code>: The index of the top-level feature
+</p>
+</li>
+<li> <p><code>nest_id</code>: The recursion level (if feature is a geometry collection)
+</p>
+</li>
+<li> <p><code>part_id</code>: The part index (if nested within a multi-geometry or collection)
+</p>
+</li>
+<li> <p><code>type_id</code>: The type identifier (see <code>wk_geometry_type()</code>)
+</p>
+</li>
+<li> <p><code>size</code>: For points and linestrings the number of points, for polygons
+the number of rings, and for mutlti-geometries and collection types,
+the number of child geometries.
+</p>
+</li>
+<li> <p><code>srid</code>: The spatial reference identifier as an integer
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R">wkt_meta("POINT (30 10)")
+wkt_meta("GEOMETRYCOLLECTION (POINT (30 10))", recursive = FALSE)
+wkt_meta("GEOMETRYCOLLECTION (POINT (30 10))", recursive = TRUE)
+
+</code></pre>
+
+
+</div>

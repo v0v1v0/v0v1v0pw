@@ -1,0 +1,344 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>winratio</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Win Ratio for Prioritized Outcomes and 95% Confidence Interval</h2>
+
+<h3>Description</h3>
+
+<p>Calculate the win ratio for prioritized outcomes and the 95% confidence interval based on Bebu and Lachin (2016). Three type of outcomes can be analyzed: survival "failure-time" events, repeated survival "failure-time" events and continuous or ordinal "non-failure time" events that are captured at specific time-points in the study.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">winratio(id, trt, active = NULL, outcomes, fu, data, keep.matrix = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+
+<p>a string indicating the patient ID variable. The patient ID variable must not contain missing values or duplicates.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trt</code></td>
+<td>
+
+<p>a string indicating the treatment variable. The variable can be of any type (binary, numeric, character, factor) and must imperatively have 2 unique values/levels.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>active</code></td>
+<td>
+
+<p>a numeric or string value used to define the active treatment group for the calculation of the win ratio. If <code>active = NULL</code> (default value), active group is automatically determined according to the type of treatment variable:
+</p>
+
+<ul>
+<li>
+<p> binary variable: active group = 1.
+</p>
+</li>
+<li>
+<p> numeric variable: active group = maximum value.
+</p>
+</li>
+<li>
+<p> character variable: active group = last string after sorting the character variable in ascending order.
+</p>
+</li>
+<li>
+<p> factor variable: active group = last level.
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>outcomes</code></td>
+<td>
+<p>a list used to define all outcomes in order of priority. 
+The first element to be defined must be the outcome considered as being of greater clinical importance, usually this outcome is a fatal event. 
+Each element must be a character vector of length 3 or a character list of length 3 depending on the type of outcome (survival event, repeated survival event, continuous or ordinal event): 
+</p>
+
+<ul>
+<li>
+<p>for survival events, the element is a character vector <code>c(x, "s", y)</code>, where <code>x</code> is a string indicating the name of the event variable, <code>"s"</code> indicating that this outcome is a "failure-time" event, and <code>y</code> is a string indicating the name of the time-to-event variable.
+ 
+</p>
+</li>
+<li>
+<p>for repeated survival events, note <code>k</code> the maximum number of events observed during follow-up, the element is a character list <code>list(x, "r", y)</code>, where <code>x = c(x1, ..., xk)</code> is a character vector of length <code>k</code> indicating the name of event variables, <code>"r"</code> indicating that this outcome is a "failure-time" repeated event, and <code>y = c(y1, ..., yk)</code> is a character vector of length <code>k</code> indicating the name of time-to-event variables corresponding to the event variables.
+
+</p>
+</li>
+<li>
+<p>for continuous or ordinal events, the element is a character vector <code>c(x, "c", d)</code>, where <code>x</code> is a string indicating the name of the continuous or ordinal variable, <code>"c"</code> indicating that this outcome is a continuous or ordinal event, and <code>d</code> is a string with two options <code>"&lt;"</code> or <code>"&gt;"</code> indicating the direction of deterioration or worsening.
+
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fu</code></td>
+<td>
+
+<p>a string indicating the name of the follow-up time variable.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>a data frame containing all the variables listed in the <code>id</code>, <code>trt</code>, <code>outcomes</code> and <code>fu</code> arguments.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep.matrix</code></td>
+<td>
+
+<p>a logical value indicating if the 'win-loss' matrix is kept. Default value is <code>FALSE</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+
+<h4>'win-loss' matrix</h4>
+
+<p>Let <code>n1</code> the number of patients in the active group and <code>n0</code> the number of patients in the other group. 
+The 'win-loss' matrix is a matrix <code>M</code> of dimension <code>n1 x n0</code> with its element <code>M[i,j]</code> is defined as:
+</p>
+<p><code>M[i,j] = 1</code> if <code>i</code> wins against <code>j</code> on 1st outcome,
+</p>
+<p><code>M[i,j] = -1</code> if <code>i</code> loses against <code>j</code> on 1st outcome,
+</p>
+<p><code>M[i,j] = k</code> if <code>i</code> wins on outcome <code>k</code> after ties with <code>j</code> on outcomes <code>1</code> to <code>(k-1)</code>,
+</p>
+<p><code>M[i,j] = -k</code> if <code>i</code> loses on outcome <code>k</code> after ties with <code>j</code> on outcomes <code>1</code> to <code>(k-1)</code>,
+</p>
+<p><code>M[i,j] = 0</code> if <code>i</code> and <code>j</code> ties on all outcomes.
+</p>
+
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+
+<p>a list with all arguments entered <code>list(id, trt, active, outcomes, fu, data, keep.matrix)</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group1</code></td>
+<td>
+
+<p>the value/level of the active group (group 1).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group0</code></td>
+<td>
+
+<p>the value/level of the other group (group 0).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n1</code></td>
+<td>
+
+<p>the number of subjects in group 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n0</code></td>
+<td>
+
+<p>the number of subjects in group 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+
+<p>the total number of subjects.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wins</code></td>
+<td>
+
+<p>a vector of numbers of 'winners' for each outcome.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loss</code></td>
+<td>
+
+<p>a vector of numbers of 'losers' for each outcome.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>total.wins</code></td>
+<td>
+
+<p>the total number of 'winners'.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>total.loss</code></td>
+<td>
+
+<p>the total number of 'losers'.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>total.ties</code></td>
+<td>
+
+<p>the total number of ties.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wr</code></td>
+<td>
+
+<p>the win ratio.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>v</code></td>
+<td>
+
+<p>the estimated variance of win ratio.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+
+<p>the value of the test statistic.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value</code></td>
+<td>
+
+<p>the p-value of the test.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wr.lower</code></td>
+<td>
+
+<p>the lower end of the 95% confidence interval.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wr.upper</code></td>
+<td>
+
+<p>the upper end of the 95% confidence interval.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wr.matrix</code></td>
+<td>
+
+<p>the 'win-loss' matrix (only if <code>keep.matrix = T</code>). See details above.
+</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Load survival package to use the dataset 'bladder1'
+library(survival)
+
+# Creation of dataset 'df' with 3 outcomes:
+#   Outcome 1: death (survival event)
+#   Outcome 2: cancer recurrence (repeated survival event)
+#   Outcome 3: size of largest initial tumour (continuous event) 
+data1 &lt;- bladder1  %&gt;%  
+  mutate(trt = if_else(treatment == "placebo", "Placebo", "Treatment")) %&gt;%
+  group_by(id) %&gt;% 
+  mutate(death = if_else(max(status) %in% c(2, 3), 1, 0),
+         t2death = max(stop)) %&gt;% 
+  ungroup() %&gt;%
+  select(id, trt, death, t2death, number, size) %&gt;% 
+ unique()
+
+data2 &lt;- bladder1 %&gt;% 
+  filter(status == 1) %&gt;% 
+  select(id, t2recurr = stop) %&gt;%
+  mutate(recurr = 1) %&gt;% 
+  arrange(id, t2recurr) %&gt;% 
+  group_by(id) %&gt;% 
+  mutate(nrecurr = row_number()) %&gt;% 
+  ungroup() %&gt;% 
+  full_join((data1 %&gt;% select(id)), by = "id") %&gt;% 
+  complete(id, nrecurr) %&gt;%
+  filter(!is.na(nrecurr)) %&gt;% 
+  full_join((data1 %&gt;% select(id, t2death)), by = "id") %&gt;% 
+  mutate(
+    recurr = replace(recurr, is.na(recurr), 0),
+    t2recurr = if_else(is.na(t2recurr), t2death, t2recurr)
+  ) %&gt;% 
+  select(id, nrecurr, recurr, t2recurr)
+
+data3 &lt;- data2 %&gt;% 
+  pivot_wider(id_cols = "id", names_from =  nrecurr, 
+              values_from = recurr, names_prefix  = "recurr") 
+
+data4 &lt;- data2 %&gt;% 
+  pivot_wider(id_cols = "id", names_from =  nrecurr, 
+              values_from = t2recurr, names_prefix  = "t2recurr") 
+
+data5 &lt;- full_join(data3, data4, by = "id")
+
+df &lt;- full_join(data1, data5, by = "id")
+
+# Calculate the win ratio
+wr &lt;- winratio(id = "id", trt = "trt", active = "Treatment", 
+               outcomes = list(outc1 = c("death", "s", "t2death"),
+                               outc2 = list(paste0("recurr", 1:9), "r", paste0("t2recurr", 1:9)),
+                               outc3 = c("size", "c", "&gt;")), 
+               fu = "t2death", data = df)
+summary(wr)
+</code></pre>
+
+
+</div>

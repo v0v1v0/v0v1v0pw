@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>readFasta2</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read File Of Protein Sequences In Fasta Format</h2>
+
+<h3>Description</h3>
+
+<p>Read fasta formatted file (from <a href="https://www.uniprot.org">UniProt</a>) to extract (protein) sequences and name.
+If <code>tableOut=TRUE</code> output may be organized as matrix for separating meta-annotation (eg uniqueIdentifier, entryName, proteinName, GN) in separate columns.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">readFasta2(
+  filename,
+  delim = "|",
+  databaseSign = c("sp", "tr", "generic", "gi"),
+  removeEntries = NULL,
+  tableOut = FALSE,
+  UniprSep = c("OS=", "OX=", "GN=", "PE=", "SV="),
+  strictSpecPattern = TRUE,
+  cleanCols = TRUE,
+  silent = FALSE,
+  callFrom = NULL,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>filename</code></td>
+<td>
+<p>(character) names fasta-file to be read</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>delim</code></td>
+<td>
+<p>(character) delimeter at header-line</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>databaseSign</code></td>
+<td>
+<p>(character) characters at beginning right after the '&gt;' (typically specifying the data-base-origin), they will be excluded from the sequance-header</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>removeEntries</code></td>
+<td>
+<p>(character) if <code>'empty'</code> allows removing entries without any sequence entries; set to <code>'duplicated'</code> to remove duplicate entries (same sequence and same header)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tableOut</code></td>
+<td>
+<p>(logical) toggle to return named character-vector or matrix with enhaced parsing of fasta-header. 
+The resulting matrix will contain the comumns 'database','uniqueIdentifier','entryName','proteinName','sequence' and further columns depending on argument <code>UniprSep</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>UniprSep</code></td>
+<td>
+<p>(character) separators for further separating entry-fields if <code>tableOut=TRUE</code>, see also <a href="https://www.uniprot.org/help/fasta-headers">UniProt-FASTA-headers</a></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strictSpecPattern</code></td>
+<td>
+<p>(logical or character) pattern for recognizing EntryName which is typically preceeding ProteinName (separated by ' '); if <code>TRUE</code> the 
+name (capital letters and digits) must contain in the second part '_' plus capital letters, if <code>FALSE</code> the second part may be absent; if not matching pattern the text will be at the beggining of the ProteinName</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cleanCols</code></td>
+<td>
+<p>(logical) remove columns with all entries NA, if <code>tableOut=TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) supplemental messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns (depending on argument <code>tableOut</code>) a simple character vector (of sequences) with (entire) Uniprot annotation as name or 
+b) a matrix with columns: 'database','uniqueIdentifier','entryName','proteinName','sequence' and further columns depending on argument <code>UniprSep</code>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>writeFasta2</code> for writing as fasta; for reading <code>scan</code> or  <code>read.fasta</code> from the package <a href="https://CRAN.R-project.org/package=seqinr">seqinr</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Tiny example with common contaminants
+path1 &lt;- system.file('extdata', package='wrProteo')
+fiNa &lt;-  "conta1.fasta.gz"
+fasta1 &lt;- readFasta2(file.path(path1, fiNa))
+## now let's read and further separate annotation-fields
+fasta2 &lt;- readFasta2(file.path(path1, fiNa), tableOut=TRUE)
+str(fasta1)
+</code></pre>
+
+
+</div>

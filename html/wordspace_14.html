@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>convert.lemma</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Transform CWB/Penn-Style Lemmas into Other Notation Formats (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>Transform POS-disambiguated lemma strings in CWB/Penn format (see Details)
+into several other notation formats.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+convert.lemma(lemma, format=c("CWB", "BNC", "DM", "HW", "HWLC"), hw.tolower=FALSE)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lemma</code></td>
+<td>
+<p>a character vector specifying one or more POS-disambiguated lemmas in CWB/Penn notation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>the notation format to be generated (see Details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hw.tolower</code></td>
+<td>
+<p>convert headword part to lowercase, regardless of output format</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Input strings must be POS-disambiguated lemmas in CWB/Penn notation, i.e. in the form
+</p>
+<pre>
+    &lt;headword&gt;_&lt;P&gt; </pre>
+<p>where <code>&lt;headword&gt;</code> is a dictionary headword (which may be case-sensitive) and <code>&lt;P&gt;</code> is
+a one-letter code specifying the simple part of speech.  Standard POS codes are
+</p>
+<pre>
+    N ... nouns
+    Z ... proper nouns
+    V ... lexical and auxiliary verbs
+    J ... adjectives
+    R ... adverbs
+    I ... prepositions (including all uses of "to")
+    D ... determiners
+    . ... punctuation
+  </pre>
+<p>For other parts of speech, the first character of the corresponding Penn tag may be used.
+Note that these codes are not standardised and are only useful for distinguishing between content
+words and function words.
+</p>
+<p>The following output formats are supported:
+</p>
+
+<dl>
+<dt><code>CWB</code></dt>
+<dd>
+<p>returns input strings without modifications, but validates that they are in CWB/Penn format
+</p>
+</dd>
+<dt><code>BNC</code></dt>
+<dd>
+<p>BNC-style POS-disambiguated lemmas based on the simplified CLAWS tagset.
+The headword part of the lemma is unconditionally converted to lowercase.
+The standard POS codes listed above are translated into
+<code>SUBST</code> (nouns and proper nouns), <code>VERB</code> (verbs), <code>ADJ</code> (adjectives), <code>ADV</code> (adverbs),
+<code>ART</code> (determiners), <code>PREP</code> (prepositions), and <code>STOP</code> (punctuation).
+Other POS codes have no direct CLAWS equivalents and are mapped to <code>UNC</code> (unclassified),
+so the transformation should only be used for the categories listed above.
+</p>
+</dd>
+<dt><code>DM</code></dt>
+<dd>
+<p>POS-disambiguated lemmas in the format used by Distributional Memory (Baroni &amp; Lenci 2010),
+viz. <code>&lt;headword&gt;-&lt;p&gt;</code> with POS code in lowercase and headword in its original capitalisation.
+For example, <code>light_N</code> will be mapped to <code>light-n</code>.
+</p>
+</dd>
+<dt><code>HW</code></dt>
+<dd>
+<p>just the undisambiguated headword
+</p>
+</dd>
+<dt><code>HWLC</code></dt>
+<dd>
+<p>undisambiguated headword mapped to lowercase (same as <code>HW</code> with <code>hw.tolower=TRUE</code>)
+</p>
+</dd>
+</dl>
+<h3>Value</h3>
+
+<p>A character vector of the same length as <code>lemma</code>, containing the transformed lemmas.
+See Details above for the different output formats.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+<h3>References</h3>
+
+<p>Baroni, Marco and Lenci, Alessandro (2010).
+Distributional Memory: A general framework for corpus-based semantics.
+<em>Computational Linguistics</em>, <b>36</b>(4), 673–712.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+convert.lemma(RG65$word1, "CWB") # original format
+convert.lemma(RG65$word1, "BNC") # BNC-style (simple CLAWS tags)
+convert.lemma(RG65$word1, "DM")  # as in Distributional Memory
+convert.lemma(RG65$word1, "HW")  # just the headword
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,56 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>write_mol</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Export a Chemical Structure in .mol Format.</h2>
+
+<h3>Description</h3>
+
+<p>Some webchem functions return character strings that contain a chemical
+structure in Mol format. This function exports a character string as a .mol
+file so it can be imported with other chemistry software.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">write_mol(x, file = "")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a character string of a chemical structure in mol format.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>file</code></td>
+<td>
+<p>a character vector of file names</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# export Mol file
+csid &lt;- get_csid("bergapten")
+mol3d &lt;- cs_compinfo(csid$csid, field = "Mol3D")
+write_mol(mol3d$mol3D, file = mol3d$id)
+
+# export multiple Mol files
+csids &lt;- get_csid(c("bergapten", "xanthotoxin"))
+mol3ds &lt;- cs_compinfo(csids$csid, field = "Mol3D")
+mapply(function(x, y) write_mol(x, y), x = mol3ds$mol3D, y = mol3ds$id)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

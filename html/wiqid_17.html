@@ -1,0 +1,219 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Bayesian Occupancy Single Season</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Bayesian single-season occupancy modelling
+</h2>
+
+<h3>Description</h3>
+
+<p>Functions to estimate occupancy from detection/non-detection data for a single season using a Gibbs sampler coded in R or JAGS.
+</p>
+<p><code>BoccSS0</code> runs a model in R without covariates, and allows priors to be specified as beta distributions for probability of occupancy and probability of detection.
+</p>
+<p><code>BoccSS</code> runs a model in R allowing for covariates, using a probit link and conjugate normal priors, which can be specified as mean and covariance.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">BoccSS0(y, n, psiPrior=c(1,1), pPrior=c(1,1),
+                    chains=3, draws=30000, burnin=100, ...)
+
+BoccSS(DH, model=NULL, data=NULL, priors=list(),
+                    chains=3, draws=30000, burnin=1000, thin=1, parallel,
+                    seed=NULL, doWAIC=FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>a vector with the number of detections at each site; or a 1/0/NA matrix (or data frame) of detection histories, sites x occasions.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+
+<p>a scalar or vector with the number of visits (survey occasions) at each site; ignored if <code>y</code> is a matrix or data frame.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>psiPrior, pPrior</code></td>
+<td>
+
+<p>parameters for beta distributions to be used as priors for psi and p.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DH</code></td>
+<td>
+
+<p>a 1/0/NA matrix (or data frame) of detection histories, sites x occasions.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+
+<p>a list of formulae symbolically defining a linear predictor for each parameter in terms of covariates. If NULL, an intercept-only model is used, ie, psi(.) p(.).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>a data frame containing the variables in the model. For <code>occSStime</code>, a data frame with a row for each survey occasion; otherwise, a row for each site. Each site covariate has one column. Each survey covariate has one column for each occasion, and the column name must end with the occasion number (without leading zeros); eg, <code>Cov1, Cov2, ..., Cov15</code>. All covariates should be included in <code>data</code>, otherwise they will be sought in enclosing environments, which may not produce what you want – and they won't be standardised.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>priors</code></td>
+<td>
+
+<p>a list with elements for prior mean and variance for coefficients; see Details. If NULL, improper flat priors are used.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chains</code></td>
+<td>
+
+<p>number of MCMC chains to run.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>draws</code></td>
+<td>
+
+<p>minimum number of values to return. The actual number will be a multiple of the number of chains.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>burnin</code></td>
+<td>
+
+<p>number of iterations per chain to discard as burn-in.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thin</code></td>
+<td>
+
+<p>the thinning interval between consecutive values in the chain.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+
+<p>logical; if TRUE <em>and</em> <code>n.chains</code> &gt; 1 <em>and</em> available cores (as returned by <code>parallel::detectCores</code>) &gt; 2, chains will be run in parallel. If missing, chains will be run in parallel if <code>n.chains</code> &lt; available cores.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doWAIC</code></td>
+<td>
+
+<p>logical; if TRUE, the Watanabe-Akaike Information Criterion is calculated. NOTE: THIS FEATURE IS STILL EXPERIMENTAL.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+
+<p>for reproducible results; note that parallel and sequential methods use different random number generators, so will give different results with the same seed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>other arguments to pass to the function.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>BoccSS0</code> implements a simple model with one parameter for probability of occupancy and one for probability of detection, ie. a <code>psi(.) p(.)</code> model, using a Gibbs sampler implemented in R.
+</p>
+<p>Independent beta distributions are used as priors for <code>BoccSS0</code>, as specified by <code>psiPrior</code> and <code>pPrior</code>. The defaults, <code>c(1, 1)</code>, correspond to uniform priors on the probabilities of occupancy and detection.
+</p>
+<p><code>BoccSS</code> uses a probit link to model occupancy and detection as a function of site covariates or survey covariates, as specified by <code>model</code>(Dorazio and Rodriguez 2011). It includes a built in <code>.time</code> covariate which can be used for modelling p with time as a fixed effect, and <code>.Time, .Time2, .Time3</code> for a linear, quadratic or cubic trend. A built-in <code>.b</code> covariate corresponds to a behavioural effect, where detection depends on whether the species was detected on the previous occasion or not.
+</p>
+<p>Note that most software uses a logistic (logit) link; see Links.
+Coefficients on the probit scale are about half the size of the equivalent on the logit scale.
+</p>
+<p>Priors for <code>BoccSS</code> are listed in the <code>priors</code> argument, which may contain elements:
+</p>
+<p><code>muPsi</code> and <code>muP</code> : the means for occupancy and detection coefficients respectively. This may be a vector with one value for each coefficient, including the intercept, or a scalar, which will be used for all. The default is 0.
+</p>
+<p><code>sigmaPsi</code> and <code>sigmaP</code> : the (co)variance for occupancy and detection coefficients respectively. This may be (1) a vector with one value for each coefficient, including the intercept, which represents the variance, assuming independence, or (2) a scalar, which will be used for all, or (3) a variance-covariance matrix. The default is 1, which for a probit link and standardized covariates is only mildly informative.
+</p>
+<p>When specifying priors, note that numerical covariates are standardized internally before fitting the model. For an intercept-only model, a prior of Normal(0, 1) on the probit scale implies a Uniform(0, 1) or Beta(1, 1) prior on the probability scale.
+</p>
+<p>If you are unsure of the order of predictors, do a short run and check the output, or pass unusable values (eg, <code>muPsi=numeric(100)</code>) and check the error message.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an object of class <code>mcmcOutput</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith. <code>BoccSS</code> uses the Gibbs sampler described by Dorazio and Rodriguez (2012).
+</p>
+
+
+<h3>References</h3>
+
+<p>MacKenzie, D I; J D Nichols; A J Royle; K H Pollock; L L Bailey; J E Hines 2006. <em>Occupancy Estimation and Modeling : Inferring Patterns and Dynamics of Species Occurrence</em>. Elsevier Publishing.
+</p>
+<p>Dorazio and Rodriguez. 2012. A Gibbs sampler for Bayesian analysis of site-occupancy data. <em>Methods in Ecology and Evolution</em>, 3, 1093-1098
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See the examples for the <code>weta</code> data set.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># The blue ridge salamanders data from MacKenzie et al (2006) p99:
+data(salamanders)
+y &lt;- rowSums(salamanders)
+n &lt;- rowSums(!is.na(salamanders))
+
+tmp &lt;- BoccSS0(y, n)
+tmp
+occSS0(y, n)  # for comparison
+plot(tmp)
+</code></pre>
+
+
+</div>

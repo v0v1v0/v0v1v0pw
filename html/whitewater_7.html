@@ -1,0 +1,143 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ww_instantaneousUSGS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Instantaneous USGS</h2>
+
+<h3>Description</h3>
+
+<p>This function generates Instantaneous NWIS data from
+<a href="https://waterservices.usgs.gov/">https://waterservices.usgs.gov/</a>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ww_instantaneousUSGS(
+  procDV,
+  sites = NULL,
+  parameter_cd = NULL,
+  options = wwOptions(),
+  parallel = FALSE,
+  verbose = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>procDV</code></td>
+<td>
+<p>A previously created ww_dvUSGS object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sites</code></td>
+<td>
+<p>A <code>vector</code> of USGS NWIS sites. <code>optional</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameter_cd</code></td>
+<td>
+<p>A USGS code parameter code, only if using <code>sites</code> argument.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>options</code></td>
+<td>
+<p>A wwOptions call.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p><code>logical</code> indicating whether to use future_map().</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p><code>logical</code> for printing information. TRUE (default).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments to pass on to future_map.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>tibble</code> with instantaneous values.
+</p>
+
+
+<h3>Note</h3>
+
+<p>For performance reasons, with multi-site retrievals you may
+retrieve data since October 1, 2007 only. If a previously created ww_dvUSGS object is not used then the user needs to
+provide a <code>sites</code> vector. This will run ww_dvUSGS in the background.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+library(whitewater)
+yaak_river_dv &lt;- ww_dvUSGS('12304500',
+parameter_cd = '00060',
+wy_month = 10)
+
+yaak_river_iv &lt;- ww_instantaneousUSGS(yaak_river_dv)
+
+#change number of days
+
+yaak_river_iv &lt;- ww_instantaneousUSGS(yaak_river_dv,
+                                options = wwOptions(period = 365))
+
+# get by date range
+
+yaak_river_wy &lt;- ww_instantaneousUSGS(yaak_river_dv,
+                                options = wwOptions(date_range = 'date_range',
+                                                    dates = c('2022-03-01', '2022-05-11')))
+
+# get most recent
+
+yaak_river_wy &lt;- ww_instantaneousUSGS(yaak_river_dv,
+                                options = wwOptions(date_range = 'recent'))
+
+#parallel
+
+#get sites
+
+huc17_sites &lt;- dataRetrieval::whatNWISdata(huc = 17,
+siteStatus = 'active',
+service = 'dv',
+parameterCd = '00060')
+
+library(future)
+#need to call future::plan()
+plan(multisession(workers = availableCores()-1))
+
+pnw_dv &lt;- ww_dvUSGS(huc17_sites$site_no,
+parameter_cd = '00060',
+wy_month = 10,
+parallel = TRUE)
+
+pnw_iv &lt;- ww_instantaneousUSGS(pnw_dv,
+                    parallel = TRUE)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

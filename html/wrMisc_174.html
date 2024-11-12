@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>matchSampToPairw</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Match names to concatenated pairs of names</h2>
+
+<h3>Description</h3>
+
+<p>The column-names of multiple pairwise testing contain the names of the initial groups/conditions tested, plus there is a separator (eg '-' in <code>moderTestXgrp</code>).  
+Thus function allows to map back which groups/conditions were used by returning the index of the respective groups used in pair-wise sets.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">matchSampToPairw(
+  grpNa,
+  pairwNa,
+  sep = NULL,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>grpNa</code></td>
+<td>
+<p>(character) the names of the groups of replicates (ie conditions) used to test</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pairwNa</code></td>
+<td>
+<p>(character) the names of pairwise-testing (ie 'concatenated' <code>sampNa</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep</code></td>
+<td>
+<p>(character) if not <code>NULL</code> the characters given will be used via <code>stringsplit</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>There are two modes of operation : 1) Argument <code>sep</code> is set to <code>NULL</code> :  The names of initial groups/conditions (<code>grpNa</code>) 
+will be tested for exact pattern matching either at beginning or at end of pair-wise names (<code>pairwNa</code>).
+This approach has the advantage that it does not need to be known what character(s) were used as separator (or they may change), 
+but the disadvantage that in case the perfect <code>grpNa</code> was not given, the longest best match of <code>grpNa</code> will be returned.
+</p>
+<p>2) The separator <code>sep</code> is given and exact matches at both sides will be searched.
+However, if the character(s) from <code>sep</code> do appear inside <code>grpNa</code> no matches will be found.
+</p>
+<p>If some <code>grpNa</code> are not found in <code>pairwNa</code> this will be marked as NA.
+</p>
+
+
+<h3>Value</h3>
+
+<p>matrix of 2 columns with inidices of <code>sampNa</code> with <code>pairwNa</code> as rows
+</p>
+
+
+<h3>See Also</h3>
+
+<p>(for running multiple pair-wise test) <code>moderTestXgrp</code>, <code>grep</code>, <code>strsplit</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">pairwNa1 &lt;- c("abc-efg","abc-hij","efg-hij")
+grpNa1 &lt;- c("hij","abc","abcc","efg","klm")
+matchSampToPairw(grpNa1, pairwNa1) 
+
+pairwNa2 &lt;- c("abc-efg","abcc-hij","abc-hij","abc-hijj","zz-zz","efg-hij")
+matchSampToPairw(grpNa1, pairwNa2) 
+</code></pre>
+
+
+</div>

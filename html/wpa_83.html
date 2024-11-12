@@ -1,0 +1,168 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>flag_extreme</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Warn for extreme values by checking against a threshold</h2>
+
+<h3>Description</h3>
+
+<p>This is used as part of data validation to check if there are extreme values
+in the dataset.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">flag_extreme(
+  data,
+  metric,
+  person = TRUE,
+  threshold,
+  mode = "above",
+  return = "message"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A Standard Person Query dataset in the form of a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metric</code></td>
+<td>
+<p>A character string specifying the metric to test.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>person</code></td>
+<td>
+<p>A logical value to specify whether to calculate
+person-averages. Defaults to <code>TRUE</code> (person-averages calculated).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>Numeric value specifying the threshold for flagging.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>String determining mode to use for identifying extreme values.
+</p>
+
+<ul>
+<li> <p><code>"above"</code>: checks whether value is great than the threshold (default)
+</p>
+</li>
+<li> <p><code>"equal"</code>: checks whether value is equal to the threshold
+</p>
+</li>
+<li> <p><code>"below"</code>: checks whether value is below the threshold
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String specifying what to return. This must be one of the
+following strings:
+</p>
+
+<ul>
+<li> <p><code>"text"</code>
+</p>
+</li>
+<li> <p><code>"message"</code>
+</p>
+</li>
+<li> <p><code>"table"</code>
+</p>
+</li>
+</ul>
+<p>See <code>Value</code> for more information.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A different output is returned depending on the value passed to the <code>return</code>
+argument:
+</p>
+
+<ul>
+<li> <p><code>"text"</code>: string. A diagnostic message.
+</p>
+</li>
+<li> <p><code>"message"</code>: message on console. A diagnostic message.
+</p>
+</li>
+<li> <p><code>"table"</code>: data frame. A person-level table with <code>PersonId</code> and the
+extreme values of the selected metric.
+</p>
+</li>
+</ul>
+<h3>See Also</h3>
+
+<p>Other Data Validation: 
+<code>check_query()</code>,
+<code>extract_hr()</code>,
+<code>flag_ch_ratio()</code>,
+<code>flag_em_ratio()</code>,
+<code>flag_outlooktime()</code>,
+<code>hr_trend()</code>,
+<code>hrvar_count()</code>,
+<code>hrvar_count_all()</code>,
+<code>hrvar_trend()</code>,
+<code>identify_churn()</code>,
+<code>identify_holidayweeks()</code>,
+<code>identify_inactiveweeks()</code>,
+<code>identify_nkw()</code>,
+<code>identify_outlier()</code>,
+<code>identify_privacythreshold()</code>,
+<code>identify_query()</code>,
+<code>identify_shifts()</code>,
+<code>identify_shifts_wp()</code>,
+<code>identify_tenure()</code>,
+<code>remove_outliers()</code>,
+<code>standardise_pq()</code>,
+<code>subject_validate()</code>,
+<code>subject_validate_report()</code>,
+<code>track_HR_change()</code>,
+<code>validation_report()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># The threshold values are intentionally set low to trigger messages.
+flag_extreme(sq_data, "Email_hours", threshold = 15)
+
+# Return a summary table
+flag_extreme(sq_data, "Email_hours", threshold = 15, return = "table")
+
+# Person-week level
+flag_extreme(sq_data, "Email_hours", person = FALSE, threshold = 15)
+
+# Check for values equal to threshold
+flag_extreme(sq_data, "Email_hours", person = TRUE, mode = "equal", threshold = 0)
+
+# Check for values below threshold
+flag_extreme(sq_data, "Email_hours", person = TRUE, mode = "below", threshold = 5)
+
+
+</code></pre>
+
+
+</div>

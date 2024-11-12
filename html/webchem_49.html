@@ -1,0 +1,117 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pc_prop</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve compound properties from a pubchem CID</h2>
+
+<h3>Description</h3>
+
+<p>Retrieve compound information from pubchem CID, see
+<a href="https://pubchem.ncbi.nlm.nih.gov/">https://pubchem.ncbi.nlm.nih.gov/</a>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pc_prop(cid, properties = NULL, verbose = getOption("verbose"), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>cid</code></td>
+<td>
+<p>character; Pubchem ID (CID).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>properties</code></td>
+<td>
+<p>character vector; properties to retrieve, e.g.
+c("MolecularFormula", "MolecularWeight"). If NULL (default) all available
+properties are retrieved. See
+<a href="https://pubchem.ncbi.nlm.nih.gov/docs/pug-rest">https://pubchem.ncbi.nlm.nih.gov/docs/pug-rest</a>
+for a list of all available properties.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical; should a verbose output be printed to the console?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>currently not used.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a data.frame
+</p>
+
+
+<h3>Note</h3>
+
+<p>Please respect the Terms and Conditions of the National Library of
+Medicine, <a href="https://www.nlm.nih.gov/databases/download.html">https://www.nlm.nih.gov/databases/download.html</a> the data
+usage policies of National Center for Biotechnology Information,
+<a href="https://www.ncbi.nlm.nih.gov/home/about/policies/">https://www.ncbi.nlm.nih.gov/home/about/policies/</a>,
+<a href="https://pubchem.ncbi.nlm.nih.gov/docs/programmatic-access">https://pubchem.ncbi.nlm.nih.gov/docs/programmatic-access</a>, and the data
+usage policies of the indicidual data sources
+<a href="https://pubchem.ncbi.nlm.nih.gov/sources/">https://pubchem.ncbi.nlm.nih.gov/sources/</a>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Wang, Y., J. Xiao, T. O. Suzek, et al. 2009 PubChem: A Public
+Information System for
+Analyzing Bioactivities of Small Molecules. Nucleic Acids Research 37:
+623–633.
+</p>
+<p>Kim, Sunghwan, Paul A. Thiessen, Evan E. Bolton, et al. 2016
+PubChem Substance and Compound Databases. Nucleic Acids Research 44(D1):
+D1202–D1213.
+</p>
+<p>Kim, S., Thiessen, P. A., Bolton, E. E., &amp; Bryant, S. H. (2015).
+PUG-SOAP and PUG-REST: web services for programmatic access to chemical
+information in PubChem. Nucleic acids research, gkv396.
+</p>
+<p>Eduard Szöcs, Tamás Stirling, Eric R. Scott, Andreas Scharmüller,
+Ralf B. Schäfer (2020). webchem: An R Package to Retrieve Chemical
+Information from the Web. Journal of Statistical Software, 93(13).
+<a href="https://doi.org/10.18637/jss.v093.i13">doi:10.18637/jss.v093.i13</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>get_cid</code>, <code>pc_sect</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# might fail if API is not available
+pc_prop(5564)
+
+###
+# multiple CIDS
+comp &lt;- c("Triclosan", "Aspirin")
+cids &lt;- get_cid(comp)
+pc_prop(cids$cid, properties = c("MolecularFormula", "MolecularWeight",
+"CanonicalSMILES"))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,160 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>intramodularConnectivity</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Calculation of intramodular connectivity </h2>
+
+<h3>Description</h3>
+
+<p>Calculates intramodular connectivity, i.e., connectivity of nodes to other nodes within the same
+module.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">intramodularConnectivity(adjMat, colors, scaleByMax = FALSE)
+
+intramodularConnectivity.fromExpr(datExpr, colors, 
+              corFnc = "cor", corOptions = "use = 'p'",
+              weights = NULL,
+              distFnc = "dist", distOptions = "method = 'euclidean'",
+              networkType = "unsigned", power = if (networkType=="distance") 1 else 6,
+              scaleByMax = FALSE,
+              ignoreColors = if (is.numeric(colors)) 0 else "grey",
+              getWholeNetworkConnectivity = TRUE)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>adjMat</code></td>
+<td>
+<p> adjacency matrix, a square, symmetric matrix with entries between 0 and 1. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colors</code></td>
+<td>
+<p> module labels. A vector of length <code>ncol(adjMat)</code> giving a module label for each
+gene (node) of the network.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scaleByMax</code></td>
+<td>
+<p> logical: should intramodular connectivities be scaled by the maximum IM connectivity
+in each module? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>datExpr</code></td>
+<td>
+<p> data frame or matrix containing expression data. Columns correspond to genes and rows to
+samples.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corFnc</code></td>
+<td>
+<p> character string specifying the function to be used to calculate co-expression
+similarity for correlation networks.
+Defaults to Pearson correlation. Any function returning values between -1 and 1 can be used. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corOptions</code></td>
+<td>
+<p> character string specifying additional arguments to be passed to the function given
+by <code>corFnc</code>. Use <code>"use = 'p', method = 'spearman'"</code> to obtain Spearman correlation.   </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>optional matrix of the same dimensions as <code>datExpr</code>, giving the weights for individual
+observations in <code>datExpr</code>. These will be passed on to the correlation function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distFnc</code></td>
+<td>
+<p> character string specifying the function to be used to calculate co-expression
+similarity for distance networks. Defaults to the function <code>dist</code>.
+Any function returning non-negative values can be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distOptions</code></td>
+<td>
+<p> character string specifying additional arguments to be passed to the function given
+by <code>distFnc</code>. For example, when the function  <code>dist</code> is used, the argument <code>method</code>
+can be used to specify various ways of computing the distance. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkType</code></td>
+<td>
+<p>network type. Allowed values are (unique abbreviations of) <code>"unsigned"</code>,
+<code>"signed"</code>, <code>"signed hybrid"</code>, <code>"distance"</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>soft thresholding power. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ignoreColors</code></td>
+<td>
+<p>level(s) of <code>colors</code> that identifies unassigned genes. The intramodular
+connectivity in this "module" will not be calculated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getWholeNetworkConnectivity</code></td>
+<td>
+<p>logical: should whole-network connectivity be computed as well? For
+large networks, this can be quite time-consuming.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The module labels can be numeric or character. For each node (gene), the function sums adjacency
+entries (excluding the diagonal) to other nodes within the same module. Optionally, the connectivities
+can be scaled by the maximum connectivy in each module. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>If input <code>getWholeNetworkConnectivity</code> is <code>TRUE</code>, a data frame with 4 columns giving the total connectivity, intramodular connectivity, extra-modular
+connectivity, and the difference of the intra- and extra-modular connectivities for all genes; otherwise a
+vector of intramodular connectivities, 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Steve Horvath and Peter Langfelder</p>
+
+
+<h3>References</h3>
+
+<p> Dong J, Horvath S (2007) Understanding Network Concepts in Modules, BMC Systems Biology
+2007, 1:24 </p>
+
+
+<h3>See Also</h3>
+
+ <p><code>adjacency</code> </p>
+
+
+</div>

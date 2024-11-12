@@ -1,0 +1,87 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>portmanteauTest</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Portmanteau tests</h2>
+
+<h3>Description</h3>
+
+<p>Realizes portmanteau tests of the first m lags, this function uses <code>portmanteauTest.h</code>
+for h in 1:m.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">portmanteauTest(ar = NULL, ma = NULL, y, m = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ar</code></td>
+<td>
+<p>Vector of AR coefficients. If <code>NULL</code>, it is a MA process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ma</code></td>
+<td>
+<p>Vector of MA coefficients. If <code>NULL</code>, it is an AR process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Univariate time series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>Integer for the lag.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of vectors of length <code>m</code>, corresponding to statistics and p-value for each lag, 
+for standard, modified and self-normalized Ljung-Box and Box-Pierce methods.
+</p>
+
+
+<h3>References</h3>
+
+<p>Boubacar Maïnassara, Y. 2011, Multivariate portmanteau test for structural VARMA models
+with uncorrelated but non-independent error terms <em>Journal of Statistical Planning and Inference</em>,
+vol. 141, no. 8, pp. 2961-2975.
+</p>
+<p>Boubacar Maïnassara, Y. and Saussereau, B. 2018, Diagnostic checking in multivariate ARMA models with 
+dependent errors using normalized residual autocorrelations ,
+<em>Journal of the American Statistical Association</em>, vol. 113, no. 524, pp. 1813-1827.
+</p>
+<p>Francq, C., Roy, R. and Zakoïan, J.M. 2005, Diagnostic Checking in ARMA
+Models with Uncorrelated Errors, <em>Journal of the American Statistical
+Association</em>, vol. 100, no. 470, pp. 532-544.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>portmanteauTest.h</code> to obtain statistics for only one h lag.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"> est&lt;-estimation(p = 1, q = 1, y = CAC40return.sq)
+ portmanteauTest(ar = est$ar, ma = est$ma, y = CAC40return.sq, m = 20)
+
+</code></pre>
+
+
+</div>

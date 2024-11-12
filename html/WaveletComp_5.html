@@ -1,0 +1,173 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ARIMA</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Simulation of an ARIMA(p,0,q) surrogate for a given time series x</h2>
+
+<h3>Description</h3>
+
+<p>It simulates an ARIMA(p,0,q) surrogate for the time series x analyzed by wavelet transformation using either function
+<code>analyze.wavelet</code> or function <code>analyze.coherency</code>. A set of surrogates is used for significance assessment 
+to test the hypothesis of equal periodic components. 
+</p>
+<p>Simulation is subject to parameters concerning:
+AR and MA order, an indicator of mean/intercept term inclusion, a boosting factor which is applied to 
+the residual standard deviation, an indicator to trim the data according to the given trimming proportion 
+(i.e. to restrict them to the interval between the lower and upper quantile corresponding to the given probability).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ARIMA(x, params = 
+      list(ARIMA = list(p = 1, q = 1, 
+                        include.mean = TRUE, sd.fac = 1, 
+                        trim = FALSE, trim.prop = 0.01)))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>the given time series</p>
+</td>
+</tr></table>
+<table><tr style="vertical-align: top;">
+<td><code>params</code></td>
+<td>
+<p>a list containing an assignment of parameter values to ARIMA. Default: <code>NULL</code>. 
+</p>
+<p>Default includes: 
+</p>
+<p><code>ARIMA = list(...)</code>, a list of six elements:            
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>p</code>            </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  AR order. </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>1</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>q</code>            </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  MA order. </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>1</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>include.mean</code> </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  Include a mean/intercept term? </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>TRUE</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>sd.fac</code>       </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  magnification factor to boost the </td>
+</tr>
+<tr>
+<td style="text-align: right;"> 
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  residual standard deviation. </td>
+</tr>
+<tr>
+<td style="text-align: right;">  
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>1</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>trim</code>         </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  Simulate trimmed data? </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>FALSE</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;"> <code>trim.prop</code>    </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;">  high/low trimming proportion. </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+<td style="text-align: left;">                     </td>
+<td style="text-align: left;">   </td>
+<td style="text-align: left;">  Default: <code>0.01</code>.</td>
+</tr>
+<tr>
+<td style="text-align: right;">
+        </td>
+</tr>
+</table>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>Basics of model estimation and simulation are provided by application of the R functions <code>arima</code> and <code>arima.sim</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A surrogate series for x is returned which has the same length and properties according to estimates resulting from 
+the given ARIMA setting. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Angi Roesch and Harald Schmidbauer</p>
+
+
+<h3>See Also</h3>
+
+<p><code>analyze.wavelet</code>, <code>analyze.coherency</code>, <code>SurrogateData</code>, <code>AR</code>, 
+<code>FourierRand</code>
+</p>
+
+
+</div>

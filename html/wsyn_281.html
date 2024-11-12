@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wt_methods</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Basic methods for the <code>wt</code> class</h2>
+
+<h3>Description</h3>
+
+<p>Set, get, summary, and print methods for the <code>wt</code> class.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wt'
+summary(object, ...)
+
+## S3 method for class 'wt'
+print(x, ...)
+
+## S3 method for class 'wt'
+set_times(obj, newval)
+
+## S3 method for class 'wt'
+set_timescales(obj, newval)
+
+## S3 method for class 'wt'
+set_values(obj, newval)
+
+## S3 method for class 'wt'
+set_dat(obj, newval)
+
+## S3 method for class 'wt'
+set_wtopt(obj, newval)
+
+## S3 method for class 'wt'
+get_times(obj)
+
+## S3 method for class 'wt'
+get_timescales(obj)
+
+## S3 method for class 'wt'
+get_values(obj)
+
+## S3 method for class 'wt'
+get_dat(obj)
+
+## S3 method for class 'wt'
+get_wtopt(obj)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object, x, obj</code></td>
+<td>
+<p>An object of class <code>wt</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Not currently used. Included for argument consistency
+with existing generics.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>newval</code></td>
+<td>
+<p>A new value, for the <code>set_*</code> methods</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>summary.wt</code> produces a summary of a <code>wt</code> object.
+A <code>print.wt</code> method is also available. For <code>wt</code> objects, 
+<code>set_*</code> and <code>get_*</code> methods are available for all slots,
+i.e., <code>*</code> equal to <code>times</code>, <code>timescales</code>, <code>wtopt</code>, 
+<code>values</code>, and <code>dat</code>. The <code>set_*</code> methods just throw an 
+error, to prevent breaking the consistency between the slots of a 
+<code>wt</code> object.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Daniel Reuman, <a href="mailto:reuman@ku.edu">reuman@ku.edu</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wt</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">time1&lt;-1:100
+time2&lt;-101:200
+ts1p1&lt;-sin(2*pi*time1/15)
+ts1p2&lt;-0*time1
+ts2p1&lt;-0*time2
+ts2p2&lt;-sin(2*pi*time2/8)
+ts1&lt;-ts1p1+ts1p2
+ts2&lt;-ts2p1+ts2p2
+ts&lt;-c(ts1,ts2)
+ra&lt;-rnorm(200,mean=0,sd=0.5)
+t.series&lt;-ts+ra
+t.series&lt;-t.series-mean(t.series)
+times&lt;-c(time1,time2)
+h&lt;-wt(t.series, times)
+get_times(h)
+summary(h)
+print(h)
+
+</code></pre>
+
+
+</div>

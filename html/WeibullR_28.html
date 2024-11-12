@@ -1,0 +1,239 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.wblr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+S3 <code>wblr</code> Object Plotting on pretty canvax
+</h2>
+
+<h3>Description</h3>
+
+<p>This function adds the <code>.wblr</code> method to <code>plot.default</code>
+from the <span class="pkg">graphics</span> package.
+</p>
+<p>Currently, the function plots the (life-)time observations, fits (if any)
+and confidence bounds for B-lives (if any) of an
+<code>wblr</code> object or a list of <code>wblr</code> objects on Weibull or
+Lognormal probability paper. 
+</p>
+<p>For each fit in the (list of) <code>wblr</code> object(s), legends are added to
+the plot, displaying the fit parameters and (if available) goodness-of-fit
+indicators and confidence information.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wblr'
+plot(x, ...)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>Object of class <code>"wblr"</code> or a list of <code>wblr</code> objects.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Options for plotting the <code>wblr</code> object; see section "Details".
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>...</code> argument can be any graphical parameter that can be
+supplied to <code>plot.default</code>, and any option that can be
+set by the function <code>options.wblr</code>. The options set
+in this way are applied to all graphical elements of the plot, overriding
+any previously supplied options.<br></p>
+<p>One can pass a list of <code>wblr</code> objects to <code>plot.wblr</code>; in
+that case it is mandatory to use the full method name: <code>plot.wblr(...)</code>
+and not <code>plot(...)</code>.<br></p>
+<p>The calculated Weibull or Lognormal distribution fits are plotted
+on Weibull probability paper by default, but by passing the argument
+<code>canvas = "lognormal"</code> to the function, Lognormal paper is used.<br></p>
+<p>When a <em>list</em> of wblr objects is passed, the plot window is generated
+with the options of the first <code>wblr</code> object in the list.<br></p>
+<p>Graphical controls typically used with <code>plot</code> or <code>plot.wblr</code>:
+</p>
+
+<dl>
+<dt><code>canvas</code></dt>
+<dd>
+<p>The plotting canvas to be used. This does not necessarily have to match the fit distribution.
+Only <code>"weibull"</code> (default) or <code>"lognormal"</code> are recognized.
+</p>
+</dd>
+<dt><code>mar</code></dt>
+<dd>
+<p> Margins defaults to <code>c(5.1,4.1,5.1,2.1),</code>.
+</p>
+</dd>
+<dt><code>main</code></dt>
+<dd>
+<p> Title, defaults to <code>"Probability Plot"</code>.
+</p>
+</dd>
+<dt><code>main.contour</code></dt>
+<dd>
+<p> Contour plot title defaults to <code>"Contour Plot"</code>.
+</p>
+</dd>
+<dt><code>sub</code></dt>
+<dd>
+<p> Subtitle defaults to <code>NULL</code>.
+</p>
+</dd>
+<dt><code>sub.contour</code></dt>
+<dd>
+<p> Contour subtitle defaults to <code>NULL</code>.
+</p>
+</dd>
+<dt><code>xlim</code></dt>
+<dd>
+<p> Plot x limits override to be presented as a vector c(lo,hi), default <code>NULL</code>.
+</p>
+</dd>
+<dt><code>ylim</code></dt>
+<dd>
+<p> Plot y limits override to be presented as a vector c(lo,hi), default <code>NULL</code>.
+</p>
+</dd>
+<dt><code>xlab</code></dt>
+<dd>
+<p> X axis label defaults to <code>"Time To Failure"</code>.
+</p>
+</dd>
+<dt><code>ylab</code></dt>
+<dd>
+<p> Y axis label defaults to <code>"Unreliability [%]"</code>.
+</p>
+</dd>
+<dt><code>coordinate.text.size</code></dt>
+<dd>
+<p> default <code>0.7</code>.
+</p>
+</dd>
+<dt><code>signif</code></dt>
+<dd>
+<p> Used to control display of numbers in Legend, default <code>4</code>.
+</p>
+</dd>
+<dt><code>col.grid</code></dt>
+<dd>
+<p> Color for chart gridlines defaults <code>"grey"</code>.
+</p>
+</dd>
+<dt><code>is.plot.grid</code></dt>
+<dd>
+<p> default <code>TRUE</code>.
+</p>
+</dd>
+<dt><code>is.plot.fit</code></dt>
+<dd>
+<p> default <code>TRUE</code>.
+</p>
+</dd>
+<dt><code>is.plot.pp</code></dt>
+<dd>
+<p> default <code>TRUE</code>.
+</p>
+</dd>
+<dt><code>is.plot.ppcoordinates</code></dt>
+<dd>
+<p> default <code>FALSE</code>.
+</p>
+</dd>
+<dt><code>is.plot.legend</code></dt>
+<dd>
+<p> default <code>TRUE</code>.
+</p>
+</dd>
+<dt><code>legend.position</code></dt>
+<dd>
+<p> default <code>"bottomright"</code>. See <code>legend</code> Details.
+</p>
+</dd>
+<dt><code>legend.inset</code></dt>
+<dd>
+<p> default <code>c(0,0)</code>. legend inset values are fractions of graph width and height.
+</p>
+</dd>
+<dt><code>legend.text.size</code></dt>
+<dd>
+<p> default <code>0.7</code>.
+</p>
+</dd>
+<dt><code>label</code></dt>
+<dd>
+<p> defaults to <code>""</code>.
+</p>
+</dd>
+<dt><code>in.legend</code></dt>
+<dd>
+<p> default <code>TRUE</code>.
+</p>
+</dd>
+<dt><code>in.legend.blives</code></dt>
+<dd>
+<p> default <code>TRUE</code>.
+</p>
+</dd>
+<dt><code>in.legend.gof</code></dt>
+<dd>
+<p> default <code>TRUE</code>.
+</p>
+</dd>
+<dt><code>is.plot.cb</code></dt>
+<dd>
+<p> default <code>TRUE</code>.
+</p>
+</dd>
+<dt><code>persistent</code></dt>
+<dd>
+<p> default <code>TRUE</code>.
+</p>
+</dd>
+</dl>
+<h3>Value</h3>
+
+<p>Currently, the function returns no value.
+</p>
+
+
+<h3>References</h3>
+
+<p>Jurgen Symynck, Filip De Bal, Weibull analysis using R, in a nutshell (New Technologies and Products in Machine Manufacturing Technology, Stefan cel Mare University of Suceava, 2010).
+</p>
+<p>Jurgen Symynck, Filip De Bal, Monte Carlo pivotal confidence bounds for Weibull analysis, with implementations in R (New Technologies and Products in Machine Manufacturing Technology, Stefan cel Mare University of Suceava, 2011).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">options.wblr(blives=0.1) # make the legend boxes a bit shorter...
+da2 &lt;- wblr.conf(wblr.fit(wblr(runif(5,10,100),col="red")))
+da3 &lt;- wblr.conf(wblr.fit(wblr(rweibull(5,2,1000),col="green4",pch=3)))
+da4 &lt;- wblr.conf(wblr.fit(wblr(rlnorm(5,log(500),log(2)),col="blue3",pch=8),
+    dist="lognormal"))
+
+## Not run: 
+plot.wblr(list(da2,da3,da4),xlim=c(1,1e6),
+    main="Uniformly distributed observations")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

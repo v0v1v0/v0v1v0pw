@@ -1,0 +1,147 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wt</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Computes the wavelet transform of a timeseries. Also the creator function for the
+<code>wt</code> class.</h2>
+
+<h3>Description</h3>
+
+<p>Computes the wavelet transform of a timeseries. Also the creator function for the
+<code>wt</code> class. The <code>wt</code> class inherits from the <code>tts</code> class, which
+inherits from the <code>list</code> class.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wt(
+  t.series,
+  times,
+  scale.min = 2,
+  scale.max.input = NULL,
+  sigma = 1.05,
+  f0 = 1
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>t.series</code></td>
+<td>
+<p>A timeseries of real values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>times</code></td>
+<td>
+<p>A vector of time step values (e.g., years), spacing 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.min</code></td>
+<td>
+<p>The smallest scale of fluctuation that will be examined. At least 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.max.input</code></td>
+<td>
+<p>The largest scale of fluctuation that is guaranteed to be examined</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>The ratio of each time scale examined relative to the next timescale. Should be greater than 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f0</code></td>
+<td>
+<p>The ratio of the period of fluctuation to the width of the envelope. Defaults to 1.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>wt</code> returns an object of class <code>wt</code>.  Slots are: 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>A matrix of complex numbers, of dimensions <code>length(t.series)</code> by the number of timescales. Entries not considered reliable (longer timescales, near the edges of the time span) are set to NA.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>times</code></td>
+<td>
+<p>The time steps specified (e.g. years)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wtopt</code></td>
+<td>
+<p>The inputted wavelet transform options scale.min, scale.max.input, sigma, f0 in a list</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timescales</code></td>
+<td>
+<p>The timescales (1/frequency) computed for the wavelet transform</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>The data vector from which the transform was computed</p>
+</td>
+</tr>
+</table>
+<h3>Note</h3>
+
+<p>Important for interpreting the phase: the phases grow through time, i.e., they turn anti-clockwise.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Lawrence Sheppard <a href="mailto:lwsheppard@ku.edu">lwsheppard@ku.edu</a>, Jonathan Walter 
+<a href="mailto:jaw3es@virginia.edu">jaw3es@virginia.edu</a>, Daniel Reuman <a href="mailto:reuman@ku.edu">reuman@ku.edu</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wt_methods</code>, <code>tts</code>, <code>plotmag</code>, <code>plotphase</code>,
+<code>browseVignettes("wsyn")</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">time1&lt;-1:100
+time2&lt;-101:200
+ts1p1&lt;-sin(2*pi*time1/15)
+ts1p2&lt;-0*time1
+ts2p1&lt;-0*time2
+ts2p2&lt;-sin(2*pi*time2/8)
+ts1&lt;-ts1p1+ts1p2
+ts2&lt;-ts2p1+ts2p2
+ts&lt;-c(ts1,ts2)
+ra&lt;-rnorm(200,mean=0,sd=0.5)
+t.series&lt;-ts+ra
+t.series&lt;-t.series-mean(t.series)
+times&lt;-c(time1,time2)
+res&lt;-wt(t.series, times)
+
+</code></pre>
+
+
+</div>

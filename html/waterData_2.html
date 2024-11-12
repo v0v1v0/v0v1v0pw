@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>badDataSet</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Hydrologic dataset with provisional and negative data.</h2>
+
+<h3>Description</h3>
+
+<p>Daily mean streamflow for the Red River of the North
+at Fargo, North Dakota, streamgage 0504000, from January 1, 2000, to 
+December 31, 2010.  At the time these data were downloaded, some of the data 
+were provisional and subject to revision, including a negative value.  
+<img src="../help/figures/badDataSet.png" alt="Red River of the North, North Dakota, 
+  streamflow, in cubic feet per second, with a anomalous negative value."></p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">badDataSet</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A dataframe containing 4,018 observations of daily mean 
+streamflow.  There are  four variables shown in the following table.
+</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   Name </td>
+<td style="text-align: left;"> Type </td>
+<td style="text-align: left;"> Description </td>
+</tr>
+<tr>
+<td style="text-align: left;"> 
+   staid </td>
+<td style="text-align: left;"> factor </td>
+<td style="text-align: left;"> USGS Station identification number </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   val </td>
+<td style="text-align: left;"> numeric </td>
+<td style="text-align: left;"> Daily mean streamflow </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   dates </td>
+<td style="text-align: left;"> Date </td>
+<td style="text-align: left;"> Date of daily mean </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   qualcode </td>
+<td style="text-align: left;"> factor </td>
+<td style="text-align: left;"> Qualification code
+  </td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Streamflow data for U.S. Geological Survey streamgage 05054000, Red River of 
+the North at Fargo, North Dakota, from January 1, 2000, to December 31, 
+2010, were downloaded, then 2,000 of the 4,018 daily values were randomly
+changed to missing values.  At the time these data were downloaded, some of the data 
+were provisional and subject to revision, including a negative value.  For
+example purposes, the three smallest nonnegative values were changed to
+zero.  Data for this site and specific dates have since been revised and 
+approved.  Definitions of the daily data qualification codes can be 
+found at 
+<a href="http://help.waterdata.usgs.gov/codes-and-parameters/daily-value-qualification-code-dv_rmk_cd">http://help.waterdata.usgs.gov/codes-and-parameters/daily-value-qualification-code-dv_rmk_cd</a> 
+(U.S. Geological Survey, 2011a).
+</p>
+
+
+<h3>Source</h3>
+
+<p>Imported from the USGS Daily Values Site Web Service 
+<a href="http://waterservices.usgs.gov/rest/DV-Service.html">http://waterservices.usgs.gov/rest/DV-Service.html</a> (U.S. 
+Geological Survey, 2011b) using the function importDVs, 
+modified by replacing the three smallest values with zero.  
+Data for this site and specific dates have since been revised and 
+approved.  The user would not be able to retrieve the same dataset from the USGS 
+Daily Values Web Site Service.
+</p>
+
+
+<h3>References</h3>
+
+<p>U.S. Geological Survey, 2011a, Daily value qualification code (dv_rmk_cd): 
+National Water Information System: Help System, accessed September 7, 
+2012, at 
+<a href="http://help.waterdata.usgs.gov/codes-and-parameters/daily-value-qualification-code-dv_rmk_cd">http://help.waterdata.usgs.gov/codes-and-parameters/daily-value-qualification-code-dv_rmk_cd</a>.<br><br>
+U.S. Geological Survey, 2011b, National Water Information System (NWISWeb): 
+U.S. Geological Survey database, accessed November 2, 2011, at 
+<a href="http://waterservices.usgs.gov/">http://waterservices.usgs.gov/</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(exampleWaterData)
+par(las=1, tck=0.02, mar=c(5,5,4,2), mex=1.2, cex.axis=0.75)
+plot(badDataSet$dates, badDataSet$val, type="l",  
+     ylab="Streamflow, in cubic feet per second", 
+     xlab="", yaxs='i', xaxs='i', 
+     xlim=c(as.Date("2000-01-01"), as.Date("2012-01-01")), 
+     yaxt="n", col="blue")
+axis(2, axTicks(2), format(axTicks(2), big.mark=",", scientific=FALSE))
+title("Red River of the North at Fargo, North Dakota")
+summary(badDataSet$val)
+</code></pre>
+
+
+</div>

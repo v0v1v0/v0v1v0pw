@@ -1,0 +1,249 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_data_drill_apsim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get DataDrill Weather Data in the APSIM Format From SILO</h2>
+
+<h3>Description</h3>
+
+<p>Fetch <abbr><span class="acronym">APSIM</span></abbr> .met file formatted weather data from the weather data
+from the <abbr><span class="acronym">SILO</span></abbr> <abbr><span class="acronym">API</span></abbr> of spatially interpolated weather
+data (DataDrill).  The daily climate surfaces have been derived either by
+splining or kriging the observational data.  The returned values contain
+“source” columns, which denote how the observations were derived.
+The grid spans 112° to 154°, -10° to -44° with resolution 0.05° latitude by
+0.05° longitude (approximately 5 km × 5 km).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_data_drill_apsim(
+  longitude,
+  latitude,
+  start_date,
+  end_date = Sys.Date(),
+  api_key = get_key(service = "SILO")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>longitude</code></td>
+<td>
+<p>A single <code>numeric</code> value  representing the longitude of the
+point-of-interest.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>latitude</code></td>
+<td>
+<p>A single <code>numeric</code> value representing the latitude of the
+point-of-interest.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_date</code></td>
+<td>
+<p>A <code>character</code> string or <code>Date</code> object representing the
+beginning of the range to query in the format “yyyy-mm-dd”
+(ISO8601).  Data returned is inclusive of this date.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end_date</code></td>
+<td>
+<p>A <code>character</code> string or <code>Date</code> object representing the end of
+the range query in the format  “yyyy-mm-dd” (ISO8601).  Data
+returned is inclusive of this date.  Defaults to the current system date.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_key</code></td>
+<td>
+<p>A <code>character</code> string containing your <abbr><span class="acronym">API</span></abbr> key,
+an e-mail address, for the request.  Defaults to automatically detecting
+your key from your local .Renviron, .Rprofile or similar.  Alternatively,
+you may directly provide your key as a string here.  If nothing is
+provided, you will be prompted on how to set up your <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> session so that it
+is auto-detected.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note that when saving, comments from SILO will be included, but these will
+not be printed as a part of the resulting <code>met</code> object in your <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> session.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <a href="https://CRAN.R-project.org/package=apsimx"><span class="pkg">apsimx</span></a> object of class ‘met’ with attributes.
+</p>
+
+
+<h3>Included Values</h3>
+
+
+<dl>
+<dt>rain (mm)</dt>
+<dd>
+<p>Rainfall</p>
+</dd>
+<dt>maxt (degrees C)</dt>
+<dd>
+<p>Maximum temperature</p>
+</dd>
+<dt>mint (degrees C)</dt>
+<dd>
+<p>Minimum temperature</p>
+</dd>
+<dt>vp (hPa)</dt>
+<dd>
+<p>Vapour pressure</p>
+</dd>
+<dt>evap_pan (mm)</dt>
+<dd>
+<p>Class A pan evaporation</p>
+</dd>
+<dt>radiation (Mj/m<sup>1</sup>)</dt>
+<dd>
+<p>Solar
+exposure, consisting of both direct and diffuse components</p>
+</dd>
+</dl>
+<h3>Value information</h3>
+
+<p>Solar radiation: total incoming downward shortwave radiation on a horizontal
+surface, derived from estimates of cloud oktas and sunshine
+duration<sup>2</sup>.
+</p>
+<p>Evaporation and evapotranspiration: an overview of the variables provided by
+<abbr><span class="acronym">SILO</span></abbr> is available here,
+<a href="https://data.longpaddock.qld.gov.au/static/publications/Evapotranspiration_overview.pdf">https://data.longpaddock.qld.gov.au/static/publications/Evapotranspiration_overview.pdf</a>.
+</p>
+
+
+<h3>Data codes</h3>
+
+<p>Where the source code is a 6 digit string comprising the source code for the
+6 variables. The single digit code for each variable is:
+</p>
+
+<dl>
+<dt>0</dt>
+<dd>
+<p>an actual observation;</p>
+</dd>
+<dt>1</dt>
+<dd>
+<p>an actual observation from a composite station;</p>
+</dd>
+<dt>2</dt>
+<dd>
+<p>a value interpolated from daily observations;</p>
+</dd>
+<dt>3</dt>
+<dd>
+<p>a value interpolated from daily observations using the anomaly
+interpolation method for <abbr><span class="acronym">CLIMARC</span></abbr> data;</p>
+</dd>
+<dt>6</dt>
+<dd>
+<p>a synthetic pan value; or</p>
+</dd>
+<dt>7</dt>
+<dd>
+<p>an interpolated long term average.</p>
+</dd>
+</dl>
+<h3>Saving objects</h3>
+
+<p>To save “met” objects the <code>apsimx::write_apsim_met()</code> is reexported.
+Note that when saving, comments from SILO will be included, but these will
+not be printed as a part of the resulting <code>met</code> object in your <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> session.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Rodrigo Pires, <a href="mailto:rodrigo.pires@dpird.wa.gov.au">rodrigo.pires@dpird.wa.gov.au</a>, and Adam
+Sparks, <a href="mailto:adamhsparks@gmail.com">adamhsparks@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+
+<ol>
+<li>
+<p> Rayner, D. (2005). Australian synthetic daily Class A pan evaporation.
+Technical Report December 2005, Queensland Department of Natural Resources
+and Mines, Indooroopilly, Qld., Australia, 40 pp.
+</p>
+</li>
+<li>
+<p> Morton, F. I. (1983). Operational estimates of areal evapotranspiration
+and their significance to the science and practice of hydrology, <em>Journal
+of Hydrology</em>, Volume 66, 1-76.
+</p>
+</li>
+</ol>
+<h3>See Also</h3>
+
+<p>Other SILO: 
+<code>find_nearby_stations()</code>,
+<code>find_stations_in()</code>,
+<code>get_data_drill()</code>,
+<code>get_patched_point()</code>,
+<code>get_patched_point_apsim()</code>,
+<code>get_stations_metadata()</code>,
+<code>silo_daily_values</code>
+</p>
+<p>Other data fetching: 
+<code>get_ag_bulletin()</code>,
+<code>get_coastal_forecast()</code>,
+<code>get_data_drill()</code>,
+<code>get_dpird_apsim()</code>,
+<code>get_dpird_extremes()</code>,
+<code>get_dpird_minute()</code>,
+<code>get_dpird_summaries()</code>,
+<code>get_patched_point()</code>,
+<code>get_patched_point_apsim()</code>,
+<code>get_precis_forecast()</code>,
+<code>get_radar_imagery()</code>,
+<code>get_satellite_imagery()</code>
+</p>
+<p>Other APSIM: 
+<code>get_dpird_apsim()</code>,
+<code>get_patched_point_apsim()</code>,
+<code>reexports</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# requires an API key as your email address
+# Source data from latitude and longitude coordinates (gridded data) for
+# max and minimum temperature and rainfall for Southwood, QLD.
+wd &lt;- get_data_drill_apsim(
+  latitude = -27.85,
+  longitude = 150.05,
+  start_date = "20220101",
+  end_date = "20221231",
+  api_key = "your_api_key"
+)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,168 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>dualtree</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Dual-tree Complex Discrete Wavelet Transform</h2>
+
+<h3>Description</h3>
+
+<p>One- and two-dimensional dual-tree complex discrete wavelet transforms
+developed by Kingsbury and Selesnick <em>et al.</em>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dualtree(x, J, Faf, af)
+
+idualtree(w, J, Fsf, sf)
+
+dualtree2D(x, J, Faf, af)
+
+idualtree2D(w, J, Fsf, sf)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>N-point vector or MxN matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>number of stages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Faf</code></td>
+<td>
+<p>analysis filters for the first stage.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>af</code></td>
+<td>
+<p>analysis filters for the remaining stages.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+<p>DWT coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Fsf</code></td>
+<td>
+<p>synthesis filters for the last stage.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sf</code></td>
+<td>
+<p>synthesis filters for the preceeding stages.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>In one dimension <code class="reqn">N</code> is divisible by <code class="reqn">2^J</code> and
+<code class="reqn">N\ge2^{J-1}\cdot\mbox{length}(\mbox{\code{af}})</code>.
+</p>
+<p>In two dimensions, these two conditions must hold for both <code class="reqn">M</code> and
+<code class="reqn">N</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>For the analysis of <code>x</code>, the output is </p>
+<table><tr style="vertical-align: top;">
+<td><code>w</code></td>
+<td>
+<p>DWT
+coefficients.  Each wavelet scale is a list containing the real and
+imaginary parts.  The final scale (J+1) contains the low-pass filter
+coefficients.</p>
+</td>
+</tr></table>
+<p> For the synthesis of <code>w</code>, the output is </p>
+<table><tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>output
+signal</p>
+</td>
+</tr></table>
+<h3>Author(s)</h3>
+
+<p>Matlab: S. Cai, K. Li and I. Selesnick; R port: B. Whitcher
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>FSfarras</code>, <code>farras</code>,
+<code>convolve</code>, <code>cshift</code>, <code>afb</code>,
+<code>sfb</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## EXAMPLE: dualtree
+x = rnorm(512)
+J = 4
+Faf = FSfarras()$af
+Fsf = FSfarras()$sf
+af = dualfilt1()$af
+sf = dualfilt1()$sf
+w = dualtree(x, J, Faf, af)
+y = idualtree(w, J, Fsf, sf)
+err = x - y
+max(abs(err))
+
+## Example: dualtree2D
+x = matrix(rnorm(64*64), 64, 64)
+J = 3
+Faf = FSfarras()$af
+Fsf = FSfarras()$sf
+af = dualfilt1()$af
+sf = dualfilt1()$sf
+w = dualtree2D(x, J, Faf, af)
+y = idualtree2D(w, J, Fsf, sf)
+err = x - y
+max(abs(err))
+
+## Display 2D wavelets of dualtree2D.m
+
+J &lt;- 4
+L &lt;- 3 * 2^(J+1)
+N &lt;- L / 2^J
+Faf &lt;- FSfarras()$af
+Fsf &lt;- FSfarras()$sf
+af &lt;- dualfilt1()$af
+sf &lt;- dualfilt1()$sf
+x &lt;- matrix(0, 2*L, 3*L)
+w &lt;- dualtree2D(x, J, Faf, af)
+w[[J]][[1]][[1]][N/2, N/2+0*N] &lt;- 1
+w[[J]][[1]][[2]][N/2, N/2+1*N] &lt;- 1
+w[[J]][[1]][[3]][N/2, N/2+2*N] &lt;- 1
+w[[J]][[2]][[1]][N/2+N, N/2+0*N] &lt;- 1
+w[[J]][[2]][[2]][N/2+N, N/2+1*N] &lt;- 1
+w[[J]][[2]][[3]][N/2+N, N/2+2*N] &lt;- 1
+y &lt;- idualtree2D(w, J, Fsf, sf)
+image(t(y), col=grey(0:64/64), axes=FALSE)
+
+</code></pre>
+
+
+</div>

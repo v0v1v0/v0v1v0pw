@@ -1,0 +1,71 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>anlz_mixmeta</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fit a mixed meta-analysis regression model of trends</h2>
+
+<h3>Description</h3>
+
+<p>Fit a mixed meta-analysis regression model of trends
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">anlz_mixmeta(metseason, yrstr = 2000, yrend = 2019)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>metseason</code></td>
+<td>
+<p>output from <code>anlz_metseason</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yrstr</code></td>
+<td>
+<p>numeric for starting year</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yrend</code></td>
+<td>
+<p>numeric for ending year</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Parameters are not back-transformed if the original GAM used a transformation of the response variable
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of <code>mixmeta</code> fitted model objects
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(dplyr)
+
+# data to model
+tomod &lt;- rawdat %&gt;%
+  filter(station %in% 34) %&gt;%
+  filter(param %in% 'chl') %&gt;% 
+  filter(yr &gt; 2015)
+
+mod &lt;- anlz_gam(tomod, trans = 'log10')
+metseason &lt;- anlz_metseason(mod, doystr = 90, doyend = 180)
+anlz_mixmeta(metseason, yrstr = 2016, yrend = 2019)
+</code></pre>
+
+
+</div>

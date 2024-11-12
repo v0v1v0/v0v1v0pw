@@ -1,0 +1,90 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>m_Opensearch</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Open search of a string</h2>
+
+<h3>Description</h3>
+
+<p>Search string in the content of the project page using OpenSearch. Only in
+namespace 0. Please, see https://www.mediawiki.org/wiki/API:Opensearch for
+further information.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">m_Opensearch(
+  string,
+  project = "en.wikipedia.org",
+  profile = "engine_autoselect",
+  redirects = "resolve"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>string</code></td>
+<td>
+<p>String to search.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>Wikimedia project, defaults "en.wikipedio.org".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>profile</code></td>
+<td>
+<p>This parameter sets the search type: classic,
+engine_autoselect (default), fast-fuzzy, fuzzy, fuzzy-subphrases, normal,
+normal-subphrases, and strict.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>redirects</code></td>
+<td>
+<p>If redirects='return', the page title is the normalized one
+(also the URL). If redirects='resolve", the page title is the normalized and
+resolved redirection is in effect (also the URL). Note that in both cases the
+API performs a NFC Unicode normalization on search string.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data-frame of page titles and URL returned. If error, return Null.
+</p>
+
+
+<h3>Note</h3>
+
+<p>Only for namespace 0. The function also obtains redirections for
+disambiguation pages.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Angel Zazo, Department of Computer Science and Automatics, University of Salamanca
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Some search profiles:
+df &lt;- m_Opensearch(string='Duque de Alba', project='es.wikipedia.org',
+                    profile="engine_autoselect", redirects="resolve")
+df &lt;- m_Opensearch(string='Duque de Alba', project='es.wikipedia.org', profile="strict")
+df &lt;- m_Opensearch(string='Duque de Alba', project='es.wikipedia.org', profile="fuzzy")
+</code></pre>
+
+
+</div>

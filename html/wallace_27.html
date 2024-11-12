@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>poccs_removeByID</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>poccs_removeByID Remove occurrence by ID</h2>
+
+<h3>Description</h3>
+
+<p>This function removes user selected occurrences by ID.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">poccs_removeByID(occs, removeID, logger = NULL, spN = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>occs</code></td>
+<td>
+<p>data frame of cleaned occurrences obtained from component occs:
+Obtain occurrence data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>removeID</code></td>
+<td>
+<p>the ID of the occurrence to be removed from the occurrences
+dataframe.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+<p>Stores all notification messages to be displayed in the Log
+Window of Wallace GUI. Insert the logger reactive list here for running in
+shiny, otherwise leave the default NULL</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>spN</code></td>
+<td>
+<p>data frame of cleaned occurrences obtained from component occs:
+Obtain occurrence data. Used to obtain species name for logger messages.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is called by the remove occurrences by ID module. It allows for
+removal of a single occurrence flagged by the user on the map. The function
+will return a data frame of occurrences with all relevant columns for
+further analyses and without the occurrence selected by the user.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A new occurence dataframe without the user selected occurrence
+mantaining all columns from original dataframe for further analyses.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jamie Kass &lt;jamie.m.kass@gmail.com&gt;
+</p>
+<p>Gonzalo E. Pinilla-Buitrago &lt;gepinillab@gmail.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">occs &lt;- read.csv(system.file("extdata/Bassaricyon_neblina.csv",
+                 package = "wallace"))[, 2:3]
+occs$occID &lt;- 1:nrow(occs)
+out.ID &lt;- poccs_removeByID(occs, 11)
+
+</code></pre>
+
+
+</div>

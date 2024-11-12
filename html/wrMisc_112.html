@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>combineRedundLinesInList</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Combine Redundant Lines In List</h2>
+
+<h3>Description</h3>
+
+<p>This function provides help for combining/summarizing lines of numeric data which may be summaried according to reference vector or matrix of annotation (part of the same input-list).
+The data and reference will be aligned and data corresponding to redundant information be combined/summarized.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">combineRedundLinesInList(
+  lst,
+  refNa = "ref",
+  datNa = "quant",
+  refColNa = "GeneName",
+  supRefColNa = NULL,
+  summarizeType = "av",
+  NA.rm = TRUE,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lst</code></td>
+<td>
+<p>(list) main input, containing matrix or data.frame of numeric data (see <code>datNa</code> and annotation (see <code>refNa</code>) and possibly unrelated stuff</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refNa</code></td>
+<td>
+<p>(character) name of list-element containing annotation</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>datNa</code></td>
+<td>
+<p>(character) name(s) of list-element(s) containing numeric/quantitation data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refColNa</code></td>
+<td>
+<p>(character) in case the list-element to be used as reference is <code>matrix</code> or <code>data.frame</code>, the column to be used must be specified here</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>supRefColNa</code></td>
+<td>
+<p>(character) in case the <code>lst$refNa</code> has no rownames, the content of column <code>lst$supRefColNa</code> will be used instead</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>summarizeType</code></td>
+<td>
+<p>(character) the summarization method gets specified here; so far 'sum','av','med','first' and 'last' are implemented</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NA.rm</code></td>
+<td>
+<p>(logical) pass to summarizing functions order to omit <code>NA</code>s, defaults to <code>TRUE</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>All input data should be in a list, ie one or multipl matrix or data.frame for numeric data (see argument <code>datNa</code>), as well as the reference (see argument <code>refNa</code>). 
+The refgerence may be a named character vecor or a matrix for which the column to be used should be specified using the argument <code>refColNa</code>.
+In case the annotation is a matrix, the rownames will be used as unique/independent identifyers to adjust potentially different order of numeric data and annotation.
+In absence of rownames, an additional column  <code>supRefColNa</code> of the annotation may be designed for adjusting the order of annotation and numeric data.
+</p>
+<p>The numeric list may contain multiple matrixes or data.frames which will all be summarized by the same procedure as long as they have the same initial dimensions and are specified by <code>refNa</code>. 
+</p>
+<p>Please note that all other list elements from input not specified by <code>refNa</code> (or <code>datNa</code>) will be maintained in the output just as they are.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a list of same length as input
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>findRepeated</code>, <code>firstOfRepLines</code>, <code>organizeAsListOfRepl</code>, <code>combineRedBasedOnCol</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x1 &lt;- list(quant=matrix(11:34, ncol=3, dimnames=list(letters[8:1], LETTERS[11:13])), 
+  annot=matrix(paste0(LETTERS[c(1:4,6,3:5)],LETTERS[c(1:4,6,3:5)]), ncol=1, 
+  dimnames=list(paste(letters[1:8]),"xx")) )
+combineRedundLinesInList(lst=x1, refNa="annot", datNa="quant", refColNa="xx")
+</code></pre>
+
+
+</div>

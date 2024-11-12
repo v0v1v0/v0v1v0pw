@@ -1,0 +1,68 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>bin_depths</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>bin read depths of SNPs into categories having at least S observations</h2>
+
+<h3>Description</h3>
+
+<p>bin read depths of SNPs into categories having at least S observations
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">bin_depths(D, S)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>D</code></td>
+<td>
+<p>a matrix of read depths.  Rows are individuals, columns are SNPs.  Cells where data are missing
+in the genotype matrix must be denoted as NA</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>S</code></td>
+<td>
+<p>the min number of observations to have in each bin</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This returns a list with two components.  <code>dp_bins</code> is a matrix of the same
+shape as D with the bin categories (as 1, 2, ...) and -1 for this cells
+corresponding to missing genotypes.  <code>num_cats</code> is the number of depth bins.
+<code>tidy_bins</code> is a long format description of the bins.
+<code>bin_stats</code> is a tibble giving summary information about the read depth bins which
+is useful for plotting things, etc.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# get a matrix of read depths and make it an integer matrix
+depths &lt;- vcfR::extract.gt(lobster_buz_2000, element = "DP")
+storage.mode(depths) &lt;- "integer"
+
+# get a character matrix of genotypes, so we can figure out which
+# are missing and mask those from depths
+genos &lt;- vcfR::extract.gt(lobster_buz_2000, element = "GT")
+
+# make missing in depths if missing in genos
+depths[is.na(genos)] &lt;- NA
+
+# bin the read depths into bins with at least 1000 observations in each bin
+bins &lt;- bin_depths(depths, 1000)
+</code></pre>
+
+
+</div>

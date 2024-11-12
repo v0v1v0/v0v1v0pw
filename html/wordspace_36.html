@@ -1,0 +1,195 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>eval.multiple.choice</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Evaluate DSM on Multiple Choice Task (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>Evaluates DSM on a multiple choice task by selecting the answer option closest to the target term in distributional space.
+A typical example is the TOEFL Synonym Task (Landauer &amp; Dumais 1997).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+eval.multiple.choice(task, M, dist.fnc = pair.distances, ...,
+                     details = FALSE, format = NA, taskname = NA,
+                     target.name = "target", correct.name = "correct",
+                     distractor.name = "^distract") 
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>task</code></td>
+<td>
+<p>a data frame listing the target word, the correct answer, and one or more additional choices (distractors) for each test item</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>a scored DSM matrix, passed to <code>dist.fnc</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist.fnc</code></td>
+<td>
+<p>a callback function used to compute distances between term pairs (or similarity scores, which must be marked with an attribute <code>similarity=TRUE</code>). See “Details” below for further information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any further arguments are passed to <code>dist.fnc</code> and can be used e.g. to select a distance measure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>details</code></td>
+<td>
+<p>if <code>TRUE</code>, a detailed report with information on each task item is returned (see “Value” below for details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>if the task definition specifies POS-disambiguated lemmas in CWB/Penn format, they can automatically be transformed into some other notation conventions; see <code>convert.lemma</code> for details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>taskname</code></td>
+<td>
+<p>optional row label for the short report (<code>details=FALSE</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>target.name</code></td>
+<td>
+<p>the name of the column of <code>task</code> containing the target word</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>correct.name</code></td>
+<td>
+<p>the name of the column of <code>task</code> containing the correct choice</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distractor.name</code></td>
+<td>
+<p>a regular expression matching columns of <code>task</code> containing the distractors. The regular expression is matched with <code>perl=TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The callback function <code>dist.fnc</code> will be invoked with character vectors containing the components of the term pairs as first and second argument,
+the DSM matrix <code>M</code> as third argument, plus any additional arguments (<code>...</code>) passed to <code>eval.multiple.choice</code>.
+The return value must be a numeric vector of appropriate length.  If one of the terms in a pair is not represented in the DSM,
+the corresponding distance value should be set to <code>Inf</code> (or <code>-Inf</code> in the case of similarity scores).
+In most cases, the default callback <code>pair.distances</code> is sufficient if used with suitable parameter settings.
+</p>
+<p>For each task item, distances between the target word and the possible choices are computed.  Then all choices
+are ranked according to their distances; in the case of a tie, the <em>higher</em> rank is assigned to both words.
+A task item counts as a TP (<em>true positive</em>, i.e. a successful answer by the DSM) if the correct choice is
+ranked in first place.  Note that if it is tied with another choice, both will be assigned rank 2, so the item does not count as a TP.
+</p>
+<p>If either the target word is missing from the DSM or none of the choices is found in the DSM, the result for this
+item is set to <code>NA</code>, which counts as a FP (<em>false positive</em>) in the accuracy computation.
+</p>
+<p>With the default <code>dist.fnc</code> callback, additional arguments <code>method</code> and <code>p</code> can be used to select 
+a distance measure (see <code>dist.matrix</code> for details).  It is pointless to specify <code>rank="fwd"</code>, as
+the neighbour ranks produce exactly the same candidate ranking as the distance values.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The default short report (<code>details=FALSE</code>) is a data frame with a single row and the columns
+<code>accuracy</code> (percentage correct), <code>TP</code> (number of correct answers), <code>FP</code> (number of wrong answers)
+and <code>missing</code> (number of test items for which the distance between target and correct choice
+was not found in the DSM).
+</p>
+<p>The detailed report (<code>details=TRUE</code>) is a data frame with one row for each task item and the following columns:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>target</code></td>
+<td>
+<p>the target word (character)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>correct</code></td>
+<td>
+<p>whether model's choice is correct (logical or <code>NA</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>best.choice</code></td>
+<td>
+<p>best choice according to the DSM (character)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>best.dist</code></td>
+<td>
+<p>distance of best choice from target (numeric)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>correct.choice</code></td>
+<td>
+<p>correct answer (numeric)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>correct.rank</code></td>
+<td>
+<p>rank of correct answer among choices (integer)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>correct.dist</code></td>
+<td>
+<p>distance of correct answer from target (numeric)</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+<h3>References</h3>
+
+<p>Landauer, Thomas K. and Dumais, Susan T. (1997).
+A solution to Plato's problem: The latent semantic analysis theory of acquisition, induction and representation of knowledge.
+<em>Psychological Review</em>, <b>104</b>(2), 211–240.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Suitable gold standard data sets in this package: <b>TODO</b>
+</p>
+<p>Support functions: <code>pair.distances</code>, <code>convert.lemma</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## TODO
+</code></pre>
+
+
+</div>

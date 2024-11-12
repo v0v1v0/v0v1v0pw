@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>located_in_shapefile</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Locations In the Shapefile</h2>
+
+<h3>Description</h3>
+
+<p>Creates a new column (in_shape) that tells whether the lat/long is in a certain shapefile.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">located_in_shapefile(
+  .,
+  lat_column = "lat",
+  lng_column = "lng",
+  shapefile = NA,
+  shapefile_name = NA
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.</code></td>
+<td>
+<p>Data Frame that has been locationized. see <code>weed::split_locations</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lat_column</code></td>
+<td>
+<p>Name of column containing Latitude data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lng_column</code></td>
+<td>
+<p>Name of column containing Longitude data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shapefile</code></td>
+<td>
+<p>The shapefile itself (either shapefile or shapefile_name must be provided)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shapefile_name</code></td>
+<td>
+<p>FileName/Path to shapefile (either shapefile or shapefile_name must be provided)</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Data Frame with the shapefile data as well as the previous data
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+d &lt;- tibble::tribble(
+~value,  ~location_word,                    ~Country,     ~lat,       ~lng,
+"city of new york",      "new york",                       "USA", 40.71427,  -74.00597,
+"kerala, chennai municipality, and san francisco",  "kerala", "India", 10.41667,       76.5,
+"kerala, chennai municipality, and san francisco",  "chennai",  "India", 13.08784,   80.2847)
+located_in_shapefile(d,
+lat_column = "lat",
+lng_column = "lng",
+shapefile_name = "~/dummy_name")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

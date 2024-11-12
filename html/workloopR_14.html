@@ -1,0 +1,144 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>time_correct</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Time correction for work loop experiments</h2>
+
+<h3>Description</h3>
+
+<p>Correct for potential degradation of muscle over time.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">time_correct(x)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>data.frame</code> with summary data, e.g. an object created by
+<code>summarize_wl_trials()</code>.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p>This function assumes that across a batch of successive trials, the
+stimulation parameters for the first and final trials are identical. If not,
+DO NOT USE. Decline in power output is therefore assumed to be a linear
+function of time. Accordingly, the difference between the final and first
+trial's (absolute) power output is used to 'correct' trials that occur in
+between, with explicit consideration of run order and time elapsed (via
+mtime). A similar correction procedure is applied to work.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>data.frame</code> that additionally contains:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Time_Corrected_Work </code></td>
+<td>
+<p>Time corrected work output, transformed from
+<code>$Mean_Work</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Time_Corrected_Power </code></td>
+<td>
+<p>Time corrected net power output, transformed
+from <code>$Mean_Power</code></p>
+</td>
+</tr>
+</table>
+<p>And new attributes:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>power_difference </code></td>
+<td>
+<p>Difference in mass-specific net power output
+between the final and first trials.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time_difference </code></td>
+<td>
+<p>Difference in mtime between the final and first
+trials.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time_correction_rate </code></td>
+<td>
+<p>Overall rate; <code>power_difference</code> divided
+by <code>time_difference</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Vikram B. Baliga and Shreeram Senthivasan
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>summarize_wl_trials</code>
+</p>
+<p>Other workloop functions: 
+<code>analyze_workloop()</code>,
+<code>fix_GR()</code>,
+<code>get_wl_metadata()</code>,
+<code>invert_position()</code>,
+<code>read_analyze_wl_dir()</code>,
+<code>read_analyze_wl()</code>,
+<code>select_cycles()</code>,
+<code>summarize_wl_trials()</code>
+</p>
+<p>Other batch analyses: 
+<code>get_wl_metadata()</code>,
+<code>read_analyze_wl_dir()</code>,
+<code>summarize_wl_trials()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(workloopR)
+
+# batch read and analyze files included with workloopR
+analyzed_wls &lt;- read_analyze_wl_dir(system.file("extdata/wl_duration_trials",
+                                                package = 'workloopR'),
+                                    phase_from_peak = TRUE,
+                                    cycle_def = "p2p", keep_cycles = 2:4)
+
+# now summarize
+summarized_wls &lt;- summarize_wl_trials(analyzed_wls)
+
+
+# mtimes within the package are not accurate, so we'll supply
+# our own vector of mtimes
+summarized_wls$mtime &lt;- read.csv(
+                          system.file(
+                            "extdata/wl_duration_trials/ddfmtimes.csv",
+                            package="workloopR"))$mtime
+
+# now time correct
+timecor_wls &lt;- time_correct(summarized_wls)
+timecor_wls
+
+
+</code></pre>
+
+
+</div>

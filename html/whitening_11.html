@@ -1,0 +1,173 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>scca</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Perform Canonical Correlation Analysis</h2>
+
+<h3>Description</h3>
+
+<p><code>scca</code> computes canonical correlations and directions using a shrinkage estimate of the joint 
+correlation matrix of <code class="reqn">X</code> and <code class="reqn">Y</code>.
+</p>
+<p><code>cca</code>  computes canonical correlations and directions based on empirical correlations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">scca(X, Y, lambda.cor, scale=TRUE, verbose=TRUE)
+cca(X, Y, scale=TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>First data matrix, with samples in rows and variables in columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Y</code></td>
+<td>
+<p>Second data matrix, with samples in rows and variables in columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda.cor</code></td>
+<td>
+<p>Shrinkage intensity for estimating the joint correlation matrix - 
+see <code>cor.shrink</code>. 
+If not specified this will be estimated from the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>Determines whether canonical directions are computed for standardized or raw data.
+Note that if data are not standardized the canonical directions contain the scale
+of the variables.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Report shrinkage intensities.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The canonical directions in this function are scaled in such a way that they correspond to whitening matrices - see Jendoubi and Strimmer (2019) for details. Note that the sign convention for the canonical directions employed here  allows purposely for both positive and negative canonical correlations.
+</p>
+<p>The function <code>scca</code> uses some clever matrix algebra to avoid computation of full correlation matrices, and hence can be applied to high-dimensional data sets - see Jendoubi and Strimmer (2019) for details.
+</p>
+<p><code>cca</code> it is a shortcut for running <code>scca</code> with <code>lambda.cor=0</code> and <code>verbose=FALSE</code>.
+</p>
+<p>If <code>scale=FALSE</code> the standard deviations needed for the canonical directions are estimated 
+by  <code>apply(X, 2, sd)</code> and <code>apply(X, 2, sd)</code>.
+</p>
+<p>If <code class="reqn">X</code> or <code class="reqn">Y</code> contains only a single variable the correlation-adjusted cross-correlations <code class="reqn">K</code> reduce to the CAR score (see function <code>carscore</code> in the <code>care</code> package) described in Strimmer and Zuber (2011).
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>scca</code> and <code>cca</code> return a list with the following components:
+</p>
+<p><code>K</code> - the correlation-adjusted cross-correlations.
+</p>
+<p><code>lambda</code> - the canonical correlations. 
+</p>
+<p><code>WX</code> and <code>WY</code> - the whitening matrices for  <code class="reqn">X</code> and <code class="reqn">Y</code>, with canonical directions in the rows. If <code>scale=FALSE</code> then canonical directions include scale of the data, if <code>scale=TRUE</code> then only correlations are needed to compute the canonical directions.
+</p>
+<p><code>PhiX</code> and <code>PhiY</code> - the loadings for <code class="reqn">X</code> and <code class="reqn">Y</code>. If <code>scale=TRUE</code> then these are the correlation loadings, i.e. the correlations between
+the whitened variables and the original variables.
+</p>
+<p><code>scale</code> - whether data was standardized (if <code>scale=FALSE</code> then canonical directions include scale of the data).
+</p>
+<p><code>lambda.cor</code> - shrinkage intensity used for estimating the correlations (0 for empirical estimator)
+</p>
+<p><code>lambda.cor.estimated</code> - indicates whether shrinkage intenstiy was specified or estimated.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Korbinian Strimmer (<a href="https://strimmerlab.github.io">https://strimmerlab.github.io</a>) with Takoua Jendoubi.
+</p>
+
+
+<h3>References</h3>
+
+<p>Jendoubi, T., and K. Strimmer 2019. A whitening approach to probabilistic canonical correlation analysis for omics data integration. 
+BMC Bioinformatics 20: 15.
+&lt;DOI:10.1186/s12859-018-2572-9&gt;
+</p>
+<p>Zuber, V., and K. Strimmer. 2011.  High-dimensional regression and 
+variable selection using CAR scores.  Statist. Appl. Genet. Mol. Biol. 10: 34.
+&lt;DOI:10.2202/1544-6115.1730&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>cancor</code> and <code>whiteningMatrix</code>.</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># load whitening library
+library("whitening")
+
+# example data set
+data(LifeCycleSavings)
+X = as.matrix( LifeCycleSavings[, 2:3] )
+Y = as.matrix( LifeCycleSavings[, -(2:3)] )
+n = nrow(X)
+colnames(X) # "pop15" "pop75"
+colnames(Y) # "sr"   "dpi"  "ddpi" 
+
+# CCA
+
+cca.out = cca(X, Y, scale=TRUE)
+cca.out$lambda  # canonical correlations
+cca.out$WX      # whitening matrix / canonical directions X
+cca.out$WY      # whitening matrix / canonical directions Y
+cca.out$K       # correlation-adjusted cross-correlations
+cca.out$PhiX    # correlation loadings X
+cca.out$PhiX    # correlation loadings Y
+
+corplot(cca.out, X, Y)
+loadplot(cca.out, 2)
+# column sums of squared correlation loadings add to 1
+colSums(cca.out$PhiX^2) 
+
+# CCA whitened data
+CCAX = tcrossprod( scale(X), cca.out$WX )
+CCAY = tcrossprod( scale(Y), cca.out$WY )
+zapsmall(cov(CCAX))
+zapsmall(cov(CCAY))
+zapsmall(cov(CCAX,CCAY)) # canonical correlations
+
+
+# compare with built-in function cancor 
+# note different signs in correlations and directions!
+cancor.out = cancor(scale(X), scale(Y))
+cancor.out$cor                  # canonical correlations
+t(cancor.out$xcoef)*sqrt(n-1)   # canonical directions X
+t(cancor.out$ycoef)*sqrt(n-1)   # canonical directions Y
+
+
+## see "User guides, package vignettes and other documentation"
+## for examples with high-dimensional data using the scca function
+
+
+</code></pre>
+
+
+</div>

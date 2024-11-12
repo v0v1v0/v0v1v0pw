@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>nv.object</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Node vector objects.</h2>
+
+<h3>Description</h3>
+
+<p>These are objects of classes 
+</p>
+<p><code>nv</code>
+</p>
+<p>They represent a basis in a packet-ordered non-decimated wavelet transform object. 
+</p>
+
+
+<h3>Details</h3>
+
+<p>A <code>nv</code> object is a description of a basis which is a path through a packet ordered non-decimated wavelet transform. To view the basis just print it! See the examples in <code>numtonv</code> for a print out of its structure.
+</p>
+<p>A similar object exists for describing a basis in a wavelet packet object see nvwp. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>The following components must be included in a legitimate ‘nv’ object. 
+</p>
+<table><tr style="vertical-align: top;">
+<td><code>node.list</code></td>
+<td>
+<p>This is a complicated structure composed of one-dimensional array of <code>nv$nlevelsWT</code> lists. Each item in the array is itself a list having two components<code>$upperctrl</code> and <code>upperl</code>. Each component is described as follows:
+</p>
+
+<dl>
+<dt>upperctrl</dt>
+<dd>
+<p>The ‘upperctrl’ item in each is the most important. It consists of a vector of characters. Each character refers to a node in the non-decimated wavelet tree at that level and can only be one of the characters L (for left), R (for right) and S (for stop). Each character in the vector informs reconstruction algorithms that, to do the best thing (whatever the best thing is in any particular case, e.g. select the minimum entropy node downwards), you should select the left/right node or stop at the current node.</p>
+</dd>
+<dt>upperl</dt>
+<dd>
+<p>The ‘upperl’ vector is in 1-1 correspondance with the ‘upperctrl’ vector. Each entry is a number related in some way to the L/R/S entry. (For the minumum entropy this is the minmum entropy achieved by this selection).</p>
+</dd>
+<dt>nlevelsWT</dt>
+<dd>
+<p>The number of levels in the <code>wst</code> object that was involved in the creation of the <code>nv</code> object. Nv objects describe a basis relative to a packet ordered non-decimated wavelet transform object and thus must know the number of levels in that object.</p>
+</dd>
+</dl>
+</td>
+</tr></table>
+<h3>GENERATION</h3>
+
+<p>This class of objects is returned from the <code>MaNoVe.wst</code> and <code>numtonv</code> functions. The former returns the minimum entropy basis (most sparse basis) obtained using the Coifman-Wickerhauser, 1992 algorithm. The latter permits selection of a basis by an index number. 
+</p>
+
+
+<h3>METHODS</h3>
+
+<p>The <code>nv</code> class of objects has methods for the following generic functions: print, <code>nlevelsWT</code>, <code>InvBasis</code>, 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.6.0 Copyright Guy Nason 1995
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wst</code>, <code>wst.object</code>, <code>numtonv</code>, <code>print</code>, <code>nlevelsWT</code>, <code>InvBasis</code>, <code>MaNoVe.wst</code>. 
+</p>
+
+
+</div>

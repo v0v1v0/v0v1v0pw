@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>nComp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get Amounts of Each Compartments using Lambdas and Coefficients of Multi-compartment Model</h2>
+
+<h3>Description</h3>
+
+<p>It calculates using multi-compartment model.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">nComp(Sol, Ka=0, DH)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Sol</code></td>
+<td>
+<p>Solution list of lambdas and coefficients</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ka</code></td>
+<td>
+<p>Absorption rate constant</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DH</code></td>
+<td>
+<p>Expanded dosing history table</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>First compartment is the gut compartment for oral dosing. IV bolus and infusion dosing should be done at the second compartment.
+If a bolus dose was given at time T, it is reflected at times of larger than T. This is more close to real observation. ADAPT does like this, but NONMEM does not.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This returns a table with the gut and the other compartment columns
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Kyun-Seop Bae &lt;k@acr.kr&gt;</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">DAT
+DAT2 = ExpandDH(DAT)
+Sol = SolComp2(K10=0.1, K12=3, K21=1)
+X2 = nComp(Sol, Ka=1, DAT2)
+X2
+matplot(DAT2[, "TIME"], X2, type="l")
+</code></pre>
+
+
+</div>

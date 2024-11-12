@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cts_convert</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert Ids using Chemical Translation Service (CTS)</h2>
+
+<h3>Description</h3>
+
+<p>Convert Ids using Chemical Translation Service (CTS), see
+<a href="http://cts.fiehnlab.ucdavis.edu/">http://cts.fiehnlab.ucdavis.edu/</a>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cts_convert(
+  query,
+  from,
+  to,
+  match = c("all", "first", "ask", "na"),
+  verbose = getOption("verbose"),
+  choices = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>query</code></td>
+<td>
+<p>character; query ID.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>from</code></td>
+<td>
+<p>character; type of query ID, e.g. <code>'Chemical Name'</code> ,
+<code>'InChIKey'</code>, <code>'PubChem CID'</code>, <code>'ChemSpider'</code>, <code>'CAS'</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>to</code></td>
+<td>
+<p>character; type to convert to.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>match</code></td>
+<td>
+<p>character; How should multiple hits be handled? <code>"all"</code>
+returns all matches, <code>"first"</code> returns only the first result,
+<code>"ask"</code> enters an interactive mode and the user is asked for input,
+<code>"na"</code> returns <code>NA</code> if multiple hits are found.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>logical; should a verbose output be printed on the console?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>choices</code></td>
+<td>
+<p>deprecated.  Use the <code>match</code> argument instead.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>currently not used.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>See also <a href="http://cts.fiehnlab.ucdavis.edu/">http://cts.fiehnlab.ucdavis.edu/</a>
+for possible values of from and to.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a list of character vectors or if <code>choices</code> is used, then a
+single named vector.
+</p>
+
+
+<h3>References</h3>
+
+<p>Wohlgemuth, G., P. K. Haldiya, E. Willighagen, T. Kind, and O.
+Fiehn 2010The Chemical Translation Service – a Web-Based Tool to Improve
+Standardization of Metabolomic Reports. Bioinformatics 26(20): 2647–2648.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>cts_from</code> for possible values in the 'from' argument
+and <code>cts_to</code> for possible values in the 'to' argument.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# might fail if API is not available
+cts_convert("XEFQLINVKFYRCS-UHFFFAOYSA-N", "inchikey", "Chemical Name")
+
+### multiple inputs
+keys &lt;- c("XEFQLINVKFYRCS-UHFFFAOYSA-N", "VLKZOEOYAKHREP-UHFFFAOYSA-N")
+cts_convert(keys, "inchikey", "cas")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

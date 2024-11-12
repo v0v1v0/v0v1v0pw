@@ -1,0 +1,207 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_dpird_minute</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get DPIRD Weather Data by the Minute</h2>
+
+<h3>Description</h3>
+
+<p>Fetch nicely formatted minute weather station data from the <abbr><span class="acronym">DPIRD</span></abbr>
+Weather 2.0 <abbr><span class="acronym">API</span></abbr> for a maximum 24-hour period.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_dpird_minute(
+  station_code,
+  start_date_time = lubridate::now() - lubridate::hours(24L),
+  minutes = 1440L,
+  values = "all",
+  api_key = get_key(service = "DPIRD")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>station_code</code></td>
+<td>
+<p>A <code>character</code> string or <code>factor</code> from
+<code>get_stations_metadata()</code> of the <abbr><span class="acronym">BOM</span></abbr> station code for the station
+of interest.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_date_time</code></td>
+<td>
+<p>A <code>character</code> string representing the start date and
+time of the query in the format “yyyy-mm-dd-hh-mm” (ISO8601).
+Defaults to 24 hours before the current local system time, returning the
+most recent 24 hour observations rounded to the nearest minute.  This
+function does its best to decipher many date and time formats but prefers
+ISO8601.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minutes</code></td>
+<td>
+<p>An <code>integer</code> value that provides the number of observations to
+be returned.  Defaults to 1440 minutes for 24 hours of observations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>values</code></td>
+<td>
+<p>A <code>vector</code> of weather values to query from the
+<abbr><span class="acronym">API</span></abbr>.  See <strong>Available Values</strong> section for valid available codes.
+Defaults to all available values, <code>all</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>api_key</code></td>
+<td>
+<p>A <code>character</code> string containing your <abbr><span class="acronym">API</span></abbr> key from
+<abbr><span class="acronym">DPIRD</span></abbr>, <a href="https://www.agric.wa.gov.au/web-apis">https://www.agric.wa.gov.au/web-apis</a>, for the
+<abbr><span class="acronym">DPIRD</span></abbr> Weather 2.0 <abbr><span class="acronym">API</span></abbr>.  Defaults to automatically
+detecting your key from your local .Renviron, .Rprofile or similar.
+Alternatively, you may directly provide your key as a string here.  If
+nothing is provided, you will be prompted on how to set up your <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> session
+so that it is auto-detected.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a <code>data.table::data.table()</code> with <code>station_code</code> and the date interval
+queried together with the requested weather variables.
+</p>
+
+
+<h3>Available Values</h3>
+
+
+<ul>
+<li>
+<p> all (which will return all of the following values),
+</p>
+</li>
+<li>
+<p> airTemperature,
+</p>
+</li>
+<li>
+<p> dateTime,
+</p>
+</li>
+<li>
+<p> dewPoint,
+</p>
+</li>
+<li>
+<p> rainfall,
+</p>
+</li>
+<li>
+<p> relativeHumidity,
+</p>
+</li>
+<li>
+<p> soilTemperature,
+</p>
+</li>
+<li>
+<p> solarIrradiance,
+</p>
+</li>
+<li>
+<p> wetBulb,
+</p>
+</li>
+<li>
+<p> wind,
+</p>
+</li>
+<li>
+<p> windAvgSpeed,
+</p>
+</li>
+<li>
+<p> windMaxSpeed, and
+</p>
+</li>
+<li>
+<p> windMinSpeed
+</p>
+</li>
+</ul>
+<h3>Note</h3>
+
+<p>Please note this function converts date-time columns from Coordinated
+Universal Time ‘UTC’ returned by the <abbr><span class="acronym">API</span></abbr> to Australian
+Western Standard Time ‘AWST’.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Adam H. Sparks, <a href="mailto:adamhsparks@gmail.com">adamhsparks@gmail.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other DPIRD: 
+<code>dpird_extreme_weather_values</code>,
+<code>dpird_minute_values</code>,
+<code>dpird_summary_values</code>,
+<code>find_nearby_stations()</code>,
+<code>find_stations_in()</code>,
+<code>get_dpird_apsim()</code>,
+<code>get_dpird_availability()</code>,
+<code>get_dpird_extremes()</code>,
+<code>get_dpird_summaries()</code>,
+<code>get_stations_metadata()</code>
+</p>
+<p>Other data fetching: 
+<code>get_ag_bulletin()</code>,
+<code>get_coastal_forecast()</code>,
+<code>get_data_drill()</code>,
+<code>get_data_drill_apsim()</code>,
+<code>get_dpird_apsim()</code>,
+<code>get_dpird_extremes()</code>,
+<code>get_dpird_summaries()</code>,
+<code>get_patched_point()</code>,
+<code>get_patched_point_apsim()</code>,
+<code>get_precis_forecast()</code>,
+<code>get_radar_imagery()</code>,
+<code>get_satellite_imagery()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+
+# Note that you need to supply your own API key
+
+get_dpird_minute(
+  station_code = "SP",
+  start_date_time = "2023-02-01 13:00:00",
+  minutes = 1440,
+  values = c("airTemperature",
+             "solarIrradiance",
+             "wind"),
+  api_key = "your_api_key"
+)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

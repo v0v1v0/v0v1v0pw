@@ -1,0 +1,168 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_mod.default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add Estimated Population Line to a Probability Plot</h2>
+
+<h3>Description</h3>
+
+<p>This function adds an estimated regression line to an existing probability
+plot (plot_prob).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+plot_mod(
+  p_obj,
+  x,
+  dist_params,
+  distribution = c("weibull", "lognormal", "loglogistic", "sev", "normal", "logistic",
+    "weibull3", "lognormal3", "loglogistic3", "exponential", "exponential2"),
+  title_trace = "Fit",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>p_obj</code></td>
+<td>
+<p>A plot object returned by plot_prob.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector containing the x-coordinates of the respective
+regression line.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist_params</code></td>
+<td>
+<p>A (named) numeric vector of estimated location and scale
+parameters for a specified distribution. The order of elements is important.
+First entry needs to be the location parameter <code class="reqn">\mu</code> and the second
+element needs to be the scale parameter <code class="reqn">\sigma</code>. If a three-parametric
+model is used the third element is the threshold parameter <code class="reqn">\gamma</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed distribution of the random variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_trace</code></td>
+<td>
+<p>A character string which is assigned to the legend trace.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A plot object containing the probability plot with plotting positions
+and the estimated regression line.
+</p>
+
+
+<h3>References</h3>
+
+<p>Meeker, William Q; Escobar, Luis A., Statistical methods for
+reliability data, New York: Wiley series in probability and statistics, 1998
+</p>
+
+
+<h3>See Also</h3>
+
+<p>plot_mod
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Vectors:
+cycles &lt;- alloy$cycles
+status &lt;- alloy$status
+
+# Probability estimation
+prob_tbl &lt;- estimate_cdf(x = cycles, status = status, method = "johnson")
+
+# Example 1: Probability Plot and Regression Line Three-Parameter-Weibull:
+plot_weibull &lt;- plot_prob(
+  x = prob_tbl$x,
+  y = prob_tbl$prob,
+  status = prob_tbl$status,
+  id = prob_tbl$id,
+  distribution = "weibull"
+)
+
+rr &lt;- rank_regression(
+  x = prob_tbl$x,
+  y = prob_tbl$prob,
+  status = prob_tbl$status,
+  distribution = "weibull3"
+)
+
+plot_reg_weibull &lt;- plot_mod(
+  p_obj = plot_weibull,
+  x = prob_tbl$x,
+  dist_params = rr$coefficients,
+  distribution = "weibull3"
+)
+
+
+
+# Example 2: Probability Plot and Regression Line Three-Parameter-Lognormal:
+plot_lognormal &lt;- plot_prob(
+  x = prob_tbl$x,
+  y = prob_tbl$prob,
+  status = prob_tbl$status,
+  id = prob_tbl$id,
+  distribution = "lognormal"
+)
+
+rr_ln &lt;- rank_regression(
+  x = prob_tbl$x,
+  y = prob_tbl$prob,
+  status = prob_tbl$status,
+  distribution = "lognormal3"
+)
+
+plot_reg_lognormal &lt;- plot_mod(
+  p_obj = plot_lognormal,
+  x = prob_tbl$x,
+  dist_params = rr_ln$coefficients,
+  distribution = "lognormal3"
+)
+
+## Mixture Identification
+# Vectors:
+hours &lt;- voltage$hours
+status &lt;- voltage$status
+
+# Probability estimation:
+prob_mix &lt;- estimate_cdf(
+  x = hours,
+  status = status,
+  method = "johnson"
+)
+
+</code></pre>
+
+
+</div>

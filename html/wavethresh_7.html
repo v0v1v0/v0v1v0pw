@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>accessC.wst</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get smoothed data from packet ordered non-decimated wavelet object (wst)</h2>
+
+<h3>Description</h3>
+
+<p>The smoothed data from a packet ordered non-decimated wavelet object (returned from <code>wst</code>) are stored in a matrix. This function extracts all the coefficients corresponding to a particular resolution level.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wst'
+accessC(wst, level, aspect, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wst</code></td>
+<td>
+<p>Packet ordered non-decimated wavelet object from which you wish to extract the smoothed or original data (if the object is directly from a packet ordered non-decimated wavelet transform of some data).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>The level that you wish to extract. This can range from zero (the coarsest coefficients) to nlevelsWT(wstobj) which returns the original data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aspect</code></td>
+<td>
+<p>Applies function to coefficients before return. Supplied
+as a character string which gets converted to a function.
+For example "Mod" which returns the absolute values of the coefficients</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>wst</code> function performs a packet-ordered non-decimated wavelet transform. This function extracts all the father wavelet coefficients at a particular resolution level specified by <code>level</code>.
+</p>
+<p>Note that coefficients returned by this function are in <em>packet order</em>. They can be used <em>as is</em> but for many applications it might be more useful to deal with the coefficients in packets: see the function <code>getpacket.wst</code> for further details. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of the extracted data. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>References</h3>
+
+<p>Nason, G. P. and Silverman, B. W. (1994). The discrete wavelet transform in S. <em>Journal of Computational and Graphical Statistics</em>, <b>3</b>, 163–191. 
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wst</code>, <code>wst.object</code>, <code>accessC</code>, <code>getpacket.wst</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Get the 3rd level of smoothed data from a decomposition
+#
+dat &lt;- rnorm(64)
+accessC(wst(dat), level=3)
+</code></pre>
+
+
+</div>

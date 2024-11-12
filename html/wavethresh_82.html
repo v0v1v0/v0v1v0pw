@@ -1,0 +1,120 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>getpacket.wpst</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get packet of coefficients from a non-decimated wavelet packet object (wpst). </h2>
+
+<h3>Description</h3>
+
+<p>This function extracts and returns a packet of coefficients from a non-decimated wavelet packet (<code>wpst</code>) object. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wpst'
+getpacket(wpst, level, index, ... )
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wpst</code></td>
+<td>
+<p>Non-decimated wavelet packet object from which you wish to extract the packet from.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>The resolution level of the coefficients that you wish to extract. Can range from 0 to <code>nlevelsWT</code>(wpst). The coefficients at level <code>nlevels</code> are the data the created the <code>wpst.object</code>. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>index</code></td>
+<td>
+<p>The index number within the resolution level of the packet of coefficients that you wish to extract. Index ranges from 0 to
+<code class="reqn">(4^r)-1</code> where <code>r = nlevelsWT - level</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>wpst</code> transform produces a non-decimated wavelet packet object. This is a "cross" between a <code>wavelet packet</code> object and a <code>non-decimated wavelet</code> object. In other words the transform produces <em>wavelet packet</em> coefficients at every possible integer shift (unlike the ordinary wavelet packet transform which is aligned to a dyadic grid). 
+</p>
+<p>Each packet of coefficients is obtained by chaining together the effect of the two <em>packet operators</em> DG and DH: these are the high and low pass quadrature mirror filters of the Mallat pyramid algorithm scheme followed by both even <em>and</em> odd decimation. For a full description of this algorithm and how coefficients are stored within see Nason, Sapatinas and Sawczenko, 1998. 
+</p>
+<p>Note that this function extracts <em>packets</em>. If you want to obtain the wavelet packet coefficients for each shift you need to use the <code>accessD.wpst</code>function. This function extracts particular wavelet packet coefficients for a particular shift. In particular, this function returns a number of coefficients dependent on the scale level requested whereas <code>accessD.wpst</code> always returns a vector of coefficients of length equal to the input data that created the <code>wpst.object</code> initially. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector containing the packet of non-decimated wavelet packet coefficients that you wished to extract. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.9 Copyright Guy Nason 1998 </p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>accessD.wpst</code>, <code>wpst</code>, 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Create some random data
+#
+myrand &lt;- rnorm(16)
+#myrand
+# [1]  0.19268626 -0.41737181 -0.30806613  0.07435407  0.99871757
+# [6] -0.58935121 -1.38049759 -0.13346631  1.55555403 -1.60581265
+#[11]  0.14353621  1.21277774  1.13762337 -1.08577934 -0.29745609
+#[16]  0.50977512
+#
+# Do the non-decimated wavelet packet transform
+#
+myrwpst &lt;- wpst(myrand)
+#
+# Let's access what is a level nlevelsWT(myrwpst)
+#
+getpacket(myrwpst, nlevelsWT(myrwpst), index=0)
+# [1]  0.19268626 -0.41737181 -0.30806613  0.07435407  0.99871757
+# [6] -0.58935121 -1.38049759 -0.13346631  1.55555403 -1.60581265
+#[11]  0.14353621  1.21277774  1.13762337 -1.08577934 -0.29745609
+#[16]  0.50977512
+#
+# I.e. the data that created the object.
+#
+# How about extracting the 3rd (last) packet at level 3?
+#
+getpacket(myrwpst, 3, index=3)
+#[1] -2.660657144  0.688415755 -1.764060698  0.717267105 -0.206916242
+#[6] -0.659983747  0.005836952 -0.196874007
+#
+# Of course, there are only 8 coefficients at this level.
+</code></pre>
+
+
+</div>

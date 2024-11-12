@@ -1,0 +1,59 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mw_range_parser</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Middleware to parse a Range header</h2>
+
+<h3>Description</h3>
+
+<p>Adds the requested ranges to the <code>ranges</code> element of the request
+object. <code>request$ranges</code> is a data frame with two columns, <code>from</code> and
+<code>to</code>. Each row corresponds one requested interval.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mw_range_parser()
+</code></pre>
+
+
+<h3>Details</h3>
+
+<p>When the last <code>n</code> bytes of the file are requested, the matrix row is set
+to <code>c(0, -n)</code>. When all bytes after a <code>p</code> position are requested, the
+matrix row is set to <code>c(p, Inf)</code>.
+</p>
+<p>If the intervals overlap, then <code>ranges</code> is not set, i.e. the <code>Range</code>
+header is ignored.
+</p>
+<p>If its syntax is invalid or the unit is not <code>bytes</code>, then the
+<code>Range</code> header is ignored.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Handler function.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other middleware: 
+<code>mw_cgi()</code>,
+<code>mw_cookie_parser()</code>,
+<code>mw_etag()</code>,
+<code>mw_json()</code>,
+<code>mw_log()</code>,
+<code>mw_multipart()</code>,
+<code>mw_raw()</code>,
+<code>mw_static()</code>,
+<code>mw_text()</code>,
+<code>mw_urlencoded()</code>
+</p>
+
+
+</div>

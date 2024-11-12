@@ -1,0 +1,139 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_conf</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add Confidence Region(s) for Quantiles and Probabilities</h2>
+
+<h3>Description</h3>
+
+<p>This function is used to add estimated confidence region(s) to an existing
+probability plot. Since confidence regions are related to the estimated
+regression line, the latter is provided as well.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_conf(p_obj, x, ...)
+
+## S3 method for class 'wt_confint'
+plot_conf(
+  p_obj,
+  x,
+  title_trace_mod = "Fit",
+  title_trace_conf = "Confidence Limit",
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>p_obj</code></td>
+<td>
+<p>A plot object returned by plot_prob.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A tibble with class <code>wt_confint</code> returned by confint_betabinom or
+confint_fisher.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_trace_mod</code></td>
+<td>
+<p>A character string which is assigned to the model trace
+in the legend.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title_trace_conf</code></td>
+<td>
+<p>A character string which is assigned to the confidence
+trace in the legend.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A plot object containing the probability plot with plotting positions,
+the estimated regression line and the estimated confidence region(s).
+</p>
+
+
+<h3>References</h3>
+
+<p>Meeker, William Q; Escobar, Luis A., Statistical methods for
+reliability data, New York: Wiley series in probability and statistics, 1998
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Reliability data:
+data &lt;- reliability_data(data = alloy, x = cycles, status = status)
+
+# Probability estimation:
+prob_tbl &lt;- estimate_cdf(data, methods = "johnson")
+
+# Example 1 - Probability Plot, Regression Line and Confidence Bounds for Three-Parameter-Weibull:
+rr &lt;- rank_regression(prob_tbl, distribution = "weibull3")
+
+conf_betabin &lt;- confint_betabinom(rr)
+
+plot_weibull &lt;- plot_prob(prob_tbl, distribution = "weibull")
+
+plot_conf_beta &lt;- plot_conf(
+  p_obj = plot_weibull,
+  x = conf_betabin
+)
+
+# Example 2 - Probability Plot, Regression Line and Confidence Bounds for Three-Parameter-Lognormal:
+rr_ln &lt;- rank_regression(
+  prob_tbl,
+  distribution = "lognormal3",
+  conf_level = 0.9
+)
+
+conf_betabin_ln &lt;- confint_betabinom(
+  rr_ln,
+  bounds = "two_sided",
+  conf_level = 0.9,
+  direction = "y"
+)
+
+plot_lognormal &lt;- plot_prob(prob_tbl, distribution = "lognormal")
+
+plot_conf_beta_ln &lt;- plot_conf(
+  p_obj = plot_lognormal,
+  x = conf_betabin_ln
+)
+
+# Example 3 - Probability Plot, Regression Line and Confidence Bounds for MLE
+ml &lt;- ml_estimation(data, distribution = "weibull")
+
+conf_fisher &lt;- confint_fisher(ml)
+
+plot_weibull &lt;- plot_prob(prob_tbl, distribution = "weibull")
+
+plot_conf_fisher_weibull &lt;- plot_conf(
+  p_obj = plot_weibull,
+  x = conf_fisher
+)
+
+</code></pre>
+
+
+</div>

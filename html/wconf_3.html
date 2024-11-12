@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rconfusionmatrix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Redistributed confusion matrix</h2>
+
+<h3>Description</h3>
+
+<p>This function calculates the redistributed confusion matrix from a caret
+ConfusionMatrix object or a simple matrix and optionally prints the
+redistributed standard accuracy score. The redistributed confusion matrix
+can serve to place significance on observations close to the diagonal by
+applying a custom weighting scheme which transfers a proportion of the
+non-diagonal observations to the diagonal.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rconfusionmatrix(m, custom.weights = NA,
+                        print.weighted.accuracy = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>m</code></td>
+<td>
+<p>the caret confusion matrix object or simple matrix.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>custom.weights</code></td>
+<td>
+<p>the vector of custom weights to be applied, which
+should be equal to "n", but can be larger, with excess values, as well as
+the first element, being ignored. The first element is ignored because it
+represents weighting applied to the diagonal. As, in the case of
+redistribution, a proportion of the non-diagonal observations is shifted
+towards the diagonal, the weighting applied to the diagonal depends on the
+weights assigned to the non-diagonal elements, and is thus not configurable
+by the user.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>print.weighted.accuracy</code></td>
+<td>
+<p>print the standard accuracy metric for the
+redistributed matrix, which represents the sum of the correctly classified
+observations (or the diagonal elements of the matrix) divided by the
+total number of observations (or the sum of all observations).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The number of categories "n" should be greater or equal to 2.
+</p>
+
+
+<h3>Value</h3>
+
+<p>an nxn weighted confusion matrix
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alexandru Monahov, &lt;https://www.alexandrumonahov.eu.org/&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p>[weightmatrix()] for the weight matrix used in computations,
+[wconfusionmatrix()] for the computation of weighted confusion matrices,
+[balancedaccuracy()] for accuracy metrics designed for imbalanced data.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">m = matrix(c(70,0,0,10,10,0,5,3,2), ncol = 3, nrow=3)
+rconfusionmatrix(m, custom.weights = c(0,0.5,0.25),
+                 print.weighted.accuracy = TRUE)
+
+</code></pre>
+
+
+</div>

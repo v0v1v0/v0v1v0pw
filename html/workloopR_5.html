@@ -1,0 +1,111 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_wl_metadata</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get file info for a sequence of experiment files</h2>
+
+<h3>Description</h3>
+
+<p>Grab metadata from files stored in the same folder (e.g. a sequence of trials
+in an experiment).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_wl_metadata(file_path, pattern = "*.ddf")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>file_path</code></td>
+<td>
+<p>Path where files are stored. Should be in the same folder.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pattern</code></td>
+<td>
+<p>Regex pattern for identifying relevant files in the file_path.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If several files (e.g. successive trials from one experiment) are
+stored in one folder, use this function to obtain metadata in a list
+format. Runs <code>file.info()</code> from base R to extract info from files.
+</p>
+<p>This function is not truly considered to be part of the batch analysis
+pipeline;
+see <code>read_analyze_wl_dir()</code> for a similar function that not
+only grabs metadata but also imports &amp; analyzes files. Instead,
+<code>get_wl_metadata()</code> is meant to be a handy function to investigate
+metadata issues that arise if running <code>read_analyze_wl_dir()</code> goes awry.
+</p>
+<p>Unlike <code>read_analyze_wl_dir()</code>, this function does not necessarily need
+files to all be work loops. Any file type is welcome (as long as the Regex
+<code>pattern</code> argument makes sense).
+</p>
+
+
+<h3>Value</h3>
+
+<p>Either a <code>data.frame</code> (if a single file is supplied) or a
+<code>list</code> of <code>data.frame</code>s (if a list of files is supplied), with
+information as supplied from <code>file.info()</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Vikram B. Baliga
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>summarize_wl_trials</code>
+</p>
+<p>Other data import functions: 
+<code>as_muscle_stim()</code>,
+<code>read_analyze_wl_dir()</code>,
+<code>read_analyze_wl()</code>,
+<code>read_ddf_dir()</code>,
+<code>read_ddf()</code>
+</p>
+<p>Other workloop functions: 
+<code>analyze_workloop()</code>,
+<code>fix_GR()</code>,
+<code>invert_position()</code>,
+<code>read_analyze_wl_dir()</code>,
+<code>read_analyze_wl()</code>,
+<code>select_cycles()</code>,
+<code>summarize_wl_trials()</code>,
+<code>time_correct()</code>
+</p>
+<p>Other batch analyses: 
+<code>read_analyze_wl_dir()</code>,
+<code>summarize_wl_trials()</code>,
+<code>time_correct()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(workloopR)
+
+# get file info for files included with workloopR
+wl_meta &lt;- get_wl_metadata(system.file("extdata/wl_duration_trials",
+                                       package = 'workloopR'))
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,167 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rowNormalize</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Row Normalize</h2>
+
+<h3>Description</h3>
+
+<p>This function was designed for normalizing data that is supposed to be particularly similar, like a collection of technical replicates.
+Thus, initially for each row an independent normalization factor is calculated and the median or mean across all factors will be finally applied to the data.
+This function has a special mode of operation with higher content of <code>NA</code> values (which may pose problems with other normalization approaches). 
+If the <code>NA</code>-content is higher than the threshold set in <code>sparseLim</code>,
+a special procedure for sparse data will be applied (iteratively trating subsets of <code>nCombin</code> columns that will be combined in a later step).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rowNormalize(
+  dat,
+  method = "median",
+  refLines = NULL,
+  refGrp = NULL,
+  proportMode = TRUE,
+  minQuant = NULL,
+  sparseLim = 0.4,
+  nCombin = 3,
+  omitNonAlignable = FALSE,
+  maxFact = 10,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>matrix or data.frame of data to get normalized</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>(character) may be "mean","median" (plus "NULL","none"); When NULL or 'none' is chosen the input will be returned as is</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refLines</code></td>
+<td>
+<p>(NULL or numeric) allows to consider only specific lines of 'dat' when determining normalization factors (all data will be normalized)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refGrp</code></td>
+<td>
+<p>(integer) Only the columns indicated will be used as reference, default all columns (integer or colnames)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>proportMode</code></td>
+<td>
+<p>(logical) decide if normalization should be done by multiplicative or additive factor</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minQuant</code></td>
+<td>
+<p>(numeric) optional filter to set all values below given value as <code>NA</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sparseLim</code></td>
+<td>
+<p>(integer) decide at which min content of  <code>NA</code> values the function should go in sparse-mode</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nCombin</code></td>
+<td>
+<p>(NULL or integer) used only in sparse-mode (ie if content of <code>NA</code>s higher than content of <code>sparseLim</code>): Number of groups of smller matrixes with this number of columns to be inspected initailly;
+low values (small groups have higher chances of more common elements)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>omitNonAlignable</code></td>
+<td>
+<p>(logical) allow omitting all columns which can't get aligned due to sparseness</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxFact</code></td>
+<td>
+<p>(numeric, length=2) max normalization factor</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) This function allows easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Arguments were kept similar with function <code>normalizeThis</code> as much as possible.
+In most cases data get normalized by proportional factors. In case of log2-data (very common in omics-data) normalizing by an additive factor is equivalent to a proportional factor.
+</p>
+<p>This function has a special mode of operation for sparse data (ie containing a high content of <code>NA</code> values).
+0-values by themselves will be primarily considered as true measurment outcomes and not as missing.
+However, by using the argument <code>minQuant</code> all values below a given threshold will be set as <code>NA</code> and this may possibly trigger the sparse mode of normalizing.
+</p>
+<p>Note : Using a small value of <code>nCombin</code> will give the highest chances of finding sufficient complete combination of columns with sparse data.
+However, this will also increase (very much) the computational efforts and time required to produce an output.
+</p>
+<p>When using default proportional mode a potential division by 0 could occur, when the initial normalization factor turns out as 0.
+In this case a small value (default the maximum value of <code>dat</code> / 10 will be added to all data before normalizing.
+If this also creates 0-vales in the data this factor will be multiplied by 0.03.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a matrix of normalized data
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>exponNormalize</code>, <code>adjBy2ptReg</code>, <code>justvsn</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## sparse matrix  normalization
+set.seed(2); AA &lt;- matrix(rbinom(110,10,0.05), nrow=10)
+AA[,4:5] &lt;- AA[,4:5] *rep(4:3, each=nrow(AA))
+AA[2,c(2,6,7)] &lt;- 1; AA[3,8] &lt;- 1;
+
+(AA1 &lt;- rowNormalize(AA))
+(AA2 &lt;- rowNormalize(AA, minQuant=1))   # set all 0 as NAs
+(AA3 &lt;- rowNormalize(AA, refLines=1:6, omitNonAlignable=FALSE, minQuant=1))
+
+
+</code></pre>
+
+
+</div>

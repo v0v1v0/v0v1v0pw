@@ -1,0 +1,106 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>blueWhiteRed</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Blue-white-red color sequence </h2>
+
+<h3>Description</h3>
+
+<p>Generate a blue-white-red color sequence of a given length.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">blueWhiteRed(
+    n, 
+    gamma = 1, 
+    endSaturation = 1,
+    blueEnd = c(0.05 + (1-endSaturation) * 0.45 , 0.55 + (1-endSaturation) * 0.25, 1.00),
+    redEnd = c(1.0, 0.2 + (1-endSaturation) * 0.6, 0.6*(1-endSaturation)),
+    middle = c(1,1,1))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p> number of colors to be returned. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma</code></td>
+<td>
+<p> color change power. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>endSaturation</code></td>
+<td>
+<p> a number between 0 and 1 giving the saturation of the colors that will represent the
+ends of the scale. Lower numbers mean less saturation (lighter colors).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blueEnd</code></td>
+<td>
+<p>vector of length 3 giving the RGB relative values (between 0 and 1) for the blue or negative end color.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>redEnd</code></td>
+<td>
+<p>vector of length 3 giving the RGB relative values (between 0 and 1) for the red or positive end color.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>middle</code></td>
+<td>
+<p>vector of length 3 giving the RGB relative values (between 0 and 1) for the middle of the scale.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function returns a color vector that starts with blue, gradually turns into white and then to
+red. The power <code>gamma</code> can be used to control the behaviour of the quarter- and three quarter-values
+(between blue and white, and white and red, respectively). Higher powers will make the mid-colors more
+white, while lower powers will make the colors more saturated, respectively.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of colors of length <code>n</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder </p>
+
+
+<h3>See Also</h3>
+
+<p><code>numbers2colors</code> for a function that produces a color representation for continuous numbers.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  par(mfrow = c(3, 1))
+  displayColors(blueWhiteRed(50));
+  title("gamma = 1")
+  displayColors(blueWhiteRed(50, 3));
+  title("gamma = 3")
+  displayColors(blueWhiteRed(50, 0.5));
+  title("gamma = 0.5")
+</code></pre>
+
+
+</div>

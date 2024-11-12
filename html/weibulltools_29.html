@@ -1,0 +1,138 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>loglik_profiling.default</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Log-Likelihood Profile Function for Parametric Lifetime Distributions with Threshold</h2>
+
+<h3>Description</h3>
+
+<p>This function evaluates the log-likelihood with respect to a given threshold
+parameter of a parametric lifetime distribution. In terms of
+<em>Maximum Likelihood Estimation</em> this function can be optimized
+(optim) to estimate the threshold parameter.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## Default S3 method:
+loglik_profiling(
+  x,
+  status,
+  wts = rep(1, length(x)),
+  thres,
+  distribution = c("weibull3", "lognormal3", "loglogistic3", "exponential2"),
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector which consists of lifetime data. Lifetime data
+could be every characteristic influencing the reliability of a product,
+e.g. operating time (days/months in service), mileage (km, miles), load
+cycles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>A vector of binary data (0 or 1) indicating whether a unit is
+a right censored observation (= 0) or a failure (= 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wts</code></td>
+<td>
+<p>Optional vector of case weights. The length of <code>wts</code> must be equal
+to the number of observations in <code>x</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thres</code></td>
+<td>
+<p>A numeric value for the threshold parameter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distribution</code></td>
+<td>
+<p>Supposed parametric distribution of the random variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Further arguments passed to or from other methods. Currently not used.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns the log-likelihood value for the threshold parameter <code>thres</code> given
+the data.
+</p>
+
+
+<h3>References</h3>
+
+<p>Meeker, William Q; Escobar, Luis A., Statistical methods for
+reliability data, New York: Wiley series in probability and statistics, 1998
+</p>
+
+
+<h3>See Also</h3>
+
+<p>loglik_profiling
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Vectors:
+cycles &lt;- alloy$cycles
+status &lt;- alloy$status
+
+# Determining the optimal loglikelihood value:
+## Range of threshold parameter must be smaller than the first failure:
+threshold &lt;- seq(
+  0,
+  min(cycles[status == 1]) - 0.1,
+  length.out = 50
+)
+
+## loglikelihood value with respect to threshold values:
+profile_logL &lt;- loglik_profiling(
+  x = cycles,
+  status = status,
+  thres = threshold,
+  distribution = "weibull3"
+)
+
+## Threshold value (among the candidates) that maximizes the
+## loglikelihood:
+threshold[which.max(profile_logL)]
+
+## plot:
+plot(
+  threshold,
+  profile_logL,
+  type = "l"
+)
+abline(
+  v = threshold[which.max(profile_logL)],
+  h = max(profile_logL),
+  col = "red"
+)
+
+</code></pre>
+
+
+</div>

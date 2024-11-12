@@ -1,0 +1,103 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>autoWaiter</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Automatic Waiter</h2>
+
+<h3>Description</h3>
+
+<p>This function allows easily adding
+waiters to dynamically rendered Shiny content where
+"dynamic" means <code style="white-space: pre;">⁠render*⁠</code> and <code style="white-space: pre;">⁠*output⁠</code> function pair.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">autoWaiter(id = NULL, html = NULL, color = NULL, image = "", fadeout = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>Vector of ids of elements to overlay the waiter.
+If <code>NULL</code> then the loading screens are applied to all
+elements.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>html</code></td>
+<td>
+<p>HTML content of waiter, generally a spinner, see <code>spinners</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color</code></td>
+<td>
+<p>Background color of loading screen.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>image</code></td>
+<td>
+<p>Path to background image.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fadeout</code></td>
+<td>
+<p>Use a fade out effect when the screen is removed.
+Can be a boolean, or a numeric indicating the number of
+milliseconds the effect should take.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This will display the waiter when the element is being
+recalculated and hide it when it receives new data.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(shiny)
+library(waiter)
+
+ui &lt;- fluidPage(
+	autoWaiter(),
+	actionButton(
+		"trigger",
+		"Render"
+	),
+	plotOutput("plot"),
+	plotOutput("dom")
+)
+
+server &lt;- function(input, output){
+	output$plot &lt;- renderPlot({
+		input$trigger
+		Sys.sleep(3)
+		plot(cars)
+	})
+
+	output$dom &lt;- renderPlot({
+		input$trigger
+		Sys.sleep(5)
+		plot(runif(100))
+	})
+}
+
+if(interactive())
+ shinyApp(ui, server)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,173 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fun.load</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Stochastic Search Helper Functions
+</h2>
+
+<h3>Description</h3>
+
+<p>Functions that assign values and functions needed by <code>MSS.snow</code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fun.load.hals.a()
+fun.load.hals.fill()
+fun.load.widals.a()
+fun.load.widals.fill()
+</code></pre>
+
+
+<h3>Details</h3>
+
+<p>Please see <code>MSS.snow</code> and examples.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Nothing.  The central role of these functions is the creation of four functions required by <code>MSS.snow</code>: <code>FUN.MH</code>, <code>FUN.GP</code>, <code>FUN.I</code>, and <code>FUN.EXIT</code>.  These four functions are assigned to the Global Environment.  This <code>fun.load</code> suite of functions also passes needed objects (out-of-scope) to <code>snowfall</code> threads if the global user-made variable <code>run.parallel</code> is set to <code>TRUE</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>MSS.snow</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+
+### Here's an itty bitty example:
+### we use stochastic search to find the minimum number in a vector
+### GP isn't used here, and hence neither are p.ndx.ls nor f.d
+### however, we still need to create them since MSS.snow requires their existence
+
+## Not run: 
+
+fun.load.simpleExample &lt;- function() {
+
+   if( run.parallel ) {
+         sfExport("xx")
+    }
+    
+    p.ndx.ls &lt;- list( c(1) )
+    
+    p.ndx.ls &lt;&lt;- p.ndx.ls
+    
+    f.d &lt;- list( dlog.norm )
+
+    f.d &lt;&lt;- f.d
+    
+    FUN.MH &lt;- function(jj, GP.mx, X) {
+        our.cost &lt;- sample(xx, 1)
+    }
+
+    FUN.MH &lt;&lt;- FUN.MH
+    
+    
+    FUN.GP &lt;- NULL
+    FUN.GP &lt;&lt;- FUN.GP
+    
+    
+    FUN.I &lt;- function(envmh, X) {
+        cat( "Hello, I have found an even smaller number in xx ---&gt; ", envmh$current.best, "\n" )
+    }
+    FUN.I &lt;&lt;- FUN.I
+    
+    FUN.EXIT &lt;- function(envmh, X) {
+        cat( "Done",   "\n" )
+    }
+
+    FUN.EXIT &lt;&lt;- FUN.EXIT
+    
+}
+
+xx &lt;- 1:600
+
+GP &lt;- c(1)
+
+run.parallel &lt;- TRUE
+sfInit(TRUE, 2)
+
+MH.source &lt;- fun.load.simpleExample
+MH.source()
+
+MSS.snow(MH.source, Inf, p.ndx.ls, f.d, matrix(1, nrow=28), 28, 7)
+sfStop()
+
+
+
+
+### Here's another itty bitty example:
+### we use stochastic search to find the mean of a vector
+### i.e., the argmin? of sum ( x - ? )^2
+
+fun.load.simpleExample2 &lt;- function() {
+
+   if( run.parallel ) {
+         sfExport("xx")
+    }
+    
+    p.ndx.ls &lt;- list( c(1) )
+    p.ndx.ls &lt;&lt;- p.ndx.ls
+    
+    f.d &lt;- list( unif.mh )
+    f.d &lt;&lt;- f.d
+    
+    FUN.MH &lt;- function(jj, GP.mx, X) {
+        our.cost &lt;- sum( ( xx - GP.mx[jj, 1] )^2 )
+        return(our.cost)
+    }
+    FUN.MH &lt;&lt;- FUN.MH
+    
+    FUN.GP &lt;- NULL
+    FUN.GP &lt;&lt;-  FUN.GP
+    
+    FUN.I &lt;- function(envmh, X) {
+        cat( "Improvement ---&gt; ", envmh$current.best, " ---- " , envmh$GP, "\n" )
+    }
+    FUN.I &lt;&lt;- FUN.I
+    
+    FUN.EXIT &lt;- function(envmh, X) {
+        our.cost &lt;- envmh$current.best
+        GP &lt;- envmh$GP
+        cat( "Done",   "\n" )
+        cat( envmh$GP, our.cost, "\n" )
+    }
+    FUN.EXIT &lt;&lt;- FUN.EXIT
+    
+}
+
+##set.seed(99999)
+xx &lt;- rnorm(300, 5, 10)
+
+GP &lt;- c(1)
+
+run.parallel &lt;- TRUE
+sfInit(TRUE, 2)
+
+MH.source &lt;- fun.load.simpleExample2
+MH.source()
+
+MSS.snow(MH.source, Inf, p.ndx.ls, f.d, matrix(1/10, nrow=140, ncol=length(GP)), 140, 14)
+sfStop()
+
+##### in fact:
+mean(xx)
+
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,72 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>firstOfRepeated</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Find first of repeated elements</h2>
+
+<h3>Description</h3>
+
+<p>This function works similar to <code>unique</code>, but provides additional information about which elements of original input <code>'x'</code> are repeatd by providing indexes realtoe to the input.
+<code>firstOfRepeated</code> makes list with 3 elements : $indRepeated.. index for first of repeated 'x', $indUniq.. index of all unique + first of repeated, $indRedund.. index of all redundant entries, ie non-unique (wo 1st).
+Used for reducing data to non-redundant status, however, for large numeric input the function nonAmbiguousNum() may perform better/faster.
+NAs won't be considered (NAs do not appear in reported  index of results), see also firstOfRepLines() .
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">firstOfRepeated(x, silent = FALSE, debug = FALSE, callFrom = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(charcter or numeric) main input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>list with indices: $indRepeated,  $indUniq, $indRedund
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>duplicated</code>, <code>nonAmbiguousNum</code>, <code>firstOfRepLines</code> gives less detail in output (lines/elements/indexes of omitted not directly accessible) and works fsster
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- c(letters[c(3,2:4,8,NA,3:1,NA,5:4)]); names(x) &lt;- 100+(1:length(x))
+firstOfRepeated(x)
+x[firstOfRepeated(x)$indUniq]          # only unique with names
+</code></pre>
+
+
+</div>

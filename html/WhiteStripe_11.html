@@ -1,0 +1,48 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>t2.voi.hist</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Histogram of VOI of T2 template image</h2>
+
+<h3>Description</h3>
+
+<p>Histogram of VOI of T2 template image
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">t2.voi.hist
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A histogram volume of interest from a T2 image for smoothing
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+lib.loc = tempdir() 
+if (download_img_data(lib.loc = lib.loc)){
+t2 = readNIfTI(system.file("T2Strip.nii.gz", package="WhiteStripe",
+lib.loc = lib.loc))
+t2.voi = make_img_voi(t2)
+any(is.na(t2.voi))
+# FALSE 
+t2.voi.hist = hist(t2.voi, 
+breaks=2000, 
+plot=FALSE)  
+#save(t2.voi.hist, file="data/t2.voi.hist.rda", compress = TRUE,
+# compression_level=9) 
+}
+
+## End(Not run) 
+</code></pre>
+
+
+</div>

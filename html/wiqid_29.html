@@ -1,0 +1,197 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>BetaDist</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+The Beta Distribution
+</h2>
+
+<h3>Description</h3>
+
+<p>Density, distribution function, quantile function and random generation for the Beta distribution with parameters <code>mean</code> and <code>sd</code> OR <code>mode</code> and <code>concentration</code>. These are wrappers for <code>stats::dbeta</code>, etc. <code>getBeta*Par</code> returns the shape parameters.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dbeta2(x, mean, sd)
+pbeta2(q, mean, sd, lower.tail=TRUE, log.p=FALSE)
+qbeta2(p, mean, sd, lower.tail=TRUE, log.p=FALSE)
+rbeta2(n, mean, sd)
+getBeta2Par(mean, sd)
+
+dbeta3(x, mode, concentration)
+pbeta3(q, mode, concentration, lower.tail=TRUE, log.p=FALSE)
+qbeta3(p, mode, concentration, lower.tail=TRUE, log.p=FALSE)
+rbeta3(n, mode, concentration)
+getBeta3Par(mode, concentration)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>vector of parameter values
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+
+<p>vector of quantiles
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+
+<p>vector of probabilities
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+
+<p>number of random draws required.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mean</code></td>
+<td>
+
+<p>mean of the beta distribution; cannot be 0 or 1.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd</code></td>
+<td>
+
+<p>standard deviation of the beta distribution; this must be less than <code>sqrt(mean * (1-mean))</code>, larger values will return NA, with a warning.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+
+<p>mode of the beta distribution; may be 0 or 1.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>concentration</code></td>
+<td>
+
+<p>concentration of the beta distribution; concentration = 2 is uniform, and the distribution becomes narrower as concentration increases. It is sometimes referred to as 'sample size', but best thought of as sample size + 2.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower.tail</code></td>
+<td>
+
+<p>logical; if TRUE (default), cumulative probabilities up to x, otherwise, above x.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log.p</code></td>
+<td>
+
+<p>logical; if TRUE, probabilities p are given as log(p).
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>dbeta*</code> gives the density, <code>pbeta*</code> gives the distribution function, <code>qbeta*</code> gives the quantile function, and <code>rbeta*</code> generates random deviates.
+</p>
+<p><code>getBeta*Par</code> returns a 2-column matrix with the shape parameters corresponding to <code>mean</code> and <code>sd</code> OR <code>mode</code> and <code>concentration</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith
+</p>
+
+
+<h3>See Also</h3>
+
+<p>See the <span class="pkg">stats</span> functions <code>dbeta</code>, <code>pbeta</code>, <code>qbeta</code>, <code>rbeta</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Plot some curves with dbeta2
+xx &lt;- seq(0, 1, length.out=101)
+plot(xx, dbeta2(xx, 0.4, 0.12), xlab="x", ylab="Probability density",
+  main="Beta curves with mean = 0.4", type='l', lwd=2)
+lines(xx, dbeta2(xx, 0.4, 0.24), col='darkgreen', lwd=2)
+lines(xx, dbeta2(xx, 0.4, 0.28), col='red', lwd=2)
+lines(xx, dbeta2(xx, 0.4, 0.36), col='blue', lwd=2)
+abline(v=0.4, lty=3, lwd=2)
+legend('topright', paste("sd =", c(0.12,0.24, 0.28, 0.36)), lwd=2,
+  col=c('black', 'darkgreen', 'red', 'blue'), bty='n')
+
+# Get shape and rate parameters for mean = 0.4 and sd = c(0.12,0.24, 0.28, 0.36, 0.49)
+# The last value for sd is too big and will produce NAs and a warning
+getBeta2Par(mean = 0.4, sd = c(0.12,0.24, 0.28, 0.36, 0.49))
+
+# The parameterisation with mean and sd doesn't seem intuitive,
+#   let's try mode and concentration.
+# This does not allow 'bathtub' curves, which are bimodal.
+plot(xx, dbeta3(xx, 0.4, 16), xlab="x", ylab="Probability density",
+  main="Beta curves with mode = 0.4", type='l', lwd=2)
+lines(xx, dbeta3(xx, 0.4, 8), col='darkgreen', lwd=2)
+lines(xx, dbeta3(xx, 0.4, 4), col='red', lwd=2)
+lines(xx, dbeta3(xx, 0.4, 2), col='blue', lwd=2)
+abline(v=0.4, lty=3, lwd=2)
+legend('topright', , lwd=2, paste("concentration =", c(16, 8, 4, 2)),
+  col=c('black', 'darkgreen', 'red', 'blue'), bty='n')
+
+# The mode can be at 0 or 1:
+plot(xx, dbeta3(xx, 1, 16), xlab="x", ylab="Probability density",
+  main="Beta curves with mode = 1", type='l', lwd=2)
+lines(xx, dbeta3(xx, 1, 8), col='darkgreen', lwd=2)
+lines(xx, dbeta3(xx, 1, 4), col='red', lwd=2)
+lines(xx, dbeta3(xx, 1, 2), col='blue', lwd=2)
+legend('topleft', paste("concentration =", c(16, 8, 4, 2)), lwd=2,
+  col=c('black', 'darkgreen', 'red', 'blue'), bty='n')
+
+# Cumulative plots with pbeta3
+plot(xx, pbeta3(xx, 0.4, 16), xlab="x", ylab="Cumulative probability",
+  main="Beta curves with mode = 0.4", type='l', lwd=2)
+lines(xx, pbeta3(xx, 0.4, 8), col='darkgreen', lwd=2)
+lines(xx, pbeta3(xx, 0.4, 4), col='red', lwd=2)
+lines(xx, pbeta3(xx, 0.4, 2), col='blue', lwd=2)
+abline(v=0.4, lty=3, lwd=2)
+legend('topleft', paste("concentration =", c(16, 8, 4, 2)), lwd=2,
+  col=c('black', 'darkgreen', 'red', 'blue'), bty='n')
+
+# Generate random draws and plot a histogram
+rnd &lt;- rbeta3(1e5, 0.4, 8)
+hist(rnd, freq=FALSE)
+# Add the curve:
+lines(xx, dbeta3(xx, 0.4, 8), col='darkgreen', lwd=2)
+
+# Get shape and rate parameters for mode = 0.4 and concentration = c(2, 4, 8, 16)
+getBeta3Par(mode = 0.4, concentration = c(2, 4, 8, 16))
+
+</code></pre>
+
+
+</div>

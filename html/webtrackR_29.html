@@ -1,0 +1,97 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sum_durations</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Summarize visit duration by person</h2>
+
+<h3>Description</h3>
+
+<p><code>sum_durations()</code> summarizes the duration of visits by person within a <code>timeframe</code>,
+and optionally by <code>visit_class</code> of visit. Note:
+</p>
+
+<ul>
+<li>
+<p> If for a time frame all rows are NA on the duration column, the summarized duration for that time frame will be NA.
+</p>
+</li>
+<li>
+<p> If only some of the rows of a time frame are NA on the duration column, the function will ignore those NA rows.
+</p>
+</li>
+<li>
+<p> If there were no visits to a class (i.e., a value of the 'visit_class' column) for a time frame, the summarized duration for that time frame will be zero; if there were visits, but NA on duration, the summarized duration will be NA.
+</p>
+</li>
+</ul>
+<h3>Usage</h3>
+
+<pre><code class="language-R">sum_durations(wt, var_duration = NULL, timeframe = NULL, visit_class = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wt</code></td>
+<td>
+<p>webtrack data object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>var_duration</code></td>
+<td>
+<p>character. Name of the duration variable if already present.
+Defaults to <code>NULL</code>, in which case duration will be approximated with
+<code>add_duration(wt, cutoff = 300, replace_by = "na", replace_val = NULL)</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timeframe</code></td>
+<td>
+<p>character. Indicates for what time frame to aggregate visit durations.
+Possible values are <code>"date"</code>, <code>"week"</code>, <code>"month"</code>, <code>"year"</code>, <code>"wave"</code> or <code>NULL</code>.
+If set to <code>"wave"</code>, <code>wt</code> must contain a column call <code>wave</code>. Defaults to <code>NULL</code>,
+in which case the output contains duration of visits for the entire time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>visit_class</code></td>
+<td>
+<p>character. Column that contains a classification of visits.
+For each value in this column, the output will have a column indicating the
+number of visits belonging to that value. Defaults to <code>NULL</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a data.frame with columns <code>panelist_id</code>, column indicating the time unit
+(unless <code>timeframe</code> set to <code>NULL</code>), <code>duration_visits</code> indicating the duration of visits
+(in seconds, or whatever the unit of the variable specified by <code>var_duration</code> parameter),
+and a column for each value of <code>visit_class</code>, if specified.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data("testdt_tracking")
+wt &lt;- as.wt_dt(testdt_tracking)
+# summarize for whole period
+wt_summ &lt;- sum_durations(wt)
+# summarize by week
+wt_summ &lt;- sum_durations(wt, timeframe = "week")
+# create a class variable to summarize by class
+wt &lt;- extract_domain(wt)
+wt$google &lt;- ifelse(wt$domain == "google.com", 1, 0)]
+wt_summ &lt;- sum_durations(wt, timeframe = "week", visit_class = "google")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,95 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>elimCloseCoord</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Eliminate close (overlapping) points (in x &amp; y space)</h2>
+
+<h3>Description</h3>
+
+<p><code>elimCloseCoord</code> reduces number of rows in 'dat' by eliminating lines where x &amp; y coordinates (columns of matrix '<code>dat</code>' defined by '<code>useCol</code>') are identical (overlay points) or very close.
+The stringency for 'close' values may be fine-tuned using <code>nDig</code>), this function uses internally <code>firstOfRepeated</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">elimCloseCoord(
+  dat,
+  useCol = 1:2,
+  elimIdentOnly = FALSE,
+  refine = 2,
+  nDig = 3,
+  callFrom = NULL,
+  silent = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>matrix (or data.frame) with main numeric input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useCol</code></td>
+<td>
+<p>(numeric) index for numeric columns of 'dat' to use/consider</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>elimIdentOnly</code></td>
+<td>
+<p>(logical) if TRUE, eliminate real duplicated points only (ie identical values only)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refine</code></td>
+<td>
+<p>(numeric) allows increasing stringency even further  (higher 'refine' .. more lines considered equal)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nDig</code></td>
+<td>
+<p>(integer) number of significant digits used for rounding, if two 'similar' values are identical after this rounding the second will be eliminated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allows easier tracking of message(s) produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>resultant matrix/data.frame
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>findCloseMatch</code>, <code>firstOfRepeated</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">da1 &lt;- matrix(c(rep(0:4,5),0.01,1.1,2.04,3.07,4.5),nc=2); da1[,1] &lt;- da1[,1]*99; head(da1)
+elimCloseCoord(da1)
+</code></pre>
+
+
+</div>

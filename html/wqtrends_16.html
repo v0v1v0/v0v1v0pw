@@ -1,0 +1,135 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>anlz_trndseason</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimate rates of change based on seasonal metrics</h2>
+
+<h3>Description</h3>
+
+<p>Estimate rates of change based on seasonal metrics
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">anlz_trndseason(
+  mod,
+  metfun = mean,
+  doystr = 1,
+  doyend = 364,
+  justify = c("center", "left", "right"),
+  win = 5,
+  nsim = 10000,
+  yromit = NULL,
+  useave = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>mod</code></td>
+<td>
+<p>input model object as returned by <code>anlz_gam</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metfun</code></td>
+<td>
+<p>function input for metric to calculate, e.g., <code>mean</code>, <code>var</code>, <code>max</code>, etc</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doystr</code></td>
+<td>
+<p>numeric indicating start Julian day for extracting averages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doyend</code></td>
+<td>
+<p>numeric indicating ending Julian day for extracting averages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>justify</code></td>
+<td>
+<p>chr string indicating the justification for the trend window</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>win</code></td>
+<td>
+<p>numeric indicating number of years to use for the trend window, see details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsim</code></td>
+<td>
+<p>numeric indicating number of random draws for simulating uncertainty</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yromit</code></td>
+<td>
+<p>optional numeric vector for years to omit from the output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useave</code></td>
+<td>
+<p>logical indicating if <code>anlz_avgseason</code> is used for the seasonal metric calculation, see details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to <code>metfun</code>, e.g., <code>na.rm = TRUE</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Trends are based on the slope of the fitted linear trend within the window, where the linear trend is estimated using a meta-analysis regression model (from <code>anlz_mixmeta</code>) for the seasonal metrics (from <code>anlz_metseason</code>). Set <code>useave = T</code> to speed up calculations if <code>metfun = mean</code>.  This will use <code>anlz_avgseason</code> to estimate the seasonal summary metrics using a non-stochastic equation.
+</p>
+<p>Note that for left and right windows, the exact number of years in <code>win</code> is used. For example, a left-centered window for 1990 of ten years will include exactly ten years from 1990, 1991, ... , 1999.  The same applies to a right-centered window, e.g., 1990 would include 1981, 1982, ..., 1990 (if those years have data). However, for a centered window, picking an even number of years for the window width will create a slightly off-centered window because it is impossible to center on an even number of years.  For example, if <code>win = 8</code> and <code>justify = 'center'</code>, the estimate for 2000 will be centered on 1997 to 2004 (three years left, four years right, eight years total). Centering for window widths with an odd number of years will always create a symmetrical window, i.e., if <code>win = 7</code> and <code>justify = 'center'</code>, the estimate for 2000 will be centered on 1997 and 2003 (three years left, three years right, seven years total).
+</p>
+<p>The optional <code>yromit</code> vector can be used to omit years from the trend assessment. This may be preferred if seasonal estimates for a given year have very wide confidence intervals likely due to limited data, which can skew the trend assessments.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A data frame of slope estimates and p-values for each year
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other analyze: 
+<code>anlz_sumtrndseason()</code>,
+<code>anlz_trans()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(dplyr)
+
+# data to model
+tomod &lt;- rawdat %&gt;%
+  filter(station %in% 34) %&gt;%
+  filter(param %in% 'chl') %&gt;% 
+  filter(yr &gt; 2015)
+
+mod &lt;- anlz_gam(tomod, trans = 'log10')
+anlz_trndseason(mod, doystr = 90, doyend = 180, justify = 'center', win = 4)
+</code></pre>
+
+
+</div>

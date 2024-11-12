@@ -1,0 +1,75 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_amax</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>A function to obtain annual maxima (AMAX) data using the NRFA API</h2>
+
+<h3>Description</h3>
+
+<p>The function queries the NRFA API for the .AM file similar to the WINFAP file for a given stations. It then processes the file in a fashion similar to <code>read_amax</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_amax(station)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>station</code></td>
+<td>
+<p>the NRFA station number for which the annual maxima records should be obtained. Can also be a vector of station numbers.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>a data.frame with information on the annual maxima for the station with the following columns
+</p>
+
+<dl>
+<dt>Station</dt>
+<dd>
+<p>NRFA station number (can be a vector of station numbers)</p>
+</dd>
+<dt>WaterYear</dt>
+<dd>
+<p>the correct water year for the peak flow</p>
+</dd>
+<dt>Date</dt>
+<dd>
+<p>date of maximum flow</p>
+</dd>
+<dt>Flow</dt>
+<dd>
+<p>the maximum flow in m3/s</p>
+</dd>
+<dt>Stage</dt>
+<dd>
+<p>the stage (height) reached by the river - this information is used to derive the flow via a rating curve</p>
+</dd>
+<dt>Rejected</dt>
+<dd>
+<p>logical, if TRUE the water year has been flagged as rejected by the NRFA</p>
+</dd>
+</dl>
+<h3>See Also</h3>
+
+<p><code>read_amax</code>. Information on river flow gauging in the UK and the annual maxima can be found at the National River Flow Archive website <a href="https://nrfa.ceh.ac.uk">https://nrfa.ceh.ac.uk</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">  a40003 &lt;- get_amax(40003) # the Medway at Teston / East Farleigh
+  multipleStations &lt;- get_amax(c(40003, 42003))
+  names(multipleStations)
+  summary(multipleStations$`42003`)
+</code></pre>
+
+
+</div>

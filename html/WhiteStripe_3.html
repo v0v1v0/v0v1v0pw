@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get.first.mode</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get First Peak</h2>
+
+<h3>Description</h3>
+
+<p>This function grabs the first peak or shoulder.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get.first.mode(x, y, rare.prop = 1/5, verbose = TRUE, remove.tail = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>values of midpoints from <code>hist</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>values of counts from <code>hist</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rare.prop</code></td>
+<td>
+<p>Proportion used to remove rare intensity tail</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>print diagnostic output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>remove.tail</code></td>
+<td>
+<p>Remove rare intensity tail</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments to be passed to <code>smooth_hist</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Value of x that is the first peak
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(t1.voi.hist)
+system.time({
+y = t1.voi.hist$counts
+x = t1.voi.hist$mids
+x = x[!is.na(y)];
+y = y[!is.na(y)]
+# 20 used for speed of example
+nawm_peak = get.first.mode(x, y, k=20)
+plot(t1.voi.hist, border="red")
+abline(v=nawm_peak)
+})
+ 
+</code></pre>
+
+
+</div>

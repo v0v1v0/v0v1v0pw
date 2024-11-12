@@ -1,0 +1,142 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>replicateStructure</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Search and Select Groups of Replicates</h2>
+
+<h3>Description</h3>
+
+<p>This function was designed for mining annotation information organized in multiple columns to identify the (potential) grouping of multiple samples, ie to determine factor levels.
+The argument <code>method</code> allows further finetuning if high or low number of groups should be preferred, if multiple columns may be combined, or to choose a particular custom column for desiganting factor levels.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">replicateStructure(
+  x,
+  method = "median",
+  sep = "__",
+  exclNoRepl = TRUE,
+  trimNames = FALSE,
+  includeOther = FALSE,
+  silent = FALSE,
+  callFrom = NULL,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>(matrix or data.frame) the annotation to inspect; each column is supposed to describe another set of annoation/metadata for the rows of <code>x</code> (min 1 row and 1 column),</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>(character, length=1) the procedure to choose column(s) with properties of information, may be <code>highest</code> or <code>max</code> (max number of levels)
+<code>lowest</code> or <code>min</code> (min number of levels), <code>median</code> (median of all options for number of levels),
+<code>combAll</code> (combine all columns of <code>x</code>) or <code>combNonOrth</code> (combine only non-orthogonal columns of <code>x</code>, to avoid avoid n lines with n levels);
+lazy evluation of the argument is possible</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep</code></td>
+<td>
+<p>(character) separator used when a method combining multiple columns (eg combAll, combNonOrth)  is chosen (should not appear anywhere in <code>x</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclNoRepl</code></td>
+<td>
+<p>(logical) decide whether columns with all values different (ie no replicates or max divergency) should be excluded</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trimNames</code></td>
+<td>
+<p>(logical) optional trimming of names in <code>x</code> by removing redundant heading and tailing text</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>includeOther</code></td>
+<td>
+<p>(logical) include $allCols with pattern of (all) other columns</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Statistical tests require specifying which samples should be considered as replicates of whom.
+In some cases, like the Sdrf-format, automatic mining of such annotation to indentify an experiment's underlying structure of replicates
+may be challanging, since the key information may not always be found in the same column.
+For this reason this function allows inspecting all columns of a matrix of data.frame to identify which colmns may serve describing groups of replicates.
+</p>
+<p>The argument <code>exclNoRepl=TRUE</code> allows excluding all columns with different content for each line (like line-numbers), ie information without any replicates.
+It is set by default to <code>TRUE</code> to exclude such columns, since statistical tests usually do require some replicates.
+</p>
+<p>When using as <code>method="combAll"</code>, there is risk all lines (samples) will be be considered different and no replicates remain.
+To avoid this situation the argument can be set to <code>method="combNonOrth"</code>.
+Using this mode it will be checked if adding more columns will lead to complete loss of replicates, and -if so- concerned columns omitted.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a list with $col (column index relativ to <code>x</code>), $lev (abstract labels of level),
+$meth (note of method finally used) and $allCols with general replicate structure of all columns of  <code>x</code>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>duplicated</code>, uses <code>trimRedundText</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## a is all different, b is groups of 2,
+## c &amp; d  are groups of 2 nut NOT 'same general' pattern as b
+strX &lt;- data.frame(a=letters[18:11], b=letters[rep(c(3:1,4), each=2)],
+ c=letters[rep(c(5,8:6), each=2)], d=letters[c(1:2,1:3,3:4,4)],
+ e=letters[rep(c(4,8,4,7),each=2)], f=rep("z",8) )
+strX
+replicateStructure(strX[,1:2])
+replicateStructure(strX[,1:4], method="combAll")
+replicateStructure(strX[,1:4], method="combAll", exclNoRepl=FALSE)
+replicateStructure(strX[,1:4], method="combNonOrth", exclNoRepl=TRUE)
+replicateStructure(strX, method="lowest")
+replicateStructure(strX, method=3, includeOther=TRUE)   # custom choice of 3rd column
+
+
+
+</code></pre>
+
+
+</div>

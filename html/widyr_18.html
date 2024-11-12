@@ -1,0 +1,92 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>widely_hclust</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cluster pairs of items into groups using hierarchical clustering</h2>
+
+<h3>Description</h3>
+
+<p>Reshape a table that represents pairwise distances into hierarchical clusters,
+returning a table with <code>item</code> and <code>cluster</code> columns.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">widely_hclust(tbl, item1, item2, distance, k = NULL, h = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tbl</code></td>
+<td>
+<p>Table</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item1</code></td>
+<td>
+<p>First item</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item2</code></td>
+<td>
+<p>Second item</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>distance</code></td>
+<td>
+<p>Distance column</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>The desired number of groups</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>h</code></td>
+<td>
+<p>Height at which to cut the hierarchically clustered tree</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p>cutree
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(gapminder)
+library(dplyr)
+
+# Construct Euclidean distances between countries based on life
+# expectancy over time
+country_distances &lt;- gapminder %&gt;%
+  pairwise_dist(country, year, lifeExp)
+
+country_distances
+
+# Turn this into 5 hierarchical clusters
+clusters &lt;- country_distances %&gt;%
+  widely_hclust(item1, item2, distance, k = 8)
+
+# Examine a few such clusters
+clusters %&gt;% filter(cluster == 1)
+clusters %&gt;% filter(cluster == 2)
+
+</code></pre>
+
+
+</div>

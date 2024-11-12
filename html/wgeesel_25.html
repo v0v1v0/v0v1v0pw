@@ -1,0 +1,76 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>RJ2.gee</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Corrected RJC for GEE
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculate corrected RJC (Rotnitzky-Jewell information criterion) based on GEE with a modified robust variance estimator. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">RJ2.gee(object)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+
+<p>a fitted model object of class <code>"wgee"</code>.
+</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Return the value of the corrected Rotnitzky-Jewell information criterion (RJC). 
+</p>
+
+
+<h3>Note</h3>
+
+<p><code>RJ2.gee</code> can only handle balanced data (data with dropout missingness). Two assumptions should be satisfied. (A1) The conditional variance of <code class="reqn">Y_{ij}</code> given <code class="reqn">X_{ij}</code> is correctly specified; (A2) A common correlation structure, <code class="reqn">Rc</code>, exists across all subjects. If there is missingness, one can group the subjects by the cluter size of the response variable. And, calculate the modified robust variance in each group to get the pooled estimate of the variance. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Cong Xu, Zheng Li and Ming Wang
+</p>
+
+
+<h3>References</h3>
+
+<p>Rotnitzky, A. and Jewell, N.P., 1990. Hypothesis testing of regression parameters in semiparametric generalized linear models for cluster correlated data. <em>Biometrika</em>, pp.485-497.
+</p>
+<p>Wang, M. and Long, Q., 2011. Modified robust variance estimator for generalized estimating equations with improved small-sample performance. <em>Statistics in Medicine</em>, 30(11), pp. 1278-1291.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>geeglm</code> (<span class="pkg">geepack</span>), <code>RJ.gee</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(ohio)
+
+fit &lt;- wgee(resp ~ age + smoke+age:smoke, data=ohio, id=ohio$id, 
+            family="binomial",corstr="exchangeable")
+RJ2.gee(fit)       
+
+</code></pre>
+
+
+</div>

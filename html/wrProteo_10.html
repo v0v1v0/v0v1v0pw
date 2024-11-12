@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cleanListCoNames</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Selective batch cleaning of sample- (ie column-) names in list</h2>
+
+<h3>Description</h3>
+
+<p>This function allows to manipulate sample-names (ie colnames of abundance data) in a batch-wise manner from data stored as multiple matrixes or data.frames of a list.
+Import functions such as <code>readMaxQuantFile()</code> organize initial flat files into lists (of matrixes) of the different types of data.
+Many times all column names in such lists carry long names including redundant information, like the overall experiment name or date, etc.
+The aim of this function is to facilitate 'cleaning' the sample- (ie column-) names to obtain short and concise names.
+Character terms to be removed (via argument <code>rem</code>) and/or replaced/subsitituted (via argument <code>subst</code>) should be given as they are, characters with special behaviour in <code>grep</code> (like '.') will be protected internally.
+Note, that the character substitution part will be done first, and the removal part (without character replacement) afterwards.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cleanListCoNames(
+  dat,
+  rem = NULL,
+  subst = c("-", "_"),
+  lstE = c("raw", "quant", "counts"),
+  mathOper = NULL,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>(list) main input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rem</code></td>
+<td>
+<p>(character) character string to be removed, may be named 'left' and 'right' for more specific exact pattern matching
+(this part will be perfomed before character substitutions by <code>subst</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subst</code></td>
+<td>
+<p>(character of length=2, or matrix with 2 columns) pair(s) of character-strings for replacement (1st as search-item and 2nd as replacement); this part is performed after character-removal via <code>rem</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lstE</code></td>
+<td>
+<p>(character, length=1) names of list-elements where colnames should be cleaned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mathOper</code></td>
+<td>
+<p>(character, length=1) optional mathematical operation on numerical part of sample-names (eg <code>mathOper='/2'</code> for deviding numeric part of colnames by 2)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a list (equivalent to input <code>dat</code>)
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>grep</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">dat1 &lt;- matrix(1:12, ncol=4, dimnames=list(1:3, paste0("sample_R.",1:4)))
+dat1 &lt;- list(raw=dat1, quant=dat1, notes="other..")
+cleanListCoNames(dat1, rem=c(left="sample_"), c(".","-"))
+</code></pre>
+
+
+</div>

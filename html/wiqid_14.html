@@ -1,0 +1,167 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Bayesian normal estimation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Bayesian modelling of a normal (Gaussian) distribution
+</h2>
+
+<h3>Description</h3>
+
+<p>Bayesian estimation of centre (<code class="reqn">\mu</code>) and scale (spread) (<code class="reqn">\sigma</code>) of a normal distribution based on a sample. <code>Bnormal</code> uses a gamma prior on the precision, <code class="reqn">\tau = 1/\sigma^2</code>, while <code>Bnormal2</code> applies a gamma prior to <code class="reqn">\sigma</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Bnormal(y, priors=NULL,
+            chains=3, draws=10000, burnin=100, ...)
+
+Bnormal2(y, priors=NULL,
+            chains=3, draws=3e4, burnin=0, thin=1, adapt=1000,
+            doPriorsOnly=FALSE, parallel=NULL, seed=NULL, ...)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>a vector (length &gt; 1) with observed sample values; missing values not allowed.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>priors</code></td>
+<td>
+
+<p>an optional list with elements specifying the priors for the centre and scale; see Details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>doPriorsOnly</code></td>
+<td>
+
+<p>if TRUE, <code>Bnormal2</code> returns MCMC chains representing the prior distributions, <em>not</em> the posterior distributions for your data set.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chains</code></td>
+<td>
+
+<p>the number of MCMC chains to run.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>draws</code></td>
+<td>
+
+<p>the number of MCMC draws per chain to be returned.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thin</code></td>
+<td>
+
+<p>thinning rate. If set to n &gt; 1, n steps of the MCMC chain are calculated for each one returned. This is useful if autocorrelation is high.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>burnin</code></td>
+<td>
+
+<p>number of steps to discard as burn-in at the beginning of each chain.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adapt</code></td>
+<td>
+
+<p>number of steps for adaptation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+
+<p>a positive integer (or NULL): the seed for the random number generator, used to obtain reproducible output if required.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+
+<p>if NULL or TRUE and &gt; 3 cores are available, the MCMC chains are run in parallel. (If TRUE and &lt; 4 cores are available, a warning is given.)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>other arguments to pass to the function.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function generates vectors of random draws from the posterior distributions of the population centre (<code class="reqn">\mu</code>) and scale (<code class="reqn">\sigma</code>). <code>Bnormal</code> uses a Gibbs sampler implemented in R, while <code>Bnormal2</code> uses JAGS (Plummer 2003).
+</p>
+<p>Priors for all parameters can be specified by including elements in the <code>priors</code> list. For both functions, <code class="reqn">\mu</code> has a normal prior, with mean <code>muMean</code> and standard deviation <code>muSD</code>. For <code>Bnormal</code>, a gamma prior is used for the precision, <code class="reqn">\tau = 1\\sigma^2</code>, with parameters specified by <code>tauShape</code> and <code>tauRate</code>. For <code>Bnormal2</code>, a gamma prior is placed on <code class="reqn">\sigma</code>, with parameters specified by mode, <code>sigmaMode</code>, and SD, <code>sigmaSD</code>.
+</p>
+<p>When <code>priors = NULL</code> (the default), <code>Bnormal</code> uses improper flat priors for both <code class="reqn">\mu</code> and <code class="reqn">\tau</code>, while <code>Bnormal2</code> uses a broad normal prior (muMean = mean(y), muSD = sd(y)*5) for <code class="reqn">\mu</code> and a uniform prior on (sd(y) / 1000, sd(y) * 1000) for <code class="reqn">\sigma</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns an object of class <code>mcmcOutput</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith, <code>Bnormal</code> based on code by Brian Neelon, <code>Bnormal2</code> adapted from code by John Kruschke.
+</p>
+
+
+<h3>References</h3>
+
+<p>Kruschke, J K. 2013. Bayesian estimation supersedes the <em>t</em> test. <em>Journal of Experimental Psychology: General</em> 142(2):573-603. doi: 10.1037/a0029146
+</p>
+<p>Plummer, Martyn (2003). JAGS: A Program for Analysis of Bayesian Graphical Models Using Gibbs Sampling, <em>Proceedings of the 3rd International Workshop on Distributed Statistical Computing (DSC 2003)</em>, March 20-22, Vienna, Austria. ISSN 1609-395X
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Generate a sample from a normal distribution, maybe the head-body length of a
+#   carnivore in mm:
+HB &lt;- rnorm(10, 900, 15)
+Bnormal(HB)  # with improper flat priors for mu and tau
+Bnormal(HB, priors=list(muMean=1000, muSD=200))
+Bnormal(HB, priors=list(muMean=1, muSD=0.2)) # a silly prior produces a warning.
+
+if(requireNamespace("rjags")) {
+  Bnormal2(HB, chains=2)  # with broad normal prior for mu, uniform for sigma
+  Bnormal2(HB, chains=2, priors=list(muMean=1000, muSD=200, sigmaMode=20, sigmaSD=10))
+}
+</code></pre>
+
+
+</div>

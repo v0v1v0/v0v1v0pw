@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ConditionalSmoothedScatterPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot a scatter plot with smoothing line.</h2>
+
+<h3>Description</h3>
+
+<p>Plot a scatter plot with a smoothing line; the smoothing window is aligned either left, center or right.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ConditionalSmoothedScatterPlot(
+  frame,
+  xvar,
+  yvar,
+  groupvar = NULL,
+  title = "ConditionalSmoothedScatterPlot",
+  ...,
+  k = 3,
+  align = "center",
+  point_color = "black",
+  point_alpha = 0.2,
+  smooth_color = "black",
+  palette = "Dark2"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frame</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar</code></td>
+<td>
+<p>name of the independent column in frame. Assumed to be regularly spaced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yvar</code></td>
+<td>
+<p>name of the dependent (output or result to be modeled) column in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groupvar</code></td>
+<td>
+<p>name of the grouping column in frame. Can be NULL for an unconditional plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title for plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>width of smoothing window. Must be odd for a center-aligned plot. Defaults to 3</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>align</code></td>
+<td>
+<p>smoothing window alignment: 'center', 'left', or 'right'. Defaults to 'center'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>point_color</code></td>
+<td>
+<p>color of points, when groupvar is NULL. Set to NULL to turn off points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>point_alpha</code></td>
+<td>
+<p>alpha/opaqueness of points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>smooth_color</code></td>
+<td>
+<p>color of smoothing line, when groupvar is NULL</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>palette</code></td>
+<td>
+<p>name of Brewer palette, when groupvar is non-NULL (can be NULL)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>xvar</code> is the continuous independent variable and <code>yvar</code> is the dependent binary variable.
+Smoothing is by a square window of width <code>k</code>.
+</p>
+<p>If <code>palette</code> is NULL, and <code>groupvar</code> is non-NULL, plot colors will be chosen from the default ggplot2 palette.
+Setting <code>palette</code> to NULL
+allows the user to choose a non-Brewer palette, for example with <code>scale_fill_manual</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+y = c(1,2,3,4,5,10,15,18,20,25)
+x = seq_len(length(y))
+df = data.frame(x=x, y=y, group=x&gt;5)
+WVPlots::ConditionalSmoothedScatterPlot(df, "x", "y", NULL,
+   title="left smooth, one group", align="left")
+# WVPlots::ConditionalSmoothedScatterPlot(df, "x", "y", "group",
+#    title="left smooth, two groups", align="left")
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,164 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>PRTPlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot Precision-Recall or Enrichment-Recall as a function of threshold.</h2>
+
+<h3>Description</h3>
+
+<p>Plot classifier performance metrics as a function of threshold.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">PRTPlot(
+  frame,
+  predVar,
+  truthVar,
+  truthTarget,
+  title,
+  ...,
+  plotvars = c("precision", "recall"),
+  thresholdrange = c(-Inf, Inf),
+  linecolor = "black"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frame</code></td>
+<td>
+<p>data frame to get values from</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>predVar</code></td>
+<td>
+<p>name of the column of predicted scores</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truthVar</code></td>
+<td>
+<p>name of the column of actual outcomes in frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>truthTarget</code></td>
+<td>
+<p>value we consider to be positive</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotvars</code></td>
+<td>
+<p>variables to plot, must be at least one of the measures listed below. Defaults to c("precision", "recall")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thresholdrange</code></td>
+<td>
+<p>range of thresholds to plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>linecolor</code></td>
+<td>
+<p>line color for the plot</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For a classifier, the precision is what fraction of predicted positives
+are true positives; the recall is what fraction of true positives the
+classifier finds, and the enrichment is the ratio of classifier precision to
+the average rate of positives. Plotting precision-recall or enrichment-recall
+as a function of classifier score helps identify a score threshold that achieves
+an acceptable tradeoff between precision and recall, or enrichment and recall.
+</p>
+<p>In addition to precision/recall, <code>PRTPlot</code> can plot a number of other metrics:
+</p>
+
+<ul>
+<li>
+<p>precision: fraction of predicted positives that are true positives
+</p>
+</li>
+<li>
+<p>recall: fraction of true positives that were predicted to be true
+</p>
+</li>
+<li>
+<p>enrichment: ratio of classifier precision to prevalence of positive class
+</p>
+</li>
+<li>
+<p>sensitivity: the same as recall (also known as the true positive rate)
+</p>
+</li>
+<li>
+<p>specificity: fraction of true negatives to all negatives (or 1 - false_positive_rate)
+</p>
+</li>
+<li>
+<p>false_positive_rate: fraction of negatives predicted to be true over all negatives
+</p>
+</li>
+</ul>
+<p>For example, plotting sensitivity/false_positive_rate as functions of threshold will "unroll" an ROC Plot.
+</p>
+<p>Plots are in a single column, in the order specified by <code>plotvars</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>ThresholdPlot</code>, <code>ROCPlot</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+df &lt;- iris
+df$isVersicolor &lt;- with(df, Species=='versicolor')
+model = glm(isVersicolor ~ Petal.Length + Petal.Width + Sepal.Length + Sepal.Width,
+            data=df, family=binomial)
+df$pred = predict(model, newdata=df, type="response")
+
+WVPlots::PRTPlot(df, "pred", "isVersicolor", TRUE, title="Example Precision-Recall threshold plot")
+
+if (FALSE) {
+WVPlots::PRTPlot(df, "pred", "isVersicolor", TRUE,
+                 plotvars = c("sensitivity", "specificity", "false_positive_rate"),
+                 title="Sensitivity/specificity/FPR as functions of threshold")
+}
+
+</code></pre>
+
+
+</div>

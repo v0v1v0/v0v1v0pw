@@ -1,0 +1,65 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>take_a_step</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Track one movement</h2>
+
+<h3>Description</h3>
+
+<p>Track one step of unknown movement by Jack, either on roads or through alleyways
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">take_a_step(paths, roads, blocked = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>paths</code></td>
+<td>
+<p>list of all possible paths already traveled</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>roads</code></td>
+<td>
+<p>data.frame of non-directional edge pairs for either the road graph or the alley graph</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>blocked</code></td>
+<td>
+<p>list of node pairs which cannot be traversed because a police officer blocks it (should not be used for special movement)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The non-directional edge pairs are available via <code>data(roads)</code> or <code>data(alley)</code>
+This function does not account for the rule that Jack cannot travel through a road occupied by a police officer.
+</p>
+
+
+<h3>Value</h3>
+
+<p>list of all possible paths traveled by Jack
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">possibilities = start_round(64)
+possibilities = take_a_step(possibilities,roads)
+possibilities = take_a_step(possibilities,roads,blocked=list(c(63,82),c(63,65)))
+possibilities = take_a_step(possibilities,alley)
+</code></pre>
+
+
+</div>

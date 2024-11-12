@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mw_cgi</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Middleware that calls a CGI script</h2>
+
+<h3>Description</h3>
+
+<p>You can use it as an unconditional middleware in <code>app$use()</code>,
+as a handler on <code>app$get()</code>, <code>app$post()</code>, etc., or you can call it
+from a handler. See examples below.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mw_cgi(command, args = character(), timeout = as.difftime(Inf, units = "secs"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>command</code></td>
+<td>
+<p>External command to run.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>args</code></td>
+<td>
+<p>Arguments to pass to the external command.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timeout</code></td>
+<td>
+<p>Timeout for the external command. If the command does
+not terminate in time, the web server kills it and returns an 500
+response.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A function with signature
+</p>
+<div class="sourceCode"><pre>function(req, res, env = character())
+</pre></div>
+<p>See <a href="https://www.ietf.org/rfc/rfc3875">RFC 3875</a> for details on the CGI
+protocol.
+</p>
+<p>The request body (if any) is passed to the external command as standard
+intput. <code>mw_cgi()</code> sets <code>CONTENT_LENGTH</code>, <code>CONTENT_TYPE</code>,
+<code>GATEWAY_INTERFACE</code>, <code>PATH_INFO</code>, <code>QUERY_STRING</code>, <code>REMOTE_ADDR</code>,
+<code>REMOTE_HOST</code>, <code>REMOTE_USER</code>, <code>REQUEST_METHOD</code>, <code>SERVER_NAME</code>,
+<code>SERVER_PORT</code>, <code>SERVER_PROTOCOL</code>, <code>SERVER_SOFTEWARE</code>.
+</p>
+<p>It does not currently set the <code>AUTH_TYPE</code>, <code>PATH_TRANSLATED</code>,
+<code>REMOTE_IDENT</code>, <code>SCRIPT_NAME</code> environment variables.
+</p>
+<p>The standard output of the external command is used to set the
+response status code, the response headers and the response body.
+Example output from git's CGI:
+</p>
+<div class="sourceCode"><pre>Status: 200 OK
+Expires: Fri, 01 Jan 1980 00:00:00 GMT
+Pragma: no-cache
+Cache-Control: no-cache, max-age=0, must-revalidate
+Content-Type: application/x-git-upload-pack-advertisement
+
+000eversion 2
+0015agent=git/2.42.0
+0013ls-refs=unborn
+0020fetch=shallow wait-for-done
+0012server-option
+0017object-format=sha1
+0010object-info
+0000
+</pre></div>
+
+
+<h3>See Also</h3>
+
+<p>Other middleware: 
+<code>mw_cookie_parser()</code>,
+<code>mw_etag()</code>,
+<code>mw_json()</code>,
+<code>mw_log()</code>,
+<code>mw_multipart()</code>,
+<code>mw_range_parser()</code>,
+<code>mw_raw()</code>,
+<code>mw_static()</code>,
+<code>mw_text()</code>,
+<code>mw_urlencoded()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">app &lt;- new_app()
+app$use(mw_cgi("echo", "Status: 200\n\nHello"))
+app
+
+app2 &lt;- new_app()
+app2$get("/greet", mw_cgi("echo", "Status: 200\n\nHello"))
+app2
+
+# Using `mw_cgi()` in a handler, you can pass extra environment variables
+app3 &lt;- new_app()
+cgi &lt;- mw_cgi("echo", "Status: 200\n\nHello")
+app2$get("/greet", function(req, res) {
+  cgi(req, res, env = c("EXTRA_VAR" = "EXTRA_VALUE"))
+})
+app3
+</code></pre>
+
+
+</div>

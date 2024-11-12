@@ -1,0 +1,227 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wc.angle</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot arrows into a cross-wavelet or wavelet coherency spectrum</h2>
+
+<h3>Description</h3>
+
+<p>It adds arrows as symbolic indicators of phase-differences into 
+a cross-wavelet spectrum or wavelet coherency spectrum of two time series. 
+</p>
+<p>In particular, the area to be filled with
+arrows can be determined in several ways: to reflect significance
+(at a given level) with respect to cross-wavelet power, wavelet
+coherency, or individual wavelet power, and/or to flag a
+high-value region ("high" according to a given level) with respect
+to cross-wavelet power (coherency values, respectively). 
+</p>
+<p>There is an option to choose "smoothed" arrows (phase differences) for plotting; 
+these have been computed from smoothing filters as defined in <code>analyze.coherency</code>.
+</p>
+<p>The name and layout were inspired by a similar function developed by Huidong Tian and Bernard Cazelles 
+(archived R package <code>WaveletCo</code>). The code for the arrow design to reflect phase differences 
+has been adopted from Huidong Tian.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wc.angle(WC = WC, exponent = 1, use.sAngle = TRUE, p = 1, 
+         which.lvl = "wp", lvl = 0, 
+         which.sig = which.lvl, siglvl = 0.05, 
+         col.arrow = "black")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>WC</code></td>
+<td>
+<p>an object of class <code>analyze.coherency</code></p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>exponent</code></td>
+<td>
+<p>Exponent applied to cross-wavelet power (or wavelet coherence, depending on <code>which.lvl</code>) values before selecting the area 
+to be filled with arrows according to level, see <code>lvl</code> (only effective if <code>p = 0</code> or <code>p = 2</code>); the exponent should be positive.
+</p>
+<p>Default: <code>1</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use.sAngle</code></td>
+<td>
+<p>Use smoothed version of phase difference to plot arrows? Logical.<br> Default: <code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>Which area should be filled with arrows displaying phase differences?<br></p>
+
+<ul>
+<li>
+<p>[<code>0</code> :] Select the area w.r.t. power (or coherence, depending on <code>which.lvl</code>.<br> 
+The value of <code>lvl</code> is the threshold.<br> 
+Set <code>lvl = 0</code> to plot arrows over the entire area.
+</p>
+</li>
+<li>
+<p>[<code>1</code> :] Select the area w.r.t. significance as specified in <code>which.sig</code>.<br> 
+The value of <code>siglvl</code> is the threshold.
+</p>
+</li>
+<li>
+<p>[<code>2</code> :] Intersection of both areas above. 
+</p>
+</li>
+</ul>
+<p>Default: <code>1</code>.
+</p>
+</td>
+</tr></table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>which.lvl</code></td>
+<td>
+<p>Which spectrum should be used to restrict the area of arrows according to its level? 
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+                                </td>
+<td style="text-align: left;"> <code>"wp"</code> </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> cross-wavelet power </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                                </td>
+<td style="text-align: left;"> <code>"wc"</code> </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> wavelet coherence </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                                </td>
+</tr>
+</table>
+<p>Default: <code>"wp"</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lvl</code></td>
+<td>
+<p>minimum level of cross-wavelet power (or wavelet coherence, depending on <code>which.lvl</code>) for arrows to be plotted 
+(only effective if <code>p = 0</code> or <code>p = 2</code>).
+</p>
+<p>Default: <code>0</code>.
+</p>
+</td>
+</tr>
+</table>
+<table>
+<tr style="vertical-align: top;">
+<td><code>which.sig</code></td>
+<td>
+<p>Which spectrum and corresponding p-values should be used to restrict the area of arrows according to significance? 
+</p>
+
+<table>
+<tr>
+<td style="text-align: right;">
+                                </td>
+<td style="text-align: left;"> <code>"wp"</code> </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> cross-wavelet power </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                                </td>
+<td style="text-align: left;"> <code>"wc"</code> </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> wavelet coherence </td>
+</tr>
+<tr>
+<td style="text-align: right;">
+                                </td>
+<td style="text-align: left;"> <code>"wt"</code> </td>
+<td style="text-align: left;"> : </td>
+<td style="text-align: left;"> individual wavelet power
+                                </td>
+</tr>
+</table>
+<p>Default: <code>which.lvl</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>siglvl</code></td>
+<td>
+<p>level of significance referring to <code>which.sig</code> 
+(only effective if <code>p = 1</code> or <code>p = 2</code>).
+</p>
+<p>Default: <code>0.05</code>.
+</p>
+</td>
+</tr>
+</table>
+<table><tr style="vertical-align: top;">
+<td><code>col.arrow</code></td>
+<td>
+<p>arrow color. Default: "black".</p>
+</td>
+</tr></table>
+<h3>Author(s)</h3>
+
+<p>Angi Roesch and Harald Schmidbauer; credits are also due to Huidong Tian, and Bernard Cazelles.</p>
+
+
+<h3>References</h3>
+
+<p>Aguiar-Conraria L., and Soares M.J., 2011. 
+Business cycle synchronization and the Euro: A wavelet analysis. 
+Journal of Macroeconomics 33 (3), 477–489.
+</p>
+<p>Aguiar-Conraria L., and Soares M.J., 2011. 
+The Continuous Wavelet Transform: A Primer. 
+NIPE Working Paper Series 16/2011.
+</p>
+<p>Cazelles B., Chavez M., Berteaux, D., Menard F., Vik J.O., Jenouvrier S., and Stenseth N.C., 2008.
+Wavelet analysis of ecological time series.
+Oecologia 156, 287–304.
+</p>
+<p>Liu P.C., 1994. 
+Wavelet spectrum analysis and ocean wind waves. 
+In: Foufoula-Georgiou E., and Kumar P., (eds.), Wavelets in Geophysics, Academic Press, San Diego, 151–166.
+</p>
+<p>Tian, H., and Cazelles, B., 2012. <code>WaveletCo</code>. 
+Available at <a href="https://cran.r-project.org/src/contrib/Archive/WaveletCo/">https://cran.r-project.org/src/contrib/Archive/WaveletCo/</a>, archived April 2013; accessed July 26, 2013.
+</p>
+<p>Torrence C., and Compo G.P., 1998. 
+A practical guide to wavelet analysis.
+Bulletin of the American Meteorological Society 79 (1), 61–78.
+</p>
+<p>Veleda D., Montagne R., and Araujo M., 2012. 
+Cross-Wavelet Bias Corrected by Normalizing Scales. 
+Journal of Atmospheric and Oceanic Technology 29, 1401–1408.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>analyze.coherency</code>, <code>wc.image</code>, <code>arrow</code>
+</p>
+
+
+</div>

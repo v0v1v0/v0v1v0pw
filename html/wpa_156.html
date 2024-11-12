@@ -1,0 +1,115 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot_flex_index</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot a Sample of Working Patterns using Flexibility Index output</h2>
+
+<h3>Description</h3>
+
+<p>This is a helper function for plotting visualizations for the
+Flexibility Index using the <code>data</code> output from <code>flex_index()</code>. This is used
+within <code>flex_index()</code> itself as an internal function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plot_flex_index(
+  data,
+  sig_label = "Signals_sent_",
+  method = "sample",
+  start_hour = 9,
+  end_hour = 17,
+  mode = "binary"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Data frame. Direct data output from <code>flex_index()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sig_label</code></td>
+<td>
+<p>Character string for identifying signal labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Character string for determining which plot to return.
+Options include "sample", "common", and "time". "sample"
+plots a sample of ten working patterns; "common" plots the ten most common
+working patterns; "time" plots the Flexibility Index for the group over time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>start_hour</code></td>
+<td>
+<p>See <code>flex_index()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>end_hour</code></td>
+<td>
+<p>See <code>flex_index()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode</code></td>
+<td>
+<p>See <code>flex_index()</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>ggplot object. See <code>method</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Working Patterns: 
+<code>flex_index()</code>,
+<code>identify_shifts()</code>,
+<code>identify_shifts_wp()</code>,
+<code>workpatterns_area()</code>,
+<code>workpatterns_classify()</code>,
+<code>workpatterns_classify_bw()</code>,
+<code>workpatterns_classify_pav()</code>,
+<code>workpatterns_hclust()</code>,
+<code>workpatterns_rank()</code>,
+<code>workpatterns_report()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Pre-calculate Flexibility Index
+fi_output &lt;- flex_index(em_data, return = "data")
+
+# Examples of how to test the plotting options individually
+# Sample of 10 work patterns
+plot_flex_index(fi_output, method = "sample")
+
+# 10 most common work patterns
+plot_flex_index(fi_output, method = "common")
+
+# Plot Flexibility Index over time
+plot_flex_index(fi_output, method = "time")
+
+
+</code></pre>
+
+
+</div>

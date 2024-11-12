@@ -1,0 +1,100 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Yield</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Returns yearly yield for a turbine's location.</h2>
+
+<h3>Description</h3>
+
+<p>For a turbine's location represented by <code>x</code> and <code>y</code>, looks up the (adjusted) yield from the matrix <code>Adj</code>. Internally transforms coordinates of <code>x</code> and <code>y</code> from problem space (usually unit square) to the matrix space of <code>Adj</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Yield(x, y, Adj)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>must be a single value containing the 'x' location of a turbine in problem space.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>must be a single value containing the 'y' location of a turbine in problem space.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Adj</code></td>
+<td>
+
+<p>a matrix containing adjusted yields. Usually, the first element of the list object <code>FarmData</code> will be used as this matrix.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Adjusted yields are the projected yearly average yields dependent on wind speed, hub height and other settings at each point in the raster data. Annual Energy Production (AEP) at a specific location, weighted by a location quality correction factor, produces adjusted yields. This adjustment returns a better guess on the marketable yield at a specific point. For details on the data, see the data set description to this package.<br>
+Note that <code>Profit</code> internally multiplies the outcome of <code>Yield</code> by <code>e$FarmVars$Price</code> to obtain revenue. Users who replace the function by <code>e$Yield</code> need to provide that manually, if revenue is desired.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>Yield</code> returns a single value.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Carsten Croonenbroeck
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>Profit</code> to see where to use <code>Yield</code>, <code>Cost</code> for a similar function for yearly cost. <code>FarmData</code> for the data set.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Returns adjusted yield for the given location.
+Adj &lt;- FarmData[[1]][e$FarmVars$StartPoint:e$FarmVars$EndPoint,
+e$FarmVars$StartPoint:e$FarmVars$EndPoint]
+Yield(0.5, 0.7, Adj)
+
+## Replace the function by another function
+## also called 'Yield', embedded in environment e.
+## Also, see the vignette.
+## Not run: 
+e$Yield &lt;- function(x, y, AEP) #x, y \in R
+{
+	return(x + y)
+}
+set.seed(1357)
+NumTurbines &lt;- 4 # For example.
+Result &lt;- pso::psoptim(par = runif(NumTurbines * 2), fn = Profit,
+  lower = rep(0, NumTurbines * 2), upper = rep(1, NumTurbines * 2))
+Result
+rm(Yield, envir = e)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

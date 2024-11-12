@@ -1,0 +1,69 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_geodist</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get a matrix of geographic distances for circle_gd</h2>
+
+<h3>Description</h3>
+
+<p>Create a distance matrix based on coordinates and a raster layer.
+The output is a distance matrix where rows represent cells on the landscape
+and columns represent individual locations on the landscape. Each value is
+the geographic distance between each individual and each cell calculated
+using st_distance. This matrix is used by circle_gd.
+If coords_only = TRUE, the result is a distance matrix for the sample coordinates
+only.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_geodist(coords, lyr = NULL, fact = 0, coords_only = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>coords</code></td>
+<td>
+<p>coordinates of samples as sf points, a two-column matrix, or a data.frame representing x and y coordinates (see Details for important information about projections)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lyr</code></td>
+<td>
+<p>SpatRaster or RasterLayer for generating distances (not required if coords_only = TRUE)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fact</code></td>
+<td>
+<p>aggregation factor to apply to <code>lyr</code> (defaults to 0; <em>note:</em> increasing this value reduces computational time)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coords_only</code></td>
+<td>
+<p>whether to return distances only for sample coordinates</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a distance matrix used by circle_gd
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">load_mini_ex()
+distmat &lt;- get_geodist(mini_coords, mini_lyr)
+
+</code></pre>
+
+
+</div>

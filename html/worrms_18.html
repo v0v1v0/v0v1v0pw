@@ -1,0 +1,101 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wm_external</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get an external ID via an AphiaID</h2>
+
+<h3>Description</h3>
+
+<p>Get an external ID via an AphiaID
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wm_external(id, type = "tsn", ...)
+
+wm_external_(id = NULL, name = NULL, type = "tsn", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>(numeric/integer) an AphiaID. For <code>wm_external</code> it's
+required and must be <code>length(id) == 1</code>, for <code>wm_external_</code> it's
+optional and can be <code>length(id) &gt;= 1</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>(character) the type of external id. one of: tsn, bold,
+dyntaxa, eol, fishbase, iucn, lsid, ncbi, gisd. default: tsn</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>named curl options. see <code>curl::curl_options</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>(character) one or more taxonomic names. optional</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An integer that is the ID. When using underscore method,
+a list, named by the input IDs
+</p>
+
+
+<h3>Singular vs. plural</h3>
+
+<p>Of the two sister functions, the one without the underscore is the original
+function that wraps the relavant WoRMS API method - and only accepts
+one thing (i.e., name or AphiaID) per request.
+</p>
+<p>The sister function with the underscore at the end is the plural version,
+accepting more than one input. Internally this function loops over
+the non-underscore method, and labels output (whether it's a list or
+data.frame rows) with the input names or IDs so that you can easily
+parse output by your inputs.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# by default, get a TSN (an ITIS code)
+wm_external(id = 1080)
+
+## get many
+wm_external_(id = c(1080, 126436))
+
+# BOLD code
+wm_external(id = 278468, type = "bold")
+
+# NCBI code
+wm_external(id = 278468, type = "ncbi")
+
+# fishbase code
+wm_external(id = 278468, type = "fishbase")
+
+# curl options
+library(crul)
+wm_external(id = 105706, verbose = TRUE)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

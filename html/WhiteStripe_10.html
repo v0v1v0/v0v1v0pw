@@ -1,0 +1,45 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>t1.voi.hist</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Histogram of VOI of T1 template image</h2>
+
+<h3>Description</h3>
+
+<p>Histogram of VOI of T1 template image
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">t1.voi.hist
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A volume of interest histogram from a T1 image for smoothing
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+lib.loc = tempdir()
+if (download_img_data(lib.loc = lib.loc)){
+  t1 = oro.nifti::readNIfTI(system.file("T1Strip.nii.gz", package="WhiteStripe",
+                             lib.loc = lib.loc))
+  t1.voi = make_img_voi(t1)
+  any(is.na(t1.voi))
+  # FALSE
+  t1.voi.hist = hist(t1.voi,
+                     breaks=2000,
+                     plot=FALSE)
+}
+ 
+</code></pre>
+
+
+</div>

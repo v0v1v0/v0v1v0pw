@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>convertExamples</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Convert Examples</h2>
+
+<h3>Description</h3>
+
+<p>Generate example section content from <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> code. </p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">convertExamples(examples_l, captureOutput_b_1n = TRUE,
+                mode_s_1n = c(NA, "donttest", "dontrun", "dontshow")[1])
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>examples_l</code></td>
+<td>
+<p>An unconstrained <em><code>list</code></em> of <em><code>functions</code></em></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>captureOutput_b_1n</code></td>
+<td>
+<p>a length-1 or N <em><code>boolean</code></em> vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mode_s_1n</code></td>
+<td>
+<p>An length-1 or N vector of <em><code>string</code></em> values taken amongst
+valid values. See examples below.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+<p>Maintainer: Fabien Gelineau &lt;neonira@gmail.com&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">someComputation &lt;- function(numberAsString_s_1) {
+  suppressWarnings(sum(as.integer(strsplit(numberAsString_s_1, '')[[1]]), na.rm = TRUE))
+}
+
+examples &lt;- list(
+  function() {
+    someComputation("145")
+  },
+  function() {
+    someComputation("1547215")
+  },
+  function() {
+    someComputation(NA_character_)
+  },
+  function() {
+    invisible(someComputation("0x145ABC"))
+  }
+)
+
+cat(convertExamples(examples, TRUE , c(NA_character_, 'donttest', 'dontrun', 'dontshow')))
+# ------- example 1 -------
+# someComputation("145")
+# 10
+
+# \\donttest{
+# ------- example 2 -------
+someComputation("1547215")
+# 25
+# }
+# \\dontrun{
+# ------- example 3 -------
+# someComputation(NA)
+# 0
+# }
+# \dontshow{
+# ------- example 4 -------
+#invisible(someComputation("0x145ABC"))
+# }"
+
+</code></pre>
+
+
+</div>

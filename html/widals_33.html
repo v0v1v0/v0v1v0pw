@@ -1,0 +1,244 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>widals.snow</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Fit WIDALS
+</h2>
+
+<h3>Description</h3>
+
+<p>Locate the WIDALS hyperparameters
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">widals.snow(j, rm.ndx, Z, Hs, Ht, Hst.ls, locs, lags, b.lag, cv = 0, 
+geodesic = FALSE, wrap.around = NULL, GP.mx, stnd.d = FALSE, ltco = -16)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>j</code></td>
+<td>
+
+<p>Index used by <code>snowfall</code>.  A scalar integer.  Which row of <code>GP.mx</code> to use for the ALS hyperparameters, <code>GP</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rm.ndx</code></td>
+<td>
+
+<p>A list of vectors of indices to remove for <em>k</em>-fold cross-validation.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+
+<p>Data.  A <code class="reqn">\tau</code> x <code class="reqn">n</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hs</code></td>
+<td>
+
+<p>Spacial covariates.  An <code class="reqn">n</code> x <code class="reqn">p_s</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ht</code></td>
+<td>
+
+<p>Temporal covariates.  A <code class="reqn">\tau</code> x <code class="reqn">p_t</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hst.ls</code></td>
+<td>
+
+<p>Space-time covariates.  A list of length <code class="reqn">\tau</code>, each element containing a <code class="reqn">n</code> x <code class="reqn">p_st</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>locs</code></td>
+<td>
+
+<p>Locations of supporting sites.  An <em>n</em> x 2 numeric matrix, first column is spacial <code class="reqn">x</code>, second column is spacial <code class="reqn">y</code>.  If the <code>geodesic</code> is <code>TRUE</code>, make sure latitude is in the first column.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lags</code></td>
+<td>
+
+<p>Temporal lags for stochastic smoothing.  An integer vector or scalar.  E.g., if the data's time increment is daily, then <code>lags = c(-1,0,1)</code> would tell the enclosed function <code>crispify</code> smooth today's predictions using yesterdays, today's, and tomorrow's observed residuals.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b.lag</code></td>
+<td>
+
+<p>ALS lag.  A scalar integer, typically -1 (<em>a-prior</em>), or 0 (<em>a-posteriori</em>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cv</code></td>
+<td>
+
+<p>Cross-validation switch.  Currently takes on a value of <code>-2</code> or <code>2</code>.  See Details below.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geodesic</code></td>
+<td>
+
+<p>Use geodesic distance?  Boolean.  If true, distance (used internally) is in units kilometers.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wrap.around</code></td>
+<td>
+
+<p>**Unused.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>GP.mx</code></td>
+<td>
+
+<p>Hyperparameters.  A <code class="reqn">k.glob</code> x 2 non-negative matrix.  See <code>MSS.snow</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stnd.d</code></td>
+<td>
+
+<p>Spacial compression.  Boolean.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ltco</code></td>
+<td>
+
+<p>Weight threshold.  A scalar number.  A value of, e.g., -10, will instruct <code>crispify</code> to ignore weights less than 10^(-10) when smoothing.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>When the <code>cv</code> is set to 2, then this function uses spacial <em>k</em>-fold validation, according to the site indices present in <code>rm.ndx</code>.  When <code>cv</code> is set to -2, self-referencing sites are given zero-weight, i.e., a site's value is not allowed to contribute to its predicted value.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code class="reqn">\tau</code> x <code class="reqn">n</code> matrix.  The WIDALS predictions at <code>locs</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>crispify</code>, <code>H.als.b</code>, <code>widals.predict</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">	
+set.seed(99999)
+
+library(SSsimple)
+
+tau &lt;- 100
+n.all &lt;- 35
+
+Hs.all &lt;- matrix(rnorm(n.all), nrow=n.all)
+Ht &lt;- matrix(rnorm(tau*2), nrow=tau)
+Hst.ls.all &lt;- list()
+for(i in 1:tau) { Hst.ls.all[[i]] &lt;- matrix(rnorm(n.all*2), nrow=n.all) }
+
+Hst.combined &lt;- list()
+for(i in 1:tau) { 
+    Hst.combined[[i]] &lt;- cbind( Hs.all, matrix(Ht[i, ], nrow=n.all, ncol=ncol(Ht), 
+    byrow=TRUE), Hst.ls.all[[i]] ) 
+}
+
+locs.all &lt;- cbind(runif(n.all, -1, 1), runif(n.all, -1, 1))
+D.mx.all &lt;- distance(locs.all, locs.all, FALSE)
+R.all &lt;- exp(-2*D.mx.all) + diag(0.01, n.all)
+
+######## use SSsimple to simulate
+sssim.obj &lt;- SS.sim.tv( 0.999, Hst.combined, 0.01, R.all, tau )
+
+
+n &lt;- n.all
+locs &lt;- locs.all
+
+Z.all &lt;- sssim.obj$Z
+Z &lt;- Z.all
+
+
+Hst.ls &lt;- Hst.ls.all
+Hs &lt;- Hs.all
+
+test.rng &lt;- 20:tau
+
+################  WIDALS, true cross-validation
+
+rm.ndx &lt;- create.rm.ndx.ls(n, 10)
+
+cv &lt;- 2
+lags &lt;- c(0)
+b.lag &lt;- 0
+
+GP &lt;- c(1/8, 1/12, 5, 0, 1)
+GP.mx &lt;- matrix(GP, ncol=length(GP))
+Zwid &lt;- widals.snow(j=1, rm.ndx, Z, Hs, Ht, Hst.ls, locs, lags, b.lag, cv = cv, 
+geodesic = FALSE, wrap.around = NULL, GP.mx, stnd.d = FALSE, ltco = -16) 
+
+errs.sq &lt;- (Z - Zwid)^2
+sqrt( mean(errs.sq[test.rng, ]) )
+
+
+################  WIDALS, pseudo cross-validation
+
+rm.ndx &lt;- I(1:n)
+
+cv &lt;- -2
+lags &lt;- c(0)
+b.lag &lt;- -1
+
+GP &lt;- c(1/8, 1/12, 5, 0, 1)
+GP.mx &lt;- matrix(GP, ncol=length(GP))
+Zwid &lt;- widals.snow(j=1, rm.ndx, Z, Hs, Ht, Hst.ls, locs, lags, b.lag, cv = cv, 
+geodesic = FALSE, wrap.around = NULL, GP.mx, stnd.d = FALSE, ltco = -16) 
+
+errs.sq &lt;- (Z - Zwid)^2
+sqrt( mean(errs.sq[test.rng, ]) )
+
+
+</code></pre>
+
+
+</div>

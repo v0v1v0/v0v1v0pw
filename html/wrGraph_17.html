@@ -1,0 +1,267 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>MAplotW</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>MA-plot (differential intensity versus average intensity)</h2>
+
+<h3>Description</h3>
+
+<p>This type of plot for display of relative changes versus (mean) absolute abundance is very common in high-throughput biology, see <a href="https://en.wikipedia.org/wiki/MA_plot">MA-plot</a>.
+Basically one compares two independent series of measures (ie gene transcript or protein abundance values) of 2 samples/data-sets or the means of 2 groups of replicates.
+And the log-fold-change ('Minus'=M) is plotted againts the absolute mean value ('Average'=A).
+Furthermore, output from statistical testing by <code>moderTest2grp</code> or <code>moderTestXgrp</code> can be directly read to produce MA plots for diagnostic purpose.
+Please note, that plotting a very high number of points in transparency (eg &gt;10000) may take several seconds.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">MAplotW(
+  Mvalue,
+  Avalue = NULL,
+  useComp = 1,
+  filtFin = NULL,
+  ProjNa = NULL,
+  FCthrs = NULL,
+  subTxt = NULL,
+  grayIncrem = TRUE,
+  col = NULL,
+  pch = 16,
+  compNa = NULL,
+  batchFig = FALSE,
+  cexMa = 1.8,
+  cexLa = 1.1,
+  limM = NULL,
+  limA = NULL,
+  annotColumn = c("SpecType", "GeneName", "EntryName", "Accession", "Species", "Contam"),
+  annColor = NULL,
+  cexPt = NULL,
+  cexSub = NULL,
+  cexTxLab = 0.7,
+  namesNBest = NULL,
+  NbestCol = 1,
+  NaSpecTypeAsContam = TRUE,
+  useMar = c(6.2, 4, 4, 2),
+  returnData = FALSE,
+  callFrom = NULL,
+  silent = FALSE,
+  debug = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Mvalue</code></td>
+<td>
+<p>(numeric, list or MArrayLM-object) main data to plot; if numeric, the content will be used as M-values (and A-values must be provided separateley);
+if list or MArrayLM-object, it must conatin list-elements named <code>Mvalue</code> and <code>means</code> to extract all information needed for plotting</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Avalue</code></td>
+<td>
+<p>(numeric, list or data.frame) if <code>NULL</code> it is assumed that M-values can be extracted form argument <code>Avalue</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useComp</code></td>
+<td>
+<p>(integer) choice of one of multiple comparisons present in <code>Mvalue</code> (if generated using <code>moderTestXgrp()</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filtFin</code></td>
+<td>
+<p>(matrix or logical) The data may get filtered before plotting: If <code>FALSE</code> no filtering will get applied; if matrix of <code>TRUE</code>/<code>FALSE</code> it will be used as optional custom filter, otherwise (if <code>Mvalue</code> if an <code>MArrayLM</code>-object eg from limma) a default filtering based on the <code>filtFin</code> element will be applied</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ProjNa</code></td>
+<td>
+<p>(character) custom title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>FCthrs</code></td>
+<td>
+<p>(numeric) Fold-Change threshold (display as line) give as Fold-change and NOT log2(FC)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subTxt</code></td>
+<td>
+<p>(character) custom sub-title</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grayIncrem</code></td>
+<td>
+<p>(logical) if <code>TRUE</code>, display overlay of points (not exceeding threshold) as increased shades of gray</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col</code></td>
+<td>
+<p>(character) custom color(s) for points of plot (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pch</code></td>
+<td>
+<p>(integer) type of symbol(s) to plot (default=16) (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>compNa</code></td>
+<td>
+<p>depreciated, please use <code>useComp</code> instead</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>batchFig</code></td>
+<td>
+<p>(logical) if <code>TRUE</code> figure title and axes legends will be kept shorter for display on fewer splace</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexMa</code></td>
+<td>
+<p>(numeric) font-size of title, as expansion factor (see also <code>cex</code> in <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexLa</code></td>
+<td>
+<p>(numeric) size of axis-labels, as expansion factor (see also <code>cex</code> in <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limM</code></td>
+<td>
+<p>(numeric, length=2) range of axis M-values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>limA</code></td>
+<td>
+<p>(numeric, length=2) range of axis A-values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annotColumn</code></td>
+<td>
+<p>(character) column names of annotation to be extracted (only if <code>Mvalue</code> is <code>MArrayLM</code>-object containing matrix $annot).
+The first entry (typically 'SpecType') is used for different symbols in figure, the second (typically 'GeneName') is used as prefered text for annotating the best points (if <code>namesNBest</code> allows to do so.)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>annColor</code></td>
+<td>
+<p>(character or integer) colors for specific groups of annotation (only if <code>Mvalue</code> is <code>MArrayLM</code>-object containing matrix $annot)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexPt</code></td>
+<td>
+<p>(numeric) size of points, as expansion factor (see also <code>cex</code> in <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexSub</code></td>
+<td>
+<p>(numeric) size of subtitle, as expansion factor (see also <code>cex</code> in <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cexTxLab</code></td>
+<td>
+<p>(numeric) size of text-labels for points, as expansion factor (see also <code>cex</code> in <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>namesNBest</code></td>
+<td>
+<p>(integer or character, length=1) number of best points to add names in figure; if 'passThr' all points passing FC-filter will be selected; 
+if the initial object <code>Mvalue</code> contains a list-element called 'annot' the second of the column specified in argument <code>annotColumn</code> will be used as text</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NbestCol</code></td>
+<td>
+<p>(character or integer) colors for text-labels of best points</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NaSpecTypeAsContam</code></td>
+<td>
+<p>(logical) consider lines/proteins with <code>NA</code> in Mvalue$annot[,"SpecType"] as contaminants (if a 'SpecType' for contaminants already exits)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useMar</code></td>
+<td>
+<p>(numeric,length=4) custom margings (see also <code>par</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>returnData</code></td>
+<td>
+<p>(logical) optional returning data.frame with (ID, Mvalue, Avalue, FDRvalue, passFilt)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) additional messages for debugging</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function plots an MA-plot (to the current graphical device); if <code>returnData=TRUE</code>, a data.frame with ($ID, $Mvalue, $Avalue, $FDRvalue, $passFilt) gets returned
+</p>
+
+
+<h3>See Also</h3>
+
+<p>(for PCA) <code>plotPCAw</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(wrMisc)
+set.seed(2005); mat &lt;- matrix(round(runif(600),2), ncol=6)
+rownames(mat) &lt;- c(rep(letters[1:25],each=3), letters[2:26])
+MAplotW(mat[,2] -mat[,1], A=rowMeans(mat))
+## assume 2 groups with 3 samples each
+matMeans &lt;- rowGrpMeans(mat, gr=gl(2,3,labels=LETTERS[3:4]))
+MAplotW(M=matMeans[,2] -matMeans[,1], A=matMeans) 
+## assume 2 groups with 3 samples each and run moderated t-test (from package 'limma')
+tRes &lt;- moderTest2grp(mat, gl(2,3))
+MAplotW(tRes$Mval, tRes$Amean)                          
+MAplotW(M=tRes$Mval, A=tRes$means, FCth=1.3) 
+MAplotW(tRes)
+MAplotW(tRes, limM=c(-2,2), FCth=1.3) 
+
+</code></pre>
+
+
+</div>

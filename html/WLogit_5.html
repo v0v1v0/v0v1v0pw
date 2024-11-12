@@ -1,0 +1,116 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Refit_glm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Refit the logistic regression with chosen variables
+</h2>
+
+<h3>Description</h3>
+
+<p>Refit the logistic regression with chosen variables.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Refit_glm(X, beta_pred, y)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+
+<p>Design matrix of the logistic model considered.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta_pred</code></td>
+<td>
+
+<p>Predicted coefficients to be refited.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+<p>Binary response
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>beta_refit </code></td>
+<td>
+<p>The new estimated coefficients</p>
+</td>
+</tr></table>
+<h3>Author(s)</h3>
+
+<p>Wencan Zhu, Celine Levy-Leduc, Nils Ternes
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(X)
+data(y)
+data(beta)
+Refit_glm(X=X, beta_pred=beta, y=y)
+##---- Should be DIRECTLY executable !! ----
+##-- ==&gt;  Define data, use random,
+##--	or do  help(data=index)  for the standard data sets.
+
+## The function is currently defined as
+function (X, beta_pred, y) 
+{
+    X_temp &lt;- X[, which(beta_pred != 0)]
+    if (length(which(beta_pred != 0)) == 0) {
+        coef_est &lt;- beta_pred
+    }
+    else if (is.null(ncol(X_temp))) {
+        mydata &lt;- data.frame(Y = y, X_temp)
+        colnames(mydata) &lt;- c("Y", "X")
+        formula &lt;- paste0("Y~-1 +", paste0(colnames(mydata)[-which(colnames(mydata) == 
+            "Y")], collapse = " + "))
+        myform &lt;- as.formula(formula)
+        mod_lm &lt;- glm(myform, data = mydata, family = "binomial")
+        coef_est &lt;- mod_lm$coefficients
+    }
+    else {
+        mydata &lt;- data.frame(Y = y, as.matrix(X_temp))
+        formula &lt;- paste0("Y~-1 +", paste0(colnames(mydata)[-which(colnames(mydata) == 
+            "Y")], collapse = " + "))
+        myform &lt;- as.formula(formula)
+        if (length(which(beta_pred != 0)) &gt;= length(y)) {
+            mod_ridge &lt;- cv.glmnet(x = as.matrix(X_temp), y = y, 
+                alpha = 0, intercept = FALSE, family = "binomial")
+            opt_lambda &lt;- mod_ridge$lambda[which.min(mod_ridge$cvm)]
+            coef_est &lt;- as.vector(glmnet(x = as.matrix(X), y = y, 
+                alpha = 0, intercept = FALSE, family = "binomial", 
+                lambda = opt_lambda)$beta)
+        }
+        else {
+            mod_lm &lt;- glm(myform, data = mydata, family = "binomial")
+            coef_est &lt;- mod_lm$coefficients
+        }
+    }
+    beta_refit &lt;- rep(0, length(beta_pred))
+    beta_refit[which(beta_pred != 0)] &lt;- coef_est
+    return(beta_refit)
+  }
+</code></pre>
+
+
+</div>

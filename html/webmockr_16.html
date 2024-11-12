@@ -1,0 +1,263 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>HeadersPattern</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>HeadersPattern</h2>
+
+<h3>Description</h3>
+
+<p>headers matcher
+</p>
+
+
+<h3>Details</h3>
+
+<p><code>webmockr</code> normalises headers and treats all forms of same headers as equal:
+i.e the following two sets of headers are equal:
+<code>list(Header1 = "value1", content_length = 123, X_CuStOm_hEAder = "foo")</code>
+and
+<code>list(header1 = "value1", "Content-Length" = 123, "x-cuSTOM-HeAder" = "foo")</code>
+</p>
+
+
+<h3>Public fields</h3>
+
+<div class="r6-fields">
+
+<dl>
+<dt><code>pattern</code></dt>
+<dd>
+<p>a list</p>
+</dd>
+</dl>
+</div>
+
+
+<h3>Methods</h3>
+
+
+
+<h4>Public methods</h4>
+
+
+<ul>
+<li> <p><a href="#method-HeadersPattern-new"><code>HeadersPattern$new()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-HeadersPattern-matches"><code>HeadersPattern$matches()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-HeadersPattern-empty_headers"><code>HeadersPattern$empty_headers()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-HeadersPattern-to_s"><code>HeadersPattern$to_s()</code></a>
+</p>
+</li>
+<li> <p><a href="#method-HeadersPattern-clone"><code>HeadersPattern$clone()</code></a>
+</p>
+</li>
+</ul>
+<hr>
+<a id="method-HeadersPattern-new"></a>
+
+
+
+<h4>Method <code>new()</code>
+</h4>
+
+<p>Create a new <code>HeadersPattern</code> object
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>HeadersPattern$new(pattern)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>pattern</code></dt>
+<dd>
+<p>(list) a pattern, as a named list, must be named,
+e.g,. <code>list(a = 5, b = 6)</code></p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>A new <code>HeadersPattern</code> object
+</p>
+
+
+<hr>
+<a id="method-HeadersPattern-matches"></a>
+
+
+
+<h4>Method <code>matches()</code>
+</h4>
+
+<p>Match a list of headers against that stored
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>HeadersPattern$matches(headers)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>headers</code></dt>
+<dd>
+<p>(list) named list of headers, e.g,. <code>list(a = 5, b = 6)</code></p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>a boolean
+</p>
+
+
+<hr>
+<a id="method-HeadersPattern-empty_headers"></a>
+
+
+
+<h4>Method <code>empty_headers()</code>
+</h4>
+
+<p>Are headers empty? tests if null or length==0
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>HeadersPattern$empty_headers(headers)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>headers</code></dt>
+<dd>
+<p>named list of headers</p>
+</dd>
+</dl>
+</div>
+
+
+
+<h5>Returns</h5>
+
+<p>a boolean
+</p>
+
+
+<hr>
+<a id="method-HeadersPattern-to_s"></a>
+
+
+
+<h4>Method <code>to_s()</code>
+</h4>
+
+<p>Print pattern for easy human consumption
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>HeadersPattern$to_s()</pre></div>
+
+
+
+<h5>Returns</h5>
+
+<p>a string
+</p>
+
+
+<hr>
+<a id="method-HeadersPattern-clone"></a>
+
+
+
+<h4>Method <code>clone()</code>
+</h4>
+
+<p>The objects of this class are cloneable with this method.
+</p>
+
+
+<h5>Usage</h5>
+
+<div class="r"><pre>HeadersPattern$clone(deep = FALSE)</pre></div>
+
+
+
+<h5>Arguments</h5>
+
+<div class="arguments">
+
+<dl>
+<dt><code>deep</code></dt>
+<dd>
+<p>Whether to make a deep clone.</p>
+</dd>
+</dl>
+</div>
+
+
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">(x &lt;- HeadersPattern$new(pattern = list(a = 5)))
+x$pattern
+x$matches(list(a = 5))
+
+# different cases
+(x &lt;- HeadersPattern$new(pattern = list(Header1 = "value1")))
+x$pattern
+x$matches(list(header1 = "value1"))
+x$matches(list(header1 = "value2"))
+
+# different symbols
+(x &lt;- HeadersPattern$new(pattern = list(`Hello_World` = "yep")))
+x$pattern
+x$matches(list(`hello-world` = "yep"))
+x$matches(list(`hello-worlds` = "yep"))
+
+headers &lt;- list(
+  'User-Agent' = 'Apple',
+  'Accept-Encoding' = 'gzip, deflate', 
+  'Accept' = 'application/json, text/xml, application/xml, */*')
+(x &lt;- HeadersPattern$new(pattern = headers))
+x$to_s()
+x$pattern
+x$matches(headers)
+</code></pre>
+
+
+</div>

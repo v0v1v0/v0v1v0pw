@@ -1,0 +1,154 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wtsplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot the weights for an observation</h2>
+
+<h3>Description</h3>
+
+<p>Create several plots showing the weights used to fit a model for a single observation.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wtsplot(dat_in, ...)
+
+## Default S3 method:
+wtsplot(
+  dat_in,
+  ref = NULL,
+  wins = list(0.5, 10, NULL),
+  min_obs = TRUE,
+  slice = FALSE,
+  dt_rng = NULL,
+  pt_rng = c(1, 12),
+  col_vec = NULL,
+  col_lns = NULL,
+  alpha = 1,
+  as_list = FALSE,
+  ...
+)
+
+## S3 method for class 'tidal'
+wtsplot(dat_in, ...)
+
+## S3 method for class 'tidalmean'
+wtsplot(dat_in, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input tidal object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>arguments passed to other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ref</code></td>
+<td>
+<p>chr string indicating the date at the center of the weighting window. Must be in the format 'YYYY-mm-dd' which is passed to <code>as.Date</code>.  The closest observation is used if the actual is not present in the data.  Defaults to the mean date if not supplied.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wins</code></td>
+<td>
+<p>list with three elements passed to <code>getwts</code> indicating the half-window widths for day, year, and salinity/flow</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_obs</code></td>
+<td>
+<p>logical to use window widening if less than 100 non-zero weights are found, passed to <code>getwts</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>slice</code></td>
+<td>
+<p>logical indicating if only weights bounded by the year window (i.e., the limiting window for the combined weights) are shown, passed to <code>getwts</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dt_rng</code></td>
+<td>
+<p>Optional chr string indicating the date range for all plots except seasonal (day) weights. Must be two values in the format 'YYYY-mm-dd' which is passed to <code>as.Date</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pt_rng</code></td>
+<td>
+<p>numeric vector of two elements indicating point scaling for all weights in the plot of salinity/flow vs time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col_vec</code></td>
+<td>
+<p>chr string of plot colors to use, passed to <code>gradcols</code> and <code>scale_colour_gradientn</code> for weight shading.  The last value in the vector is used as the line color if <code>col_lns = NULL</code>.  Any color palette from RColorBrewer can be used as a named input. Palettes from grDevices must be supplied as the returned string of colors for each palette.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>col_lns</code></td>
+<td>
+<p>chr string of line color in plots</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>numeric value from zero to one indicating transparency of points and lines</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>as_list</code></td>
+<td>
+<p>logical indicating if plots should be returned in a list</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Create diagnostic plots to view the effects of different weighting windows on model predictions.  The plots illustrate the weights that are used when fitting a weighted regression in reference to a single observation.  The process is repeated for all observations when the entire model is fit.  Five plots are produced by the function, each showing the weights in relation to time and the selected observation (i.e., center of the weighting window).  The top plot shows salinity/flow over time with the points colored and sized by the combined weight vector.  The remaining four plots show the weights over time for each separate weighting component (months/days, year, and salinity/flow) and the final combined vector.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A combined <code>ggplot</code> object created using <code>grid.arrange</code>.  A list with elements for each individual plot will be returned if <code>as_list = TRUE</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>getwts</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## load a fitted tidal object
+data(tidfit)
+
+## plot using defaults, 
+wtsplot(tidfit)
+
+## change the defaults
+wtsplot(tidfit, ref = '2000-01-01', wins = list(0.5, 15, Inf), 
+ dt_rng = c('1990-01-01', '2010-01-01'), 
+ pt_rng = c(3, 8), col_vec = c('lightgreen', 'lightblue', 'purple'),
+ alpha = 0.7)
+</code></pre>
+
+
+</div>

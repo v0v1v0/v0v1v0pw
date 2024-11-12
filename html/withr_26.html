@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>with_options</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Options</h2>
+
+<h3>Description</h3>
+
+<p>Temporarily change global options.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">with_options(new, code)
+
+local_options(.new = list(), ..., .local_envir = parent.frame())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>new, .new</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[named list]⁠</code><br> New options and their values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>code</code></td>
+<td>
+<p><code>[any]</code><br> Code to execute in the temporary environment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional options and their values</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.local_envir</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[environment]⁠</code><br> The environment to use for scoping.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p><code>[any]</code><br> The results of the evaluation of the <code>code</code>
+argument.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>withr</code> for examples
+</p>
+<p><code>options()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># number of significant digits to print
+getOption("digits")
+# modify temporarily the number of significant digits to print
+with_options(list(digits = 3), getOption("digits"))
+with_options(list(digits = 3), print(pi))
+
+# modify temporarily the character to be used as the decimal point
+getOption("digits")
+with_options(list(OutDec = ","), print(pi))
+
+# modify temporarily multiple options
+with_options(list(OutDec = ",", digits = 3), print(pi))
+
+# modify, within the scope of the function, the number of
+# significant digits to print
+print_3_digits &lt;- function(x) {
+  # assign 3 to the option "digits" for the rest of this function
+  # after the function exits, the option will return to its previous
+  # value
+  local_options(list(digits = 3))
+  print(x)
+}
+
+print_3_digits(pi)  # returns 3.14
+print(pi)           # returns 3.141593
+</code></pre>
+
+
+</div>

@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>figure108.wt.filter</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Plot Multiple DWT Wavelet or Scaling Filters
+</h2>
+
+<h3>Description</h3>
+
+<p>Plots multiple DWT Wavelet or Scaling Filters similar to
+Figure 108 in <em>Wavelet Methods for Time Series Analysis</em> by
+Percival and Walden (2000).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">figure108.wt.filter(filter.objects, level = 1, l = NULL, wavelet = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>filter.objects</code></td>
+<td>
+<p>List containing 'wt.filter' objects, character
+strings specifying a wavelet filter, or numeric vectors of wavelet
+coefficients. The list can contain a combination of 'wt.filter'
+objects, character strings, and numeric vectors. If only one filter
+is to be plotted, a single 'wt.filter' object, character string, or
+numeric vector may be supplied. See 'help(wt.filter)' for acceptable
+filter names.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>If <code>filter.object</code> is only a single 'wt.filter'
+object, character string, or numeric vector, then the level of the
+filter can be specified in <code>level</code>.  Defaulted to 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>l</code></td>
+<td>
+<p>Single integer representing the right hand limit of the
+horizontal axis. If unspecified, it will default to the length
+of the filter of greatest length given in
+<code>filter.object</code>. Cannot be less than the length of the filter
+of greatest length.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wavelet</code></td>
+<td>
+<p>A logical flag indicating whether to plot the wavelet
+(high pass) or scaling (low pass) filter.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The plotting space available for each filter is dictated by the
+value of greatest magnitude of all the filters plotted. The vertical
+plotting space for each level will then be 2 times the absolute
+value of this magnitude.
+</p>
+<p>The filters are successively plotted in the order given in
+<code>filter.object</code>, where the first filter in <code>filter.object</code>
+is drawn at the top of the plot region, and the successive filters
+are plotted below.  
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Kelvin Ma, kkym@u.washington.edu
+</p>
+
+
+<h3>References</h3>
+
+<p>Percival, D. B. and A. T. Walden (2000) <em>Wavelet Methods for Time
+Series Analysis</em>, Cambridge University Press.  
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wt.filter</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Plotting the LA8 Wavelet Filter
+filter &lt;- wt.filter()
+figure108.wt.filter(filter)
+
+# Alternatively
+figure108.wt.filter("la8")
+
+# Plotting the Haar, D4, D6 Wavelet Filters
+figure108.wt.filter(list("haar", "d4", "d6"))
+
+# Plotting the Haar, D4, D6 Scaling Filters
+figure108.wt.filter(list("haar", "d4", "d6"), wavelet = FALSE)
+
+# Alternatively
+haar &lt;- wt.filter("haar")
+d6 &lt;- wt.filter("d6")
+figure108.wt.filter(list(haar, "d4", d6), wavelet = FALSE)
+
+# Adding an "made up" filter (represented by c(1,-1,1,-1)
+figure108.wt.filter(list(haar, "d4", d6, c(1,-1,1,-1)), wavelet = FALSE)
+</code></pre>
+
+
+</div>

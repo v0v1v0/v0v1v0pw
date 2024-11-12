@@ -1,0 +1,353 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wdpa_clean</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Clean data</h2>
+
+<h3>Description</h3>
+
+<p>Clean data obtained from
+<a href="https://www.protectedplanet.net/en">Protected Planet</a>.
+Specifically, this function is designed to clean data obtained from
+the World Database on Protected Areas
+(WDPA) and the World Database on Other Effective Area-Based Conservation
+Measures (WDOECM).
+For recommended practices on cleaning large datasets
+(e.g. datasets that span multiple countries or a large geographic area),
+please see below.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wdpa_clean(
+  x,
+  crs = paste("+proj=cea +lon_0=0 +lat_ts=30 +x_0=0",
+    "+y_0=0 +datum=WGS84 +ellps=WGS84 +units=m +no_defs"),
+  exclude_unesco = TRUE,
+  retain_status = c("Designated", "Inscribed", "Established"),
+  snap_tolerance = 1,
+  simplify_tolerance = 0,
+  geometry_precision = 1500,
+  erase_overlaps = TRUE,
+  verbose = interactive()
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>sf::sf()</code> object containing protected area data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>crs</code></td>
+<td>
+<p><code>character</code> or <code>integer</code> object representing a
+coordinate reference system. Defaults to World Behrmann
+(<em>ESRI:54017</em>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclude_unesco</code></td>
+<td>
+<p><code>logical</code> should UNESCO Biosphere Reserves be excluded?
+Defaults to <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>retain_status</code></td>
+<td>
+<p><code>character</code> vector containing the statuses for
+protected areas that should be retained during the cleaning process.
+Available statuses include:
+<code>"Proposed"</code>, <code>"Inscribed"</code>, <code>"Adopted"</code>, <code>"Designated"</code>, and
+<code>"Established"</code>.
+Additionally, a <code>NULL</code> argument can be specified to ensure that no
+protected areas are excluded according to their status.
+The default argument is a <code>character</code> vector containing <code>"Designated"</code>,
+<code>"Inscribed"</code>, and <code>"Established"</code>.
+This default argument ensures that protected areas that are not currently
+implemented are excluded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>snap_tolerance</code></td>
+<td>
+<p><code>numeric</code> tolerance for snapping geometry to a
+grid for resolving invalid geometries. Defaults to 1 meter.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simplify_tolerance</code></td>
+<td>
+<p><code>numeric</code> simplification tolerance.
+Defaults to 0 meters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geometry_precision</code></td>
+<td>
+<p><code>numeric</code> level of precision for processing
+the spatial data (used with <code>sf::st_set_precision()</code>). The
+default argument is 1500 (higher values indicate higher precision).
+This level of precision is generally suitable for analyses at the
+national-scale. For analyses at finer-scale resolutions, please
+consider using a greater value (e.g. 10000).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>erase_overlaps</code></td>
+<td>
+<p><code>logical</code> should overlapping boundaries be
+erased? This is useful for making comparisons between individual
+protected areas and understanding their "effective" geographic coverage.
+On the other hand, this processing step may not be needed
+(e.g. if the protected area boundaries are going to be rasterized), and so
+processing time can be substantially by skipping this step and setting
+the argument to <code>FALSE</code>. Defaults to <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p><code>logical</code> should progress on data cleaning be reported?
+Defaults to <code>TRUE</code> in an interactive session, otherwise
+<code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function cleans data following best practices
+(Butchart <em>et al.</em> 2015; Protected Planet 2021; Runge <em>et al.</em> 2015).
+To obtain accurate protected area coverage statistics for a country,
+please note that you will need to manually clip the cleaned data to
+the countries' coastline and its Exclusive Economic Zone (EEZ).
+</p>
+
+<ol>
+<li>
+<p> Exclude protected areas according to their status (i.e.
+<code>"STATUS"</code> field). Specifically, protected areas that have
+a status not specified in the argument to <code>retain_status</code> are excluded.
+By default, only protected areas that have a
+<code>"Designated"</code>, <code>"Inscribed"</code>, or <code>"Established"</code> status are retained.
+This means that the default behavior is to exclude protected that
+are not currently implemented.
+</p>
+</li>
+<li>
+<p> Exclude United Nations Educational, Scientific and Cultural
+Organization (UNESCO) Biosphere Reserves (Coetzer <em>et al.</em> 2014).
+This step is only performed if the argument to <code>exclude_unesco</code> is
+<code>TRUE</code>.
+</p>
+</li>
+<li>
+<p> Standardize column names. This is important so that data
+imported as in shapefile or file geodatabase format have the
+same column names. Specifically, if present, the <code>"PARENT_ISO3"</code> field is
+renamed to "PARENT_ISO" and the "SHAPE" field is renamed to
+<code>"geometry"</code>.
+</p>
+</li>
+<li>
+<p> Create a field (<code>"GEOMETRY_TYPE"</code>) indicating if areas are
+represented as point localities (<code>"POINT"</code>) or as polygons
+(<code>"POLYGON"</code>).
+</p>
+</li>
+<li>
+<p> Exclude areas represented as point localities that do not
+have a reported spatial extent (i.e. missing data for the field
+</p>
+</li>
+<li>
+<p> Geometries are wrapped to the dateline (using
+<code>sf::st_wrap_dateline()</code> with the options
+<code>"WRAPDATELINE=YES"</code> and <code>"DATELINEOFFSET=180"</code>).
+</p>
+</li>
+<li>
+<p> Reproject data to coordinate system specified in argument to
+<code>crs</code> (using <code>sf::st_transform()</code>).
+</p>
+</li>
+<li>
+<p> Repair any invalid geometries that have manifested
+(using <code>st_repair_geometry()</code>).
+</p>
+</li>
+<li>
+<p> Buffer areas represented as point localities to circular areas
+using their reported spatial extent (using data in the field
+<code>"REP_AREA"</code> and <code>sf::st_buffer()</code>; see Visconti
+<em>et al.</em> 2013).
+</p>
+</li>
+<li>
+<p> Snap the geometries to a grid to fix any remaining
+geometry issues (using argument to <code>snap_tolerance</code> and
+<code>lwgeom::st_snap_to_grid()</code>).
+</p>
+</li>
+<li>
+<p> Repair any invalid geometries that have manifested
+(using <code>st_repair_geometry()</code>).
+</p>
+</li>
+<li>
+<p> Simplify the protected area geometries to reduce computational burden
+(using argument to <code>simplify_tolerance</code> and
+<code>sf::st_simplify()</code>).
+</p>
+</li>
+<li>
+<p> Repair any invalid geometries that have manifested
+(using <code>st_repair_geometry()</code>).
+</p>
+</li>
+<li>
+<p> The <code>"MARINE"</code> field is converted from integer codes
+to descriptive names (i.e. <code>0</code> = <code>"terrestrial"</code>,
+<code>1</code> = <code>"partial"</code>, <code>2</code> = <code>"marine"</code>).
+</p>
+</li>
+<li>
+<p> The <code>"PA_DEF"</code> field is converted from integer codes
+to descriptive names (i.e. <code>0</code> = <code>"OECM"</code>, and <code>1</code> = <code>"PA"</code>).
+</p>
+</li>
+<li>
+<p> Zeros in the <code>"STATUS_YR"</code> field are replaced with
+missing values (i.e. <code>NA_real_</code> values).
+</p>
+</li>
+<li>
+<p> Zeros in the <code>"NO_TK_AREA"</code> field are replaced with <code>NA</code>
+values for areas where such data are not reported or applicable
+(i.e. areas with the values <code>"Not Applicable"</code>
+or <code>"Not Reported"</code> in the <code>"NO_TK_AREA"</code> field).
+</p>
+</li>
+<li>
+<p> Overlapping geometries are erased from the protected area data
+(discussed in Deguignet <em>et al.</em> 2017). Geometries are erased such
+that areas associated with more effective management
+categories (<code>"IUCN_CAT"</code>) or have historical precedence are retained
+(using <code>sf::st_difference()</code>).
+</p>
+</li>
+<li>
+<p> Slivers are removed (geometries with areas less than 0.1 square
+meters).
+</p>
+</li>
+<li>
+<p> The size of areas are calculated in square kilometers and stored in
+the field <code>"AREA_KM2"</code>.
+</p>
+</li>
+<li>
+<p> Trimming extra leading or trailing white space characters
+from the <code>"MANG_PLAN"</code> field  (e.g., <code>" "</code>, <code>"\n"</code>, <code>"\r"</code>).
+</p>
+</li>
+</ol>
+<h3>Value</h3>
+
+<p>A <code>sf::sf()</code> object.
+</p>
+
+
+<h3>Recommended practices for large datasets</h3>
+
+<p>This function can be used to clean large datasets assuming that
+sufficient computational resources and time are available.
+Indeed, it can clean data spanning large countries, multiple
+countries, and even the full global dataset.
+When processing the full global dataset, it is recommended to use a
+computer system with at least 32 GB RAM available and to allow for at least
+one full day for the data cleaning procedures to complete.
+It is also recommended to avoid using the computer system for any other
+tasks while the data cleaning procedures are being completed,
+because they are very computationally intensive.
+Additionally, when processing large datasets – and especially
+for the global dataset – it is strongly recommended to disable the
+procedure for erasing overlapping areas.
+This is because the built-in procedure for erasing overlaps is
+very time consuming when processing many protected areas, so that
+information on each protected area can be output
+(e.g. IUCN category, year established).
+Instead, when cleaning large datasets, it is recommended to run
+the data cleaning procedures with the procedure for erasing
+overlapping areas disabled (i.e. with <code>erase_overlaps = FALSE</code>).
+After the data cleaning procedures have completed,
+the protected area data can be manually dissolved
+to remove overlapping areas (e.g. using <code>wdpa_dissolve()</code>).
+For an example of processing a large protected area dataset,
+please see the vignette.
+</p>
+
+
+<h3>References</h3>
+
+<p>Butchart SH, Clarke M, Smith RJ, Sykes RE, Scharlemann JP,
+Harfoot M, ... &amp; Brooks TM (2015) Shortfalls and solutions for
+meeting national and global conservation area targets.
+<em>Conservation Letters</em>, <strong>8</strong>: 329–337.
+</p>
+<p>Coetzer KL, Witkowski ET, &amp; Erasmus BF (2014) Reviewing
+Biosphere Reserves globally: Effective conservation action or bureaucratic
+label? <em>Biological Reviews</em>, <strong>89</strong>: 82–104.
+</p>
+<p>Deguignet M, Arnell A, Juffe-Bignoli D, Shi Y, Bingham H, MacSharry B &amp;
+Kingston N (2017) Measuring the extent of overlaps in protected area
+designations. <em>PloS One</em>, <strong>12</strong>: e0188681.
+</p>
+<p>Runge CA, Watson JEM, Butchart HM, Hanson JO, Possingham HP &amp; Fuller RA
+(2015) Protected areas and global conservation of migratory birds.
+<em>Science</em>, <strong>350</strong>: 1255–1258.
+</p>
+<p>Protected Planet (2021) Calculating protected and OECM area coverage.
+Available at:
+<a href="https://www.protectedplanet.net/en/resources/calculating-protected-area-coverage">https://www.protectedplanet.net/en/resources/calculating-protected-area-coverage</a>.
+</p>
+<p>Visconti P, Di Marco M, Alvarez-Romero JG, Januchowski-Hartley SR, Pressey,
+RL, Weeks R &amp; Rondinini C (2013) Effects of errors and gaps in spatial data
+sets on assessment of conservation progress. <em>Conservation Biology</em>,
+<strong>27</strong>: 1000–1010.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wdpa_fetch()</code>, <code>wdpa_dissolve()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# fetch data for the Liechtenstein
+lie_raw_data &lt;- wdpa_fetch("LIE", wait = TRUE)
+
+# clean data
+lie_data &lt;- wdpa_clean(lie_raw_data)
+
+# plot cleaned dataset
+plot(lie_data)
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

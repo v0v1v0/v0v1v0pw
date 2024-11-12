@@ -1,0 +1,392 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>addObjectToArea</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Adds a feature to area
+</h2>
+
+<h3>Description</h3>
+
+<p>This function adds objects from the basin primary features to the object inherited from class of <code>createArea</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">addObjectToArea(area, object)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>area</code></td>
+<td>
+<p>An object inherited from <code>createArea</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>An objects inherited from any of the following constructors: <code>createAquifer</code> , <code>createRiver</code>, <code>createReservoir</code>, <code>createJunction</code>, <code>createDiversion</code>, and <code>createDemandSite</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The examples included in this documentation show construction and simulation of primary features of a water resources system using <code>WRSS</code> package.
+The Figure below presents schematic layouts attributed to the examples at the rest of the page:
+</p>
+<p><img src="../help/figures/Fig.png" width="60%" alt="Figure: Fig.png"></p>
+
+
+<h3>Value</h3>
+
+<p>an object from class of <code>createArea</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Rezgar Arabzadeh
+</p>
+
+
+<h3>References</h3>
+
+<p>Loucks, Daniel P., et al. Water resources systems planning and management: an introduction to methods, models and applications. Paris: Unesco, 2005.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>sim</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+#--------------------1st Example--------------------
+R&lt;-createRiver(name="river1",discharge=rnorm(120,5,1.5))
+Res&lt;-createReservoir(name="res3",type='storage',
+                     priority=1,netEvaporation=rnorm(120,0.5,0.1),
+                     geometry=list(deadStorage= 10 ,capacity= 90 ,
+                     storageAreaTable= cbind(seq(0,90,10),seq(0,9,1))))
+waterVariation&lt;-round(sin(seq(0,pi,length.out=12))*
+                       100/sum(sin(seq(0,pi,length.out=12))))
+D&lt;-createDemandSite(name ="Agri1",
+                    demandParams=list(waterUseRate=1,
+                                      waterVariation=waterVariation,
+                                      cropArea=1000))
+R&lt;-set.as(Res,R,'downstream')
+D&lt;-set.as(Res,D,'supplier')
+
+area&lt;-createArea(name="unknown",location="unknown",
+                 simulation=list(start='2000-01-01',
+                                 end  ='2000-04-29',
+                                 interval='day'))
+area&lt;-addObjectToArea(area,R)
+area&lt;-addObjectToArea(area,Res)
+area&lt;-addObjectToArea(area,D)
+## Not run: 
+plot(area)
+simulated&lt;-sim(area)
+plot(simulated)
+
+## End(Not run)
+
+
+#--------------------2nd Example--------------------
+Res&lt;-createReservoir(name="res3",type='storage',
+                     priority=1,netEvaporation=rnorm(120,0.5,0.1),
+                     geometry=list(deadStorage= 10 ,capacity= 90 ,
+                     storageAreaTable= cbind(seq(0,90,10),seq(0,9,1))))
+R&lt;-createRiver(name="river1",discharge=rnorm(120,5,1.5))
+waterVariation&lt;-round(sin(seq(0,pi,length.out=12))*
+                       100/sum(sin(seq(0,pi,length.out=12))))
+D1&lt;-createDemandSite(name ="Agri1",
+                    demandParams=list(waterUseRate=1,
+                                      waterVariation=waterVariation,
+                                      cropArea=1000),
+                    returnFlowFraction =0.2,priority=1)
+D2&lt;-createDemandSite(name ="Agri2",
+                    demandParams=list(waterUseRate=1,
+                                      waterVariation=waterVariation,
+                                      cropArea=1000),
+                    returnFlowFraction =0.2,priority=1)
+
+R&lt;-set.as(Res,R,'downstream')
+D1&lt;-set.as(Res,D1,'supplier')
+D2&lt;-set.as(Res,D2,'supplier')
+
+area&lt;-createArea(name="unknown",location="unknown",
+                 simulation=list(start='2000-01-01',
+                                 end  ='2000-04-29',
+                                 interval='day'))
+area&lt;-addObjectToArea(area,R)
+area&lt;-addObjectToArea(area,Res)
+area&lt;-addObjectToArea(area,D1)
+area&lt;-addObjectToArea(area,D2)
+## Not run: 
+plot(area)
+simulated&lt;-sim(area)
+plot(simulated)
+
+## End(Not run)
+
+#--------------------3rd Example--------------------
+J1&lt;-createJunction(name="j1")
+Res1&lt;-createReservoir(name="res1",type='storage',
+                     priority=1,netEvaporation=rnorm(120,0.5,0.1),
+                     geometry=list(deadStorage= 10 ,capacity= 90 ,
+                     storageAreaTable= cbind(seq(0,90,10),seq(0,9,1))))
+Res2&lt;-createReservoir(name="res2",type='storage',
+                     priority=2,netEvaporation=rnorm(120,0.5,0.1),
+                     geometry=list(deadStorage= 10 ,capacity= 90 ,
+                     storageAreaTable= cbind(seq(0,90,10),seq(0,9,1))))
+R1&lt;-createRiver(name="river1",discharge=rnorm(120,5,1.5))
+R2&lt;-createRiver(name="river2",discharge=rnorm(120,5,1.5))
+waterVariation&lt;-round(sin(seq(0,pi,length.out=12))*
+                       100/sum(sin(seq(0,pi,length.out=12))))
+D1&lt;-createDemandSite(name ="Agri1",
+                    demandParams=list(waterUseRate=1,
+                                      waterVariation=waterVariation,
+                                      cropArea=1000),
+                    returnFlowFraction =0.2,priority=1)
+D2&lt;-createDemandSite(name ="Agri2",
+                    demandParams=list(waterUseRate=1,
+                                      waterVariation=waterVariation,
+                                      cropArea=1000),
+                    returnFlowFraction =0.2,priority=2)
+D3&lt;-createDemandSite(name ="Agri3",
+                    demandParams=list(waterUseRate=1,
+                                      waterVariation=waterVariation,
+                                      cropArea=1000),
+                    returnFlowFraction =0.2,priority=1)
+area&lt;-createArea(name="unknown",location="unknown",
+                 simulation=list(start='2000-01-01',
+                                 end  ='2000-04-29',
+                                 interval='day'))
+
+R1&lt;-set.as(Res1,R1,'downstream')
+R2&lt;-set.as(Res2,R2,'downstream')
+Res1&lt;-set.as(J1,Res1,'downstream')
+Res2&lt;-set.as(J1,Res2,'downstream')
+D1&lt;-set.as(J1,D1,'downstream')
+D2&lt;-set.as(J1,D2,'downstream')
+D3&lt;-set.as(J1,D3,'downstream')
+D1&lt;-set.as(Res1,D1,'supplier')
+D2&lt;-set.as(Res1,D2,'supplier')
+D2&lt;-set.as(Res2,D2,'supplier')
+D3&lt;-set.as(Res2,D3,'supplier')
+
+area&lt;-addObjectToArea(area,R1)
+area&lt;-addObjectToArea(area,R2)
+area&lt;-addObjectToArea(area,Res1)
+area&lt;-addObjectToArea(area,Res2)
+area&lt;-addObjectToArea(area,D1)
+area&lt;-addObjectToArea(area,D2)
+area&lt;-addObjectToArea(area,D3)
+area&lt;-addObjectToArea(area,J1)
+## Not run: 
+plot(area)
+simulated&lt;-sim(area)
+plot(simulated)
+
+## End(Not run)
+
+#--------------------4th Example--------------------
+J1&lt;-createJunction(name="j1")
+Res1&lt;-createReservoir(name="res1",type='storage',
+                     priority=1,netEvaporation=rnorm(120,0.5,0.1),downstream =J1 ,
+                     geometry=list(deadStorage= 10 ,capacity= 90 ,
+                     storageAreaTable= cbind(seq(0,90,10),seq(0,9,1))))
+Auq1&lt;-createAquifer(name="Aquifer1",area=100,volume=5000,
+                    rechargeTS=rnorm(120,10,3),Sy=0.1,
+                    leakageFraction=0.02,leakageObject=J1,priority=2)
+waterVariation&lt;-round(sin(seq(0,pi,length.out=12))*
+                       100/sum(sin(seq(0,pi,length.out=12))))
+R1&lt;-createRiver(name="river1",downstream=Res1,discharge=rnorm(120,5,1.5))
+R2&lt;-createRiver(name="river2",downstream=Auq1,discharge=rnorm(120,5,1.5))
+D1&lt;-createDemandSite(name ="Agri1",
+                    demandParams=list(waterUseRate=1,
+                                      waterVariation=waterVariation,
+                                      cropArea=1000),
+                    returnFlowFraction =0.2,suppliers=list(Res1,Auq1),
+                    downstream=J1,priority=1)
+D2&lt;-createDemandSite(name ="Agri2",
+                    demandParams=list(waterUseRate=1,
+                                      waterVariation=waterVariation,
+                                      cropArea=1000),
+                    returnFlowFraction =0.2,suppliers=list(Res1,Auq1),
+                    downstream=J1,priority=2)
+D3&lt;-createDemandSite(name ="Agri3",
+                    demandParams=list(waterUseRate=1,
+                                      waterVariation=waterVariation,
+                                      cropArea=1000),
+                    returnFlowFraction =0.2,suppliers=list(Res1,Auq1),
+                    downstream=J1,priority=1)
+area&lt;-createArea(name="unknown",location="unknown",
+                 simulation=list(start='2000-01-01',
+                                 end  ='2000-04-29',
+                                 interval='day'))
+area&lt;-addObjectToArea(area,R1)
+area&lt;-addObjectToArea(area,R2)
+area&lt;-addObjectToArea(area,Res1)
+area&lt;-addObjectToArea(area,Auq1)
+area&lt;-addObjectToArea(area,D1)
+area&lt;-addObjectToArea(area,D2)
+area&lt;-addObjectToArea(area,D3)
+area&lt;-addObjectToArea(area,J1)
+## Not run: 
+plot(area)
+simulated&lt;-sim(area)
+plot(simulated)
+
+## End(Not run)
+
+#--------------------5th Example--------------------
+J1&lt;-createJunction(name="junction1")
+Res1&lt;-createReservoir(name="res1",type='storage',
+                     priority=1,netEvaporation=rnorm(120,0.5,0.1),
+                     geometry=list(deadStorage= 10 ,capacity= 90 ,
+                     storageAreaTable= cbind(seq(0,90,10),seq(0,9,1))))
+Auq1&lt;-createAquifer(name="Aquifer1",area=100,volume=5000,
+                    rechargeTS=rnorm(120,10,3),Sy=0.1,priority=2)
+waterVariation&lt;-round(sin(seq(0,pi,length.out=12))*
+                       100/sum(sin(seq(0,pi,length.out=12))))
+R1&lt;-createRiver(name="River1",
+                downstream=Res1,discharge=rnorm(120,20,3),
+                seepageFraction=0.1,seepageObject=Auq1)
+D1&lt;-createDemandSite(name ="Agri1",
+                    demandParams=list(waterUseRate=1,
+                                      waterVariation=waterVariation,
+                                      cropArea=1000),
+                    returnFlowFraction =0.2,suppliers=list(Res1),
+                    downstream=J1,priority=1)
+D2&lt;-createDemandSite(name ="Agri2",
+                    demandParams=list(waterUseRate=1,
+                                      waterVariation=waterVariation,
+                                      cropArea=1000),
+                    returnFlowFraction =0.2,suppliers=list(Res1,Auq1),
+                    downstream=J1,priority=2)
+D3&lt;-createDemandSite(name ="Agri3",
+                    demandParams=list(waterUseRate=1,
+                                      waterVariation=waterVariation,
+                                      cropArea=1000),
+                    returnFlowFraction =0.2,suppliers=list(R1),
+                    downstream=Res1,priority=2)
+D4&lt;-createDemandSite(name ="Agri4",
+                    demandParams=list(waterUseRate=1,
+                                      waterVariation=waterVariation,
+                                      cropArea=1000),
+                    returnFlowFraction =0.2,suppliers=list(R1),
+                    downstream=Res1,priority=1)
+area&lt;-createArea(name="unknown",location="unknown",
+                 simulation=list(start='2000-01-01',
+                                 end  ='2000-04-29',
+                                 interval='day'))
+area&lt;-addObjectToArea(area,R1)
+area&lt;-addObjectToArea(area,Res1)
+area&lt;-addObjectToArea(area,Auq1)
+area&lt;-addObjectToArea(area,D1)
+area&lt;-addObjectToArea(area,D2)
+area&lt;-addObjectToArea(area,D3)
+area&lt;-addObjectToArea(area,D4)
+area&lt;-addObjectToArea(area,J1)
+## Not run: 
+plot(area)
+simulated&lt;-sim(area)
+plot(simulated)
+
+## End(Not run)
+
+
+#--------------------6th Example--------------------
+Auq1&lt;-createAquifer(name="Aquifer1",area=100,volume=5000,
+                    rechargeTS=rnorm(120,10,3),Sy=0.1)
+waterVariation&lt;-round(sin(seq(0,pi,length.out=12))*
+                       100/sum(sin(seq(0,pi,length.out=12))))
+D0&lt;-createDemandSite(name ="Agri0",
+                    demandParams=list(waterUseRate=1,
+                                      waterVariation=waterVariation,
+                                      cropArea=1000),priority=1)
+Div1&lt;-createDiversion(name="Div1",capacity=10)
+J2&lt;-createJunction(name="junc2")
+
+Res2&lt;-createReservoir(name="res2",type='storage',
+                     priority=1,netEvaporation=rnorm(120,0.5,0.1),
+                     geometry=list(deadStorage= 10 ,capacity= 90 ,
+                     storageAreaTable= cbind(seq(0,90,10),seq(0,9,1))))
+R2&lt;-createRiver(name="river2",discharge=rnorm(120,12,3))
+D3&lt;-createDemandSite(name ="Agri3",
+                    demandParams=list(waterUseRate=1,
+                                      waterVariation=waterVariation,
+                                      cropArea=1000),
+                    returnFlowFraction =0.2,priority=2)
+J1&lt;-createJunction(name="junc1")
+Res1&lt;-createReservoir(name="res1",type='storage',
+                     priority=1,netEvaporation=rnorm(120,0.5,0.1),
+                     geometry=list(deadStorage= 10 ,capacity= 90 ,
+                     storageAreaTable= cbind(seq(0,90,10),seq(0,9,1))))
+R1&lt;-createRiver(name="river1",discharge=rnorm(120,5,1))
+D2&lt;-createDemandSite(name ="Agri2",
+                    demandParams=list(waterUseRate=1,
+                                      waterVariation=waterVariation,
+                                      cropArea=1000),
+                    returnFlowFraction =0.2,priority=2)
+D1&lt;-createDemandSite(name ="Agri1",
+                    demandParams=list(waterUseRate=1,
+                                      waterVariation=waterVariation,
+                                      cropArea=1000),
+                    returnFlowFraction =0.2,priority=1)
+area&lt;-createArea(name="unknown",location="unknown",
+                 simulation=list(start='2000-01-01',
+                                 end  ='2000-04-29',
+                                 interval='day'))
+
+R1&lt;-set.as(Res1,R1,'downstream')
+R2&lt;-set.as(Res2,R2,'downstream')
+Res1&lt;-set.as(J1,Res1,'downstream')
+Res2&lt;-set.as(J2,Res2,'downstream')
+J1&lt;-set.as(Div1,J1,'downstream')
+J2&lt;-set.as(Auq1,J2,'downstream')
+Div1&lt;-set.as(Auq1,Div1,'divertObject')
+D1&lt;-set.as(J1,D1,'downstream')
+D2&lt;-set.as(J1,D2,'downstream')
+D3&lt;-set.as(J2,D3,'downstream')
+D1&lt;-set.as(Res1,D1,'supplier')
+D2&lt;-set.as(Res1,D2,'supplier')
+D2&lt;-set.as(Res2,D2,'supplier')
+D3&lt;-set.as(Res2,D3,'supplier')
+D0&lt;-set.as(Auq1,D0,'supplier')
+
+
+
+area&lt;-addObjectToArea(area,R1)
+area&lt;-addObjectToArea(area,R2)
+area&lt;-addObjectToArea(area,Res1)
+area&lt;-addObjectToArea(area,Res2)
+area&lt;-addObjectToArea(area,D0)
+area&lt;-addObjectToArea(area,D1)
+area&lt;-addObjectToArea(area,D2)
+area&lt;-addObjectToArea(area,D3)
+area&lt;-addObjectToArea(area,Div1)
+area&lt;-addObjectToArea(area,Auq1)
+area&lt;-addObjectToArea(area,J1)
+area&lt;-addObjectToArea(area,J2)
+
+simulated&lt;-sim(area)
+## Not run: 
+plot(area)
+plot(simulated)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

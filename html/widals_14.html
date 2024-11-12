@@ -1,0 +1,206 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>H.als.b</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Adaptive Least Squares
+</h2>
+
+<h3>Description</h3>
+
+<p>Adaptive Least Squares expecially for large spacio-temporal data
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">H.als.b(Z, Hs, Ht, Hst.ls, rho, reg, b.lag = -1, Hs0 = NULL, Ht0 = NULL, Hst0.ls = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Z</code></td>
+<td>
+
+<p>Space-time data.  A <code class="reqn">\tau</code> x <code class="reqn">n</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hs</code></td>
+<td>
+
+<p>Spacial covariates (of supporting sites).  An <code class="reqn">n</code> x <code class="reqn">p_s</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ht</code></td>
+<td>
+
+<p>Temporal covariates (of supporting sites).  A <code class="reqn">\tau</code> x <code class="reqn">p_t</code> numeric matrix.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hst.ls</code></td>
+<td>
+
+<p>Space-time covariates (of supporting sites).  A list of length <code class="reqn">\tau</code>, each element should be a <code class="reqn">n</code> x <code class="reqn">p_st</code> numeric matrix. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho</code></td>
+<td>
+
+<p>ALS signal-to-noise ratio (SNR).  A non-negative scalar.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reg</code></td>
+<td>
+
+<p>ALS regularizer.  A non-negative scalar.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b.lag</code></td>
+<td>
+
+<p>ALS lag.  A scalar integer, typically -1 (<em>a-prior</em>), or 0 (<em>a-posteriori</em>).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hs0</code></td>
+<td>
+
+<p>Spacial covariates (of interpolation sites).  An <code class="reqn">n</code>* x <code class="reqn">p_s</code> matrix, or <code>NULL</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ht0</code></td>
+<td>
+
+<p>Temporal covariates (of interpolation sites).  A <code class="reqn">\tau</code> x <code class="reqn">p_t</code> matrix, or <code>NULL</code>.  If not <code>NULL</code>, I cannot imagine a scenario where this shouldn't be <code>Ht</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Hst0.ls</code></td>
+<td>
+
+<p>Space-time covariates (of interpolation sites).  A list of length <code class="reqn">\tau</code>, each element should be a numeric <code class="reqn">n</code> x <code class="reqn">p_st</code> matrix. 
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A named list.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Z.hat</code></td>
+<td>
+<p>A <code class="reqn">\tau</code> x <em>n</em> matrix, the <em>i</em>th row of which is the ALS prediction of the supporting sites at time <em>i</em>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>B</code></td>
+<td>
+<p>A <code class="reqn">\tau</code> x <code class="reqn">(p_s+p_t+p_st)</code> matrix, the <em>i</em>th row of which is the ALS state (partial slopes) prediction at time <em>i</em>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Z0.hat</code></td>
+<td>
+<p>A <code class="reqn">\tau</code> x <em>n</em>* matrix, the <em>i</em>th row of which is the ALS prediction of the interpolation sites at time <em>i</em>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>inv.LHH</code></td>
+<td>
+<p>A <code class="reqn">(p_s+p_t+p_st)</code> x <code class="reqn">(p_s+p_t+p_st)</code> matrix.  This is the (ALS predicted) covariate precision matrix at time <code class="reqn">\tau</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ALS.g</code></td>
+<td>
+<p>The ALS gain at time <code class="reqn">\tau</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+set.seed(99999)
+
+library(SSsimple)
+
+tau &lt;- 70
+n.all &lt;- 14
+
+Hs.all &lt;- matrix(rnorm(n.all), nrow=n.all)
+Ht &lt;- matrix(rnorm(tau*2), nrow=tau)
+Hst.ls.all &lt;- list()
+for(i in 1:tau) { Hst.ls.all[[i]] &lt;- matrix(rnorm(n.all*2), nrow=n.all) }
+
+Hst.combined &lt;- list()
+for(i in 1:tau) { 
+    Hst.combined[[i]] &lt;- cbind( Hs.all, matrix(Ht[i, ], nrow=n.all, ncol=ncol(Ht), 
+    byrow=TRUE), Hst.ls.all[[i]] ) 
+}
+
+######## use SSsimple to simulate
+sssim.obj &lt;- SS.sim.tv( 0.999, Hst.combined, 0.01, diag(1, n.all), tau )
+
+
+ndx.support &lt;- 1:10
+ndx.interp &lt;- 11:14
+
+Z.all &lt;- sssim.obj$Z
+Z &lt;- Z.all[ , ndx.support]
+Z0 &lt;- Z.all[ , ndx.interp]
+
+Hst.ls &lt;- subsetsites.Hst.ls(Hst.ls.all, ndx.support)
+Hst0.ls &lt;- subsetsites.Hst.ls(Hst.ls.all, ndx.interp)
+
+Hs &lt;- Hs.all[ ndx.support, , drop=FALSE]
+Hs0 &lt;- Hs.all[ ndx.interp, , drop=FALSE]
+
+xrho &lt;- 1/10
+xreg &lt;- 1/10
+xALS &lt;- H.als.b(Z=Z, Hs=Hs, Ht=Ht, Hst.ls=Hst.ls, rho=xrho, reg=xreg, b.lag=-1, 
+Hs0=Hs0, Ht0=Ht, Hst0.ls=Hst0.ls) 
+
+
+
+test.rng &lt;- 20:tau
+
+errs.sq &lt;- (Z0 - xALS$Z0.hat)^2
+sqrt( mean(errs.sq[test.rng, ]) )
+
+
+################ calculate the 'effective standard errors' (actually 'effective prediction
+################ errors') of the ALS partial slopes
+rmse &lt;- sqrt(mean((Z[test.rng, ] - xALS$Z.hat[test.rng, ])^2))
+rmse
+als.se &lt;- rmse * sqrt(xALS$ALS.g) * sqrt(diag(xALS$inv.LHH))
+cbind(xALS$B[tau, ], als.se, xALS$B[tau, ]/als.se)
+
+
+</code></pre>
+
+
+</div>

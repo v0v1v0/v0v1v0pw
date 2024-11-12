@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>InvBasis.wst</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Invert a wst library representation with a basis specification</h2>
+
+<h3>Description</h3>
+
+<p>Inverts a wst basis representation with a given basis specification,
+for example an output from the <code>MaNoVe</code> function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wst'
+InvBasis(wst, nv, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wst</code></td>
+<td>
+<p>The wst object that you wish to invert</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nv</code></td>
+<td>
+<p>The node vector, basis spec, that you want to pick out</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments, that don't do anything here</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Objects arising from a <code>wst.object</code> specification
+are a representation of a signal with respect to a library
+of basis functions. A particular basis specification can be obtained
+using the <code>numtonv</code> function which can pick an indexed
+basis function, or <code>MaNoVe.wst</code> which uses the
+Coifman-Wickerhauser minimum entropy method to select a basis.
+This function takes a <code>wst.object</code> and
+a particular basis description (in a <code>nv.object</code> node vector
+object) and inverts the representation with respect to that selected basis.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The inverted reconstruction
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>numtonv</code>,<code>nv.object</code>,<code>MaNoVe.wst</code>,<code>threshold.wst</code>,<code>wst</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Let's generate a noisy signal
+#
+x &lt;- example.1()$y + rnorm(512, sd=0.2)
+#
+# You can plot this if you like
+#
+## Not run: ts.plot(x)
+#
+# Now take the nondecimated wavelet transform
+#
+xwst &lt;- wst(x)
+#
+# Threshold it
+#
+xwstT &lt;- threshold(xwst)
+#
+# You can plot this too if you like
+#
+## Not run: plot(xwstT)
+#
+# Now use Coifman-Wickerhauser to get a "good" basis
+#
+xwstTNV &lt;- MaNoVe(xwstT)
+#
+# Now invert the thresholded wst using this basis specification
+#
+xTwr &lt;- InvBasis(xwstT, xwstTNV)
+#
+# And plot the result, and superimpose the truth in dotted
+#
+## Not run: ts.plot(xTwr)
+## Not run: lines(example.1()$y, lty=2)
+</code></pre>
+
+
+</div>

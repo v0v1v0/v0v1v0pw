@@ -1,0 +1,129 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>relate</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create Related Numeric Columns</h2>
+
+<h3>Description</h3>
+
+<p>Generate columns that are related.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">relate(
+  x,
+  j,
+  name = NULL,
+  operation = "+",
+  mean = 5,
+  sd = 1,
+  rep.sep = "_",
+  digits = max(nchar(sub("^[^.]*.", "", x)))
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A starting column.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>j</code></td>
+<td>
+<p>The number of columns to produce.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name</code></td>
+<td>
+<p>An optional prefix name to give to the columns.  If <code>NULL</code>
+attempts to take from the <code>varname</code> attribute of <code>x</code>.  If not found,
+"Variable" is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>operation</code></td>
+<td>
+<p>A operation character vector of length 1; either
+<code>c("+", "-", "*", "/")</code>.  This is the relationship between columns.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mean</code></td>
+<td>
+<p>Mean is the average value to add, subtract, multiple, or divide
+by.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sd</code></td>
+<td>
+<p>The amount of variability to allow in <code>mean</code>.  Setting to 0
+will constrain the operation between x_(n - 1) column and x_n to be exactly
+the mean value (see <b>Examples</b> for a demonstration).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rep.sep</code></td>
+<td>
+<p>A separator to use for repeated variable names.  For example
+if the <code>age</code> is used three times
+(<code>r_data_frame(age, age, age)</code>), the name "Age" will be assigned to all
+three columns.  The results in column names <code>c("Age_1", "Age_2", "Age_3")</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p>The number of digits to round to.  Defaults to the max number
+of significant digits in <code>x</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a <code>tbl_df</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>r_series</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">relate(1:10, 10)
+
+(x &lt;- r_data_frame(10, id, relate(1:10, 10, "Time", mean = 2)))
+library(ggplot2)
+
+dat &lt;- with(x, data.frame(ID = rep(ID, ncol(x[, -1])), stack(x[, -1])))
+dat[["Time"]] &lt;- factor(sub("Time_", "", dat[["ind"]]), levels = 1:10)
+ggplot(dat, aes(x = Time, y = values, color = ID, group = ID)) +
+    geom_line(size=.8)
+
+relate(1:10, 10, name = "X", operation = "-")
+relate(1:10, 10, "X", mean = 1, sd = 0)
+relate(1:10, 10, "Var", "*")
+relate(1:10, 10, "Var", "/")
+
+relate(gpa(30), 5, mean = .1)
+relate(likert(10), 5, mean = .1, sd = .2)
+relate(date_stamp(10), 6)
+relate(time_stamp(10), 6)
+relate(rep(100, 10), 6, "Reaction", "-")
+</code></pre>
+
+
+</div>

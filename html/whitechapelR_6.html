@@ -1,0 +1,78 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>show_board</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Display game board representation</h2>
+
+<h3>Description</h3>
+
+<p>Show a graph representation of the game board with nodes placed in the appropriate relative spot, colored by the number of paths which include a particular node. Possible hideouts are marked with blue squares.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">show_board(paths = NULL, hideouts = NULL, roads, alley, node_locations)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>paths</code></td>
+<td>
+<p>optional list of all possible paths already traveled</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hideouts</code></td>
+<td>
+<p>optional vector of possible hideouts from previous rounds.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>roads</code></td>
+<td>
+<p>data.frame of non-directional edge pairs for the road graph</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alley</code></td>
+<td>
+<p>data.frame of non-directional edge pairs for the alley graph</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>node_locations</code></td>
+<td>
+<p>data.frame of where nodes should be placed in the graph</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>roads, alley and node_locations are all bundled with the package (e.g. <code>data(roads)</code>).
+Solid lines in the graph represent road connections between nodes. Dashed lines represent alley way connections.
+</p>
+
+
+<h3>Value</h3>
+
+<p>plotted igraph object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">possibilities = start_round(64)
+possibilities = take_a_step(possibilities,roads)
+possibilities = take_a_step(possibilities,roads,blocked=list(c(63,82),c(63,65)))
+possibilities = take_a_step(possibilities,alley)
+show_board(paths=possibilities,hideouts=NULL,roads,alley,node_locations)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>extract_domain</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract the domain from URL</h2>
+
+<h3>Description</h3>
+
+<p><code>extract_domain()</code> adds the domain of a URL as a new column.
+By "domain", we mean the "top private domain", i.e., the domain under
+the public suffix (e.g., "<code>com</code>") as defined by the Public Suffix List.
+See details.
+</p>
+<p>Extracts the domain from urls.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">extract_domain(wt, varname = "url")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wt</code></td>
+<td>
+<p>webtrack data object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>varname</code></td>
+<td>
+<p>character. Name of the column from which to extract the host.
+Defaults to <code>"url"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>We define a "web domain" in the common colloquial meaning, that is,
+the part of an web address that identifies the person or organization in control.
+is <code>google.com</code>. More technically, what we mean by "domain" is the
+"top private domain", i.e., the domain under the public suffix,
+as defined by the Public Suffix List.
+Note that this definition sometimes leads to counterintuitive results because
+not all public suffixes are "registry suffixes". That is, they are not controlled
+by a domain name registrar, but allow users to directly register a domain.
+One example of such a public, non-registry suffix is <code>blogspot.com</code>. For a URL like
+<code>www.mysite.blogspot.com</code>, our function, and indeed the packages we are aware of,
+would extract the domain as <code>mysite.blogspot.com</code>, although you might think of
+<code>blogspot.com</code> as the domain.
+For details, see <a href="https://github.com/google/guava/wiki/InternetDomainNameExplained">here</a>
+</p>
+
+
+<h3>Value</h3>
+
+<p>webtrack data.frame with the same columns as wt
+and a new column called <code>'domain'</code>
+(or, if varname not equal to <code>'url'</code>, <code>'&lt;varname&gt;_domain'</code>)
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data("testdt_tracking")
+wt &lt;- as.wt_dt(testdt_tracking)
+# Extract domain and drop rows without domain
+wt &lt;- extract_domain(wt)
+# Extract domain and keep rows without domain
+wt &lt;- extract_domain(wt)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

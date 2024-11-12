@@ -1,0 +1,73 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>qae</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Quote assignment expressions (name = expr, name := expr, name %:=% expr).</h2>
+
+<h3>Description</h3>
+
+<p>Accepts arbitrary un-parsed expressions as
+assignments to allow forms such as "Sepal_Long := Sepal.Length &gt;= 2 * Sepal.Width".
+(without the quotes).
+Terms are expressions of the form "lhs := rhs", "lhs = rhs", "lhs %:=% rhs".
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">qae(...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>assignment expressions.</p>
+</td>
+</tr></table>
+<h3>Details</h3>
+
+<p><code>qae()</code> uses
+<code>bquote()</code> <code>.()</code> quasiquotation escaping notation,
+and <code>.(-)</code> "string quotes, string to name" notation.
+</p>
+
+
+<h3>Value</h3>
+
+<p>array of quoted assignment expressions.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>qc</code>, <code>qe</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+ratio &lt;- 2
+
+exprs &lt;- qae(Sepal_Long := Sepal.Length &gt;= ratio * Sepal.Width,
+             Petal_Short = Petal.Length &lt;= 3.5)
+print(exprs)
+
+exprs &lt;- qae(Sepal_Long := Sepal.Length &gt;= .(ratio) * Sepal.Width,
+             Petal_Short = Petal.Length &lt;= 3.5)
+print(exprs)
+
+# library("rqdatatable")
+# datasets::iris %.&gt;%
+#  extend_se(., exprs) %.&gt;%
+#  summary(.)
+
+</code></pre>
+
+
+</div>

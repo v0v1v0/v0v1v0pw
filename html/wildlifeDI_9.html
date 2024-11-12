@@ -1,0 +1,120 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Cs</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Coefficient of Sociality</h2>
+
+<h3>Description</h3>
+
+<p>The function <code>Cs</code> computes the coefficient of sociality between two moving
+objects following the methods outlined by Kenward et al. (1993). It also uses a
+signed Wilcoxon-rank test to test for significance.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Cs(traj, traj2, tc = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>traj</code></td>
+<td>
+<p>an object of the class <code>move2</code> which contains the time-stamped movement fixes of at least two individuals. For more information on objects of this type see <code>help(mt_as_move2)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>traj2</code></td>
+<td>
+<p>(optional) same as traj, but for the second group of individuals. See <code>checkTO</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tc</code></td>
+<td>
+<p>time threshold for determining simultaneous fixes – see function: <code>GetSimultaneous</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function can be used to calculate the Kenward et al. (1993) coefficient of sociality (Cs)
+between two animals. The Cs statistic tests the observed mean
+distance between simultaneous fixes against that expected by the overall
+distribution of distances between all fixes.
+</p>
+<p style="text-align: center;"><code class="reqn">Cs=\frac{D_E-D_O}{D_O+D_E}</code>
+</p>
+
+<p>Where <code class="reqn">D_O</code> is the mean observed distance between simultaneous fixes, and <code class="reqn">D_E</code>
+is the mean expected distance between all fixes. Kenward et al. (1993) propose Cs
+as a useful metric for exploring attraction or avoidance behaviour.
+Values for Cs closer to 1 indicate
+attraction, while values for Cs closer to -1 indicate avoidance. Values of Cs
+near 0 indicate that the two animals' movements have no influence on one another.
+<br><br>
+Further, the difference between the observed and expected distances are compared
+using a paired signed-rank test (both one-sided tests, indicative of attraction
+or avoidance). See the function <code>GetSimultaneous</code> for details on how
+simultaneous fixes are determined from two trajectories.
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a list of objects representing the calculated values from the
+Cs statistic and associated <em>p</em>-values from the signed rank test.
+</p>
+
+<ul>
+<li>
+<p> Do – The mean distance of simultaneous fixes.
+</p>
+</li>
+<li>
+<p> De – The mean expected distance, from all fixes.
+</p>
+</li>
+<li>
+<p> Cs – The coefficient of sociality, see <b>Details</b>.
+</p>
+</li>
+<li>
+<p> p.Attract – One sided <em>p</em>-value from signed rank test, testing for attraction.
+</p>
+</li>
+<li>
+<p> p.Avoid – One sided <em>p</em>-value from signed rank test, testing for avoidance.
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Kenward, R.E., Marcstrom, V. and Karlbom, M. (1993) Post-nestling behaviour in
+goshawks, <em>Accipiter gentilis: II</em>. Sex differences in sociality and nest-switching.
+<em>Animal Behaviour</em>. <b>46</b>, 371–378.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>GetSimultaneous
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(deer)
+#tc = 7.5 minutes
+Cs(deer, tc = 7.5*60) 
+
+</code></pre>
+
+
+</div>

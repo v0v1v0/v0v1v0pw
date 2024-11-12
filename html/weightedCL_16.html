@@ -1,0 +1,237 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wcl</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>SOLVING THE WEIGHTED COMPOSITE LIKELIHOOD ESTIMATING EQUATIONS WITH INPUTS THE WEIGHT MATRICES AND  DATA</h2>
+
+<h3>Description</h3>
+
+<p>Solving the weighted composite likelihood estimating equations with inputs the weight matrices
+and data.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wcl(start,WtScMat,xdat,ydat,margmodel,link)
+wcl.ord(start,WtScMat,xdat,ydat,link)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>start</code></td>
+<td>
+<p>A starting value of the vector of regression
+and not regression parameters. The composite likelihood estimates of regression and not regression parameters 
+is a good starting value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>WtScMat</code></td>
+<td>
+<p>A list containing the following components.
+omega: the matrix  <code class="reqn">\boldsymbol{\Omega}^{(1)}</code>;
+delta: the matrix <code class="reqn">\boldsymbol{\Delta}^{(1)}</code>;
+X: the matrix <code class="reqn">\mathbf{X}</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xdat</code></td>
+<td>
+<p>The <code class="reqn">d\times p</code> matrix of covariates, where <code class="reqn">d</code> is the length of the time-series and <code class="reqn">p</code> is the number of covariates including
+the unit first column  to account for the intercept (except for ordinal regression where there is no intercept).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ydat</code></td>
+<td>
+<p>The <code class="reqn">d</code>-dimensional vector of  dicrete time series reponse, where <code class="reqn">d</code> is the length of the series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>margmodel</code></td>
+<td>
+
+<p>Indicates the marginal model.
+Choices are “poisson” for Poisson, “bernoulli” for Bernoulli, 
+and  “nb1” , “nb2” for the NB1 and NB2 parametrization 
+of negative binomial in Cameron and Trivedi (1998).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+<p>The link function. 
+Choices are “log” for the log link function, “logit” for 
+the logit link function, and “probit” for 
+the probit link function. 
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Obtain  estimates <code class="reqn">{\hat{\mathbf{a}}}</code> of the univariate parameters
+solving the weighted composite likelihood estimating equations.
+</p>
+<p>Note that <code>wcl.ord</code> is a variant of the code for ordinal (probit and logistic) regression.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>root</code></td>
+<td>
+<p>The weighted composite likelihood estimates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f.root</code></td>
+<td>
+<p>The value of the weighted composite likelihood estimating equations evaluated at the root.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iter</code></td>
+<td>
+<p>The number of iterations used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>estim.precis</code></td>
+<td>
+<p>The estimated precision for root.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Aristidis K. Nikoloulopoulos <a href="mailto:A.Nikoloulopoulos@uea.ac.uk">A.Nikoloulopoulos@uea.ac.uk</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Nikoloulopoulos, A.K. (2022)
+Efficient and feasible inference for high-dimensional normal copula regression models.
+<em>Arxiv e-prints</em>, &lt;arXiv:2203.04619&gt;. <a href="https://arxiv.org/abs/2203.04619">https://arxiv.org/abs/2203.04619</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>weightMat</code>,
+<code>godambe</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+################################################################################
+#                      NB2 regression for count time-series data
+################################################################################
+################################################################################
+#                      read and set up data set
+################################################################################
+data(polio)
+ydat &lt;-polio
+d=length(ydat)
+tvec=1:length(ydat)
+tvec1=tvec-73
+xdat &lt;- cbind(1, tvec1/1000, cos(2 * pi * tvec1 / 12), sin(2 * pi * tvec1 / 12),
+                      cos(2 * pi * tvec1 / 6), sin(2 * pi * tvec1 / 6)) 
+################################################################################
+#                      select the marginal model
+################################################################################
+margmodel="nb2"
+################################################################################
+#                      select the  ARMA structure
+################################################################################
+p=2;q=1
+################################################################################
+#                      perform CL1 estimation
+################################################################################
+i.est&lt;-iee(xdat,ydat,margmodel)
+cat("\niest: IEE estimates\n")
+print(c(i.est$reg,i.est$gam))
+est.rho&lt;-cl(p=p,q=q,b=i.est$reg,gam=i.est$gam,
+             xdat,ydat,margmodel,link)
+cat("\nest.rho: CL estimates\n")
+print(est.rho$e)
+################################################################################
+#                      obtain the weight matrices
+################################################################################
+WtScMat&lt;-weightMat(b=i.est$reg,gam=i.est$gam,rh=est.rho$e,
+                   p=p,q=q,xdat,margmodel)
+################################################################################
+#           obtain the weighted composite likelihood estimates
+################################################################################  
+est&lt;-wcl(start=c(i.est$reg,i.est$gam),WtScMat,xdat,ydat,
+              margmodel,link)
+cat("est=parameter estimates\n")
+print(est$r)                                  
+################################################################################
+#                         Ordinal time-series regression 
+################################################################################
+################################################################################
+#                      read and set up data set
+################################################################################
+data(sleep)
+ydat=sleep$sleep
+bydat=oydat=ydat
+bydat[ydat==4]=0
+bydat[ydat&lt;4]=1
+oydat[ydat==4]=1
+oydat[ydat&lt;4]=2
+oydat[ydat==2]=3
+oydat[ydat==3]=4
+
+x1=sleep$heartrate
+x2=sleep$temperature
+z1=(x1-mean(x1))/sd(x1)
+z2=(x2-mean(x2))/sd(x2)
+xdat=cbind(z1,z2)
+################################################################################
+#                      select the link
+################################################################################
+link="probit"
+################################################################################
+#                      select the ARMA structure
+################################################################################
+p=1;q=0
+################################################################################
+#                      perform CL1 estimation
+################################################################################
+i.est&lt;-iee.ord(xdat,oydat,link)
+cat("\niest: IEE estimates\n")
+print(c(i.est$reg,i.est$gam))
+est.rho&lt;-cl.ord(p=p,q=q,b=i.est$reg,gam=i.est$gam,
+             xdat,oydat,link)
+cat("\nest.rho: CL estimates\n")
+print(est.rho$e)
+################################################################################
+#                      obtain the weight matrices
+################################################################################
+WtScMat&lt;-weightMat.ord(b=i.est$reg,gam=i.est$gam,rh=est.rho$e,
+                   p=p,q=q,xdat,link)
+################################################################################
+#           obtain the weighted composite likelihood estimates
+################################################################################  
+est&lt;-wcl.ord(start=c(i.est$reg,i.est$gam),WtScMat,
+                  xdat,oydat,link)
+cat("est=parameter estimates\n")
+print(est$r)               
+
+</code></pre>
+
+
+</div>

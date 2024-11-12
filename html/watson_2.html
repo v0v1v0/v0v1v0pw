@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rmwat</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Random Sampling from a Mixture of Watson Distributions</h2>
+
+<h3>Description</h3>
+
+<p><code>rmwat</code> generates a random sample from a mixture of multivariate Watson distributions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rmwat(n, weights, kappa, mu, method = "acg", b = -10, rho = 1.1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>an integer giving the number of samples to draw.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>a numeric vector with non-negative elements giving the mixture probabilities.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kappa</code></td>
+<td>
+<p>a numeric vector giving the kappa parameters of the mixture components.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mu</code></td>
+<td>
+<p>a numeric matrix with columns giving the mu parameters of the mixture components.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>a string indicating whether ACG sampler (<code>method = "acg"</code>), Tinflex sampler (<code>method = "tinflex"</code>) or automatic selection (<code>method = "auto"</code>) of the sampler should be used, default: "acg".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+<p>a positive numeric hyper-parameter used in the sampling. If not a positive value is given, optimal choice of b is used, default: -10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho</code></td>
+<td>
+<p>performance parameter: requested upper bound for ratio of area below hat to area below squeeze (numeric). See <code>Tinflex.setup</code>, default: 1.1.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function generates samples from finite mixtures of Watson distributions,
+using methods from Sablica, Hornik and Leydold (2022) <a href="https://research.wu.ac.at/en/publications/random-sampling-from-the-watson-distribution">https://research.wu.ac.at/en/publications/random-sampling-from-the-watson-distribution</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix with rows equal to the generated values.
+</p>
+
+
+<h3>References</h3>
+
+<p>Sablica, Hornik and Leydold (2022). Random Sampling from the Watson Distribution <a href="https://research.wu.ac.at/en/publications/random-sampling-from-the-watson-distribution">https://research.wu.ac.at/en/publications/random-sampling-from-the-watson-distribution</a>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+## simulate from Watson distribution
+sample1 &lt;- rmwat(n = 20, weights = 1, kappa = 20, mu = matrix(c(1,1,1),nrow = 3))
+
+## simulate from a mixture of Watson distributions
+sample2 &lt;- rmwat(n = 20, weights = c(0.5,0.5), kappa = c(-200,-200),
+                            mu = matrix(c(1,1,1,-1,1,1),nrow = 3))
+</code></pre>
+
+
+</div>

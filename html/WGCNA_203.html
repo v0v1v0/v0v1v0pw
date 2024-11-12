@@ -1,0 +1,225 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotColorUnderTree</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot color rows in a given order, for example under a dendrogram</h2>
+
+<h3>Description</h3>
+
+<p>Plot color rows encoding information about objects in a given order, for example the order of 
+a clustering dendrogram, 
+usually below the dendrogram or a barplot.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotOrderedColors(
+   order, 
+   colors, 
+   main = "",
+   rowLabels = NULL, 
+   rowWidths = NULL, 
+   rowText = NULL,
+   rowTextAlignment = c("left", "center", "right"),
+   rowTextIgnore = NULL,
+   textPositions = NULL, 
+   addTextGuide = TRUE,
+   cex.rowLabels = 1, 
+   cex.rowText = 0.8,
+   startAt = 0,
+   align = c("center", "edge"),
+   separatorLine.col = "black",
+   ...)
+
+plotColorUnderTree(
+   dendro, 
+   colors,
+   rowLabels = NULL,
+   rowWidths = NULL,
+   rowText = NULL,
+   rowTextAlignment = c("left", "center", "right"),
+   rowTextIgnore = NULL,
+   textPositions = NULL,
+   addTextGuide = TRUE,
+   cex.rowLabels = 1,
+   cex.rowText = 0.8,
+   separatorLine.col = "black",
+   ...)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>order</code></td>
+<td>
+<p>A vector giving the order of the objects. Must have the same length as <code>colors</code> if
+<code>colors</code> is a vector, or as the number of rows if <code>colors</code> is a matrix or data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dendro</code></td>
+<td>
+<p>A hierarchical clustering dendrogram such one returned by <code>hclust</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>colors</code></td>
+<td>
+<p>Coloring of objects on the dendrogram. Either a vector (one color per object) or a
+matrix (can also be an array or a data frame)
+with each column giving one color per object. Each column will be plotted as a horizontal row of colors
+under the dendrogram.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>Optional main title.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rowLabels</code></td>
+<td>
+<p>Labels for the colorings given in <code>colors</code>. The labels will be printed to the
+left of the color rows in the plot. If the argument is given, it must be a vector of length
+equal to the number of columns in <code>colors</code>. If not given, <code>names(colors)</code>
+will be used if available. If not, sequential numbers
+starting from 1 will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rowWidths</code></td>
+<td>
+<p> Optional specification of relative row widths for the color and text (if given) rows.
+Need not sum to 1. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rowText</code></td>
+<td>
+<p>Optional labels to identify colors in the color rows. 
+If given, must be of the same dimensions as <code>colors</code>. Each label that occurs will be displayed
+once.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rowTextAlignment</code></td>
+<td>
+<p>Character string specifying whether the labels should be left-justified to the
+start of the largest block of each label, centered in the middle, or right-justified to the end of the
+largest block.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rowTextIgnore</code></td>
+<td>
+<p>Optional specifications of labels that should be ignored when displaying them using
+<code>rowText</code> above. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>textPositions</code></td>
+<td>
+<p>optional numeric vector of the same length as the number of columns in <code>rowText</code>
+giving the color rows under which the text rows should appear.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>addTextGuide</code></td>
+<td>
+<p> logical: should guide lines be added for the text rows (if given)? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.rowLabels</code></td>
+<td>
+<p>Font size scale factor for the row labels. See <code>par</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cex.rowText</code></td>
+<td>
+<p> character expansion factor for text rows (if given). </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>startAt</code></td>
+<td>
+<p>A numeric value indicating where in relationship to the left edge of the plot the center
+of the first rectangle should be. Useful values are 0 if ploting color under a dendrogram, and 0.5 if
+ploting colors under a barplot. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>align</code></td>
+<td>
+<p>Controls the alignment of the color rectangles. <code>"center"</code> means aligning centers of the rectangles on
+equally spaced values; <code>"edge"</code> means aligning edges of the first and last rectangles on the edges of the plot
+region.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>separatorLine.col</code></td>
+<td>
+<p>Color of the line separating rows of color rectangles. If <code>NA</code>, no lines will be drawn.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other parameters to be passed on to the plotting method (such as <code>main</code> for the main
+title etc).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>It is often useful to plot dendrograms or other plots (e.g., barplots) 
+of objects together with additional information about the
+objects, for example module assignment (by color) that was obtained by cutting a hierarchical
+dendrogram or external color-coded measures such as gene significance.
+This function provides a way to do so. The calling code should section the screen into two 
+(or more) parts, plot the dendrogram (via <code>plot(hclust)</code>) or other information 
+in the upper section and use this function
+to plot color annotation in the order corresponding to the dendrogram in the lower section. 
+</p>
+
+
+<h3>Value</h3>
+
+<p> A list with the following components
+</p>
+<table><tr style="vertical-align: top;">
+<td><code>colorRectangles</code></td>
+<td>
+<p>A list with one component per color row. Each component
+is a list with 4 elements <code>xl, yb, xr, yt</code> giving the left, bottom, right and top coordinates of the rectangles in
+that row.</p>
+</td>
+</tr></table>
+<h3>Note</h3>
+
+<p> This function replaces <code>plotHclustColors</code> in package <code>moduleColor</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Steve Horvath <a href="mailto:SHorvath@mednet.ucla.edu">SHorvath@mednet.ucla.edu</a> and Peter Langfelder <a href="mailto:Peter.Langfelder@gmail.com">Peter.Langfelder@gmail.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>cutreeDynamic</code> for module detection in a dendrogram;
+</p>
+<p><code>plotDendroAndColors</code> for automated plotting of dendrograms and colors in one step.</p>
+
+
+</div>

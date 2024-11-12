@@ -1,0 +1,256 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>create_period_scatter</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Period comparison scatter plot for any two metrics</h2>
+
+<h3>Description</h3>
+
+<p>Returns two side-by-side scatter plots representing two selected metrics,
+using colour to map an HR attribute and size to represent number of employees.
+Returns a faceted scatter plot by default, with additional options
+to return a summary table.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">create_period_scatter(
+  data,
+  hrvar = "Organization",
+  metric_x = "Multitasking_meeting_hours",
+  metric_y = "Meeting_hours",
+  before_start = min(as.Date(data$Date, "%m/%d/%Y")),
+  before_end,
+  after_start = as.Date(before_end) + 1,
+  after_end = max(as.Date(data$Date, "%m/%d/%Y")),
+  before_label = "Period 1",
+  after_label = "Period 2",
+  mingroup = 5,
+  return = "plot"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A Standard Person Query dataset in the form of a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hrvar</code></td>
+<td>
+<p>HR Variable by which to split metrics. Accepts a character vector,
+defaults to "Organization" but accepts any character vector, e.g. "LevelDesignation"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metric_x</code></td>
+<td>
+<p>Character string containing the name of the metric,
+e.g. "Collaboration_hours"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>metric_y</code></td>
+<td>
+<p>Character string containing the name of the metric,
+e.g. "Collaboration_hours"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>before_start</code></td>
+<td>
+<p>Start date of "before" time period in YYYY-MM-DD</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>before_end</code></td>
+<td>
+<p>End date of "before" time period in YYYY-MM-DD</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>after_start</code></td>
+<td>
+<p>Start date of "after" time period in YYYY-MM-DD</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>after_end</code></td>
+<td>
+<p>End date of "after" time period in YYYY-MM-DD</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>before_label</code></td>
+<td>
+<p>String to specify a label for the "before" period. Defaults to "Period 1".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>after_label</code></td>
+<td>
+<p>String to specify a label for the "after" period. Defaults to "Period 2".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mingroup</code></td>
+<td>
+<p>Numeric value setting the privacy threshold / minimum group size.
+Defaults to 5.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>Character vector specifying what to return, defaults to "plot".
+Valid inputs are "plot" and "table".</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This is a general purpose function that powers all the functions
+in the package that produce faceted scatter plots.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a 'ggplot' object showing two scatter plots side by side representing
+the two periods.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Visualization: 
+<code>afterhours_dist()</code>,
+<code>afterhours_fizz()</code>,
+<code>afterhours_line()</code>,
+<code>afterhours_rank()</code>,
+<code>afterhours_summary()</code>,
+<code>afterhours_trend()</code>,
+<code>collaboration_area()</code>,
+<code>collaboration_dist()</code>,
+<code>collaboration_fizz()</code>,
+<code>collaboration_line()</code>,
+<code>collaboration_rank()</code>,
+<code>collaboration_sum()</code>,
+<code>collaboration_trend()</code>,
+<code>create_bar()</code>,
+<code>create_bar_asis()</code>,
+<code>create_boxplot()</code>,
+<code>create_bubble()</code>,
+<code>create_dist()</code>,
+<code>create_fizz()</code>,
+<code>create_inc()</code>,
+<code>create_line()</code>,
+<code>create_line_asis()</code>,
+<code>create_rank()</code>,
+<code>create_sankey()</code>,
+<code>create_scatter()</code>,
+<code>create_stacked()</code>,
+<code>create_tracking()</code>,
+<code>create_trend()</code>,
+<code>email_dist()</code>,
+<code>email_fizz()</code>,
+<code>email_line()</code>,
+<code>email_rank()</code>,
+<code>email_summary()</code>,
+<code>email_trend()</code>,
+<code>external_dist()</code>,
+<code>external_fizz()</code>,
+<code>external_line()</code>,
+<code>external_network_plot()</code>,
+<code>external_rank()</code>,
+<code>external_sum()</code>,
+<code>hr_trend()</code>,
+<code>hrvar_count()</code>,
+<code>hrvar_trend()</code>,
+<code>internal_network_plot()</code>,
+<code>keymetrics_scan()</code>,
+<code>meeting_dist()</code>,
+<code>meeting_fizz()</code>,
+<code>meeting_line()</code>,
+<code>meeting_quality()</code>,
+<code>meeting_rank()</code>,
+<code>meeting_summary()</code>,
+<code>meeting_trend()</code>,
+<code>meetingtype_dist()</code>,
+<code>meetingtype_dist_ca()</code>,
+<code>meetingtype_dist_mt()</code>,
+<code>meetingtype_summary()</code>,
+<code>mgrcoatt_dist()</code>,
+<code>mgrrel_matrix()</code>,
+<code>one2one_dist()</code>,
+<code>one2one_fizz()</code>,
+<code>one2one_freq()</code>,
+<code>one2one_line()</code>,
+<code>one2one_rank()</code>,
+<code>one2one_sum()</code>,
+<code>one2one_trend()</code>,
+<code>period_change()</code>,
+<code>workloads_dist()</code>,
+<code>workloads_fizz()</code>,
+<code>workloads_line()</code>,
+<code>workloads_rank()</code>,
+<code>workloads_summary()</code>,
+<code>workloads_trend()</code>,
+<code>workpatterns_area()</code>,
+<code>workpatterns_rank()</code>
+</p>
+<p>Other Flexible: 
+<code>create_bar()</code>,
+<code>create_bar_asis()</code>,
+<code>create_boxplot()</code>,
+<code>create_bubble()</code>,
+<code>create_density()</code>,
+<code>create_dist()</code>,
+<code>create_fizz()</code>,
+<code>create_hist()</code>,
+<code>create_inc()</code>,
+<code>create_line()</code>,
+<code>create_line_asis()</code>,
+<code>create_rank()</code>,
+<code>create_sankey()</code>,
+<code>create_scatter()</code>,
+<code>create_stacked()</code>,
+<code>create_tracking()</code>,
+<code>create_trend()</code>,
+<code>period_change()</code>
+</p>
+<p>Other Time-series: 
+<code>IV_by_period()</code>,
+<code>create_line()</code>,
+<code>create_line_asis()</code>,
+<code>create_trend()</code>,
+<code>period_change()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Return plot
+create_period_scatter(sq_data,
+                      hrvar = "LevelDesignation",
+                      before_start = "2019-12-15",
+                      before_end = "2019-12-29",
+                      after_start = "2020-01-05",
+                      after_end = "2020-01-26")
+
+# Return a summary table
+create_period_scatter(sq_data, before_end = "2019-12-31", return = "table")
+
+
+</code></pre>
+
+
+</div>

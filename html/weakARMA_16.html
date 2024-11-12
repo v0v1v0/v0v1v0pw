@@ -1,0 +1,151 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sim.ARMA</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Simulation of ARMA(p,q) model.</h2>
+
+<h3>Description</h3>
+
+<p>Simulates an ARMA, AR or MA process according to the arguments
+given.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sim.ARMA(
+  n,
+  ar = NULL,
+  ma = NULL,
+  sigma = 1,
+  eta = NULL,
+  method = "strong",
+  k = 1,
+  mu = 0,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Number of observations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ar</code></td>
+<td>
+<p>Vector of AR coefficients. If <code>NULL</code>,  the simulation is a MA process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ma</code></td>
+<td>
+<p>Vector of MA coefficients. If <code>NULL</code>,  the simulation is a AR process.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>Standard deviation.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eta</code></td>
+<td>
+<p>Vector of white noise sequence. Allows the user to use his own
+white noise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Defines the kind of noise used for the simulation. By default,
+the noise used is strong. See 'Details'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k</code></td>
+<td>
+<p>Integer used in the creation of the noise. See 'Details'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mu</code></td>
+<td>
+<p>Integer for the mean of the series.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments needed to simulate GARCH noise. See 'Details'.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>ARMA model is of the following form : </p>
+<p style="text-align: center;"><code class="reqn"> X_{t}-\mu = e_{t} + a_{1} (X_{t-1}-\mu)
++ a_{2} (X_{t-2}-\mu) + ... + a_{p} (X_{t-p}-\mu) - b_1 e_{t-1} - b_2 e_{t-2} - ... - b_{q}  e_{t-q}</code>
+</p>
+
+<p>where <code class="reqn">e_t</code> is a sequence  of uncorrelated random variables with zero
+mean and common variance <code class="reqn">\sigma^{2} &gt; 0</code> . <code class="reqn">ar = (a_{1}, a_{2}, ..., a_{p})</code> are
+autoregressive coefficients and <code class="reqn">ma = (b_{1}, b_{2}, ... , b_{q})</code> are moving
+average coefficients. Characteristic polynomials of ar and ma must
+constitute a stationary process.
+</p>
+<p>Method "<code>strong</code>" realise a simulation with gaussian white noise.
+</p>
+<p>Method "<code>product</code>", "<code>ratio</code>" and "<code>product.square</code>"
+realise a simulation with a weak white noise. These methods employ
+respectively the functions  <code>wnPT</code>, <code>wnRT</code> and
+<code>wnPT_SQ</code> to simulate nonlinear ARMA model. So, the
+paramater <code>k</code> is an argument of these functions. See <code>wnPT</code>, <code>wnRT</code>
+or <code>wnPT_SQ</code>.
+</p>
+<p>Method "<code>GARCH</code>" gives an ARMA process with a GARCH noise. See
+<code>simGARCH</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a vector containing the <code>n</code> simulated observations of the
+time series.
+</p>
+
+
+<h3>References</h3>
+
+<p>Francq, C. and Zakoïan, J.M. 1998, Estimating linear representations
+of nonlinear processes, <em>Journal of Statistical Planning and
+Inference</em>, vol. 68, no. 1, pp. 145-165
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>arima.sim</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">y &lt;- sim.ARMA(n = 100, ar = 0.95, ma = -0.6, method = "strong" )
+y2 &lt;- sim.ARMA(n = 100, ar = 0.95, ma = -0.6, method = "ratio")
+y3 &lt;- sim.ARMA(n = 100,  ar = 0.95, ma = -0.6, method = "GARCH", c = 1, A = 0.1, B = 0.88)
+y4 &lt;- sim.ARMA(n = 100, ar = 0.95, ma = -0.6, method = "product")
+y5 &lt;- sim.ARMA(n = 100, ar = 0.95, ma = -0.6, method = "product.square")
+
+</code></pre>
+
+
+</div>

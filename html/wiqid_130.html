@@ -1,0 +1,291 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Survival (CJS)</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Survival from recapture data with Cormack-Jolly-Seber (CJS) model
+</h2>
+
+<h3>Description</h3>
+
+<p>Calculation of apparent survival (accounting for recapture probability) from mark-recapture data, with time-dependent phi or p, possibly with covariates. Function <code>survCHSaj</code> allows for different survival parameters for juveniles and adults; juveniles are assumed to become adults after the first interval. <code>BsurvCJS</code> is a Bayesian version.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">survCJS(DH, model=list(phi~1, p~1), data=NULL, freq=1, group, interval=1,
+    ci = 0.95, link=c("logit", "probit"), ...)
+
+survCJSaj(DHj, DHa=NULL, model=list(phiJ~1, phiA~1, p~1), data=NULL,
+    freqj=1, freqa=1, ci = 0.95, link=c("logit", "probit"), ...)
+
+BsurvCJS(DH, model=list(phi~1, p~1), data = NULL, freq=1, priors=NULL,
+    chains=3, draws=1e4, burnin=1000, thin=1, adapt=1000,
+    parallel = NULL, seed=NULL, priorOnly=FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>DH</code></td>
+<td>
+
+<p>a 1/0 matrix with detection histories with a row for each animal captured and a column for each capture occasion.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>model</code></td>
+<td>
+
+<p>a list of formulae symbolically defining a linear predictor for each parameter in terms of covariates.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+
+<p>a data frame with a row for each survival interval / recapture occasion and columns for each of the covariates used to estimate phi or p.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>freq</code></td>
+<td>
+
+<p>a scalar or a vector of length <code>nrows(DH)</code> with the frequency of each detection history. Negative values indicate trap losses.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>group</code></td>
+<td>
+
+<p>an optional factor of length <code>nrows(DH)</code>; if provided, <code>group</code> can be included in the model definition, see Examples.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interval</code></td>
+<td>
+
+<p>the time interval between capture occasions; scalar if all intervals are equal or a vector of length <code>ncols(DH) - 1</code>; the units used must be the same as those for the apparent survival estimate, eg, for annual survival use years.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DHj, DHa</code></td>
+<td>
+
+<p>detection history matrices for animals marked as juveniles and adults respectively; DHa should be NULL if no animals were marked as adults.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>freqj, freqa</code></td>
+<td>
+
+<p>frequencies of each detection history in DHj and DHa; freqa is ignored if DHa = NULL.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ci</code></td>
+<td>
+
+<p>the required confidence interval.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+
+<p>the link function to use, either logit or probit; see Links.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>other arguments passed to <code>nlm</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>priors</code></td>
+<td>
+
+<p>a list with elements for prior mean and variance for coefficients; see Details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chains</code></td>
+<td>
+
+<p>the number of Markov chains to run.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>draws</code></td>
+<td>
+
+<p>the minimum number of values to return; the actual number returned may be slightly higher, as it will be a multiple of <code>chains</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>burnin</code></td>
+<td>
+
+<p>the number of values to discard at the beginning of each chain.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>thin</code></td>
+<td>
+
+<p>the thinning rate. If set to n &gt; 1, n values are calculated for each value returned.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adapt</code></td>
+<td>
+
+<p>the number of iterations to run in the JAGS adaptive phase.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>priorOnly</code></td>
+<td>
+
+<p>if TRUE, the function produces random draws from the appropriate <em>prior</em> distributions, with a warning.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+
+<p>if TRUE or NULL and sufficient cores are available, the MCMC chains are run in parallel; if TRUE and insufficient cores are available, a warning is given.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+
+<p>a positive integer, the seed for the random number generators.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>BsurvCJS</code> uses a probit link to model apparent survival and detection as a function of covariates; most software uses a logistic (logit) link.
+See Links.
+Coefficients on the probit scale are about half the size of the equivalent on the logit scale.
+</p>
+<p>Priors for <code>BsurvCJS</code> are listed in the <code>priors</code> argument, which may contain elements:
+</p>
+<p><code>muPhi</code> and <code>muP</code> : the means for apparent survival and detection coefficients respectively. This may be a vector with one value for each coefficient, including the intercept, or a scalar, which will be used for all. The default is 0.
+</p>
+<p><code>sigmaPhi</code> and <code>sigmaP</code> : the variance for apparent survival and detection coefficients respectively. This may be (1) a vector with one value for each coefficient, including the intercept, which represents the variance, assuming independence, or (2) a scalar, which will be used for all. The function does not currently allow a variance-covariance matrix. The default is 1, which is somewhat informative.
+</p>
+<p>When specifying priors, note that numerical covariates are standardized internally before fitting the model. For an intercept-only model, a prior of Normal(0, 1) on the probit scale implies a Uniform(0, 1) or Beta(1, 1) prior on the probability scale.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>survCJS</code> and <code>survCJSaj</code> return an object of class <code>wiqid</code>, a list with elements:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>The call used to produce the results</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta </code></td>
+<td>
+<p>Estimates of the coefficients in the linear predictors for phi and p.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta.vcv </code></td>
+<td>
+<p>The variance-covariance matrix for the beta estimates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>real </code></td>
+<td>
+<p>Back-transformed estimates of phi and p for each interval / occasion. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logLik</code></td>
+<td>
+<p>a vector with elements for log(likelihood), number of parameters, and effective sample size. If the variance-covariance matrix cannot be calculated, the second element should be <code>NA</code>.</p>
+</td>
+</tr>
+</table>
+<p>There are <code>print</code>, <code>logLik</code>, and <code>nobs</code> methods for class <code>wiqid</code>.
+</p>
+<p><code>BsurvCJS</code> returns an object of class <code>Bwiqid</code>, a data frame with columns for each p and psi value containing the series of MCMC draws, and attributes for details of the MCMC run.
+</p>
+
+
+<h3>Benchmarks</h3>
+
+<p>Output of <code>survCJS</code> has been checked against program MARK with the dipper data set: coefficients are not the same as MARK uses models without an intercept, but the real values agree to 3 decimal places.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Mike Meredith
+</p>
+
+
+<h3>References</h3>
+
+<p>Lebreton, J-D; K P Burnham; J Clobert; D R Anderson. 1992. Modeling survival and testing biological hypotheses using marked animals: a unified approach with case studies. <em>Ecological Monographs</em> 62:67-118.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(dippers)
+
+DH &lt;- dippers[1:7]  # Extract the detection histories
+survCJS(DH)  # the phi(.) p(.) model
+survCJS(DH, phi ~ .time)  # the phi(t) p(.) model
+df &lt;- data.frame(flood = c(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE))
+survCJS(DH, phi ~ flood, data=df)  # the phi(flood) p(.) model
+# Including a grouping factor:
+survCJS(DH, phi ~ flood*group, data=df, group=dippers$sex)
+
+# With unequal intervals - suppose no data were collected in year 5:
+DH1 &lt;- DH[, -5]
+survCJS(DH1, phi ~ .time, interval = c(1, 1, 1, 2, 1))
+
+# See also the examples in the dippers help file.
+</code></pre>
+
+
+</div>

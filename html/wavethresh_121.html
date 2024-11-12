@@ -1,0 +1,133 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>makegrid</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Interpolate data to a grid.</h2>
+
+<h3>Description</h3>
+
+<p>This function takes a set of univariate (x,y) data with x arbitrary in (0,1) and linearly interpolates (x,y) to an equally spaced dyadic grid. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">makegrid(t, y, gridn = 2^(floor(log(length(t)-1,2)) + 1))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>t</code></td>
+<td>
+<p>A vector of <code>x</code> data. Each of the entries of <code>x</code> must lie between 0 and 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A vector of <code>y</code> data. Each entry of <code>y</code> corresponds to the same-positioned entry in <code>x</code> and so<code>y</code> must be of the same length as <code>x</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gridn</code></td>
+<td>
+<p>The number of grid points in the dyadic grid that the (x,y) gets interpolated to. By default this is the next power of two larger than the length of <code>x</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>One method for performing wavelet regression on data that is not equally spaced nor of power of two length is that described in Kovac, (1997) and Kovac and Silverman, (2000). 
+</p>
+<p>The Kovac-Silverman algorithm linearly interpolates arbitrarily spaced (x,y) data to a dyadic grid and applies wavelet shrinkage to the interpolated data. However, if one assumes that the original data obeys a signal+noise model with iid data the interpolated data will be correlated due to the interpolation. This fact needs to be taken into account after taking the DWT and before thresholding one realizes that each coefficient has its own variance. The Kovac-Silverman algorithm computes this variance efficiently using knowledge of the interpolation scheme. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>griddata</code>.
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.9.6 Copyright Arne Kovac 1997
+Copyright Guy Nason (help pages) 1999</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Arne Kovac</p>
+
+
+<h3>See Also</h3>
+
+<p><code>accessc</code>, <code>irregwd</code>, <code>newsure</code>, <code>plot.irregwd</code>, <code>threshold.irregwd</code>, 
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Generate some values in (0,1), then sort them (for plotting)
+#
+tt &lt;- sort(runif(100))
+#
+# Now evaluate the \code{\link{doppler}} function and add
+# some noise.
+#
+yy &lt;- doppler(tt) + rnorm(100, 0, 0.15)
+#
+# Now make the grid with this data
+#
+yygrid &lt;- makegrid(t=tt, y=yy)
+#
+# Jolly good. Now let's take the wavelet transform of this gridded data.
+# Note that we have to use the \code{\link{irregwd}} function
+# of the gridded data as it computes the variances of the coefficients
+# as well as the coefficients themselves.
+#
+yyirregwd &lt;- irregwd(yygrid)
+#
+# You might want to plot the coefficients
+#
+# If you want to see the actual coefficients you have to first convert
+# the class of the yyirregwd object to a wd object and then use
+# \code{\link{plot.wd}} like this
+#
+yyirregwd2 &lt;- yyirregwd
+class(yyirregwd2) &lt;- "wd"
+## Not run: plot(yyirregwd2)
+#
+# If you want to see the variance factors (essentially the coefficient
+# variances divided by the overall variance). Then just use
+# \code{\link{plot.irregwd}}
+#
+## Not run: plot(yyirregwd)
+#
+# Ok. So you've seen the coefficients. Now let's do some thresholding.
+#
+yy.thresh.sure &lt;- threshold(yyirregwd, policy="sure", type="soft", dev=madmad)
+#
+# And now do the reconstruct
+#
+yy.wr &lt;- wr(yy.thresh.sure)
+#
+# And you can even plot the answer on the new grid!
+#
+## Not run: plot(yygrid$gridt, yy.wr, type="l")
+#
+# And superimpose the original data!
+#
+## Not run: points(tt, yy)
+#
+# This is sort of \code{Doppler} like!
+</code></pre>
+
+
+</div>

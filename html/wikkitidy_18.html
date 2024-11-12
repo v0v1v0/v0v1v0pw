@@ -1,0 +1,102 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>page_vector_functions</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get data about pages from their titles</h2>
+
+<h3>Description</h3>
+
+<p><code>get_latest_revision()</code> returns metadata about the latest
+revision of each
+page.
+</p>
+<p><code>get_page_html()</code> returns the rendered html for each
+page.
+</p>
+<p><code>get_page_summary()</code> returns metadata about the latest revision, along
+with the page description and a summary extracted from the opening
+paragraph
+</p>
+<p><code>get_page_related()</code> returns summaries for 20 related pages for each
+passed page
+</p>
+<p><code>get_page_talk()</code> returns structured talk page content for each
+title. You must ensure to use the title for the Talk page itself, e.g.
+"Talk:Earth" rather than "Earth"
+</p>
+<p><code>get_page_langlinks()</code> returns interwiki links for each
+title
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_latest_revision(title, language = "en")
+
+get_page_html(title, language = "en")
+
+get_page_summary(title, language = "en")
+
+get_page_related(title, language = "en")
+
+get_page_talk(title, language = "en")
+
+get_page_langlinks(title, language = "en")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>A character vector of page titles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>A character vector of two-letter language codes, either of
+length 1 or the same length as <code>title</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list, vector or tibble, the same length as <code>title</code>, with the
+desired data.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Get language links for a known page on English Wikipedia
+get_page_langlinks("Charles Harpur")
+
+# Many of these functions return a list of data frames. Tidyr can be useful.
+# Get 20 related pages for German City
+cities &lt;- tibble::tribble(
+  ~city,
+  "Berlin",
+  "Darmstadt",
+) %&gt;%
+  dplyr::mutate(related = get_page_related(city))
+cities
+
+# Unest to get one row per related page:
+tidyr::unnest(cities, "related")
+
+# The functions are vectorised over title and language
+# Find all articles about Joanna Baillie, and retrieve summary data for
+# the first two.
+baillie &lt;- get_page_langlinks("Joanna Baillie") %&gt;%
+  dplyr::slice(1:2) %&gt;%
+  dplyr::mutate(get_page_summary(title = title, language = code))
+baillie
+</code></pre>
+
+
+</div>

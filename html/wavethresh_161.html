@@ -1,0 +1,108 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>print.nv</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Print a node vector object, also used by several other functions to
+obtain packet list information</h2>
+
+<h3>Description</h3>
+
+<p>Ostensibly prints out node vector information, but also produces packet
+indexing information for several functions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'nv'
+print(x, printing = TRUE, verbose = FALSE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>The <code>nv.object</code> that you wish to print</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>printing</code></td>
+<td>
+<p>If FALSE then nothing is printed. This argument is
+here because the results of the printing are also useful
+to many other routines where you want the results but are not
+bothered by actually seeing the results</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Not actually used</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>A node vector contains selected basis information, but this is stored
+as a tree object. Hence, it is not immediately obvious which basis elements
+have been stored. This function produces a list of the packets at each
+resolution level that have been selected in the basis. This information
+is so useful to other functions that the function is used even when
+printing is not the primary objective.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing two components: <code>indexlist</code> and <code>rvector</code>.
+The former is a list of packets that were selected at each resolution
+level. Rvector encodes a list of "rotate/non-rotate" instructions in binary.
+At each selected packet level a decision has to be made whether to select
+the LH or RH basis element, and this information is stored in <code>rvector</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>InvBasis.wst</code>,
+<code>nv.object</code>,
+<code>plot.wp</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">v &lt;- rnorm(128)
+vwst &lt;- wst(v)
+vnv &lt;- MaNoVe(vwst)
+print(vnv)
+#Level :  6  Action is  R (getpacket Index:  1 )
+#Level :  5  Action is  L (getpacket Index:  2 )
+#Level :  4  Action is  L (getpacket Index:  4 )
+#Level :  3  Action is  R (getpacket Index:  9 )
+#Level :  2  Action is  L (getpacket Index:  18 )
+#There are  6  reconstruction steps
+#
+# The L or R indicate whether to move to the left or the right basis function
+# when descending the node tree
+#
+#
+</code></pre>
+
+
+</div>

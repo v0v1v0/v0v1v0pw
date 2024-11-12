@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>espace_pca</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>espace_pca Principal component analysis</h2>
+
+<h3>Description</h3>
+
+<p>Principal component analysis to reduce dimensionality of
+environmental space
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">espace_pca(
+  sp.name1,
+  sp.name2 = NULL,
+  occs.z1,
+  occs.z2 = NULL,
+  bgPts.z1,
+  bgPts.z2 = NULL,
+  logger = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>sp.name1</code></td>
+<td>
+<p>character. Name of species 1 to be analyzed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sp.name2</code></td>
+<td>
+<p>character. Name of species 2 to be analyzed. Default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>occs.z1</code></td>
+<td>
+<p>table of occurrences with environmental values only for sp1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>occs.z2</code></td>
+<td>
+<p>table of occurrences with environmental values only for sp2.
+Default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bgPts.z1</code></td>
+<td>
+<p>table of background points with environmental values only
+for sp1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bgPts.z2</code></td>
+<td>
+<p>table of background points with environmental values only
+for sp2. Default is NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>logger</code></td>
+<td>
+<p>Stores all notification messages to be displayed in the Log
+Window of Wallace GUI. Insert the logger reactive list here for running in shiny,
+otherwise leave the default NULL</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is called by the component espace to calibrate a PCA for
+2 species in environmental space. When using within Wallace,
+GUI parameters are obtained from the model object, in particular, table of
+occurrences with environmental values and table of background points with
+environmental values. User must be careful as these tables must contain only
+environmental variables and not the point coordinates as outputted by model
+objects. The PCA is calibrated over the whole set of background points.
+The provided species name(s) are only used for logger messages and not for
+querying or selecting occurrences.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of 14 elements of classes dudi and pca as in dudi.pca
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jamie Kass &lt;jamie.m.kass@gmail.com&gt;
+</p>
+<p>Olivier Broennimann &lt;olivier.broennimann@unil.ch&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>dudi.pca</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+sp.name1 &lt;- "Bassaricyon_alleni"
+sp.name2 &lt;- "Bassaricyon_neblina"
+envs &lt;- envs_userEnvs(rasPath = list.files(system.file("extdata/wc",
+                                           package = "wallace"),
+                      pattern = ".tif$", full.names = TRUE),
+                      rasName = list.files(system.file("extdata/wc",
+                                           package = "wallace"),
+                      pattern = ".tif$", full.names = FALSE))
+
+occs.z1 &lt;- read.csv(system.file("extdata/Bassaricyon_alleni.csv",
+                    package = "wallace"))
+occs.z2 &lt;- read.csv(system.file("extdata/Bassaricyon_neblina.csv",
+                    package = "wallace"))
+
+bgPts.z1 &lt;- read.csv(system.file("extdata/Bassaricyon_alleni_bgPoints.csv",
+                     package = "wallace"))
+bgPts.z2 &lt;- read.csv(system.file("extdata/Bassaricyon_neblina_bgPoints.csv",
+                     package = "wallace"))
+
+occsExt.z1 &lt;- raster::extract(envs, occs.z1[, c("longitude", "latitude")])
+occsExt.z2 &lt;- raster::extract(envs, occs.z2[, c("longitude", "latitude")])
+bgExt.z1 &lt;- raster::extract(envs, bgPts.z1[, c("longitude", "latitude")])
+bgExt.z2 &lt;- raster::extract(envs, bgPts.z2[, c("longitude", "latitude")])
+pcaZ &lt;- espace_pca(sp.name1, sp.name2,
+                   occsExt.z1, occsExt.z2,
+                   bgExt.z1, bgExt.z2)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

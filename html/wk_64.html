@@ -1,0 +1,83 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>grd_tile</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Extract normalized grid tiles</h2>
+
+<h3>Description</h3>
+
+<p>Unlike <code>grd_tile_template()</code>, which returns a <code>grd()</code> whose elements are
+the boundaries of the specified tiles with no data attached, <code>grd_tile()</code>
+returns the actual tile with the data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">grd_tile(grid, level, i, j = NULL)
+
+## S3 method for class 'wk_grd_rct'
+grd_tile(grid, level, i, j = NULL)
+
+## S3 method for class 'wk_grd_xy'
+grd_tile(grid, level, i, j = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>grid</code></td>
+<td>
+<p>A <code>grd_xy()</code>, <code>grd_rct()</code>, or other object
+implementing <code style="white-space: pre;">⁠grd_*()⁠</code> methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>An integer describing the overview level. This is related to
+the <code>step</code> value by a power of 2 (i.e., a level of <code>1</code> indicates a step of
+<code>2</code>, a level of <code>2</code> indicates a step of <code>4</code>, etc.).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>i, j</code></td>
+<td>
+<p>1-based index values. <code>i</code> indices correspond to decreasing
+<code>y</code> values; <code>j</code> indices correspond to increasing <code>x</code> values.
+Values outside the range <code>1:nrow|ncol(data)</code> will be censored to
+<code>NA</code> including 0 and negative values.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A <code>grd_subset()</code>ed version
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">grid &lt;- grd_rct(volcano)
+plot(grd_tile(grid, 4, 1, 1))
+
+plot(grd_tile(grid, 3, 1, 1), add = TRUE)
+plot(grd_tile(grid, 3, 1, 2), add = TRUE)
+plot(grd_tile(grid, 3, 2, 1), add = TRUE)
+plot(grd_tile(grid, 3, 2, 2), add = TRUE)
+
+grid &lt;- as_grd_xy(grd_tile(grid, 4, 1, 1))
+plot(grid, add = TRUE, pch = ".")
+plot(grd_tile(grid, 3, 1, 1), add = TRUE, col = "green", pch = ".")
+plot(grd_tile(grid, 3, 1, 2), add = TRUE, col = "red", pch = ".")
+plot(grd_tile(grid, 3, 2, 1), add = TRUE, col = "blue", pch = ".")
+plot(grd_tile(grid, 3, 2, 2), add = TRUE, col = "magenta", pch = ".")
+
+</code></pre>
+
+
+</div>

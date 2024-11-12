@@ -1,0 +1,201 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>validation_report</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Generate a Data Validation report in HTML</h2>
+
+<h3>Description</h3>
+
+<p>The function generates an interactive HTML report using
+Standard Person Query data as an input. The report contains checks on
+Workplace Analytics query outputs to provide diagnostic information
+for the Analyst prior to analysis.
+</p>
+<p>An additional Standard Meeting Query can be provided to perform meeting
+subject line related checks. This is optional and the validation report can
+be run without it.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">validation_report(
+  data,
+  meeting_data = NULL,
+  hrvar = "Organization",
+  path = "validation report",
+  hrvar_threshold = 150,
+  timestamp = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A Standard Person Query dataset in the form of a data frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>meeting_data</code></td>
+<td>
+<p>An optional Meeting Query dataset in the form of a data
+frame.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hrvar</code></td>
+<td>
+<p>HR Variable by which to split metrics, defaults to "Organization"
+but accepts any character vector, e.g. "Organization"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Pass the file path and the desired file name, <em>excluding the file
+extension</em>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hrvar_threshold</code></td>
+<td>
+<p>Numeric value determining the maximum number of unique
+values to be allowed to qualify as a HR variable. This is passed directly
+to the <code>threshold</code> argument within <code>hrvar_count_all()</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>timestamp</code></td>
+<td>
+<p>Logical vector specifying whether to include a timestamp in
+the file name. Defaults to <code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For your input to <code>data</code> or <code>meeting_data</code>, please use the function
+<code>wpa::import_wpa()</code> to import your csv query files into R. This function will
+standardize format and prepare the data as input for this report.
+</p>
+<p>If you are passing a Ways of Working Assessment query instead of a Standard
+Person query to the <code>data</code> argument, please also use <code>standardise_pq()</code> to
+make the variable names consistent with a Standard Person Query.
+</p>
+<p>Since <code>v1.6.2</code>, the variable <code>Call_hours</code> is no longer a pre-requisite to run
+this report. A note is returned in-line instead of an error if the variable
+is not available.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An HTML report with the same file name as specified in the arguments is
+generated in the working directory. No outputs are directly returned by the
+function.
+</p>
+
+
+<h3>Checking functions within <code>validation_report()</code>
+</h3>
+
+
+<ul>
+<li> <p><code>check_query()</code>
+</p>
+</li>
+<li> <p><code>flag_ch_ratio()</code>
+</p>
+</li>
+<li> <p><code>hrvar_count_all()</code>
+</p>
+</li>
+<li> <p><code>identify_privacythreshold()</code>
+</p>
+</li>
+<li> <p><code>identify_nkw()</code>
+</p>
+</li>
+<li> <p><code>identify_holidayweeks()</code>
+</p>
+</li>
+<li> <p><code>subject_validate()</code>
+</p>
+</li>
+<li> <p><code>identify_tenure()</code>
+</p>
+</li>
+<li> <p><code>flag_outlooktime()</code>
+</p>
+</li>
+<li> <p><code>identify_shifts()</code>
+</p>
+</li>
+<li> <p><code>track_HR_change()</code>
+</p>
+</li>
+</ul>
+<p>You can browse each individual function for details on calculations.
+</p>
+
+
+<h3>Creating a report</h3>
+
+<p>Below is an example on how to run the report.
+</p>
+<div class="sourceCode"><pre>validation_report(dv_data,
+                  meeting_data = mt_data,
+                  hrvar = "Organization")
+</pre></div>
+
+
+<h3>See Also</h3>
+
+<p>Other Reports: 
+<code>IV_report()</code>,
+<code>capacity_report()</code>,
+<code>coaching_report()</code>,
+<code>collaboration_report()</code>,
+<code>connectivity_report()</code>,
+<code>generate_report()</code>,
+<code>meeting_tm_report()</code>,
+<code>read_preamble()</code>,
+<code>subject_validate_report()</code>,
+<code>workpatterns_report()</code>
+</p>
+<p>Other Data Validation: 
+<code>check_query()</code>,
+<code>extract_hr()</code>,
+<code>flag_ch_ratio()</code>,
+<code>flag_em_ratio()</code>,
+<code>flag_extreme()</code>,
+<code>flag_outlooktime()</code>,
+<code>hr_trend()</code>,
+<code>hrvar_count()</code>,
+<code>hrvar_count_all()</code>,
+<code>hrvar_trend()</code>,
+<code>identify_churn()</code>,
+<code>identify_holidayweeks()</code>,
+<code>identify_inactiveweeks()</code>,
+<code>identify_nkw()</code>,
+<code>identify_outlier()</code>,
+<code>identify_privacythreshold()</code>,
+<code>identify_query()</code>,
+<code>identify_shifts()</code>,
+<code>identify_shifts_wp()</code>,
+<code>identify_tenure()</code>,
+<code>remove_outliers()</code>,
+<code>standardise_pq()</code>,
+<code>subject_validate()</code>,
+<code>subject_validate_report()</code>,
+<code>track_HR_change()</code>
+</p>
+
+
+</div>

@@ -1,0 +1,63 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>httr_progress</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Waitress with httr</h2>
+
+<h3>Description</h3>
+
+<p>Use a waitress progress bar with httr requests.
+Simply use <code>httr_progress</code> where you would use
+httr::progress.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">httr_progress(object, type = c("down", "up"), pre = NULL, post = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>The waitress or attendant object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Type of progress to display: either number of
+bytes uploaded or downloaded. Passed to httr::progress.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pre, post</code></td>
+<td>
+<p>Pre and callback functions to run before
+the progress starts or once it is done.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+cap_speed &lt;- httr::config(max_recv_speed_large = 10000)
+
+httr::GET(
+  "http://httpbin.org/bytes/102400", 
+  httr_progress(w), 
+  cap_speed
+)
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

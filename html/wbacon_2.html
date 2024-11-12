@@ -1,0 +1,319 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wBACON</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Weighted BACON Algorithm for Multivariate Outlier Detection</h2>
+
+<h3>Description</h3>
+
+<p><code>wBACON</code> is an iterative method for the computation of multivariate
+location and scatter (under the assumption of a Gaussian distribution).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wBACON(x, weights = NULL, alpha = 0.05, collect = 4, version = c("V2", "V1"),
+    na.rm = FALSE, maxiter = 50, verbose = FALSE, n_threads = 2)
+distance(x)
+## S3 method for class 'wbaconmv'
+print(x, digits = max(3L, getOption("digits") - 3L), ...)
+## S3 method for class 'wbaconmv'
+summary(object, ...)
+center(object)
+## S3 method for class 'wbaconmv'
+vcov(object, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code>[matrix]</code> or <code>[data.frame]</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p><code>[numeric]</code> sampling weight (default
+<code>weights = NULL</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p><code>[numeric]</code> tuning constant, level of significance,
+<code class="reqn">0 &lt; \alpha &lt; 1</code>; (default: <code>alpha = 0.05</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>collect</code></td>
+<td>
+<p>determines the size <code class="reqn">m</code> of the initial subset to be
+<code class="reqn">m = collect \cdot p</code>, where <code class="reqn">p</code> is the
+number of variables, <code>[integer]</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>version</code></td>
+<td>
+<p><code>[character]</code> method of initialization; <code>"V1"</code>:
+weighted Mahalanobis distances (not robust but affine equivariant);
+<code>"V2"</code> (<code>default</code>): Euclidean norm of the data centered by
+the coordinate-wise weighted median.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.rm</code></td>
+<td>
+<p><code>[logical]</code> indicating whether <code>NA</code> values should
+be removed before the computation proceeds (default: <code>FALSE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxiter</code></td>
+<td>
+<p><code>[integer]</code> maximal number of iterations (default:
+<code>maxiter = 50</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p><code>[logical]</code> indicating whether additional information
+is printed to the console (default: <code>TRUE</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n_threads</code></td>
+<td>
+<p><code>[integer]</code> number of threads used for OpenMP
+(<code>default: 2</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>digits</code></td>
+<td>
+<p><code>[integer]</code> minimal number of significant digits.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments passed to the method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>object of class <code>wbaconmv</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The algorithm is initialized from a set of uncontaminated data. Then the
+subset is iteratively refined; i.e., additional observations are included
+into the subset if their Mahalanobis distance is below some threshold
+(likewise, observations are removed from the subset if their distance
+larger than the threshold). This process iterates until the set of good
+data remain stable. Observations not among the good data are outliers;
+see Billor et al. (2000). The weighted Bacon algorithm is due to Béguin
+and Hulliger (2008).
+</p>
+<p>The threshold for the (squared) Mahalanobis distances is defined as
+the standardized chi-square <code class="reqn">1 - \alpha</code> quantile. All
+observations whose squared Mahalanobis distances is larger than
+the threshold are regarded as outliers.
+</p>
+<p>If the sampling weights <code>weights</code> are not explicitly specified (i.e.,
+<code>weights = NULL</code>), they are taken to be 1.0.
+</p>
+
+
+<h4>Incomplete/missing data</h4>
+
+<p>The <code>wBACON</code> <em>cannot</em> deal with missing values. In contrast,
+function <code>BEM</code> in package <span class="pkg">modi</span> implements
+the BACON-EEM algorithm of Béguin and Hulliger (2008), which
+is tailored to work with outlying and missing values.
+</p>
+<p>If the argument <code>na.rm</code> is set to <code>TRUE</code> the method behaves
+like <code>na.omit</code>.
+</p>
+
+
+
+<h4>Assumptions</h4>
+
+<p>The BACON algorithm <em>assumes</em> that the non-outlying data have (roughly)
+an elliptically contoured distribution (this includes the Gaussian
+distribution as a special case). "Although the algorithms will often
+do something reasonable even when these assumptions are violated, it
+is hard to say what the results mean." (Billor et al., 2000, p. 289)
+</p>
+<p>In line with Billor et al. (2000, p. 290), we use the term
+outlier "nomination" rather than "detection" to highlight that algorithms
+should not go beyond nominating observations as <em>potential</em> outliers;
+see also Béguin and Hulliger (2008). It is left to the analyst
+to finally label outlying observations as such.
+</p>
+
+
+
+<h4>Utility functions and tools</h4>
+
+<p>Diagnostic plots are available by the <code>plot</code>
+method.
+</p>
+<p>The method <code>center</code> and <code>vcov</code> return, respectively, the
+estimated center/location and covariance matrix.
+</p>
+<p>The <code>distance</code> method returns the robust Mahalanobis distances.
+</p>
+<p>The function is_outlier returns a vector of
+logicals that flags the nominated outliers.
+</p>
+
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>wbaconmv</code> with slots
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>see function arguments</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>see function arguments</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>center</code></td>
+<td>
+<p>estimated center of the data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist</code></td>
+<td>
+<p>Mahalanobis distances</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>number of observations</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>number of variables</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>see function arguments</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>subset</code></td>
+<td>
+<p>final subset of outlier-free data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cutoff</code></td>
+<td>
+<p>see function arguments</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxiter</code></td>
+<td>
+<p>number of iterations until convergence</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>version</code></td>
+<td>
+<p>see functions arguments</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>collect</code></td>
+<td>
+<p>see functions arguments</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cov</code></td>
+<td>
+<p>covariance matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>converged</code></td>
+<td>
+<p>logical that indicates whether the algorithm converged</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>call</code></td>
+<td>
+<p>the matched call</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Billor N., Hadi A.S. and Vellemann P.F. (2000). BACON: Blocked Adaptive
+Computationally efficient Outlier Nominators.
+<em>Computational Statistics and Data Analysis</em> <b>34</b>, pp. 279–298.
+<a href="https://doi.org/10.1016/S0167-9473%2899%2900101-2">doi:10.1016/S0167-9473(99)00101-2</a>
+</p>
+<p>Béguin C. and Hulliger B. (2008). The BACON-EEM Algorithm for Multivariate
+Outlier Detection in Incomplete Survey Data. <em>Survey Methodology</em>
+<b>34</b>, pp. 91–103.
+<a href="https://www150.statcan.gc.ca/n1/en/catalogue/12-001-X200800110616">https://www150.statcan.gc.ca/n1/en/catalogue/12-001-X200800110616</a>
+</p>
+<p>Schoch, T. (2021). wbacon: Weighted BACON algorithms for multivariate
+outlier nomination (detection) and robust linear regression,
+<em>Journal of Open Source Software</em> <b>6</b> (62), 3238
+<a href="https://doi.org/10.21105/joss.03238">doi:10.21105/joss.03238</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>plot</code> and
+<code>is_outlier</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(swiss)
+dt &lt;- swiss[, c("Fertility", "Agriculture", "Examination", "Education",
+    "Infant.Mortality")]
+m &lt;- wBACON(dt)
+m
+which(is_outlier(m))
+
+</code></pre>
+
+
+</div>

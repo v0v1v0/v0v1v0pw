@@ -1,0 +1,194 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>perm.oneway.anova</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+
+Permutation One-Way ANOVA Test
+</h2>
+
+<h3>Description</h3>
+
+
+<p>Performs a permutation (randomization) test for location, using trimmed
+data (trim = 0 gives untrimmed data) on several independent samples.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">perm.oneway.anova(x, y, trim = 0, ford = NULL, R = 9999)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+
+<p>a (non-empty) vector of observations of the (response) variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+
+<p>a vector of the corresponding populations (levels of the factor).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>trim</code></td>
+<td>
+
+
+<p>the fraction (0 to 0.5) of observations to be trimmed from each sample;
+default is 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ford</code></td>
+<td>
+
+
+<p>an optional integer vector giving the change from alphabetical order
+of the populations to some other desired order.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+
+
+<p>number of replications (default = 9999).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+<p>The null hypothesis is that the distributions of the variable are 
+identical on all the populations. The alternative hypothesis is that
+the distributions of the variable have systematically larger values
+on some of the populations than on others.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with class "perm.oneway.anova" containing the following components:
+
+
+
+
+
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Perm.values </code></td>
+<td>
+<p>the values of the test statistic obtained from the permutations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Header </code></td>
+<td>
+<p>the main title for the output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Response </code></td>
+<td>
+<p>the name of the (response) variable.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Factor </code></td>
+<td>
+<p>the name of the factor.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Levels </code></td>
+<td>
+<p>the populations (levels of the factor).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n </code></td>
+<td>
+<p>the sample sizes.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Mean </code></td>
+<td>
+<p>the sample means.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>SD </code></td>
+<td>
+<p>the sample standard deviations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Statistic </code></td>
+<td>
+<p>the test statistic; here, always F.trim.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Observed </code></td>
+<td>
+<p>the observed value of the test statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>P.value </code></td>
+<td>
+<p>the P-value or a statement like P &lt; 0.001.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value </code></td>
+<td>
+<p>the P-value.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Trim </code></td>
+<td>
+<p>the trim value.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+
+<p>Neil A. Weiss
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Last year's energy consumptions, to the nearest 10 million BTU, for
+# independent random samples of households in the four U.S. regions.
+data("energy")
+str(energy)
+attach(energy)
+
+# Permutation one-way ANOVA to decide whether the energy distributions
+# have systematically larger values in some U.S. regions than in others.
+# Regions ordered to Northeast, Midwest, South, and West; 999 replications.
+perm.oneway.anova(ENERGY, REGION, ford = c(2,1,3,4), R = 999)
+
+detach(energy)  # clean up
+</code></pre>
+
+
+</div>

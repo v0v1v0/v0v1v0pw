@@ -1,0 +1,73 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>fb_team_player_stats</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get fbref Team's Player Season Statistics</h2>
+
+<h3>Description</h3>
+
+<p>Returns the team's players season stats for a selected team(s) and stat type
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">fb_team_player_stats(team_urls, stat_type, time_pause = 3)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>team_urls</code></td>
+<td>
+<p>the URL(s) of the teams(s) (can come from fb_teams_urls())</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stat_type</code></td>
+<td>
+<p>the type of statistic required</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>time_pause</code></td>
+<td>
+<p>the wait time (in seconds) between page loads
+</p>
+<p>The statistic type options (stat_type) include:
+</p>
+<p><em>"standard"</em>, <em>"shooting"</em>, <em>"passing"</em>,
+<em>"passing_types"</em>, <em>"gca"</em>, <em>"defense"</em>, <em>"possession"</em>
+<em>"playing_time"</em>, <em>"misc"</em>, <em>"keeper"</em>, <em>"keeper_adv"</em></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>returns a dataframe of all players of a team's season stats
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+try({
+fb_team_player_stats("https://fbref.com/en/squads/d6a369a2/Fleetwood-Town-Stats",
+                       stat_type = 'standard')
+
+league_url &lt;- fb_league_urls(country = "ENG", gender = "M",
+                                             season_end_year = 2022, tier = "3rd")
+team_urls &lt;- fb_teams_urls(league_url)
+multiple_playing_time &lt;- fb_team_player_stats(team_urls,
+                         stat_type = "playing_time")
+})
+
+## End(Not run)
+</code></pre>
+
+
+</div>

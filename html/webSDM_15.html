@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>predict.trophicSDMfit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Computes predicted values from the fitted trophicSDMfit model</h2>
+
+<h3>Description</h3>
+
+<p>Computes predicted values from the fitted trophicSDMfit model at environmental conditions specified by <code>Xnew</code>. Once predictions have been obtained, their quality can eventually be evaluated with <code>evaluateModelFit()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'trophicSDMfit'
+predict(
+  object,
+  Xnew = NULL,
+  prob.cov = FALSE,
+  pred_samples = NULL,
+  run.parallel = FALSE,
+  verbose = FALSE,
+  fullPost = TRUE,
+  filter.table = NULL,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>object</code></td>
+<td>
+<p>A trophicSDMfit object obtained with trophicSDM()</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Xnew</code></td>
+<td>
+<p>a matrix specifying the environmental covariates for the predictions to be made. If NULL (default), predictions are done on the training dataset (e.g. by setting Xnew = tSDM$data$X).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prob.cov</code></td>
+<td>
+<p>Parameter to predict with trophicSDM with presence-absence data. Whether to use predicted probability of presence (prob.cov = T) or the transformed presence-absences (default, prov.cov = F) to predict species distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pred_samples</code></td>
+<td>
+<p>Number of samples to draw from species posterior predictive distribution when method = "stan_glm". If NULL, set by the default to the number of iterations/10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>run.parallel</code></td>
+<td>
+<p>Whether to use parallelise code when possible. Can speed up computation time.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>Whether to print advances of the algorithm</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fullPost</code></td>
+<td>
+<p>Optional parameter for stan_glm only. Whether to give back the full posterior predictive distribution (default, fullPost = TRUE) or just the posterior mean, and 2.5% and 97.5% quantiles,</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.table</code></td>
+<td>
+<p>Optional, default to NULL, should be provided only if the users wants to filter some species predictions. A sites x species matrix of zeros and ones.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>additional arguments</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing for each species the predicted value at each sites. If method = "stan_glm", then each element of the list is a sites x pred_samples matrix containing the posterior predictive distribution of the species at each sites.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Giovanni Poggiato and Jérémy Andréoletti
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(Y, X, G)
+# define abiotic part of the model
+env.formula = "~ X_1 + X_2"
+# Run the model with bottom-up control using stan_glm as fitting method and no penalisation
+# (set iter = 1000 to obtain reliable results)
+m = trophicSDM(Y, X, G, env.formula, iter = 50,
+               family = binomial(link = "logit"), penal = NULL, 
+               mode = "prey", method = "stan_glm")
+# We can now evaluate species probabilities of presence for the environmental conditions c(0.5, 0.5)
+predict(m, Xnew = data.frame(X_1 = 0.5, X_2 = 0.5))
+# Obtain 50 draws from the posterior predictive distribution of species (pred_samples = 10)
+# using predicted presence-absences of species to predict their predators (prob.cov = TRUE)
+# Since we don't specify Xnew, the function sets Xnew = X by default
+Ypred = predict(m, fullPost = TRUE, pred_samples = 10, prob.cov = FALSE)
+# We can ask the function to only give back posterior mean and 95% credible intervals with
+# fullPost = F
+
+Ypred = predict(m, fullPost = TRUE, pred_samples = 30, prob.cov = FALSE)
+
+# If we fit the model using in a frequentist  way (e.g. glm)
+m = trophicSDM(Y, X, G, env.formula, 
+               family = binomial(link = "logit"), penal = NULL, 
+               mode = "prey", method = "glm")
+# We are obliged to set pred_samples = 1 
+# (this is done by default if pred_samples is not provided)
+# In the frequentist case, fullPost is useless.
+ Ypred = predict(m, pred_samples = 1, prob.cov = FALSE)
+</code></pre>
+
+
+</div>

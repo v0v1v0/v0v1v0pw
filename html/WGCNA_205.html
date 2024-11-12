@@ -1,0 +1,138 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>pquantile</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Parallel quantile, median, mean </h2>
+
+<h3>Description</h3>
+
+<p>Calculation of “parallel” quantiles, minima, maxima, medians, and means, across given arguments or across lists
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">pquantile(prob, ...)
+pquantile.fromList(dataList, prob)
+pmedian(...)
+pmean(..., weights = NULL)
+pmean.fromList(dataList, weights = NULL)
+pminWhich.fromList(dataList)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>prob</code></td>
+<td>
+
+<p>A single probability at which to calculate the quantile. See <code>quantile</code>. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dataList</code></td>
+<td>
+<p>A list of numeric vectors or arrays, all of the same length and dimensions, over which to
+calculate “parallel” quantiles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weights</code></td>
+<td>
+<p>Optional vector of the same length as <code>dataList</code>, giving the weights to be used in the
+weighted mean. If not given, unit weights will be used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Numeric arguments. All arguments must have the same dimensions. See details.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Given numeric arguments, say x,y,z, of equal dimensions (and length), the <code>pquantile</code> 
+calculates and returns the quantile of the first components of x,y,z, then the second components, etc.
+Similarly, <code>pmedian</code> and <code>pmean</code> calculate the median and mean, respectively.
+The funtion <code>pquantile.fromList</code> is identical to <code>pquantile</code> except that the argument
+<code>dataList</code> replaces the ... in holding the numeric vectors over which to calculate the quantiles.
+</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>pquantile, pquantile.fromList</code></td>
+<td>
+<p>A vector or array containing quantiles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pmean, pmean.fromList</code></td>
+<td>
+<p>A vector or array containing means. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pmedian</code></td>
+<td>
+<p>A vector or array containing  medians.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pminWhich.fromList</code></td>
+<td>
+<p>A list with two components: <code>min</code> gives the minima, <code>which</code> gives the
+indices of the elements that are the minima.</p>
+</td>
+</tr>
+</table>
+<p>Dimensions are copied from dimensions of the input arguments.
+If any of the input variables have <code>dimnames</code>, the first non-NULL dimnames are copied into the output.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder and Steve Horvath
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>quantile</code>, <code>median</code>, <code>mean</code> for the underlying statistics.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Generate 2 simple matrices
+a = matrix(c(1:12), 3, 4);
+b = a+ 1;
+c = a + 2;
+
+# Set the colnames on matrix a
+
+colnames(a) = spaste("col_", c(1:4));
+
+# Example use
+
+pquantile(prob = 0.5, a, b, c)
+
+pmean(a,b,c)
+pmedian(a,b,c)
+
+</code></pre>
+
+
+</div>

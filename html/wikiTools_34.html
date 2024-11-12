@@ -1,0 +1,88 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>w_Geoloc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get Latitude and Longitude coordinates, and Country of places</h2>
+
+<h3>Description</h3>
+
+<p>Get Latitude and Longitude coordinates of the Wikidata entities which are
+places. Also the countries they belong are returned.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">w_Geoloc(entity_list, langsorder = "", nlimit = 1000, debug = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>entity_list</code></td>
+<td>
+<p>A vector with de Wikidata entities (places).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>langsorder</code></td>
+<td>
+<p>Order of languages in which the information will be
+returned, separated with '|'. If no information is given in the first
+language, next is used. If langsorder==”, then labels or descriptions
+are not returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlimit</code></td>
+<td>
+<p>If the number of entities exceeds this number, chunked queries
+are done. This is the number of entities requested in each chunk. Please,
+reduce the default value if error is raised.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>For debugging purposes (default FALSE). If debug='info'
+information about chunked queries is shown. If debug='query' also the query
+launched is shown.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A data-frame with 'entity', label, Latitude and Longitude, country
+and label of the country.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Angel Zazo, Department of Computer Science and Automatics, University of Salamanca
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+w_Geoloc(c("Q57860", "Q90", "Q15695"), langsorder="")
+w_Geoloc(c("Q57860", "Q90", "Q15695"), langsorder="se") # Note label of place for Q15695
+w_Geoloc(c("Q57860", "Q90", "Q15695"), langsorder="se|fr")
+df &lt;- w_SearchByOccupation(Qoc='Q2306091') # aprox. 20000
+l &lt;- df$entity
+# Get birth-place (P19)
+p &lt;- w_Property(l, Pproperty = 'P19', includeQ=TRUE, langsorder='es|en', debug='info')
+# Filter entities that have places
+places &lt;- p[grepl("^Q\\d+$", p$P19), ]$P19
+g &lt;- w_Geoloc(places, langsorder='en|es', debug='info')
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>phenoAmp</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Phenological amplitude</h2>
+
+<h3>Description</h3>
+
+<p>Finds various measures of the amplitude of the annual cycle, or of some
+specified season range.
+</p>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A seasonal time series, or a class <code>zoo</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>season.range</code></td>
+<td>
+<p>A vector of two numbers specifying the season range to
+be considered.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>phenoAmp</code> gives three measures of the amplitude of a seasonal cycle:
+the range, the variance, and the median absolute deviation, along with the
+mean and median to allow calculation of other statistics as well.
+</p>
+<p>These measures can be restricted to a subset of the year by giving the
+desired range of season numbers. This can be useful for isolating measures
+of, say, the spring and autumn phytoplankton blooms in temperate waters. In
+the case of a monthly time series, for example, a non-missing value is
+required for every month or the result will be <code>NA</code>, so using a period
+shorter than one year can also help avoid any months that are typically not
+covered by the sampling program. Similarly, in the case of dated
+observations, a shorter period can help avoid times of sparse data. The
+method for time series allows for other than monthly frequencies, but
+<code>season.range</code> is always interpreted as months for <code>zoo</code> objects.
+</p>
+<p>Note that the amplitude is sensitive to the number of samples for small
+numbers. This could be a problem for <code>zoo</code> objects if the sample number
+is changing greatly from year to year, depending on the amplitude measure
+and the underlying data distribution. So use <code>ts</code> objects or make sure
+that the sample number stays more or less the same over time.
+</p>
+<p><code>tsMake</code> can be used to produce <code>ts</code> and <code>zoo</code> objects
+suitable as arguments to this function.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix of class <code>ts</code> or <code>zoo</code> with individual series for
+the range, variance, median absolute deviation, mean, median and – in the
+case of <code>zoo</code> objects – number of samples.
+</p>
+
+
+<h3>References</h3>
+
+<p>Cloern, J.E. and Jassby, A.D. (2008) Complex seasonal patterns
+of primary producers at the land-sea interface. <em>Ecology Letters</em>
+<b>11,</b> 1294–1303.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>phenoPhase</code>, <code>tsMake</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+y &lt;- sfbayChla[, "s27"]
+phenoAmp(y) # entire year
+# i.e., Jan-Jun only, which yields results for more years
+phenoAmp(y, c(1, 6))
+
+</code></pre>
+
+
+</div>

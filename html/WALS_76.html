@@ -1,0 +1,465 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>walsNBfit</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Fitter function for Weighted Average Least Squares estimation of NB2 regression model</h2>
+
+<h3>Description</h3>
+
+<p>Workhorse function behind <code>walsNB</code> and used internally in
+<code>walsNBfitIterate</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">walsNBfit(
+  X1,
+  X2,
+  y,
+  betaStart1,
+  betaStart2,
+  rhoStart,
+  family,
+  prior,
+  method = c("fullSVD", "original"),
+  svdTol = .Machine$double.eps,
+  svdRtol = 1e-06,
+  keepUn = FALSE,
+  keepR = FALSE,
+  eigenSVD = TRUE,
+  postmult = TRUE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X1</code></td>
+<td>
+<p>Design matrix for focus regressors. Usually includes a constant
+(column full of 1s) and can be generated using <code>model.matrix</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X2</code></td>
+<td>
+<p>Design matrix for auxiliary regressors. Usually does not include
+a constant column and can also be generated using <code>model.matrix</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>Count response as vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>betaStart1</code></td>
+<td>
+<p>Starting values for coefficients of focus regressors X1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>betaStart2</code></td>
+<td>
+<p>Starting values for coefficients of auxiliary regressors X2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rhoStart</code></td>
+<td>
+<p>Starting value for log-dispersion parameter of NB2</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>Object of class <code>"familyNBWALS"</code>. Currently only supports
+<code>negbinWALS</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior</code></td>
+<td>
+<p>Object of class <code>"familyPrior"</code>. For example
+<code>weibull</code> or <code>laplace</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Specifies method used. Available methods are <code>"fullSVD"</code>
+(default) or <code>"original"</code>. See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>svdTol</code></td>
+<td>
+<p>Tolerance for rank of matrix <code class="reqn">\bar{Z}_{1}</code> and <code class="reqn">\bar{Z}</code>.
+Only used if <code>method = "fullSVD"</code>.
+Checks if smallest eigenvalue in SVD of <code class="reqn">\bar{Z}_1</code> and <code class="reqn">\bar{Z}</code>
+is larger than <code>svdTol</code>, otherwise reports a rank deficiency.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>svdRtol</code></td>
+<td>
+<p>Relative tolerance for rank of matrix <code class="reqn">\bar{Z}_{1}</code> and <code class="reqn">\bar{Z}</code>.
+Only used if <code>method = "fullSVD"</code>. Checks if ratio of largest to smallest
+eigenvalue in SVD of <code class="reqn">\bar{Z}_1</code> and <code class="reqn">\bar{Z}</code> is larger than
+<code>svdRtol</code>, otherwise reports a rank deficiency.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepUn</code></td>
+<td>
+<p>If <code>TRUE</code>, keeps the one-step ML estimators of the
+unrestricted model, i.e. <code class="reqn">\tilde{\gamma}_{u}</code> and <code class="reqn">\tilde{\beta}_{u}</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keepR</code></td>
+<td>
+<p>If <code>TRUE</code>, keeps the one-step ML estimators of the fully
+restricted model, i.e. <code class="reqn">\tilde{\gamma}_{r}</code> and <code class="reqn">\tilde{\beta}_{r}</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eigenSVD</code></td>
+<td>
+<p>If <code>TRUE</code>, then <code>semiorthogonalize()</code> uses <code>svd()</code>
+to compute the eigendecomposition of <code class="reqn">\bar{\Xi}</code> instead of <code>eigen()</code>.
+In this case, the tolerances of <code>svdTol</code> and <code>svdRtol</code> are used to
+determine whether <code class="reqn">\bar{\Xi}</code> is of full rank (need it for <code class="reqn">\bar{\Xi}^{-1/2}</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>postmult</code></td>
+<td>
+<p>If <code>TRUE</code> (default), then it computes
+</p>
+<p style="text-align: center;"><code class="reqn">\bar{Z}_{2} = \bar{X}_{2} \bar{\Delta}_{2} \bar{T} \bar{\Lambda}^{-1/2} \bar{T}^{\top},</code>
+</p>
+
+<p>where <code class="reqn">\bar{T}</code> contains the eigenvectors and <code class="reqn">\bar{\Lambda}</code> the
+eigenvalues from the eigenvalue decomposition
+</p>
+<p style="text-align: center;"><code class="reqn">\bar{\Xi} = \bar{T} \bar{\Lambda} \bar{T}^{\top},</code>
+</p>
+
+<p>instead of
+</p>
+<p style="text-align: center;"><code class="reqn">\bar{Z}_{2} = \bar{X}_{2} \bar{\Delta}_{2} \bar{T} \bar{\Lambda}^{-1/2}.</code>
+</p>
+
+<p>See Huynh (2024b) for more details. The latter is used
+in the original MATLAB code for WALS in the linear regression model,
+see eq. (12) of Magnus and De Luca (2016).
+The first form is required in eq. (9) of De Luca et al. (2018).
+<strong>Thus, it is not recommended to set <code>postmult = FALSE</code>.</strong></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments for internal function <code>computePosterior</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The method to be specified in <code>method</code> mainly differ in the way
+they compute the fully restricted and unrestricted estimators for the
+transformed regressors <code class="reqn">Z</code>, i.e. <code class="reqn">\tilde{\gamma}_{1r}</code>,
+and <code class="reqn">\tilde{\gamma}_{u}</code>.
+</p>
+
+<dl>
+<dt>"fullSVD"</dt>
+<dd>
+<p>Recommended approach. First applies an SVD to <code class="reqn">\bar{Z}_{1}</code>
+to compute <code class="reqn">\bar{X}_{2}^{\top} \bar{M}_{1} \bar{X}_{2}</code>:
+It is used for computing the inverse of
+</p>
+<p style="text-align: center;"><code class="reqn">\bar{X}_{1}^{\top}\bar{X}_{1}
+ + \bar{g} \bar{\epsilon} X_{1}^{\top}\bar{q} \bar{q}^{\top} X_{1},</code>
+</p>
+
+<p>when using the Sherman-Morrison-Woodbury formula. We further leverage the
+SVD of <code class="reqn">\bar{Z}_1</code> and additionally <code class="reqn">\bar{Z}</code> to compute the
+unrestricted estimator <code class="reqn">\tilde{\gamma}_{u}</code> and the fully restricted
+estimator <code class="reqn">\tilde{\gamma}_{r}</code>. For <code class="reqn">\tilde{\gamma}_{u}</code>, we simply
+use the SVD of <code class="reqn">\bar{Z}</code> to solve the full equation system derived from
+the one-step ML problem for more details. The SVD of <code class="reqn">\bar{Z}_1</code> is further
+used in computing the model averaged estimator for the focus regressors
+<code class="reqn">\hat{\gamma}_1</code>.
+</p>
+<p>Described in more detail in the appendix of Huynh (2024b).</p>
+</dd>
+<dt>"original"</dt>
+<dd>
+<p>Computes all inverses directly using <code>solve</code>
+and does not make use of the Sherman-Morrison-Woodbury formula for certain
+inverses. Specifically, it directly inverts the matrix
+<code class="reqn">\bar{Z}_{1}^{\top} \bar{Z}_{1}</code> using <code>solve</code>
+in order to compute <code class="reqn">\bar{M}_1</code>. Moreover, it computes the fully
+unrestricted estimators of the focus regressors
+<code class="reqn">\tilde{\gamma}_{1u}</code> and of the auxiliary regressors
+<code class="reqn">\tilde{\gamma}_{2u}</code> and the fully restricted estimator
+<code class="reqn">\tilde{\gamma}_{1r}</code> by directly implementing the formulas derived
+in Huynh (2024a).
+This method should only be used as reference and for easier
+debugging.</p>
+</dd>
+</dl>
+<p>All variables in the code that contain "start" in their name are computed
+using the starting values of the one-step ML estimators. See section
+"One-step ML estimator" of (Huynh 2024a) for details.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>coef</code></td>
+<td>
+<p>Model averaged estimates of all coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta1</code></td>
+<td>
+<p>Model averaged estimates of the coefficients of the focus regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>beta2</code></td>
+<td>
+<p>Model averaged estimates of the coefficients of the auxiliary regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rho</code></td>
+<td>
+<p>Model averaged estimate of the log-dispersion parameter of the
+NB2 distribution.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma1</code></td>
+<td>
+<p>Model averaged estimates of the coefficients of the transformed
+focus regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma2</code></td>
+<td>
+<p>Model averaged estimates of the coefficients of the transformed
+auxiliary regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>condition</code></td>
+<td>
+<p>Condition number of the matrix
+<code class="reqn">\bar{\Xi} = \bar{\Delta}_{2} \bar{X}_{2}^{\top} \bar{M}_{1} \bar{X}_{2} \bar{\Delta}_{2}</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vcovBeta</code></td>
+<td>
+<p><code>NULL</code>, not implemented yet, placeholder for estimated
+covariance matrix of the regression coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>vcovGamma</code></td>
+<td>
+<p><code>NULL</code>, not implemented yet, placeholder for estimated
+covariance matrix of the coefficients of the transformed regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>betaStart</code></td>
+<td>
+<p>Starting values of the regression coefficients for the
+one-step ML estimators.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rhoStart</code></td>
+<td>
+<p>Starting values of the dispersion parameter for the
+one-step ML estimators.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Stores <code>method</code> used from the arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prior</code></td>
+<td>
+<p><code>familyPrior</code>. The <code>prior</code> specified in the arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>betaUn1</code></td>
+<td>
+<p>If <code>keepUn = TRUE</code>, contains the unrestricted one-step ML
+estimators of the coefficients of the focus regressors. Else <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>betaUn2</code></td>
+<td>
+<p>If <code>keepUn = TRUE</code>, contains the unrestricted one-step ML
+estimators of the coefficients of the auxiliary regressors. Else <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gammaUn1</code></td>
+<td>
+<p>If <code>keepUn = TRUE</code>, contains the unrestricted one-step ML
+estimators of the coefficients of the transformed focus regressors. Else <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gammaUn2</code></td>
+<td>
+<p>If <code>keepUn = TRUE</code>, contains the unrestricted one-step ML
+estimators of the coefficients of the transformed auxiliary regressors. Else <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gamma1r</code></td>
+<td>
+<p>If <code>keepR = TRUE</code>, contains the fully restricted one-step
+ML estimator for the transformed regressors (only focus regressors).
+Else <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k1</code></td>
+<td>
+<p>Number of focus regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>k2</code></td>
+<td>
+<p>Number of auxiliary regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>Number of observations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X1names</code></td>
+<td>
+<p>Names of the focus regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>X2names</code></td>
+<td>
+<p>Names of the auxiliary regressors.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>familyStart</code></td>
+<td>
+<p>The family object of class <code>"familyNBWALS"</code> used for the
+estimation of the starting values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family</code></td>
+<td>
+<p>The family object of class <code>"familyNBWALS"</code> used later for predictions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitted.link</code></td>
+<td>
+<p>Linear link fitted to the data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fitted.values</code></td>
+<td>
+<p>Estimated conditional mean for the data. Lives on the
+scale of the response.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>De Luca G, Magnus JR, Peracchi F (2018).
+“Weighted-average least squares estimation of generalized linear models.”
+<em>Journal of Econometrics</em>, <b>204</b>(1), 1–17.
+<a href="https://doi.org/10.1016/j.jeconom.2017.12.007">doi:10.1016/j.jeconom.2017.12.007</a>.<br><br> Huynh K (2024a).
+“Weighted-Average Least Squares for Negative Binomial Regression.”
+arXiv 2404.11324, arXiv.org E-Print Archive.
+<a href="https://doi.org/10.48550/arXiv.2404.11324">doi:10.48550/arXiv.2404.11324</a>.<br><br> Huynh K (2024b).
+“WALS: Weighted-Average Least Squares Model Averaging in R.”
+University of Basel.
+Mimeo.<br><br> Magnus JR, De Luca G (2016).
+“Weighted-average least squares (WALS): A survey.”
+<em>Journal of Economic Surveys</em>, <b>30</b>(1), 117-148.
+<a href="https://doi.org/10.1111/joes.12094">doi:10.1111/joes.12094</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>walsNB, walsNBfitIterate.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data("NMES1988", package = "AER")
+NMES1988 &lt;- na.omit(NMES1988)
+form &lt;- (visits ~ health + chronic + age + insurance + adl + region + gender
+         + married + income + school + employed)
+X &lt;- model.matrix(form, data = NMES1988)
+focus &lt;- c("(Intercept)", "healthpoor", "healthexcellent", "chronic", "age",
+        "insuranceyes")
+aux &lt;- c("adllimited", "regionnortheast", "regionmidwest", "regionwest",
+         "gendermale", "marriedyes", "income", "school", "employedyes")
+X1 &lt;- X[, focus]
+X2 &lt;- X[, aux]
+y &lt;- NMES1988$visits
+
+# starting values from glm.nb() from MASS
+startFit &lt;- MASS::glm.nb(y ~ X[,-1])
+betaStart &lt;- coef(startFit)
+rhoStart &lt;- startFit$theta
+k1 &lt;- ncol(X1)
+k2 &lt;- ncol(X2)
+
+str(walsNBfit(X1, X2, y, rhoStart, family = negbinWALS(scale = rhoStart, link = "log"),
+              betaStart1 = betaStart[1:k1],
+              betaStart2 = betaStart[(k1 + 1):(k1 + k2)],
+              prior = weibull(), method = "fullSVD"))
+
+</code></pre>
+
+
+</div>

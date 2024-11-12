@@ -1,0 +1,89 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wpstCLASS</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Predict values using new time series values via a non-decimated wavelet packet
+discrimination object.
+</h2>
+
+<h3>Description</h3>
+
+<p>Given a timeseries (<code>timeseries</code>) and another time series
+of categorical values (<code>groups</code>) the <code>makewpstDO</code> produces
+a model that permits discrimination of the <code>groups</code> series using
+a discriminant analysis based on a restricted set of non-decimated
+wavelet packet coefficients of <code>timeseries</code>. The current function
+enables new <code>timeseries</code> data, to be used in conjunction with
+the model to generate new, predicted, values of the <code>groups</code> time series.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wpstCLASS(newTS, wpstDO)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>newTS</code></td>
+<td>
+<p>A new segment of time series values, of the same time series
+that was used as the dependent variable used to construct the
+wpstDO object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wpstDO</code></td>
+<td>
+<p>An object that uses values of a dependent time series to
+build a discriminatory model of a groups time series. Output
+from the <code>makewpstDO</code> function</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function performs the same nondecimated wavelet packet (NDWPT) transform
+of the <code>newTS</code> data that was used to analyse the original <code>timeseries</code>
+and the details of this transform are stored within the <code>wpstDO</code>
+object. Then, using information that was recorded in <code>wpstDO</code>
+the packets with the same level/index are extracted from the new NDWPT 
+and formed into a matrix. Then the linear discriminant variables,
+again stored in <code>wpstDO</code> are used to form predictors of the
+original <code>groups</code> time series, ie new values of <code>groups</code>
+that correspond to the new values of <code>timeseries</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The prediction using the usual R <code>predict.lda</code> function. The
+predicted values are stored in the <code>class</code> component of that list.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>See Also</h3>
+
+<p><code>makewpstDO</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# See example at the end of help page for makewpstDO
+#
+</code></pre>
+
+
+</div>

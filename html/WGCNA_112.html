@@ -1,0 +1,118 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>hierarchicalConsensusMEDissimilarity</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Hierarchical consensus calculation of module eigengene dissimilarity
+</h2>
+
+<h3>Description</h3>
+
+<p>Hierarchical consensus calculation of module eigengene dissimilarities, or more generally, correlation-based
+dissimilarities of sets of vectors.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">hierarchicalConsensusMEDissimilarity(
+   MEs, 
+   networkOptions, 
+   consensusTree, 
+   greyName = "ME0", 
+   calibrate = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>MEs</code></td>
+<td>
+
+<p>A <code>multiData</code> structure containing vectors (usually module eigengenes) whose consensus
+dissimilarity is to be calculated.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkOptions</code></td>
+<td>
+
+<p>A <code>multiData</code> structure containing, for each input data set, a list of class <code>NetworkOptions</code> giving options for network calculation for all of the networks.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>consensusTree</code></td>
+<td>
+
+<p>A list specifying the consensus calculation. See details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>greyName</code></td>
+<td>
+
+<p>Name of the "grey" module eigengene. Currently not used.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>calibrate</code></td>
+<td>
+
+<p>Logical: should the dissimilarities be calibrated using the calibration method specified in
+<code>consensusTree</code>? See details.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function first calculates the similarities of the ME vectors from their correlations, using the appropriate
+options in <code>networkOptions</code> (correlation type and options, signed or unsigned dissimilarity etc). This
+results in a similarity matrix in each of the input data sets. 
+</p>
+<p>Next, a hierarchical consensus of the similarities is calculated via a call to
+<code>hierarchicalConsensusCalculation</code>, using the consensus specification and
+options in <code>consensusTree</code>. In typical use, <code>consensusTree</code> contains the same consensus
+specification as the consensus network calculation that gave rise to the consensus modules whose eigengenes
+are contained in <code>MEs</code> but this is not mandatory.
+</p>
+<p>The argument <code>consensusTree</code> should have the following components: (1) <code>inputs</code> must be either a
+character vector whose components match <code>names(inputData)</code>, or consensus trees in the own right.
+(2) <code>consensusOptions</code> must be a list of class <code>"ConsensusOptions"</code> that specifies options for
+calculating the consensus. A suitable set of options can be obtained by calling
+<code>newConsensusOptions</code>. (3) Optionally, the component <code>analysisName</code> can be a single
+character string giving the name for the analysis. When intermediate results are returned, they are returned
+in a list whose names will be set from <code>analysisName</code> components, if they exist.
+</p>
+<p>In the final step, the consensus similarity is turned into a dissimilarity by subtracting it from 1.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix with rows and columns corresponding to the variables (modules) in MEs, containing the consensus
+dissimilarities. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>hierarchicalConsensusCalculation</code> for the actual consensus calculation.
+</p>
+
+
+</div>

@@ -1,0 +1,149 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ShadowHist</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plot a Shadow Histogram Plot</h2>
+
+<h3>Description</h3>
+
+<p>Plot a histogram of a continuous variable <code>xvar</code>,
+faceted on a categorical conditioning variable, <code>condvar</code>. Each faceted plot
+also shows a "shadow plot" of the unconditioned histogram for comparison.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ShadowHist(
+  frm,
+  xvar,
+  condvar,
+  title,
+  ...,
+  ncol = 1,
+  monochrome = FALSE,
+  palette = "Dark2",
+  fillcolor = "darkblue",
+  bins = 30,
+  binwidth = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>frm</code></td>
+<td>
+<p>data frame to get values from.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xvar</code></td>
+<td>
+<p>name of the primary continuous variable</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>condvar</code></td>
+<td>
+<p>name of conditioning variable (categorical variable, controls faceting).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>title</code></td>
+<td>
+<p>title to place on plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>no unnamed argument, added to force named binding of later arguments.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ncol</code></td>
+<td>
+<p>numeric: number of columns in facet_wrap.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>monochrome</code></td>
+<td>
+<p>logical: if TRUE, all facets filled with same color</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>palette</code></td>
+<td>
+<p>character: if monochrome==FALSE, name of brewer color palette (can be NULL)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fillcolor</code></td>
+<td>
+<p>character: if monochrome==TRUE, name of fill color</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bins</code></td>
+<td>
+<p>number of bins. Defaults to thirty.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>binwidth</code></td>
+<td>
+<p>width of the bins. Overrides bins.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Currently supports only the <code>bins</code> and <code>binwidth</code> arguments (see <code>geom_histogram</code>),
+but not the <code>center</code>, <code>boundary</code>, or <code>breaks</code> arguments.
+</p>
+<p>By default, the facet plots are arranged in a single column. This can be changed
+with the optional <code>ncol</code> argument.
+</p>
+<p>If <code>palette</code> is NULL, and <code>monochrome</code> is FALSE, plot colors will be chosen from the default ggplot2 palette. Setting <code>palette</code> to NULL
+allows the user to choose a non-Brewer palette, for example with <code>scale_fill_manual</code>.
+For consistency with previous releases, <code>ShadowHist</code> defaults to <code>monochrome = FALSE</code>, while
+<code>ShadowPlot</code> defaults to <code>monochrome = TRUE</code>.
+</p>
+<p>Please see here for some interesting discussion <a href="https://drsimonj.svbtle.com/plotting-background-data-for-groups-with-ggplot2">https://drsimonj.svbtle.com/plotting-background-data-for-groups-with-ggplot2</a>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>a ggplot2 histogram plot
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+if (requireNamespace('data.table', quietly = TRUE)) {
+	# don't multi-thread during CRAN checks
+		data.table::setDTthreads(1)
+}
+
+ShadowHist(iris, "Petal.Length", "Species",
+           title = "Petal Length distribution by Species")
+
+if (FALSE) {
+# make all the facets the same color
+ShadowHist(iris, "Petal.Length", "Species",
+           monochrome=TRUE,
+           title = "Petal Length distribution by Species")
+}
+
+</code></pre>
+
+
+</div>

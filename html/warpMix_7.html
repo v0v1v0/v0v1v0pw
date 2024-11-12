@@ -1,0 +1,134 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>warpMix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimate the non linear mixed effect functional model.</h2>
+
+<h3>Description</h3>
+
+<p>This function returns estimates of parameters in the
+non linear functional mixed-effect model defined to warp
+data and estimate the underlying model with mixed effect.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">warpMix(t, y, baseMu, baseU, baseW, sigmaEpsilonTilde = 10^-3,
+  threshold = 10^-3, nIte = 100)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>t</code></td>
+<td>
+<p>A vector of numbers, corresponding to time points.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>A matrix of numbers, corresponding to observations (size: T * n).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>baseMu</code></td>
+<td>
+<p>A B-spline used to decompose the global mean.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>baseU</code></td>
+<td>
+<p>A B-spline used to decompose the individual effects.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>baseW</code></td>
+<td>
+<p>A B-spline used to decompose the warping functions.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigmaEpsilonTilde</code></td>
+<td>
+<p>A number, defining the variance of the noise in the linear mixed-
+effect model fitted on the warping parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>A number, defining the threshold of convergence.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nIte</code></td>
+<td>
+<p>Maximum number of iterations</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Notice that the warping parameters are considered as random effects.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list, with fonct, functional quantities (indCurvAlign
+the individual aligned curves, warping the warping functions and theta,
+the warping parameters), para the estimates of parameters (alphaMu,
+sigmaU,theta0, sigmaTheta, sigmaEpsHat), dist the criterion computed to
+reach the convergence, and others other values (successAlphaMu,
+initTheta, initPara, CPUtime).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">T = seq(0.5,0.841,length.out = 9)
+n = 10
+t = c(qnorm(T),1)
+mu = cos(2*pi*t+pi/2)
+library(fda)
+baseMu = create.bspline.basis(c(0,max(t)), norder = 2, breaks = seq(0,1,0.5))
+splineBasisMu = eval.basis(t,baseMu)
+alphaMu = Data2fd(mu,argvals = t, baseMu)$coef
+muApprox = (splineBasisMu) %*% alphaMu
+baseU = create.bspline.basis(c(0,max(t)),norder = 2, breaks = seq(0,1,0.5))
+mU = baseU$nbasis
+sigmaU = diag(0.1,mU)
+library(MASS)
+alphaU = t(mvrnorm(n,rep(0,mU),sigmaU))
+splineBasisU = eval.basis(t,baseU)
+U = splineBasisU %*% alphaU
+epsilon = t(mvrnorm(n,rep(0,length(t)),0.01 * diag(1,length(t))))
+X = as.vector(muApprox) + U + epsilon
+baseW = create.bspline.basis(c(0,max(t)), norder = 2, breaks = c(0,0.6,1))
+mW = baseW$nbasis
+splineBasisW = eval.basis(t,baseW)
+theta = t(mvrnorm(n,rep(0,mW),diag(0.1,mW + 1e-3 * diag(1,mW))))
+wtheta = matrix(rep(0,n*length(t)),ncol = n)
+for (i in c(1:n)){
+ wtheta[,i] = warpTimeFunction(splineBasisW,theta[,i],t)$warpTime
+}
+Y = matrix(0, nrow = length(t), ncol = n)
+for (i in c(1:n)){
+ y = approxfun(wtheta[,i],X[,i])
+ Y[,i] = y(t)
+}
+warpMix(t,Y,baseMu, baseU, baseW, nIte = 2)
+
+
+
+</code></pre>
+
+
+</div>

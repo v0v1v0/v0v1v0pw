@@ -1,0 +1,128 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plot.eval.similarity.correlation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Printing and Plotting Similarity Correlation Evaluation Results (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>Suitable printing and visualization of evaluation results from <code>eval.similarity.correlation</code>.
+The <code>print</code> method displays an evaluation summary (stored in attribute <code>"eval.result"</code>) after the full data frame.
+The <code>plot</code> method displays a scatterplot of gold standard ratings against DSM distances with optional
+regression line (<code>lowess</code>), a summary of evaluation results at the top, and various other formatting options.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">  ## S3 method for class 'eval.similarity.correlation'
+print(x, ...)
+  
+  ## S3 method for class 'eval.similarity.correlation'
+plot(x, y, line = TRUE,
+     categories = NULL, cat.col = NA, cat.legend = "bottomleft",
+     pch = 20, cex = 1, xlim = NULL, ylim = NULL,
+     xlab = "human rating", ylab = "distributional model",
+     main = attr(x, "taskname"), ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>detailed evaluation report from <code>eval.similarity.correlation</code> (with <code>details=TRUE</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>unused, must not be specified</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>line</code></td>
+<td>
+<p>if <code>TRUE</code>, a non-linear regression line is added to the plot in order to indicate the precise relationship between gold standard ratings and DSM distances (based on the <code>lowess</code> smoother)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>categories</code></td>
+<td>
+<p>a factor with one entry for each word pair in the evaluation task.
+If specified, points in the scatterplot are colour-coded according to the categories of the corresponding word pairs.
+Note that <code>categories</code> is evaluated within the data frame <code>x</code>, so any column of <code>x</code>
+can directly be used as a variable.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cat.col</code></td>
+<td>
+<p>a vector of colours to be used for the different categories (defaults to the standard palette built into <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cat.legend</code></td>
+<td>
+<p>corner of the plot in which to display the legend box for category colours</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pch, cex</code></td>
+<td>
+<p>symbol used for plotting and its size</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlim, ylim</code></td>
+<td>
+<p>range of values shown on the x-axis and y-axis, respectively</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab, ylab, main</code></td>
+<td>
+<p>axis labels and main title of the plot</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>all other arguments are passed to the scatterplot function (<code>plot.default</code>) and can be used to set additional graphics parameters</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Word pairs not found in the DSM are always shown as empty boxes in the scatterplot, regardless of the <code>pch</code> parameter.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+<h3>See Also</h3>
+
+<p><code>eval.similarity.correlation</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+plot(eval.similarity.correlation(WordSim353, DSM_Vectors, details=TRUE))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

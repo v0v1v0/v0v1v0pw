@@ -1,0 +1,295 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>clust</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Detection and description of clusters of synchronous locations</h2>
+
+<h3>Description</h3>
+
+<p>Generator function for the <code>clust</code> S3 class, which supports tools for detecting clusters
+(aka, modules, sub-networks, communities, etc.) of especially synchronous locations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">clust(
+  dat,
+  times,
+  coords,
+  method,
+  tsrange = c(0, Inf),
+  nsurrogs = 1000,
+  scale.min = 2,
+  scale.max.input = NULL,
+  sigma = 1.05,
+  f0 = 1,
+  weighted = TRUE,
+  sigthresh = 0.95
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>A locations (rows) x time (columns) matrix of measurements</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>times</code></td>
+<td>
+<p>The times at which measurements were made, spacing 1</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coords</code></td>
+<td>
+<p>A data frame containing X,Y coordinates of locations in <code>data</code>, with column
+names either <code>X</code> and <code>Y</code> or <code>lon</code> and <code>lat</code> or <code>longitude</code> and 
+<code>latitude</code>. The data frame may contain other columns with additional metainformation 
+about the sites.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Method for synchrony calculation. See details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tsrange</code></td>
+<td>
+<p>A vector containing the min and max of the focal timescale range. Defaults 
+to all timescales that are valid given choices for scale.min, scale.max.input, f0, sigma.
+Only used for wavelet-based methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsurrogs</code></td>
+<td>
+<p>Number of surrogates for significance test. Defaults to 1000. Only used
+for surrogate-based methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.min</code></td>
+<td>
+<p>The smallest scale of fluctuation that will be examined. At least 2. Used 
+only for wavelet-based methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.max.input</code></td>
+<td>
+<p>The largest scale of fluctuation guaranteed to be examined. Only used 
+for wavelet-based methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigma</code></td>
+<td>
+<p>The ratio of each time scale examined relative to the next timescale. Should be 
+greater than 1. Only used for wavelet-based methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>f0</code></td>
+<td>
+<p>The ratio of the period of fluctuation to the width of the envelope. Only used for 
+wavelet-based methods.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>weighted</code></td>
+<td>
+<p>If <code>TRUE</code>, create a weighted network. If <code>FALSE</code>, create a binary 
+network using statistical significance. Binary networks are only allowed for networks based
+on significance.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sigthresh</code></td>
+<td>
+<p>Significance threshold needed, if <code>weighted</code> is false, for a network
+link to be realized. Typically 0.95, 0.99, or 0.999, etc. Only used if <code>weighted</code> is
+<code>FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The following values are valid for <code>method</code>: 
+<code>"pearson"</code>, <code>"pearson.sig.std"</code>, <code>"pearson.sig.fft"</code>, 
+<code>"pearson.sig.aaft"</code>, 
+<code>"spearman"</code>, <code>"spearman.sig.std"</code>, <code>"spearman.sig.fft"</code>, 
+<code>"spearman.sig.aaft"</code>, 
+<code>"kendall"</code>, <code>"kendall.sig.std"</code>, <code>"kendall.sig.fft"</code>, 
+<code>"kendall.sig.aaft"</code>, 
+<code>"ReXWT"</code>, <code>"ReXWT.sig.fft"</code>, <code>"ReXWT.sig.aaft"</code>, <code>"ReXWT.sig.fast"</code>, 
+<code>"coh"</code>, <code>"coh.sig.fft"</code>, <code>"coh.sig.aaft"</code>, <code>"coh.sig.fast"</code>,
+<code>"phasecoh"</code>, <code>"phasecoh.sig.fft"</code>, and <code>"phasecoh.sig.aaft"</code>.
+The first portions of these identifiers correspond to the Pearson, Spearman, and Kendall 
+correlations, the real part of the cross-wavelet transform, the wavelet coherence, and the 
+wavelet phase coherence. The second portions of these identifiers, when present, indicates
+that significance of the measure specified in the first portion of the identifies is to
+be used for establishing the synchrony matrix. Otherwise the value itself is used. The
+third part of the <code>method</code> identifier indicates what type of significance is used.
+</p>
+<p>Significance testing is performed using standard approaches (<code>method</code> flag containg
+<code>std</code>; for correlation coefficients, 
+although these are inappropriate for autocorrelated data), or surrogates generated using the 
+Fourier (<code>method</code> flag containing <code>"fft"</code>) or amplitude adjusted Fourier 
+surrogates (<code>"aaft"</code>). For 
+<code>"coh"</code> and <code>"ReXWT"</code>, the fast testing algorithm of Sheppard et al. (2017) is also
+implemented (<code>"fast"</code>). That method uses implicit Fourier surrogates. The choice of 
+wavelet coherence (method flag containing <code>"coh"</code>) or the real part of 
+the cross-wavelet 
+transform (method flag containing <code>"ReXWT"</code>) depends mainly 
+on treatment of out-of-phase 
+relationships. The <code>"ReXWT"</code> is more akin to a correlation coefficient in that 
+strong in-phase relationships approach 1 and strong antiphase relationships approach -1. 
+Wavelet coherence allows any phase relationship and ranges from 0 to 1. Power normalization
+is applied for <code>"coh"</code> and for <code>"ReXWT"</code>. All significance tests are one-tailed. 
+Synchrony matrices for significance-based methods when <code>weighted</code> is <code>TRUE</code> 
+contain 1 minus the p-values. 
+</p>
+<p>Clustering is performed using the the eigenvector-based modularity method of 
+Newman (2006).
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>clust</code> returns an object of class <code>clust</code>. Slots are:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat</code></td>
+<td>
+<p>The input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>times</code></td>
+<td>
+<p>The input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coords</code></td>
+<td>
+<p>The input</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>methodspecs</code></td>
+<td>
+<p>A list with elements specifying the method used, and methodological 
+parameters that were in the input.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>adj</code></td>
+<td>
+<p>The adjacency matrix that defines the synchrony network</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clusters</code></td>
+<td>
+<p>A list with one element for each successive split of the networks into 
+subcomponents carried out by the clustering algorithm. Each element is a vector of length equal
+to the number of nodes in the original network, giving cluster membership of the nodes. The 
+first element is a vector of all 1s, corresponding to before the first clustering split was
+performed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>modres</code></td>
+<td>
+<p>A list of the same length as <code>clusters</code>, with each element containing the 
+results of calling <code>modularity</code> on the network split to that level.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mns</code></td>
+<td>
+<p>Mean time series for modules. A list of the same length as <code>clusters</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wmfs</code></td>
+<td>
+<p>Wavelet mean fields for modules. <code>NA</code> when <code>clust</code> is first called, but 
+<code>addwmfs</code> causes this entry to be added. It is a list. See documentation for the method 
+<code>addwmfs</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wpmfs</code></td>
+<td>
+<p>Wavelet phasor mean fields for modules. <code>NA</code> when <code>clust</code> is first 
+called, but <code>addwpmfs</code> causes this entry to be added. It is a list. See documentation for 
+the method <code>addwpmfs</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Jonathan Walter, <a href="mailto:jaw3es@virginia.edu">jaw3es@virginia.edu</a>; Daniel Reuman, <a href="mailto:reuman@ku.edu">reuman@ku.edu</a>; 
+Lei Zhao, <a href="mailto:lei.zhao@cau.edu.cn">lei.zhao@cau.edu.cn</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Walter, J. A., et al. (2017) The geography of spatial synchrony. Ecology Letters. 
+doi: 10.1111/ele.12782
+</p>
+<p>Newman M.E.J. (2006). Finding community structure in networks using the eigenvectors of 
+matrices. Phys Rev E, 74, 036104.
+</p>
+<p>Newman M.E.J. (2006) Modularity and community structure in networks. PNAS 103, 8577-8582.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>cluseigen</code>, <code>modularity</code>, <code>addwmfs</code>, 
+<code>addwpmfs</code>,<code>clust_methods</code>, <code>synmat</code>, <code>plotmap</code>,
+<code>browseVignettes("wsyn")</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">sig&lt;-matrix(.8,5,5)
+diag(sig)&lt;-1
+lents&lt;-50
+if (requireNamespace("mvtnorm",quietly=TRUE))
+{
+  dat1&lt;-t(mvtnorm::rmvnorm(lents,mean=rep(0,5),sigma=sig))
+  dat2&lt;-t(mvtnorm::rmvnorm(lents,mean=rep(0,5),sigma=sig))
+}else
+{
+  dat1&lt;-t(matrix(rep(rnorm(lents),times=5),lents,5))
+  dat2&lt;-t(matrix(rep(rnorm(lents),times=5),lents,5))
+}
+dat&lt;-rbind(dat1,dat2)
+times&lt;-1:lents
+dat&lt;-cleandat(dat,times,clev=1)$cdat
+coords&lt;-data.frame(Y=rep(0,10),X=1:10)
+method&lt;-"coh.sig.fast"
+res&lt;-clust(dat,times,coords,method,nsurrogs = 50)
+#nsurrogs should be much higher for a real application
+
+</code></pre>
+
+
+</div>

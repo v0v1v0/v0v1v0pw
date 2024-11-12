@@ -1,0 +1,98 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>partition_tables</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Partition as set of tables into a list.</h2>
+
+<h3>Description</h3>
+
+<p>Partition a set of tables into a list of sets of tables.  Note: removes rownames.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">partition_tables(
+  tables_used,
+  partition_column,
+  ...,
+  source_usage = NULL,
+  source_limit = NULL,
+  tables = NULL,
+  env = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tables_used</code></td>
+<td>
+<p>character, names of tables to look for.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>partition_column</code></td>
+<td>
+<p>character, name of column to partition by (tables should not have NAs in this column).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>force later arguments to bind by name.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>source_usage</code></td>
+<td>
+<p>optional named map from tables_used names to sets of columns used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>source_limit</code></td>
+<td>
+<p>optional numeric scalar limit on rows wanted every source.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tables</code></td>
+<td>
+<p>named map from tables_used names to data.frames.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>env</code></td>
+<td>
+<p>environment to also look for tables named by tables_used</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>list of names maps of data.frames partitioned by partition_column.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>execute_parallel</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+d1 &lt;- data.frame(a = 1:5, g = c(1, 1, 2, 2, 2))
+d2 &lt;- data.frame(x = 1:3, g = 1:3)
+d3 &lt;- data.frame(y = 1)
+partition_tables(c("d1", "d2", "d3"), "g", tables = list(d1 = d1, d2 = d2, d3 = d3))
+
+</code></pre>
+
+
+</div>

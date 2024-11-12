@@ -1,0 +1,62 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>DSM_TermTermMatrix</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Example of a Term-Term Co-occurrence Matrix (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>This matrix is a typical example of a term-term DSM co-occurrence matrix,
+derived from the English Wikipedia.  It is available as a plain matrix in dense representation,
+and as a DSM object including marginal frequency data.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+DSM_TermTermMatrix
+
+DSM_TermTerm
+
+</code></pre>
+
+
+<h3>Format</h3>
+
+<p><code>DSM_TermTermMatrix</code> is a numeric matrix with 7 rows and 7 columns.
+</p>
+<p>Rows represent the target nouns <em>cat</em>, <em>dog</em>, <em>animal</em>, <em>time</em>, <em>reason</em>, <em>cause</em>, <em>effect</em>.
+</p>
+<p>Columns specify co-occurrence frequencies of these nouns with the words <em>breed</em>, <em>tail</em>, <em>feed</em>, <em>kill</em>, <em>important</em>, <em>explain</em> and <em>likely</em> in articles of the English Wikipedia.  Co-occurring words must appear within a distance of at most two word tokens of each other.
+</p>
+<p><code>DSM_TermTerm</code> is an object of class <code>dsm</code> based on the same co-occurrence matrix, but with additional information on marginal frequencies of the target and feature terms.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>This matrix/DSM describes the same target terms as the term-context matrix <code>DSM_TermContextMatrix</code> and corresponding DSM object <code>DSM_TermContext</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+DSM_TermTermMatrix["time", ] # row vector for target noun "time"
+
+all.equal(DSM_TermTermMatrix, head(DSM_TermTerm, Inf))
+
+## Not run: 
+plot(hclust(dist.matrix(DSM_TermTermMatrix, as.dist=TRUE)))
+
+## End(Not run)
+
+</code></pre>
+
+
+</div>

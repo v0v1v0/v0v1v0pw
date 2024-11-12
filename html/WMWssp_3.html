@@ -1,0 +1,119 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>WMWssp_minimize</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Minimizing samplesize for a given Type I and II error rate and prior information x and y</h2>
+
+<h3>Description</h3>
+
+<p>This function minimizes the sample size for a given power and type-I error rate with respect to the allocation rate t = n_1/N.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">WMWssp_minimize(x, y, alpha = 0.05, power = 0.8, simulation = FALSE,
+  nsim = 10^4)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a vector of prior information for the first group</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>a vector of prior information for the second group</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Type I error rate</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>Power to detect a relative effect based on the prior information</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>simulation</code></td>
+<td>
+<p>TRUE if a power simulation should be carried out</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nsim</code></td>
+<td>
+<p>number of simulations for the power simulation</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns an object from class WMWssp containing
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>result</code></td>
+<td>
+<p>A dataframe with the results.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>t</code></td>
+<td>
+<p>The optimal allocation rate for minimizing the sample size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>The type-I error rate which was used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>The power which was used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>The minimized sample size.</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Brunner, E., Bathke A. C. and Konietschke, F. Rank- and Pseudo-Rank Procedures in Factorial Designs - Using R and SAS. Springer Verlag. to appear.
+</p>
+<p>Happ, M., Bathke, A. C., &amp; Brunner, E. (2019). Optimal Sample Size Planning for the Wilcoxon-Mann-Whitney-Test. Statistics in medicine, 38(3), 363-375.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Prior information for the reference group
+x &lt;- c(315,375,356,374,412,418,445,403,431,410,391,475,379)
+# generate data for treatment group based on a shift effect
+y &lt;- x - 20
+
+# calculate optimal t
+ssp &lt;- WMWssp_minimize(x, y, alpha = 0.05, power = 0.8)
+summary(ssp)
+</code></pre>
+
+
+</div>

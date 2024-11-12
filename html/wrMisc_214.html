@@ -1,0 +1,122 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>readVarColumns</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Read Tabular Content Of Files With Variable Number Of Columns</h2>
+
+<h3>Description</h3>
+
+<p>Reading the content of files where the number of separators (eg tabulation) is variable poses problems with traditional methods for reding files, like  <code>read.table</code>.
+This function reads each line independently and then parses all separators therein. The first line is assumed to be column-headers.
+Finally, all data will be returned in a matrix adopted to the line with most separators and if the number of column-headers is insufficient, new (unique) column-headers will be generated.
+Thus, the lines may contain different number of elements, empty elements (ie tabular fields) will always get added to right of data read 
+and their content will be as defined by argument <code>emptyFields</code> (default <code>NA</code>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">readVarColumns(
+  fiName,
+  path = NULL,
+  sep = "\t",
+  header = TRUE,
+  emptyFields = NA,
+  refCo = NULL,
+  supNa = NULL,
+  silent = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fiName</code></td>
+<td>
+<p>(character) file-name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>(character) optional path</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sep</code></td>
+<td>
+<p>(character) separator (between columns)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>header</code></td>
+<td>
+<p>(logical) indicating whether the file contains the names of the variables as its first line.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>emptyFields</code></td>
+<td>
+<p>(<code>NA</code> or character) missing headers will be replaced by the content of 'emptyFields', if <code>NA</code> the last column-name will be re-used and a counter added</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>refCo</code></td>
+<td>
+<p>(integer) for custom choice of column to be used as row-names (default will use 1st text-column)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>supNa</code></td>
+<td>
+<p>(character) base for constructing name for columns wo names (+counter starting at 2), default column-name to left of 1st col wo colname</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Note, this functions assumes one line of header and at least one line of data !
+Note, for numeric data the comma is assumed to be US-Style (as '.').
+Note, that it is assumed, that any missing fields for the complete tabular view are missing on the right (ie at the end of line) !
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a matrix (character or numeric)
+</p>
+
+
+<h3>See Also</h3>
+
+<p>for regular 'complete' data <code>read.table</code> and its argument <code>flush</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">path1 &lt;- system.file("extdata",package="wrMisc")
+fiNa &lt;- "Names1.tsv"
+datAll &lt;- readVarColumns(fiName=file.path(path1,fiNa))
+str(datAll)
+</code></pre>
+
+
+</div>

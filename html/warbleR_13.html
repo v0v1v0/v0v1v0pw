@@ -1,0 +1,164 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>cut_sels</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Cut selections into individual sound files</h2>
+
+<h3>Description</h3>
+
+<p><code>cut_sels</code> cuts selections from a selection table into individual sound files.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">cut_sels(
+  X,
+  mar = 0.05,
+  parallel = 1,
+  path = NULL,
+  dest.path = NULL,
+  pb = TRUE,
+  labels = c("sound.files", "selec"),
+  overwrite = FALSE,
+  norm = FALSE,
+  keep.stereo = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>object of class 'selection_table', 'extended_selection_table' or data frame containing columns for sound file name (sound.files),
+selection number (selec), and start and end time of signals (start and end).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mar</code></td>
+<td>
+<p>Numeric vector of length 1. Specifies the margins adjacent to the start and end points of selections,
+delineating spectrogram limits. Default is 0.05.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Numeric. Controls whether parallel computing is applied.
+It specifies the number of cores to be used. Default is 1 (i.e. no parallel computing).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Character string containing the directory path where the sound files are located.
+If <code>NULL</code> (default) then the current working directory is used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dest.path</code></td>
+<td>
+<p>Character string containing the directory path where the cut sound files will be saved.
+If <code>NULL</code> (default) then the directory containing the sound files will be used instead.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Logical argument to control progress bar. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>labels</code></td>
+<td>
+<p>String vector. Provides the column names that will be used as labels to
+create sound file names. Note that they should provide unique names (otherwise
+sound files will be overwritten). Default is <code>c("sound.files", "selec")</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>overwrite</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> sound files with the same name will be
+overwritten. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>norm</code></td>
+<td>
+<p>Logical indicating whether wave objects must be normalized first using the function <code>normalize</code>. Additional arguments can be passed to <code>normalize</code> using '...'.' Default is <code>FALSE</code>. See <code>normalize</code> for available options.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>keep.stereo</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> both channels are kept in the clips, oterwise it will keep the channel referenced in the channel column (if supplied) or the first channel if a 'channel' column is not found in 'X'. Only applies to stereo (2-channel) files.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments to be passed to the internal <code>normalize</code> function for customizing sound file output. Ignored if  <code>norm = FALSE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function allow users to produce individual sound files from the selections
+listed in a selection table as in <code>lbh_selec_table</code>. Note that wave objects with a bit depth of 32 might not be readable by some programs after exporting. In this case they should be "normalized" (argument 'norm") with a lower bit depth. The function keeps the original number of channels in the output clips only for 1- and 2-channel files.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Sound files of the signals listed in the input data frame.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>) and Grace Smith Vidaurre
+</p>
+
+
+<h3>References</h3>
+
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>tailor_sels</code> for tailoring selections
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">{
+# save wav file examples
+data(list = c("Phae.long1", "Phae.long2", "Phae.long3", "Phae.long4", "lbh_selec_table"))
+writeWave(Phae.long1, file.path(tempdir(), "Phae.long1.wav"))
+writeWave(Phae.long2, file.path(tempdir(), "Phae.long2.wav"))
+writeWave(Phae.long3, file.path(tempdir(), "Phae.long3.wav"))
+writeWave(Phae.long4, file.path(tempdir(), "Phae.long4.wav"))
+
+# cut selections
+cut_sels(lbh_selec_table, path = tempdir())
+
+#check this folder!!
+tempdir()
+}
+
+</code></pre>
+
+
+</div>

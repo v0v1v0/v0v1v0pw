@@ -1,0 +1,220 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>stub_request</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Stub an http request</h2>
+
+<h3>Description</h3>
+
+<p>Stub an http request
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">stub_request(method = "get", uri = NULL, uri_regex = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>(character) HTTP method, one of "get", "post", "put", "patch",
+"head", "delete", "options" - or the special "any" (for any method)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uri</code></td>
+<td>
+<p>(character) The request uri. Can be a full or partial uri.
+<span class="pkg">webmockr</span> can match uri's without the "http" scheme, but does
+not match if the scheme is "https". required, unless <code>uri_regex</code> given.
+See UriPattern for more. See the "uri vs. uri_regex" section</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>uri_regex</code></td>
+<td>
+<p>(character) A URI represented as regex. required, if <code>uri</code>
+not given. See examples and the "uri vs. uri_regex" section</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Internally, this calls StubbedRequest which handles the logic
+</p>
+<p>See <code>stub_registry()</code> for listing stubs, <code>stub_registry_clear()</code>
+for removing all stubs and <code>remove_request_stub()</code> for removing specific
+stubs
+</p>
+<p>If multiple stubs match the same request, we use the first stub. So if you
+want to use a stub that was created after an earlier one that matches,
+remove the earlier one(s).
+</p>
+<p>Note on <code>wi_th()</code>: If you pass <code>query</code> values are coerced to character
+class in the recorded stub. You can pass numeric, integer, etc., but
+all will be coerced to character.
+</p>
+<p>See <code>wi_th()</code> for details on request body/query/headers and
+<code>to_return()</code> for details on how response status/body/headers
+are handled
+</p>
+
+
+<h3>Value</h3>
+
+<p>an object of class <code>StubbedRequest</code>, with print method describing
+the stub.
+</p>
+
+
+<h3>uri vs. uri_regex</h3>
+
+<p>When you use <code>uri</code>, we compare the URIs without query params AND
+also the query params themselves without the URIs.
+</p>
+<p>When you use <code>uri_regex</code> we don't compare URIs and query params;
+we just use your regex string defined in <code>uri_regex</code> as the pattern
+for a call to grepl
+</p>
+
+
+<h3>Mocking writing to disk</h3>
+
+<p>See mocking-disk-writing
+</p>
+
+
+<h3>Note</h3>
+
+<p>Trailing slashes are dropped from stub URIs before matching
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wi_th()</code>, <code>to_return()</code>, <code>to_timeout()</code>, <code>to_raise()</code>,
+<code>mock_file()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+# basic stubbing
+stub_request("get", "https://httpbin.org/get")
+stub_request("post", "https://httpbin.org/post")
+
+# any method, use "any"
+stub_request("any", "https://httpbin.org/get")
+
+# list stubs
+stub_registry()
+
+# request headers
+stub_request("get", "https://httpbin.org/get") %&gt;%
+   wi_th(headers = list('User-Agent' = 'R'))
+
+# request body
+stub_request("post", "https://httpbin.org/post") %&gt;%
+   wi_th(body = list(foo = 'bar'))
+stub_registry()
+library(crul)
+x &lt;- crul::HttpClient$new(url = "https://httpbin.org")
+crul::mock()
+x$post('post', body = list(foo = 'bar'))
+
+# add expectation with to_return
+stub_request("get", "https://httpbin.org/get") %&gt;%
+  wi_th(
+    query = list(hello = "world"),
+    headers = list('User-Agent' = 'R')) %&gt;%
+  to_return(status = 200, body = "stuff", headers = list(a = 5))
+
+# list stubs again
+stub_registry()
+
+# regex
+stub_request("get", uri_regex = ".+ample\\..")
+
+# set stub an expectation to timeout
+stub_request("get", "https://httpbin.org/get") %&gt;% to_timeout()
+x &lt;- crul::HttpClient$new(url = "https://httpbin.org")
+res &lt;- x$get('get')
+
+# raise exception
+library(fauxpas)
+stub_request("get", "https://httpbin.org/get") %&gt;% to_raise(HTTPAccepted)
+stub_request("get", "https://httpbin.org/get") %&gt;% to_raise(HTTPAccepted, HTTPGone)
+
+x &lt;- crul::HttpClient$new(url = "https://httpbin.org")
+stub_request("get", "https://httpbin.org/get") %&gt;% to_raise(HTTPBadGateway)
+crul::mock()
+x$get('get')
+
+# pass a list to .list
+z &lt;- stub_request("get", "https://httpbin.org/get")
+wi_th(z, .list = list(query = list(foo = "bar")))
+
+# just body
+stub_request("any", uri_regex = ".+") %&gt;%
+   wi_th(body = list(foo = 'bar'))
+## with crul
+library(crul)
+x &lt;- crul::HttpClient$new(url = "https://httpbin.org")
+crul::mock()
+x$post('post', body = list(foo = 'bar'))
+x$put('put', body = list(foo = 'bar'))
+## with httr
+library(httr)
+httr_mock()
+POST('https://example.com', body = list(foo = 'bar'))
+PUT('https://google.com', body = list(foo = 'bar'))
+
+
+# just headers
+headers &lt;- list(
+  'Accept-Encoding' = 'gzip, deflate', 
+  'Accept' = 'application/json, text/xml, application/xml, */*')
+stub_request("any", uri_regex = ".+") %&gt;% wi_th(headers = headers)
+library(crul)
+x &lt;- crul::HttpClient$new(url = "https://httpbin.org", headers = headers)
+crul::mock()
+x$post('post')
+x$put('put', body = list(foo = 'bar'))
+x$get('put', query = list(stuff = 3423234L))
+
+# many responses
+## the first response matches the first to_return call, and so on
+stub_request("get", "https://httpbin.org/get") %&gt;% 
+  to_return(status = 200, body = "foobar", headers = list(a = 5)) %&gt;% 
+  to_return(status = 200, body = "bears", headers = list(b = 6))
+con &lt;- crul::HttpClient$new(url = "https://httpbin.org")
+con$get("get")$parse("UTF-8")
+con$get("get")$parse("UTF-8")
+
+## OR, use times with to_return() to repeat the same response many times
+library(fauxpas)
+stub_request("get", "https://httpbin.org/get") %&gt;% 
+  to_return(status = 200, body = "apple-pie", times = 2) %&gt;% 
+  to_raise(HTTPUnauthorized)
+con &lt;- crul::HttpClient$new(url = "https://httpbin.org")
+con$get("get")$parse("UTF-8")
+con$get("get")$parse("UTF-8")
+con$get("get")$parse("UTF-8")
+
+# clear all stubs
+stub_registry()
+stub_registry_clear()
+
+## End(Not run)
+</code></pre>
+
+
+</div>

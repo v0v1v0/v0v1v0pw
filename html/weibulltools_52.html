@@ -1,0 +1,136 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mr_method</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimation of Failure Probabilities using Median Ranks</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#soft-deprecated"><img src="../help/figures/lifecycle-soft-deprecated.svg" alt="[Soft-deprecated]"></a>
+</p>
+<p><code>mr_method()</code> is no longer under active development, switching to estimate_cdf
+is recommended.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">mr_method(
+  x,
+  status = rep(1, length(x)),
+  id = NULL,
+  method = c("benard", "invbeta"),
+  ties.method = c("max", "min", "average")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A numeric vector which consists of lifetime data. Lifetime
+data could be every characteristic influencing the reliability of a product,
+e.g. operating time (days/months in service), mileage (km, miles), load
+cycles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>status</code></td>
+<td>
+<p>A vector of ones indicating that every unit has failed.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>A vector for the identification of every unit. Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>Method for the estimation of the cdf. Can be <code>"benard"</code> (default)
+or <code>"invbeta"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ties.method</code></td>
+<td>
+<p>A character string specifying how ties are treated,
+default is <code>"max"</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This non-parametric approach (<em>Median Ranks</em>) is used to estimate the
+failure probabilities in terms of complete data. Two methods are available to
+estimate the cumulative distribution function <em>F(t)</em>:
+</p>
+
+<ul>
+<li> <p><code>"benard"</code> : Benard's approximation for Median Ranks.
+</p>
+</li>
+<li> <p><code>"invbeta"</code> : Exact Median Ranks using the inverse beta distribution.
+</p>
+</li>
+</ul>
+<h3>Value</h3>
+
+<p>A tibble with only failed units containing the following columns:
+</p>
+
+<ul>
+<li> <p><code>id</code> : Identification for every unit.
+</p>
+</li>
+<li> <p><code>x</code> : Lifetime characteristic.
+</p>
+</li>
+<li> <p><code>status</code> : Status of failed units (always 1).
+</p>
+</li>
+<li> <p><code>rank</code> : Assigned ranks.
+</p>
+</li>
+<li> <p><code>prob</code> : Estimated failure probabilities.
+</p>
+</li>
+<li> <p><code>cdf_estimation_method</code> : Specified method for the estimation of failure
+probabilities (always 'mr').
+</p>
+</li>
+</ul>
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Vectors:
+obs   &lt;- seq(10000, 100000, 10000)
+state &lt;- rep(1, length(obs))
+uic   &lt;- c("3435", "1203", "958X", "XX71", "abcd", "tz46",
+           "fl29", "AX23", "Uy12", "kl1a")
+
+# Example 1 - Benard's approximation:
+tbl_mr &lt;- mr_method(
+  x = obs,
+  status = state,
+  id = uic,
+  method = "benard"
+)
+
+# Example 2 - Inverse beta distribution:
+tbl_mr_invbeta &lt;- mr_method(
+  x = obs,
+  status = state,
+  method = "invbeta"
+)
+
+</code></pre>
+
+
+</div>

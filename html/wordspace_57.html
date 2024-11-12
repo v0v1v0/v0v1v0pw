@@ -1,0 +1,125 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rsvd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Randomized Singular Value Decomposition (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>An implementation of the randomized truncated SVD algorithm of Halko, Martinsson &amp; Tropp (2009).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+rsvd(M, n, q = 2, oversampling = 2, transpose = FALSE, verbose = FALSE)
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+
+<p>a dense or sparse numeric matrix
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+
+<p>an integer specifying the desired number of singular components. This argument must be specified and must satisfy <code>n &lt;= min(nrow(M), ncol(M))</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>q</code></td>
+<td>
+
+<p>number of power iterations (Halko <em>et al.</em> recommend <code>q=1</code> or <code>q=2</code>)
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>oversampling</code></td>
+<td>
+
+<p>oversampling factor. The rSVD algorithm computes an approximate SVD factorization of rank <code>n * oversampling</code>, which is then truncated to the first <code>n</code> components.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transpose</code></td>
+<td>
+
+<p>if <code>TRUE</code>, apply the rSVD algorithm to the transpose <code>t(M)</code>, which may be more efficient depending on the dimensions of <code>M</code>
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+
+<p>whether to display progress messages during execution
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This implementation of randomized truncated SVD is based on the randomized PCA algorithm (Halko <em>et al.</em> 2009, p. 9).  The discussion in Sec. 4 and 5 of the paper shows that the same algorithm applies to the case where the columns of A are not centered (Algorithm 4.3 + Algorithm 5.1).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with components
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>u</code></td>
+<td>
+<p>a matrix whose columns contain the first <code>n</code> left singular vectors of <code>M</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>v</code></td>
+<td>
+<p>a matrix whose columns contain the first <code>n</code> right singular vectors of <code>M</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>d</code></td>
+<td>
+<p>a vector containing the first <code>n</code> singular values of <code>M</code></p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+<h3>References</h3>
+
+<p>Halko, N., Martinsson, P. G., and Tropp, J. A. (2009).
+Finding structure with randomness: Stochastic algorithms for constructing approximate matrix decompositions. Technical Report 2009-05, ACM, California Institute of Technology.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>svd</code>, <code>dsm.projection</code>, <code>sparsesvd</code>
+</p>
+
+
+</div>

@@ -1,0 +1,96 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>accessD.wst</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get mother wavelet coefficients from a packet ordered non-decimated wavelet object (wst).</h2>
+
+<h3>Description</h3>
+
+<p>The mother wavelet coefficients from a packet ordered non-decimated wavelet object, <code>wst</code>, are stored in a matrix. This function extracts all the coefficients corresponding to a particular resolution level.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wst'
+accessD(wst, level, aspect = "Identity", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wst</code></td>
+<td>
+<p>Packet ordered non-decimated wavelet object from which you wish to extract the mother wavelet coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level</code></td>
+<td>
+<p>The level that you wish to extract. This can range from zero (the coarsest coefficients) to nlevelsWT(wstobj) which returns the original data. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aspect</code></td>
+<td>
+<p>Function to apply to coefficient before return.
+Supplied as a character argument which gets converted to a function.
+For example, "Mod" which returns the absolute value of complex-valued
+coefficients.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>wst</code> function performs a packet-ordered non-decimated wavelet transform. This function extracts all the mother wavelet coefficients at a particular resolution level specified by <code>level</code>.
+</p>
+<p>Note that coefficients returned by this function are in <em>packet order</em>. They can be used <em>as is</em> but for many applications it might be more useful to deal with the coefficients in packets: see the function <code>getpacket.wst</code> for further details. 
+</p>
+<p>Note that all the coefficients here are those of mother wavelets. The non-decimated transform efficiently computes all possible shifts of the discrete wavelet transform computed by <code>wd</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of the extracted coefficients. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>G P Nason</p>
+
+
+<h3>References</h3>
+
+<p>Nason, G.P. and Silverman, B.W. The stationary wavelet transform and some statistical applications. 
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wst</code>, <code>wst.object</code>, <code>accessD</code>, <code>getpacket.wst</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#
+# Get the 4th level of mother wavelet coefficients from a decomposition
+#
+dat &lt;- rnorm(128)
+accessD(wst(dat), level=4)
+</code></pre>
+
+
+</div>

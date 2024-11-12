@@ -1,0 +1,127 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>newConsensusOptions</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Create a list holding consensus calculation options.
+</h2>
+
+<h3>Description</h3>
+
+<p>This function creates a list of class <code>ConsensusOptions</code> that holds options for consensus calculations.
+This list holds options for a single-level analysis.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">newConsensusOptions(
+      calibration = c("full quantile", "single quantile", "none"),
+
+      # Simple quantile scaling options
+      calibrationQuantile = 0.95,
+      sampleForCalibration = TRUE, 
+      sampleForCalibrationFactor = 1000,
+
+      # Consensus definition
+      consensusQuantile = 0,
+      useMean = FALSE,
+      setWeights = NULL,
+      suppressNegativeResults = FALSE,
+      # Name to prevent files clashes
+      analysisName = "")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>calibration</code></td>
+<td>
+
+<p>Calibration method. One of <code>"full quantile", "single quantile", "none"</code>
+(or a unique abbreviation of one of them).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>calibrationQuantile</code></td>
+<td>
+
+<p>if <code>calibration</code> is <code>"single quantile"</code>,
+input data to a consensus calculation 
+will be scaled such that their <code>calibrationQuantile</code> quantiles will agree. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sampleForCalibration</code></td>
+<td>
+<p> if <code>TRUE</code>, calibration quantiles will be determined from a sample of
+network
+similarities. Note that using all data can double the memory footprint of the function and the function
+may fail. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sampleForCalibrationFactor</code></td>
+<td>
+<p> Determines the number of samples for calibration: the number is
+<code>1/calibrationQuantile * sampleForCalibrationFactor</code>. Should be set well above 1 to ensure accuracy of
+the sampled quantile. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>consensusQuantile</code></td>
+<td>
+<p>Quantile at which consensus is to be defined. See details. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useMean</code></td>
+<td>
+
+<p>Logical: should the consensus be calculated using (weighted) mean rather than a quantile?
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>setWeights</code></td>
+<td>
+
+<p>Optional specification of weights when <code>useMean</code> is <code>TRUE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>suppressNegativeResults</code></td>
+<td>
+<p>Logical: should negative consensus results be replaced by 0? In a typical network
+connstruction, negative topological overlap values may results with <code>TOMType = "signed Nowick"</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>analysisName</code></td>
+<td>
+
+<p>Optional character string naming the consensus analysis. Useful for identifying partial consensus calculation
+in hierarchical consensus analysis.
+</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list of type <code>ConsensusOptions</code> that holds copies of the input arguments.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Peter Langfelder
+</p>
+
+
+</div>

@@ -1,0 +1,140 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>automaticNetworkScreening</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> One-step automatic network gene screening </h2>
+
+<h3>Description</h3>
+
+<p>This function performs gene screening based on a given trait and gene network properties
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">automaticNetworkScreening(
+   datExpr, 
+   y, 
+   power = 6, 
+   networkType = "unsigned", 
+   detectCutHeight = 0.995,
+   minModuleSize = min(20, ncol(as.matrix(datExpr))/2), 
+   datME = NULL, 
+   getQValues = TRUE, 
+   ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datExpr</code></td>
+<td>
+<p> data frame containing the expression data, columns corresponding to genes and rows to
+samples </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p> vector containing trait values for all samples in <code>datExpr</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p> soft thresholding power used in network construction </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkType</code></td>
+<td>
+<p> character string specifying network type. Allowed values are (unique abbreviations
+of) <code>"unsigned"</code>, <code>"signed"</code>, <code>"hybrid"</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>detectCutHeight</code></td>
+<td>
+<p> cut height of the gene hierarchical clustering dendrogram. See
+<code>cutreeDynamic</code> for details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minModuleSize</code></td>
+<td>
+<p> minimum module size to be used in module detection procedure. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>datME</code></td>
+<td>
+<p> optional specification of module eigengenes. A data frame whose columns are the module
+eigengenes. If given, module analysis will not be performed. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>getQValues</code></td>
+<td>
+<p>logical: should q-values (local FDR) be calculated? </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>other arguments to the module identification function <code>blockwiseModules</code></p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Network screening is a method for identifying genes that have a high gene significance and are members
+of important modules at the same time.
+If <code>datME</code> is given, the function calls <code>networkScreening</code> with the default
+parameters. If <code>datME</code> is not given, module eigengenes are first calculated using network analysis
+based on supplied parameters.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>networkScreening</code></td>
+<td>
+<p>a data frame containing results of the network screening procedure. See
+<code>networkScreening</code> for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>datME</code></td>
+<td>
+<p> calculated module eigengenes (or a copy of the input <code>datME</code>, if given).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hubGeneSignificance</code></td>
+<td>
+<p> hub gene significance for all calculated modules. See
+<code>hubGeneSignificance</code>. </p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p> Steve Horvath </p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code>networkScreening</code>, <code>hubGeneSignificance</code>,
+<code>networkScreening</code>, <code>cutreeDynamic</code> </p>
+
+
+</div>

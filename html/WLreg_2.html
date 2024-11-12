@@ -1,0 +1,275 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wrlogistic</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Logistic regression for win ratio</h2>
+
+<h3>Description</h3>
+
+<p>Use a logistic regression model to model win ratio adjusting for covariates with the user-supplied comparison results</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wrlogistic(aindex,z,b0=rep(0,ncol(z)),tol=1.0e-04,maxiter=20)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>aindex</code></td>
+<td>
+<p>a vector that collects the pairwise comparison results. Suppose there are a total of <code class="reqn">n</code> subjects in the study, there are <code class="reqn">n(n-1)/2</code> elements in <code>aindex</code>. The <code class="reqn">(i-1)*(i-2)/2+j</code>-th element, denoted by <code class="reqn">C_{ij}</code>, is the comparison result between subject <code class="reqn">i</code> and subject <code class="reqn">j</code>, where <code class="reqn">i=2,\ldots,n</code> and <code class="reqn">j=1,\ldots,i-1</code>. The element <code class="reqn">C_{ij}</code> is equal to <code class="reqn">1</code> if subject <code class="reqn">i</code> wins over subject <code class="reqn">j</code> on the most important outcome, <code class="reqn">C_{ij}</code> is equal to <code class="reqn">-1</code> if subject <code class="reqn">i</code> loses against subject <code class="reqn">j</code> on the most important outcome; <code class="reqn">C_{ij}</code> is equal to <code class="reqn">2</code> if subject <code class="reqn">i</code> wins over subject <code class="reqn">j</code> on the second most important outcome after tie on the most important outcome, <code class="reqn">C_{ij}</code> is equal to <code class="reqn">-2</code> if subject <code class="reqn">i</code> loses against subject <code class="reqn">j</code> on the second most important outcome after tie on the most important outcome; and so forth until all the outcomes have been used for comparison; then <code class="reqn">C_{ij}</code> is equal to <code class="reqn">0</code> if an ultimate tie is resulted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>z</code></td>
+<td>
+<p>a matrix of covariates</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>b0</code></td>
+<td>
+<p>the initial value of the regression parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tol</code></td>
+<td>
+<p>error tolerence</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxiter</code></td>
+<td>
+<p>maximum number of iterations</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function uses a logistic regression model to model win ratio adjusting for covaraites. This function uses the pairwise comparision result supplied by the user which hopefully will speed up the program.</p>
+
+
+<h3>Value</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>b</code></td>
+<td>
+<p>Estimated regression parameter, <code class="reqn">\exp</code>(<code>b</code>) is the adjusted win ratio</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ubeta</code></td>
+<td>
+<p>The score function</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Vbeta</code></td>
+<td>
+<p>The estimated varaince of <code class="reqn">\sqrt{n}\times</code><code>b</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Wald</code></td>
+<td>
+<p>Wald test statistics for the estimated parameter <code>b</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pvalue</code></td>
+<td>
+<p>Two-sided p-values of the Wald statistics</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Imatrix</code></td>
+<td>
+<p>The information matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Wtotal</code></td>
+<td>
+<p>Total wins</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Ltotal</code></td>
+<td>
+<p>Total losses</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>err</code></td>
+<td>
+<p>err at convergence</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iter</code></td>
+<td>
+<p>number of iterations performed before covergence</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Xiaodong Luo</p>
+
+
+<h3>References</h3>
+
+<p>Pocock S.J., Ariti C.A., Collier T. J. and Wang D. 2012. The win ratio: a new approach to the analysis of composite endpoints in clinical trials based on clinical priorities. European Heart Journal, 33, 176-182.
+</p>
+<p>Luo X., Tian H., Mohanty S. and Tsai W.-Y. 2015. An alternative approach to confidence interval estimation for the win ratio statistic. Biometrics, 71, 139-145.
+</p>
+<p>Luo X., Qiu J., Bai S. and Tian H. 2017. Weighted win loss approach for analyzing prioritized outcomes. Statistics in Medicine, to appear.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>winreg</code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">###Generate data
+n&lt;-300
+rho&lt;-0.5
+b2&lt;-c(1.0,-1.0)
+b1&lt;-c(0.5,-0.9)
+bc&lt;-c(1.0,0.5)
+lambda10&lt;-0.1;lambda20&lt;-0.08;lambdac0&lt;-0.09
+lam1&lt;-rep(0,n);lam2&lt;-rep(0,n);lamc&lt;-rep(0,n)
+z1&lt;-rep(0,n)
+z1[1:(n/2)]&lt;-1
+z2&lt;-rnorm(n)
+z&lt;-cbind(z1,z2)
+
+lam1&lt;-lam2&lt;-lamc&lt;-rep(0,n)
+for (i in 1:n){
+    lam1[i]&lt;-lambda10*exp(-sum(z[i,]*b1))
+    lam2[i]&lt;-lambda20*exp(-sum(z[i,]*b2))
+    lamc[i]&lt;-lambdac0*exp(-sum(z[i,]*bc))
+}
+tem&lt;-matrix(0,ncol=3,nrow=n)
+
+y2y&lt;-matrix(0,nrow=n,ncol=3)
+y2y[,1]&lt;-rnorm(n);y2y[,3]&lt;-rnorm(n)
+y2y[,2]&lt;-rho*y2y[,1]+sqrt(1-rho^2)*y2y[,3]
+tem[,1]&lt;--log(1-pnorm(y2y[,1]))/lam1
+tem[,2]&lt;--log(1-pnorm(y2y[,2]))/lam2
+tem[,3]&lt;--log(1-runif(n))/lamc
+
+y1&lt;-apply(tem,1,min)
+y2&lt;-apply(tem[,2:3],1,min)
+d1&lt;-as.numeric(tem[,1]&lt;=y1)
+d2&lt;-as.numeric(tem[,2]&lt;=y2)
+
+y&lt;-cbind(y1,y2,d1,d2)
+z&lt;-as.matrix(z)
+###################
+
+#####Define the comparison function
+comp&lt;-function(y,x){
+  y1i&lt;-y[1];y2i&lt;-y[2];d1i&lt;-y[3];d2i&lt;-y[4]
+  y1j&lt;-x[1];y2j&lt;-x[2];d1j&lt;-x[3];d2j&lt;-x[4] 
+  w2&lt;-0;w1&lt;-0;l2&lt;-0;l1&lt;-0
+  
+  if (d2j==1 &amp; y2i&gt;=y2j) w2&lt;-1
+  else if (d2i==1 &amp; y2j&gt;=y2i) l2&lt;-1
+  
+  if (w2==0 &amp; l2==0 &amp; d1j==1 &amp; y1i&gt;=y1j) w1&lt;-1
+  else if (w2==0 &amp; l2==0 &amp; d1i==1 &amp; y1j&gt;=y1i) l1&lt;-1
+  
+  comp&lt;-0
+  if (w2==1) comp&lt;-1 
+  else if (l2==1) comp&lt;-(-1)
+  else if (w1==1) comp&lt;-2
+  else if (l1==1) comp&lt;-(-2)
+  
+  comp
+}
+bin&lt;-rep(0,n*(n-1)/2)
+for (i in 2:n)for (j in 1:(i-1))bin[(i-1)*(i-2)/2+j]&lt;-comp(y[i,],y[j,])
+###Use the win loss indicator matrix to calculate the general win loss statistics
+bb2&lt;-wrlogistic(bin,z,b0=rep(0,ncol(z)),tol=1.0e-04,maxiter=20)
+bb2
+
+
+####Calculate the win, loss, tie result using Fortran loops to speed up the process
+####Using the "inline" package to convert the code into Fortran
+
+#install.packages("inline") #Install the package "inline''
+library("inline") ###Load the package "inline"
+
+########################################################
+# The use of ``inline'' needs ``rtools'' and ``gcc''
+# in the PATH environment of R.
+# The following code will put these two into
+# the PATH for the current R session ONLY.
+########################################################
+
+#rtools &lt;- "C:\Rtools\bin"
+#gcc &lt;- "C:\Rtools\gcc-4.6.3\bin"
+#path &lt;- strsplit(Sys.getenv("PATH"), ";")[[1]]
+#new_path &lt;- c(rtools, gcc, path)
+#new_path &lt;- new_path[!duplicated(tolower(new_path))]
+#Sys.setenv(PATH = paste(new_path, collapse = ";"))
+
+codex4 &lt;- "
+integer::i,j,indexij,d1i,d2i,d1j,d2j,w2,w1,l2,l1
+double precision::y1i,y2i,y1j,y2j
+do i=2,n,1
+   y1i=y(i,1);y2i=y(i,2);d1i=dnint(y(i,3));d2i=dnint(y(i,4))
+   do j=1,(i-1),1
+      y1j=y(j,1);y2j=y(j,2);d1j=dnint(y(j,3));d2j=dnint(y(j,4)) 
+      indexij=(i-1)*(i-2)/2+j
+      w2=0;w1=0;l2=0;l1=0
+      if (d2j==1 .and. y2i&gt;=y2j) then
+         w2=1
+      else if (d2i==1 .and. y2j&gt;=y2i) then
+         l2=1
+      else if (d1j==1 .and. y1i&gt;=y1j) then
+         w1=1
+      else if (d1i==1 .and. y1j&gt;=y1i) then
+         l1=1
+      end if
+      aindex(indexij)=0
+      if (w2==1) then 
+         aindex(indexij)=1
+      else if (l2==1) then
+         aindex(indexij)=-1
+      else if (w2==0 .and. l2==0 .and. w1==1) then
+         aindex(indexij)=2
+      else if (w2==0 .and. l2==0 .and. l1==1) then
+         aindex(indexij)=-2
+      end if
+   end do
+end do
+"
+###Convert the above code into Fortran
+cubefnx4&lt;-cfunction(sig = signature(n="integer", p="integer", y="numeric", aindex="integer"), 
+            implicit = "none",dim = c("", "", "(n,p)", "(n*(n-1)/2)"), codex4, language="F95")
+
+###Use the converted code to calculate the win, loss and tie indicators
+options(object.size=1.0E+10)
+ain&lt;-cubefnx4(length(y[,1]),length(y[1,]), y, rep(0,n*(n-1)/2))$aindex
+
+####Perform the logistic regression
+aa2&lt;-wrlogistic(ain,z,b0=rep(0,ncol(z)),tol=1.0e-04,maxiter=20)
+aa2
+
+</code></pre>
+
+
+</div>

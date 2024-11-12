@@ -1,0 +1,162 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>projectiveKMeans</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Projective K-means (pre-)clustering of expression data </h2>
+
+<h3>Description</h3>
+
+<p>Implementation of a variant of K-means clustering for expression data. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">projectiveKMeans(
+  datExpr, 
+  preferredSize = 5000, 
+  nCenters = as.integer(min(ncol(datExpr)/20, preferredSize^2/ncol(datExpr))),
+  sizePenaltyPower = 4, 
+  networkType = "unsigned",  
+  randomSeed = 54321,
+  checkData = TRUE,
+  imputeMissing = TRUE,
+  maxIterations = 1000, 
+  verbose = 0, indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datExpr</code></td>
+<td>
+<p>  expression data. A data frame in which columns are genes and rows ar samples. NAs are
+allowed, but not too many. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>preferredSize</code></td>
+<td>
+<p> preferred maximum size of clusters. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nCenters</code></td>
+<td>
+<p> number of initial clusters. Empirical evidence suggests that more centers will give a
+better preclustering; the default is an attempt to arrive at a reasonable number. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sizePenaltyPower</code></td>
+<td>
+<p> parameter specifying how severe is the penalty for clusters that exceed
+<code>preferredSize</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkType</code></td>
+<td>
+<p> network type. Allowed values are (unique abbreviations of) <code>"unsigned"</code>,
+<code>"signed"</code>, <code>"signed hybrid"</code>. See <code>adjacency</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>randomSeed</code></td>
+<td>
+<p> integer to be used as seed for the random number generator before the function
+starts. If a current seed exists, it is saved and restored upon exit. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checkData</code></td>
+<td>
+<p> logical: should data be checked for genes with zero variance and 
+genes and samples with excessive numbers of missing samples? Bad samples are ignored; returned cluster
+assignment for bad genes will be <code>NA</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>imputeMissing</code></td>
+<td>
+<p> logical: should missing values in <code>datExpr</code> be imputed before the calculations
+start? The early imputation makes the code run faster but may produce slightly different results if re-running
+older calculations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxIterations</code></td>
+<td>
+<p> maximum iterations to be attempted. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The principal aim of this function within WGCNA is to pre-cluster a large number of genes into smaller blocks
+that can be handled using standard WGCNA techniques.
+</p>
+<p>This function implements a variant of K-means clustering that is suitable for co-expression analysis.
+Cluster centers are defined by the first principal component, and distances by correlation (more
+precisely, 1-correlation). The distance between a gene and a cluster is multiplied by a factor of
+<code class="reqn">max(clusterSize/preferredSize, 1)^{sizePenaltyPower}</code>, thus penalizing clusters whose size exceeds
+<code>preferredSize</code>. The function starts with randomly generated cluster assignment (hence the need to
+set the random seed for repeatability) and executes interations of calculating new centers and
+reassigning genes to nearest center until the clustering becomes stable. Before returning, nearby
+clusters are iteratively combined if their combined size is below <code>preferredSize</code>.
+</p>
+<p>The standard principal component calculation via the function <code>svd</code> fails from time to time
+(likely a convergence problem of the underlying lapack functions). Such errors are trapped and the
+principal component is approximated by a weighted average of expression profiles in the cluster. If
+<code>verbose</code> is set above 2, an informational message is printed whenever this approximation is used.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>clusters</code></td>
+<td>
+<p>A numerical vector with one component per input gene, giving the cluster number in
+which the gene is assigned. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>centers</code></td>
+<td>
+<p>Cluster centers, that is their first principal components. </p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder </p>
+
+
+<h3>See Also</h3>
+
+ <p><code>sizeRestrictedClusterMerge</code> which implements the last step of merging smaller clusters.</p>
+
+
+</div>

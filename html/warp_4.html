@@ -1,0 +1,156 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>warp_change</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Detect changes in a date time vector</h2>
+
+<h3>Description</h3>
+
+<p><code>warp_change()</code> detects changes at the <code>period</code> level.
+</p>
+<p>If <code>last = TRUE</code>, it returns locations of the last value before a change,
+and the last location in <code>x</code> is always included. Additionally, if
+<code>endpoint = TRUE</code>, the first location in <code>x</code> will be included.
+</p>
+<p>If <code>last = FALSE</code>, it returns locations of the first value after a change,
+and the first location in <code>x</code> is always included. Additionally, if
+<code>endpoint = TRUE</code>, the last location in <code>x</code> will be included.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">warp_change(
+  x,
+  period,
+  ...,
+  every = 1L,
+  origin = NULL,
+  last = TRUE,
+  endpoint = FALSE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[Date / POSIXct / POSIXlt]⁠</code>
+</p>
+<p>A date time vector.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>period</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[character(1)]⁠</code>
+</p>
+<p>A string defining the period to group by. Valid inputs can be roughly
+broken into:
+</p>
+
+<ul>
+<li> <p><code>"year"</code>, <code>"quarter"</code>, <code>"month"</code>, <code>"week"</code>, <code>"day"</code>
+</p>
+</li>
+<li> <p><code>"hour"</code>, <code>"minute"</code>, <code>"second"</code>, <code>"millisecond"</code>
+</p>
+</li>
+<li> <p><code>"yweek"</code>, <code>"mweek"</code>
+</p>
+</li>
+<li> <p><code>"yday"</code>, <code>"mday"</code>
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[dots]⁠</code>
+</p>
+<p>These dots are for future extensions and must be empty.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>every</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[positive integer(1)]⁠</code>
+</p>
+<p>The number of periods to group together.
+</p>
+<p>For example, if the period was set to <code>"year"</code> with an every value of <code>2</code>,
+then the years 1970 and 1971 would be placed in the same group.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>origin</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[Date(1) / POSIXct(1) / POSIXlt(1) / NULL]⁠</code>
+</p>
+<p>The reference date time value. The default when left as <code>NULL</code> is the
+epoch time of <code style="white-space: pre;">⁠1970-01-01 00:00:00⁠</code>, <em>in the time zone of the index</em>.
+</p>
+<p>This is generally used to define the anchor time to count from, which is
+relevant when the every value is <code style="white-space: pre;">⁠&gt; 1⁠</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>last</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[logical(1)]⁠</code>
+</p>
+<p>If <code>TRUE</code>, the <em>last</em> location <em>before</em> a change is returned.
+The last location of the input is always returned.
+</p>
+<p>If <code>FALSE</code>, the <em>first</em> location <em>after</em> a change is returned.
+The first location of the input is always returned.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>endpoint</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[logical(1)]⁠</code>
+</p>
+<p>If <code>TRUE</code> and <code>last = TRUE</code>, will additionally return the first location
+of the input.
+</p>
+<p>If <code>TRUE</code> and <code>last = FALSE</code>, will additionally return the last location
+of the input.
+</p>
+<p>If <code>FALSE</code>, does nothing.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A double vector of locations.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x &lt;- as.Date("2019-01-01") + 0:5
+x
+
+# Last location before a change, last location of `x` is always included
+warp_change(x, period = "yday", every = 2, last = TRUE)
+
+# Also include first location
+warp_change(x, period = "yday", every = 2, last = TRUE, endpoint = TRUE)
+
+# First location after a change, first location of `x` is always included
+warp_change(x, period = "yday", every = 2, last = FALSE)
+
+# Also include last location
+warp_change(x, period = "yday", every = 2, last = FALSE, endpoint = TRUE)
+</code></pre>
+
+
+</div>

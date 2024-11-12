@@ -1,0 +1,113 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>inverseWeibull</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>The inverse Weibull distribution</h2>
+
+<h3>Description</h3>
+
+<p>Density function, distribution function, quantile function, random generation,
+raw moments and limited moments for the Inverse Weibull distribution
+with parameters <code>shape</code> and <code>scale</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">dinvweibull(x, shape, scale = 1, log = FALSE)
+pinvweibull(q, shape, scale = 1, lower.tail = TRUE, log.p = FALSE)
+qinvweibull(p, shape, scale = 1, lower.tail = TRUE, log.p = FALSE)
+rinvweibull(n, shape, scale = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x, q</code></td>
+<td>
+<p>vector of quantiles.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p</code></td>
+<td>
+<p>vector of probabilities.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>number of observations. If <code>length(n) &gt; 1</code>, the length is taken to be the number required.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shape, scale</code></td>
+<td>
+<p>parameters. Must be positive.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>log, log.p</code></td>
+<td>
+<p>logical; if <code>TRUE</code>, probabilities or densities <code class="reqn">p</code> are given as <code class="reqn">\log(p)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lower.tail</code></td>
+<td>
+<p>logical; if <code>TRUE</code> (default), probabilities are
+<code class="reqn">P[X \le x]</code>, otherwise, <code class="reqn">P[X &gt; x]</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The probability density function of the inverse Weibull distribution with parameters <code>shape</code> 
+<code class="reqn">=\beta</code> and <code>scale</code> <code class="reqn">= \theta</code> is given by 
+</p>
+<p style="text-align: center;"><code class="reqn">f(x) = \frac{\beta (\theta/x)^\beta e^{-(\theta/x)^\beta}}{x}</code>
+</p>
+
+<p>where <code class="reqn">x &gt; 0</code>, <code class="reqn">\beta &gt; 0</code> and <code class="reqn">\theta &gt; 0</code>.
+</p>
+<p>The cumulative distribution function is given by 
+</p>
+<p style="text-align: center;"><code class="reqn">F(X)=\exp(-(\theta/x)^\beta)</code>
+</p>
+
+
+
+<h3>Value</h3>
+
+<p><code>dinvweibull</code> gives the density, <code>pinvweibull</code> gives the distribution function,
+<code>qinvweibull</code> gives the quantile function, and <code>rinvweibull</code> generates random deviates.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Chanseok Park
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">x = (-1):2
+names(x) = letters[1:4]
+dinvweibull(x, shape=2) 
+exp( dinvweibull(x, shape=2, log=TRUE) )
+
+
+pinvweibull (1, shape=2)
+exp(pinvweibull (1, shape=2,  log=TRUE))
+
+q = c(-1,0,1,2)
+qinvweibull ( pinvweibull (q, shape=2), shape=2 )
+</code></pre>
+
+
+</div>

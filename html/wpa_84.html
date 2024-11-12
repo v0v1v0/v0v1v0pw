@@ -1,0 +1,132 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>flag_outlooktime</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Flag unusual outlook time settings for work day start and end time</h2>
+
+<h3>Description</h3>
+
+<p>This function flags unusual outlook calendar settings for
+start and end time of work day.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">flag_outlooktime(data, threshold = c(4, 15), return = "message")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>A data frame containing a Person Query.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>threshold</code></td>
+<td>
+<p>A numeric vector of length two, specifying the hour
+threshold for flagging. Defaults to c(4, 15).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String specifying what to return. This must be one of the
+following strings:
+</p>
+
+<ul>
+<li> <p><code>"text"</code> (default)
+</p>
+</li>
+<li> <p><code>"message"</code>
+</p>
+</li>
+<li> <p><code>"data"</code>
+</p>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A different output is returned depending on the value passed to the <code>return</code>
+argument:
+</p>
+
+<ul>
+<li> <p><code>"text"</code>: string. A diagnostic message.
+</p>
+</li>
+<li> <p><code>"message"</code>: message on console. A diagnostic message.
+</p>
+</li>
+<li> <p><code>"data"</code>: data frame. Data where flag is present.
+</p>
+</li>
+</ul>
+<p>See <code>Value</code> for more information.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Data Validation: 
+<code>check_query()</code>,
+<code>extract_hr()</code>,
+<code>flag_ch_ratio()</code>,
+<code>flag_em_ratio()</code>,
+<code>flag_extreme()</code>,
+<code>hr_trend()</code>,
+<code>hrvar_count()</code>,
+<code>hrvar_count_all()</code>,
+<code>hrvar_trend()</code>,
+<code>identify_churn()</code>,
+<code>identify_holidayweeks()</code>,
+<code>identify_inactiveweeks()</code>,
+<code>identify_nkw()</code>,
+<code>identify_outlier()</code>,
+<code>identify_privacythreshold()</code>,
+<code>identify_query()</code>,
+<code>identify_shifts()</code>,
+<code>identify_shifts_wp()</code>,
+<code>identify_tenure()</code>,
+<code>remove_outliers()</code>,
+<code>standardise_pq()</code>,
+<code>subject_validate()</code>,
+<code>subject_validate_report()</code>,
+<code>track_HR_change()</code>,
+<code>validation_report()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Demo with `dv_data`
+flag_outlooktime(dv_data)
+
+# Example where Outlook Start and End times are imputed
+spq_df &lt;- sq_data
+
+spq_df$WorkingStartTimeSetInOutlook &lt;- "6:30"
+
+spq_df$WorkingEndTimeSetInOutlook &lt;- "23:30"
+
+# Return a message
+flag_outlooktime(spq_df, threshold = c(5, 13))
+
+# Return data
+flag_outlooktime(spq_df, threshold = c(5, 13), return = "data")
+
+</code></pre>
+
+
+</div>

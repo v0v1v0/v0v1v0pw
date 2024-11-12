@@ -1,0 +1,152 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>PlotAdjacency</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>PlotAdjacency</h2>
+
+<h3>Description</h3>
+
+<p>Plots a heat map of the differential light sensitivity on the Humphrey Field
+Analyzer-II visual field.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">PlotAdjacency(
+  Wij,
+  Visit = 1,
+  stat = "mean",
+  main = "Estimated Adjacencies",
+  color.scheme = c("Black", "White"),
+  edgewidth = 2,
+  cornerwidth = 1/4,
+  lwd.border = 3,
+  color.bs = "gray",
+  zlim = c(0, 1),
+  legend = TRUE,
+  DM = NULL,
+  W = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Wij</code></td>
+<td>
+<p>a <code>PosteriorAdj</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Visit</code></td>
+<td>
+<p>either an integer <code>(1,...,Nu)</code> indicating the visit number for which
+you want to get the adjacencies to plot or NA. If NA, then the plot will produce the
+dissimilarity metric at each adjacency.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stat</code></td>
+<td>
+<p>either "mean" or "sd" (only used for Visit != NA).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>main</code></td>
+<td>
+<p>an overall title for the plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color.scheme</code></td>
+<td>
+<p>a vector of colors to be used to show the adjacencies changing.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>edgewidth</code></td>
+<td>
+<p>a scalar indicating the width of the edges.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cornerwidth</code></td>
+<td>
+<p>a scalar indicating the width of the corners.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lwd.border</code></td>
+<td>
+<p>a scalar indicating width of the visual field border.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>color.bs</code></td>
+<td>
+<p>one color specifying the blind spot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>zlim</code></td>
+<td>
+<p>the limits used for the legend (default are c(0,1)).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>legend</code></td>
+<td>
+<p>logical, indicating whether the legend should be present (default = TRUE).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DM</code></td>
+<td>
+<p>a dissimilarity metric to be plotted at each location on the visual field (default = NULL).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p>an adjacency matrix that specifies the visual field, required if Wij is not provided (default = NULL).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>PlotAdjacency</code> is used in the application of glaucoma progression to
+plot the posterior mean and standard deviation neighborhood adjacencies across the
+visual field.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Samuel I. Berchuck
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">###Define blind spot locations on the HFA-II
+blind_spot &lt;- c(26, 35)
+
+###Load visual field adjacency matrix
+W &lt;- HFAII_Queen[ -blind_spot, -blind_spot]
+
+###Load Garway-Heath angles for dissimiliarity metric
+DM &lt;- GarwayHeath[-blind_spot] #Uses Garway-Heath angles object "GarwayHeath"
+
+###Adjacency plots
+PlotAdjacency(W = W, DM = DM, zlim = c(0, 180), Visit = NA,
+              main = "Garway-Heath dissimilarity metric\n across the visual field")
+
+</code></pre>
+
+
+</div>

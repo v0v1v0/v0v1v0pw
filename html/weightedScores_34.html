@@ -1,0 +1,210 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wtsc.wrapper</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>THE WEIGHTED SCORES METHOD  WITH INPUTS OF THE DATA</h2>
+
+<h3>Description</h3>
+
+<p>The weighted scores method with inputs of the data.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wtsc.wrapper(xdat,ydat,id,tvec,margmodel,corstr,link,iprint=FALSE)
+wtsc.ord.wrapper(xdat,ydat,id,tvec,corstr,link,iprint=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>xdat</code></td>
+<td>
+<p><code class="reqn">(\mathbf{x}_1 ,  \mathbf{x}_2 , \ldots ,
+  \mathbf{x}_n )^\top</code>, where the matrix <code class="reqn">\mathbf{x}_i,\,i=1,\ldots,n</code> for a given unit will
+depend on the  times of observation for that unit (<code class="reqn">j_i</code>) and will have
+number of rows <code class="reqn">j_i</code>, each row corresponding to one of the <code class="reqn">j_i</code> elements
+of <code class="reqn">y_i</code> and <code class="reqn">p</code> columns where <code class="reqn">p</code> is the number of covariates including
+the unit first column  to account for the intercept (except for ordinal regression where there is no intercept). This xdat matrix is
+of dimension <code class="reqn">(N\times p),</code> where <code class="reqn">N =\sum_{i=1}^n j_i</code> is the total
+number of observations from all units.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ydat</code></td>
+<td>
+<p><code class="reqn">(y_1 , y_2 , \ldots , y_n  )^\top</code>,
+where the response data vectors <code class="reqn">y_i,\,i=1,\ldots,n</code>
+are of possibly different lengths for different units.  In particular,
+we now have that <code class="reqn">y_i</code> is (<code class="reqn">j_i \times 1</code>), where <code class="reqn">j_i</code> is the   number of
+observations on unit <code class="reqn">i</code>. The total number of observations   from all units
+is <code class="reqn">N =\sum_{i=1}^n j_i</code>. The ydat are the collection of data   vectors
+<code class="reqn">y_i, i = 1,\ldots,n</code> one from each unit which summarize all the data
+together in a single, long vector of length <code class="reqn">N</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>id</code></td>
+<td>
+<p>An index for individuals or clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tvec</code></td>
+<td>
+<p>A vector with the time indicator of individuals or clusters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>margmodel</code></td>
+<td>
+
+<p>Indicates the marginal model.
+Choices are “poisson” for Poisson, “bernoulli” for Bernoulli, 
+and  “nb1” , “nb2” for the NB1 and NB2 parametrization 
+of negative binomial in Cameron and Trivedi (1998).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corstr</code></td>
+<td>
+<p>Indicates the latent correlation structure of normal copula.
+Choices are “exch”, “ar”, and “unstr” for exchangeable, ar(1)
+and unstructured correlation structure, respectively.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>link</code></td>
+<td>
+<p>The link function. 
+Choices are “log” for the log link function, “logit” for 
+the logit link function, and “probit” for 
+the probit link function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>iprint</code></td>
+<td>
+<p>Indicates printing of some intermediate results, default FALSE</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This wrapper functions handles all the steps to obtain the weighted
+scores estimates and standard errors.</p>
+
+
+<h3>Value</h3>
+
+<p>A list containing the following components:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>IEEest</code></td>
+<td>
+<p>The estimates of the regression and not regression
+parameters ignoring dependence.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CL1est</code></td>
+<td>
+<p>The vector with the CL1 estimated dependence parameters (latent
+correlations).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>CL1lik</code></td>
+<td>
+<p>The  value of the sum of bivariate marginal log-likelihoods at
+CL1 estimates.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>WSest</code></td>
+<td>
+<p>The weighted score estimates of the regression and not regression
+parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>asympcov</code></td>
+<td>
+<p>The estimated weighted scores asymptotic covariance matrix.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Aristidis K. Nikoloulopoulos <a href="mailto:A.Nikoloulopoulos@uea.ac.uk">A.Nikoloulopoulos@uea.ac.uk</a><br>
+Harry Joe <a href="mailto:harry.joe@ubc.ca">harry.joe@ubc.ca</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Nikoloulopoulos, A.K., Joe, H. and Chaganty, N.R. (2011)
+Weighted scores method for regression models with dependent data.
+<em>Biostatistics</em>, <b>12</b>, 653–665. doi: <a href="https://doi.org/10.1093/biostatistics/kxr005">10.1093/biostatistics/kxr005</a>.
+</p>
+<p>Nikoloulopoulos, A.K. (2016)
+Correlation structure and variable selection in generalized estimating equations via composite likelihood information criteria.
+<em>Statistics in Medicine</em>, <b>35</b>, 2377–2390. doi: <a href="https://doi.org/10.1002/sim.6871">10.1002/sim.6871</a>.
+</p>
+<p>Nikoloulopoulos, A.K. (2017)
+Weighted scores method for longitudinal  ordinal data.
+<em>Arxiv e-prints</em>, &lt;arXiv:1510.07376&gt;. <a href="https://arxiv.org/abs/1510.07376">https://arxiv.org/abs/1510.07376</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wtsc</code>,
+<code>solvewtsc</code>,
+<code>weightMat</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+################################################################################
+#                      read and set up the data set
+################################################################################
+data(childvisit)
+# covariates
+season1&lt;-childvisit$q
+season1[season1&gt;1]&lt;-0
+xdat&lt;-cbind(1,childvisit$sex,childvisit$age,childvisit$m,season1)
+# response
+ydat&lt;-childvisit$hosp
+#id
+id&lt;-childvisit$id
+#time
+tvec&lt;-childvisit$q
+################################################################################
+out&lt;-wtsc.wrapper(xdat,ydat,id,tvec,margmodel="nb1",corstr="ar",iprint=TRUE)
+
+################################################################################
+#                        transform to binary responses                         #
+################################################################################
+y2&lt;-ydat
+y2[ydat&gt;0]&lt;-1
+################################################################################
+out&lt;-wtsc.wrapper(xdat,y2,id,tvec,margmodel="bernoulli",link="probit",
+corstr="exch",iprint=TRUE)
+################################################################################
+#                        via the code for ordinal                             #
+################################################################################
+out&lt;-wtsc.ord.wrapper(xdat[,-1],2-y2,id,tvec,link="probit",
+corstr="exch",iprint=TRUE)
+
+</code></pre>
+
+
+</div>

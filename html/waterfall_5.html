@@ -1,0 +1,155 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>waterfallchart</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Waterfall Chart</h2>
+
+<h3>Description</h3>
+
+<p>Creates a waterfall chart using Lattice
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">waterfallchart(x, data = NULL, groups = NULL, horizontal = FALSE,
+  panel = panel.waterfallchart, prepanel = prepanel.waterfallchart,
+  summaryname = "Total", box.ratio = 2, origin = 0, level.lines = TRUE,
+  ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>a formula describing the form of conditioning plot. The
+formula is generally of the form 'y ~ x | g1 * g2 * ...', indicating
+that plots of 'y' (on the y axis) versus 'x' (on the x axis) should
+be produced conditional on the variables 'g1, g2, ...'. However, the
+conditioning variables 'g1,g2,...' may be omitted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a data frame containing values (or more precisely,
+anything that is a valid 'envir' argument in 'eval', e.g., a list or
+an environment) for any variables in the formula, as well as 'groups'
+and 'subset' if applicable. If not found in 'data', or if 'data' is
+unspecified, the variables are looked for in the environment of the
+formula.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>groups</code></td>
+<td>
+<p>a vector expected to act as a grouping variable within
+each panel, typically used to distinguish different groups by varying
+graphical parameters like color and line type.  Unlike with the
+barchart function, groups specifies where subtotals columns,
+should appear.  There is a subtotal created for each group specified.
+If no groups are given, a summary column is still reported.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>horizontal</code></td>
+<td>
+<p>This argument is used to process the arguments to
+these high level functions, but more importantly, it is passed as an
+argument to the panel function, which is supposed to use it as
+appropriate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>panel</code></td>
+<td>
+<p>This draws the actual plot after bwplot has done
+the difficult work of processing the formula.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prepanel</code></td>
+<td>
+<p>This function returns the bwplot information
+on the number of columns to display and where to place labels.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>summaryname</code></td>
+<td>
+<p>name of the summary column, usually "Total"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>box.ratio</code></td>
+<td>
+<p>specifies the ratio of the width of the rectangles
+to the interrectangle space.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>origin</code></td>
+<td>
+<p>initial offset relative to the x axis.  The value
+serves as the logical starting point for the first column and any
+summary column.  Defaults to 0.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>level.lines</code></td>
+<td>
+<p>if FALSE, the lines connecting adjacent boxes are
+ommitted from the display.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function closely mimics the barchart interface, but
+provides a type of chart called a waterfall plot, showing how
+multiple subvalues contribute to a total sum.
+</p>
+<p>The bulk of the work is actually processed in bwplot which
+defines where tickmarks and other information outside the plot itself
+are placed.  Only a formula method is provided.
+</p>
+<p>Matrix and vector interfaces are not provided because mimicing the
+behavior of barchart for those interfaces produces
+unintellible and undefined graphic output.
+</p>
+
+
+<h3>References</h3>
+
+<p>Andrew Jaquith, <em>Security Metrics: Replacing Fear,
+Uncertainty, and Doubt</em> (Boston: Addison-Wesley Professional, 2007),
+170-172.
+</p>
+<p>Ethan M. Rasiel, <em>The McKinsey Way: Using the Techniques of the
+World's Top Strategic Consultants to Help You and Your Business</em> (New
+York: McGraw-Hill, 1999), 113-118.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(rasiel)
+data(jaquith)
+waterfallchart(value~label, data=rasiel, groups=rasiel$subtotal)
+waterfallchart(factor~score, data=jaquith)
+
+</code></pre>
+
+
+</div>

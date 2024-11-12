@@ -1,0 +1,162 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simulateModule</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Simulate a gene co-expression module</h2>
+
+<h3>Description</h3>
+
+<p>Simulation of a single gene co-expression module.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">simulateModule(
+  ME, 
+  nGenes, 
+  nNearGenes = 0, 
+  minCor = 0.3, maxCor = 1, corPower = 1, 
+  signed = FALSE, propNegativeCor = 0.3, 
+  geneMeans = NULL,
+  verbose = 0, indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>ME</code></td>
+<td>
+<p> seed module eigengene. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nGenes</code></td>
+<td>
+<p> number of genes in the module to be simulated. Must be non-zero. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nNearGenes</code></td>
+<td>
+<p> number of genes to be simulated with low correlation with the seed eigengene. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minCor</code></td>
+<td>
+<p> minimum correlation of module genes with the eigengene. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxCor</code></td>
+<td>
+<p> maximum correlation of module genes with the eigengene. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corPower</code></td>
+<td>
+<p>  controls the dropoff of gene-eigengene correlation. See details.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>signed</code></td>
+<td>
+<p> logical: should the genes be simulated as belonging to a signed network? If <code>TRUE</code>,
+all genes will be simulated to have positive correlation with the eigengene. If <code>FALSE</code>, a
+proportion given by <code>propNegativeCor</code> will be simulated with negative correlations of the same
+absolute values.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>propNegativeCor</code></td>
+<td>
+<p> proportion of genes to be simulated with negative gene-eigengene correlations.
+Only effective if <code>signed</code> is <code>FALSE</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>geneMeans</code></td>
+<td>
+<p> optional vector of length <code>nGenes</code> giving desired mean expression for each gene. If
+not given, the returned expression profiles will have mean zero. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Module genes are simulated around the eigengene by choosing them such that their (expected)
+correlations with the seed eigengene decrease progressively from (just below) <code>maxCor</code> to <code>minCor</code>.
+The genes are otherwise independent from one another. The variable <code>corPower</code> determines how fast
+the correlation drops towards <code>minCor</code>. Higher powers lead to a faster frop-off; <code>corPower</code> must be
+above zero but need not be integer.
+</p>
+<p>If <code>signed</code> is <code>FALSE</code>, the genes are simulated so as to be part of an unsigned network module,
+that is some genes will be simulated with a negative correlation with the seed eigengene (but of the same
+absolute value that a positively correlated gene would be simulated with). The proportion of genes with
+negative correlation is controlled by <code>propNegativeCor</code>. 
+</p>
+<p>Optionally, the function can also simulate genes that are "near" the module, meaning they are
+simulated with a  low but non-zero correlation with the seed eigengene. The correlations run between
+<code>minCor</code> and zero. 
+</p>
+
+
+<h3>Value</h3>
+
+  
+<p>A matrix containing the expression data with rows corresponding to samples and columns to genes. 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder </p>
+
+
+<h3>References</h3>
+
+<p> A short description of the simulation method can also be found in the Supplementary Material
+to the article
+</p>
+<p>Langfelder P, Horvath S (2007) Eigengene networks for studying the relationships between co-expression
+modules. BMC Systems Biology 2007, 1:54.
+</p>
+<p>The material is posted at
+http://horvath.genetics.ucla.edu/html/CoexpressionNetwork/EigengeneNetwork/SupplementSimulations.pdf.
+</p>
+
+
+<h3>See Also</h3>
+
+ 
+<p><code>simulateEigengeneNetwork</code> for a simulation of eigengenes with a given causal structure;
+</p>
+<p><code>simulateDatExpr</code> for simulations of whole datasets consisting of multiple modules;
+</p>
+<p><code>simulateDatExpr5Modules</code> for a simplified interface to expression simulations;
+</p>
+<p><code>simulateMultiExpr</code> for a simulation of several related data sets.
+</p>
+
+
+</div>

@@ -1,0 +1,251 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>perm.ind.spread</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+
+Permutation Test for Difference in Spread
+</h2>
+
+<h3>Description</h3>
+
+
+<p>Performs a permutation (randomization) test for difference in spread (variation)
+based on independent samples from two populations.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">perm.ind.spread(x, y, parameter, stacked = TRUE, variable = NULL,
+                alternative = c("two.sided", "less", "greater"),
+                R = 9999)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+
+<p>a numeric vector of observations of the variable (stacked case) or a
+numeric vector of data values representing the first of the two
+samples (unstacked case).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+
+
+<p>a vector of corresponding population identifiers (stacked case) or a
+numeric vector of data values representing the second of the two
+samples (unstacked case).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameter</code></td>
+<td>
+
+
+<p>the spread parameter under consideration (e.g., sd, var).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>stacked</code></td>
+<td>
+
+
+<p>a logical value (default TRUE) indicating whether the data are stacked.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variable</code></td>
+<td>
+
+
+<p>an optional character string that gives the name of the variable under
+consideration; ignored if stacked is TRUE.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alternative</code></td>
+<td>
+
+
+<p>a character string specifying the alternative hypothesis;
+must be one of "two.sided" (default), "less", or "greater".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+
+
+<p>number of replications (default = 9999).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+
+<p>The null hypothesis is that the distributions of the variable on the 
+two populations are identical—"identical".
+</p>
+<p>The possible alternative hypotheses are:
+</p>
+<p>Two tailed ("two.sided"): The distribution of the variable on the first population has a
+different spread than that of the variable on the second population—"different.spread".
+</p>
+<p>Left tailed ("less"): The distribution of the variable on the first population has a
+smaller spread than that of the variable on the second population—"smaller.spread".
+</p>
+<p>Right tailed ("greater"): The distribution of the variable on the first population has a
+larger spread than that of the variable on the second population—"larger.spread".
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list with class "perm.ts.ind" containing the following components:
+
+
+
+
+
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Stacked </code></td>
+<td>
+<p>TRUE if the data are stacked, FALSE otherwise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Perm.values </code></td>
+<td>
+<p>the values of the test statistic obtained from the permutations.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Header </code></td>
+<td>
+<p>the main title for the output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Variable </code></td>
+<td>
+<p>the name of the variable under consideration or NULL.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Pop.1 </code></td>
+<td>
+<p>the first population.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Pop.2 </code></td>
+<td>
+<p>the second population.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.1 </code></td>
+<td>
+<p>the sample size for the first population.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.2 </code></td>
+<td>
+<p>the sample size for the second population.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Statistic </code></td>
+<td>
+<p>the test statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Observed </code></td>
+<td>
+<p>the observed value of the test statistic.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Null </code></td>
+<td>
+<p>the null hypothesis; here, always identical.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Alternative </code></td>
+<td>
+<p>the alternative hypothesis.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>P.value </code></td>
+<td>
+<p>the P-value or a statement like P &lt; 0.001.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>p.value </code></td>
+<td>
+<p>the P-value.</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+
+<p>Neil A. Weiss
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Manufacturers use the Elmendorf tear test to evaluate material
+# strength for various manufactured products. 
+#
+# Elmendorf tear strength, in grams, of two different vinyl floor
+# coverings, Brand A and Brand B.
+data("elmendorf")
+str(elmendorf)
+# Note that the data are stacked.
+
+# Permutation test to decide whether there is a difference in spread of
+# tear strength for Brand A and Brand B vinyl floor coverings, using the
+# standard deviation as the spread parameter.
+attach(elmendorf)
+perm.ind.spread(STRENGTH, BRAND, sd)
+
+detach(elmendorf)  # clean up
+
+# Final-exam scores (out of 40 possible) for two groups of algebra
+# students. One group, called the control group, was taught the usual
+# algebra course; the other group, called the experimental group, was
+# taught by a new teaching method.
+data("control")
+str(control)
+data("experimental")
+str(experimental)
+
+# Permutation test to decide whether the new teaching method reduces
+# variation in final-exam scores, using the variance as the spread
+# parameter.
+perm.ind.spread(control, experimental, var, stacked = FALSE,
+variable = "Score", alternative = "greater")
+</code></pre>
+
+
+</div>

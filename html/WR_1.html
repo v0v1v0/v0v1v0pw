@@ -1,0 +1,114 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>base</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Compute the baseline parameters needed for sample size calculation for
+standard win ratio test</h2>
+
+<h3>Description</h3>
+
+<p>Compute the baseline parameters <code class="reqn">\zeta_0^2</code> and <code class="reqn">\boldsymbol\delta_0</code>
+needed for sample size calculation for standard win ratio test (see <code>WRSS</code>).
+The calculation is based
+on a Gumbel–Hougaard copula model for survival time <code class="reqn">D^{(a)}</code> and nonfatal event
+time <code class="reqn">T^{(a)}</code> for group <code class="reqn">a</code> (1: treatment; 0: control):
+</p>
+<p style="text-align: center;"><code class="reqn">{P}(D^{(a)}&gt;s, T^{(a)}&gt;t) =\exp\left(-\left[\left\{\exp(a\xi_1)\lambda_Ds\right\}^\kappa+
+\left\{\exp(a\xi_2)\lambda_Ht\right\}^\kappa\right]^{1/\kappa}\right),</code>
+</p>
+
+<p>where <code class="reqn">\xi_1</code> and <code class="reqn">\xi_2</code> are the component-wise log-hazard ratios to be used
+as effect size in <code>WRSS</code>.
+We also assume that patients are recruited uniformly over the period <code class="reqn">[0, \tau_b]</code>
+and followed until time <code class="reqn">\tau</code>  (<code class="reqn">\tau\geq\tau_b</code>), with an exponential
+loss-to-follow-up hazard <code class="reqn">\lambda_L</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">base(lambda_D, lambda_H, kappa, tau_b, tau, lambda_L, N = 1000, seed = 12345)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>lambda_D</code></td>
+<td>
+<p>Baseline hazard <code class="reqn">\lambda_D</code> for death.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda_H</code></td>
+<td>
+<p>Baseline hazard <code class="reqn">\lambda_H</code> for nonfatal event.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>kappa</code></td>
+<td>
+<p>Gumbel–Hougaard copula correlation parameter <code class="reqn">\kappa</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau_b</code></td>
+<td>
+<p>Length of the initial (uniform) accrual period <code class="reqn">\tau_b</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>Total length of follow-up <code class="reqn">\tau</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lambda_L</code></td>
+<td>
+<p>Exponential hazard rate <code class="reqn">\lambda_L</code> for random loss to follow-up.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>Simulated sample size for monte-carlo integration.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>seed</code></td>
+<td>
+<p>Seed for monte-carlo simulation.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>A list containing real number <code>zeta2</code> for <code class="reqn">\zeta_0^2</code>
+and bivariate vector <code>delta</code> for <code class="reqn">\boldsymbol\delta_0</code>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Mao, L., Kim, K. and Miao, X. (2021). Sample size formula for general win ratio analysis.
+Biometrics, https://doi.org/10.1111/biom.13501.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>gumbel.est</code>, <code>WRSS</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># see the example for WRSS
+</code></pre>
+
+
+</div>

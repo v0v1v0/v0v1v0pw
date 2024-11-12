@@ -1,0 +1,52 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>load_vocab</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Load a vocabulary file</h2>
+
+<h3>Description</h3>
+
+<p>Load a vocabulary file
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">load_vocab(vocab_file)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>vocab_file</code></td>
+<td>
+<p>path to vocabulary file. File is assumed to be a text file,
+with one token per line, with the line number corresponding to the index of
+that token in the vocabulary.</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>The vocab as a character vector of tokens. The casedness of the
+vocabulary is inferred and attached as the "is_cased" attribute. The
+vocabulary indices are taken to be the positions of the tokens,
+<em>starting at zero</em> for historical consistency.
+</p>
+<p>Note that from the perspective of a neural net, the numeric indices <em>are</em>
+the tokens, and the mapping from token to index is fixed. If we changed the
+indexing (the order of the tokens), it would break any pre-trained models.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Get path to sample vocabulary included with package.
+vocab_path &lt;- system.file("extdata", "tiny_vocab.txt", package = "wordpiece")
+vocab &lt;- load_vocab(vocab_file = vocab_path)
+</code></pre>
+
+
+</div>

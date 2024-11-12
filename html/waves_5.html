@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>filter_spectra</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Filter spectral data frame based on Mahalanobis distance</h2>
+
+<h3>Description</h3>
+
+<p>Determine Mahalanobis distances of observations (rows) within a
+given <code>data.frame</code> with spectral data. Option to filter out
+observations based on these distances.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">filter_spectra(df, filter, return.distances, num.col.before.spectra,
+  window.size, verbose)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p><code>data.frame</code> object containing columns of spectra and rows of
+observations. Spectral columns must be labeled with an "X" and then the
+wavelength (example: "X740" = 740nm). Left-most column must be unique ID.
+May also contain columns of metadata between the unique ID and spectral
+columns. Cannot contain any missing values. Metadata column names may not
+start with "X".</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>boolean that determines whether or not the input
+<code>data.frame</code> will be filtered. If <code>TRUE</code>, <code>df</code> will be
+filtered according to squared Mahalanobis distance with a 95% cutoff from
+a chi-square distribution with degrees of freedom = number of spectral
+columns. If <code>FALSE</code>, a column of squared Mahalanobis distances
+<code>h.distance</code> will be added to the right side of df and all rows will
+be returned. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return.distances</code></td>
+<td>
+<p>boolean that determines whether a column of squared
+Mahalanobis distances will be included in output <code>data.frame</code>. If
+<code>TRUE</code>, a column of Mahalanobis distances for each row will be added
+to the right side of <code>df</code>. Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>num.col.before.spectra</code></td>
+<td>
+<p>number of columns to the left of the spectral
+matrix in <code>df</code>. Default is 4.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>window.size</code></td>
+<td>
+<p>number defining the size of window to use when calculating
+the covariance of the spectra (required to calculate Mahalanobis distance).
+Default is 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p>If <code>TRUE</code>, the number of rows removed through filtering
+will be printed to the console. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function uses a chi-square distribution with 95% cutoff where
+degrees of freedom = number of wavelengths (columns) in the input
+<code>data.frame</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>filter</code> is <code>TRUE</code>, returns filtered data frame
+<code>df</code> and reports the number of rows removed. The Mahalanobis distance
+with a cutoff of 95% of chi-square distribution (degrees of freedom =
+number of wavelengths) is used as filtering criteria. If <code>filter</code> is
+<code>FALSE</code>, returns full input df with column <code>h.distances</code>
+containing the Mahalanobis distance for each row.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Jenna Hershberger <a href="mailto:jmh579@cornell.edu">jmh579@cornell.edu</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Johnson, R.A., and D.W. Wichern. 2007. Applied Multivariate
+Statistical Analysis (6th Edition). pg 189
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(magrittr)
+filtered.test &lt;- ikeogu.2017 %&gt;%
+  dplyr::select(-TCC) %&gt;%
+  na.omit() %&gt;%
+  filter_spectra(
+    df = .,
+    filter = TRUE,
+    return.distances = TRUE,
+    num.col.before.spectra = 5,
+    window.size = 15
+  )
+filtered.test[1:5, c(1:5, (ncol(filtered.test) - 5):ncol(filtered.test))]
+</code></pre>
+
+
+</div>

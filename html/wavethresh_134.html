@@ -1,0 +1,114 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>mwd.object</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Multiple wavelet decomposition object (1D) </h2>
+
+<h3>Description</h3>
+
+<p>These are objects of class 
+</p>
+<p><code>mwd</code>
+</p>
+<p>They represent a decomposition of a function with respect to a multiple wavelet basis. 
+</p>
+
+
+<h3>Details</h3>
+
+<p>To retain your sanity the C and D coefficients should be extracted by the <code>accessC</code> and <code>accessD</code> functions and put using the <code>putC</code> and <code>putD</code> functions, rather than by the <code>$</code> operator. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>The following components must be included in a legitimate ‘mwd’ object. 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>C</code></td>
+<td>
+<p>a matrix containing each level's smoothed data, each column corresponding to one coefficient vector. The wavelet transform works by applying both a smoothing filter and a bandpass filter to the previous level's smoothed data. The top level contains data at the highest resolution level. Each of these levels are stored one after the other in this matrix. The matrix '<code>fl.dbase$first.last.c</code>' determines exactly which columns in the matrix, store each level.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>D</code></td>
+<td>
+<p>wavelet coefficient matrix. If you were to write down the discrete wavelet transform of a function then columns of D would be the vector coefficients of the wavelet basis function s. Like the C, they are also formed in a pyramidal manner, but stored in a linear matrix. The storage details are to be found in '<code>fl.dbase$first.last.d</code>'.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nlevelsWT</code></td>
+<td>
+<p>The number of levels in the pyramidal decomposition that produces the coefficients. The precise number of levels depends on the number of different wavelet functions used and the preprocessing method used, as well as the number of data points used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>fl.dbase</code></td>
+<td>
+<p>The first last database associated with this decomposition. This is a list consisting of 2 integers, and 2 matrices. The matrices detail how the coefficients are stored in the C and D components of the ‘mwd.object’. See the help on <code>mfirst.last</code> for more information.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>a list containing the details of the filter that did the decomposition. See <code>mfilter.select</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>either <code>"wavelet"</code> indicating that the ordinary multiple wavelet transform was performed or <code>"station"</code> indicating that the non-decimated multiple wavelet transform was done.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>prefilter</code></td>
+<td>
+<p>Type of preprocessing or prefilter used. This will be specigic for the type of multiple wavelet used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>date</code></td>
+<td>
+<p>The date that the transform was performed or the mwd object was last modified.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bc</code></td>
+<td>
+<p>how the boundaries were handled</p>
+</td>
+</tr>
+</table>
+<h3>GENERATION</h3>
+
+<p>This class of objects is returned from the <code>mwd</code> function to represent a multiple wavelet decomposition of a function. Many other functions return an object of class mwd.
+</p>
+
+
+<h3>METHODS</h3>
+
+<p>The mwd class of objects has methods for the following generic functions: <code>accessC</code>, <code>accessD</code>, <code>draw</code>, <code>plot</code>, <code>print</code>, <code>putC</code>, <code>putD</code>, <code>summary</code>, <code>threshold</code>, <code>wr.mwd</code>. 
+</p>
+
+
+<h3>RELEASE</h3>
+
+<p>Version 3.9.6 (Although Copyright Tim Downie, 1995-6). 
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Tim Downie</p>
+
+
+<h3>See Also</h3>
+
+<p><code>accessC.mwd</code>, <code>accessD.mwd</code>, <code>draw.mwd</code>, <code>mfirst.last</code>, <code>mfilter.select</code>, <code>mwd.object</code>, <code>mwr</code>, <code>plot.mwd</code>,<code>print.mwd</code>, <code>putC.mwd</code>, <code>putD.mwd</code>, <code>summary.mwd</code>, <code>threshold.mwd</code>, <code>wd</code>, <code>wr.mwd</code>. 
+</p>
+
+
+</div>

@@ -1,0 +1,167 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>TWP</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+The Toronto Word Pool
+</h2>
+
+<h3>Description</h3>
+
+<p>The Toronto Word Pool consists of 1080 words in various grammatical classes
+together with a variety of normative variables.
+</p>
+<p>The <code>TWP</code> contains high frequency nouns, adjectives, and verbs taken 
+originally from the Thorndike-Lorge (1944) norms. 
+This word pool has been used in hundreds of studies at Toronto and elsewhere. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">data(TWP)</code></pre>
+
+
+<h3>Format</h3>
+
+<p>A data frame with 1093 observations on the following 12 variables.
+</p>
+
+<dl>
+<dt><code>itmno</code></dt>
+<dd>
+<p>item number</p>
+</dd>
+<dt><code>word</code></dt>
+<dd>
+<p>the word</p>
+</dd>
+<dt><code>imagery</code></dt>
+<dd>
+<p>imagery rating</p>
+</dd>
+<dt><code>concreteness</code></dt>
+<dd>
+<p>concreteness rating</p>
+</dd>
+<dt><code>letters</code></dt>
+<dd>
+<p>number of letters</p>
+</dd>
+<dt><code>frequency</code></dt>
+<dd>
+<p>word frequency, from the Kucera-Francis norms</p>
+</dd>
+<dt><code>foa</code></dt>
+<dd>
+<p>a measure of first order approximation to English. 
+In a first-order approximation, the probability of
+generating any string of letters is based on the frequencies of
+occurrence of individual letters in the language.</p>
+</dd>
+<dt><code>soa</code></dt>
+<dd>
+<p>a measure of second order approximation to English, based on bigram frequencies.</p>
+</dd>
+<dt><code>onr</code></dt>
+<dd>
+<p>Orthographic neighbor ratio, taken from
+Landauer and Streeter (1973). It is the ratio of the frequency of
+the word in Kucera and Francis (1967) count divided by the sum
+of the frequencies of all its orthographic neighbors. </p>
+</dd>
+<dt><code>dictcode</code></dt>
+<dd>
+<p>dictionary codes, a factor indicating 
+the collection of grammatical classes, 1-5, for a given word form</p>
+</dd>
+</dl>
+<p>.
+In the code, "1" in any position means the item had a dictionary definition as a noun;
+similarly, a "2" means a verb, "3" means an adjective, "4"
+means an adverb, and "5" was used to cover all other grammatical
+categories (but in practice was chiefly a preposition). Thus
+an entry "2130" indicates an item defined as a verb, noun, and
+an adjective in that order of historical precedence.
+</p>
+<dl>
+<dt><code>noun</code></dt>
+<dd>
+<p>percent noun usage. Words considered unambiguous based on <code>dictcode</code>
+are listed as 0 or 100; other items were rated in a judgment task. </p>
+</dd>
+<dt><code>canadian</code></dt>
+<dd>
+<p>a factor indicating an alternative Canadian spelling of a given word</p>
+</dd>
+</dl>
+<h3>Details</h3>
+
+<p>The last 13 words in the list are alternative Canadian spellings of words
+listed earlier, and have duplicate <code>itmno</code> values.
+</p>
+
+
+<h3>Source</h3>
+
+<p>Friendly, M., Franklin, P., Hoffman, D. &amp; Rubin, D. The Toronto Word Pool,
+<em>Behavior Research Methods and Instrumentation</em>, 1982, 14(4), 375-399.
+<a href="http://datavis.ca/papers/twp.pdf">http://datavis.ca/papers/twp.pdf</a>.
+</p>
+
+
+<h3>References</h3>
+
+<p>Kucera and Francis, W.N. (1967). 
+<em>Computational Analysis of Present-Day American English</em>. Providence: Brown University Press. 
+</p>
+<p>Landauer, T. K., &amp; Streeter, L. A.  Structural differences
+between common and rare words: Failure of equivalent assumptions
+for theories of word recognition. <em>Journal of Verbal Learning and
+Verbal Behavior</em>, 1973, 11, 119-131.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(TWP)
+str(TWP)
+summary(TWP)
+# quick view of distributions
+boxplot(scale(TWP[, 3:9]))
+
+plotDensity(TWP, "imagery")
+plotDensity(TWP, "concreteness")
+plotDensity(TWP, "frequency")
+
+# select low imagery, concreteness and frequency words
+R &lt;- list(imagery=c(1,5), concreteness=c(1,4), frequency=c(0,30))
+pickList(TWP, R)
+
+# dplyr now makes this much more flexible
+if (require(dplyr)) {
+  # select items within given ranges
+  selected &lt;- TWP |&gt;	
+  	filter( canadian == 0) |&gt;              # remove Canadian spellings
+  	filter( imagery &lt;= 5, concreteness &lt;= 4, frequency &lt;= 30) |&gt;
+  	select(word, imagery:frequency )
+  	
+  str(selected)
+  
+  # get random samples of selected items
+  nitems &lt;- 5
+  nlists &lt;- 2
+  lists &lt;- selected |&gt;
+  	sample_n( nitems*nlists, replace=FALSE) |&gt;
+  	mutate(list = rep(1:nlists, each=nitems))
+  
+  str(lists)
+  lists
+}
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,198 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ShowWakePenalizers</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Visualizes the points causing/'suffering' from wake effects.</h2>
+
+<h3>Description</h3>
+
+<p>After optimization, this function draws a reduced 'field' and shows which points cause wake penalties on which points. 'Causers' are displayed in grey, 'sufferers', i.e. points that are in (possibly multiple) wakes of (several) causers are displayed in gold.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ShowWakePenalizers(Result, Cones = TRUE, All = FALSE, VectorField = TRUE,
+ImposeMST = FALSE, NS = FALSE, NSOnly = FALSE, Exaggerate = TRUE,
+DoubleLine = TRUE, Frames = 100, Alpha = 0.5, MaxContrast = TRUE, Soften = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>Result</code></td>
+<td>
+
+<p>must be an optimization result as returned by an optimizer such as <code>optim</code>. Usually, this will be a <code>list</code> at least containing '$par'. Most optimizers comply with this R standard. If your optimizer does not, wrap its result into a list containing an object '$par' containing the optimization result (i.e., a vector of points).
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Cones</code></td>
+<td>
+
+<p>triggers whether the Jensen cones are to be displayed as well. Defaults to <code>TRUE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>All</code></td>
+<td>
+
+<p>triggers whether all Jensen cones are to be displayed, instead of just causers and sufferers. Defaults to <code>FALSE</code>, as <code>TRUE</code> results in a mess most of the times.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>VectorField</code></td>
+<td>
+
+<p>controls whether or not to impose the wind directions vector field (arrows). Defaults to <code>TRUE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ImposeMST</code></td>
+<td>
+
+<p>if <code>TRUE</code>, computes and imposes a minimum spanning tree for the vertices, useful for cable installation purposes. Defaults to <code>FALSE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NS</code></td>
+<td>
+
+<p>if <code>TRUE</code>, imposes a computationally intensive Navier-Stokes based wake simulation image over the plot. Defaults to <code>FALSE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>NSOnly</code></td>
+<td>
+
+<p>if <code>TRUE</code>, imposes just the Navier-Stokes wake simulation (no Jensen wakes). Defaults to <code>FALSE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Exaggerate</code></td>
+<td>
+
+<p>if <code>TRUE</code>, displays turbines as squares in the Navier-Stokes visualization. The turbine is then still to scale, but in reality the rotor is a disc instead of a cube, of course. This overly emphasizes wakes, which may be desired in most cases. Thus, defaults to <code>TRUE</code>. Set to <code>FALSE</code> for a more realistic look of the rotor discs, but this will make the wakes appear less severe.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>DoubleLine</code></td>
+<td>
+
+<p>applies only if <code>Exaggerate == TRUE</code>. The rotor disc is then a disc instead of a cube (or line instead of square), but the line will be two instead of one pixel wide. This option is a trade-off between <code>Exaggerate == TRUE</code> and <code>Exaggerate == FALSE</code>. Set to <code>TRUE</code> (the default) if <code>Exaggerate == FALSE</code> to apply. Note that only if <code>Exaggerate == FALSE</code> and <code>DoubleLine == FALSE</code>, the rotor disc is a one pixel wide line, the most realistic setting which however shows only weak wakes.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Frames</code></td>
+<td>
+
+<p>number of frames to pre-compute for the Navier-Stokes simulation. 100 is a good value. Less makes the computation faster, but more inaccurate. More than 100 in only necessary for very low wind speeds. Thus, defaults to <code>100</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Alpha</code></td>
+<td>
+
+<p>The Navier-Stokes wake simulation is imposed semi-transparent over the usual image. This controls the transparency. Alpha = 0 means transparent, Alpha = 1 means opaque. Defaults to <code>0.5</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>MaxContrast</code></td>
+<td>
+
+<p>increases the contrast to maximum (this is equivalent to histogram stretching). Defaults to <code>TRUE</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Soften</code></td>
+<td>
+
+<p>applies a Gaussian soften filter to the Navier-Stokes image to have a more homogeneous visualization. Defaults to <code>TRUE</code>.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Enables the researcher to inspect the optimization result in an a-posteriori analysis of Jensen's wake model. Parts of the Navier-Stokes code are inspired by Stam (2003).
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>ShowWakePenalizers</code> invisibly returns a square matrix (dimension: 'number of turbines') of wake penalty pairs: Columns are sufferers, rows are causers. For each row/column pair unequal to one, the turbine in row i sheds wake on the turbine in column j. The actual numbers are those returned by <code>JensenFactor</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Carsten Croonenbroeck
+</p>
+
+
+<h3>References</h3>
+
+<p>Stam, S. (2003). Real-Time Fluid Dynamics for Games. <a href="https://www.researchgate.net/publication/2560062_Real-Time_Fluid_Dynamics_for_Games">https://www.researchgate.net/publication/2560062_Real-Time_Fluid_Dynamics_for_Games</a>, 1-17
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Use <code>PlotResult</code> to visualize the optimization result.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+#Will show that turbine 1 sheds wake on turbine 5.
+NumTurbines &lt;- 8
+set.seed(1357)
+Result &lt;- optim(par = runif(NumTurbines * 2), fn = Profit,
+  method = "L-BFGS-B", lower = rep(0, NumTurbines * 2),
+  upper = rep(1, NumTurbines * 2))
+ShowWakePenalizers(Result)
+
+###############
+
+#This may take some time. A progress bar is displayed.
+Result = list(par = e$FarmVars$BenchmarkSolution)
+ShowWakePenalizers(Result, All = TRUE, NS = TRUE, VectorField = FALSE, Alpha = 0.7)
+
+###############
+
+#Generates a few frames of an animation.
+Result &lt;- list(par = e$FarmVars$BenchmarkSolution)
+MakeFrames &lt;- function(Frames)
+{
+	for (i in 100:(100 + Frames - 1))
+	{
+		bmp(file = paste(i, ".bmp", sep = ""))
+		ShowWakePenalizers(Result, All = TRUE, NS = TRUE, Frames = i)
+		dev.off()
+	}
+}
+system.time(MakeFrames(30)) #May take an hour.
+
+
+## End(Not run)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,112 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>squarely</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>A special case of the widely adverb for creating tidy
+square matrices</h2>
+
+<h3>Description</h3>
+
+<p>A special case of <code>widely()</code>. Used to pre-prepare and
+post-tidy functions that take an m x n (m items, n features)
+matrix and return an m x m (item x item) matrix, such as a
+distance or correlation matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">squarely(.f, diag = FALSE, upper = TRUE, ...)
+
+squarely_(.f, diag = FALSE, upper = TRUE, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.f</code></td>
+<td>
+<p>Function to wrap</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>diag</code></td>
+<td>
+<p>Whether to include diagonal (i = j) in output</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>upper</code></td>
+<td>
+<p>Whether to include upper triangle, which may be
+duplicated</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Extra arguments passed on to <code>widely</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>Returns a function that takes at least four arguments:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>tbl</code></td>
+<td>
+<p>A table</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>item</code></td>
+<td>
+<p>Name of column to use as rows in wide matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>feature</code></td>
+<td>
+<p>Name of column to use as columns in wide matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>feature</code></td>
+<td>
+<p>Name of column to use as values in wide matrix</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments passed on to inner function</p>
+</td>
+</tr>
+</table>
+<h3>See Also</h3>
+
+<p><code>widely()</code>, <code>pairwise_count()</code>,
+<code>pairwise_cor()</code>, <code>pairwise_dist()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(dplyr)
+library(gapminder)
+
+closest_continent &lt;- gapminder %&gt;%
+  group_by(continent) %&gt;%
+  squarely(dist)(country, year, lifeExp)
+
+</code></pre>
+
+
+</div>

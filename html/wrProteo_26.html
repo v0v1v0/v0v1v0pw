@@ -1,0 +1,114 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>razorNoFilter</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Filter based on either number of total peptides and specific peptides or number of razor petides</h2>
+
+<h3>Description</h3>
+
+<p><code>razorNoFilter</code> filters based on either a) number of total peptides and specific peptides or b) numer of razor petides.
+This function was designed for filtering using a mimimum number of (PSM-) count values following the common practice to consider results with 2 or more peptide counts as reliable. 
+The function be (re-)run independently on each of various questions (comparisons).
+Note: Non-integer data will be truncated to integer (equivalent to  <code>floor</code>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">razorNoFilter(
+  annot,
+  speNa = NULL,
+  totNa = NULL,
+  minRazNa = NULL,
+  minSpeNo = 1,
+  minTotNo = 2,
+  silent = FALSE,
+  debug = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>annot</code></td>
+<td>
+<p>(matrix or data.frame) main data (may contain NAs) with (PSM-) count values for each protein</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>speNa</code></td>
+<td>
+<p>(integer or character) indicate which column of 'annot' has number of specific peptides</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>totNa</code></td>
+<td>
+<p>(integer or character) indicate which column of 'annot' has number of total peptides</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minRazNa</code></td>
+<td>
+<p>(integer or character) name of column with number of razor peptides, alternative to 'minSpeNo'&amp; 'minTotNo'</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minSpeNo</code></td>
+<td>
+<p>(integer) minimum number of pecific peptides</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minTotNo</code></td>
+<td>
+<p>(integer) minimum total ie max razor number of peptides</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>debug</code></td>
+<td>
+<p>(logical) display additional messages for debugging</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of messages produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>This function returns a vector of logical values if corresponding line passes filter criteria
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>presenceFilt</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(2019); datT &lt;- matrix(sample.int(20,60,replace=TRUE), ncol=6,
+  dimnames=list(letters[1:10], LETTERS[1:6])) -3
+datT[,2] &lt;- datT[,2] +2
+datT[which(datT &lt;0)] &lt;- 0
+razorNoFilter(datT, speNa="A", totNa="B")
+</code></pre>
+
+
+</div>

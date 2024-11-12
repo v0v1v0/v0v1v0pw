@@ -1,0 +1,213 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_satellite_imagery</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get BOM Satellite Imagery</h2>
+
+<h3>Description</h3>
+
+<p>Fetch <abbr><span class="acronym">BOM</span></abbr> satellite GeoTIFF imagery from
+<a href="ftp://ftp.bom.gov.au/anon/gen/gms/">ftp://ftp.bom.gov.au/anon/gen/gms/</a> and return a <a href="https://CRAN.R-project.org/package=terra"><span class="pkg">terra</span></a>
+<code>SpatRaster</code> S4 class (see <code style="white-space: pre;">⁠[terra::rast()]⁠</code>) or <a href="https://CRAN.R-project.org/package=stars"><span class="pkg">stars</span></a> S3 <code>stars</code>
+object of GeoTIFF files.  Files are available at ten minutes update
+frequency with a 24-hour delete time.  It is suggested to check file
+availability first by using <code>get_available_imagery()</code>.  Ported from
+<a href="https://CRAN.R-project.org/package=bomrang"><span class="pkg">bomrang</span></a> with modifications.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_satellite_imagery(product_id, scans = 1, compat = "terra")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>product_id</code></td>
+<td>
+<p><code>Character</code>. <abbr><span class="acronym">BOM</span></abbr> product <abbr><span class="acronym">ID</span></abbr> to download
+and import as a <a href="https://CRAN.R-project.org/package=terra"><span class="pkg">terra</span></a> <code>SpatRaster</code> S4 class (see
+<code style="white-space: pre;">⁠[terra::rast()]⁠</code>) or <a href="https://CRAN.R-project.org/package=stars"><span class="pkg">stars</span></a> S3 <code>stars</code> class object.  A vector of
+values from <code>get_available_imagery()</code> may be used here.  Value is required.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scans</code></td>
+<td>
+<p><code>Integer</code>. Number of scans to download, starting with most
+recent and progressing backwards, <em>e.g.</em>, 1 - the most recent single scan
+available , 6 - the most recent hour available, 12 - the most recent 2
+hours available, etc.  Negating will return the oldest files first.
+Defaults to 1.  Value is optional.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>compat</code></td>
+<td>
+<p><code>Character</code>. A string indicating the <span style="font-family: Courier New, Courier; color: #666666;"><b>R</b></span> package with which the
+returned imagery should be formatted for use, one of <code>terra</code> or
+<code>stars</code>.  Defaults to <code>terra</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Valid <abbr><span class="acronym">BOM</span></abbr> satellite Product IDs for use with
+<var>product_id</var> include:
+</p>
+
+<dl>
+<dt>IDE00420</dt>
+<dd>
+<p>AHI cloud cover only 2km FD GEOS GIS</p>
+</dd>
+<dt>IDE00421</dt>
+<dd>
+<p>AHI IR (Ch13) greyscale 2km FD GEOS GIS</p>
+</dd>
+<dt>IDE00422</dt>
+<dd>
+<p>AHI VIS (Ch3) greyscale 2km FD GEOS GIS</p>
+</dd>
+<dt>IDE00423</dt>
+<dd>
+<p>AHI IR (Ch13) Zehr 2km FD GEOS GIS</p>
+</dd>
+<dt>IDE00425</dt>
+<dd>
+<p>AHI VIS (true colour) / IR (Ch13 greyscale) composite 1km
+FD GEOS GIS</p>
+</dd>
+<dt>IDE00426</dt>
+<dd>
+<p>AHI VIS (true colour) / IR (Ch13 greyscale) composite 2km
+FD GEOS GIS</p>
+</dd>
+<dt>IDE00427</dt>
+<dd>
+<p>AHI WV (Ch8) 2km FD GEOS GIS</p>
+</dd>
+<dt>IDE00430</dt>
+<dd>
+<p>AHI cloud cover only 2km AUS equirect. GIS</p>
+</dd>
+<dt>IDE00431</dt>
+<dd>
+<p>AHI IR (Ch13) greyscale 2km AUS equirect. GIS</p>
+</dd>
+<dt>IDE00432</dt>
+<dd>
+<p>AHI VIS (Ch3) greyscale 2km AUS equirect. GIS</p>
+</dd>
+<dt>IDE00433</dt>
+<dd>
+<p>AHI IR (Ch13) Zehr 2km AUS equirect. GIS</p>
+</dd>
+<dt>IDE00435</dt>
+<dd>
+<p>AHI VIS (true colour) / IR (Ch13 greyscale) composite 1km
+AUS equirect. GIS</p>
+</dd>
+<dt>IDE00436</dt>
+<dd>
+<p>AHI VIS (true colour) / IR (Ch13 greyscale) composite 2km
+AUS equirect. GIS</p>
+</dd>
+<dt>IDE00437</dt>
+<dd>
+<p>AHI WV (Ch8) 2km AUS equirect. GIS</p>
+</dd>
+<dt>IDE00439</dt>
+<dd>
+<p>AHI VIS (Ch3) greyscale 0.5km AUS equirect. GIS</p>
+</dd>
+</dl>
+<h3>Value</h3>
+
+<p>A <a href="https://CRAN.R-project.org/package=terra"><span class="pkg">terra</span></a> <code>SpatRaster</code> S4 class (see <code style="white-space: pre;">⁠[terra::rast()]⁠</code>) or
+<a href="https://CRAN.R-project.org/package=stars"><span class="pkg">stars</span></a> S3 <code>stars</code> class object as selected by the user by
+specifying <code>compat</code> of GeoTIFF images with layers named by <abbr><span class="acronym">BOM</span></abbr>
+product <abbr><span class="acronym">ID</span></abbr>, timestamp and band.
+</p>
+
+
+<h3>Note</h3>
+
+<p>The original <a href="https://CRAN.R-project.org/package=bomrang"><span class="pkg">bomrang</span></a> version of this function supported local
+file caching using <a href="https://CRAN.R-project.org/package=hoardr"><span class="pkg">hoardr</span></a>.  This version does not support this
+functionality any longer due to issues with <abbr><span class="acronym">CRAN</span></abbr> and
+<a href="https://CRAN.R-project.org/package=hoardr"><span class="pkg">hoardr</span></a>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Adam H. Sparks, <a href="mailto:adamhsparks@gmail.com">adamhsparks@gmail.com</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>Australian Bureau of Meteorology (<abbr><span class="acronym">BOM</span></abbr>) high-definition satellite
+images <br><a href="http://www.bom.gov.au/australia/satellite/index.shtml">http://www.bom.gov.au/australia/satellite/index.shtml</a>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>get_available_imagery()</code>
+</p>
+<p>Other BOM: 
+<code>find_forecast_towns()</code>,
+<code>get_ag_bulletin()</code>,
+<code>get_available_imagery()</code>,
+<code>get_available_radar()</code>,
+<code>get_coastal_forecast()</code>,
+<code>get_precis_forecast()</code>,
+<code>get_radar_imagery()</code>,
+<code>parse_ag_bulletin()</code>,
+<code>parse_coastal_forecast()</code>,
+<code>parse_precis_forecast()</code>
+</p>
+<p>Other data fetching: 
+<code>get_ag_bulletin()</code>,
+<code>get_coastal_forecast()</code>,
+<code>get_data_drill()</code>,
+<code>get_data_drill_apsim()</code>,
+<code>get_dpird_apsim()</code>,
+<code>get_dpird_extremes()</code>,
+<code>get_dpird_minute()</code>,
+<code>get_dpird_summaries()</code>,
+<code>get_patched_point()</code>,
+<code>get_patched_point_apsim()</code>,
+<code>get_precis_forecast()</code>,
+<code>get_radar_imagery()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Fetch AHI VIS (true colour) / IR (Ch13 greyscale) composite 1km FD
+# GEOS GIS {terra} `SpatRaster`` object for most recent single scan
+ available
+
+imagery &lt;- get_satellite_imagery(product_id = "IDE00425", scans = 1)
+plot(imagery)
+
+# Get a list of available image files and use that to specify files for
+# download, downloading the two most recent files available
+
+avail &lt;- get_available_imagery(product_id = "IDE00425")
+imagery &lt;- get_satellite_imagery(product_id = avail, scans = 2)
+plot(imagery)
+
+</code></pre>
+
+
+</div>

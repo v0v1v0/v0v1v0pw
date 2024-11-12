@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>nfirst2lower</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Make a String's First n Characters Lowercase
+</h2>
+
+<h3>Description</h3>
+
+<p>Converts uppercase to lowercase letters for the first n characters  of a character string.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">nfirst2lower(x, n = 1, first = TRUE, second = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>a character string.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+
+<p>an integer. Number of characters that we want to convert.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>first</code></td>
+<td>
+
+<p>logical. If <code>TRUE</code>, it converts the n first characters into lowercase.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>second</code></td>
+<td>
+
+<p>logical. If <code>TRUE</code>, it checks if the second letter of <code>x</code> is uppercase, the whole word will be converted to lower.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>It is a function to convert some uppercase letters  into lowercase for which words with uppercase second letter. If <code>tolower</code> in base R is used, it will be sometimes created a problem for proper nouns. Because, as we know, a name or proper noun starts with capital letter and we do not want to convert them into lowercase. But sometimes there are some words which are not a name or proper noun and displayed in capital letters. These words are the target of this function.
+</p>
+<p>If we have a text of several sentences and we want to convert  the first n letters of every sentence to lowercase, separately. We have to split text to sentences, furthermore we should consider <code>first=TRUE</code> and apply the function for each sentence (see the examples below).
+</p>
+<p>If we have a list, it works fine.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A character string.
+
+
+
+
+</p>
+
+
+<h3>Note</h3>
+
+<p>Because of all sentences begin with uppercase letters, <code>first=TRUE</code> is considered  as a default. But, if the second character of a word be capital, it is usually
+concluded that all its characters are capital. In this case, you can consider <code>second=TRUE</code>. Of course, there are some exceptations in these cases that they can be ignored (see the examples below).
+</p>
+<p>In general, if there are not a lot of proper nouns in your text string, we suggest you to use <code>tolower</code> in base R. As an ability of this function, <code>lower</code> is considered as a third argument.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Neda Daneshgar and Majid Sarmad.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>tolower</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># x is a list
+
+x=list('W-A for an English-Persian Parallel Corpus (Mizan).','ALIGNMENT is a link between words.')
+
+nfirst2lower(x, n=8) ## nfirst2lower(x, n=8) is not a list
+
+y='MT is the automatic translation. SMT is one of the methods of MT.'
+
+nfirst2lower(y) # only run for the first sentence
+
+u1=unlist(strsplit(y, ". ", fixed = TRUE))
+sapply(1:length(u1),function(x)nfirst2lower(u1[x])) ## run for all sentences
+
+h = 'It is a METHOD for this function.'
+nfirst2lower (h, second = TRUE) #only run for the first word
+
+h1 = strsplit(h, ' ')[[1]]
+nfirst2lower(h1, second = TRUE) # run for all words
+</code></pre>
+
+
+</div>

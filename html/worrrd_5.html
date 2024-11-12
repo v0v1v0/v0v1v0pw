@@ -1,0 +1,91 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>crossword</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create a crossword puzzle</h2>
+
+<h3>Description</h3>
+
+<p>Create a crossword puzzle
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">crossword(words, clues, r = 50, c = 50, method = c("optimal", "random"))
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>words</code></td>
+<td>
+<p>a vector of words (character/vector)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clues</code></td>
+<td>
+<p>a vector a clues (character/vector)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>r</code></td>
+<td>
+<p>number of rows (numeric/scalar)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>c</code></td>
+<td>
+<p>number of columns (numeric/scalar)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>generate puzzle using 'optimal' or 'random' word order, where
+the optimal order will place words with the most overlap first</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>crossword object
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Example 1 ----
+words &lt;- c("apple", "pear", "banana")
+clues &lt;- c("red fruit", "bartlett", "green then yellow")
+x &lt;- crossword(words, clues)
+plot(x, solution = TRUE)
+
+# Example 2 ---
+dat &lt;-
+dplyr::tribble(
+  ~word,   ~clue,
+  "dog",   "Bark. Bark. Bark.",
+  "cat",   "Purrr",
+  "horse", "Neighhhhh",
+  "frog",  "Ribbit Ribbit",
+  "cow",   "Moooooooo",
+  "fox",   "Nee Nee Nee (What does the ____ say?)",
+  "sheep", "Bleat",
+  "snake", "Hissss",
+  "duck",  "Quack",
+  "bird",  "Chirp"
+)
+ex2 &lt;- crossword(words = dat$word, clues = dat$clue, r = 40, c = 40)
+plot(ex2, solution = TRUE, clues = TRUE)
+
+</code></pre>
+
+
+</div>

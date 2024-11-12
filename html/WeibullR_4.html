@@ -1,0 +1,82 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>contour.wblr</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+S3 Likelihood Ratio Contour Maps From <code>wblr</code> Objects
+</h2>
+
+<h3>Description</h3>
+
+<p>This function adds the <code>.wblr</code> method to <code>contour</code>
+from the <span class="pkg">graphics</span> package.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">## S3 method for class 'wblr'
+contour(x, ...)</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+
+<p>Object of class <code>"wblr"</code> or a list of <code>wblr</code> objects.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+
+<p>Entry for a limited set of graphic parameters (col, lty, lwd, xlim, ylim, main and sub)
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function provides S3 object functionality for plotting a likelihood ratio contour map for
+any single wblr object with just the contour function.
+</p>
+<p>Contour parameters are drawn from a contour existing in the object(s) passed in, or 
+from the base object (sometimes just defaults) if no contour exists in the object.
+</p>
+<p>In order to plot contour maps from multiple objects onto a single canvas
+it is necessary to call contour.wblr specifically with a list of wblr objects as primary argument.
+</p>
+<p>Unlike the <code>contour</code> this map is not prepared from a matrix of z-values.
+Rather the specific x,y points for each CL level (Z-value) are provided for plotting lines
+connecting the points.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The contour.wblr function itself returns no value, however, the full output of contour points and
+parameters from the internally called WeibullR::plot_contour function is displayed.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">set.seed(1234)
+da2 &lt;- wblr.conf(wblr.fit(wblr(runif(5,100,1000),col="red")))
+da3 &lt;- wblr.conf(wblr.fit(wblr(rweibull(5,3,1000),col="green4")))
+
+
+## Not run: 
+contour.wblr(list(da2,da3))
+
+## End(Not run)
+</code></pre>
+
+
+</div>

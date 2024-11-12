@@ -1,0 +1,168 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>create_ITSA</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Estimate an effect of intervention on every Viva Insights metric in input
+file by applying single-group Interrupted Time-Series Analysis (ITSA)</h2>
+
+<h3>Description</h3>
+
+<p>r lifecycle::badge('experimental')
+</p>
+<p>This function implements ITSA method described in the paper 'Conducting
+interrupted time-series analysis for single- and multiple-group comparisons',
+Ariel Linden, The Stata Journal (2015), 15, Number 2, pp. 480-500
+</p>
+<p>This function further requires the installation of 'sandwich', 'portes', and
+'lmtest' in order to work. These packages can be installed from CRAN using
+<code>install.packages()</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">create_ITSA(
+  data,
+  before_start = min(as.Date(data$Date, "%m/%d/%Y")),
+  before_end,
+  after_start,
+  after_end = max(as.Date(data$Date, "%m/%d/%Y")),
+  ac_lags_max = 7,
+  return = "table"
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>Person Query as a dataframe including date column named <code>Date</code>.
+This function assumes the data format is MM/DD/YYYY as is standard in a
+Viva Insights query output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>before_start</code></td>
+<td>
+<p>Start date of 'before' time period in MM/DD/YYYY format
+as character type. Before time period is the period before the intervention
+(e.g. training program, re-org, shift to remote work) occurs and bounded by
+before_start and before_end parameters. Longer period increases likelihood
+of achieving more statistically significant results. Defaults to earliest
+date in dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>before_end</code></td>
+<td>
+<p>End date of 'before' time period in MM/DD/YYYY  format as
+character type.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>after_start</code></td>
+<td>
+<p>Start date of 'after' time period in MM/DD/YYYY  format as
+character type. After time period is the period after the intervention
+occurs and bounded by after_start and after_end parameters. Longer period
+increases likelihood of achieving more statistically significant results.
+Defaults to date after before_end.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>after_end</code></td>
+<td>
+<p>End date of 'after' time period in MM/DD/YYYY  format as
+character type. Defaults to latest date in dataset.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ac_lags_max</code></td>
+<td>
+<p>maximum lag for autocorrelation test. Default is 7</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>return</code></td>
+<td>
+<p>String specifying what output to return. Defaults to "table".
+Valid return options include:
+</p>
+
+<ul>
+<li> <p><code>'plot'</code>: return a list of plots.
+</p>
+</li>
+<li> <p><code>'table'</code>: return data.frame with estimated models' coefficients and
+their corresponding p-values You should look for significant p-values in
+beta_2 to indicate an immediate treatment effect, and/or in beta_3 to
+indicate a treatment effect over time
+</p>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function uses the additional package dependencies 'sandwich' and
+'lmtest'. Please install these separately from CRAN prior to running the
+function.
+</p>
+<p>As of May 2022, the 'portes' package was archived from CRAN. The dependency
+has since been removed and dependent functions <code>Ljungbox()</code> incorporated into
+the <strong>wpa</strong> package.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Aleksey Ashikhmin <a href="mailto:alashi@microsoft.com">alashi@microsoft.com</a>
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other Flexible Input: 
+<code>period_change()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# Returns summary table
+create_ITSA(
+  data = sq_data,
+  before_start = "12/15/2019",
+  before_end = "12/29/2019",
+  after_start = "1/5/2020",
+  after_end = "1/26/2020",
+  ac_lags_max = 7,
+  return = "table")
+
+# Returns list of plots
+
+plot_list &lt;-
+  create_ITSA(
+    data = sq_data,
+    before_start = "12/15/2019",
+    before_end = "12/29/2019",
+    after_start = "1/5/2020",
+    after_end = "1/26/2020",
+    ac_lags_max = 7,
+    return = 'plot')
+
+# Extract a plot as an example
+plot_list$Workweek_span
+
+
+</code></pre>
+
+
+</div>

@@ -1,0 +1,208 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>as_muscle_stim</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Create your own muscle_stim object</h2>
+
+<h3>Description</h3>
+
+<p>For use when data are not stored in .ddf format and you would like
+to create a <code>muscle_stim</code> object that can be used by other workloopR
+functions.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">as_muscle_stim(x, type, sample_frequency, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A <code>data.frame</code>. See Details for how it should be organized.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Experiment type; must be one of: "workloop", "tetanus", or
+"twitch."</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sample_frequency</code></td>
+<td>
+<p>Numeric value of the frequency at which samples were
+recorded; must be in Hz. Please format as numeric, e.g. <code>10000</code> works
+but <code>10000 Hz</code> does not</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Additional arguments that can be passed in as attributes. See
+Details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>muscle_stim</code> objects, which are required by (nearly) all
+workloopR functions, are automatically created via <code>read_ddf()</code>. Should
+you have data that are stored in a format other than .ddf, use this function
+to create your own object of class <code>muscle_stim</code>.
+</p>
+<p>The input <code>x</code> must be a <code>data.frame</code> that contains time series
+of numeric data collected from an experiment. Each row must correspond to a
+sample, and these columns (exact title matches) must be included: <br>
+"Time" - time, recorded in seconds <br>
+"Position" - instantaneous position of the muscle,
+preferably in millimeters <br>
+"Force" - force, preferably in millinewtons <br>
+"Stim" - whether stimulation has occurred. All entries must be either 0 (no
+stimulus) or 1 (stimulus occurrence).
+</p>
+<p>Additional arguments can be provided via <code>...</code>. For all experiment
+types, the following attributes are appropriate: <br>
+"units","header", "units_table",
+"protocol_table", "stim_table",
+"stimulus_pulses", "stimulus_offset",
+"stimulus_width", "gear_ratio",
+"file_id", or "mtime".
+</p>
+<p>Please ensure that further attributes are appropriate to your experiment
+type.
+</p>
+<p>For workloops, these include:
+"stimulus_frequency", "cycle_frequency",
+"total_cycles", "cycle_def",
+"amplitude", "phase",
+and "position_inverted"
+</p>
+<p>For twitches or tetanic trials:
+"stimulus_frequency", and "stimulus_length"
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>workloop</code>, <code>twitch</code>, or <code>tetanus</code>,
+all of which inherit class <code>muscle_stim</code>. These objects behave like
+<code>data.frames</code> in most situations but also store metadata from the ddf
+as attributes.
+</p>
+<p>The <code>muscle_stim</code> object's columns contain:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>Time</code></td>
+<td>
+<p>Time</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Position</code></td>
+<td>
+<p>Length change of the muscle, uncorrected for gear ratio</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Force</code></td>
+<td>
+<p>Force, uncorrected for gear ratio</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Stim</code></td>
+<td>
+<p>When stimulation occurs, on a binary scale</p>
+</td>
+</tr>
+</table>
+<p>In addition, the following information is stored in the <code>data.frame</code>'s
+attributes:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>sample_frequency</code></td>
+<td>
+<p>Frequency at which samples were collected</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pulses</code></td>
+<td>
+<p>Number of sequential pulses within a stimulation train</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>total_cycles_lo</code></td>
+<td>
+<p>Total number of oscillatory cycles (assuming sine
+wave trajectory) that the muscle experienced. Cycles are defined with respect
+to initial muscle length (L0-to-L0 as opposed to peak-to-peak).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>amplitude</code></td>
+<td>
+<p>amplitude of length change (again, assuming sine wave
+trajectory)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cycle_frequency</code></td>
+<td>
+<p>Frequency of oscillations (again, assuming sine wave
+trajectory)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>units</code></td>
+<td>
+<p>The units of measurement for each column in the
+<code>data.frame</code>. This might be the most important attribute so please check
+that it makes sense!</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Shreeram Senthivasan
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>read_ddf</code>
+</p>
+<p>Other data import functions: 
+<code>get_wl_metadata()</code>,
+<code>read_analyze_wl_dir()</code>,
+<code>read_analyze_wl()</code>,
+<code>read_ddf_dir()</code>,
+<code>read_ddf()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+library(workloopR)
+
+# import the workloop.ddf file included in workloopR
+wl_dat &lt;-read_ddf(system.file("extdata", "workloop.ddf",
+                              package = 'workloopR'))
+
+
+</code></pre>
+
+
+</div>

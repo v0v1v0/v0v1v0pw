@@ -1,0 +1,93 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>with_timezone</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Time zone</h2>
+
+<h3>Description</h3>
+
+<p>Change the time zone, and restore it afterwards.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">with_timezone(tz, code)
+
+local_timezone(tz, .local_envir = parent.frame())
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>tz</code></td>
+<td>
+<p><code style="white-space: pre;">⁠[character(1)]⁠</code> a valid time zone specification, note that
+time zone names might be platform dependent.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>code</code></td>
+<td>
+<p><code>[any]</code><br> Code to execute in the temporary environment</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.local_envir</code></td>
+<td>
+<p>The environment to apply the change to.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p><code>with_timezone()</code> runs the code with the specified time zone and
+resets it afterwards.
+</p>
+<p><code>local_timezone()</code> changes the time zone for the caller
+execution environment.
+</p>
+
+
+<h3>Value</h3>
+
+<p><code>[any]</code><br> The results of the evaluation of the <code>code</code>
+argument.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>withr</code> for examples
+</p>
+<p><code>Sys.timezone()</code>.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">Sys.time()
+with_timezone("Europe/Paris", print(Sys.time()))
+with_timezone("America/Los_Angeles", print(Sys.time()))
+
+fun1 &lt;- function() {
+  local_timezone("CET")
+  print(Sys.time())
+}
+
+fun2 &lt;- function() {
+  local_timezone("America/Los_Angeles")
+  print(Sys.time())
+}
+Sys.time()
+fun1()
+fun2()
+Sys.time()
+</code></pre>
+
+
+</div>

@@ -1,0 +1,131 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>simbase_covar</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Calculate reference data for simulating values based on a covariance matrix approach</h2>
+
+<h3>Description</h3>
+
+<p>Given the covariance matrix and the means of a set of variables, we can
+simulate not only the distribution of the variables, but also their
+correlations. The present function calculates the basic values required for
+the simulation and returns them packed into an object of class
+<code>simbase_covar</code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">simbase_covar(
+  data,
+  variables = NULL,
+  transforms = list(),
+  label = simbase_labeler,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The dataset for the calculation of the reference data for
+simulation; for grouped datasets (see <code>group_by</code>),
+the reference data is
+calculated for each group separately (see also <code>simbase_list</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>variables</code></td>
+<td>
+<p>Character vector containing the names in <code>data</code>
+which should be included in the simulation. If missing, all numeric
+variables in <code>data</code> are used.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transforms</code></td>
+<td>
+<p>A named list of objects of class <code>trans</code>
+or class <code>transform</code>
+(see function <code>trans_new</code> in package <code>scales</code>);
+the name of each list entry
+<b>must</b> correspond to a variable name in <code>variables</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>label</code></td>
+<td>
+<p>Either a string describing the data and the simulation approach,
+or a labelling function which returns a label string and takes as input
+the data, a string giving the class
+of the simbase object (here <code>"simbase_covar"</code>) and the
+transforms list.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Arguments to be passed on to <code>simbase_list</code>
+(<em>if</em> it is called).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If some of the variables are non-normally distributed, a transform may
+improve the prediction. The transforms are passed to the function as a named
+list, where the name of a list entry must correspond to the name of the
+variable in the data which is to be transformed.
+</p>
+<p>Predefined transforms can be found in the package <code>scales</code>, where they are
+used for axis transformations as a preparation for plotting. The package
+<code>scales</code> also contains a function <code>trans_new</code> which can be used
+to define new transforms.
+</p>
+<p>In the context of destructively measured sawn timber properties, the type of
+destructive test applied is of interest. If the dataset <code>data</code> contains a
+variable <code>loadtype</code> which consistently throughout the dataset has either the
+value "t" (i.e. all sawn timber has been tested in tension) or the
+value "be" (i.e. all sawn timber has been tested in bending, edgewise),
+then the returned object also has a field <code>loadtype</code> with that value.
+</p>
+<p>One can also calculate a simbase under the assumption that the correlations
+are different for different subgroups of the data. This is done by grouping
+the dataset <code>data</code> prior to passing it to the function,
+using <code>group_by</code>. In this case, several objects of
+class <code>simbase_covar</code> are created and joined together in a <code>tibble</code> –
+see also <code>simbase_list</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An <code>S3</code> object of class <code>simbase_list</code> if <code>data</code> is grouped,
+and an object of class <code>simbase_covar</code> otherwise.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># obtain a dataset for demonstration
+dataset &lt;- simulate_dataset();
+
+# calculate a simbase without transforms
+simbase_covar(dataset, c('f', 'E', 'rho', 'E_dyn'));
+
+# calculate a simbase with log-transformed f
+simbase_covar(dataset, c('f', 'E', 'rho', 'E_dyn'), list(f = scales::log_trans()));
+
+# if we group the dataset, we get a simbase_list object
+simbase_covar(dplyr::group_by(dataset, country), c('f', 'E', 'rho', 'E_dyn'));
+
+</code></pre>
+
+
+</div>

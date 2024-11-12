@@ -1,0 +1,124 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>ridgePlot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Ridge Plots for a Range of Coefficients</h2>
+
+<h3>Description</h3>
+
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="../help/figures/lifecycle-experimental.svg" alt="[Experimental]"></a>
+This function will plot the distribution of predictions for a range of active coefficients
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">ridgePlot(
+  fit,
+  index = 1,
+  minCoef = 1,
+  maxCoef = 10,
+  scale = 1,
+  alpha = 0.5,
+  full = NULL,
+  transform = function(x) {
+     x
+ },
+  xlab = "Predictions",
+  bandwidth = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>fit</code></td>
+<td>
+<p>A <code>WpProj</code> object or list of <code>WpProj</code> objects</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>index</code></td>
+<td>
+<p>The observation number to select. Can be a vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>minCoef</code></td>
+<td>
+<p>The minimum number of coefficients to use</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxCoef</code></td>
+<td>
+<p>The maximum number of coefficients to use</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>How the densities should be scale</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>Alpha term from ggplot2 object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>full</code></td>
+<td>
+<p>"True" prediction to compare to</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>transform</code></td>
+<td>
+<p>transform for predictions</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>xlab</code></td>
+<td>
+<p>x-axis label</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bandwidth</code></td>
+<td>
+<p>Bandwidth for kernel</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>a <code>ggplot2::ggplot()</code> plot
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">if(rlang::is_installed("stats")) {
+n &lt;- 128
+p &lt;- 10
+s &lt;- 99
+x &lt;- matrix(stats::rnorm(n*p), nrow = n, ncol = p )
+beta &lt;- (1:10)/10
+y &lt;- x %*% beta + stats::rnorm(n)
+post_beta &lt;- matrix(beta, nrow=p, ncol=s) + matrix(stats::rnorm(p*s, 0, 0.1), p, s)
+post_mu &lt;- x %*% post_beta
+fit &lt;-  WpProj(X=x, eta=post_mu, 
+             power = 2
+)
+ridgePlot(fit)
+}
+</code></pre>
+
+
+</div>

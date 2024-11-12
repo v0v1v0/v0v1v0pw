@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>select_week_level</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Configure week level</h2>
+
+<h3>Description</h3>
+
+<p>When the dimension is defined as a date type, using this function we can select
+the week level and its attributes to include in it: week and year_week.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">select_week_level(td, include_all, exclude_all, week, year_week)
+
+## S3 method for class 'when'
+select_week_level(
+  td,
+  include_all = FALSE,
+  exclude_all = FALSE,
+  week = NULL,
+  year_week = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>td</code></td>
+<td>
+<p>A <code>when</code> object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_all</code></td>
+<td>
+<p>A boolean, include all fields of the level.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>exclude_all</code></td>
+<td>
+<p>A boolean, exclude all fields of the level.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>week</code></td>
+<td>
+<p>A boolean, include the week number.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>year_week</code></td>
+<td>
+<p>A boolean, include the year-week combination.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The <code>include_all</code> and <code>exclude_all</code> parameters allow us to include or exclude
+all attributes, and then specifically exclude or include the ones we need.
+</p>
+<p>For the first and last days of the year, the year associated with the week may
+be different from the year of the date, depending on the date type selected.
+</p>
+<p>The week number associated with each date depends on the type of date dimension
+selected: standard ('date'), ISO 8601 ('iso') or epidemiological ('epi').
+</p>
+<p>The standard week numbers blocks of 7 days beginning on January 1. The last week
+of the year can be less than 7 days long.
+</p>
+<p>The ISO 8601 week numbers blocks of 7 days from Monday to Sunday. The first and
+last week of the year can contain days from the previous or next year.
+</p>
+<p>The epidemiological week is like ISO 8601 only that it considers that the week
+begins on Sunday.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>when</code> object.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>Other dimension definition: 
+<code>define_characteristics()</code>,
+<code>define_instances()</code>,
+<code>get_attribute_definition_function()</code>,
+<code>get_day_part()</code>,
+<code>get_week_date_range()</code>,
+<code>select_date_levels()</code>,
+<code>select_day_level()</code>,
+<code>select_month_level()</code>,
+<code>select_quarter_level()</code>,
+<code>select_semester_level()</code>,
+<code>select_time_level()</code>,
+<code>select_year_level()</code>,
+<code>set_attribute_definition_function()</code>,
+<code>set_day_part()</code>,
+<code>when()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+td &lt;- when() |&gt;
+  select_week_level(year_week = FALSE)
+
+</code></pre>
+
+
+</div>

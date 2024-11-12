@@ -1,0 +1,392 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>get_wcde</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Download data from the Wittgenstein Centre Human Capital Data Explorer</h2>
+
+<h3>Description</h3>
+
+<p>Downloads data from the Wittgenstein Centre Human Capital Data Explorer. Requires a working internet connection.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">get_wcde(
+  indicator = "pop",
+  scenario = 2,
+  country_code = NULL,
+  country_name = NULL,
+  pop_age = c("total", "all"),
+  pop_sex = c("total", "both", "all"),
+  pop_edu = c("total", "four", "six", "eight"),
+  include_scenario_names = FALSE,
+  server = c("iiasa", "github", "1&amp;1", "search-available", "iiasa-local"),
+  version = c("wcde-v3", "wcde-v2", "wcde-v1")
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>indicator</code></td>
+<td>
+<p>One character string based on the <code>indicator</code> column in the <code>wic_indicators</code> data frame, representing the variable to be downloaded.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scenario</code></td>
+<td>
+<p>Vector of length one or more with numbers corresponding the scenarios. See details for more information. Defaults to 2 for the SSP2 Medium scenario.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>country_code</code></td>
+<td>
+<p>Vector of length one or more of country numeric codes based on ISO 3 digit numeric values.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>country_name</code></td>
+<td>
+<p>Vector of length one or more of country names. The corresponding country code will be guessed using the countrycodes package.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pop_age</code></td>
+<td>
+<p>Character string for population age groups if <code>indicator</code> is set to <code>pop</code>. Defaults to no age groups <code>total</code>, but can be set to <code>all</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pop_sex</code></td>
+<td>
+<p>Character string for population sexes if <code>indicator</code>is set to <code>pop</code>. Defaults to no sex <code>total</code>, but can be set to <code>both</code> or <code>all</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pop_edu</code></td>
+<td>
+<p>Character string for population educational attainment if <code>indicator</code> is set to <code>pop</code>. Defaults to <code>total</code>, but can be set to <code>four</code>, <code>six</code> or <code>eight</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>include_scenario_names</code></td>
+<td>
+<p>Logical vector of length one to indicate if to include additional columns for scenario names and short names. <code>FALSE</code> by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>server</code></td>
+<td>
+<p>Character string for server to download from. Defaults to <code>iiasa</code>, but can use <code>github</code> or <code>1&amp;1</code> if IIASA server is down. Can check availability by setting to <code>search-available</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>version</code></td>
+<td>
+<p>Character string for version of projections to obtain. Defaults to <code>wcde-v3</code>, but can use <code>wcde-v2</code> or <code>wcde-v1</code>. Scenario and indicator availability vary between versions.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>If no <code>country_name</code> or <code>country_code</code> is provided data for all countries and regions are downloaded. A full list of available countries and regions can be found in the <code>wic_locations</code> data frame.
+</p>
+<p><code>indicator</code> must be set to a value in the first column in the table below of available demographic indicators:</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   <code>indicator</code> </td>
+<td style="text-align: left;"> Indicator Description </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>pop</code> </td>
+<td style="text-align: left;"> Population Size (000's) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>bpop</code> </td>
+<td style="text-align: left;"> Population Size by Broad Age (000's) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>epop</code> </td>
+<td style="text-align: left;"> Population Size by Education (000's) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>prop</code> </td>
+<td style="text-align: left;"> Educational Attainment Distribution </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>bprop</code> </td>
+<td style="text-align: left;"> Educational Attainment Distribution by Broad Age </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>growth</code> </td>
+<td style="text-align: left;"> Average Annual Growth Rate </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>nirate</code> </td>
+<td style="text-align: left;"> Average Annual Rate of Natural Increase </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>sexratio</code> </td>
+<td style="text-align: left;"> Sex Ratio </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>mage</code> </td>
+<td style="text-align: left;"> Population Median Age </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>tdr</code> </td>
+<td style="text-align: left;"> Total Dependency Ratio </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>ydr</code> </td>
+<td style="text-align: left;"> Youth Dependency Ratio </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>odr</code> </td>
+<td style="text-align: left;"> Old-age Dependency Ratio </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>ryl15</code> </td>
+<td style="text-align: left;"> Age When Remaining Life Expectancy is Below 15 years </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>pryl15</code> </td>
+<td style="text-align: left;"> Proportion of Population with a Remaining Life Expectancy below 15 Years </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>mys</code> </td>
+<td style="text-align: left;"> Mean Years of Schooling by Age </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>bmys</code> </td>
+<td style="text-align: left;"> Mean Years of Schooling by Broad Age </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>ggapmys15</code> </td>
+<td style="text-align: left;"> Gender Gap in Mean Years Schooling (15+) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>ggapmys25</code> </td>
+<td style="text-align: left;"> Gender Gap in Mean Years Schooling (25+) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>ggapedu15</code> </td>
+<td style="text-align: left;"> Gender Gap in Educational Attainment (15+) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>ggapedu25</code> </td>
+<td style="text-align: left;"> Gender Gap in Educational Attainment (25+) </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>tfr</code> </td>
+<td style="text-align: left;"> Total Fertility Rate </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>etfr</code> </td>
+<td style="text-align: left;"> Total Fertility Rate by Education </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>asfr</code> </td>
+<td style="text-align: left;"> Age-Specific Fertility Rate </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>easfr</code> </td>
+<td style="text-align: left;"> Age-Specific Fertility Rate by Education </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>cbr</code> </td>
+<td style="text-align: left;"> Crude Birth Rate </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>macb</code> </td>
+<td style="text-align: left;"> Mean Age at Childbearing </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>emacb</code> </td>
+<td style="text-align: left;"> Mean Age at Childbearing by Education </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>e0</code> </td>
+<td style="text-align: left;"> Life Expectancy at Birth </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>cdr</code> </td>
+<td style="text-align: left;"> Crude Death Rate </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>assr</code> </td>
+<td style="text-align: left;"> Age-Specific Survival Ratio </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>eassr</code> </td>
+<td style="text-align: left;"> Age-Specific Survival Ratio by Education </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>net</code> </td>
+<td style="text-align: left;"> Net Migration </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>netedu</code> </td>
+<td style="text-align: left;"> Net Migration Flows by Education </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>emi</code> </td>
+<td style="text-align: left;"> Emigration Flows </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>imm</code> </td>
+<td style="text-align: left;"> Immigration Flows </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>See <code>wic_indicators</code> data frame for more details.
+</p>
+<p><code>scenario</code> must be set to one or values in the first column table below of the available future scenarios:</p>
+
+<table>
+<tr>
+<td style="text-align: left;">
+   <code>scenario</code> </td>
+<td style="text-align: left;"> description </td>
+<td style="text-align: left;"> version </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>1</code> </td>
+<td style="text-align: left;"> Rapid Development (SSP1) </td>
+<td style="text-align: left;"> V1, V2, V3 </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>2</code> </td>
+<td style="text-align: left;"> Medium (SSP2) </td>
+<td style="text-align: left;"> V1, V2, V3 </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>3</code> </td>
+<td style="text-align: left;"> Stalled Development (SSP3) </td>
+<td style="text-align: left;"> V1, V2, V3 </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>4</code> </td>
+<td style="text-align: left;"> Inequality (SSP4) </td>
+<td style="text-align: left;"> V1, V3 </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>5</code> </td>
+<td style="text-align: left;"> Conventional Development (SSP5) </td>
+<td style="text-align: left;"> V1, V3 </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>20</code> </td>
+<td style="text-align: left;"> Medium - Constant Enrollment Rate (SSP2-CER) </td>
+<td style="text-align: left;"> V1 </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>21</code> </td>
+<td style="text-align: left;"> Medium - Fast Track Education (SSP2-FT) </td>
+<td style="text-align: left;"> V1 </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>22</code> </td>
+<td style="text-align: left;"> Medium - Zero Migration (SSP2-ZM) </td>
+<td style="text-align: left;"> V2, V3 </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+   <code>23</code> </td>
+<td style="text-align: left;"> Medium - Double Migration (SSP2-DM) </td>
+<td style="text-align: left;"> V2, V3 </td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+<p>See <code>wic_scenarios</code> data frame for more details.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A tibble with the data selected.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+# SSP2 tfr for Austria and Bulgaria
+get_wcde(indicator = "tfr", country_code = c(40, 100))
+
+# SSP1 and SSP2 life expectancy for Vietnam and United Kingdom (guessing the country codes)
+get_wcde(scenario = c(1, 2), indicator = "e0", country_name = c("Vietnam", "UK"))
+
+# SSP1 and SSP3 population by education for all countries
+get_wcde(scenario = c(1, 3), indicator = "tfr")
+
+# population totals (aggregated over age, sex and education)
+get_wcde(indicator = "pop", country_name = "Austria")
+
+# population totals by education group
+get_wcde(indicator = "pop", country_name = "Austria", pop_edu = "four")
+
+# population totals by age-sex group
+get_wcde(indicator = "pop", country_name = "Austria", pop_age = "all", pop_sex = "both")
+
+</code></pre>
+
+
+</div>

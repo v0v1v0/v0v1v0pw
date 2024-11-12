@@ -1,0 +1,192 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>eval.clustering</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Evaluate DSM on Clustering Task (wordspace)
+</h2>
+
+<h3>Description</h3>
+
+<p>Performs evaluation on a word clustering task by comparing a flat clustering
+solution based on semantic distances with a gold classification. 
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">
+eval.clustering(task, M, dist.fnc = pair.distances, ...,
+                details = FALSE, format = NA, taskname = NA,
+                scale.entropy = FALSE, n.clusters = NA,
+                word.name = "word", class.name = "class")
+
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>task</code></td>
+<td>
+<p>a data frame listing words and their classes, usually in columns named <code>word</code> and <code>class</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>M</code></td>
+<td>
+<p>a scored DSM matrix, passed to <code>dist.fnc</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dist.fnc</code></td>
+<td>
+<p>a callback function used to compute distances between word pairs.
+It will be invoked with character vectors containing the components of the word pairs as first and second argument,
+the DSM matrix <code>M</code> as third argument, plus any additional arguments (<code>...</code>) passed to <code>eval.multiple.choice</code>.
+The return value must be a numeric vector of appropriate length.  If one of the words in a pair is not represented in the DSM,
+the corresponding distance value should be set to <code>Inf</code>.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>any further arguments are passed to <code>dist.fnc</code> and can be used e.g. to select a distance measure</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>details</code></td>
+<td>
+<p>if <code>TRUE</code>, a detailed report with information on each task item is returned (see “Value” below for details)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>format</code></td>
+<td>
+<p>if the task definition specifies POS-disambiguated lemmas in CWB/Penn format, they can automatically be transformed into some other notation conventions; see <code>convert.lemma</code> for details</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>taskname</code></td>
+<td>
+<p>optional row label for the short report (<code>details=FALSE</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale.entropy</code></td>
+<td>
+<p>whether to scale cluster entropy values to the range <code class="reqn">[0, 1]</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n.clusters</code></td>
+<td>
+<p>number of clusters. The (very sensible) default is to generate as many clusters as their are classes in the gold standard.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>word.name</code></td>
+<td>
+<p>the name of the column of <code>task</code> containing words</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>class.name</code></td>
+<td>
+<p>the name of the column of <code>task</code> containing gold standard classes</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The test words are clustered using the “partitioning around medoids” (PAM) algorithm (Kaufman &amp; Rousseeuw 1990, Ch. 2) based on their semantic distances.
+The PAM algorithm is used because it works with arbitrary distance measures (including neihbour rank), produces a stable solution (unlike most iterative algorithms)
+and has shown to be on par with state-of-the-art spherical k-means clustering (CLUTO) in evaluation studies.
+</p>
+<p>Each cluster is automatically assigned a majority label, i.e. the gold standard class occurring most frequently in the cluster.
+This represents the best possible classification that can be derived from the clustering.
+</p>
+<p>As evaluation metrics, clustering <b>purity</b> (accuracy of the majority classification) and <b>entropy</b> are computed.
+The latter is defined as a weighted average over the entropy of the class distribution within each cluster, expressed in bits.
+If <code>scale.entropy=TRUE</code>, the value is divided by the overall entropy of the class distribution in the gold standard, scaling it to the range <code class="reqn">[0, 1]</code>.
+</p>
+<p>NB: The semantic distance measure selected with the extra arguments (<code>...</code>) should be <em>symmetric</em>.
+In particular, it is not very sensible to specify <code>rank="fwd"</code> or <code>rank="bwd"</code>.
+</p>
+<p>NB: Similarity measures are not supported by the current clustering algorithm.  Make sure not to call <code>dist.matrix</code>
+(from <code>dist.fnc</code>) with <code>convert=FALSE</code>!
+</p>
+
+
+<h3>Value</h3>
+
+<p>The default short report (<code>details=FALSE</code>) is a data frame with a single row and the columns
+<code>purity</code> (clustering purity as a percentage), <code>entropy</code> (scaled or unscaled clustering entropy)
+and <code>missing</code> (number of words not found in the DSM).
+</p>
+<p>The detailed report (<code>details=TRUE</code>) is a data frame with one row for each test word and the following columns:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>word</code></td>
+<td>
+<p>the test word (character)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cluster</code></td>
+<td>
+<p>cluster to which the word has been assigned; all unknown words are collected in an additional cluster <code>"n/a"</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>label</code></td>
+<td>
+<p>majority label of this cluster (factor with same levels as <code>gold</code>)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>gold</code></td>
+<td>
+<p>gold standard class of the test word (factor)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>correct</code></td>
+<td>
+<p>whether majority class assignment is correct (logical)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>missing</code></td>
+<td>
+<p>whether word was not found in the DSM (logical)</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Stephanie Evert (<a href="https://purl.org/stephanie.evert">https://purl.org/stephanie.evert</a>)</p>
+
+
+<h3>See Also</h3>
+
+<p>Suitable gold standard data sets in this package: <code>ESSLLI08_Nouns</code>
+</p>
+<p>Support functions: <code>pair.distances</code>, <code>convert.lemma</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+eval.clustering(ESSLLI08_Nouns, DSM_Vectors, class.name="class2")
+
+</code></pre>
+
+
+</div>

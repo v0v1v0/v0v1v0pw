@@ -1,0 +1,210 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>bicor</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Biweight Midcorrelation </h2>
+
+<h3>Description</h3>
+
+<p>Calculate biweight midcorrelation efficiently for matrices.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">bicor(x, y = NULL, 
+      robustX = TRUE, robustY = TRUE, 
+      use = "all.obs", 
+      maxPOutliers = 1,
+      quick = 0,
+      pearsonFallback = "individual",
+      cosine = FALSE, 
+      cosineX = cosine,
+      cosineY = cosine,
+      nThreads = 0, 
+      verbose = 0, indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p> a vector or matrix-like numeric object </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p> a vector or matrix-like numeric object </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>robustX</code></td>
+<td>
+<p> use robust calculation for <code>x</code>?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>robustY</code></td>
+<td>
+<p> use robust calculation for <code>y</code>?</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>use</code></td>
+<td>
+<p> specifies handling of <code>NA</code>s. One of (unique abbreviations of) "all.obs",
+"pairwise.complete.obs". </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxPOutliers</code></td>
+<td>
+<p> specifies the maximum percentile of data that can be considered outliers on either
+side of the median separately. For each side of the median, if
+higher percentile than <code>maxPOutliers</code> is considered an outlier by the weight function based on
+<code>9*mad(x)</code>, the width of the weight function is increased such that the percentile of outliers on
+that side of the median equals <code>maxPOutliers</code>. Using <code>maxPOutliers=1</code> will effectively disable
+all weight function broadening; using <code>maxPOutliers=0</code> will give results that are quite similar (but
+not equal to) Pearson correlation. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quick</code></td>
+<td>
+<p> real number between 0 and 1 that controls the handling of missing data in the
+calculation of correlations. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pearsonFallback</code></td>
+<td>
+<p>Specifies whether the bicor calculation should revert to Pearson when median
+absolute deviation (mad) is zero. Recongnized values are (abbreviations of) 
+<code>"none", "individual", "all"</code>. If set to
+<code>"none"</code>, zero mad will result in <code>NA</code> for the corresponding correlation. 
+If set to <code>"individual"</code>, Pearson calculation will be used only for columns that have zero mad.
+If set to <code>"all"</code>, the presence of a single zero mad will cause the whole variable to be treated in
+Pearson correlation manner (as if the corresponding <code>robust</code> option was set to <code>FALSE</code>). </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cosine</code></td>
+<td>
+<p> logical: calculate cosine biweight midcorrelation? 
+Cosine bicorrelation is similar to standard bicorrelation but the median subtraction is not performed. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cosineX</code></td>
+<td>
+<p> logical: use the cosine calculation for <code>x</code>? This setting does not affect <code>y</code> 
+and can be used to give a hybrid cosine-standard bicorrelation. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>cosineY</code></td>
+<td>
+<p> logical: use the cosine calculation for <code>y</code>? This setting does not affect <code>x</code>
+and can be used to give a hybrid cosine-standard bicorrelation. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nThreads</code></td>
+<td>
+<p> non-negative integer specifying the number of parallel threads to be used by certain
+parts of correlation calculations. This option only has an effect on systems on which a POSIX thread
+library is available (which currently includes Linux and Mac OSX, but excludes Windows).
+If zero, the number of online processors will be used if it can be determined dynamically, otherwise
+correlation calculations will use 2 threads. 
+Note that this option does not affect what is usually the most expensive part of the
+calculation, namely the matrix multiplication. The matrix multiplication is carried out by BLAS routines provided by R;
+these can be sped up by installing a fast BLAS and making R use it.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> if non-zero, the underlying C function will print some diagnostics.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function implements biweight midcorrelation calculation (see references). If <code>y</code> is not
+supplied, midcorrelation of columns of <code>x</code> will be calculated; otherwise, the midcorrelation between
+columns of <code>x</code> and <code>y</code> will be calculated. Thus, <code>bicor(x)</code> is equivalent to
+<code>bicor(x,x)</code> but is more efficient. 
+</p>
+<p>The options <code>robustX</code>, <code>robustY</code> allow the user to revert the calculation to standard
+correlation calculation. This is important, for example, if any of the variables is binary
+(or, more generally, discrete) as in such cases the robust methods produce meaningless results. 
+If both <code>robustX</code>, <code>robustY</code> are set to <code>FALSE</code>, the function calculates the
+standard Pearson correlation (but is slower than the function <code>cor</code>).
+</p>
+<p>The argument <code>quick</code> specifies the precision of handling of missing data in the correlation
+calculations. Value <code>quick = 0</code> will cause all
+calculations to be executed accurately, which may be significantly slower than calculations without
+missing data. Progressively higher values will speed up the
+calculations but introduce progressively larger errors. Without missing data, all column meadians and
+median absolute deviations (MADs) can be pre-calculated before the covariances are calculated. When
+missing data are present, 
+exact calculations require the column medians and MADs to be calculated for each covariance. The
+approximate calculation uses the pre-calculated median and MAD and simply ignores missing data in the
+covariance calculation. If the number of missing data is high, the pre-calculated medians and MADs may
+be very different from the actual ones, thus potentially introducing large errors.
+The <code>quick</code> value times the
+number of rows specifies the maximum difference in the
+number of missing entries for median and MAD calculations on the one hand and covariance on the other
+hand that will be tolerated before a recalculation is triggered. The hope is that if only a few missing
+data are treated approximately, the error introduced will be small but the potential speedup can be
+significant.
+</p>
+<p>The choice <code>"all"</code> for <code>pearsonFallback</code> is not fully implemented in the sense that there are
+rare but possible cases in which the calculation is equivalent to <code>"individual"</code>. This may happen if
+the <code>use</code> option is set to <code>"pairwise.complete.obs"</code> and
+the missing data are arranged such that each individual mad is non-zero, but when two columns are analyzed
+together, the missing data from both columns may make a mad zero. In such a case, the calculation is treated
+as Pearson, but other columns will be treated as bicor. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>A matrix of biweight midcorrelations. Dimnames on the result are set appropriately.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Peter Langfelder</p>
+
+
+<h3>References</h3>
+
+ 
+<p>Peter Langfelder, Steve Horvath (2012)
+Fast R Functions for Robust Correlations and Hierarchical Clustering.
+Journal of Statistical Software, 46(11), 1-17.
+<a href="https://www.jstatsoft.org/v46/i11/">https://www.jstatsoft.org/v46/i11/</a>
+</p>
+<p>"Introduction to Robust Estimation and Hypothesis Testing", Rand Wilcox, Academic Press, 1997.
+</p>
+<p>"Data Analysis and Regression: A Second Course in Statistics", Mosteller and Tukey, Addison-Wesley,
+1977, pp. 203-209. 
+</p>
+
+
+</div>

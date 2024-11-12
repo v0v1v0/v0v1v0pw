@@ -1,0 +1,69 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>bquote_function</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Adapt a function to use bquote on its arguments.</h2>
+
+<h3>Description</h3>
+
+<p>bquote_function is for adapting a function defined elsewhere for bquote-enabled argument substitution.
+Re-write call to evaluate <code>expr</code> with <code>bquote</code> <code>.()</code> substitution.
+Uses convetion that := is considered a alias for =.
+Including <code>.(-x)</code> promoting <code>x</code>'s value from character to a name,
+which is called "quote negation" (hence the minus-sign).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">bquote_function(fn)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>fn</code></td>
+<td>
+<p>function to adapt, must have non-empty formals().</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>new function.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>bquote_call_args</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+
+if(requireNamespace('graphics', quietly = TRUE)) {
+  angle = 1:10
+  variable &lt;- as.name("angle")
+  plotb &lt;- bquote_function(graphics::plot)
+  plotb(x = .(variable), y = sin(.(variable)))
+}
+
+
+
+f1 &lt;- function(x) { substitute(x) }
+f2 &lt;- bquote_function(f1)
+arg &lt;- "USER_ARG"
+f2(arg)    # returns arg
+f2(.(arg)) # returns "USER_ARG" (character)
+f2(.(-arg)) # returns USER_ARG (name)
+
+
+</code></pre>
+
+
+</div>

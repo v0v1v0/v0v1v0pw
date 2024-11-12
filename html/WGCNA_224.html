@@ -1,0 +1,243 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>rankPvalue</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Estimate the p-value for ranking consistently high (or low) on multiple lists
+</h2>
+
+<h3>Description</h3>
+
+<p>The function rankPvalue calculates the p-value for observing that an object (corresponding to a row of the input
+data frame <code>datS</code>) has a consistently high ranking (or low ranking) according to multiple ordinal scores
+(corresponding to the columns of the input data frame <code>datS</code>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">rankPvalue(datS, columnweights = NULL, 
+           na.last = "keep", ties.method = "average", 
+           calculateQvalue = TRUE, pValueMethod = "all")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>datS</code></td>
+<td>
+
+<p>a data frame whose rows represent objects that will be ranked. Each column of <code>datS</code> represents an
+ordinal variable (which can take on negative values). The columns correspond to (possibly signed) object
+significance measures, e.g., statistics (such as Z statistics), ranks, or correlations. 
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>columnweights</code></td>
+<td>
+
+<p>allows the user to input a vector of non-negative numbers reflecting weights for the different columns of
+<code>datZ</code>.
+If it is set to <code>NULL</code> then all weights are equal.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>na.last</code></td>
+<td>
+
+<p>controls the treatment of missing values (NAs) in the rank function. If <code>TRUE</code>, missing values in the data are
+put last (i.e. they get the highest rank values). If <code>FALSE</code>, they are put first; 
+if <code>NA</code>, they are removed; if
+<code>"keep"</code> they are kept with rank NA. See <code>rank</code> for more details.
+</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ties.method</code></td>
+<td>
+
+<p>represents the ties method used in the rank function for the percentile rank method. See <code>rank</code> for
+more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>calculateQvalue</code></td>
+<td>
+<p> logical: should q-values be calculated? If set to TRUE then the function calculates
+corresponding q-values (local false discovery rates) using the qvalue package, see Storey JD and Tibshirani R.
+(2003). This option assumes that qvalue package has been installed. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValueMethod</code></td>
+<td>
+
+<p>determines which method is used for calculating p-values. By default it is set to "all", i.e. both methods are
+used. If it is set to "rank" then only the percentile rank method is used. If it set to "scale" then only the
+scale method will be used.
+</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function calculates asymptotic p-values (and optionally q-values) for testing the null hypothesis that the
+values in the columns of datS are independent. This allows us to find objects (rows) with consistently high (or
+low) values across the columns.
+</p>
+<p>Example: Imagine you have 5 vectors of Z statistics corresponding to the columns of datS. Further assume that a
+gene has ranks 1,1,1,1,20 in the 5 lists. It seems very significant that the gene ranks number 1 in 4 out of the
+5 lists. The function rankPvalue can be used to calculate a p-value for this occurrence.
+</p>
+<p>The function uses the central limit theorem to calculate asymptotic p-values for two types of test statistics
+that measure consistently high or low ordinal values.
+The first method (referred to as percentile rank method) leads to accurate estimates of p-values if datS has at
+least 4 columns but it can be overly conservative. 
+The percentile rank method replaces each column datS by the ranked version rank(datS[,i]) (referred to ask low
+ranking) and by rank(-datS[,i]) (referred to as high ranking). Low ranking and high ranking allow one to find
+consistently small values or  consistently large values of datS, respectively.  All ranks are divided by the
+maximum rank so that the result lies in the unit interval [0,1]. In the following, we refer to rank/max(rank) as
+percentile rank. For a given object (corresponding to a row of datS) the observed percentile rank follows
+approximately a uniform distribution under the null hypothesis. The test statistic is defined as the sum of the
+percentile ranks (across the columns of datS). Under the null hypothesis that there is no relationship between
+the rankings of the columns of datS, this (row sum) test statistic follows a distribution that is given by the
+convolution of random uniform distributions. Under the null hypothesis, the individual percentile ranks are
+independent and one can invoke the central limit theorem to argue that the row sum test statistic follows
+asymptotically a normal distribution.  It is well-known that the speed of convergence to the normal distribution
+is extremely fast in case of  identically distributed uniform distributions. Even when datS has only  4 columns,
+the difference between the normal approximation and the exact distribution is negligible in practice (Killmann
+et al 2001).
+In summary, we use the central limit theorem to argue that the sum of the percentile ranks follows a normal
+distribution whose mean and variance can be calculated using the fact that the mean value of a uniform random
+variable (on the unit interval) equals 0.5 and its variance equals 1/12.
+</p>
+<p>The second method for calculating p-values is referred to as scale method. It is often more powerful but its
+asymptotic p-value can only be trusted if either datS has a lot of columns or if the ordinal scores (columns of
+datS)  follow an approximate normal distribution.  The scale method scales (or standardizes) each ordinal
+variable (column of datS) so that it has mean 0 and variance 1. Under the null hypothesis of independence, the
+row sum follows approximately a normal distribution if the assumptions of  the central limit theorem are met.
+In practice, we find that the second approach is often more powerful but it makes more distributional
+assumptions (if datS has few columns).
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list whose actual content depends on which p-value methods is selected, and whether q0values are calculated.
+The following inner components are calculated, organized in outer components <code>datoutrank</code> and
+<code>datoutscale</code>,:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>pValueExtremeRank</code></td>
+<td>
+<p>This is the minimum between pValueLowRank and
+pValueHighRank, i.e. min(pValueLow, pValueHigh)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValueLowRank</code></td>
+<td>
+<p>Asymptotic p-value for observing a consistently low value across
+the columns of datS based on the rank method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValueHighRank</code></td>
+<td>
+<p>Asymptotic p-value for observing a consistently low value across
+the columns of datS based on the rank method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValueExtremeScale</code></td>
+<td>
+<p>This is the minimum between pValueLowScale and
+pValueHighScale, i.e. min(pValueLow, pValueHigh)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValueLowScale</code></td>
+<td>
+<p>Asymptotic p-value for observing a consistently low value across
+the columns of datS based on the Scale method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pValueHighScale</code></td>
+<td>
+<p>Asymptotic p-value for observing a consistently low value across
+the columns of datS based on the Scale method.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueExtremeRank</code></td>
+<td>
+<p>local false discovery rate (q-value) corresponding to the p-value
+pValueExtremeRank</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueLowRank</code></td>
+<td>
+<p>local false discovery rate (q-value) corresponding to the p-value
+pValueLowRank</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueHighRank</code></td>
+<td>
+<p>local false discovery rate (q-value) corresponding to the p-value
+pValueHighRank</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueExtremeScale</code></td>
+<td>
+<p>local false discovery rate (q-value) corresponding to the p-value
+pValueExtremeScale</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueLowScale</code></td>
+<td>
+<p>local false discovery rate (q-value) corresponding to the p-value
+pValueLowScale</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>qValueHighScale</code></td>
+<td>
+<p>local false discovery rate (q-value) corresponding to the p-value
+pValueHighScale</p>
+</td>
+</tr>
+</table>
+<h3>Author(s)</h3>
+
+<p>Steve Horvath
+</p>
+
+
+<h3>References</h3>
+
+<p>Killmann F,  VonCollani E (2001) A Note on the Convolution of the Uniform and Related Distributions and Their
+Use in Quality Control. Economic Quality Control Vol 16 (2001), No. 1, 17-41.ISSN 0940-5151
+</p>
+<p>Storey JD and Tibshirani R. (2003) Statistical significance for genome-wide experiments. Proceedings of the
+National Academy of Sciences, 100: 9440-9445. </p>
+
+
+<h3>See Also</h3>
+
+<p><code>rank</code>, <code>qvalue</code>
+</p>
+
+
+</div>

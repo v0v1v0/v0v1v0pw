@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Kolm</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Kolm index</h2>
+
+<h3>Description</h3>
+
+<p>Computes Kolm inequality measure of a given variable taking into account weights.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Kolm(X, W = rep(1, length(X)), parameter = 1, scale = "None")
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>is a data vector</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>W</code></td>
+<td>
+<p>is a vector of weights</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parameter</code></td>
+<td>
+<p>is a Kolm parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>scale</code></td>
+<td>
+<p>method of data scaling (None, Normalization, Unitarization, Standardization)</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Kolm index with parameter <code class="reqn">\alpha</code>  is defined as:
+</p>
+<p style="text-align: center;"><code class="reqn">K = \frac{1}{ \alpha} (log( \sum_{i=1}^n \exp(\alpha (w_{i} - \mu)) - log(n)))</code>
+</p>
+
+<p>Kolm index is scale-dependent. Basic normalization methods can be applied before final computation.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The value of Kolm coefficient.
+</p>
+
+
+<h3>References</h3>
+
+<p>Kolm S. C.: (1976) Unequal inequalities I and II
+</p>
+<p>Kolm S. C.: (1996) Intermediate measures of inequality
+</p>
+<p>Chakravarty S. R.: (2009) Inequality, Polarization and Poverty  e-ISBN 978-0-387-79253-8
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># Compare weighted and unweighted result
+X=1:10
+W=1:10
+Kolm(X)
+Kolm(X,W)
+
+# Compare raw and standardized data.
+Kolm(X,W)
+Kolm(X,W, scale ="Standardization")
+
+# Changing units has an impact on the final result
+Kolm(X)
+Kolm(10*X)
+
+# Changing units has no impact on the final result with standardized data
+Kolm(X,scale ="Standardization")
+Kolm(10*X,scale ="Standardization")
+
+</code></pre>
+
+
+</div>

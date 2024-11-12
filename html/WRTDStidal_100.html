@@ -1,0 +1,167 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wrtdstrnd</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Get WRTDS trends</h2>
+
+<h3>Description</h3>
+
+<p>Get WRTDS trends for annual and monthly groupings
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wrtdstrnd(dat_in, ...)
+
+## Default S3 method:
+wrtdstrnd(
+  dat_in,
+  mobrks,
+  yrbrks,
+  molabs,
+  yrlabs,
+  aves = FALSE,
+  mo_strt = 10,
+  min_mo = 9,
+  ...
+)
+
+## S3 method for class 'tidal'
+wrtdstrnd(
+  dat_in,
+  mobrks,
+  yrbrks,
+  molabs,
+  yrlabs,
+  tau = NULL,
+  aves = FALSE,
+  mo_strt = 10,
+  min_mo = 9,
+  ...
+)
+
+## S3 method for class 'tidalmean'
+wrtdstrnd(
+  dat_in,
+  mobrks,
+  yrbrks,
+  molabs,
+  yrlabs,
+  aves = FALSE,
+  mo_strt = 10,
+  min_mo = 9,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>dat_in</code></td>
+<td>
+<p>input tidal or tidalmean object which must already have fitted model data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>methods passed to or from other methods</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mobrks</code></td>
+<td>
+<p>list of month groupings where each month is an integer from 1 to 12, see examples</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yrbrks</code></td>
+<td>
+<p>numeric vector of breaks for years, see examples</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>molabs</code></td>
+<td>
+<p>character vector of names for month breaks, see examples</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>yrlabs</code></td>
+<td>
+<p>character vector of names for year breaks, see examples</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>aves</code></td>
+<td>
+<p>logical if averages within each period are also returned</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mo_strt</code></td>
+<td>
+<p>numeric indicating month to start aggregation years for annual trends, defaults to October for USGS water year from October to September, passed to <code>annual_agg</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>min_mo</code></td>
+<td>
+<p>numeric value from one to twelve indicating the minimum number of months with observations for averaging by years, passed to <code>annual_agg</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tau</code></td>
+<td>
+<p>numeric vector of quantile for estimating trends</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Trends are reported as percent changes of annual averages from the beginning to the end of each period.  To reduce the effects of odd years at the beginning and end of each period, percent changes are based on an average of the first three and last three annual averages.  For example, percent changes for January throughout an an entire time series from 1980 to 2000 would be the change of the average from January in 1980-1982 to the average from January in 1998-2000.  Annual trends, e.g., percent changes from 1980-1986, 1987-1993, etc. do not average by the first and last three years in each grouping because the values are already based on annual averages as returned by <code>annual_agg</code>.  
+</p>
+<p>Note that the default minimum number of months argument (<code>min_mo</code>) may not be appropriate for all cases.  Annual estimates should first be evaluated with <code>prdnrmplot</code> to verify that odd years with missing months are not driving results for the annual percent changes.  
+</p>
+<p>Averages in each period can be returned if <code>aves = TRUE</code>.  These averages are based on annual averages within each period for congruency with the trend estimates.  
+</p>
+<p>All trends are based on back-transformed, flow-normalized results. 
+</p>
+<p>The user must supply the annual and monthly aggregation periods to the appropriate arguments. These are passed to <code>cut</code> and are left-open, right-closed along the interval.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A <code>data.frame</code> with summary trends for each grouping
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## load a fitted model object
+data(tidfit)
+data(tidfitmean)
+
+## get trends
+
+# setup month, year categories
+mobrks &lt;- list(c(1, 2, 3), c(4, 5, 6), c(7, 8, 9), c(10, 11, 12))
+yrbrks &lt;- c(1973, 1985, 1994, 2003, 2012)
+molabs &lt;- c('JFM', 'AMJ', 'JAS', 'OND')
+yrlabs &lt;- c('1974-1985', '1986-1994', '1995-2003', '2004-2012')
+
+wrtdstrnd(tidfit, mobrks, yrbrks, molabs, yrlabs)
+wrtdstrnd(tidfitmean, mobrks, yrbrks, molabs, yrlabs)
+
+# get averages in each period
+wrtdstrnd(tidfit, mobrks, yrbrks, molabs, yrlabs, aves = TRUE)
+</code></pre>
+
+
+</div>

@@ -1,0 +1,443 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>modulePreservation</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2> Calculation of module preservation statistics </h2>
+
+<h3>Description</h3>
+
+<p>Calculations of module preservation statistics between independent data sets.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">modulePreservation(
+   multiData,
+   multiColor,
+   multiWeights = NULL,
+   dataIsExpr = TRUE,
+   networkType = "unsigned", 
+   corFnc = "cor",
+   corOptions = "use = 'p'",
+   referenceNetworks = 1, 
+   testNetworks = NULL,
+   nPermutations = 100, 
+   includekMEallInSummary = FALSE,
+   restrictSummaryForGeneralNetworks = TRUE,
+   calculateQvalue = FALSE,
+   randomSeed = 12345, 
+   maxGoldModuleSize = 1000, 
+   maxModuleSize = 1000, 
+   quickCor = 1, 
+   ccTupletSize = 2, 
+   calculateCor.kIMall = FALSE,
+   calculateClusterCoeff = FALSE,
+   useInterpolation = FALSE, 
+   checkData = TRUE, 
+   greyName = NULL, 
+   goldName = NULL,
+   savePermutedStatistics = TRUE, 
+   loadPermutedStatistics = FALSE, 
+   permutedStatisticsFile = if (useInterpolation) "permutedStats-intrModules.RData" 
+                                   else "permutedStats-actualModules.RData", 
+   plotInterpolation = TRUE, 
+   interpolationPlotFile = "modulePreservationInterpolationPlots.pdf", 
+   discardInvalidOutput = TRUE,
+   parallelCalculation = FALSE,
+   verbose = 1, indent = 0)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>multiData</code></td>
+<td>
+<p>  expression data or adjacency data 
+in multi-set format (see <code>checkSets</code>). A vector of
+lists, one per set. Each set must contain a component <code>data</code> that contains the expression or adjacency
+data.
+If expression data are used,
+rows correspond to samples and columns to genes or probes. In case of adjacencies, each <code>data</code> matrix
+should be a symmetric matrix ith entries between 0 and 1 and unit diagonal. 
+Each component of the outermost list should be
+named. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multiColor</code></td>
+<td>
+<p> a list in which every component is a vector giving the module labels of genes in
+<code>multiExpr</code>. The components must be named using the same names that are used in <code>multiExpr</code>; these
+names are used top match labels to expression data sets. See details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>multiWeights</code></td>
+<td>
+<p>optional weights, only when <code>multiData</code> contains expression data. 
+If given, must be in the multi-set format (see <code>checkSets</code>) and
+weights for each set must have the same dimensions as the corresponding set in <code>multiData</code>. The weights are used in
+correlation calculations that involve <code>multiData</code>, and are supplied as argument <code>weights.x</code> and possibly
+<code>weights.y</code> (where appropriate) to the correlation function specified by <code>corFnc</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dataIsExpr</code></td>
+<td>
+<p> logical: if <code>TRUE</code>, <code>multiData</code> will be interpreted as expression data; if
+<code>FALSE</code>, <code>multiData</code> will be interpreted as adjacencies. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>networkType</code></td>
+<td>
+<p> network type. Allowed values are (unique abbreviations of) <code>"unsigned"</code>,
+<code>"signed"</code>, <code>"signed hybrid"</code>. See <code>adjacency</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corFnc</code></td>
+<td>
+<p> character string specifying the function to be used to calculate co-expression
+similarity. Defaults to Pearson correlation. Another useful choice is <code>bicor</code>.
+More generally, any function returning values between -1 and 1 can be used. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>corOptions</code></td>
+<td>
+<p> character string specifying additional arguments to be passed to the function given
+by <code>corFnc</code>. Use <code>"use = 'p', method = 'spearman'"</code> to obtain Spearman correlation.   </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>referenceNetworks</code></td>
+<td>
+<p> a vector giving the indices of expression data to be used as reference networks.
+Reference networks must have their module labels given in <code>multiColor</code>. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>testNetworks</code></td>
+<td>
+<p>a list with one component per each entry in <code>referenceNetworks</code> above, giving
+the test networks in which to evaluate module preservation for the corresponding reference network. If not
+given, preservation will be evaluated in all networks (except each reference network). If
+<code>referenceNetworks</code> is of length 1, <code>testNetworks</code> can also be a vector (instead of a list
+containing the single vector).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nPermutations</code></td>
+<td>
+<p> specifies the number of permutations that will be calculated in the permutation test. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>includekMEallInSummary</code></td>
+<td>
+<p> logical: should cor.kMEall be included in the calculated summary statistics?
+Because kMEall takes into account all genes in the network, this statistic measures preservation of the full
+network with respect to the eigengene of the module. This may be undesirable, hence the default is
+<code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>restrictSummaryForGeneralNetworks</code></td>
+<td>
+<p> logical: should the summary statistics for general (not
+correlation) networks be restricted (density to meanAdj, connectivity to cor.kIM and cor.Adj)? The default
+<code>TRUE</code> corresponds to published work. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>calculateQvalue</code></td>
+<td>
+<p> logical: should q-values (local FDR estimates) be calculated? Package qvalue must
+be installed for this calculation. Note that q-values may not be meaningful when the number of modules is
+small and/or most modules are preserved. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>randomSeed</code></td>
+<td>
+<p> seed for the random number generator. If <code>NULL</code>, the seed will not be set. If
+non-<code>NULL</code> and the random generator has been initialized prior to the function call, the latter's state
+is saved and restored upon exit</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxGoldModuleSize</code></td>
+<td>
+<p> maximum size of the "gold" module, i.e., the random sample of all network genes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>maxModuleSize</code></td>
+<td>
+<p> maximum module size used for calculations. Modules larger than <code>maxModuleSize</code>
+will be reduced by randomly sampling <code>maxModuleSize</code> genes. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>quickCor</code></td>
+<td>
+<p> number between 0 and 1 specifying the handling of missing data in calculation of
+correlation. Zero means exact but potentially slower calculations; one means potentially faster
+calculations, but with potentially inaccurate results if the proportion of missing data is large. See
+<code>cor</code> for more details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>ccTupletSize</code></td>
+<td>
+<p> tuplet size for co-clustering calculations. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>calculateCor.kIMall</code></td>
+<td>
+<p> logical: should cor.kMEall be calculated? This option is only valid for
+adjacency input. If <code>FALSE</code>, cor.kIMall will not be calculated, potentially saving significant amount
+of time if the input adjacencies are large and contain many modules. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>calculateClusterCoeff</code></td>
+<td>
+<p> logical: should statistics based on the clustering coefficient be
+calculated? While these statistics may be interesting, the calculations are also computationally expensive.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>checkData</code></td>
+<td>
+<p> logical: should data be checked for excessive number of missing entries? See
+<code>goodSamplesGenesMS</code> for details. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>greyName</code></td>
+<td>
+<p> label used for unassigned genes. Traditionally such genes are labeled by grey color or
+numeric label 0. These values are the default when <code>multiColor</code> contains character or numeric vectors,
+respectively. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>goldName</code></td>
+<td>
+<p> label used for the "module" representing a random sample of the whole network. 
+Traditionally such genes are labeled by gold color or
+numeric label 0.1. These values are the default when <code>greyName</code> is character and numeric,
+respectively. If these values conflict with the module labels in <code>multiColor</code>, they should be set to something not present
+in <code>multiColor</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>savePermutedStatistics</code></td>
+<td>
+<p> logical: should calculated permutation statistics be saved? Saved
+statistics may be re-used if the calculation needs to be repeated.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>permutedStatisticsFile</code></td>
+<td>
+<p> file name to save the permutation statistics into. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>loadPermutedStatistics</code></td>
+<td>
+<p> logical: should permutation statistics be loaded? If a previously executed
+calculation needs to be repeated, loading permutation study results can cut the calculation time many-fold. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>useInterpolation</code></td>
+<td>
+<p> logical: should permutation statistics be calculated by interpolating an artificial
+set of evenly spaced modules? This option may potentially speed up the calculations, but it restricts
+calculations to density measures.  </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotInterpolation</code></td>
+<td>
+<p> logical: should interpolation plots be saved? If interpolation is used (see
+<code>useInterpolation</code> above), the function can optionally generate diagnostic plots that can be used to
+assess whether the interpolation makes sense. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>interpolationPlotFile</code></td>
+<td>
+<p> file name to save the interpolation plots into. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>discardInvalidOutput</code></td>
+<td>
+<p>logical: should output columns containing no valid data be discarded? This
+option may be useful when input <code>dataIsExpr</code> is <code>FALSE</code> and some of the output statistics cannot
+be calculated. This option causes such statistics to be dropped from output.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallelCalculation</code></td>
+<td>
+<p>logical: should calculations be done in parallel? Note that parallel
+calculations are turned off by default and will lead to somewhat DIFFERENT results than serial calculations
+because the random seed is set differently. For the calculation to actually run in parallel mode, a call to
+<code>enableWGCNAThreads</code> must be made before this function is called.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>verbose</code></td>
+<td>
+<p> integer level of verbosity. Zero means silent, higher values make the output
+progressively more and more verbose. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>indent</code></td>
+<td>
+<p> indentation for diagnostic messages. Zero means no indentation, each unit adds
+two spaces. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function calculates module preservation statistics pair-wise between given reference sets and all
+other sets in <code>multiExpr</code>. Reference sets must have their corresponding module assignment specified in
+<code>multiColor</code>; module assignment is optional for test sets. Individual expression sets and their module
+labels are matched using <code>names</code> of the corresponding components in <code>multiExpr</code> and
+<code>multiColor</code>. 
+</p>
+<p>For each reference-test pair, the function calculates module preservation statistics that
+measure how well the modules of the reference set are preserved in the test set. 
+If the <code>multiColor</code> also contains module assignment for the test set, the calculated statistics also
+include cross-tabulation statistics that make use of the test module assignment. 
+</p>
+<p>For each reference-test pair, the function only uses genes (columns of the <code>data</code> component of each
+component of <code>multiExpr</code>) that are in common between the reference and test set. Columns are matched by
+column names, so column names must be valid.  
+</p>
+<p>In addition to preservation statistics, the function also calculates several statistics of module quality,
+that is measures of how well-defined modules are in the reference set. The quality statistics are calculated
+with respect to genes in common with with a test set; thus the function calculates a set of quality
+statistics for each reference-test pair. This may be somewhat counter-intuitive, but it allows a direct
+comparison of corresponding quality and preservation statistics.
+</p>
+<p>The calculated p-values are determined from the Z scores of individual measures under assumption of
+normality. No p-value is calculated for the Zsummary measures. Bonferoni correction to the number of tested
+modules. Because the p-values for strongly preserved modules are often extremely low, the function reports
+natural logarithms (base e) of the p-values. However, q-values are reported untransformed since they are
+calculated that way in package qvalue.
+</p>
+<p>Missing data are removed (but see <code>quickCor</code> above). 
+</p>
+
+
+<h3>Value</h3>
+
+<p>The function returns a nested list of preservation statistics. At the top level, the list components are:
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>quality</code></td>
+<td>
+<p>observed values, Z scores, log p-values, Bonferoni-corrected log p-values, and (optionally)
+q-values of quality statistics. All logarithms are in base 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>preservation </code></td>
+<td>
+<p>observed values, Z scores, log p-values, Bonferoni-corrected log p-values, and
+(optionally) q-values of density and connectivity preservation statistics. All logarithms are in base 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>accuracy</code></td>
+<td>
+<p>observed values, Z scores, log p-values, Bonferoni-corrected log p-values, and
+(optionally) q-values of cross-tabulation statistics. All logarithms are in base 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>referenceSeparability</code></td>
+<td>
+<p>observed values, Z scores, log p-values, Bonferoni-corrected log p-values, and (optionally)
+q-values of module separability in the reference network. All logarithms are in base 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>testSeparability</code></td>
+<td>
+<p>observed values, Z scores, p-values, Bonferoni-corrected p-values, and (optionally)
+q-values of module separability in the test network. All logarithms are in base 10.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>permutationDetails</code></td>
+<td>
+<p>results of individual permutations, useful for diagnostics</p>
+</td>
+</tr>
+</table>
+<p>All of the above are lists. The lists <code>quality</code>, <code>preservation</code>, <code>referenceSeparability</code>,
+and <code>testSeparability</code> each contain 4 or 5 components: <code>observed</code> contains observed values, 
+<code>Z</code> contains the corresponding Z scores, <code>log.p</code> contains base 10 logarithms of the p-values,
+<code>log.pBonf</code>  contains base 10 logarithms of the Bonferoni corrected p-values, and optionally <code>q</code>
+contains the associated q-values. The list <code>accuracy</code> contains <code>observed</code>, <code>Z</code>, <code>log.p</code>,
+<code>log.pBonf</code>, optionally <code>q</code>, 
+and additional components <code>observedOverlapCounts</code> and <code>observedFisherPvalues</code> that contain the
+observed matrices of overlap counts and Fisher test p-values. 
+</p>
+<p>Each of the lists <code>observed</code>, <code>Z</code>, <code>log.p</code>,
+<code>log.pBonf</code>, optionally <code>q</code>, <code>observedOverlapCounts</code> and <code>observedFisherPvalues</code>
+is structured as a 2-level list where the outer components correspond to reference sets and the inner
+components to tests sets. As an example, <code>preservation$observed[[1]][[2]]</code> contains the density and
+connectivity preservation statistics for the preservation of set 1 modules in set 2, that is set 1 is the
+reference set and set 2 is the test set. <code>preservation$observed[[1]][[2]]</code> is a data frame in which
+each row corresponds to a module in the reference network 1 plus one row for the unassigned objects, and
+one row for a "module" that contains randomly sampled objects and that represents a whole-network average.
+Each column corresponds to a statistic as indicated by the column name. 
+</p>
+
+
+<h3>Note</h3>
+
+ 
+<p>For large data sets, the permutation study may take a while (typically on the order of several hours). Use
+<code>verbose = 3</code> to get detailed progress report as the calculations advance.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p> Rui Luo and Peter Langfelder </p>
+
+
+<h3>References</h3>
+
+<p> Peter Langfelder, Rui Luo, Michael C. Oldham, and Steve Horvath, to appear </p>
+
+
+<h3>See Also</h3>
+
+<p> Network construction and module detection functions in the WGCNA package such as
+<code>adjacency</code>, <code>blockwiseModules</code>; rudimentary cleaning in
+<code>goodSamplesGenesMS</code>; the WGCNA implementation of correlation in <code>cor</code>.
+</p>
+
+
+</div>

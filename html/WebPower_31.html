@@ -1,0 +1,130 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wp.mc.chisq.diff</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Statistical Power Analysis for SEM Based on Chi-square Difference Test</h2>
+
+<h3>Description</h3>
+
+<p>This function is for SEM power analysis based on the chi-square difference test.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wp.mc.chisq.diff(full.model.pop, full.model, 
+reduced.model, N=100, R=1000, alpha=0.05)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>full.model.pop</code></td>
+<td>
+<p>Full model (under the alternative hypothesis) with population parameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>full.model</code></td>
+<td>
+<p>Full model (under the alternative hypothesis) lavaan specification.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>reduced.model</code></td>
+<td>
+<p>Reduced model (under the null hypothesis) lavaan specification.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>N</code></td>
+<td>
+<p>Sample size.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>R</code></td>
+<td>
+<p>Number of Monte Carlo replications.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha</code></td>
+<td>
+<p>significance level chosed for the test. It equals 0.05 by default.</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>An object of the power analysis.
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>power</code></td>
+<td>
+<p>Statistical power.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>df</code></td>
+<td>
+<p>Degrees of freedom</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>chi.diff</code></td>
+<td>
+<p>Chi-square differences between the reduced model and the full model</p>
+</td>
+</tr>
+</table>
+<h3>References</h3>
+
+<p>Demidenko, E. (2007). Sample size determination for logistic regression revisited. Statistics in medicine, 26(18), 3385-3397.
+</p>
+<p>Zhang, Z., &amp; Yuan, K.-H. (2018). Practical Statistical Power Analysis Using Webpower and R (Eds). Granger, IN: ISDSA Press.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+set.seed(20220722)
+
+full.model.pop &lt;-'
+y1 ~ 0.4*x
+y2 ~ 0.5*x + 0.2*y1
+y3 ~ 0.4*x
+y4 ~ 0.4*y1 + 0.4*y2 + 0.4*y3
+y1 ~~ 0.84*y1
+y2 ~~ 0.61*y2
+y3 ~~ 0.84*y3
+y4 ~~ 0.27*y4
+'
+
+full.model &lt;-'
+y1 ~ x
+y2 ~ x + y1
+y3 ~ x
+y4 ~ y1 + y2 + y3
+'
+
+reduced.model &lt;-'
+y1 ~ x
+y2 ~ x 
+y3 ~ x
+y4 ~ y1 + y3
+'
+
+wp.mc.chisq.diff(full.model.pop, full.model, reduced.model)
+
+
+</code></pre>
+
+
+</div>

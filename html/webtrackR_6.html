@@ -1,0 +1,85 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>add_referral</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Add social media referrals as a new column</h2>
+
+<h3>Description</h3>
+
+<p>Identifies whether a visit was referred to from social media and
+adds it as a new column. See details for method.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">add_referral(wt, platform_domains, patterns)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>wt</code></td>
+<td>
+<p>webtrack data object.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>platform_domains</code></td>
+<td>
+<p>character. A vector of platform domains for which
+referrers should be identified. Order and length must correspondent to <code>patterns</code> argument</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>patterns</code></td>
+<td>
+<p>character. A vector of patterns for which referrers should
+be identified. Order and length must correspondent to <code>platform_domains</code> vector.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>To identify referrals, we rely on the method described as most valid
+in Schmidt et al.: When the domain preceding a visit was to the platform in question,
+and the query string of the visit's URL contains a certain pattern,
+we count it as a referred visit. For Facebook, the pattern has been identified
+by Schmidt et al. as <code>'fbclid='</code>, although this can change in future.
+</p>
+
+
+<h3>Value</h3>
+
+<p>webtrack data.frame with the same columns as wt and a new column called <code>referral</code>,
+which takes on NA if no referral has been identified, or the name specified
+platform_domains if a referral from that platform has been identified
+</p>
+
+
+<h3>References</h3>
+
+<p>Schmidt, Felix, Frank Mangold, Sebastian Stier and Roberto Ulloa. "Facebook as an Avenue to News: A Comparison and Validation of Approaches to Identify Facebook Referrals". Working paper.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data("testdt_tracking")
+wt &lt;- as.wt_dt(testdt_tracking)
+wt &lt;- add_referral(wt, platform_domains = "facebook.com", patterns = "fbclid=")
+wt &lt;- add_referral(wt,
+    platform_domains = c("facebook.com", "twitter.com"),
+    patterns = c("fbclid=", "utm_source=twitter")
+)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

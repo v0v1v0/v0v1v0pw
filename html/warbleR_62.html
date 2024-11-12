@@ -1,0 +1,199 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>sig2noise</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Measure signal-to-noise ratio</h2>
+
+<h3>Description</h3>
+
+<p><code>sig2noise</code> measures signal-to-noise ratio across multiple files.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">sig2noise(
+  X,
+  mar,
+  parallel = 1,
+  path = NULL,
+  pb = TRUE,
+  type = 1,
+  eq.dur = FALSE,
+  in.dB = TRUE,
+  before = FALSE,
+  lim.dB = TRUE,
+  bp = NULL,
+  wl = 10
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>X</code></td>
+<td>
+<p>object of class 'selection_table', 'extended_selection_table' or any data frame with columns
+for sound file name (sound.files), selection number (selec), and start and end time of signal
+(start and end).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>mar</code></td>
+<td>
+<p>numeric vector of length 1. Specifies the margins adjacent to
+the start and end points of selection over which to measure noise.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>parallel</code></td>
+<td>
+<p>Numeric. Controls whether parallel computing is applied.
+It specifies the number of cores to be used. Default is 1 (i.e. no parallel computing). It can also be
+set globally using the 'parallel' option (see <code>warbleR_options</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>path</code></td>
+<td>
+<p>Character string containing the directory path where the sound files are located.
+If <code>NULL</code> (default) then the current working directory is used. It can also be
+set globally using the 'wav.path' option (see <code>warbleR_options</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>pb</code></td>
+<td>
+<p>Logical argument to control if progress bar is shown. Default is <code>TRUE</code>. It can also be
+set globally using the 'pb' option (see <code>warbleR_options</code>).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Numeric. Determine the formula to be used to calculate the signal-to-noise ratio (S = signal
+, N = background noise):
+</p>
+
+<ul>
+<li> <p><code>1</code>: ratio of S mean amplitude envelope to
+N mean amplitude envelope (<code>mean(env(S))/mean(env(N))</code>)
+</p>
+</li>
+<li> <p><code>2</code>: ratio of S amplitude envelope RMS (root mean square) to N amplitude envelope RMS
+(<code>rms(env(S))/rms(env(N))</code>)
+</p>
+</li>
+<li> <p><code>3</code>: ratio of the difference between S amplitude envelope RMS and N amplitude envelope RMS to N amplitude envelope RMS (<code>(rms(env(S)) - rms(env(N)))/rms(env(N))</code>)
+</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>eq.dur</code></td>
+<td>
+<p>Logical. Controls whether the noise segment that is measured has the same duration
+than the signal (if <code>TRUE</code>, default <code>FALSE</code>). If <code>TRUE</code> then 'mar' argument is ignored.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>in.dB</code></td>
+<td>
+<p>Logical. Controls whether the signal-to-noise ratio is returned in decibels (20*log10(SNR)).
+Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>before</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> noise is only measured right before the signal (instead of before and after). Default is <code>FALSE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>lim.dB</code></td>
+<td>
+<p>Logical. If <code>TRUE</code> the lowest signal-to-noise would be limited to -40 dB (if <code>in.dB = TRUE</code>). This would remove NA's that can be produced when noise segments have a higher amplitude than the signal
+itself. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bp</code></td>
+<td>
+<p>Numeric vector of length 2 giving the lower and upper limits of a frequency bandpass filter (in kHz). Default is <code>NULL</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wl</code></td>
+<td>
+<p>A numeric vector of length 1 specifying the window length of the spectrogram for applying bandpass. Default
+is 10. Ignored if <code>bp = NULL</code>. It can also be
+set globally using the 'wl' option (see <code>warbleR_options</code>).
+Note that lower values will increase time resolution, which is more important for signal-to-noise ratio calculations.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Signal-to-noise ratio (SNR) is a measure of the level of a desired signal compared to
+background noise. The function divides the mean amplitude of the signal by
+the mean amplitude of the background noise adjacent to the signal.
+A general margin to apply before and after the acoustic signal must
+be specified. Setting margins for individual signals that have been
+previously clipped from larger files may take some optimization, as
+for calls within a larger file that are irregularly separated. When
+margins overlap with another acoustic signal nearby, the signal-to-noise
+ratio (SNR) will be inaccurate. Any SNR less than or equal to one suggests
+background noise is equal to or overpowering the acoustic signal.
+<code>snr_spectrograms</code> can be used to troubleshoot different noise margins.
+</p>
+
+
+<h3>Value</h3>
+
+<p>The input 'X' object with a new column including the signal-to-noise values.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Marcelo Araya-Salas (<a href="mailto:marcelo.araya@ucr.ac.cr">marcelo.araya@ucr.ac.cr</a>) and Grace Smith Vidaurre
+</p>
+
+
+<h3>References</h3>
+
+<p>Araya-Salas, M., &amp; Smith-Vidaurre, G. (2017). warbleR: An R package to streamline analysis of animal acoustic signals. Methods in Ecology and Evolution, 8(2), 184-191.
+<a href="https://en.wikipedia.org/wiki/Signal-to-noise_ratio">Wikipedia: Signal-to-noise ratio</a>
+
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">{
+  data(list = c("Phae.long1", "lbh_selec_table"))
+  writeWave(Phae.long1, file.path(tempdir(), "Phae.long1.wav")) # save sound files
+
+  # specifying the correct margin is important
+  # use snr_spectrograms to troubleshoot margins for sound files
+  sig2noise(lbh_selec_table[grep("Phae.long1", lbh_selec_table$sound.files), ],
+    mar = 0.2,
+    path = tempdir()
+  )
+
+  # this smaller margin doesn't overlap neighboring signals
+  sig2noise(lbh_selec_table[grep("Phae.long1", lbh_selec_table$sound.files), ],
+    mar = 0.1,
+    path = tempdir()
+  )
+}
+
+</code></pre>
+
+
+</div>

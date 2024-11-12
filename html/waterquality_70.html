@@ -1,0 +1,75 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wq_calc</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Water quality calculation</h2>
+
+<h3>Description</h3>
+
+<p>Calculates a set of water quality indices
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wq_calc(terraRast, alg = "all", sat, ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>terraRast</code></td>
+<td>
+<p>Terra SpatRaster containing a satellite data</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alg</code></td>
+<td>
+<p>Name (e.g. <code>Am09KBBI()</code>) or type of the algorithm ("chlorophyll", "phycocyanin", "turbidity") or "all"</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sat</code></td>
+<td>
+<p>Name of the satellite or instrument ("worldview2", "sentinel2", "landsat8", "modis", "meris", or "OLCI")</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Other arguments passed on to <code>terra::rast()</code></p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>SpatRaster
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">library(terra)
+
+# sentinel2 example
+s2 = terra::rast(system.file("raster/S2_Harsha.tif", package = "waterquality"))
+s2_Al10SABI = wq_calc(s2, alg = "Al10SABI", sat = "sentinel2")
+s2_two_alg = wq_calc(s2, alg = c("TurbChip09NIROverGreen", "Am092Bsub"), sat = "sentinel2")
+
+## Not run: (
+s2_wq = wq_calc(s2, alg = "all", sat = "sentinel2")
+
+# landsat8 example
+l8 = terra::rast(system.file("raster/L8_Taylorsville.tif", package = "waterquality"))
+l8_wq = wq_calc(s2, alg = "all", sat = "landsat8")
+)
+## End(Not run)
+</code></pre>
+
+
+</div>

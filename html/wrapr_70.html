@@ -1,0 +1,80 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>psagg</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Pseudo aggregator.</h2>
+
+<h3>Description</h3>
+
+<p>Take a vector or list and return the first element (pseudo-aggregation or projection).
+If the argument length is zero or there are different items throw in an error.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">psagg(x, ..., strict = TRUE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>should be a vector or list of items.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>force later arguments to be passed by name</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>strict</code></td>
+<td>
+<p>logical, should we check value uniqueness.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function is useful in some split by column situations as a safe and legible
+way to convert vectors to scalars.
+</p>
+
+
+<h3>Value</h3>
+
+<p>x[[1]] (or throw if not all items are equal or this is an empty vector).
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+d &lt;- data.frame(
+  group = c("a", "a", "b"),
+  stringsAsFactors = FALSE)
+dl &lt;- lapply(
+  split(d, d$group),
+  function(di) {
+    data.frame(
+      # note: di$group is a possibly length&gt;1 vector!
+      # pseudo aggregate it to the value that is
+      # constant for each group, confirming it is constant.
+      group_label = psagg(di$group),
+      group_count = nrow(di),
+      stringsAsFactors = FALSE
+    )
+  })
+do.call(rbind, dl)
+
+</code></pre>
+
+
+</div>

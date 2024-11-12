@@ -1,0 +1,84 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>LLw</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Log Likelihood for weibull fitted data, failures and suspensions only</h2>
+
+<h3>Description</h3>
+
+<p>Determination of log-likelihood values for the basic distributions covered by R should be ubiquitous, but an implementation is provided here to enable likelihood ratio testing particularly for comparison of 3-parameter optimized models with their 2-parameter counterpart.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">LLw(x, s=NULL, Eta, Beta)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>A vector of failure data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>s</code></td>
+<td>
+<p>An optional vector of suspension data.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Eta</code></td>
+<td>
+<p>The scale parameter from a weibull fit.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Beta</code></td>
+<td>
+<p>The shape parameter from a weibull fit.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Function LLw can only handle datasets with failure and suspension data. For data including intervals <code>wblrLikelihood</code> can be used.
+This function is somewhat unique among likelihood functions in that it will scan the suspension data for
+removal of negative values. Such negative values are likely to be entered as data is provided
+for a 3-parameter fit by explicitly providing the original data with vector subtraction by the optimized t0.
+The primary intention for likelihood determination is to permit likelihood ratio testing for comparison
+of 3-parameter optimized models with their 2-parameter counterpart. 
+</p>
+
+
+<h3>Value</h3>
+
+<p>Returns a log-likelihood value.
+</p>
+
+
+<h3>References</h3>
+
+<p>Robert B. Abernethy, (2008) "The New Weibull Handbook, Fifth Edition"
+</p>
+<p>Marie Laure Delignette-Muller, Christophe Dutang (2015). "fitdistrplus: An R Package for Fitting Distributions".
+Journal of Statistical Software, 64(4), 1-34. URL http://www.jstatsoft.org/v64/i04/.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">failures&lt;-c(90,96,30,49,82)
+suspensions&lt;-c(100,45,10)
+fit&lt;-lslr(getPPP(failures, suspensions))
+LL&lt;-LLw(failures, suspensions, fit[1], fit[2])
+</code></pre>
+
+
+</div>

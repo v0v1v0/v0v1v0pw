@@ -1,0 +1,143 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>merge_surnames</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Surname probability merging function.</h2>
+
+<h3>Description</h3>
+
+<p><code>merge_surnames</code> merges surnames in user-input dataset with corresponding
+race/ethnicity probabilities from U.S. Census Surname List and Spanish Surname List.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">merge_surnames(
+  voter.file,
+  surname.year = 2020,
+  name.data,
+  clean.surname = TRUE,
+  impute.missing = TRUE
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>voter.file</code></td>
+<td>
+<p>An object of class <code>data.frame</code>. Must contain a field
+named 'surname' containing list of surnames to be merged with Census lists.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>surname.year</code></td>
+<td>
+<p>An object of class <code>numeric</code> indicating which year
+Census Surname List is from. Accepted values are <code>2010</code> and <code>2000</code>.
+Default is <code>2020</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>name.data</code></td>
+<td>
+<p>An object of class <code>data.frame</code>. Must contain a leading
+column of surnames, and 5 subsequent columns, with Pr(Race | Surname) for each
+of the five major racial categories.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clean.surname</code></td>
+<td>
+<p>A <code>TRUE</code>/<code>FALSE</code> object. If <code>TRUE</code>,
+any surnames in <code><var>voter.file</var></code> that cannot initially be matched
+to surname lists will be cleaned, according to U.S. Census specifications,
+in order to increase the chance of finding a match. Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>impute.missing</code></td>
+<td>
+<p>A <code>TRUE</code>/<code>FALSE</code> object. If <code>TRUE</code>,
+race/ethnicity probabilities will be imputed for unmatched names using
+race/ethnicity distribution for all other names (i.e., not on Census List).
+Default is <code>TRUE</code>.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function allows users to match surnames in their dataset with the U.S.
+Census Surname List (from 2000 or 2010) and Spanish Surname List to obtain
+Pr(Race | Surname) for each of the five major racial groups.
+</p>
+<p>By default, the function matches surnames to the Census list as follows:
+</p>
+
+<ol>
+<li>
+<p> Search raw surnames in Census surname list;
+</p>
+</li>
+<li>
+<p> Remove any punctuation and search again;
+</p>
+</li>
+<li>
+<p> Remove any spaces and search again;
+</p>
+</li>
+<li>
+<p> Remove suffixes (e.g., Jr) and search again;
+</p>
+</li>
+<li>
+<p> Split double-barreled surnames into two parts and search first part of name;
+</p>
+</li>
+<li>
+<p> Split double-barreled surnames into two parts and search second part of name;
+</p>
+</li>
+<li>
+<p> For any remaining names, impute probabilities using distribution
+for all names not appearing on Census list.
+</p>
+</li>
+</ol>
+<p>Each step only applies to surnames not matched in a previous ste.
+Steps 2 through 7 are not applied if <code>clean.surname</code> is FALSE.
+</p>
+<p>Note: Any name appearing only on the Spanish Surname List is assigned a
+probability of 1 for Hispanics/Latinos and 0 for all other racial groups.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Output will be an object of class <code>data.frame</code>. It will
+consist of the original user-input data with additional columns that
+specify the part of the name matched with Census data (<code><var>surname.match</var></code>),
+and the probabilities Pr(Race | Surname) for each racial group
+(<code><var>p_whi</var></code> for White, <code><var>p_bla</var></code> for Black,
+<code><var>p_his</var></code> for Hispanic/Latino,
+<code><var>p_asi</var></code> for Asian and Pacific Islander, and
+<code><var>p_oth</var></code> for Other/Mixed).
+#'
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(voters)
+## Not run: try(merge_surnames(voters))
+
+</code></pre>
+
+
+</div>

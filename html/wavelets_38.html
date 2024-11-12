@@ -1,0 +1,123 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wt.filter.shift</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>
+Wavelet Transform Filter Phase Shift
+</h2>
+
+<h3>Description</h3>
+
+<p>Computes phase shifts for wavelet transform coefficients corresponding
+to a particular filter.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wt.filter.shift(filter, J, wavelet=TRUE, coe=FALSE, modwt=FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>filter</code></td>
+<td>
+<p>A <code>wt.filter</code> object, a character string indicating
+which wavelet transform filter to compute, or a numeric vector of
+wavelet (high pass) filter coefficients (not scaling (low pass)
+coefficients). If a numeric vector is supplied, the length must be
+even.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>J</code></td>
+<td>
+<p>A vector of positive integers indicating levels for which
+to compute phase shifts.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>wavelet</code></td>
+<td>
+<p>A logical flag indicating whether to compute the
+wavelet (high pass) or scaling (low pass) phase shift(s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>coe</code></td>
+<td>
+<p>A logical value indicating whether to use the center of
+energy method (see Percival and Walden 2000, page 118) to compute
+the phase shift(s).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>modwt</code></td>
+<td>
+<p>A logical value indicating whether to compute MODWT phase
+shift(s).</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>For wavelet filters of class 'Least Assymetric' or 'Coiflet', the
+default method for calculating phase shifts is outlined on pages
+112-114 and page 124 of Percival and Walden 2000.  For wavelet filters of
+class 'Best Localized', the default shifts are given on page 119 of
+Percival and Walden 2000. For the Haar filter, both the level <code class="reqn">j</code>
+wavelet and scaling phase shifts are half the length of the level
+<code class="reqn">j</code> wavelet and scaling filters and the phase shifts for the D(4)
+filter are determined by specifying <code class="reqn">\nu = -1</code> in equations (114a)
+and (114b) of Percival and Walden 2000.
+</p>
+<p>For all other filters, the center of energy method is the default
+method for computing phase shifts (thus rendering the <code>coe</code>
+argument irrelevant). If <code>coe = TRUE</code>, then the center of energy
+method is used regardless of filter class.
+</p>
+<p>By default the DWT phase shifts are computed, using the MODWT phase
+shifts and the methods outlined on pages 115-116 of Percival and
+Walden 2000. If <code>modwt = TRUE</code>, then only the MODWT phase shifts
+are computed.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of phase shifts, expressed in absolute value.  Each element
+corresponds to the equivalent element in <code>J</code>.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Eric Aldrich. ealdrich@gmail.com.</p>
+
+
+<h3>References</h3>
+
+<p>Percival, D. B. and A. T. Walden (2000) <em>Wavelet Methods for Time
+Series Analysis</em>, Cambridge University Press.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>wt.filter</code>,
+<code>align</code>,
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">wt.filter.shift("la14", J=1:6)
+</code></pre>
+
+
+</div>

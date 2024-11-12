@@ -1,0 +1,157 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>to_return</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Expectation for what's returned from a stubbed request</h2>
+
+<h3>Description</h3>
+
+<p>Set response status code, response body, and/or response headers
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">to_return(.data, ..., .list = list(), times = 1)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>.data</code></td>
+<td>
+<p>input. Anything that can be coerced to a <code>StubbedRequest</code> class
+object</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>Comma separated list of named variables. accepts the following:
+<code>status</code>, <code>body</code>, <code>headers</code>. See Details for more.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>.list</code></td>
+<td>
+<p>named list, has to be one of 'status', 'body',
+and/or 'headers'. An alternative to passing in via <code>...</code>. Don't pass the
+same thing to both, e.g. don't pass 'status' to <code>...</code>, and also 'status' to
+this parameter</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>times</code></td>
+<td>
+<p>(integer) number of times the given response should be
+returned; default: 1. value must be greater than or equal to 1. Very large
+values probably don't make sense, but there's no maximum value. See
+Details.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>Values for status, body, and headers:
+</p>
+
+<ul>
+<li>
+<p> status: (numeric/integer) three digit status code
+</p>
+</li>
+<li>
+<p> body: various: <code>character</code>, <code>json</code>, <code>list</code>, <code>raw</code>, <code>numeric</code>,
+<code>NULL</code>, <code>FALSE</code>, a file connection (other connetion types
+not supported), or a <code>mock_file</code> function call (see <code>mock_file()</code>)
+</p>
+</li>
+<li>
+<p> headers: (list) a named list, must be named
+</p>
+</li>
+</ul>
+<p>response headers are returned with all lowercase names and the values
+are all of type character. if numeric/integer values are given
+(e.g., <code>to_return(headers = list(a = 10))</code>), we'll coerce any
+numeric/integer values to character.
+</p>
+
+
+<h3>Value</h3>
+
+<p>an object of class <code>StubbedRequest</code>, with print method describing
+the stub
+</p>
+
+
+<h3>multiple <code>to_return()</code>
+</h3>
+
+<p>You can add more than one <code>to_return()</code> to a webmockr stub (including
+<code>to_raise()</code>, <code>to_timeout()</code>). Each one is a HTTP response returned.
+That is, you'll match to an HTTP request based on <code>stub_request()</code> and
+<code>wi_th()</code>; the first time the request is made, the first response
+is returned; the second time the reqeust is made, the second response
+is returned; and so on.
+</p>
+<p>Be aware that webmockr has to track number of requests
+(see <code>request_registry()</code>), and so if you use multiple <code>to_return()</code>
+or the <code>times</code> parameter, you must clear the request registry
+in order to go back to mocking responses from the start again.
+<code>webmockr_reset()</code> clears the stub registry and  the request registry,
+after which you can use multiple responses again (after creating
+your stub(s) again of course)
+</p>
+
+
+<h3>Raise vs. Return</h3>
+
+<p><code>to_raise()</code> always raises a stop condition, while <code>to_return(status=xyz)</code> only
+sets the status code on the returned HTTP response object. So if you want to
+raise a stop condition then <code>to_raise()</code> is what you want. But if you
+don't want to raise a stop condition use <code>to_return()</code>. Use cases for each
+vary. For example, in a unit test you may have a test expecting a 503 error;
+in this case <code>to_raise()</code> makes sense. In another case, if a unit test
+expects to test some aspect of an HTTP response object that httr, httr2,
+or crul typically returns, then you'll want <code>to_return()</code>.
+</p>
+
+
+<h3>Note</h3>
+
+<p>see more examples in <code>stub_request()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R"># first, make a stub object
+foo &lt;- function() {
+  stub_request("post", "https://httpbin.org/post")
+}
+
+# add status, body and/or headers
+foo() %&gt;% to_return(status = 200)
+foo() %&gt;% to_return(body = "stuff")
+foo() %&gt;% to_return(body = list(a = list(b = "world")))
+foo() %&gt;% to_return(headers = list(a = 5))
+foo() %&gt;% 
+  to_return(status = 200, body = "stuff", headers = list(a = 5))
+
+# .list - pass in a named list instead
+foo() %&gt;% to_return(.list = list(body = list(foo = "bar")))
+
+# multiple responses using chained `to_return()`
+foo() %&gt;% to_return(body = "stuff") %&gt;% to_return(body = "things")
+
+# many of the same response using the times parameter
+foo() %&gt;% to_return(body = "stuff", times = 3)
+</code></pre>
+
+
+</div>

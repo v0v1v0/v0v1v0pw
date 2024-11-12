@@ -1,0 +1,70 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>plotErrorRateByHour</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Plots rates of HTTP response code groups by hour  
+</h2>
+
+<h3>Description</h3>
+
+<p>Generates a stacked bar plot of http response code types (2xx Success, 3xx Redirect, 4xx User Error and 5xx System Error) by hour.
+</p>
+<p>The x-axis is hours and the plot is limited to 24 axis labels (optimally this is one day) regardless of how many days are being reported. 
+This ensures that the labels are readable.  
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">plotErrorRateByHour(dataFrame) 
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table><tr style="vertical-align: top;">
+<td><code>dataFrame</code></td>
+<td>
+
+<p>a transaction data frame created by <code>logFileRead</code> or <code>logFileListRead</code> 
+</p>
+</td>
+</tr></table>
+<h3>Value</h3>
+
+<p>Returns a ggplot2 plot.  This function is intended to be wrapped in a call to <code>plotSaveGG</code>
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Greg Hunt &lt;greg@firmansyah.com&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code>logFileRead</code>
+<code>logFileListRead</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">
+logFileName = logFileNamesGetLast(dataDirectory=datd, 
+  directoryNames=c(".", "."), 
+  fileNamePattern="*[.]log")[[1]]
+
+cols = logFileFieldsGetIIS(logFileName)
+
+logdf = logFileRead(logFileName, columnList=cols, 
+            logTimeZone = "", timeFormat = "")
+
+plotErrorRateByHour(logdf) 
+</code></pre>
+
+
+</div>

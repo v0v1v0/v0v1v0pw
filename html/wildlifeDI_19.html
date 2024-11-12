@@ -1,0 +1,188 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>Lixn</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Minta's Spatial-temporal interaction statistics</h2>
+
+<h3>Description</h3>
+
+<p>The function <code>Lixn</code> measures dynamic interaction between two animals following
+the methods outlined by Minta (1992).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">Lixn(traj, traj2, method = "spatial", tc = 0, hr = NULL, OZ = NULL)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>traj</code></td>
+<td>
+<p>an object of the class <code>move2</code> which contains the time-stamped movement fixes of at least two individuals. For more information on objects of this type see <code>help(mt_as_move2)</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>traj2</code></td>
+<td>
+<p>(optional) same as traj, but for the second group of individuals. See <code>checkTO</code></p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>method</code></td>
+<td>
+<p>method for computing the marginal distribution from which expected
+values are computed. If <code>method = "spatial"</code>, the marginal values are calculated based on areas
+of the shared and unshared portions of the home ranges. If <code>method = "frequency"</code>, the marginal 
+values are calculated based on the number of all fixes within the shared and unshared portions of 
+the home ranges – see Details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>tc</code></td>
+<td>
+<p>time threshold for determining simultaneous fixes – see function: <code>GetSimultaneous</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hr</code></td>
+<td>
+<p>(optional) spatial polygon <code>sf</code> object associated with the home range (or some other form of) spatial range estimate for each individual in <code>traj</code>. The hr polygon should have a corresponding ID column with the same column name as in <code>traj</code>. If NULL (the default) the MCP home range estimate will be used for each individual.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>OZ</code></td>
+<td>
+<p>(– required if method = 'frequency') A <code>sf</code> object representing the shared area polygon associated with spatial use overlap each pair of individuals in <code>traj</code>. Must be a <code>sf</code> polygon object and contain two columns id1 and id2 indicating the polygon associated with each pair.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>The function <code>Lixn</code> can be used to calculate the Minta (1992) measures of dynamic
+interaction between two animals. The Minta statistic tests how the two animals simultaneously utilize
+an area shared between the two individuals. Three coefficients are produced <code class="reqn">L_{AA}</code>, <code class="reqn">L_{BB}</code>, 
+and <code class="reqn">L_{ixn}</code>. Each of these statistics are based on a contingency table that compares the observed 
+frequency of those fixes that are simultaneous and within/outside the shared area to expectations based on 
+area overlap proportions (if <code>method="spatial"</code>) or expectations derived from all fixes (if 
+<code>method="frequency"</code>) – see Minta (1992) for more details. A Chi-squared statistic can then
+be used to examine the significance between the observed and expected use of the shared area.
+<br><br>
+Minta (1992) suggests the following interpretations of the coefficients. When <code class="reqn">L_{AA}</code>
+is near 0, the first animal's use of the shared area is random (or as expected). When
+<code class="reqn">L_{AA} &gt; 0</code> it signifies spatial attraction to the shared area, or greater than
+expected use. When <code class="reqn">L_{AA} &lt; 0</code> it signifies spatial avoidance of the shared area, or
+less than expected use. Interpretation of <code class="reqn">L_{BB}</code> is the same as for <code class="reqn">L_{AA}</code> with
+respect to the second animal. <code class="reqn">L_{ixn}</code> tells us far more about the nature of the
+interaction between the two individuals. As <code class="reqn">L_{ixn}</code> nears 0, both animals use the
+shared area randomly, with regards to the other animal. If <code class="reqn">L_{ixn} &gt; 0</code> the animals
+use the shared area more <em>simultaneously</em>, whereas if <code class="reqn">L_{ixn} &lt; 0</code> it is an
+indication of <em>solitary</em> use, or avoidance. This is why <code class="reqn">L_{ixn}</code> is termed the temporal
+interaction coefficient. A Chi-squared test can be used to identify the significance
+of the <code class="reqn">L_{AA}</code>, <code class="reqn">L_{BB}</code>, and <code class="reqn">L_{ixn}</code> values.
+<br><br>
+NOTEs: 
+<br>
+1. With modern telemetry datasets, where home ranges are readily estimated, choosing <code>method = 'spatial'</code>
+is most appropriate. If parmater <code>hr</code> is not specified, the code uses the minimum convex hull method to calculate individual 
+home ranges.
+<br>
+2. When the home ranges do not overlap the Lixn statistic is not defined and the function returns a 
+string of NA's.
+<br>
+3. When one home range completely encloses another the Lixn statistic is not defined and the function returns
+a string of NA's and <code>'ContainsB'</code> (or <code>'ContainsB'</code>) under the p.IXN result.
+<br>
+4. Further to points 2 and 3, the Lixn statistic is not appropriate in situations where the overlap area is 
+either very large or very small relative to either home range (i.e., a situation with almost complete enclosure 
+or virtually no overlap). The example data (deer) is an exampl of a near complete enclosure. Thus, it is advised 
+that <code>Lixn</code> be used only in situations where there are suitable marginal areas for areaA, areaB, and areaAB 
+– see Minta (1992).
+</p>
+
+
+<h3>Value</h3>
+
+<p>This function returns a data.frame with values representing the calculated statistical values and associated <em>p</em>-values from the Chi-squared test for each dyad.
+</p>
+
+<ul>
+<li>
+<p> pTable – contingency table showing marginal probabilities of expected use 
+based on the selection of the <code>method</code> parameter.
+</p>
+</li>
+<li>
+<p> nTable – contingency table showing observed frequency of use of the shared 
+area based on simultaneous fixes.
+</p>
+</li>
+<li>
+<p> oTable – the odds for each cell in the contingency table.
+</p>
+</li>
+<li>
+<p> Laa – the calculated value of the <code class="reqn">L_{AA}</code> statistic
+</p>
+</li>
+<li>
+<p> p.AA – the associated <em>p</em>-value
+</p>
+</li>
+<li>
+<p> Lbb – the calculated value of the <code class="reqn">L_{BB}</code> statistic
+</p>
+</li>
+<li>
+<p> p.BB – the associated <em>p</em>-value
+</p>
+</li>
+<li>
+<p> Lixn – the calculated value of the <code class="reqn">L_{ixn}</code> statistic
+</p>
+</li>
+<li>
+<p> p.IXN – the associated <em>p</em>-value
+</p>
+</li>
+</ul>
+<h3>References</h3>
+
+<p>Minta, S.C. (1992) Tests of spatial and temporal interaction among animals.
+<em>Ecological Applications</em>, <b>2</b>: 178-188
+</p>
+
+
+<h3>See Also</h3>
+
+<p>GetSimultaneous
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+data(deer)
+#tc = 7.5 minutes, dc = 50 meters
+Lixn(deer,  method='spatial', tc=7.5*60)
+
+#use internal buffer 500m of MCP for demonstration of frequency method
+# NOTE: This is just an example, this is not an appropriate way to define overlap zone.
+idcol &lt;- mt_track_id_column(deer)
+deercore &lt;- deer |&gt;
+  st_union() |&gt;
+  st_convex_hull() |&gt;
+  st_buffer(-500)
+Lixn(deer,  method='frequency', tc=7.5*60, OZ=deercore)
+
+## End(Not run)
+</code></pre>
+
+
+</div>

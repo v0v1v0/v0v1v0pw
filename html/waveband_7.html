@@ -1,0 +1,206 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>wave.band</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Posterior credible intervals for wavelet regression </h2>
+
+<h3>Description</h3>
+
+<p>Computes posterior credible intervals for an unknown regression curve.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">wave.band(data = 0, alpha = 0.5, beta = 1., filter.number = 8, family = 
+        "DaubLeAsymm", bc = "periodic", dev = var, j0 = 3., plotfn = TRUE, 
+        retvalue = TRUE, n = 128, type = "data", rsnr = 3)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<p>Either data or a value of type other than "data" must be supplied. 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>If type="data", then data should be a vector of data. The length of the vector should be a power of two not greater than 1024, and not less
+than 8.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>type</code></td>
+<td>
+<p>Either type="data", in which case a vector of data should be supplied, or type should specify a standard test function and wave.band will generate a test data set via a call to test.data. Permissible values for type are "blocks", "bumps", "doppler", "heavi", or "ppoly"; see the documentation for test.data for more details.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>alpha, beta</code></td>
+<td>
+<p>Hyperparameters which determine the priors placed on the wavelet coefficients. Both alpha and beta take positive values; see Abramovich, Sapatinas, &amp; Silverman (1998) or Chipman &amp; Wolfson (1999) for more details on selecting alpha and beta.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>filter.number</code></td>
+<td>
+<p>A parameter relating to the smoothness of wavelet that you want to use in the decomposition.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>family </code></td>
+<td>
+<p>Specifies the family of wavelets to be used. Two popular options are "DaubExPhase" and "DaubLeAsymm" but see the help for filter.select for more possibilities.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bc</code></td>
+<td>
+<p>Specifies the boundary handling. If bc="periodic" the default, then the function you decompose is assumed to be periodic on it's interval of definition. Other boundary options exist, but are currently unsupported for this function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>dev</code></td>
+<td>
+<p>This argument supplies the function to be used to compute the spread of the absolute values coefficients. The function supplied must return a value of spread on the variance scale (i.e. not standard deviation) such as the var() function. A popular, useful and robust alternative is the madmad function.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>j0</code></td>
+<td>
+<p>The primary resolution level; used in assessing the universal threshold which is used in the empirical Bayes estimation of hyperparameters.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>plotfn</code></td>
+<td>
+<p>If <code>plotfn=TRUE</code>, wave.band draws the noisy data, the BayesThresh function estimate, and pointwise 99 percent credible intervals for the regression function. If the value of <code>type</code> is not "data", then the true function will also be plotted.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>retvalue</code></td>
+<td>
+<p>If <code>retvalue=TRUE</code>, then a lengthy list of results will be returned. Note that if both <code>plotfn</code> and <code>retvalue</code> are set to <code>FALSE</code>, then <code>wave.band</code> will return no results whatsoever.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>n</code></td>
+<td>
+<p>If <code>type</code> is not "data", then a data vector of length <code>n</code> will be generated; note that <code>n</code> should be a power of two not greater than 1024.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>rsnr</code></td>
+<td>
+<p>If type is not "data", then the data vector generated will have root signal-to-noise ratio as specified by <code>rsnr</code>. </p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>This function implements the WaveBand method of Barber, Nason, &amp; Silverman (2001) to compute posterior credible intervals for a regression function. The credible intervals are found by approximating the posterior distribution of the estimated regression curve at each design point. A mixture prior with two components (a zero-mean normal and a point mass at zero) is placed on each wavelet coefficient and updated by the data to give the posteriors for the wavelet coefficients. This is the same prior used by Abramovich, Sapatinas, &amp; Silverman (1998) in their BayesThresh method, implemented in the function <code>BAYES.THR</code>. 
+</p>
+<p>The cumulants of these posteriors are computed and stored in the <code>wd.objects</code> returned by <code>wave.band</code> as <code>Kr.wd</code>. These are summed to give the posterior cumulants of the regression curve, which are used to fit a Johnson distribution (Johnson, 1949), using the algorithm of Hill, Hill, &amp; Holder (1976). Percentage points of these distributions are computed by the algorithm of Hill (1976) and give the credible intervals themselves. 
+</p>
+<p>Code to implement the algorithms by Hill (1976) and Hill, Hill, &amp; Holder (1976) was obtained from the StatLib archive.
+</p>
+
+
+<h3>Value</h3>
+
+<p>If <code>retvalue=FALSE</code>, the value returned by <code>wave.band</code> is <code>NULL</code>. Otherwise, <code>wave.band</code> returns a list, an object of class
+<code>wb</code>, with the following components: 
+</p>
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>The data vector which has been analysed. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>nts</code></td>
+<td>
+<p>A list containing four vectors named one, two, three, and four. Vector one contains the first cumulants of the regression function estimate, vector to the second cumulants and so on.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>Kr.wd</code></td>
+<td>
+<p>A list of four wd objects. These contain the first to fourth cumulants of the wavelet coefficients, as well as recording the wavelet used in the decomposition. </p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>bands</code></td>
+<td>
+<p>A list containing pointwise upper and lower credible limits for the regression function estimate for nominal coverage rates 80, 90, 95 and 99 percent. The widths of the credible intervals is also included. The vectors are named with "l", "u", and "w" indicating lower limits, upper limits, and intervals widths, while "80", "90", "95", and "99" refer to the nominal coverage rate. </p>
+</td>
+</tr>
+</table>
+<p>The <code>BayesThresh</code> estimate of the regression function, using the same parameters as the WaveBand credible intervals, is also included in the <code>pointest</code> component of this list. 
+</p>
+<table><tr style="vertical-align: top;">
+<td><code>param</code></td>
+<td>
+<p>A record of parameters in the call to <code>wave.band</code>.</p>
+</td>
+</tr></table>
+<h3>SIDE EFFECTS</h3>
+
+<p>If <code>plotfn=TRUE</code>, results are plotted on the current graphics device.
+</p>
+
+
+<h3>References</h3>
+
+<p>Barber, S., Nason, G.P. and Silverman, B.W. (2002)
+Posterior probability intervals for wavelet thresholding.
+<em>Journal of the Royal Statistical Society</em>, Series B,
+<b>64</b>, 189-206.</p>
+
+
+<h3>See Also</h3>
+
+<p><code>BAYES.THR</code>, <code>print.wb</code>, <code>plot.wb</code>, <code>power.sum</code>, <code>test.data</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">#library(wavethresh)
+#
+# First, look at the piecewise polynomial example.
+#
+# This plot and the plots for the smooth example below show
+# the data as points, the BayesThresh estimate (thick line), 
+# pointwise 99 percent credible intervals (thin lines), and
+# the true function (dotted thin line).
+#
+ppoly.wb &lt;- wave.band(type = "ppoly", n = 1024, rsnr=4)
+#
+# Plotting the cumulants shows that there are significant 
+# third and fourth cumulants in some places.
+#
+t &lt;- (1:1024)/1024
+plot(t, ppoly.wb$cumulants$one, type="l", xlab="t", ylab = "one")
+plot(t, ppoly.wb$cumulants$two, type="l", xlab="t", ylab = "two")
+plot(t, ppoly.wb$cumulants$three, type="l", xlab="t", ylab = "three")
+plot(t, ppoly.wb$cumulants$four, type="l", xlab="t", ylab = "four")
+#
+# Now consider how much difference the prior can make.
+# Consider a smooth example, first using the default prior,
+# and then using a smoother prior.
+#
+
+gs &lt;- sin(2*pi*t) + 2*(t - 0.5)^2
+gs.noisy &lt;- gs + rnorm(n=1024, sd=sqrt(var(gs))/2)
+gs.wb1 &lt;- wave.band(data=gs.noisy)
+
+gs.wb2 &lt;- wave.band(data=gs.noisy, alpha=4, beta=1)
+</code></pre>
+
+
+</div>

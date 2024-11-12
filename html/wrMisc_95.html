@@ -1,0 +1,99 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>checkGrpOrderSEM</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Check order of multiple groups including non-overlapping SEM-margins</h2>
+
+<h3>Description</h3>
+
+<p><code>checkGrpOrderSEM</code> tests each line of 'x' if expected order of (replicate-) groups (defined in 'grp') appears intact,
+while inluding SEM of groups (replicates) via a proportional weight 'sdFact' as (avGr1-gr1SEM) &lt; (avGr1+gr1SEM) &lt; (avGr2-gr2SEM) &lt; (avGr2+gr2SEM).  
+Used for comparing groups of measures with expected profile (by matching expected order)
+to check if data in 'x' represting groups ('grp') as lines follow.  
+Groups of size=1: The sd (and SEM) can't be estimated directly without any replicates, however, an estimate can be given by shrinking if 'shrink1sampSd'=TRUE 
+under the hypothesis that the overall mechanisms determining the variances is constant across all samples.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">checkGrpOrderSEM(
+  x,
+  grp,
+  sdFact = 1,
+  revRank = TRUE,
+  shrink1sampSd = TRUE,
+  silent = FALSE,
+  callFrom = NULL
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>x</code></td>
+<td>
+<p>matrix or data.frame</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>grp</code></td>
+<td>
+<p>(factor) to organize replicate columns of (x)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>sdFact</code></td>
+<td>
+<p>(numeric) is proportional factor how many units of SEM will be used for defining lower &amp; upper bounds of each group</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>revRank</code></td>
+<td>
+<p>(logical) optionally revert ranks</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>shrink1sampSd</code></td>
+<td>
+<p>(logical)</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>silent</code></td>
+<td>
+<p>(logical) suppress messages</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>callFrom</code></td>
+<td>
+<p>(character) allow easier tracking of message(s) produced</p>
+</td>
+</tr>
+</table>
+<h3>Value</h3>
+
+<p>logical vector if order correct (as expected based on ranks)
+</p>
+
+
+<h3>See Also</h3>
+
+<p>takes only 10
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">mat1 &lt;- matrix(rep(11:24,3)[1:40],byrow=TRUE,ncol=8)
+checkGrpOrderSEM(mat1,grp=gl(3,3)[-1])
+</code></pre>
+
+
+</div>

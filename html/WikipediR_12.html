@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>page_info</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>Retrieve information about a particular page</h2>
+
+<h3>Description</h3>
+
+<p>page_info, when provided with a page title, retrieves metadata about that page.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">page_info(
+  language = NULL,
+  project = NULL,
+  domain = NULL,
+  page,
+  properties = c("protection", "talkid", "url", "displaytitle"),
+  clean_response = FALSE,
+  ...
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>language</code></td>
+<td>
+<p>The language code of the project you wish to query,
+if appropriate.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>project</code></td>
+<td>
+<p>The project you wish to query ("wikiquote"), if appropriate.
+Should be provided in conjunction with <code>language</code>.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>domain</code></td>
+<td>
+<p>as an alternative to a <code>language</code> and <code>project</code> combination,
+you can also provide a domain ("rationalwiki.org") to the URL constructor, allowing
+for the querying of non-Wikimedia MediaWiki instances.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>page</code></td>
+<td>
+<p>the title of the page you want the metadata of.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>properties</code></td>
+<td>
+<p>the properties you'd like to retrieve. Some properties (the pageID, namespace,
+title, language, length and most recent revision ID, for example) are retrieved by default,
+whatever is passed to <code>properties</code>: properties that can be explicitly retrieved include
+the page's protection level ("protection"), the ID of the associated talk page, if applicable
+("talkid"), the full, canonical URL ("url"), and the displayed page title ("displaytitle").</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>clean_response</code></td>
+<td>
+<p>whether to do some basic sanitising of the resulting data structure.
+Set to FALSE by default.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>further arguments to pass to httr's GET.</p>
+</td>
+</tr>
+</table>
+<h3>Examples</h3>
+
+<pre><code class="language-R">## Not run: 
+#Metadata
+page_metadata &lt;- page_info("en","wikipedia", page = "Aaron Halfaker")
+
+## End(Not run)
+</code></pre>
+
+
+</div>

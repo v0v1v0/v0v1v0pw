@@ -1,0 +1,94 @@
+<div class="container">
+
+<table style="width: 100%;"><tr>
+<td>w.qqplot</td>
+<td style="text-align: right;">R Documentation</td>
+</tr></table>
+<h2>W P-values Diagnosis by Q-Q Plot</h2>
+
+<h3>Description</h3>
+
+<p>Draw a Q-Q plot for W-test
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class="language-R">w.qqplot(data, y, w.order = c(1, 2), input.poolsize = 200,
+  hf1 = "default.hf1", hf2 = "default.hf2", ...)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr style="vertical-align: top;">
+<td><code>data</code></td>
+<td>
+<p>a data frame or matrix containing genotypes in the columns. Genotypes should be coded as (0, 1, 2) or (0, 1).</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>y</code></td>
+<td>
+<p>a numeric vector of 0 or 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>w.order</code></td>
+<td>
+<p>a numeric number taking values 1 or 2. <code>w.order</code> = 1 gives main effect Q-Q plot. <code>w.order</code> = 2 gives interaction Q-Q plot.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>input.poolsize</code></td>
+<td>
+<p>a numeric number; The maximum number of SNPs to calculate the Q-Q plot. Default is 200. The <code>input.poolsize</code> is suggested to set as 1000 for <code>w.order</code> = 1, and 200 for <code>w.order</code> = 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hf1</code></td>
+<td>
+<p><em>h</em> and <em>f</em> values to calculate main effect, organized as a matrix, with columns (<em>k</em>, <em>h</em>, <em>f</em>), <em>k</em> = 2 to 3. Needed when <code>w.order</code> = 1.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>hf2</code></td>
+<td>
+<p><em>h</em> and <em>f</em> values to calculate interaction associations, organized as a matrix, with columns (<em>k</em>, <em>h</em>, <em>f</em>), <em>k</em> = 2 to 9. Needed when <code>w.order</code> = 2.</p>
+</td>
+</tr>
+<tr style="vertical-align: top;">
+<td><code>...</code></td>
+<td>
+<p>graphical parameters.</p>
+</td>
+</tr>
+</table>
+<h3>Details</h3>
+
+<p>With a given data and y, the p-value of W-test is calculated at given <em>h</em> and <em>f</em> values, which are plotted against the theoretical distribution.
+</p>
+
+
+<h3>Value</h3>
+
+<p>Q-Q plot
+</p>
+
+
+<h3>Examples</h3>
+
+<pre><code class="language-R">data(diabetes.geno)
+data(phenotype1)
+## Step 1. HF Calculation
+# Please note that parameter B is recommended to be greater than 400.
+hf1&lt;-hf(data = diabetes.geno, w.order = 1, B = 200)
+
+## Step 2. Q-Q Plot
+w.qqplot(data = diabetes.geno, y = phenotype1, w.order = 1, hf1 = hf1, cex =.5)
+abline(0,1)
+</code></pre>
+
+
+</div>
